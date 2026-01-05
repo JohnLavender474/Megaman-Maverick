@@ -112,7 +112,7 @@ enum class LevelDefinition(
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     SMB3_1(
-        type = LevelType.BONUS_LEVEL,
+        type = LevelType.MARIO_LEVEL,
         tmxMapSource = "SMB3_1.tmx",
         music = MusicAsset.MMX2_INTRO_STAGE_MUSIC,
         screenOnCompletion = { ScreenEnum.LEVEL_SCREEN }

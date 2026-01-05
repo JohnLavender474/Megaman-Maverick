@@ -16,6 +16,7 @@ import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
@@ -23,6 +24,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.special.Ladder
+import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -220,6 +222,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     else -> it.set(v)
                 }
             }
+
+            if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL)
+                requestToPlaySound(SoundAsset.SMB3_JUMP_SOUND, false)
 
             canMakeLandSound = true
 

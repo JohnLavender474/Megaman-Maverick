@@ -323,8 +323,16 @@ class MegaContactListener(
             if (entity is Megaman) {
                 entity.aButtonTask = AButtonTask.JUMP
 
-                val blockMakesSound =
-                    block.getOrDefaultProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", true, Boolean::class)
+                val blockMakesSound = block.getOrDefaultProperty(
+                    "${ConstKeys.FEET}_${ConstKeys.SOUND}",
+                    !block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || when (entity.direction) {
+                        Direction.UP -> entity.body.physics.velocity.y <= 0f
+                        Direction.DOWN -> entity.body.physics.velocity.y >= 0f
+                        Direction.LEFT -> entity.body.physics.velocity.x >= 0f
+                        Direction.RIGHT -> entity.body.physics.velocity.x <= 0f
+                    },
+                    Boolean::class
+                )
                 if (blockMakesSound && entity.canMakeLandSound) {
                     entity.requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
                     entity.canMakeLandSound = false

@@ -158,6 +158,7 @@ sounds/beam_in.wav
 sounds/teleport.wav
 sounds/whip.wav
 sounds/enemy_damage.mp3
+sounds/smb3_jump.wav
 sounds/dig.wav
 sounds/brush.wav
 sounds/rev.wav
@@ -169,6 +170,7 @@ sounds/chill_shoot.mp3
 sounds/mecha_dragon.wav
 sounds/buster_charged_shot_v2.wav
 sounds/button.wav
+sounds/smb3_bump.wav
 sounds/chomp.wav
 sounds/conveyor_lift.mp3
 sounds/cursor_move_bloop.mp3
@@ -213,6 +215,7 @@ sounds/dink.mp3
 sounds/asteroid_explode.wav
 sounds/ice_shard_1.wav
 sounds/electric_saw.wav
+sounds/smb3_kick.wav
 sounds/currency_pickup.wav
 sounds/mario_fireball.mp3
 sounds/whee.wav
@@ -962,6 +965,10 @@ sprites/frames/Megaman_v2_Ice/slip_charge_full.png
 sprites/frames/Megaman_v2_Ice/groundslide.png
 sprites/frames/SMB3_Enemies/Goomba/smashed.png
 sprites/frames/SMB3_Enemies/Goomba/walk.png
+sprites/frames/SMB3_Enemies/RedKoopaShell/shell.png
+sprites/frames/SMB3_Enemies/RedKoopa/walk.png
+sprites/frames/SMB3_Enemies/GreenKoopaShell/shell.png
+sprites/frames/SMB3_Enemies/GreenKoopa/walk.png
 sprites/frames/Backgrounds4/GlacierBKG_v2.png
 sprites/frames/Backgrounds4/BGNeedle.png
 sprites/frames/Megaman_v2_Axe/run_trans.png
@@ -1674,6 +1681,7 @@ sprites/frames/LevelSelectScreenV2/selector/top_center.png
 sprites/frames/LevelSelectScreenV2/selector/center_left.png
 sprites/frames/LevelSelectScreenV2/background_static_wily.png
 sprites/frames/LevelSelectScreenV2/background_full.png
+sprites/frames/SMB3_Effects/Whack/whack.png
 sprites/frames/Bosses1/Bospider/climb.png
 sprites/frames/Bosses1/Bospider/open_eye.png
 sprites/frames/Bosses1/Bospider/still.png
@@ -2714,6 +2722,7 @@ sprites/sprite_sheets/Megaman_FLAME_TOSS.png
 sprites/sprite_sheets/MicrowaveMan.png
 sprites/sprite_sheets/GutsTank.txt
 sprites/sprite_sheets/WeaponGet.png
+sprites/sprite_sheets/SMB3_Effects.png
 sprites/sprite_sheets/Backgrounds2.txt
 sprites/sprite_sheets/Projectiles2.png
 sprites/sprite_sheets/WeaponGet.txt
@@ -2794,6 +2803,7 @@ sprites/sprite_sheets/Decorations1.png
 sprites/sprite_sheets/Bosses1-0.png
 sprites/sprite_sheets/PreciousMan.png
 sprites/sprite_sheets/MegamanMaverick_BUSTER.png
+sprites/sprite_sheets/SMB3_Effects.txt
 sprites/sprite_sheets/Backgrounds5.png
 sprites/sprite_sheets/Projectiles1.txt
 sprites/sprite_sheets/LevelPauseScreen.txt
@@ -2834,6 +2844,7 @@ sprites/texture_packer/SMB3_Points.tps
 sprites/texture_packer/Enemies2.tps
 sprites/texture_packer/NukeMan.tps
 sprites/texture_packer/MegamanTrailSprite.tps
+sprites/texture_packer/SMB3_Effects.tps
 sprites/texture_packer/Megaman_v2_AXE.tps
 sprites/texture_packer/Test.tps
 sprites/texture_packer/BluntMan.tps

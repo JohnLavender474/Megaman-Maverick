@@ -1,5 +1,5 @@
 SMB3_Enemies.png
-size: 18, 52
+size: 36, 234
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -7,4 +7,12 @@ pma: false
 Goomba/smashed
   bounds: 1, 1, 16, 16
 Goomba/walk
-  bounds: 1, 19, 16, 32
+  bounds: 19, 1, 16, 32
+GreenKoopa/walk
+  bounds: 1, 35, 32, 64
+GreenKoopaShell/shell
+  bounds: 1, 101, 32, 32
+RedKoopa/walk
+  bounds: 1, 135, 32, 64
+RedKoopaShell/shell
+  bounds: 1, 201, 32, 32

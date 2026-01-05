@@ -73,6 +73,8 @@ fun IBody.getFeetBlocks(): ObjectSet<Block> {
 
 fun IBody.setFeetBlocks(set: ObjectSet<Block>) = putProperty(ConstKeys.FEET_BLOCKS, set)
 
+fun IBody.hasFeetBlock(block: Block) = getFeetBlocks().contains(block)
+
 fun IBody.clearFeetBlocks() = getFeetBlocks().clear()
 
 fun IBody.addFeetBlock(block: Block) = getFeetBlocks().add(block)

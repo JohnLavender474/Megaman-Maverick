@@ -226,9 +226,6 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         if (owner == null) removeProperty(ConstKeys.OWNER) else putProperty(ConstKeys.OWNER, owner)
-
-        val feetSound = spawnProps.getOrDefault("${ConstKeys.FEET}_${ConstKeys.SOUND}", true, Boolean::class)
-        putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", feetSound)
     }
 
     override fun onDestroy() {

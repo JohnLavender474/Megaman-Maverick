@@ -1,0 +1,8 @@
+SMB3_Effects.png
+size: 18, 34
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+Whack/whack
+  bounds: 1, 1, 16, 32

@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.set
+import com.mega.game.engine.common.extensions.setToDirection
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -29,7 +30,6 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.levels.LevelDefinition
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
@@ -41,6 +41,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         const val TAG = "AbstractItem"
 
         private const val GRAVITY = 0.25f
+        private const val GROUND_GRAV = 0.01f
         private const val MOON_GRAVITY = 0.1f
         private const val WATER_GRAVITY = 0.1f
 
@@ -125,7 +126,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         debugShapes.add { itemFixture }
 
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
-        waterListenerFixture.setHitByWaterReceiver { water ->
+        waterListenerFixture.setHitByWaterReceiver {
             body.physics.velocity.setZero()
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP
@@ -139,10 +140,14 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         debugShapes.add { feetFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            body.physics.gravity
+                .setToDirection(direction.getOpposite())
+                .scl(if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAV else gravity)
+                .scl(gravityScalar * ConstVals.PPM.toFloat())
+
             if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) velClamp = MOON_VEL_CLAMP
             body.physics.velocityClamp.set(velClamp * ConstVals.PPM)
 
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) whenFeetOnGround()
             if (body.isSensing(BodySense.FEET_ON_SAND)) whenFeetOnSand()
             if (!body.isSensingAny(BodySense.FEET_ON_GROUND, BodySense.FEET_ON_SAND)) whenInAir()
 
@@ -163,11 +168,6 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         component.add { direction = megaman.direction }
     }
 
-    protected open fun whenFeetOnGround() {
-        body.physics.gravityOn = false
-        body.physics.velocity.setZero()
-    }
-
     protected open fun whenFeetOnSand() {
         body.physics.gravityOn = false
         body.physics.velocity.setZero()
@@ -175,16 +175,6 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
     protected open fun whenInAir() {
         body.physics.gravityOn = true
-
-        val gravityVec = GameObjectPools.fetch(Vector2::class)
-        when (direction) {
-            Direction.LEFT -> gravityVec.set(gravity, 0f)
-            Direction.RIGHT -> gravityVec.set(-gravity, 0f)
-            Direction.UP -> gravityVec.set(0f, -gravity)
-            Direction.DOWN -> gravityVec.set(0f, gravity)
-        }.scl(gravityScalar * ConstVals.PPM.toFloat())
-
-        body.physics.gravity.set(gravityVec)
     }
 
     override fun getType() = EntityType.ITEM

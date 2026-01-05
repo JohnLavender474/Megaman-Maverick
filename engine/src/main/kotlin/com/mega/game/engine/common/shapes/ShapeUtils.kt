@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
+import kotlin.math.max
+import kotlin.math.min
 
 object ShapeUtils {
 
@@ -28,7 +30,7 @@ object ShapeUtils {
     }
 
     fun intersectRectangleAndLine(
-        rectangle: GameRectangle, line: GameLine, intersections: ObjectSet<Vector2>
+        rectangle: GameRectangle, line: GameLine, overlaps: ObjectSet<Vector2>
     ): Boolean {
         line.calculateWorldPoints(out1, out2)
 
@@ -40,9 +42,9 @@ object ShapeUtils {
         for (element in lines) {
             element.calculateWorldPoints(out3, out4)
 
-            val intersection = Vector2()
-            if (Intersector.intersectSegments(out1, out2, out3, out4, intersection)) {
-                intersections.add(intersection)
+            val overlap = Vector2()
+            if (Intersector.intersectSegments(out1, out2, out3, out4, overlap)) {
+                overlaps.add(overlap)
 
                 intersects = true
             }
@@ -77,5 +79,17 @@ object ShapeUtils {
         }
 
         return polygon.contains(circle.x, circle.y)
+    }
+
+    fun intersectRectangles(rect1: GameRectangle, rect2: GameRectangle, overlap: GameRectangle): Boolean {
+        if (rect1.overlaps(rect2)) {
+            overlap.setX(max(rect1.getX(), rect2.getX()))
+            overlap.setWidth(min(rect1.getX() + rect1.getWidth(), rect2.getX() + rect2.getWidth()) - overlap.getX())
+            overlap.setY(max(rect1.getY(), rect2.getY()))
+            overlap.setHeight(min(rect1.getY() + rect1.getHeight(), rect2.getY() + rect2.getHeight()) - overlap.getY())
+            return true
+        }
+
+        return false
     }
 }

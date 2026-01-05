@@ -33,7 +33,6 @@ class PhysicsData(
             applyFrictionY
         )
 
-
     override fun reset() {
         velocity.setZero()
         frictionOnSelf.set(defaultFrictionOnSelf)

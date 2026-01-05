@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.AnimationsComponentBuilder
@@ -10,7 +11,6 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
-import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.orderedMapOf
@@ -18,9 +18,6 @@ import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamageable
-import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -41,45 +38,44 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
+import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.feetFixture
+import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
+import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.utils.AnimationUtils
-import com.megaman.maverick.game.utils.extensions.getPosition
-import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     companion object {
-        const val TAG = "Goomba"
+        const val TAG = "GreenKoopaShell"
 
-        private const val GRAVITY = -0.1f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -0.15f
+        private const val GROUND_GRAVITY = -0.001f
 
-        private const val WALK_SPEED = 5f
-        private const val AIR_SPEED = 2.5f
-
-        private const val SMASHED_DUR = 1f
+        private const val SPEED = 8f
 
         private const val KNOCKED_TO_DEATH_BUMP = 5f
 
-        private val SHELL_TAGS = objectSetOf(GreenKoopaShell.TAG, RedKoopaShell.TAG)
+        private val OTHER_SHELL_TAGS = objectSetOf(TAG, RedKoopaShell.TAG)
 
         private val animDefs = orderedMapOf(
-            "walk" pairTo AnimationDef(2, 1, 0.1f, true),
-            "smashed" pairTo AnimationDef()
+            "shell" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override lateinit var facing: Facing
+    private enum class GreenKoopaShellState {
+        IDLE, ROLLING, KNOCKED_TO_DEATH
+    }
 
-    private var smashed = false
-    private val smashedTimer = Timer(SMASHED_DUR)
+    override var facing = Facing.LEFT
 
-    private var knockedToDeath = false
+    private lateinit var state: GreenKoopaShellState
 
     private val tempOut = ObjectSet<MegaGameEntity>()
 
@@ -97,18 +93,10 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val position =
-            spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
+        val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(position)
 
-        body.forEachFixture { it.setActive(true) }
-
-        facing = if (megaman.body.getBounds().getX() < position.x) Facing.LEFT else Facing.RIGHT
-
-        smashed = false
-        smashedTimer.reset()
-
-        knockedToDeath = false
+        state = GreenKoopaShellState.IDLE
     }
 
     override fun onDestroy() {
@@ -116,10 +104,6 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         super.onDestroy()
         tempOut.clear()
     }
-
-    override fun canDamage(damageable: IDamageable) = !smashed && super.canDamage(damageable)
-
-    override fun canBeDamagedBy(damager: IDamager) = !smashed && super.canBeDamagedBy(damager)
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")
@@ -129,31 +113,60 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add { delta ->
+        updatablesComponent.add {
             tempOut.clear()
 
-            if (knockedToDeath) body.physics.velocity.x = 0f
-            else if (smashed) {
-                body.physics.velocity.setZero()
+            if (state != GreenKoopaShellState.KNOCKED_TO_DEATH) {
+                val otherShells = MegaGameEntities.getOfTags(tempOut, OTHER_SHELL_TAGS)
+                for (otherShell in otherShells) {
+                    if (otherShell == this) continue
 
-                smashedTimer.update(delta)
-                if (smashedTimer.isFinished()) destroy()
-            } else {
-                val shells = MegaGameEntities.getOfTags(tempOut, SHELL_TAGS)
-                for (shell in shells) {
-                    shell as IBodyEntity
-                    if (body.getBounds().overlaps(shell.body.getBounds())) {
-                        getKnockedToDeath(shell.body.getBounds())
-                        return@add
+                    otherShell as IBodyEntity
+                    if (body.getBounds().overlaps(otherShell.body.getBounds())) {
+                        getKnockedToDeath(otherShell.body.getBounds())
+                        break
                     }
                 }
+            }
 
-                if (FacingUtils.isFacingBlock(this)) swapFacing()
+            when (state) {
+                GreenKoopaShellState.IDLE -> {
+                    if (shouldStartRolling()) {
+                        startRolling()
 
-                val speed = if (body.isSensing(BodySense.FEET_ON_GROUND)) WALK_SPEED else AIR_SPEED
-                body.physics.velocity.x = speed * ConstVals.PPM * facing.value
+                        facing = when {
+                            megaman.body.getBounds().getX() < body.getBounds().getX() -> Facing.RIGHT
+                            else -> Facing.LEFT
+                        }
+                    }
+                }
+                GreenKoopaShellState.ROLLING -> {
+                    val speed = SPEED * ConstVals.PPM * facing.value
+                    body.physics.velocity.x = speed
+                }
+                GreenKoopaShellState.KNOCKED_TO_DEATH -> body.physics.velocity.x = 0f
             }
         }
+    }
+
+    private fun shouldStartRolling() =
+        megaman.leftSideFixture.getShape().overlaps(body.getBounds()) ||
+            megaman.rightSideFixture.getShape().overlaps(body.getBounds()) ||
+            megaman.feetFixture.getShape().overlaps(body.getBounds()) ||
+            megaman.body.getBounds().overlaps(body.getBounds())
+
+    private fun startRolling() {
+        state = GreenKoopaShellState.ROLLING
+        requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
+        facing = if (megaman.body.getBounds().getX() < body.getBounds().getX()) Facing.RIGHT else Facing.LEFT
+    }
+
+    private fun getKnockedToDeath(shellBounds: GameRectangle) {
+        state = GreenKoopaShellState.KNOCKED_TO_DEATH
+        body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
+        requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
+
+        spawnWhackForOverlap(shellBounds)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -169,17 +182,16 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         headFixture.setHitByFeetReceiver(ProcessState.BEGIN) { feet, _ ->
-            if (!smashed && !knockedToDeath && feet.getEntity() == megaman) {
-                smashed = true
+            if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) return@setHitByFeetReceiver
+
+            val entity = feet.getEntity()
+            if (entity is Megaman) {
+                if (state == GreenKoopaShellState.IDLE) startRolling()
 
                 spawnWhackForOverlap(feet.getShape())
 
-                spawnFloatingPoints(FloatingPointsType.POINTS100)
-
                 megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 requestToPlaySound(SoundAsset.SWIM_SOUND, false)
-
-                body.physics.velocity.setZero()
             }
         }
         body.addFixture(headFixture)
@@ -208,17 +220,37 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         drawableShapesComponent.addDebug { rightFixture }
 
         body.preProcess.put(ConstKeys.DEATH) {
-            body.physics.collisionOn = !knockedToDeath && !smashed
-            if (smashed || knockedToDeath) body.forEachFixture { it.setActive(false) }
+            body.physics.collisionOn = state != GreenKoopaShellState.KNOCKED_TO_DEATH
+            if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) body.forEachFixture { it.setActive(false) }
+        }
+
+        body.preProcess.put(ConstKeys.DAMAGER) {
+            val damager = body.fixtures.get(FixtureType.DAMAGER).first()
+            damager.setActive(state == GreenKoopaShellState.ROLLING)
         }
 
         body.preProcess.put(ConstKeys.GRAVITY) {
             val gravity = when {
-                smashed -> 0f
-                !body.isSensing(BodySense.FEET_ON_GROUND) || knockedToDeath -> GRAVITY
+                !body.isSensing(BodySense.FEET_ON_GROUND) || state == GreenKoopaShellState.KNOCKED_TO_DEATH -> GRAVITY
                 else -> GROUND_GRAVITY
             }
             body.physics.gravity.y = gravity * ConstVals.PPM
+        }
+
+        body.postProcess.put(ConstKeys.SCANNER) {
+            if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) return@put
+
+            if (isFacing(Facing.LEFT)) {
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) {
+                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
+                    facing = Facing.RIGHT
+                }
+            } else if (isFacing(Facing.RIGHT)) {
+                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
+                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
+                    facing = Facing.LEFT
+                }
+            }
         }
 
         addComponent(drawableShapesComponent.build())
@@ -231,10 +263,11 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite().also { it.setSize(ConstVals.PPM.toFloat()) })
+        .sprite(TAG, GameSprite().also { it.setSize(2f * ConstVals.PPM.toFloat()) })
         .preProcess { _, sprite ->
-            sprite.setPosition(body.getBounds().getPosition())
-            sprite.setFlip(false, knockedToDeath)
+            val position = Position.BOTTOM_CENTER
+            sprite.setPosition(body.getPositionPoint(position), position)
+            sprite.setFlip(isFacing(Facing.RIGHT), state == GreenKoopaShellState.KNOCKED_TO_DEATH)
             sprite.hidden = damageBlink
         }
         .build()
@@ -243,19 +276,11 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (smashed) "smashed" else "walk" }
+                .setKeySupplier { "shell" }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }
                 .build()
         )
         .build()
-
-    private fun getKnockedToDeath(shellBounds: GameRectangle) {
-        knockedToDeath = true
-        body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
-        requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
-
-        spawnWhackForOverlap(shellBounds)
-    }
 }

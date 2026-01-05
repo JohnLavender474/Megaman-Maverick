@@ -9,6 +9,7 @@ import com.mega.game.engine.world.collisions.StandardCollisionHandler
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.world.body.*
 
 class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHandler {
@@ -57,7 +58,9 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
 
             when (dynamicBodyDirection) {
                 Direction.UP -> {
-                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
+                    if (dynamicBody.physics.velocity.y > 0f) return true
+
+                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
                         dynamicBody.setY(staticBody.getMaxY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
@@ -65,9 +68,10 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
 
                     return dynamicBody.getY() < staticBody.getMaxY()
                 }
-
                 Direction.DOWN -> {
-                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
+                    if (dynamicBody.physics.velocity.y < 0f) return true
+
+                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
                         dynamicBody.setMaxY(staticBody.getY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
@@ -75,9 +79,10 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
 
                     return dynamicBody.getMaxY() > staticBody.getY()
                 }
-
                 Direction.LEFT -> {
-                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
+                    if (dynamicBody.physics.velocity.x < 0f) return true
+
+                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
                         dynamicBody.setMaxX(staticBody.getX())
                         dynamicBody.physics.frictionOnSelf.y += staticBody.physics.frictionToApply.y
                         return true
@@ -85,9 +90,10 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
 
                     return dynamicBody.getMaxX() > staticBody.getX()
                 }
-
                 Direction.RIGHT -> {
-                    if (dynamicBody.getFeetBlocks().contains(staticBody.getEntity())) {
+                    if (dynamicBody.physics.velocity.x > 0f) return true
+
+                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
                         dynamicBody.setX(staticBody.getMaxX())
                         dynamicBody.physics.frictionOnSelf.y += staticBody.physics.frictionToApply.y
                         return true
