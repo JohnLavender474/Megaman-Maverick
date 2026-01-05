@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.BlockPiece
 import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.enemies.Wanaan
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -41,9 +42,12 @@ import com.megaman.maverick.game.world.body.getEntity
 open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
+
         const val TAG = "BreakableBlock"
+
         const val BRICK_TYPE = "Brick"
         const val PRECIOUS_TYPE = "PinkBlock"
+        const val SMB3_GOLD_TYPE = "SMB3_Gold"
 
         fun breakApart(center: Vector2, color: BlockPieceColor) {
             for (i in 0 until BRICK_PIECE_IMPULSES.size) {
@@ -79,9 +83,12 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
-            regions.put(BRICK_TYPE, atlas.findRegion(BRICK_TYPE))
-            regions.put(PRECIOUS_TYPE, atlas.findRegion(PRECIOUS_TYPE))
+            val platformsAtlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            regions.put(BRICK_TYPE, platformsAtlas.findRegion(BRICK_TYPE))
+            regions.put(PRECIOUS_TYPE, platformsAtlas.findRegion(PRECIOUS_TYPE))
+
+            val smb3BlocksAtlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
+            regions.put(SMB3_GOLD_TYPE, smb3BlocksAtlas.findRegion("GoldBreakableBlock/block"))
         }
         super.init()
         addComponent(defineSpritesComponent())
@@ -91,10 +98,20 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
+
         color = BlockPieceColor.valueOf(
-            spawnProps.getOrDefault(ConstKeys.COLOR, BlockPieceColor.RED.name, String::class).uppercase()
+            spawnProps.getOrDefault(
+                ConstKeys.COLOR,
+                when (type) {
+                    SMB3_GOLD_TYPE -> BlockPieceColor.GOLD.name
+                    else -> BlockPieceColor.RED.name
+                },
+                String::class
+            ).uppercase()
         )
+
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.CONNECTED))
                 connectedBlockIds.add((value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java))
@@ -103,8 +120,11 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
 
     fun explodeAndDie() {
         GameLogger.debug(TAG, "explodeAndDie()")
+
         destroy()
+
         breakApart(body.getCenter(), color)
+
         connectedBlockIds.forEach { id ->
             val set = MegaGameEntities.getOfId(id)
             if (set.isEmpty) return@forEach
@@ -117,7 +137,9 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
         connectedBlockIds.clear()
         connectedBlocks.forEach { block -> block.explodeAndDie() }
         connectedBlocks.clear()
-        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
+
+        if (game.audioMan.isSoundPlaying(SoundAsset.THUMP_SOUND)) stopSoundNow(SoundAsset.THUMP_SOUND)
+        playSoundNow(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun hitByProjectile(projectileFixture: IFixture) {
@@ -127,28 +149,31 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
 
     override fun hitByHead(processState: ProcessState, headFixture: IFixture) {
         if (processState != ProcessState.BEGIN) return
+
         val entity = headFixture.getEntity()
         when (type) {
             BRICK_TYPE -> if (entity is Wanaan) explodeAndDie()
+            SMB3_GOLD_TYPE -> if (entity is Megaman) explodeAndDie()
             else -> {}
         }
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putPreProcess { _, _ ->
+        val component = SpritesComponent(sprite)
+        component.putPreProcess { _, _ ->
             val bounds = body.getBounds()
             sprite.setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight())
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { type }
         val animations = objectMapOf<String, IAnimation>(
             BRICK_TYPE pairTo Animation(regions[BRICK_TYPE]),
-            PRECIOUS_TYPE pairTo Animation(regions[PRECIOUS_TYPE])
+            PRECIOUS_TYPE pairTo Animation(regions[PRECIOUS_TYPE]),
+            SMB3_GOLD_TYPE pairTo Animation(regions[SMB3_GOLD_TYPE])
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

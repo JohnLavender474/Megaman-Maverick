@@ -46,6 +46,7 @@ object ConstVals {
     const val START_LIVES = 3
     const val MIN_CURRENCY = 0
     const val MAX_CURRENCY = 999
+    const val STANDARD_TRAIL_SPRITE_DELAY = 0.1f
 }
 
 object ConstKeys {

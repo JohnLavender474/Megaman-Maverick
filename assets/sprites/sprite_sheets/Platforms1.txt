@@ -47,63 +47,63 @@ BlockPiece/brown
   index: -1
 BlockPiece/gold
   rotate: false
-  xy: 132, 18
-  size: 32, 32
-  orig: 32, 32
+  xy: 260, 0
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
 BlockPiece/pink
   rotate: false
-  xy: 166, 18
+  xy: 132, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BlockPiece/red
   rotate: false
-  xy: 200, 18
+  xy: 166, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Large
   rotate: false
-  xy: 234, 18
+  xy: 200, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Medium
   rotate: false
-  xy: 268, 18
+  xy: 234, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Boulder/Small
   rotate: false
-  xy: 302, 18
+  xy: 268, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/1
   rotate: false
-  xy: 336, 18
+  xy: 302, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/2
   rotate: false
-  xy: 370, 18
+  xy: 336, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 BreakableIce/3
   rotate: false
-  xy: 404, 18
+  xy: 370, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -306,7 +306,7 @@ InfernoChainPlatform/platform
   index: -1
 Lift
   rotate: false
-  xy: 260, 0
+  xy: 278, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -327,7 +327,7 @@ MoonCrate
   index: -1
 PinkBlock
   rotate: false
-  xy: 278, 0
+  xy: 296, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -390,14 +390,14 @@ SwingingPlatform/other_small_platform
   index: -1
 SwingingPlatform/platform
   rotate: false
-  xy: 296, 0
+  xy: 314, 0
   size: 80, 16
   orig: 80, 16
   offset: 0, 0
   index: -1
 SwingingPlatform/ring
   rotate: false
-  xy: 378, 0
+  xy: 396, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

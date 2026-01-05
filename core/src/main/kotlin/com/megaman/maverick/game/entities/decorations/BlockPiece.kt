@@ -34,17 +34,24 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     companion object {
         const val TAG = "BlockPiece"
+
         private const val ALPHA = 1f
         private const val CULL_TIME = 2f
         private const val GRAVITY = 0.25f
-        private const val START_ROTATION = 135f
+        private const val ROTATION_DELAY = 0.1f
+        private const val ROTATION_DELTA = 45f
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     enum class BlockPieceColor { RED, GOLD, BROWN, PINK }
 
     private lateinit var color: BlockPieceColor
+
     private val cullTimer = Timer(CULL_TIME)
+
+    private var rotation = 0f
+    private val rotationTimer = Timer(ROTATION_DELAY)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -76,9 +83,18 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         color = spawnProps.getOrDefault(ConstKeys.COLOR, BlockPieceColor.RED, BlockPieceColor::class)
 
         cullTimer.reset()
+
+        rotation = 0f
+        rotationTimer.reset()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        rotationTimer.update(delta)
+        if (rotationTimer.isFinished()) {
+            rotation += ROTATION_DELTA
+            rotationTimer.reset()
+        }
+
         cullTimer.update(delta)
         if (cullTimer.isFinished()) destroy()
     })
@@ -95,14 +111,17 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1))
-                .also { sprite -> sprite.setSize(0.5f * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(1f * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             sprite.setRegion(regions[color.name.lowercase()])
+
             sprite.setCenter(body.getCenter())
+
             sprite.setAlpha(ALPHA)
+
             sprite.setOriginCenter()
-            sprite.rotation = body.physics.velocity.angleDeg() + START_ROTATION
+            sprite.rotation = rotation
         }
         .build()
 

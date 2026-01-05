@@ -973,6 +973,7 @@ sprites/frames/SMB3_Enemies/RedKoopaShell/shell.png
 sprites/frames/SMB3_Enemies/RedKoopa/walk.png
 sprites/frames/SMB3_Enemies/GreenKoopaShell/shell.png
 sprites/frames/SMB3_Enemies/GreenKoopa/walk.png
+sprites/frames/SMB3_Blocks/GoldBreakableBlock/block.png
 sprites/frames/Backgrounds4/GlacierBKG_v2.png
 sprites/frames/Backgrounds4/BGNeedle.png
 sprites/frames/Megaman_v2_Axe/run_trans.png
@@ -1686,6 +1687,8 @@ sprites/frames/LevelSelectScreenV2/selector/center_left.png
 sprites/frames/LevelSelectScreenV2/background_static_wily.png
 sprites/frames/LevelSelectScreenV2/background_full.png
 sprites/frames/SMB3_Effects/Whack/whack.png
+sprites/frames/SMB3_Effects/KoopaShellTrailSprite/green.png
+sprites/frames/SMB3_Effects/KoopaShellTrailSprite/red.png
 sprites/frames/Bosses1/Bospider/climb.png
 sprites/frames/Bosses1/Bospider/open_eye.png
 sprites/frames/Bosses1/Bospider/still.png
@@ -2721,6 +2724,7 @@ sprites/sprite_sheets/MisterMan.txt
 sprites/sprite_sheets/Backgrounds3.png
 sprites/sprite_sheets/Backgrounds6.txt
 sprites/sprite_sheets/Projectiles2.txt
+sprites/sprite_sheets/SMB3_Blocks.txt
 sprites/sprite_sheets/Items1.png
 sprites/sprite_sheets/Megaman_FLAME_TOSS.png
 sprites/sprite_sheets/MicrowaveMan.png
@@ -2759,6 +2763,7 @@ sprites/sprite_sheets/Platforms1.png
 sprites/sprite_sheets/NukeMan.txt
 sprites/sprite_sheets/Hazards2.txt
 sprites/sprite_sheets/LevelSelectScreenV2.png
+sprites/sprite_sheets/SMB3_Blocks.png
 sprites/sprite_sheets/Test.txt
 sprites/sprite_sheets/Backgrounds2.png
 sprites/sprite_sheets/Colors.png
@@ -2884,6 +2889,7 @@ sprites/texture_packer/LevelPauseScreenV2.tps
 sprites/texture_packer/Environs1.tps
 sprites/texture_packer/Items1.tps
 sprites/texture_packer/Decorations1.tps
+sprites/texture_packer/SMB3_Blocks.tps
 sprites/texture_packer/Megaman_v2_NEEDLE.tps
 sprites/texture_packer/Bosses.tps
 sprites/texture_packer/Megaman_v2_RAT.tps

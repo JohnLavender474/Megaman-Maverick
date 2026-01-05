@@ -17,7 +17,9 @@ import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -34,12 +36,14 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
+import com.megaman.maverick.game.entities.decorations.KoopaShellTrailSprite
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
@@ -79,6 +83,8 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
 
     private val tempOut = ObjectSet<MegaGameEntity>()
 
+    private val trailSpriteTimer = Timer(ConstVals.STANDARD_TRAIL_SPRITE_DELAY)
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         super.init()
@@ -97,6 +103,8 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         body.setBottomCenterToPoint(position)
 
         state = GreenKoopaShellState.IDLE
+
+        trailSpriteTimer.reset()
     }
 
     override fun onDestroy() {
@@ -113,7 +121,7 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
             tempOut.clear()
 
             if (state != GreenKoopaShellState.KNOCKED_TO_DEATH) {
@@ -143,6 +151,19 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
                 GreenKoopaShellState.ROLLING -> {
                     val speed = SPEED * ConstVals.PPM * facing.value
                     body.physics.velocity.x = speed
+
+                    trailSpriteTimer.update(delta)
+                    if (trailSpriteTimer.isFinished()) {
+                        val trailSprite = MegaEntityFactory.fetch(KoopaShellTrailSprite::class)!!
+                        trailSprite.spawn(
+                            props(
+                                ConstKeys.COLOR pairTo KoopaShellTrailSprite.ShellColor.GREEN,
+                                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
+                            )
+                        )
+
+                        trailSpriteTimer.reset()
+                    }
                 }
                 GreenKoopaShellState.KNOCKED_TO_DEATH -> body.physics.velocity.x = 0f
             }

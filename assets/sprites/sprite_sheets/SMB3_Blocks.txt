@@ -1,0 +1,8 @@
+SMB3_Blocks.png
+size: 18, 18
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+GoldBreakableBlock/block
+  bounds: 1, 1, 16, 16
