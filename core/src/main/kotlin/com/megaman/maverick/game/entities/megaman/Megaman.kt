@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.state.IGameStateListener
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -492,8 +493,13 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED))
 
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+    }
 
-        if (getCurrentHealth() <= 0) explosionOrbTrajectories.forEach { trajectory ->
+    override fun onHealthDepleted() {
+        GameLogger.debug(TAG, "onHealthDepleted()")
+        super.onHealthDepleted()
+
+        explosionOrbTrajectories.forEach { trajectory ->
             val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
             orb.spawn(
                 props(
@@ -502,6 +508,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 )
             )
         }
+
+        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL)
+            playSoundNow(SoundAsset.SMB3_PLAYER_DOWN_SOUND, false)
     }
 
     override fun onEvent(event: Event) {

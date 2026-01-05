@@ -155,12 +155,17 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.drawingColor = Color.RED
 
         val drawableShapesComponent = DrawableShapesComponentBuilder().addDebug { body.getBounds() }
+
+        val damagerFixture =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM, 1.25f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
+        drawableShapesComponent.addDebug { damagerFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
@@ -205,7 +210,7 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val leftScannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.25f * ConstVals.PPM))
         leftScannerFixture.offsetFromBodyAttachment.set(-0.75f * ConstVals.PPM, -body.getHeight() / 2f)
         leftScannerFixture.setFilter filter@{
-           return@filter it.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
+            return@filter it.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
         }
         leftScannerFixture.setConsumer { _, fixture ->
             when (fixture.getType()) {
@@ -278,7 +283,7 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGEABLE, FixtureType.DAMAGER),
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGEABLE),
         )
     }
 

@@ -30,7 +30,7 @@ open class StateLoopHandler<T>(states: Array<T>, timers: Array<GamePair<T, Timer
         }
     }
 
-    protected fun getStateTimer(): Timer? = stateTimers[getCurrentState()]
+    fun getStateTimer(): Timer? = stateTimers[getCurrentState()]
 
     fun getCurrentState() = stateLoop.getCurrent()
 

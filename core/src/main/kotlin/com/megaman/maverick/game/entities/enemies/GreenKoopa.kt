@@ -157,12 +157,17 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
-        body.setSize(ConstVals.PPM.toFloat(), 2f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 1.5f * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         body.drawingColor = Color.RED
 
         val drawableShapesComponent = DrawableShapesComponentBuilder().addDebug { body.getBounds() }
+
+        val damagerFixture =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(0.85f * ConstVals.PPM, 1.25f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
+        drawableShapesComponent.addDebug { damagerFixture }
 
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
@@ -226,7 +231,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGEABLE, FixtureType.DAMAGER),
+            BodyFixtureDef.of(FixtureType.BODY, FixtureType.DAMAGEABLE),
         )
     }
 

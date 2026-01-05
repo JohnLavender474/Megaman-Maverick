@@ -353,9 +353,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        // setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
-        setCurrentLevel(LevelDefinition.SMB3_1)
-        startLevel()
+        setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
     }
 
     override fun render() {
@@ -712,16 +710,16 @@ class MegamanMaverickGame(
         if (paused) resume()
     }
 
-    fun startLevel() {
+    fun startLevel(level: LevelDefinition? = null) {
+        if (level != null) setCurrentLevel(level)
+
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
-        val level = getCurrentLevel()
-
-        levelScreen.music = level.music
-        levelScreen.screenOnCompletion = level.screenOnCompletion
-        levelScreen.start(level.source)
-
-        setCurrentLevel(level)
+        val currentLevel = getCurrentLevel()
+        levelScreen.music = currentLevel.music
+        levelScreen.screenOnCompletion = currentLevel.screenOnCompletion
+        levelScreen.start(currentLevel.source)
+        setCurrentLevel(currentLevel)
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }

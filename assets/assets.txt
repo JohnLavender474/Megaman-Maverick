@@ -205,6 +205,7 @@ sounds/jetpack.mp3
 sounds/mecha_dragon.mp3
 sounds/buster_charged_shot.mp3
 sounds/electric_pulse.mp3
+sounds/smb3_player_down.wav
 sounds/bloopity.wav
 sounds/space_lazer.wav
 sounds/electric_shock.wav
@@ -963,6 +964,9 @@ sprites/frames/Megaman_v2_Ice/airdash_charge_shoot.png
 sprites/frames/Megaman_v2_Ice/cartin_damaged.png
 sprites/frames/Megaman_v2_Ice/slip_charge_full.png
 sprites/frames/Megaman_v2_Ice/groundslide.png
+sprites/frames/SMB3_Enemies/ChompFlower/fall.png
+sprites/frames/SMB3_Enemies/ChompFlower/chomp.png
+sprites/frames/SMB3_Enemies/ChompFlower/rise.png
 sprites/frames/SMB3_Enemies/Goomba/smashed.png
 sprites/frames/SMB3_Enemies/Goomba/walk.png
 sprites/frames/SMB3_Enemies/RedKoopaShell/shell.png
@@ -3873,6 +3877,7 @@ music/MM9_GalaxyMan.mp3
 music/MMX5_VoltKraken.txt
 music/vinnyz_main_menu_theme.mp3
 music/MM10_Wily1.mp3
+music/smb3_overworld.mp3
 music/MMX6_Sigma.mp3
 music/MM3_Magnet_Man.mp3
 music/MMX3_NeonTiger.mp3
