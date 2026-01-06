@@ -1,24 +1,34 @@
 SMB3_Enemies.png
-size: 102, 232
+size: 102, 398
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 pma: false
+BulletBill/launcher
+  bounds: 37, 1, 32, 32
+BulletBill/missile
+  bounds: 1, 35, 32, 32
 ChompFlower/chomp
-  bounds: 1, 1, 32, 64
+  bounds: 35, 69, 32, 64
 ChompFlower/fall
-  bounds: 35, 1, 64, 64
+  bounds: 35, 135, 64, 64
 ChompFlower/rise
-  bounds: 1, 67, 64, 64
+  bounds: 1, 201, 64, 64
+FireFlower/fall
+  bounds: 1, 267, 64, 64
+FireFlower/fire
+  bounds: 35, 35, 32, 32
+FireFlower/rise
+  bounds: 1, 333, 64, 64
 Goomba/smashed
-  bounds: 67, 67, 16, 16
+  bounds: 1, 1, 16, 16
 Goomba/walk
-  bounds: 85, 67, 16, 32
+  bounds: 19, 1, 16, 32
 GreenKoopa/walk
-  bounds: 1, 133, 32, 64
+  bounds: 69, 69, 32, 64
 GreenKoopaShell/shell
-  bounds: 35, 133, 32, 32
+  bounds: 69, 35, 32, 32
 RedKoopa/walk
-  bounds: 69, 133, 32, 64
+  bounds: 1, 135, 32, 64
 RedKoopaShell/shell
-  bounds: 1, 199, 32, 32
+  bounds: 1, 69, 32, 32

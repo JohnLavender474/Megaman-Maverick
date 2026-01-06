@@ -172,8 +172,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             if (!smashed && !knockedToDeath && feet.getEntity() == megaman) {
                 smashed = true
 
-                spawnWhackForOverlap(feet.getShape())
-
+                spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
                 spawnFloatingPoints(FloatingPointsType.POINTS100)
 
                 megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
@@ -255,7 +254,6 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         knockedToDeath = true
         body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
         requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
-
-        spawnWhackForOverlap(shellBounds)
+        spawnWhackForOverlap(body.getBounds(), shellBounds)
     }
 }

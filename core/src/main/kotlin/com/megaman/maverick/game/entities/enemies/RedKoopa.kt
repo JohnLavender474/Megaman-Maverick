@@ -175,7 +175,7 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 destroy()
 
                 spawnShell()
-                spawnWhackForOverlap(feet.getShape())
+                spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
                 spawnFloatingPoints(FloatingPointsType.POINTS100)
 
                 megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
@@ -314,7 +314,6 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         knockedToDeath = true
         body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
         requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
-
-        spawnWhackForOverlap(shellBounds)
+        spawnWhackForOverlap(body.getBounds(), shellBounds)
     }
 }

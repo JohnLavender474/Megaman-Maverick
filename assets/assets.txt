@@ -152,6 +152,7 @@ sounds/jet.wav
 sounds/shake.wav
 sounds/liftoff.wav
 sounds/electric_1.wav
+sounds/smb3_thwomp.wav
 sounds/bassy_blast.wav
 sounds/boss_door.wav
 sounds/beam_in.wav
@@ -969,7 +970,12 @@ sprites/frames/SMB3_Enemies/ChompFlower/chomp.png
 sprites/frames/SMB3_Enemies/ChompFlower/rise.png
 sprites/frames/SMB3_Enemies/Goomba/smashed.png
 sprites/frames/SMB3_Enemies/Goomba/walk.png
+sprites/frames/SMB3_Enemies/FireFlower/fall.png
+sprites/frames/SMB3_Enemies/FireFlower/fire.png
+sprites/frames/SMB3_Enemies/FireFlower/rise.png
 sprites/frames/SMB3_Enemies/RedKoopaShell/shell.png
+sprites/frames/SMB3_Enemies/BulletBill/launcher.png
+sprites/frames/SMB3_Enemies/BulletBill/missile.png
 sprites/frames/SMB3_Enemies/RedKoopa/walk.png
 sprites/frames/SMB3_Enemies/GreenKoopaShell/shell.png
 sprites/frames/SMB3_Enemies/GreenKoopa/walk.png
@@ -3206,6 +3212,7 @@ sprites/piskel/Death_Bomb.piskel
 sprites/piskel/Cokeyro.piskel
 sprites/piskel/CannoHoney.piskel
 sprites/piskel/MegamanFire.piskel
+sprites/piskel/FireFlower.piskel
 sprites/piskel/Bits.piskel
 sprites/piskel/large_swing.piskel
 sprites/piskel/SteamRoller.piskel

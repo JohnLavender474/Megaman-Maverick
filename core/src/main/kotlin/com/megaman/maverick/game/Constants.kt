@@ -50,6 +50,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val SMOKE = "smoke"
     const val INNER = "inner"
     const val ALLOW = "allow"
     const val CHANGE = "change"
@@ -287,6 +288,7 @@ object ConstKeys {
     const val FIXTURE = "fixture"
     const val FIXTURES = "fixtures"
     const val BODY = "body"
+    const val BODY_TYPE = "body_type"
     const val BODIES = "bodies"
     const val SLOW = "slow"
     const val OBJECT = "object"

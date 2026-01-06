@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
@@ -79,6 +80,10 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     private var canDamage = true
 
+    private var spawnSmoke = true
+
+    private val collisionsToIgnore = ObjectSet<Int>()
+
     override fun init() {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -115,6 +120,24 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         burstDirection = Direction.UP
 
         canDamage = spawnProps.getOrDefault(ConstKeys.DAMAGER, true, Boolean::class)
+
+        spawnSmoke = spawnProps.getOrDefault(ConstKeys.SMOKE, true, Boolean::class)
+
+        val bodyType = spawnProps.getOrDefault(ConstKeys.BODY_TYPE, BodyType.DYNAMIC, BodyType::class)
+        body.type = bodyType
+
+        if (spawnProps.containsKey(ConstKeys.IGNORE))
+            when (val value = spawnProps.get(ConstKeys.IGNORE)) {
+                is Int -> collisionsToIgnore.add(value)
+                is Iterable<*> -> value.forEach { id -> collisionsToIgnore.add(id as Int) }
+                else -> throw Exception("Unsupported value for ${ConstKeys.IGNORE}: $value")
+            }
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        collisionsToIgnore.clear()
     }
 
     override fun explodeAndDie(vararg params: Any?) {
@@ -134,11 +157,16 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val position = DirectionPositionMapper.getInvertedPosition(burstDirection)
         body.positionOnPoint(overlap.toGameRectangle().getPositionPoint(position), position)
 
+        body.type = BodyType.DYNAMIC
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = shieldFixture.getEntity()
+
+        if (collisionsToIgnore.contains(entity.id)) return
+
         if (owner != FireballBar || entity !is ShieldAttacker) {
             body.physics.velocity.x *= -1f
             requestToPlaySound(SoundAsset.DINK_SOUND, false)
@@ -165,21 +193,23 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         if (burstCullTimer.isFinished()) {
             destroy()
 
-            val position = when (burstDirection) {
-                Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
-                Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
-                Direction.LEFT -> body.getPositionPoint(Position.CENTER_RIGHT)
-                Direction.RIGHT -> body.getPositionPoint(Position.CENTER_LEFT)
-            }
+            if (spawnSmoke) {
+                val position = when (burstDirection) {
+                    Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
+                    Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
+                    Direction.LEFT -> body.getPositionPoint(Position.CENTER_RIGHT)
+                    Direction.RIGHT -> body.getPositionPoint(Position.CENTER_LEFT)
+                }
 
-            val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
-            puff.spawn(
-                props(
-                    ConstKeys.OWNER pairTo owner,
-                    ConstKeys.POSITION pairTo position,
-                    ConstKeys.DIRECTION pairTo burstDirection
+                val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
+                puff.spawn(
+                    props(
+                        ConstKeys.OWNER pairTo owner,
+                        ConstKeys.POSITION pairTo position,
+                        ConstKeys.DIRECTION pairTo burstDirection
+                    )
                 )
-            )
+            }
         }
     })
 
@@ -195,6 +225,9 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+            if (block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || collisionsToIgnore.contains(block.id))
+                return@setHitByBlockReceiver
+
             if (burstOnHitBlock) explodeAndDie(feetFixture.getShape().getBoundingRectangle(), block.body.getBounds())
         }
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f

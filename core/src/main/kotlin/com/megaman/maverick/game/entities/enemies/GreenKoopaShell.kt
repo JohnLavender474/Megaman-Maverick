@@ -186,8 +186,7 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         state = GreenKoopaShellState.KNOCKED_TO_DEATH
         body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
         requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
-
-        spawnWhackForOverlap(shellBounds)
+        spawnWhackForOverlap(body.getBounds(), shellBounds)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -209,7 +208,7 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
             if (entity is Megaman) {
                 if (state == GreenKoopaShellState.IDLE) startRolling()
 
-                spawnWhackForOverlap(feet.getShape())
+                spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
 
                 megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 requestToPlaySound(SoundAsset.SWIM_SOUND, false)

@@ -250,9 +250,9 @@ abstract class AbstractEnemy(
             body.getX() > megaman.body.getX() && megaman.facing == Facing.RIGHT
     }
 
-    open fun spawnWhackForOverlap(otherShape: IGameShape2D) {
+    open fun spawnWhackForOverlap(thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val overlap = GameObjectPools.fetch(GameRectangle::class)
-        ShapeUtils.intersectRectangles(body.getBounds(), otherShape.getBoundingRectangle(), overlap)
+        ShapeUtils.intersectRectangles(thisShape.getBoundingRectangle(), otherShape.getBoundingRectangle(), overlap)
 
         val position = overlap.getCenter()
 
