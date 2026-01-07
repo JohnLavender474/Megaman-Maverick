@@ -145,6 +145,12 @@ class FireFlower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         super.onDestroy()
     }
 
+    override fun onHealthDepleted() {
+        GameLogger.debug(TAG, "onHealthDepleted()")
+        super.onHealthDepleted()
+        spawnFloatingPoints()
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta -> stateLoopHandler.update(delta) }

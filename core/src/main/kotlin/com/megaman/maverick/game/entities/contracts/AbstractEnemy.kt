@@ -30,6 +30,7 @@ import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
@@ -262,7 +263,33 @@ abstract class AbstractEnemy(
         playSoundNow(SoundAsset.SMB3_KICK_SOUND, false)
     }
 
-    open fun spawnFloatingPoints(pointsType: FloatingPointsType) {
+    open fun spawnFloatingPoints() {
+        var floatingPointsType = FloatingPointsType.POINTS100
+
+        val timeSinceLastFloatingPoints =
+            game.getProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, Float::class)!!
+
+        if (timeSinceLastFloatingPoints < ConstVals.AGGREGATE_FLOATING_POINTS_DUR) {
+            val previousFloatingPointsType =
+                game.getProperty(ConstKeys.LAST_FLOATING_POINTS_TYPE, FloatingPointsType::class)
+
+            if (previousFloatingPointsType != null &&
+                previousFloatingPointsType.ordinal < FloatingPointsType.entries.size - 1
+            ) floatingPointsType = FloatingPointsType.entries[previousFloatingPointsType.ordinal + 1]
+        }
+
+        game.putProperty(ConstKeys.LAST_FLOATING_POINTS_TYPE, floatingPointsType)
+        game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, 0f)
+
+        val pointsToAdd = floatingPointsType.points
+        if (pointsToAdd != null) {
+            val currentPoints = game.getOrDefaultProperty(ConstKeys.LEVEL_POINTS, 0, Int::class)
+            game.putProperty(ConstKeys.LEVEL_POINTS, currentPoints + pointsToAdd)
+        }
+
+        if (floatingPointsType == FloatingPointsType.ONE_UP && megaman.lives.translate(1))
+            requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
+
         val position = when (megaman.direction) {
             Direction.UP -> GameObjectPools.fetch(Vector2::class)
                 .set(
@@ -298,7 +325,7 @@ abstract class AbstractEnemy(
                 )
         }
 
-        FloatingPoints.spawnFloatingPoints(pointsType, position, megaman.direction)
+        FloatingPoints.spawnFloatingPoints(floatingPointsType, position, megaman.direction)
     }
 
     override fun getType() = EntityType.ENEMY

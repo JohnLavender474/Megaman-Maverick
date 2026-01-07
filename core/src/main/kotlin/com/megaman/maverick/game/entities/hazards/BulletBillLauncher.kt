@@ -34,6 +34,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.enemies.BulletBill
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -92,6 +93,11 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (!overlapsGameCamera()) {
+            launchTimer.reset()
+            return@UpdatablesComponent
+        }
+
         launchTimer.update(delta)
         if (launchTimer.isFinished()) {
             launchBulletBill()

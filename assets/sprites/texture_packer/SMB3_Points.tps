@@ -173,7 +173,15 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/SMB3_Points/one_up.png</key>
             <key type="filename">../frames/SMB3_Points/points100.png</key>
+            <key type="filename">../frames/SMB3_Points/points1000.png</key>
+            <key type="filename">../frames/SMB3_Points/points200.png</key>
+            <key type="filename">../frames/SMB3_Points/points2000.png</key>
+            <key type="filename">../frames/SMB3_Points/points400.png</key>
+            <key type="filename">../frames/SMB3_Points/points4000.png</key>
+            <key type="filename">../frames/SMB3_Points/points800.png</key>
+            <key type="filename">../frames/SMB3_Points/points8000.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

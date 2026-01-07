@@ -1,8 +1,24 @@
 SMB3_Points.png
-size: 18, 18
+size: 54, 54
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 pma: false
-points100
+one_up
   bounds: 1, 1, 16, 16
+points100
+  bounds: 19, 1, 16, 16
+points200
+  bounds: 37, 1, 16, 16
+points400
+  bounds: 1, 19, 16, 16
+points800
+  bounds: 19, 19, 16, 16
+points1000
+  bounds: 37, 19, 16, 16
+points2000
+  bounds: 1, 37, 16, 16
+points4000
+  bounds: 19, 37, 16, 16
+points8000
+  bounds: 37, 37, 16, 16

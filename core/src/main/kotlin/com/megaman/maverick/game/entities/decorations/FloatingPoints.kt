@@ -57,8 +57,16 @@ class FloatingPoints(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    enum class FloatingPointsType(val points: Int) {
-        POINTS100(100)
+    enum class FloatingPointsType(val points: Int? = null) {
+        POINTS100(100),
+        POINTS200(200),
+        POINTS400(400),
+        POINTS800(800),
+        POINTS1000(1000),
+        POINTS2000(2000),
+        POINTS4000(4000),
+        POINTS8000(8000),
+        ONE_UP(null)
     }
 
     override lateinit var direction: Direction

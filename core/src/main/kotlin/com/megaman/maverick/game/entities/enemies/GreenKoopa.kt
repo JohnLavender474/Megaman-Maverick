@@ -20,6 +20,7 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
@@ -41,10 +42,11 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.utils.AnimationUtils
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
@@ -106,6 +108,24 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         bumpedNoDmgTimer.setToEnd()
     }
 
+    override fun canBeDamagedBy(damager: IDamager) = damager is Fireball || super.canBeDamagedBy(damager)
+
+    override fun takeDamageFrom(damager: IDamager): Boolean {
+        if (damager is Fireball) {
+            val damagerBounds = damager.body.fixtures
+                .get(FixtureType.DAMAGER)
+                .first()
+                .getShape()
+                .getBoundingRectangle()
+
+            getKnockedToDeath(damagerBounds)
+
+            return false
+        }
+
+        return super.takeDamageFrom(damager)
+    }
+
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
@@ -115,7 +135,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
-        spawnFloatingPoints(FloatingPointsType.POINTS100)
+        spawnFloatingPoints()
     }
 
     override fun canDamage(damageable: IDamageable) = bumpedNoDmgTimer.isFinished() && super.canDamage(damageable)
@@ -178,7 +198,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
                 spawnShell()
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
-                spawnFloatingPoints(FloatingPointsType.POINTS100)
+                spawnFloatingPoints()
 
                 megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 playSoundNow(SoundAsset.SWIM_SOUND, false)
@@ -257,11 +277,10 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         )
         .build()
 
-
     private fun getKnockedToDeath(shellBounds: GameRectangle) {
         knockedToDeath = true
-        body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
-        requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
+        spawnFloatingPoints()
         spawnWhackForOverlap(body.getBounds(), shellBounds)
+        body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
     }
 }

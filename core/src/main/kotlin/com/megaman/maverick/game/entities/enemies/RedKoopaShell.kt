@@ -117,7 +117,7 @@ class RedKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
-        spawnFloatingPoints(FloatingPointsType.POINTS100)
+        spawnFloatingPoints()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

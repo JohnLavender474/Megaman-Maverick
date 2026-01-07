@@ -31,7 +31,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.world.body.*
@@ -76,6 +75,12 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
 
         knockedToDeath = false
         knockabilityDelayTimer.reset()
+    }
+
+    override fun onHealthDepleted() {
+        GameLogger.debug(TAG, "onHealthDepleted()")
+        super.onHealthDepleted()
+        spawnFloatingPoints()
     }
 
     override fun onDestroy() {
@@ -124,7 +129,7 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
                 knockedToDeath = true
 
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
-                spawnFloatingPoints(FloatingPointsType.POINTS100)
+                spawnFloatingPoints()
 
                 megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 playSoundNow(SoundAsset.SWIM_SOUND, false)

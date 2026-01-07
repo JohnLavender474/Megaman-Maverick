@@ -41,7 +41,6 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -124,7 +123,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
-        spawnFloatingPoints(FloatingPointsType.POINTS100)
+        spawnFloatingPoints()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -173,7 +172,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                 smashed = true
 
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
-                spawnFloatingPoints(FloatingPointsType.POINTS100)
+                spawnFloatingPoints()
 
                 megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 requestToPlaySound(SoundAsset.SWIM_SOUND, false)
@@ -252,6 +251,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     private fun getKnockedToDeath(shellBounds: GameRectangle) {
         knockedToDeath = true
+        spawnFloatingPoints()
         body.physics.velocity.y = KNOCKED_TO_DEATH_BUMP * ConstVals.PPM
         requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
         spawnWhackForOverlap(body.getBounds(), shellBounds)

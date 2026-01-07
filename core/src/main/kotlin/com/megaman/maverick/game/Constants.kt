@@ -20,7 +20,6 @@ object ConstVals {
     const val STANDARD_RESISTANCE_Y = 4f
     const val MAX_HEALTH = 30
     const val MIN_HEALTH = 0
-    const val BOSS_DROP_DOWN_DURATION = 0.25f
     const val MEGAMAN_MAVERICK_FONT = "Megaman10Font.ttf"
     const val UI_ARROW_BLINK_DUR = 0.3f
     const val ROOM_TRANS_DELAY_DURATION = 0.35f
@@ -47,11 +46,14 @@ object ConstVals {
     const val MIN_CURRENCY = 0
     const val MAX_CURRENCY = 999
     const val STANDARD_TRAIL_SPRITE_DELAY = 0.1f
+    const val AGGREGATE_FLOATING_POINTS_DUR = 1f
 }
 
 object ConstKeys {
+    const val LEVEL_POINTS = "level_points"
+    const val TIME_SINCE_LAST_FLOATING_POINTS = "time_since_last_floating_points"
+    const val LAST_FLOATING_POINTS_TYPE = "last_floating_points_type"
     const val SMOKE = "smoke"
-    const val INNER = "inner"
     const val ALLOW = "allow"
     const val CHANGE = "change"
     const val HIT_BY_SHIELD = "hit_by_shield"
@@ -62,7 +64,6 @@ object ConstKeys {
     const val CREATE = "create"
     const val OBSTACLE = "obstacle"
     const val POINT = "point"
-    const val AUTO = "auto"
     const val HAS = "has"
     const val SHATTER = "shatter"
     const val PAUSE = "pause"
@@ -73,21 +74,17 @@ object ConstKeys {
     const val FLAME = "flame"
     const val HARD_MODE_ONLY = "hard_mode_only"
     const val NORMAL_MODE_ONLY = "normal_mode_only"
-    const val DIFFICULTY = "difficulty"
     const val WEAPON = "weapon"
     const val WEAPONS_ATTAINED = "weapons_attained"
-    const val CUSTOM = "custom"
     const val ROCK = "rock"
     const val EXCEPTION = "exception"
     const val FOCUS = "focus"
     const val CAN = "can"
     const val DEACTIVATED = "deactivated"
     const val WHOLE = "whole"
-    const val AFTER = "after"
     const val NEST = "nest"
     const val FLAG = "flag"
     const val HARD = "hard"
-    const val OWNED = "owned"
     const val GROW = "grow"
     const val TRANS = "trans"
     const val TANK = "tank"
@@ -100,7 +97,6 @@ object ConstKeys {
     const val GRID = "grid"
     const val HAND = "hand"
     const val RESIDUAL = "residual"
-    const val CHECKPOINT = "checkpoint"
     const val PINK = "pink"
     const val PIECE = "piece"
     const val PIECES = "pieces"
@@ -109,7 +105,6 @@ object ConstKeys {
     const val FROZEN = "frozen"
     const val MOON = "moon"
     const val FIRE = "fire"
-    const val OPTIONS = "options"
     const val EXIT = "exit"
     const val LEVEL = "level"
     const val DEF = "def"
@@ -463,3 +458,5 @@ object ConstFuncs {
         return out
     }
 }
+
+const val OWNED = "owned"

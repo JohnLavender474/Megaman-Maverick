@@ -269,7 +269,7 @@ class MegamanMaverickGame(
             positionY = (ConstVals.VIEW_HEIGHT - 2) * ConstVals.PPM,
             centerX = false
         )
-        val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
+        // val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
         /*
         val megamanPosTextSupplier: () -> String = {
             val pos = megaman.body.getCenter()
@@ -278,7 +278,7 @@ class MegamanMaverickGame(
             "MM POS: $x,$y"
         }
          */
-        setDebugTextSupplier(fpsTextSupplier)
+        // setDebugTextSupplier(fpsTextSupplier)
 
         assMan = AssetManager()
         queueAssets()

@@ -63,6 +63,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.CameraShaker
@@ -182,6 +183,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var gameCamera: RotatableCamera
     private lateinit var gameCameraShaker: CameraShaker
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
+
+    private lateinit var levelPointsText: MegaFontHandle
 
     private val gameCameraPriorPosition = Vector3()
     private var camerasSetToGameCamera = false
@@ -362,6 +365,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         pauseScreen.init()
 
         EntityFactories.init()
+
+        levelPointsText = MegaFontHandle(
+            { game.getProperty(ConstKeys.LEVEL_POINTS, Int::class).toString() },
+            positionX = (ConstVals.VIEW_WIDTH - 1) * ConstVals.PPM,
+            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        )
+        levelPointsText.attachment = Position.TOP_RIGHT
     }
 
     override fun start(tmxMapSource: String) {
@@ -403,13 +413,18 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 "${cameraManagerForRooms.absoluteMinX}, ${cameraManagerForRooms.absoluteMaxX}"
         )
 
+        /*
         if (DISPLAY_ROOMS_DEBUG_TEXT) {
             val roomsTextSupplier: () -> String = {
                 "current=${cameraManagerForRooms.currentGameRoom?.name} / " +
                     "prior=${cameraManagerForRooms.priorGameRoom?.name}"
             }
-            // game.setDebugTextSupplier(roomsTextSupplier)
+            game.setDebugTextSupplier(roomsTextSupplier)
         }
+         */
+
+        game.putProperty(ConstKeys.LEVEL_POINTS, 0)
+        game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, 0f)
     }
 
     override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
@@ -843,6 +858,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     focus.y.epsilonEquals(gameCamera.position.y, 0.25f * ConstVals.PPM)
                 ) game.setFocusSnappedAway(false)
             }
+
+            val timeSinceLastFloatingPoints =
+                game.getProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, Float::class)!!
+            game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, timeSinceLastFloatingPoints + delta)
         }
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
@@ -897,6 +916,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         game.viewports.get(ConstKeys.UI).apply()
         drawer.projectionMatrix = uiCamera.combined
+
+        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) levelPointsText.draw(batch)
 
         bossHealthHandler.draw(drawer)
         playerStatsHandler.draw(drawer)

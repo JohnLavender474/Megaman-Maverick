@@ -78,7 +78,7 @@ class MegaFontHandle : IComparableDrawable<Batch>, IPositional, IDrawableShape {
         centerX: Boolean = true,
         centerY: Boolean = true,
         hidden: Boolean = false,
-        priority: DrawingPriority = DrawingPriority(DrawingSection.FOREGROUND, 10)
+        priority: DrawingPriority = DrawingPriority(DrawingSection.FOREGROUND, 10),
     ) {
         val font = BitmapFontHandle.loadFont(ConstVals.MEGAMAN_MAVERICK_FONT, getDefaultFontSize())
         val attachment = BitmapFontHandle.getAttachment(centerX, centerY)

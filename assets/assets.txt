@@ -1295,7 +1295,15 @@ sprites/frames/Bosses3/ElecDevil/stand.png
 sprites/frames/Bosses3/ElecDevil/turn_to_pieces.png
 sprites/frames/Bosses3/ElecDevil/hand.png
 sprites/frames/Bosses3/ElecDevil/defeated.png
+sprites/frames/SMB3_Points/one_up.png
+sprites/frames/SMB3_Points/points200.png
+sprites/frames/SMB3_Points/points400.png
+sprites/frames/SMB3_Points/points2000.png
+sprites/frames/SMB3_Points/points800.png
 sprites/frames/SMB3_Points/points100.png
+sprites/frames/SMB3_Points/points1000.png
+sprites/frames/SMB3_Points/points4000.png
+sprites/frames/SMB3_Points/points8000.png
 sprites/frames/Faces_old/Distributor Man.png
 sprites/frames/Faces_old/Blunt Man.png
 sprites/frames/Faces_old/Precious Man.png
@@ -2996,6 +3004,7 @@ sprites/piskel/Bunby Tank DX.piskel
 sprites/piskel/ColtonJoe.piskel
 sprites/piskel/Items.piskel
 sprites/piskel/GravityCapsule.piskel
+sprites/piskel/SMB3_Points.piskel
 sprites/piskel/Togglee.piskel
 sprites/piskel/Taketento.piskel
 sprites/piskel/Falling_Icicle.piskel
