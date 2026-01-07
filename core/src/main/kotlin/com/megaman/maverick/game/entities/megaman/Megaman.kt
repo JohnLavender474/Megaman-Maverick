@@ -100,8 +100,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         )
 
         private const val UNDER_WATER_BUBBLE_DELAY = 2f
+
         private const val DEATH_X_OFFSET = 1.5f
         private const val DEATH_Y_OFFSET = 1.5f
+
         private const val TRAIL_SPRITE_DELAY = 0.1f
     }
 

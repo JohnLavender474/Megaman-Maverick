@@ -42,7 +42,6 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
 import com.megaman.maverick.game.entities.decorations.KoopaShellTrailSprite
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
@@ -260,16 +259,12 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         body.postProcess.put(ConstKeys.SCANNER) {
             if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) return@put
 
-            if (isFacing(Facing.LEFT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) {
-                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
-                    facing = Facing.RIGHT
-                }
-            } else if (isFacing(Facing.RIGHT)) {
-                if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
-                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
-                    facing = Facing.LEFT
-                }
+            if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) {
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
+                facing = Facing.RIGHT
+            } else if (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) {
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
+                facing = Facing.LEFT
             }
         }
 
