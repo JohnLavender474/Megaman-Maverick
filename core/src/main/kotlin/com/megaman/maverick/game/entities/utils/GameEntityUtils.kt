@@ -23,6 +23,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
@@ -97,7 +98,7 @@ fun standardOnTeleportStart(entity: GameEntity) {
 }
 
 fun setStandardOnTeleportStartProp(entity: GameEntity) {
-    entity.putProperty(ConstKeys.ON_TELEPORT_START, { standardOnTeleportStart(entity) })
+    entity.putProperty(ConstKeys.ON_TELEPORT_START, { _: ITeleporterEntity -> standardOnTeleportStart(entity) })
 }
 
 fun setStandardOnTeleportContinueProp(entity: GameEntity) {

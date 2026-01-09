@@ -227,10 +227,14 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                 rising -> "rise"
                 else -> "drop"
             }
-            return@key "$type-$key"
+
+            return@key if (frozen) "frozen_$key" else "$type-$key"
         }
         animations = objectMapOf(
-            "frozen" pairTo Animation(atlas!!.findRegion("frozen")),
+            "frozen_down" pairTo Animation(atlas!!.findRegion("Screwie/frozen_down")),
+            "frozen_drop" pairTo Animation(atlas!!.findRegion("Screwie/frozen_drop")),
+            "frozen_rise" pairTo Animation(atlas!!.findRegion("Screwie/frozen_rise")),
+            "frozen_shoot" pairTo Animation(atlas!!.findRegion("Screwie/frozen_shoot")),
             "red-down" pairTo Animation(atlas!!.findRegion("RedScrewie/Down")),
             "red-rise" pairTo Animation(atlas!!.findRegion("RedScrewie/Rise"), 3, 1, 0.1f, false),
             "red-drop" pairTo Animation(atlas!!.findRegion("RedScrewie/Drop"), 3, 1, 0.1f, false),

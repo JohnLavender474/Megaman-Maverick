@@ -18,8 +18,7 @@ enum class BodySense {
     SIDE_TOUCHING_ICE_RIGHT,
     HEAD_TOUCHING_LADDER,
     FEET_TOUCHING_LADDER,
-    TOUCHING_CART,
-    TELEPORTING
+    TOUCHING_CART
 }
 
 interface IBodySenseListener {

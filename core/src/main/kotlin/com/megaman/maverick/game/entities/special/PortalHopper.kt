@@ -81,7 +81,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private var nextBodyDirection: Direction? = null
 
     private val hopQueueMap = OrderedMap<IBodyEntity, GamePair<Timer, Direction>>()
-    private val timerPool = Pool<Timer>(supplier = { Timer() })
+    private val timerPool = Pool(supplier = { Timer() })
 
     private var thisKey = -1
     private var nextKey = -1
@@ -161,6 +161,8 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         }
     }
 
+    override fun isTeleporting(entity: IBodyEntity) = hopQueueMap.containsKey(entity)
+
     private fun receiveEntity(
         entity: IBodyEntity,
         direction: Direction,
@@ -192,8 +194,8 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             Direction.RIGHT -> entity.body.setCenterLeftToPoint(hopPoint)
         }
 
-        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
-        onPortalStart?.invoke()
+        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
+        onPortalStart?.invoke(this)
 
         if (bodyDirection != null) entity.body.direction = bodyDirection
         if (entityDirection != null && entity is IDirectional) entity.direction = entityDirection
@@ -204,7 +206,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         hopQueueMap.put(entity, timer pairTo direction)
     }
 
-    override fun teleportEntity(entity: IBodyEntity) {
+    override fun teleport(entity: IBodyEntity) {
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, nextKey=$nextKey, entity=$entity")
 
         game.eventsMan.submitEvent(

@@ -258,7 +258,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
-                body.isSensing(BodySense.TELEPORTING) ||
                 isAnyBehaviorActive(
                     BehaviorType.CLIMBING,
                     BehaviorType.JETPACKING,
@@ -331,7 +330,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (!game.isCameraRotating()) {
                 body.physics.gravityOn = true
 
-                if (!body.isSensing(BodySense.TELEPORTING) && !teleporting) {
+                if (!teleporting) {
                     val impulseOnEnd =
                         facing.value * ConstVals.PPM * if (body.isSensing(BodySense.IN_WATER))
                             MegamanValues.WATER_AIR_DASH_END_BUMP else MegamanValues.AIR_DASH_END_BUMP

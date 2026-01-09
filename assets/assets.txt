@@ -980,6 +980,8 @@ sprites/frames/SMB3_Enemies/RedKoopa/walk.png
 sprites/frames/SMB3_Enemies/GreenKoopaShell/shell.png
 sprites/frames/SMB3_Enemies/GreenKoopa/walk.png
 sprites/frames/SMB3_Blocks/GoldBreakableBlock/block.png
+sprites/frames/SMB3_Blocks/GreenPipe/middle.png
+sprites/frames/SMB3_Blocks/GreenPipe/top.png
 sprites/frames/Backgrounds4/GlacierBKG_v2.png
 sprites/frames/Backgrounds4/BGNeedle.png
 sprites/frames/Megaman_v2_Axe/run_trans.png
@@ -2413,6 +2415,10 @@ sprites/frames/Enemies1/Beezee/frozen.png
 sprites/frames/Enemies1/SnowSeal/Stand.png
 sprites/frames/Enemies1/SnowSeal/FormSnowball.png
 sprites/frames/Enemies1/SnowSeal/SlapTail.png
+sprites/frames/Enemies1/Screwie/frozen_shoot.png
+sprites/frames/Enemies1/Screwie/frozen_rise.png
+sprites/frames/Enemies1/Screwie/frozen_drop.png
+sprites/frames/Enemies1/Screwie/frozen_down.png
 sprites/frames/Enemies1/FloatingCan/frozen.png
 sprites/frames/Enemies1/FloatingCan/spin.png
 sprites/frames/Enemies1/PreciousTron/fall.png

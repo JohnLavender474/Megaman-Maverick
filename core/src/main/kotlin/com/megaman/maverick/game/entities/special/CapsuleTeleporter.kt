@@ -166,7 +166,10 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         ignoredBodies.clear()
     }
 
-    override fun teleportEntity(entity: IBodyEntity) {
+    override fun isTeleporting(entity: IBodyEntity) =
+        incomingBodies.containsKey(entity) || outgoingBodies.containsKey(entity)
+
+    override fun teleport(entity: IBodyEntity) {
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, entity=$entity")
 
         if (ignoredBodies.contains(entity) || incomingBodies.containsKey(entity) || outgoingBodies.containsKey(entity)) {
@@ -174,8 +177,8 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             return
         }
 
-        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? () -> Unit
-        onPortalStart?.invoke()
+        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
+        onPortalStart?.invoke(this)
 
         outgoingBodies.put(entity, Timer(SEND_DELAY))
     }

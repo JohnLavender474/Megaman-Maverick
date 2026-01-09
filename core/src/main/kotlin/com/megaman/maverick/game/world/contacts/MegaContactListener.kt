@@ -749,15 +749,16 @@ class MegaContactListener(
         // teleporter listener, teleporter
         else if (contact.fixturesMatch(FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER)) {
             printDebugLog(contact, "beginContact(): TeleporterListener-Teleporter, contact=$contact")
+
             val (teleporterListenerFixture, teleporterFixture) = contact.getFixturesInOrder(
                 FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER, out
             )!!
 
             val teleporterListener = teleporterListenerFixture.getEntity() as IBodyEntity
-            teleporterListener.body.setBodySense(BodySense.TELEPORTING, true)
 
             val teleporterEntity = teleporterFixture.getEntity() as ITeleporterEntity
-            teleporterEntity.teleportEntity(teleporterListener)
+
+            if (teleporterEntity.shouldTeleport(teleporterListener)) teleporterEntity.teleport(teleporterListener)
         }
 
         // laser, block
@@ -1300,6 +1301,22 @@ class MegaContactListener(
                 else -> body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
             }
         }
+
+
+        // teleporter listener, teleporter
+        else if (contact.fixturesMatch(FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER)) {
+            printDebugLog(contact, "continueContact(): TeleporterListener-Teleporter, contact=$contact")
+
+            val (teleporterListenerFixture, teleporterFixture) = contact.getFixturesInOrder(
+                FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER, out
+            )!!
+
+            val teleporterListener = teleporterListenerFixture.getEntity() as IBodyEntity
+
+            val teleporterEntity = teleporterFixture.getEntity() as ITeleporterEntity
+
+            if (teleporterEntity.shouldTeleport(teleporterListener)) teleporterEntity.teleport(teleporterListener)
+        }
     }
 
     override fun endContact(contact: Contact, delta: Float) {
@@ -1542,15 +1559,6 @@ class MegaContactListener(
                 feetEntity.body.setBodySense(BodySense.TOUCHING_CART, false)
                 feetEntity.body.removeProperty(ConstKeys.CART)
             }
-        }
-
-        // teleporter listener, teleporter
-        else if (contact.fixturesMatch(FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER)) {
-            printDebugLog(contact, "endContact(): TeleporterListener-Teleporter, contact=$contact")
-            val (teleporterListenerFixture, _) = contact.getFixturesInOrder(
-                FixtureType.TELEPORTER_LISTENER, FixtureType.TELEPORTER, out
-            )!!
-            teleporterListenerFixture.getBody().setBodySense(BodySense.TELEPORTING, false)
         }
     }
 

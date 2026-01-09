@@ -4,5 +4,9 @@ import com.mega.game.engine.entities.contracts.IBodyEntity
 
 interface ITeleporterEntity {
 
-    fun teleportEntity(entity: IBodyEntity)
+    fun shouldTeleport(entity: IBodyEntity) = !isTeleporting(entity)
+
+    fun isTeleporting(entity: IBodyEntity): Boolean
+
+    fun teleport(entity: IBodyEntity)
 }

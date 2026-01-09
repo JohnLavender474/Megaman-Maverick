@@ -252,6 +252,10 @@
             <key type="filename">../frames/Enemies1/PopupCanon/Up.png</key>
             <key type="filename">../frames/Enemies1/RedScrewie/Down.png</key>
             <key type="filename">../frames/Enemies1/ScooperPete/frozen.png</key>
+            <key type="filename">../frames/Enemies1/Screwie/frozen_down.png</key>
+            <key type="filename">../frames/Enemies1/Screwie/frozen_drop.png</key>
+            <key type="filename">../frames/Enemies1/Screwie/frozen_rise.png</key>
+            <key type="filename">../frames/Enemies1/Screwie/frozen_shoot.png</key>
             <key type="filename">../frames/Enemies1/ShieldAttacker/frozen.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/frozen.png</key>
             <key type="filename">../frames/Enemies1/SniperJoe/fire/jump.png</key>

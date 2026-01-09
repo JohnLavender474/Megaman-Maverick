@@ -462,12 +462,13 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         wallSlideNotAllowedTimer.resetDuration(0f)
 
-        putProperty(ConstKeys.ON_TELEPORT_START, {
+        putProperty(ConstKeys.ON_TELEPORT_START, { teleporter: ITeleporterEntity ->
             stopCharging()
             standardOnTeleportStart(this)
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
             teleporting = true
             canBeDamaged = false
+            putProperty(ConstKeys.TELEPORTER, teleporter)
         })
         setStandardOnTeleportContinueProp(this)
         putProperty(ConstKeys.ON_TELEPORT_END, {
@@ -477,11 +478,13 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             teleporting = false
             canBeDamaged = true
             game.setFocusSnappedAway(false)
+            removeProperty(ConstKeys.TELEPORTER)
         })
 
         removeProperty(ConstKeys.FOCUS)
-
         game.setFocusSnappedAway(false)
+
+        removeProperty(ConstKeys.TELEPORTER)
     }
 
     override fun onDestroy() {
@@ -495,6 +498,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED))
 
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+
+        removeProperty(ConstKeys.TELEPORTER)
     }
 
     override fun onHealthDepleted() {
