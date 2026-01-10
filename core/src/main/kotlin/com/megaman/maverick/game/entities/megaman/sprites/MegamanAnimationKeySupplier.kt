@@ -13,6 +13,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetOnGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.Ladder
+import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -37,6 +38,18 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     stunned -> "stunned"
 
     damaged -> "damaged"
+
+    teleporting && megaman.getProperty(ConstKeys.TELEPORTER) is PipePortal -> {
+        val pipePortal = megaman.getProperty(ConstKeys.TELEPORTER) as PipePortal
+
+        val prefix = when {
+            pipePortal.isEntering(this) -> "entering"
+            pipePortal.isExiting(this) -> "exiting"
+            else -> "entering"
+        }
+
+        "${prefix}_pipe"
+    }
 
     isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
 

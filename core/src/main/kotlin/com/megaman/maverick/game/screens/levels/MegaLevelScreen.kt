@@ -256,6 +256,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             interpolationValue = { 20f * Gdx.graphics.deltaTime }
         )
         cameraManagerForRooms.focus = megaman
+        cameraManagerForRooms.onFirstUpdateAfterReset = {
+            tryToPlayCurrentRoomMusic()
+        }
         cameraManagerForRooms.beginTransition = {
             GameLogger.debug(
                 TAG,
@@ -289,6 +292,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             game.getSystem(BehaviorsSystem::class).on = false
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
+
+            tryToPlayCurrentRoomMusic()
         }
         cameraManagerForRooms.continueTransition = {
             eventsMan.submitEvent(
@@ -341,7 +346,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     }
                     eventsMan.submitEvent(Event(roomEvent, props))
                 }
-
                 else -> eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
 
@@ -358,6 +362,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     props(ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom)
                 )
             )
+            tryToPlayCurrentRoomMusic()
         }
 
         gameCameraShaker = CameraShaker(gameCamera)
@@ -462,7 +467,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 game.pause()
             }
-
             EventType.GAME_RESUME -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): game resume --> resume the game"
@@ -470,7 +474,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 game.resume()
             }
-
             EventType.PLAYER_SPAWN -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
@@ -489,19 +492,28 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
 
-                val spawnProps = playerSpawnsMan.currentSpawnProps
-                if (spawnProps == null) throw IllegalStateException("Megaman spawn props are null")
+                val spawnProps =
+                    playerSpawnsMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
                 GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
                 megaman.spawn(spawnProps)
 
                 if (!gameCameraShaker.isFinished) gameCameraShaker.stop()
-            }
 
+                if (cameraManagerForRooms.nextGameRoom()?.properties?.containsKey(ConstKeys.MUSIC) == true) {
+                    val musicAsset = MusicAsset.valueOf(
+                        cameraManagerForRooms
+                            .currentGameRoom!!
+                            .properties
+                            .get(ConstKeys.MUSIC, String::class.java)
+                            .uppercase()
+                    )
+                    musicAsset.let { audioMan.playMusic(it, it.loop) }
+                }
+            }
             EventType.PLAYER_READY -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player ready")
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             }
-
             EventType.PLAYER_JUST_DIED -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player just died --> init death handler"
@@ -522,7 +534,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     game.resume()
                 }
             }
-
             EventType.PLAYER_DONE_DYIN -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player done dying --> respawn player"
@@ -539,32 +550,26 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 playerSpawnEventHandler.init()
                 playerDeathEventHandler.setToEnd()
             }
-
             EventType.ADD_WEAPON_ENERGY -> {
                 val ammo = event.getProperty(ConstKeys.VALUE, Int::class)!!
                 playerStatsHandler.addWeaponEnergy(ammo)
             }
-
             EventType.ADD_PLAYER_HEALTH -> {
                 val health = event.properties.get(ConstKeys.VALUE) as Int
                 playerStatsHandler.addHealth(health)
             }
-
             EventType.ADD_CURRENCY -> {
                 val currency = event.getProperty(ConstKeys.VALUE, Int::class)!!
                 game.state.addCurrency(currency)
             }
-
             EventType.ATTAIN_HEART_TANK -> {
                 val heartTank = event.getProperty(ConstKeys.VALUE, MegaHeartTank::class)!!
                 playerStatsHandler.attain(heartTank)
             }
-
             EventType.ATTAIN_HEALTH_TANK -> {
                 val healthTank = event.getProperty(ConstKeys.VALUE, MegaHealthTank::class)!!
                 playerStatsHandler.attain(healthTank)
             }
-
             EventType.NEXT_ROOM_REQ -> {
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
 
@@ -579,7 +584,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     "onEvent(): next room req --> could not start transition to room: $roomName"
                 )
             }
-
             EventType.GATE_INIT_OPENING -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): gate init opening --> start room transition"
@@ -593,7 +597,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 )
                 systemsToTurnOff.forEach { game.getSystem(it).on = false }
             }
-
             EventType.GATE_INIT_CLOSING -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): gate init closing")
 
@@ -605,7 +608,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 )
                 systemsToTurnOn.forEach { game.getSystem(it).on = true }
             }
-
             EventType.ENTER_BOSS_ROOM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): enter boss room")
 
@@ -630,7 +632,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
                 bossSpawnEventHandler.init(bossMapObject.name, bossSpawnProps)
             }
-
             EventType.BOSS_READY -> {
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
 
@@ -664,13 +665,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     }
                 }
             }
-
             EventType.END_BOSS_SPAWN -> {
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
                 game.engine.systems.forEach { it.on = true }
             }
-
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss defeated")
 
@@ -701,7 +700,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 bossHealthHandler.unset()
             }
-
             EventType.BOSS_DEAD -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss dead")
 
@@ -714,7 +712,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val eventType = if (boss.isEndLevelBoss()) EventType.VICTORY_EVENT else EventType.INTERMEDIATE_BOSS_DEAD
                 eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS pairTo boss)))
             }
-
             EventType.INTERMEDIATE_BOSS_DEAD -> {
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 megaman.canBeDamaged = true
@@ -722,12 +719,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.playMusic(music, true)
             }
-
             EventType.VICTORY_EVENT -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): victory event")
                 endLevelEventHandler.init()
             }
-
             EventType.SHAKE_CAM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): request to shake game cam")
                 if (gameCameraShaker.isFinished) {
@@ -738,7 +733,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     gameCameraShaker.startShake(duration, interval, shakeX, shakeY)
                 }
             }
-
             EventType.END_LEVEL -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): end level")
 
@@ -750,7 +744,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val nextScreen = screenOnCompletion.invoke(game)
                 game.setCurrentScreen(nextScreen.name)
             }
-
             EventType.EDIT_TILED_MAP -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): edit tiled map")
                 val editor = event.getProperty(ConstKeys.EDIT)!! as (TiledMap) -> Unit
@@ -759,19 +752,16 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     editor.invoke(it)
                 }
             }
-
             EventType.SHOW_BACKGROUNDS -> {
                 val backgroundKeys = event.getProperty(ConstKeys.BACKGROUNDS, String::class)!!.split(",")
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): show backgrounds: $backgroundKeys")
                 backgroundKeys.forEach { backgroundsToHide.remove(it) }
             }
-
             EventType.HIDE_BACKGROUNDS -> {
                 val backgroundKeys = event.getProperty(ConstKeys.BACKGROUNDS, String::class)!!.split(",")
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): hide backgrounds: $backgroundKeys")
                 backgroundKeys.forEach { backgroundsToHide.add(it) }
             }
-
             EventType.START_GAME_CAM_ROTATION -> {
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
                 gameCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
@@ -1025,4 +1015,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun resize(width: Int, height: Int) =
         backgrounds.forEach { background -> background.updateViewportSize(width, height) }
+
+    private fun tryToPlayCurrentRoomMusic() {
+        if (cameraManagerForRooms.currentGameRoom?.properties?.containsKey(ConstKeys.MUSIC) == true) {
+            val musicAsset = MusicAsset.valueOf(
+                cameraManagerForRooms
+                    .currentGameRoom!!
+                    .properties
+                    .get(ConstKeys.MUSIC, String::class.java)
+                    .uppercase()
+            )
+            if (musicAsset != audioMan.getCurrentMusicAsset()) musicAsset.let { audioMan.playMusic(it, it.loop) }
+        }
+    }
 }

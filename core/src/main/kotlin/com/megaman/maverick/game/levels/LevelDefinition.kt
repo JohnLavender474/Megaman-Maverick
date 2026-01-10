@@ -11,9 +11,9 @@ import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class LevelDefinition(
     val type: LevelType,
-    val music: MusicAsset,
     val tmxMapSource: String,
     val screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum,
+    val music: MusicAsset? = null,
     val mugshotAtlas: String? = null,
     val mugshotRegion: String? = null
 ) : IAsset {
@@ -114,7 +114,6 @@ enum class LevelDefinition(
     SMB3_1(
         type = LevelType.MARIO_LEVEL,
         tmxMapSource = "SMB3_1.tmx",
-        music = MusicAsset.SMB3_OVERWORLD_MUSIC,
         screenOnCompletion = { ScreenEnum.LEVEL_SCREEN }
     );
 

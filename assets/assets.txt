@@ -190,6 +190,7 @@ sounds/swim.mp3
 sounds/teleport_out.mp3
 sounds/megaman_land.mp3
 sounds/jetpack.wav
+sounds/smb3_pipe.wav
 sounds/pause_menu.mp3
 sounds/1up.mp3
 sounds/wind_1.wav
@@ -3848,6 +3849,7 @@ music/vinnyz_inferno_loop_track.wav
 music/MMX_Vile.mp3
 music/MMX6_Sigma.wav
 music/MMX5_VoltKraken.mp3
+music/smb3_underground.mp3
 music/MMX5_DarkDizzy.mp3
 music/MMX2_MorphMoth.mp3
 music/MMX2_IntroStage.mp3
@@ -3880,6 +3882,7 @@ music/MMX5_IzzyGlow.txt
 music/SnakeManMM3.mp3
 music/Famitard_OC_1.mp3
 music/MMX3_IntroStage.ogg
+music/smb3_overworld_1.mp3
 music/MM2_Boss_Intro.wav
 music/MMX3_IntroStage.txt
 music/MMX_ChillPenguin_Famitard.rtf
@@ -3905,7 +3908,6 @@ music/MM9_GalaxyMan.mp3
 music/MMX5_VoltKraken.txt
 music/vinnyz_main_menu_theme.mp3
 music/MM10_Wily1.mp3
-music/smb3_overworld.mp3
 music/MMX6_Sigma.mp3
 music/MM3_Magnet_Man.mp3
 music/MMX3_NeonTiger.mp3

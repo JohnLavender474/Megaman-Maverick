@@ -50,6 +50,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val THIS = "this"
     const val TELEPORTER = "teleporter"
     const val LEVEL_POINTS = "level_points"
     const val TIME_SINCE_LAST_FLOATING_POINTS = "time_since_last_floating_points"
@@ -107,6 +108,7 @@ object ConstKeys {
     const val MOON = "moon"
     const val FIRE = "fire"
     const val EXIT = "exit"
+    const val ENTER = "enter"
     const val LEVEL = "level"
     const val DEF = "def"
     const val SELECTOR = "selector"

@@ -55,6 +55,7 @@ class MegaAudioManager(
     private val playingSoundsMap = ObjectMap<SoundAsset, Int>()
 
     private var currentMusic: Music? = null
+    private var currentMusicAss: MusicAsset? = null
     private var fadeOutMusicTimer: Timer? = null
     private var musicPaused = false
 
@@ -116,6 +117,7 @@ class MegaAudioManager(
         key as MusicAsset
 
         currentMusic = music.get(key)
+        currentMusicAss = key
 
         if (currentMusic == null) return
 
@@ -130,9 +132,12 @@ class MegaAudioManager(
         fadeOutMusicTimer = null
     }
 
+    fun getCurrentMusicAsset() = currentMusicAss
+
     fun unsetMusic() {
         currentMusic?.stop()
         currentMusic = null
+        currentMusicAss = null
     }
 
     override fun stopMusic(key: Any?) {

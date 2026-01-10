@@ -33,7 +33,8 @@ class CameraManagerForRooms(
     var shouldInterpolate: () -> Boolean = { false },
     var interpolationValue: () -> Float = { 1f },
     var absoluteMinX: Float = 0f,
-    var absoluteMaxX: Float = Float.POSITIVE_INFINITY
+    var absoluteMaxX: Float = Float.POSITIVE_INFINITY,
+    var onFirstUpdateAfterReset: (() -> Unit)? = null,
 ) : Updatable, Resettable {
 
     companion object {
@@ -94,25 +95,28 @@ class CameraManagerForRooms(
 
     private val outRect = Rectangle()
 
-    override fun update(delta: Float) = when {
-        reset -> {
-            GameLogger.debug(TAG, "update(): reset")
+    override fun update(delta: Float) {
+        when {
+            reset -> {
+                GameLogger.debug(TAG, "update(): reset")
 
-            reset = false
+                reset = false
 
-            priorGameRoom = null
-            currentGameRoom = null
+                priorGameRoom = null
+                currentGameRoom = null
 
-            transitionDirection = null
-            transitionState = null
+                transitionDirection = null
+                transitionState = null
 
-            setCameraToFocusable()
+                setCameraToFocusable()
 
-            currentGameRoom = nextGameRoom()
+                currentGameRoom = nextGameRoom()
+
+                onFirstUpdateAfterReset?.invoke()
+            }
+            transitioning -> onTransition(delta)
+            else -> onNoTransition()
         }
-
-        transitioning -> onTransition(delta)
-        else -> onNoTransition()
     }
 
     override fun reset() {
@@ -277,7 +281,7 @@ class CameraManagerForRooms(
         }
     }
 
-    private fun nextGameRoom(): RectangleMapObject? {
+    fun nextGameRoom(): RectangleMapObject? {
         if (focus == null || gameRooms == null) {
             GameLogger.debug(TAG, "nextGameRoom(): no focus, no game rooms, so no next room")
             return null
