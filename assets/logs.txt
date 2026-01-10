@@ -1,6 +1,6 @@
-===== SESSION STARTED: 2026-01-10T00:49:54.142810951 =====
-00:49:56 | DEBUG | PipePortal | init()
-00:49:56 | DEBUG | PipePortal | onSpawn(): spawnProps=Properties({
+===== SESSION STARTED: 2026-01-10T00:52:44.551685412 =====
+00:52:46 | DEBUG | PipePortal | init()
+00:52:46 | DEBUG | PipePortal | onSpawn(): spawnProps=Properties({
 	[direction=up]
 	[bounds=[3600.0,728.0,32.0,16.0]]
 	[x=3600.0]
@@ -13,8 +13,8 @@
 	[y=728.0]
 	[width=32.0]
 })
-00:49:56 | DEBUG | PipePortal | init()
-00:49:56 | DEBUG | PipePortal | onSpawn(): spawnProps=Properties({
+00:52:46 | DEBUG | PipePortal | init()
+00:52:46 | DEBUG | PipePortal | onSpawn(): spawnProps=Properties({
 	[direction=down]
 	[bounds=[3600.0,376.0,32.0,16.0]]
 	[x=3600.0]
@@ -26,8 +26,8 @@
 	[y=376.0]
 	[width=32.0]
 })
-00:49:56 | DEBUG | PipePortal | init()
-00:49:56 | DEBUG | PipePortal | onSpawn(): spawnProps=Properties({
+00:52:46 | DEBUG | PipePortal | init()
+00:52:46 | DEBUG | PipePortal | onSpawn(): spawnProps=Properties({
 	[direction=down]
 	[bounds=[4528.0,376.0,32.0,16.0]]
 	[x=4528.0]
@@ -40,26 +40,26 @@
 	[y=376.0]
 	[width=32.0]
 })
-00:50:29 | DEBUG | PipePortal | teleport(): entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
-00:50:29 | DEBUG | PipePortal | pullEntityIn(): thisKey=1, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
-00:50:29 | DEBUG | PipePortal | update(): send timer finished; thisKey=1, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
-00:50:29 | DEBUG | PipePortal | onEvent(): event=Event(key=TELEPORT, properties=Properties({
+00:53:17 | DEBUG | PipePortal | teleport(): entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
+00:53:17 | DEBUG | PipePortal | pullEntityIn(): thisKey=1, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
+00:53:17 | DEBUG | PipePortal | update(): send timer finished; thisKey=1, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
+00:53:17 | DEBUG | PipePortal | onEvent(): event=Event(key=TELEPORT, properties=Properties({
 	[key=2]
 	[type=exit]
 	[entity={ Megaman:[id=21, dead=false, hashCode=178325065] }]
 }))
-00:50:29 | DEBUG | PipePortal | onEvent(): event=Event(key=TELEPORT, properties=Properties({
+00:53:17 | DEBUG | PipePortal | onEvent(): event=Event(key=TELEPORT, properties=Properties({
 	[key=2]
 	[type=exit]
 	[entity={ Megaman:[id=21, dead=false, hashCode=178325065] }]
 }))
-00:50:29 | DEBUG | PipePortal | pushEntityOut(): thisKey=2, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
-00:50:29 | DEBUG | PipePortal | onEvent(): event=Event(key=TELEPORT, properties=Properties({
+00:53:17 | DEBUG | PipePortal | pushEntityOut(): thisKey=2, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
+00:53:17 | DEBUG | PipePortal | onEvent(): event=Event(key=TELEPORT, properties=Properties({
 	[key=2]
 	[type=exit]
 	[entity={ Megaman:[id=21, dead=false, hashCode=178325065] }]
 }))
-00:50:30 | DEBUG | PipePortal | update(): receive timer finished; thisKey=2, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
-00:50:40 | DEBUG | PipePortal | onDestroy()
-00:50:40 | DEBUG | PipePortal | onDestroy()
-00:50:40 | DEBUG | PipePortal | onDestroy()
+00:53:18 | DEBUG | PipePortal | update(): receive timer finished; thisKey=2, entity={ Megaman:[id=21, dead=false, hashCode=178325065] }
+00:53:28 | DEBUG | PipePortal | onDestroy()
+00:53:28 | DEBUG | PipePortal | onDestroy()
+00:53:28 | DEBUG | PipePortal | onDestroy()
