@@ -43,7 +43,6 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
@@ -92,6 +91,15 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         addComponent(defineAnimationsComponent())
     }
 
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
+        val thisId = spawnProps.get(ConstKeys.ID, Int::class)!!
+
+        val shells = MegaGameEntities.getOfTag(RedKoopaShell.TAG)
+        return !shells.any { (it as RedKoopaShell).koopaId == thisId }
+    }
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
@@ -101,11 +109,8 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         body.setBottomCenterToPoint(position)
 
         body.forEachFixture { it.setActive(true) }
-
         facing = if (megaman.body.getBounds().getX() < position.x) Facing.LEFT else Facing.RIGHT
-
         knockedToDeath = false
-
         bumpedNoDmgTimer.setToEnd()
     }
 
@@ -169,6 +174,7 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val shell = MegaEntityFactory.fetch(RedKoopaShell::class)!!
         shell.spawn(
             props(
+                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo id,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )

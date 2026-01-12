@@ -185,6 +185,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var cameraManagerForRooms: CameraManagerForRooms
 
     private lateinit var levelPointsText: MegaFontHandle
+    private lateinit var coinsText: MegaFontHandle
 
     private val gameCameraPriorPosition = Vector3()
     private var camerasSetToGameCamera = false
@@ -372,11 +373,18 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EntityFactories.init()
 
         levelPointsText = MegaFontHandle(
-            { game.getProperty(ConstKeys.LEVEL_POINTS, Int::class).toString() },
-            positionX = (ConstVals.VIEW_WIDTH - 1) * ConstVals.PPM,
+            { "POINTS: " + game.getProperty(ConstKeys.LEVEL_POINTS, Int::class).toString() },
+            positionX = (ConstVals.VIEW_WIDTH - 0.5f) * ConstVals.PPM,
             positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
         levelPointsText.attachment = Position.TOP_RIGHT
+
+        coinsText = MegaFontHandle(
+            { "COINS: " + game.getProperty(ConstKeys.COINS, Int::class).toString() },
+            positionX = 0.5f * ConstVals.PPM,
+            positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        )
+        coinsText.attachment = Position.TOP_LEFT
     }
 
     override fun start(tmxMapSource: String) {
@@ -428,6 +436,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
          */
 
+        game.putProperty(ConstKeys.COINS, 0)
         game.putProperty(ConstKeys.LEVEL_POINTS, 0)
         game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, 0f)
     }
@@ -907,7 +916,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         game.viewports.get(ConstKeys.UI).apply()
         drawer.projectionMatrix = uiCamera.combined
 
-        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) levelPointsText.draw(batch)
+        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) {
+            levelPointsText.draw(batch)
+            coinsText.draw(batch)
+        }
 
         bossHealthHandler.draw(drawer)
         playerStatsHandler.draw(drawer)

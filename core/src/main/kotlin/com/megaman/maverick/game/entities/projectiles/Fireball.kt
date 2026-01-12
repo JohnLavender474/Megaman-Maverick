@@ -66,7 +66,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         private const val BURST_CULL_DUR = 0.5f
 
-        private const val NORMAL_SIZE = 0.25f
+        private const val NORMAL_SIZE = 0.5f
         private const val BURST_SIZE = 1f
 
         private val regions = ObjectMap<String, TextureRegion>()

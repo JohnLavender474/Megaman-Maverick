@@ -136,7 +136,7 @@ class FireFlower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
                 ConstKeys.BLOCK,
                 RectangleMapObject::class
             )!!.properties.get(ConstKeys.ID, Int::class.java)
-            else -> 0
+            else -> -1
         }
     }
 

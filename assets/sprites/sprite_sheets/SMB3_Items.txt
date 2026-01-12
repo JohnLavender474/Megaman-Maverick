@@ -1,0 +1,8 @@
+SMB3_Items.png
+size: 34, 34
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+coin
+  bounds: 1, 1, 32, 32

@@ -186,6 +186,12 @@ object MegamanAnimationDefs {
         "climb_still_slash1" pairTo AnimationDef(
             3, 1, gdxArrayOf(0.025f, DEFAULT_SLASH_FRAME_DUR, DEFAULT_SLASH_FRAME_DUR), false, true
         ),
+
+        "pipe_portal_entering_up" pairTo AnimationDef(5, 1, 0.05f, false),
+        "pipe_portal_entering_down" pairTo AnimationDef(5, 1, 0.05f, false),
+
+        "pipe_portal_exiting_up" pairTo AnimationDef(5, 1, 0.05f, false),
+        "pipe_portal_exiting_down" pairTo AnimationDef(5, 1, 0.05f, false),
     )
 
     fun get() = defs

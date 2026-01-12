@@ -42,13 +42,15 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     teleporting && megaman.getProperty(ConstKeys.TELEPORTER) is PipePortal -> {
         val pipePortal = megaman.getProperty(ConstKeys.TELEPORTER) as PipePortal
 
-        val prefix = when {
+        val action = when {
             pipePortal.isEntering(this) -> "entering"
             pipePortal.isExiting(this) -> "exiting"
             else -> "entering"
         }
 
-        "${prefix}_pipe"
+        val direction = pipePortal.direction.getOpposite()
+
+        "pipe_portal_${action}_${direction.name.lowercase()}"
     }
 
     isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")

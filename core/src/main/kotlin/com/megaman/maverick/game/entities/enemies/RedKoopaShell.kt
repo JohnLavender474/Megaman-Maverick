@@ -43,7 +43,6 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
 import com.megaman.maverick.game.entities.decorations.KoopaShellTrailSprite
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
@@ -66,7 +65,7 @@ class RedKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
 
         private const val KNOCKED_TO_DEATH_BUMP = 5f
 
-        private val OTHER_SHELL_TAGS = objectSetOf(RedKoopaShell.TAG, TAG)
+        private val OTHER_SHELL_TAGS = objectSetOf(TAG, GreenKoopaShell.TAG)
 
         private val animDefs = orderedMapOf(
             "shell" pairTo AnimationDef()
@@ -80,10 +79,11 @@ class RedKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
 
     override var facing = Facing.LEFT
 
+    var koopaId = -1
+        private set
+
     private lateinit var state: RedKoopaShellState
-
     private val tempOut = ObjectSet<MegaGameEntity>()
-
     private val trailSpriteTimer = Timer(ConstVals.STANDARD_TRAIL_SPRITE_DELAY)
 
     override fun init() {
@@ -104,14 +104,16 @@ class RedKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         body.setBottomCenterToPoint(position)
 
         state = RedKoopaShellState.IDLE
-
         trailSpriteTimer.reset()
+
+        koopaId = spawnProps.getOrDefault("${ConstKeys.PARENT}_${ConstKeys.ID}", -1, Int::class)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         tempOut.clear()
+        koopaId = -1
     }
 
     override fun onHealthDepleted() {
@@ -126,7 +128,7 @@ class RedKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
             tempOut.clear()
 
             if (state != RedKoopaShellState.KNOCKED_TO_DEATH) {
-                val otherShells = MegaGameEntities.getOfTags(tempOut, RedKoopaShell.Companion.OTHER_SHELL_TAGS)
+                val otherShells = MegaGameEntities.getOfTags(tempOut, OTHER_SHELL_TAGS)
                 for (otherShell in otherShells) {
                     if (otherShell == this) continue
 

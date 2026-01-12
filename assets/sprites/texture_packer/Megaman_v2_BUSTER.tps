@@ -189,6 +189,8 @@
             <key type="filename">../frames/Megaman_v2/jump_down.png</key>
             <key type="filename">../frames/Megaman_v2/jump_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/jump_shoot_down.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_shoot_up.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_up.png</key>
             <key type="filename">../frames/Megaman_v2/run_trans.png</key>
             <key type="filename">../frames/Megaman_v2/run_trans_shoot.png</key>
             <key type="filename">../frames/Megaman_v2/slip.png</key>
@@ -222,6 +224,7 @@
             <key type="filename">../frames/Megaman_v2/groundslide_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/jump_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/jump_down_charge_half.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_up_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/slip_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/stand_charge_half.png</key>
             <key type="filename">../frames/Megaman_v2/swim_charge_half.png</key>
@@ -251,6 +254,7 @@
             <key type="filename">../frames/Megaman_v2/groundslide_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/jump_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/jump_down_charge_full.png</key>
+            <key type="filename">../frames/Megaman_v2/jump_up_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/slip_charge_full.png</key>
             <key type="filename">../frames/Megaman_v2/stand.png</key>
             <key type="filename">../frames/Megaman_v2/stand_charge_full.png</key>
@@ -333,6 +337,24 @@
                 <rect>240,240,480,480</rect>
                 <key>scale9Paddings</key>
                 <rect>240,240,480,480</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2/pipe_portal_entering_down.png</key>
+            <key type="filename">../frames/Megaman_v2/pipe_portal_entering_up.png</key>
+            <key type="filename">../frames/Megaman_v2/pipe_portal_exiting_down.png</key>
+            <key type="filename">../frames/Megaman_v2/pipe_portal_exiting_up.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,60,24,120</rect>
+                <key>scale9Paddings</key>
+                <rect>12,60,24,120</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

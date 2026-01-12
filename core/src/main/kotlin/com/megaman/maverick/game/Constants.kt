@@ -50,6 +50,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val COINS = "coin"
     const val THIS = "this"
     const val TELEPORTER = "teleporter"
     const val LEVEL_POINTS = "level_points"

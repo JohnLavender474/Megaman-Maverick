@@ -42,7 +42,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     companion object {
         const val TAG = "PipePortal"
 
-        private const val TELEPORT_DUR = 0.5f
+        private const val TELEPORT_DUR = 0.25f
     }
 
     override lateinit var direction: Direction
@@ -71,6 +71,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
+        body.fixtures[FixtureType.TELEPORTER].first().setShape(bounds)
 
         direction = Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
 
@@ -81,7 +82,11 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         game.eventsMan.removeListener(this)
+
+        entering.clear()
+        exiting.clear()
     }
 
     override fun onEvent(event: Event) {
@@ -108,7 +113,10 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         exiting.put(entity, Timer(TELEPORT_DUR))
 
-        if (entity == megaman) game.setFocusSnappedAway(false)
+        if (entity == megaman) {
+            game.setFocusSnappedAway(false)
+            entity.putProperty(ConstKeys.TELEPORTER, this)
+        }
 
         requestToPlaySound(SoundAsset.SMB3_PIPE_SOUND, false)
     }
@@ -122,14 +130,17 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         }
 
         val position = DirectionPositionMapper.getPosition(direction)
-        entity.body.positionOnPoint(body.getPositionPoint(position.opposite()), position)
+        entity.body.positionOnPoint(body.getPositionPoint(position), position.opposite())
 
         entering.put(entity, Timer(TELEPORT_DUR))
 
         val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
         onPortalStart?.invoke(this)
 
-        if (entity == megaman) game.setFocusSnappedAway(true)
+        if (entity == megaman) {
+            game.setFocusSnappedAway(true)
+            entity.putProperty(ConstKeys.TELEPORTER, this)
+        }
 
         requestToPlaySound(SoundAsset.SMB3_PIPE_SOUND, false)
     }

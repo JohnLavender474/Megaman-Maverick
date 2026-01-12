@@ -214,6 +214,7 @@ sounds/electric_shock.wav
 sounds/select_ping.mp3
 sounds/pound.wav
 sounds/ice_shard_2.wav
+sounds/smb3_coin.wav
 sounds/dink.mp3
 sounds/asteroid_explode.wav
 sounds/ice_shard_1.wav
@@ -651,7 +652,9 @@ sprites/frames/Decorations1/StarknerTrailSprite/blue.png
 sprites/frames/Megaman_v2/climb_still_shoot.png
 sprites/frames/Megaman_v2/crouch_charge_half.png
 sprites/frames/Megaman_v2/run_trans.png
+sprites/frames/Megaman_v2/pipe_portal_entering_down.png
 sprites/frames/Megaman_v2/climb_charge_half.png
+sprites/frames/Megaman_v2/pipe_portal_entering_up.png
 sprites/frames/Megaman_v2/cartin_jump_charge_full.png
 sprites/frames/Megaman_v2/airdash_shoot.png
 sprites/frames/Megaman_v2/swim_charge_full.png
@@ -685,6 +688,7 @@ sprites/frames/Megaman_v2/jump_down_charge_full.png
 sprites/frames/Megaman_v2/swim.png
 sprites/frames/Megaman_v2/jump_down_charge_half.png
 sprites/frames/Megaman_v2/groundslide_charge_half.png
+sprites/frames/Megaman_v2/pipe_portal_exiting_up.png
 sprites/frames/Megaman_v2/jump_shoot.png
 sprites/frames/Megaman_v2/wallslide_charge_half.png
 sprites/frames/Megaman_v2/beam.png
@@ -698,6 +702,7 @@ sprites/frames/Megaman_v2/frozen.png
 sprites/frames/Megaman_v2/cartin_jump.png
 sprites/frames/Megaman_v2/run_charge_half.png
 sprites/frames/Megaman_v2/crouch_shoot.png
+sprites/frames/Megaman_v2/pipe_portal_exiting_down.png
 sprites/frames/Megaman_v2/groundslide_charge_full.png
 sprites/frames/Megaman_v2/run_charge_full.png
 sprites/frames/Megaman_v2/climb_finish_charge_half.png
@@ -2575,6 +2580,7 @@ sprites/frames/Enemies1/HeliMet/pop_up.png
 sprites/frames/Enemies1/ScooperPete/dig.png
 sprites/frames/Enemies1/ScooperPete/frozen.png
 sprites/frames/Enemies1/ScooperPete/idle.png
+sprites/frames/SMB3_Items/coin.png
 sprites/frames/Ui2/MegamanSubtitle.png
 sprites/frames/Ui2/TitleScreenBackgroundv2.png
 sprites/frames/Ui2/MegamanTitle.png
@@ -2749,6 +2755,7 @@ sprites/sprite_sheets/SMB3_Blocks.txt
 sprites/sprite_sheets/Items1.png
 sprites/sprite_sheets/Megaman_FLAME_TOSS.png
 sprites/sprite_sheets/MicrowaveMan.png
+sprites/sprite_sheets/SMB3_Items.txt
 sprites/sprite_sheets/GutsTank.txt
 sprites/sprite_sheets/WeaponGet.png
 sprites/sprite_sheets/SMB3_Effects.png
@@ -2779,6 +2786,7 @@ sprites/sprite_sheets/LevelSelectScreen.png
 sprites/sprite_sheets/Backgrounds3.txt
 sprites/sprite_sheets/Megaman_v2_AXE.png
 sprites/sprite_sheets/Bosses.png
+sprites/sprite_sheets/SMB3_Items.png
 sprites/sprite_sheets/PreciousMan.txt
 sprites/sprite_sheets/Platforms1.png
 sprites/sprite_sheets/NukeMan.txt
@@ -2875,6 +2883,7 @@ sprites/texture_packer/Enemies2.tps
 sprites/texture_packer/NukeMan.tps
 sprites/texture_packer/MegamanTrailSprite.tps
 sprites/texture_packer/SMB3_Effects.tps
+sprites/texture_packer/SMB3_Items.tps
 sprites/texture_packer/Megaman_v2_AXE.tps
 sprites/texture_packer/Test.tps
 sprites/texture_packer/BluntMan.tps

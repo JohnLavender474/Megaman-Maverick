@@ -78,10 +78,11 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
 
     override var facing = Facing.LEFT
 
+    var koopaId = -1
+        private set
+
     private lateinit var state: GreenKoopaShellState
-
     private val tempOut = ObjectSet<MegaGameEntity>()
-
     private val trailSpriteTimer = Timer(ConstVals.STANDARD_TRAIL_SPRITE_DELAY)
 
     override fun init() {
@@ -102,14 +103,16 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         body.setBottomCenterToPoint(position)
 
         state = GreenKoopaShellState.IDLE
-
         trailSpriteTimer.reset()
+
+        koopaId = spawnProps.getOrDefault("${ConstKeys.PARENT}_${ConstKeys.ID}", -1, Int::class)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         tempOut.clear()
+        koopaId = -1
     }
 
     override fun onHealthDepleted() {

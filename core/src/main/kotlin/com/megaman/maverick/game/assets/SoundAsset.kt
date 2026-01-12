@@ -85,7 +85,8 @@ enum class SoundAsset(src: String, val seconds: Float) : IAsset {
     SMB3_JUMP_SOUND("smb3_jump.wav", 0.7f),
     SMB3_PLAYER_DOWN_SOUND("smb3_player_down.wav", 3.25f),
     SMB3_THWOMP_SOUND("smb3_thwomp.wav", 0.4f),
-    SMB3_PIPE_SOUND("smb3_pipe.wav", 0.75f);
+    SMB3_PIPE_SOUND("smb3_pipe.wav", 0.75f),
+    SMB3_COIN_SOUND("smb3_coin.wav", 0.9f);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

@@ -91,6 +91,15 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         addComponent(defineAnimationsComponent())
     }
 
+    override fun canSpawn(spawnProps: Properties): Boolean {
+        if (!super.canSpawn(spawnProps)) return false
+
+        val thisId = spawnProps.get(ConstKeys.ID, Int::class)!!
+
+        val shells = MegaGameEntities.getOfTag(GreenKoopaShell.TAG)
+        return !shells.any { (it as GreenKoopaShell).koopaId == thisId }
+    }
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
@@ -98,13 +107,10 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val position =
             spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(position)
-
         body.forEachFixture { it.setActive(true) }
 
         facing = if (megaman.body.getBounds().getX() < position.x) Facing.LEFT else Facing.RIGHT
-
         knockedToDeath = false
-
         bumpedNoDmgTimer.setToEnd()
     }
 
@@ -170,6 +176,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val shell = MegaEntityFactory.fetch(GreenKoopaShell::class)!!
         shell.spawn(
             props(
+                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo id,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )

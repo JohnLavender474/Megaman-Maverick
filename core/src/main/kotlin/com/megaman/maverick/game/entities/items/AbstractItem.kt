@@ -30,6 +30,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
@@ -82,13 +83,23 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
             spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction.name, String::class).uppercase()
         )
 
-        val position = DirectionPositionMapper.getInvertedPosition(direction)
-        val spawn = when {
-            spawnProps.containsKey(ConstKeys.BOUNDS) ->
-                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
-            else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val centered = spawnProps.getOrDefault("${ConstKeys.CENTER}_${ConstKeys.POSITION}", false, Boolean::class)
+        if (centered) {
+            val spawn = when {
+                spawnProps.containsKey(ConstKeys.BOUNDS) ->
+                    spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+                else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            }
+            body.setCenter(spawn)
+        } else {
+            val position = DirectionPositionMapper.getInvertedPosition(direction)
+            val spawn = when {
+                spawnProps.containsKey(ConstKeys.BOUNDS) ->
+                    spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
+                else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+            }
+            body.positionOnPoint(spawn, position)
         }
-        body.positionOnPoint(spawn, position)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         when {
