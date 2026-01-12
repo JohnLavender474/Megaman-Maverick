@@ -16,14 +16,17 @@ import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.bosses.GutsTank
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -138,6 +141,17 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM))
+    headFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) {
+            val shouldMakeBumpSound = when (direction) {
+                Direction.UP -> megaman.body.physics.velocity.y >= 0f
+                Direction.DOWN -> megaman.body.physics.velocity.y <= 0f
+                Direction.LEFT -> megaman.body.physics.velocity.x <= 0f
+                Direction.RIGHT -> megaman.body.physics.velocity.x >= 0f
+            }
+            if (shouldMakeBumpSound) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
+        }
+    }
     headFixture.setRunnable(onBounce)
     body.addFixture(headFixture)
     headFixture.drawingColor = Color.ORANGE

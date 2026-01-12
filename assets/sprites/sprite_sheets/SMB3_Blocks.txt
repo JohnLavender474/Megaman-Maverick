@@ -1,8 +1,16 @@
 SMB3_Blocks.png
-size: 18, 18
+size: 36, 88
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 pma: false
 GoldBreakableBlock/block
   bounds: 1, 1, 16, 16
+GreenPipe/middle
+  bounds: 1, 19, 32, 16
+GreenPipe/top
+  bounds: 1, 37, 32, 16
+QuestionBlock/active
+  bounds: 1, 55, 32, 32
+QuestionBlock/inactive
+  bounds: 19, 1, 16, 16

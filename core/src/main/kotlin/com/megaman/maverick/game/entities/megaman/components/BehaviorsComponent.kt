@@ -14,6 +14,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.buttons.ButtonStatus
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
@@ -23,7 +24,6 @@ import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
-import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -490,7 +490,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
     val climb = object : AbstractBehaviorImpl() {
 
-        private lateinit var ladder: Ladder
+        private lateinit var ladder: IBodyEntity
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove) return false
@@ -504,7 +504,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 ) || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false
 
-            ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)!!
+            ladder = body.getProperty(ConstKeys.LADDER, IBodyEntity::class)!!
 
             val headPos = body.fixtures.get(FixtureType.HEAD)
                 .first().getShape().getBoundingRectangle()
@@ -529,7 +529,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             direction == Direction.DOWN &&
                                 bodyCenter.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
                                 return false
-
                             bodyCenter.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
                                 return false
                         }
@@ -538,7 +537,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             direction == Direction.DOWN &&
                                 bodyCenter.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
                                 return false
-
                             bodyCenter.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
                                 return false
                         }
@@ -548,7 +546,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             direction == Direction.LEFT &&
                                 bodyCenter.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
                                 return false
-
                             bodyCenter.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
                                 return false
                         }
@@ -557,7 +554,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             direction == Direction.LEFT &&
                                 bodyCenter.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
                                 return false
-
                             bodyCenter.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
                                 return false
                         }

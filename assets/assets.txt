@@ -145,6 +145,7 @@ sounds/thump.mp3
 sounds/air_shooter.wav
 sounds/blast1.wav
 sounds/atomic_fire.wav
+sounds/smb3_beanstalk.wav
 sounds/crash_bomber.wav
 sounds/explosion1.mp3
 sounds/disappearing_block.wav
@@ -985,6 +986,8 @@ sprites/frames/SMB3_Enemies/BulletBill/missile.png
 sprites/frames/SMB3_Enemies/RedKoopa/walk.png
 sprites/frames/SMB3_Enemies/GreenKoopaShell/shell.png
 sprites/frames/SMB3_Enemies/GreenKoopa/walk.png
+sprites/frames/SMB3_Blocks/QuestionBlock/inactive.png
+sprites/frames/SMB3_Blocks/QuestionBlock/active.png
 sprites/frames/SMB3_Blocks/GoldBreakableBlock/block.png
 sprites/frames/SMB3_Blocks/GreenPipe/middle.png
 sprites/frames/SMB3_Blocks/GreenPipe/top.png
@@ -1187,6 +1190,7 @@ sprites/frames/Specials1/Togglee/Right.png
 sprites/frames/Specials1/ToxicWater/water.png
 sprites/frames/Specials1/ToxicWater/waves.png
 sprites/frames/Specials1/Cart.png
+sprites/frames/SMB3_Specials/GrowingVine/vine.png
 sprites/frames/Backgrounds5/GlacierCloudsBKG.png
 sprites/frames/Bosses3/RodentMan/shielded.png
 sprites/frames/Bosses3/RodentMan/jump_down_look_straight.png
@@ -2733,6 +2737,7 @@ sprites/frames/Megaman_Old/BeamLand_old.png
 sprites/frames/Megaman_Old/AirDashHalfCharging_old.png
 sprites/frames/Megaman_Old/RunHalfCharging_old.png
 sprites/sprite_sheets/MicrowaveMan.txt
+sprites/sprite_sheets/SMB3_Specials.png
 sprites/sprite_sheets/Megaman_v2_RAT.png
 sprites/sprite_sheets/Backgrounds4.png
 sprites/sprite_sheets/Megaman_v2_FIREBALL.txt
@@ -2791,6 +2796,7 @@ sprites/sprite_sheets/PreciousMan.txt
 sprites/sprite_sheets/Platforms1.png
 sprites/sprite_sheets/NukeMan.txt
 sprites/sprite_sheets/Hazards2.txt
+sprites/sprite_sheets/SMB3_Specials.txt
 sprites/sprite_sheets/LevelSelectScreenV2.png
 sprites/sprite_sheets/SMB3_Blocks.png
 sprites/sprite_sheets/Test.txt
@@ -2929,6 +2935,7 @@ sprites/texture_packer/WintryMan.tps
 sprites/texture_packer/Projectiles2.tps
 sprites/texture_packer/Backgrounds2.tps
 sprites/texture_packer/Enemies1.tps
+sprites/texture_packer/SMB3_Specials.tps
 sprites/texture_packer/MegamanMainMenu.tps
 sprites/texture_packer/TimberWoman.tps
 sprites/texture_packer/Megaman_v2_PRECIOUS.tps

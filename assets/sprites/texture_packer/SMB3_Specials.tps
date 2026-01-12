@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/SMB3_Blocks.txt</filename>
+                <filename>../sprite_sheets/SMB3_Specials.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,8 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/SMB3_Blocks/GoldBreakableBlock/block.png</key>
-            <key type="filename">../frames/SMB3_Blocks/QuestionBlock/inactive.png</key>
+            <key type="filename">../frames/SMB3_Specials/GrowingVine/vine.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -183,40 +182,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>4,4,8,8</rect>
+                <rect>4,8,8,16</rect>
                 <key>scale9Paddings</key>
-                <rect>4,4,8,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/SMB3_Blocks/GreenPipe/middle.png</key>
-            <key type="filename">../frames/SMB3_Blocks/GreenPipe/top.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,4,16,8</rect>
-                <key>scale9Paddings</key>
-                <rect>8,4,16,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/SMB3_Blocks/QuestionBlock/active.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
+                <rect>4,8,8,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -227,7 +195,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/SMB3_Blocks</filename>
+                    <filename>../frames/SMB3_Specials</filename>
                 </array>
             </struct>
         </map>

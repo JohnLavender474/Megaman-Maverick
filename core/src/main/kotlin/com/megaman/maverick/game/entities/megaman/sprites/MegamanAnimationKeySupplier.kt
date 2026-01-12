@@ -4,6 +4,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.equalsAny
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.drawables.sprites.containsRegion
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -12,7 +13,6 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetOnGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.special.Ladder
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -56,7 +56,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     isBehaviorActive(BehaviorType.JETPACKING) -> amendKey("jetpack")
 
     isBehaviorActive(BehaviorType.CLIMBING) -> {
-        val ladder = body.getProperty(ConstKeys.LADDER, Ladder::class)
+        val ladder = body.getProperty(ConstKeys.LADDER, IBodyEntity::class)
         val inLadder = ladder != null && ladder.body.getBounds().contains(body.getCenter())
 
         when {

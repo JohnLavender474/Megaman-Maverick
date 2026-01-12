@@ -68,7 +68,8 @@ enum class TextureAsset(src: String) : IAsset {
     SMB3_POINTS("SMB3_Points.txt"),
     SMB3_EFFECTS("SMB3_Effects.txt"),
     SMB3_BLOCKS("SMB3_Blocks.txt"),
-    SMB3_ITEMS("SMB3_Items.txt");
+    SMB3_ITEMS("SMB3_Items.txt"),
+    SMB3_SPECIALS("SMB3_Specials.txt");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

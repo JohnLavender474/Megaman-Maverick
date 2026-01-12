@@ -31,7 +31,7 @@ interface ISpritesEntity : IGameEntity {
 
     fun putSpritePreProcess(function: UpdateFunction<GameSprite>) = spritesComponent.putPreProcess(function)
 
-    fun putSpritePreProcess(key: String, updateFunction: UpdateFunction<GameSprite>) =
+    fun putSpritePreProcess(key: Any, updateFunction: UpdateFunction<GameSprite>) =
         spritesComponent.putPreProcess(key, updateFunction)
 
     fun clearSpritePreProcess() = spritesComponent.clearPreProcess()

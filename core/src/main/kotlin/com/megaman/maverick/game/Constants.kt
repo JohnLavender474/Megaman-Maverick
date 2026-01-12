@@ -50,6 +50,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val CONTACT = "contact"
     const val COINS = "coin"
     const val THIS = "this"
     const val TELEPORTER = "teleporter"
@@ -424,6 +425,7 @@ object ConstKeys {
     const val PLAYER = "player"
     const val ENEMIES = "enemies"
     const val ITEMS = "items"
+    const val ITEM = "item"
     const val BLOCKS = "blocks"
     const val TRIGGERS = "triggers"
     const val FOREGROUNDS = "foregrounds"

@@ -52,8 +52,10 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private val launchTimer = Timer(LAUNCH_DELAY)
-
     private val collisionIdsToIgnore = Array<Int>()
+
+    private var canShootLeft = true
+    private var canShootRight = true
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -84,6 +86,13 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
                 collisionIdsToIgnore.add(id)
             }
         }
+
+        canShootLeft = spawnProps.getOrDefault(
+            "${ConstKeys.CAN}_${ConstKeys.SHOOT}_${ConstKeys.LEFT}", true, Boolean::class
+        )
+        canShootRight = spawnProps.getOrDefault(
+            "${ConstKeys.CAN}_${ConstKeys.SHOOT}_${ConstKeys.RIGHT}", true, Boolean::class
+        )
     }
 
     override fun onDestroy() {
@@ -93,7 +102,7 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!overlapsGameCamera()) {
+        if (!overlapsGameCamera() || megaman.dead || !megaman.ready) {
             launchTimer.reset()
             return@UpdatablesComponent
         }
@@ -126,6 +135,10 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
 
     private fun launchBulletBill() {
         val facing = if (body.getX() < megaman.body.getX()) Facing.RIGHT else Facing.LEFT
+
+        if ((facing == Facing.LEFT && !canShootLeft) ||
+            (facing == Facing.RIGHT && !canShootRight)
+        ) return
 
         val position = GameObjectPools.fetch(Vector2::class)
             .set(

@@ -99,7 +99,6 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
                 putCullable(ConstKeys.CULL_ROOM, cullable)
             }
-
             else -> removeCullable(ConstKeys.CULL_ROOM)
         }
 
