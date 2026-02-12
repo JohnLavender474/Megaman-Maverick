@@ -214,8 +214,8 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
-        val component = SpritesComponent(sprite)
-        component.putPreProcess { _, _ ->
+        val component = SpritesComponent(TAG pairTo sprite)
+        component.putPreProcess(TAG) { _, _ ->
             sprite.setFlip(facing == Facing.RIGHT, false)
             sprite.hidden = damageBlink
 

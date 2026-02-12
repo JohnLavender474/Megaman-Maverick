@@ -157,13 +157,13 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game, size =
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
         sprite.setSize(2f * ConstVals.PPM)
-        val spritesComponent = SpritesComponent(sprite)
-        spritesComponent.putPreProcess { _, _ ->
+        val component = SpritesComponent(TAG pairTo sprite)
+        component.putPreProcess(TAG) { _, _ ->
             sprite.setCenter(body.getCenter())
             sprite.setFlip(isFacing(Facing.LEFT), false)
             sprite.hidden = damageBlink
         }
-        return spritesComponent
+        return component
     }
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
