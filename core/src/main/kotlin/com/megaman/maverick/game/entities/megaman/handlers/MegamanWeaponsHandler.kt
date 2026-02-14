@@ -310,9 +310,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         )
         MegamanWeapon.INFERNAL_BARRAGE -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
-            normalCost = { 3 },
-            halfChargedCost = { 5 },
-            fullyChargedCost = { 7 },
+            normalCost = { 5 },
+            halfChargedCost = { 7 },
+            fullyChargedCost = { 9 },
             chargeable = { _ -> false /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ },
             canFireWeapon = { _, _ -> true /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ }
         )

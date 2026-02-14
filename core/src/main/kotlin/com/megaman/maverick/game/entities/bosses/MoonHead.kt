@@ -62,7 +62,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     companion object {
         const val TAG = "MoonHead"
 
-        private const val DAMAGE_DUR = 0.25f
+        private const val DAMAGE_DUR = 0.5f
 
         private const val SHOOT_SPEED = 6f
         private const val SHOOT_SPEED_HARD = 10f

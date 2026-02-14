@@ -33,7 +33,7 @@ object ConstVals {
     const val DEFAULT_PATHFINDING_MAX_ITERATIONS = 100
     const val DEFAULT_PATHFINDING_MAX_DISTANCE = 100
     const val DEFAULT_RETURN_BEST_PATH = true
-    const val GAME_CAM_ROTATE_TIME = 1f
+    const val GAME_CAM_ROTATE_TIME = 0.75f
     const val DEFAULT_PARALLAX_X = 0.25f
     const val DEFAULT_PARALLAX_Y = 0f
     const val DUR_PER_BIT = 0.075f

@@ -5,7 +5,6 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
-import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.objectMapOf
@@ -60,7 +59,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         const val MIN_ALPHA = 0f
         const val MAX_ALPHA = 1f
 
-        private const val DARKNEN_STEP_SCALAR = 2f
+        private const val DARKEN_STEP_SCALAR = 2f
         private const val LIGHTEN_STEP_SCALAR = 1f
 
         private const val CAM_BOUNDS_BUFFER = 2f
@@ -116,12 +115,14 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             val totalTime = (end - start) / 1000f
             if (totalTime > DEBUG_THRESHOLD_SECS) GameLogger.debug(TAG, messageOnTooLong.invoke(totalTime))
         }
+
+        private const val TIME_TO_UPDATE = 0.25f
     }
 
     private class BlackTile(
         val bounds: GameRectangle,
         var currentAlpha: Float = 1f,
-        var darkenStepScalar: Float = DARKNEN_STEP_SCALAR,
+        var darkenStepScalar: Float = DARKEN_STEP_SCALAR,
         var lightenStepScalar: Float = LIGHTEN_STEP_SCALAR
     ) {
 
@@ -151,7 +152,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         private set
 
     private val rooms = ObjectSet<String>()
-    private val lightSourceQueue = Queue<LightSourceDef>()
+    private val lightSourceQueue = SimpleQueueSet<LightSourceDef>()
     private val previousTiles = OrderedSet<BlackTile>()
     private val currentTiles = OrderedSet<BlackTile>()
 
@@ -169,6 +170,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private val reusableEntitiesSet = ObjectSet<MegaGameEntity>()
     private val reusableMnMs = MinsAndMaxes()
+
+    private var timeSinceLastUpdate = 1f
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -206,6 +209,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         allTiles = Matrix(rows, columns)
 
         darkMode = false
+
+        timeSinceLastUpdate = 1f
     }
 
     override fun onDestroy() {
@@ -256,7 +261,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                         TAG,
                         "onEvent(): END_ROOM_TRANS: darken all: event=$event, rooms=$rooms, newRoom=$newRoom"
                     )
-
                     darkMode = true
                 }
             }
@@ -278,7 +282,13 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                     lightSourceDef.center = center
                     lightSourceDef.radius = radius
                     lightSourceDef.radiance = radiance
-                    lightSourceQueue.addLast(lightSourceDef)
+
+                    if (!lightSourceQueue.contains(lightSourceDef)) {
+                        lightSourceQueue.add(lightSourceDef)
+
+                        // TODO: If MAX is specified and adding new light source exceeds MAX,
+                        //  then remove oldest element here...
+                    }
                 }
             }
         }
@@ -315,7 +325,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.radiance = second
             }
 
-            lightSourceQueue.addLast(lightSourceDef)
+            lightSourceQueue.add(lightSourceDef)
         }
     }
 
@@ -341,7 +351,14 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         }
     }
 
+    private fun shouldUpdate() = darkMode && timeSinceLastUpdate >= TIME_TO_UPDATE
+
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        timeSinceLastUpdate += delta
+        if (!shouldUpdate()) return@UpdatablesComponent
+
+        timeSinceLastUpdate = 0f
+
         val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
         entities.forEach { entity -> tryToLightUp(entity) }
         entities.clear()
@@ -364,7 +381,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.radiance = STANDARD_LIGHT_SOURCE.second
             }
 
-            lightSourceQueue.addLast(lightSourceDef)
+            lightSourceQueue.add(lightSourceDef)
         }
 
         val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
@@ -378,14 +395,16 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
 
-                lightSourceQueue.addLast(lightSourceDef)
+                lightSourceQueue.add(lightSourceDef)
             }
         }
 
-        while (!lightSourceQueue.isEmpty) {
-            val lightSourceDef = lightSourceQueue.removeFirst()
-            handleLightSource(lightSourceDef)
-            lightSourcePool.free(lightSourceDef)
+        while (!lightSourceQueue.isEmpty()) {
+            val lightSourceDef = lightSourceQueue.poll()
+            if (lightSourceDef != null) {
+                handleLightSource(lightSourceDef)
+                lightSourcePool.free(lightSourceDef)
+            }
         }
 
         val camBounds = game.getGameCamera().getRotatedBounds()
@@ -399,8 +418,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         sprites.values().forEach { t -> tileSpritesPool.free(t) }
         sprites.clear()
-
-        val startTime = System.currentTimeMillis()
 
         val (minX, minY, maxX, maxY) = getMinsAndMaxes(camBounds)
         for (x in minX..maxX) for (y in minY..maxY) {
@@ -420,8 +437,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
             sprites.put("${x}_${y}", sprite)
         }
-
-        debugTime(startTime) { "update(): updating tiles took too long: time=$it, size=${(maxX - minX) * (maxY - minY)}" }
     })
 
     override fun overlaps(shape: IGameShape2D) = this.bounds.overlaps(shape)
