@@ -1,10 +1,20 @@
 Hazards2.png
-size: 130, 436
+size: 232, 484
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 pma: false
 RisingLavaRiver/inner
-  bounds: 1, 1, 128, 384
+  bounds: 69, 99, 128, 384
 RisingLavaRiver/top
-  bounds: 1, 387, 128, 48
+  bounds: 1, 1, 128, 48
+WilyDeathPlaneLazor/1
+  bounds: 131, 1, 32, 96
+WilyDeathPlaneLazor/2
+  bounds: 165, 1, 32, 96
+WilyDeathPlaneLazor/3
+  bounds: 199, 1, 32, 96
+WilyDeathPlaneLazor/4
+  bounds: 1, 99, 32, 96
+WilyDeathPlaneLazor/5
+  bounds: 35, 99, 32, 96
