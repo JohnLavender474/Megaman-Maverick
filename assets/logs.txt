@@ -1,1 +1,54 @@
-===== SESSION STARTED: 2026-02-16T13:49:52.150286652 =====
+===== SESSION STARTED: 2026-03-03T17:29:42.492409063 =====
+17:29:53 | DEBUG | WilyFinalBoss | init()
+17:29:53 | DEBUG | WilyFinalBoss | onSpawn(): spawnProps=Properties({
+	[orb=false]
+	[bounds=[11600.0,4112.0,32.0,32.0]]
+	[fly_in_target_3=com.badlogic.gdx.maps.objects.RectangleMapObject@54767e9b]
+	[fly_in_start_3=com.badlogic.gdx.maps.objects.RectangleMapObject@3372b9f0]
+	[x=11600.0]
+	[height=32.0]
+	[end=false]
+	[music=OUR_BLOOD_BOILS_MUSIC]
+	[fly_in_target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@19b42b7c]
+	[id=641]
+	[fly_in_start_2=com.badlogic.gdx.maps.objects.RectangleMapObject@54391f3e]
+	[fly_in_target_4=com.badlogic.gdx.maps.objects.RectangleMapObject@335c2184]
+	[fly_in_start_4=com.badlogic.gdx.maps.objects.RectangleMapObject@1547a326]
+	[y=4112.0]
+	[width=32.0]
+	[fly_in_target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@2d109539]
+	[fly_in_start_1=com.badlogic.gdx.maps.objects.RectangleMapObject@31ccbf4a]
+})
+17:29:55 | DEBUG | WilyFinalBoss | update(): phase 1 - swoop: go to next state
+17:29:55 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_IN, previous=SWOOP
+17:29:56 | DEBUG | WilyFinalBoss | onChangeState(): current=HOVER, previous=FLY_IN
+17:29:56 | DEBUG | WilyFinalBoss | onChangeState(): end init sequence
+17:29:58 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_OUT, previous=HOVER
+17:29:59 | DEBUG | WilyFinalBoss | update(): phase 1 - fly out: go to next state
+17:29:59 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_IN, previous=FLY_OUT
+17:30:00 | DEBUG | WilyFinalBoss | onChangeState(): current=HOVER, previous=FLY_IN
+17:30:00 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_BY, previous=HOVER
+17:30:00 | DEBUG | WilyFinalBoss | beginFlyByFromHover(): col=1, row=0, movingRight=false
+17:30:01 | DEBUG | WilyFinalBoss | updateFlyBy(): fly-by complete, flyByCount=1
+17:30:01 | DEBUG | WilyFinalBoss | beginNextFlyBy(): flyByCount=1, col=0, row=1, movingRight=true
+17:30:04 | DEBUG | WilyFinalBoss | updateFlyBy(): fly-by complete, flyByCount=2
+17:30:04 | DEBUG | WilyFinalBoss | beginNextFlyBy(): flyByCount=2, col=1, row=0, movingRight=false
+17:30:07 | DEBUG | WilyFinalBoss | updateFlyBy(): fly-by complete, flyByCount=3
+17:30:07 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_IN, previous=FLY_BY
+17:30:08 | DEBUG | WilyFinalBoss | onChangeState(): current=HOVER, previous=FLY_IN
+17:30:09 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_OUT, previous=HOVER
+17:30:09 | DEBUG | WilyFinalBoss | update(): phase 1 - fly out: go to next state
+17:30:09 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_IN, previous=FLY_OUT
+17:30:10 | DEBUG | WilyFinalBoss | onChangeState(): current=HOVER, previous=FLY_IN
+17:30:10 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_OUT, previous=HOVER
+17:30:10 | DEBUG | WilyFinalBoss | update(): phase 1 - fly out: go to next state
+17:30:10 | DEBUG | WilyFinalBoss | onChangeState(): current=SWOOP, previous=FLY_OUT
+17:30:11 | DEBUG | WilyFinalBoss | update(): phase 1 - swoop: go to next state
+17:30:11 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_IN, previous=SWOOP
+17:30:12 | DEBUG | WilyFinalBoss | onChangeState(): current=HOVER, previous=FLY_IN
+17:30:13 | DEBUG | WilyFinalBoss | onChangeState(): current=FLY_BY, previous=HOVER
+17:30:13 | DEBUG | WilyFinalBoss | beginFlyByFromHover(): col=0, row=0, movingRight=true
+17:30:14 | DEBUG | WilyFinalBoss | updateFlyBy(): fly-by complete, flyByCount=1
+17:30:14 | DEBUG | WilyFinalBoss | beginNextFlyBy(): flyByCount=1, col=1, row=1, movingRight=false
+17:30:15 | DEBUG | WilyFinalBoss | onDestroy()
+17:30:15 | DEBUG | WilyFinalBoss | Phase1Handler: reset()

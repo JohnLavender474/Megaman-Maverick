@@ -274,6 +274,11 @@ sprites/frames/MegamanTrailSprite/groundslide_shoot.png
 sprites/frames/MegamanTrailSprite/groundslide.png
 sprites/frames/Hazards2/RisingLavaRiver/inner.png
 sprites/frames/Hazards2/RisingLavaRiver/top.png
+sprites/frames/Hazards2/WilyDeathPlaneLazor/4.png
+sprites/frames/Hazards2/WilyDeathPlaneLazor/3.png
+sprites/frames/Hazards2/WilyDeathPlaneLazor/1.png
+sprites/frames/Hazards2/WilyDeathPlaneLazor/2.png
+sprites/frames/Hazards2/WilyDeathPlaneLazor/5.png
 sprites/frames/Colors/black.png
 sprites/frames/Colors/white.png
 sprites/frames/Colors/pink.png
@@ -470,6 +475,15 @@ sprites/frames/Enemies2/BombPotton.png
 sprites/frames/Enemies2/JetMet/Stand.png
 sprites/frames/Enemies2/JetMet/Jet.png
 sprites/frames/Enemies2/JetMet/TakeOff.png
+sprites/frames/WilyFinalBoss/phase_1/lazors.png
+sprites/frames/WilyFinalBoss/phase_1/tilt_lazors.png
+sprites/frames/WilyFinalBoss/phase_1/fly_by.png
+sprites/frames/WilyFinalBoss/phase_1/shoot_missiles.png
+sprites/frames/WilyFinalBoss/phase_1/hover.png
+sprites/frames/WilyFinalBoss/phase_1/tilt.png
+sprites/frames/WilyFinalBoss/phase_1/swoop.png
+sprites/frames/WilyFinalBoss/phase_1/open_hatch.png
+sprites/frames/WilyFinalBoss/phase_1/fly_out.png
 sprites/frames/Gates/standard/closing.png
 sprites/frames/Gates/standard/open.png
 sprites/frames/Gates/standard/opening.png
@@ -2780,8 +2794,8 @@ sprites/sprite_sheets/Bosses.txt
 sprites/sprite_sheets/Ui2.txt
 sprites/sprite_sheets/Backgrounds1.png
 sprites/sprite_sheets/Bosses2.png
-sprites/sprite_sheets/Bosses3-0.png
 sprites/sprite_sheets/FridgeMan.png
+sprites/sprite_sheets/WilyFinalBoss.txt
 sprites/sprite_sheets/Gates.png
 sprites/sprite_sheets/MegamanTrailSprite_v2.png
 sprites/sprite_sheets/Megaman_v2_REACTOR.txt
@@ -2878,6 +2892,7 @@ sprites/sprite_sheets/DistributorMan.png
 sprites/sprite_sheets/Ui2.png
 sprites/sprite_sheets/WintryMan.txt
 sprites/sprite_sheets/Enemies1.txt
+sprites/sprite_sheets/WilyFinalBoss-0.png
 sprites/sprite_sheets/Megaman_v2_BUSTER.png
 sprites/sprite_sheets/LevelSelectScreenV2.txt
 sprites/sprite_sheets/Hazards1.png
@@ -2936,6 +2951,7 @@ sprites/texture_packer/Projectiles2.tps
 sprites/texture_packer/Backgrounds2.tps
 sprites/texture_packer/Enemies1.tps
 sprites/texture_packer/SMB3_Specials.tps
+sprites/texture_packer/WilyFinalBoss.tps
 sprites/texture_packer/MegamanMainMenu.tps
 sprites/texture_packer/TimberWoman.tps
 sprites/texture_packer/Megaman_v2_PRECIOUS.tps
@@ -3056,6 +3072,7 @@ sprites/piskel/Jetpack_Ice_Blaster_Bot.piskel
 sprites/piskel/BulletCollision.piskel
 sprites/piskel/FloorButton.piskel
 sprites/piskel/All_Terrain_Missile_Bot.piskel
+sprites/piskel/LilNuke.piskel
 sprites/piskel/Petit Devil.piskel
 sprites/piskel/GreenUziJoe.piskel
 sprites/piskel/Anokolisa_Swamp_Tileset.piskel
@@ -3130,6 +3147,7 @@ sprites/piskel/Toxic_Waterfall.piskel
 sprites/piskel/ReactMan.piskel
 sprites/piskel/CrystalManTileset.piskel
 sprites/piskel/WoodenFlipper.piskel
+sprites/piskel/WilyDeathPlaneLazor.piskel
 sprites/piskel/Dripping_Toxic_Goop.piskel
 sprites/piskel/MegamanChargedShot.piskel
 sprites/piskel/PurpleBlast.piskel
@@ -3182,6 +3200,7 @@ sprites/piskel/Enemies2.piskel
 sprites/piskel/MagmaGoopExplosion.piskel
 sprites/piskel/TeardropBlast.piskel
 sprites/piskel/Toxic_Splash.piskel
+sprites/piskel/WilyDeathPlane.piskel
 sprites/piskel/RodentMan.piskel
 sprites/piskel/Bunby Red Rocket.piskel
 sprites/piskel/GutsTank.piskel
@@ -3222,9 +3241,11 @@ sprites/piskel/QuickSand_v2_Left.piskel
 sprites/piskel/SteamRollerMan.piskel
 sprites/piskel/Popup Canon.piskel
 sprites/piskel/InfernoBKG.piskel
+sprites/piskel/HomingMissile.piskel
 sprites/piskel/Anokolisa_Cave_Tileset.piskel
 sprites/piskel/LevelPauseMenu.piskel
 sprites/piskel/Megaman_RUSH_JET.piskel
+sprites/piskel/HomingMissileExplosion.piskel
 sprites/piskel/InfernoManFace.piskel
 sprites/piskel/Cokonut.piskel
 sprites/piskel/ColdGust.piskel
@@ -3896,6 +3917,7 @@ music/MMX_Sigma1st.txt
 music/Cody_O_Quinn_Battle_Man_loop.wav
 music/MMX5_IzzyGlow.txt
 music/SnakeManMM3.mp3
+music/our_blood_boils.mp3
 music/Famitard_OC_1.mp3
 music/MMX3_IntroStage.ogg
 music/smb3_overworld_1.mp3

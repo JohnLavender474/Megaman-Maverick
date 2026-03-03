@@ -64,6 +64,7 @@ class AnimatorBuilder {
     private val animations: ObjectMap<String, IAnimation> = ObjectMap()
     private var updateScalar: Float = 1f
     private var onChangeKey: ((Animator, String?, String?) -> Unit)? = null
+    private var shouldAnimatePredicate: (Float) -> Boolean = { true }
 
     fun setKeySupplier(supplier: (String?) -> String?) = apply {
         this.keySupplier = supplier
@@ -95,8 +96,12 @@ class AnimatorBuilder {
         this.onChangeKey = listener
     }
 
+    fun shouldAnimate(shouldAnimatePredicate: (Float) -> Boolean) = apply {
+        this.shouldAnimatePredicate = shouldAnimatePredicate
+    }
+
     fun build(): Animator {
         require(animations.size > 0) { "Animator must have at least one animation." }
-        return Animator(keySupplier, animations, updateScalar, onChangeKey)
+        return Animator(keySupplier, animations, updateScalar, onChangeKey, shouldAnimatePredicate)
     }
 }

@@ -1,18 +1,18 @@
-Bosses3-0.png
-size: 1970, 1424
+Bosses3.png
+size: 940, 1870
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 BigAssMaverickRobot/Body/body
   rotate: false
-  xy: 329, 653
+  xy: 247, 1291
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Hand/rocket
   rotate: false
-  xy: 1317, 1
+  xy: 1, 51
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -26,616 +26,616 @@ BigAssMaverickRobot/Hand/still
   index: -1
 BigAssMaverickRobot/Head/defeated
   rotate: false
-  xy: 1889, 491
+  xy: 775, 1129
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/down
   rotate: false
-  xy: 1, 653
+  xy: 857, 1129
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/stunned
   rotate: false
-  xy: 83, 653
+  xy: 1, 1291
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/turn
   rotate: false
-  xy: 165, 653
+  xy: 83, 1291
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/turn_up
   rotate: false
-  xy: 247, 653
+  xy: 165, 1291
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 ElecDevil/appear
   rotate: false
-  xy: 783, 653
+  xy: 377, 1291
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 ElecDevil/charge
   rotate: false
-  xy: 1041, 653
+  xy: 635, 1291
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 ElecDevil/defeated
   rotate: false
-  xy: 1709, 1
+  xy: 99, 51
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/grid
   rotate: false
-  xy: 1839, 1
+  xy: 229, 51
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/hand
   rotate: false
-  xy: 459, 653
+  xy: 1, 1485
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row0column0
   rotate: false
-  xy: 1, 99
+  xy: 359, 51
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row0column1
   rotate: false
-  xy: 131, 99
+  xy: 489, 51
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row0column2
   rotate: false
-  xy: 261, 99
+  xy: 619, 51
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row0column3
   rotate: false
-  xy: 391, 99
+  xy: 749, 51
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row1column0
   rotate: false
-  xy: 521, 99
+  xy: 1, 149
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row1column1
   rotate: false
-  xy: 651, 99
+  xy: 131, 149
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row1column2
   rotate: false
-  xy: 781, 99
+  xy: 261, 149
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row1column3
   rotate: false
-  xy: 911, 99
+  xy: 391, 149
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row2column0
   rotate: false
-  xy: 1041, 99
+  xy: 521, 149
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row2column1
   rotate: false
-  xy: 1171, 99
+  xy: 651, 149
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row2column2
   rotate: false
-  xy: 1301, 99
+  xy: 781, 149
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row2column3
   rotate: false
-  xy: 1431, 99
+  xy: 1, 247
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row2column4
   rotate: false
-  xy: 1561, 99
+  xy: 131, 247
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row3column0
   rotate: false
-  xy: 1691, 99
+  xy: 261, 247
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row3column1
   rotate: false
-  xy: 1821, 99
+  xy: 391, 247
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row3column2
   rotate: false
-  xy: 1, 197
+  xy: 521, 247
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row3column3
   rotate: false
-  xy: 131, 197
+  xy: 651, 247
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row3column4
   rotate: false
-  xy: 261, 197
+  xy: 781, 247
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row4column0
   rotate: false
-  xy: 391, 197
+  xy: 1, 345
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row4column1
   rotate: false
-  xy: 521, 197
+  xy: 131, 345
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row4column2
   rotate: false
-  xy: 651, 197
+  xy: 261, 345
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row4column3
   rotate: false
-  xy: 781, 197
+  xy: 391, 345
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row5column1
   rotate: false
-  xy: 911, 197
+  xy: 521, 345
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/blue/row5column2
   rotate: false
-  xy: 1041, 197
+  xy: 651, 345
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row0column0
   rotate: false
-  xy: 1171, 197
+  xy: 781, 345
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row0column1
   rotate: false
-  xy: 1301, 197
+  xy: 1, 443
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row0column2
   rotate: false
-  xy: 1431, 197
+  xy: 131, 443
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row0column3
   rotate: false
-  xy: 1561, 197
+  xy: 261, 443
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row1column0
   rotate: false
-  xy: 1691, 197
+  xy: 391, 443
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row1column1
   rotate: false
-  xy: 1821, 197
+  xy: 521, 443
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row1column2
   rotate: false
-  xy: 1, 295
+  xy: 651, 443
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row1column3
   rotate: false
-  xy: 131, 295
+  xy: 781, 443
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row2column0
   rotate: false
-  xy: 261, 295
+  xy: 1, 541
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row2column1
   rotate: false
-  xy: 391, 295
+  xy: 131, 541
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row2column2
   rotate: false
-  xy: 521, 295
+  xy: 261, 541
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row2column3
   rotate: false
-  xy: 651, 295
+  xy: 391, 541
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row2column4
   rotate: false
-  xy: 781, 295
+  xy: 521, 541
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row3column0
   rotate: false
-  xy: 911, 295
+  xy: 651, 541
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row3column1
   rotate: false
-  xy: 1041, 295
+  xy: 781, 541
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row3column2
   rotate: false
-  xy: 1171, 295
+  xy: 1, 639
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row3column3
   rotate: false
-  xy: 1301, 295
+  xy: 131, 639
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row3column4
   rotate: false
-  xy: 1431, 295
+  xy: 261, 639
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row4column0
   rotate: false
-  xy: 1561, 295
+  xy: 391, 639
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row4column1
   rotate: false
-  xy: 1691, 295
+  xy: 521, 639
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row4column2
   rotate: false
-  xy: 1821, 295
+  xy: 651, 639
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row4column3
   rotate: false
-  xy: 1, 393
+  xy: 781, 639
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row5column1
   rotate: false
-  xy: 131, 393
+  xy: 1, 737
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/green/row5column2
   rotate: false
-  xy: 261, 393
+  xy: 131, 737
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row0column0
   rotate: false
-  xy: 391, 393
+  xy: 261, 737
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row0column1
   rotate: false
-  xy: 521, 393
+  xy: 391, 737
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row0column2
   rotate: false
-  xy: 651, 393
+  xy: 521, 737
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row0column3
   rotate: false
-  xy: 781, 393
+  xy: 651, 737
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row1column0
   rotate: false
-  xy: 911, 393
+  xy: 781, 737
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row1column1
   rotate: false
-  xy: 1041, 393
+  xy: 1, 835
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row1column2
   rotate: false
-  xy: 1171, 393
+  xy: 131, 835
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row1column3
   rotate: false
-  xy: 1301, 393
+  xy: 261, 835
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row2column0
   rotate: false
-  xy: 1431, 393
+  xy: 391, 835
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row2column1
   rotate: false
-  xy: 1561, 393
+  xy: 521, 835
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row2column2
   rotate: false
-  xy: 1691, 393
+  xy: 651, 835
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row2column3
   rotate: false
-  xy: 1821, 393
+  xy: 781, 835
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row2column4
   rotate: false
-  xy: 1, 491
+  xy: 1, 933
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row3column0
   rotate: false
-  xy: 131, 491
+  xy: 131, 933
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row3column1
   rotate: false
-  xy: 261, 491
+  xy: 261, 933
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row3column2
   rotate: false
-  xy: 391, 491
+  xy: 391, 933
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row3column3
   rotate: false
-  xy: 521, 491
+  xy: 521, 933
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row3column4
   rotate: false
-  xy: 651, 491
+  xy: 651, 933
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row4column0
   rotate: false
-  xy: 781, 491
+  xy: 781, 933
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row4column1
   rotate: false
-  xy: 911, 491
+  xy: 1, 1031
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row4column2
   rotate: false
-  xy: 1041, 491
+  xy: 131, 1031
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row4column3
   rotate: false
-  xy: 1171, 491
+  xy: 261, 1031
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row5column1
   rotate: false
-  xy: 1301, 491
+  xy: 391, 1031
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/pieces/white/row5column2
   rotate: false
-  xy: 1431, 491
+  xy: 521, 1031
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 ElecDevil/stand
   rotate: false
-  xy: 1299, 653
+  xy: 131, 1485
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 ElecDevil/turn_to_pieces
   rotate: false
-  xy: 775, 911
+  xy: 683, 1485
   size: 256, 384
   orig: 256, 384
   offset: 0, 0
   index: -1
 PreciousWoman/airpunch1
   rotate: false
-  xy: 1561, 491
+  xy: 447, 1129
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 PreciousWoman/airpunch2
   rotate: false
-  xy: 919, 1
+  xy: 651, 1031
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/damaged
   rotate: false
-  xy: 1415, 1
+  xy: 701, 1031
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 PreciousWoman/defeated
   rotate: false
-  xy: 1513, 1
+  xy: 799, 1031
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -656,42 +656,42 @@ PreciousWoman/jump
   index: -1
 PreciousWoman/jump_throw
   rotate: false
-  xy: 1557, 653
+  xy: 583, 1485
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
   index: -1
 PreciousWoman/run
   rotate: false
-  xy: 1611, 1
+  xy: 1, 1129
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand
   rotate: false
-  xy: 969, 1
+  xy: 99, 1129
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_laugh1
   rotate: false
-  xy: 1019, 1
+  xy: 149, 1129
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_laugh2
   rotate: false
-  xy: 1069, 1
+  xy: 199, 1129
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 PreciousWoman/stand_throw
   rotate: false
-  xy: 1607, 653
+  xy: 633, 1485
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
@@ -705,14 +705,14 @@ PreciousWoman/wallslide
   index: -1
 PreciousWoman/wink
   rotate: false
-  xy: 1743, 491
+  xy: 497, 1129
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 RodentMan/defeated
   rotate: false
-  xy: 1611, 491
+  xy: 643, 1129
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -733,7 +733,7 @@ RodentMan/jump_down_look_straight
   index: -1
 RodentMan/jump_slash
   rotate: false
-  xy: 1119, 1
+  xy: 249, 1129
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
@@ -754,126 +754,57 @@ RodentMan/jump_up_look_up
   index: -1
 RodentMan/run
   rotate: false
-  xy: 597, 1
+  xy: 465, 1
   size: 320, 48
   orig: 320, 48
   offset: 0, 0
   index: -1
 RodentMan/shielded
   rotate: false
-  xy: 1185, 1
+  xy: 315, 1129
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 RodentMan/stand
   rotate: false
-  xy: 1251, 1
+  xy: 381, 1129
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 RodentMan/stand_slash_combo
   rotate: false
-  xy: 589, 653
+  xy: 389, 1485
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 RodentMan/stand_slash_single1
   rotate: false
-  xy: 465, 1
+  xy: 787, 1
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 RodentMan/stand_slash_single2
   rotate: false
-  xy: 465, 1
+  xy: 787, 1
   size: 64, 48
   orig: 64, 48
   offset: 0, 0
   index: -1
 RodentMan/stunned
   rotate: false
-  xy: 1677, 491
+  xy: 709, 1129
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 RodentMan/wallslide
   rotate: false
-  xy: 531, 1
+  xy: 853, 1
   size: 64, 48
   orig: 64, 48
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/fly_by
-  rotate: false
-  xy: 1657, 653
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/foreground
-  rotate: false
-  xy: 1033, 911
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/hover
-  rotate: false
-  xy: 1, 911
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/lazors
-  rotate: false
-  xy: 1291, 911
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/open_hatch
-  rotate: false
-  xy: 259, 911
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/tilt
-  rotate: false
-  xy: 517, 911
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/tilt_lazors
-  rotate: false
-  xy: 1549, 911
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-
-Bosses3-1.png
-size: 514, 1540
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-WilyDeathPlane/fly_in
-  rotate: false
-  xy: 1, 1
-  size: 512, 1024
-  orig: 512, 1024
-  offset: 0, 0
-  index: -1
-WilyDeathPlane/shoot_missiles
-  rotate: false
-  xy: 1, 1027
-  size: 512, 512
-  orig: 512, 512
   offset: 0, 0
   index: -1

@@ -128,7 +128,7 @@
             </struct>
         </map>
         <key>multiPackMode</key>
-        <enum type="SettingsBase::MultiPackMode">MultiPackAuto</enum>
+        <enum type="SettingsBase::MultiPackMode">MultiPackOff</enum>
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
@@ -537,71 +537,6 @@
                 <rect>48,48,96,96</rect>
                 <key>scale9Paddings</key>
                 <rect>48,48,96,96</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/fly_by.png</key>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/hover.png</key>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/open_hatch.png</key>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/tilt.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,64,128,128</rect>
-                <key>scale9Paddings</key>
-                <rect>64,64,128,128</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/fly_in.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>128,256,256,512</rect>
-                <key>scale9Paddings</key>
-                <rect>128,256,256,512</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/foreground.png</key>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/lazors.png</key>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/tilt_lazors.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,128,128,256</rect>
-                <key>scale9Paddings</key>
-                <rect>64,128,128,256</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses3/WilyDeathPlane/shoot_missiles.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>128,128,256,256</rect>
-                <key>scale9Paddings</key>
-                <rect>128,128,256,256</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
