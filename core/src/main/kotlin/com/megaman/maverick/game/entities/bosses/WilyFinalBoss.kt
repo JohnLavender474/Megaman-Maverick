@@ -11,9 +11,7 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.orderedMapOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
@@ -46,10 +44,8 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.getCenter
 
 class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity {
 
@@ -57,16 +53,20 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val TAG = "WilyFinalBoss"
 
         private const val WILY_DEATH_PLANE_SPRITE_WIDTH = 16f
-        private const val WILY_DEATH_PLANE_SPRITE_HEIGHT = 12f
+        private const val WILY_DEATH_PLANE_SPRITE_HEIGHT = 16f
 
-        private const val FLY_IN_SPEED = 15f
+        private const val FLY_IN_SPEED = 12f
         private const val FLY_IN_SLOW_DOWN_DISTANCE = 1.5f
 
         private const val MAX_FLY_BYS = 3
-        private const val FLY_BY_SPEED = 15f
+        private const val FLY_BY_SPEED = 12f
         private const val OFF_SCREEN_BUFFER = 4f
 
         private const val STATE_QUEUE_MAX_SIZE = 3
+
+        private const val SWOOP_ENTRY_DELAY = 1.25f
+
+        private const val DELAY_BETWEEN_STATES = 0.75f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = orderedMapOf(
@@ -74,8 +74,18 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             "phase_1/hover" pairTo AnimationDef(),
             "phase_1/lazors" pairTo AnimationDef(2, 1, 0.1f, true),
             "phase_1/open_hatch" pairTo AnimationDef(),
-            "phase_1/shoot_missiles" pairTo AnimationDef(2, 2, 0.1f, false),
-            "phase_1/swoop" pairTo AnimationDef(1, 10, 0.05f, false),
+            "phase_1/shoot_missiles" pairTo AnimationDef(
+                rows = 7,
+                cols = 1,
+                durations = gdxFilledArrayOf(7, 0.1f).also { it[3] = 1f },
+                loop = false
+            ),
+            "phase_1/swoop" pairTo AnimationDef(
+                rows = 5,
+                cols = 2,
+                durations = gdxFilledArrayOf(10, 0.05f).also { it[0] = 0.25f },
+                loop = false
+            ),
             "phase_1/tilt" pairTo AnimationDef(),
             "phase_1/tilt_lazors" pairTo AnimationDef(2, 1, 0.1f, true),
             "phase_1/fly_out" pairTo AnimationDef(2, 1, 0.05f, false)
@@ -96,6 +106,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private val phase1Handler = Phase1Handler()
 
     private var initSequence = false
+
+    val delayBetweenStates = Timer(DELAY_BETWEEN_STATES)
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -138,6 +150,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         stateMachines.values().forEach { it.reset() }
 
         initSequence = true
+
+        delayBetweenStates.setToEnd()
     }
 
     override fun onDestroy() {
@@ -173,13 +187,24 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 return@add
             }
 
+            delayBetweenStates.update(delta)
+            if (!delayBetweenStates.isFinished()) {
+                body.physics.velocity.setZero()
+                return@add
+            }
+
             val currentStateMachine = stateMachines.get(currentPhase)
             when (currentPhase) {
                 WilyFinalBossPhase.PHASE_1 -> {
                     val phase1StateMachine =
                         currentStateMachine as StateMachine<WilyPhase1State>
 
-                    when (phase1StateMachine.getCurrentElement()) {
+                    val state = phase1StateMachine.getCurrentElement()
+
+                    val stateTime = phase1Handler.stateTimers[state]?.time
+                    game.setDebugText("$state: $stateTime")
+
+                    when (state) {
                         WilyPhase1State.SWOOP -> {
                             if (initSequence && !megaman.body.isSensing(BodySense.FEET_ON_GROUND)) return@add
 
@@ -192,7 +217,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         WilyPhase1State.FLY_BY -> if (phase1Handler.updateFlyBy(delta)) phase1StateMachine.next()
                         WilyPhase1State.HOVER -> if (phase1Handler.hover(delta)) phase1StateMachine.next()
                         WilyPhase1State.FIRE_LAZORS -> {}
-                        WilyPhase1State.SHOOT_MISSILES -> {}
+                        WilyPhase1State.SHOOT_MISSILES -> {
+                            body.physics.velocity.setZero()
+
+                            val timer = phase1Handler.stateTimers[WilyPhase1State.SHOOT_MISSILES]
+                            timer.update(delta)
+
+                            if (timer.isFinished()) {
+                                GameLogger.debug(TAG, "update(): phase 1 - shoot missiles: go to next state")
+                                phase1StateMachine.next()
+                            }
+                        }
                         WilyPhase1State.FLY_OUT -> {
                             val timer = phase1Handler.stateTimers[WilyPhase1State.FLY_OUT]
                             timer.update(delta)
@@ -215,13 +250,31 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         body.physics.collisionOn = false
         body.physics.receiveFrictionX = false
         body.physics.receiveFrictionY = false
-        body.setSize(16f * ConstVals.PPM, 12f * ConstVals.PPM)
+        body.setSize(6f * ConstVals.PPM, 4f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            when (currentPhase) {
+                WilyFinalBossPhase.PHASE_1 -> {
+                    val state =
+                        stateMachines.get(currentPhase).getCurrentElement() as WilyPhase1State
+
+                    if (state.equalsAny(WilyPhase1State.FLY_OUT, WilyPhase1State.SWOOP))
+                        body.forEachFixture { it.setActive(false) }
+                    else body.forEachFixture { it.setActive(true) }
+                }
+                else -> body.forEachFixture { it.setActive(true) }
+            }
+        }
+
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.DAMAGER)
+        )
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -235,10 +288,23 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
         )
         .preProcess { _, sprite ->
+            val center = body.getCenter().add(0f, 1f * ConstVals.PPM)
+            sprite.setCenter(center)
+
             when (currentPhase) {
                 WilyFinalBossPhase.PHASE_1 -> {
-                    val state =
-                        stateMachines.get(currentPhase).getCurrentElement() as WilyPhase1State
+                    val phase1StateMachine =
+                        stateMachines.get(currentPhase) as StateMachine<WilyPhase1State>
+                    val state = phase1StateMachine.getCurrentElement()
+
+                    sprite.hidden = damageBlink || phase1Handler.stateTimers[state]?.isFinished() == true
+
+                    if (!sprite.hidden && state == WilyPhase1State.SWOOP)
+                        sprite.hidden = !delayBetweenStates.isFinished() ||
+                            !phase1Handler.swoopEntryDelayTimer.isFinished()
+
+                    if (!sprite.hidden && state == WilyPhase1State.FLY_IN)
+                        sprite.hidden = !delayBetweenStates.isFinished()
 
                     sprite.priority.section = when (state) {
                         WilyPhase1State.SWOOP -> when {
@@ -248,6 +314,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         WilyPhase1State.FLY_OUT -> DrawingSection.FOREGROUND
                         else -> DrawingSection.PLAYGROUND
                     }
+
                     sprite.priority.value = when (state) {
                         WilyPhase1State.SWOOP -> when {
                             phase1Handler.stateTimers[state].getRatio() < 0.8f -> -1
@@ -266,10 +333,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 else -> {
                     sprite.priority.section = DrawingSection.PLAYGROUND
                     sprite.setFlip(false, false)
+                    sprite.hidden = false
                 }
             }
-            sprite.setCenter(body.getCenter())
-            sprite.hidden = damageBlink
         }
         .build()
 
@@ -288,7 +354,21 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                     return@keySupplier "${prefix}/${suffix}"
                 }
-                .shouldAnimate { !initSequence || megaman.body.isSensing(BodySense.FEET_ON_GROUND) }
+                .shouldAnimate shouldAnimate@{
+                    return@shouldAnimate when (currentPhase) {
+                        WilyFinalBossPhase.PHASE_1 -> {
+                            val state =
+                                stateMachines.get(currentPhase).getCurrentElement() as WilyPhase1State
+
+                            if (state == WilyPhase1State.SWOOP)
+                                return@shouldAnimate delayBetweenStates.isFinished() &&
+                                    phase1Handler.swoopEntryDelayTimer.isFinished()
+
+                            return@shouldAnimate true
+                        }
+                        else -> true
+                    }
+                }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDefs(animDefs, animations, regions)
                 }
@@ -311,6 +391,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         var currentFlyInCol = 0
         var currentFlyInRow = 1
 
+        val swoopEntryDelayTimer = Timer(SWOOP_ENTRY_DELAY)
+
         var flyInDecelerating = false
 
         var flyByCount = 0
@@ -323,10 +405,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         val stateQueue = Queue<WilyPhase1State>()
 
         val stateTimers = orderedMapOf(
-            WilyPhase1State.SWOOP pairTo Timer(0.5f),
-            WilyPhase1State.HOVER pairTo Timer(0.25f),
+            WilyPhase1State.SWOOP pairTo Timer(0.75f),
+            WilyPhase1State.HOVER pairTo Timer(0.75f),
             WilyPhase1State.FLY_BY pairTo Timer(0.5f),
-            WilyPhase1State.FLY_OUT pairTo Timer(0.1f)
+            WilyPhase1State.FLY_OUT pairTo Timer(0.1f),
+            WilyPhase1State.SHOOT_MISSILES pairTo Timer(2f)
         )
 
         fun buildStateMachine() = EnumStateMachineBuilder
@@ -346,7 +429,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_OUT) { shouldFlyOut() }
             .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_BY) { true }
             // shoot missiles
-            .transition(WilyPhase1State.SHOOT_MISSILES, WilyPhase1State.FLY_OUT) { true }
+            .transition(WilyPhase1State.SHOOT_MISSILES, WilyPhase1State.FLY_BY) { true }
             // fire lazors
             .transition(WilyPhase1State.FIRE_LAZORS, WilyPhase1State.FLY_OUT) { true }
             // fly out
@@ -356,8 +439,28 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             // build
             .build()
 
+        private fun shouldApplyStateDelay(
+            current: WilyPhase1State,
+            previous: WilyPhase1State
+        ): Boolean {
+            if (current == WilyPhase1State.FLY_OUT &&
+                previous == WilyPhase1State.HOVER
+            ) return false
+
+            if (current.equalsAny(
+                    WilyPhase1State.SWOOP,
+                    WilyPhase1State.SHOOT_MISSILES
+                )
+            ) return true
+
+            return false
+        }
+
         fun onChangeState(current: WilyPhase1State, previous: WilyPhase1State) {
             GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
+
+            if (shouldApplyStateDelay(current, previous)) delayBetweenStates.reset()
+            else delayBetweenStates.setToEnd()
 
             if (stateTimers.containsKey(previous)) stateTimers[previous].reset()
 
@@ -366,14 +469,22 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             if (stateQueue.size > STATE_QUEUE_MAX_SIZE) stateQueue.removeFirst()
 
             when (current) {
-                WilyPhase1State.SWOOP -> requestToPlaySound(SoundAsset.JET_SOUND, false)
+                WilyPhase1State.SWOOP -> {
+                    val position = flyInTargetPositions[0, 1]!!
+                    body.setCenter(position)
+
+                    swoopEntryDelayTimer.reset()
+
+                    requestToPlaySound(SoundAsset.JET_SOUND, false)
+                }
                 WilyPhase1State.FLY_BY -> {
                     flyByCount = 0
                     flyByDone = false
 
                     stateTimers[WilyPhase1State.FLY_BY].reset()
 
-                    if (previous == WilyPhase1State.HOVER) beginFlyByFromHover()
+                    if (previous.equalsAny(WilyPhase1State.HOVER, WilyPhase1State.SHOOT_MISSILES))
+                        beginFlyByFromHover()
                     else {
                         currentFlyByStartCol = 1 - currentFlyByStartCol
                         currentFlyByStartRow = UtilMethods.getRandom(0, 1)
@@ -402,13 +513,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
         }
 
-        fun shouldSwoop() = !stateQueue.contains(WilyPhase1State.SWOOP) && UtilMethods.getRandomBool()
+        fun shouldSwoop() =
+            !stateQueue.contains(WilyPhase1State.SWOOP) && UtilMethods.getRandomBool()
 
-        fun shouldFlyBy() = false
+        fun shouldFlyBy() = !initSequence && UtilMethods.getRandomBool()
 
         fun shouldFlyOut() = currentFlyInRow == 1
 
-        fun shouldShootMissiles() = false
+        fun shouldShootMissiles() = UtilMethods.getRandomBool()
 
         fun shouldFireLazors() = false
 
@@ -417,14 +529,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             val timer = stateTimers[WilyPhase1State.HOVER]
             timer.update(delta)
+
             return timer.isFinished()
         }
 
         fun swoopIn(delta: Float): Boolean {
             body.physics.velocity.setZero()
 
+            swoopEntryDelayTimer.update(delta)
+            if (!swoopEntryDelayTimer.isFinished()) return false
+
             val timer = stateTimers[WilyPhase1State.SWOOP]
             timer.update(delta)
+
             return timer.isFinished()
         }
 
@@ -461,6 +578,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         fun beginFlyByFromHover() {
             currentFlyByStartCol = currentFlyInCol
             currentFlyByStartRow = currentFlyInRow
+
             flyByMovingRight = currentFlyByStartCol == 0
 
             body.physics.velocity.x =
@@ -468,7 +586,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             body.physics.velocity.y = 0f
 
             GameLogger.debug(
-                TAG, "beginFlyByFromHover(): col=$currentFlyByStartCol, row=$currentFlyByStartRow, movingRight=$flyByMovingRight"
+                TAG,
+                "beginFlyByFromHover(): col=$currentFlyByStartCol, row=$currentFlyByStartRow, movingRight=$flyByMovingRight"
             )
 
             requestToPlaySound(SoundAsset.JET_SOUND, false)
@@ -542,6 +661,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             currentFlyInCol = 0
             currentFlyInRow = 1
+
+            swoopEntryDelayTimer.reset()
 
             flyByCount = 0
             flyByDone = false

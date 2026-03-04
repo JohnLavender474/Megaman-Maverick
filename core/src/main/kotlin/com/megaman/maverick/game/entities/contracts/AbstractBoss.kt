@@ -181,7 +181,7 @@ abstract class AbstractBoss(
         }
     }
 
-    override fun canDamage(damageable: IDamageable) = !defeated && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageable) = !defeated && ready && super.canDamage(damageable)
 
     override fun canBeDamagedBy(damager: IDamager) = !defeated && super.canBeDamagedBy(damager)
 

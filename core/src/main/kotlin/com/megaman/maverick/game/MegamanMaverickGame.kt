@@ -612,7 +612,6 @@ class MegamanMaverickGame(
         val engine = GameEngine(
             systems = gdxArrayOf(
                 ControllerSystem(controllerPoller),
-                AnimationsSystem(),
                 BehaviorsSystem(),
                 WorldSystem(
                     ppm = ConstVals.PPM,
@@ -672,6 +671,7 @@ class MegamanMaverickGame(
                 PointsSystem(),
                 UpdatablesSystem(),
                 FontsSystem(this::addDrawable),
+                AnimationsSystem(),
                 SpritesSystem(this::addDrawable),
                 DrawableShapesSystem({ shapes.add(it) }, params.debugShapes),
                 AudioSystem(
