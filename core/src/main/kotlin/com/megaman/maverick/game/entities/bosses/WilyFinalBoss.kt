@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -46,6 +47,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.math.abs
 
 class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity {
 
@@ -55,11 +57,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val WILY_DEATH_PLANE_SPRITE_WIDTH = 16f
         private const val WILY_DEATH_PLANE_SPRITE_HEIGHT = 16f
 
-        private const val FLY_IN_SPEED = 12f
+        private const val FLY_IN_SPEED = 16f
         private const val FLY_IN_SLOW_DOWN_DISTANCE = 1.5f
 
         private const val MAX_FLY_BYS = 3
-        private const val FLY_BY_SPEED = 12f
+        private const val FLY_BY_SPEED = 14f
         private const val OFF_SCREEN_BUFFER = 4f
 
         private const val STATE_QUEUE_MAX_SIZE = 3
@@ -68,11 +70,20 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private const val DELAY_BETWEEN_STATES = 0.75f
 
+        private const val LAZOR_MAX_PASSES = 2
+        private const val LAZOR_CENTER_EPSILON = 0.15f
+        private const val LAZOR_VERTICAL_BOB = 0.6f
+        private const val LAZOR_ANGULAR_SPEED = MathUtils.PI2 / 10f
+        private const val LAZOR_BOB_ANGULAR_SPEED_MULT = 4f
+        private const val LAZOR_START_PAUSE_TIME = 0.75f
+        private const val LAZOR_END_PAUSE_TIME = 0.5f
+        private const val LAZOR_NEAR_CENTER_SIN_THRESHOLD = 0.3f
+
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = orderedMapOf(
             "phase_1/fly_by" pairTo AnimationDef(),
             "phase_1/hover" pairTo AnimationDef(),
-            "phase_1/lazors" pairTo AnimationDef(2, 1, 0.1f, true),
+            "phase_1/lazors" pairTo AnimationDef(3, 1, 0.1f, true),
             "phase_1/open_hatch" pairTo AnimationDef(),
             "phase_1/shoot_missiles" pairTo AnimationDef(
                 rows = 7,
@@ -146,6 +157,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             phase1Handler.flyInTargetPositions[col, row] = flyInTarget
         }
 
+        phase1Handler.lazorLeftBound.set(
+            spawnProps.get("lazor_left_bound", RectangleMapObject::class)!!.rectangle.getCenter()
+        )
+        phase1Handler.lazorRightBound.set(
+            spawnProps.get("lazor_right_bound", RectangleMapObject::class)!!.rectangle.getCenter()
+        )
+
         currentPhase = WilyFinalBossPhase.PHASE_1
         stateMachines.values().forEach { it.reset() }
 
@@ -216,7 +234,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         WilyPhase1State.FLY_IN -> if (phase1Handler.flyInToTarget(delta)) phase1StateMachine.next()
                         WilyPhase1State.FLY_BY -> if (phase1Handler.updateFlyBy(delta)) phase1StateMachine.next()
                         WilyPhase1State.HOVER -> if (phase1Handler.hover(delta)) phase1StateMachine.next()
-                        WilyPhase1State.FIRE_LAZORS -> {}
+                        WilyPhase1State.FIRE_LAZORS -> {
+                            if (phase1Handler.updateLazors(delta)) {
+                                GameLogger.debug(TAG, "update(): phase 1 - fire lazors: go to next state")
+                                phase1StateMachine.next()
+                            }
+                        }
                         WilyPhase1State.SHOOT_MISSILES -> {
                             body.physics.velocity.setZero()
 
@@ -279,7 +302,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
-            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
+            TAG, GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 0))
                 .also { sprite ->
                     sprite.setSize(
                         WILY_DEATH_PLANE_SPRITE_WIDTH * ConstVals.PPM,
@@ -318,14 +341,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     sprite.priority.value = when (state) {
                         WilyPhase1State.SWOOP -> when {
                             phase1Handler.stateTimers[state].getRatio() < 0.8f -> -1
-                            else -> 0
+                            else -> 1
                         }
-                        else -> 0
+                        else -> 1
                     }
 
                     val flipX = when (state) {
                         WilyPhase1State.FLY_IN,
                         WilyPhase1State.FLY_BY -> body.physics.velocity.x > 0f
+                        WilyPhase1State.FIRE_LAZORS -> phase1Handler.lazorMovingRight
                         else -> false
                     }
                     sprite.setFlip(flipX, false)
@@ -349,6 +373,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     val suffix = when (val state = stateMachines.get(currentPhase).getCurrentElement()) {
                         WilyPhase1State.FLY_IN ->
                             if (phase1Handler.flyInDecelerating) "tilt" else "fly_by"
+                        WilyPhase1State.FIRE_LAZORS ->
+                            if (phase1Handler.lazorNearCenter) "tilt_lazors" else "lazors"
                         else -> (state as Enum<*>).name.lowercase()
                     }
 
@@ -401,6 +427,23 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         var currentFlyByStartCol = 0
         var currentFlyByStartRow = 0
+
+        val lazorLeftBound = Vector2()
+        val lazorRightBound = Vector2()
+
+        var lazorPasses = 0
+        var lazorTheta = 0f
+
+        val lazorAnchor = Vector2()
+
+        var lazorDirectionSign = 1f
+
+        var lazorCompletionStarted = false
+        var lazorNearCenter = false
+        var lazorMovingRight = false
+
+        private val lazorStartPauseTimer = Timer(LAZOR_START_PAUSE_TIME)
+        private val lazorEndPauseTimer = Timer(LAZOR_END_PAUSE_TIME)
 
         val stateQueue = Queue<WilyPhase1State>()
 
@@ -457,7 +500,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         fun onChangeState(current: WilyPhase1State, previous: WilyPhase1State) {
-            GameLogger.debug(TAG, "onChangeState(): current=$current, previous=$previous")
+            GameLogger.debug(TAG, "Phase1Handler: onChangeState(): current=$current, previous=$previous")
 
             if (shouldApplyStateDelay(current, previous)) delayBetweenStates.reset()
             else delayBetweenStates.setToEnd()
@@ -508,6 +551,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         initSequence = false
                     }
                 }
+                WilyPhase1State.FIRE_LAZORS -> startLazors()
                 WilyPhase1State.FLY_OUT -> body.physics.velocity.setZero()
                 else -> {}
             }
@@ -520,9 +564,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         fun shouldFlyOut() = currentFlyInRow == 1
 
-        fun shouldShootMissiles() = UtilMethods.getRandomBool()
+        fun shouldShootMissiles(): Boolean {
+            if (currentFlyInRow == 0) return true
+            return UtilMethods.getRandomBool()
+        }
 
-        fun shouldFireLazors() = false
+        fun shouldFireLazors() = currentFlyInRow == 1 && UtilMethods.getRandomBool()
 
         fun hover(delta: Float): Boolean {
             body.physics.velocity.setZero()
@@ -587,7 +634,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             GameLogger.debug(
                 TAG,
-                "beginFlyByFromHover(): col=$currentFlyByStartCol, row=$currentFlyByStartRow, movingRight=$flyByMovingRight"
+                "Phase1Handler: beginFlyByFromHover(): " +
+                    "col=$currentFlyByStartCol, row=$currentFlyByStartRow, movingRight=$flyByMovingRight"
             )
 
             requestToPlaySound(SoundAsset.JET_SOUND, false)
@@ -602,7 +650,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             body.physics.velocity.y = 0f
 
             GameLogger.debug(
-                TAG, "beginNextFlyBy(): flyByCount=$flyByCount, " +
+                TAG, "Phase1Handler: beginNextFlyBy(): flyByCount=$flyByCount, " +
                     "col=$currentFlyByStartCol, row=$currentFlyByStartRow, movingRight=$flyByMovingRight"
             )
 
@@ -630,7 +678,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             flyByCount++
 
-            GameLogger.debug(TAG, "updateFlyBy(): fly-by complete, flyByCount=$flyByCount")
+            GameLogger.debug(TAG, "Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=$flyByCount")
 
             if (flyByCount >= MAX_FLY_BYS) {
                 body.physics.velocity.setZero()
@@ -642,6 +690,75 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             currentFlyByStartCol = 1 - currentFlyByStartCol
 
             beginNextFlyBy()
+
+            return false
+        }
+
+        private fun startLazors() {
+            GameLogger.debug(TAG, "Phase1Handler: startLazors()")
+
+            lazorPasses = 0
+
+            lazorTheta = 0f
+
+            lazorCompletionStarted = false
+
+            lazorNearCenter = false
+            lazorMovingRight = false
+
+            val centerX = (lazorLeftBound.x + lazorRightBound.x) / 2f
+            lazorAnchor.set(centerX, body.getCenter().y)
+
+            lazorDirectionSign = if (UtilMethods.getRandomBool()) 1f else -1f
+
+            lazorStartPauseTimer.reset()
+            lazorEndPauseTimer.reset()
+        }
+
+        fun updateLazors(delta: Float): Boolean {
+            // If we've already completed the passes and are now pausing at end
+            if (lazorCompletionStarted) {
+                lazorEndPauseTimer.update(delta)
+                body.physics.velocity.setZero()
+                return lazorEndPauseTimer.isFinished()
+            }
+
+            // Short pause before the sine wave begins
+            if (!lazorStartPauseTimer.isFinished()) {
+                lazorStartPauseTimer.update(delta)
+                body.setCenter(lazorAnchor)
+                body.physics.velocity.setZero()
+                return false
+            }
+
+            // Continue sine movement
+            lazorTheta += LAZOR_ANGULAR_SPEED * delta
+
+            val halfSpan = (lazorRightBound.x - lazorLeftBound.x) / 2f
+            val centerX = (lazorLeftBound.x + lazorRightBound.x) / 2f
+
+            // Both x and y use sin so at theta=0 the position is exactly (centerX, lazorAnchor.y)
+            val x = centerX + lazorDirectionSign * halfSpan * MathUtils.sin(lazorTheta)
+            val y = lazorAnchor.y + LAZOR_VERTICAL_BOB * ConstVals.PPM *
+                MathUtils.sin(lazorTheta * LAZOR_BOB_ANGULAR_SPEED_MULT)
+
+            body.setCenter(x, y)
+            body.physics.velocity.setZero()
+
+            // Track near-center and direction of travel for the tilt animation
+            val sinTheta = MathUtils.sin(lazorTheta)
+            lazorNearCenter = abs(sinTheta) < LAZOR_NEAR_CENTER_SIN_THRESHOLD
+            val cosTheta = MathUtils.cos(lazorTheta)
+            lazorMovingRight = lazorDirectionSign * cosTheta > 0f
+
+            lazorPasses = (lazorTheta / MathUtils.PI2).toInt()
+
+            val nearCenter = MathUtils.isEqual(x, centerX, LAZOR_CENTER_EPSILON * ConstVals.PPM)
+            if (lazorPasses >= LAZOR_MAX_PASSES && nearCenter) {
+                body.physics.velocity.setZero()
+                lazorCompletionStarted = true
+                lazorEndPauseTimer.reset()
+            }
 
             return false
         }
