@@ -3850,6 +3850,7 @@ music/vinnyz_inferno_intro_track.mp3
 music/MMX_Sigma1st.mp3
 music/vinnyz_stage_select_v1.mp3
 music/vinnyz_inferno_loop_track.mp3
+music/mmx7_our_blood_boils.wav
 music/Mega_Quest_2_Level_1.ogg
 music/MM8_FrostMan_Alt.mp3
 music/vinnyz_glacier_track.wav

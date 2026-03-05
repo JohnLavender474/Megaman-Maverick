@@ -2872,7 +2872,7 @@
   <object id="671" name="LazorLeftBound" x="11360" y="3776" width="32" height="32"/>
   <object id="672" name="LazorRightBound" x="11840" y="3776" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="5" name="blocks" visible="0">
+ <objectgroup id="5" name="blocks">
   <object id="2" x="0" y="7296" width="864" height="256"/>
   <object id="3" x="0" y="6400" width="224" height="896"/>
   <object id="8" name="ConveyorBelt" x="928" y="7232" width="96" height="32">
@@ -3613,7 +3613,7 @@
    </properties>
   </object>
   <object id="651" x="11680" y="3712" width="320" height="64"/>
-  <object id="653" name="AbstractBlock" x="11264" y="3776" width="72" height="384"/>
+  <object id="653" name="AbstractBlock" x="11296" y="3776" width="72" height="384"/>
   <object id="654" name="AbstractBlock" x="11864" y="3776" width="72" height="384"/>
   <object id="655" x="11232" y="4160" width="768" height="160"/>
   <object id="656" x="11424" y="3968" width="64" height="32"/>

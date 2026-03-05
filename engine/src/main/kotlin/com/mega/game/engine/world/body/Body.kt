@@ -208,9 +208,19 @@ class Body(
         return this
     }
 
+    fun setTopLeftToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setTopLeftToPoint(tempVec1)
+    }
+
     override fun setTopCenterToPoint(topCenterPoint: Vector2): Body {
         super.setTopCenterToPoint(topCenterPoint)
         return this
+    }
+
+    fun setTopCenterToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setTopCenterToPoint(tempVec1)
     }
 
     override fun setTopRightToPoint(topRightPoint: Vector2): Body {
@@ -218,9 +228,19 @@ class Body(
         return this
     }
 
+    fun setTopRightToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setTopRightToPoint(tempVec1)
+    }
+
     override fun setCenterLeftToPoint(centerLeftPoint: Vector2): Body {
         super.setCenterLeftToPoint(centerLeftPoint)
         return this
+    }
+
+    fun setCenterLeftToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setCenterLeftToPoint(tempVec1)
     }
 
     override fun setCenterToPoint(centerPoint: Vector2): Body {
@@ -228,9 +248,19 @@ class Body(
         return this
     }
 
+    fun setCenterToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setCenterToPoint(tempVec1)
+    }
+
     override fun setCenterRightToPoint(centerRightPoint: Vector2): Body {
         super.setCenterRightToPoint(centerRightPoint)
         return this
+    }
+
+    fun setCenterRightToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setCenterRightToPoint(tempVec1)
     }
 
     override fun setBottomLeftToPoint(bottomLeftPoint: Vector2): Body {
@@ -238,14 +268,29 @@ class Body(
         return this
     }
 
+    fun setBottomLeftToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setBottomLeftToPoint(tempVec1)
+    }
+
     override fun setBottomCenterToPoint(bottomCenterPoint: Vector2): Body {
         super.setBottomCenterToPoint(bottomCenterPoint)
         return this
     }
 
+    fun setBottomCenterToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setBottomCenterToPoint(tempVec1)
+    }
+
     override fun setBottomRightToPoint(bottomRightPoint: Vector2): Body {
         super.setBottomRightToPoint(bottomRightPoint)
         return this
+    }
+
+    fun setBottomRightToPoint(x: Float, y: Float): Body {
+        tempVec1.set(x, y)
+        return setBottomRightToPoint(tempVec1)
     }
 
     override fun setMaxX(x: Float): Body {
