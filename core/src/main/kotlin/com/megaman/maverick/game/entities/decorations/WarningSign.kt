@@ -32,10 +32,6 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     }
 
     override var on = false
-        set(value) {
-            field = value
-            animators.values().forEach { it.reset() }
-        }
 
     val center = Vector2()
 
@@ -51,6 +47,8 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        on = spawnProps.getOrDefault(ConstKeys.ON, false, Boolean::class)
+
         val center = spawnProps.getOrDefault(ConstKeys.CENTER, Vector2.Zero, Vector2::class)!!
         this.center.set(center)
     }
@@ -63,7 +61,10 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND))
-                .also { it.setSize(2f * ConstVals.PPM.toFloat()) }
+                .also {
+                    it.setAlpha(0.75f)
+                    it.setSize(2f * ConstVals.PPM.toFloat())
+                }
         )
         .preProcess { _, sprite ->
             sprite.hidden = !on
@@ -72,11 +73,7 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG)
-        .animator(
-            Animator(Animation(region!!, 2, 1, 0.1f, true))
-                .also { it.shouldAnimatePredicate = { on } }
-        )
+        .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.05f, true)))
         .build()
 
     override fun getType() = EntityType.DECORATION

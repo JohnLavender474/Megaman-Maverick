@@ -651,6 +651,7 @@ sprites/frames/Decorations1/MuzzleFlash.png
 sprites/frames/Decorations1/GravitySwitchAura.png
 sprites/frames/Decorations1/SmallGrass/brush.png
 sprites/frames/Decorations1/SmallGrass/still.png
+sprites/frames/Decorations1/WilyDeathPlaneLazorResidual.png
 sprites/frames/Decorations1/ToxicWaterSplash.png
 sprites/frames/Decorations1/Lantern.png
 sprites/frames/Decorations1/ChargedShot_Residual_Half.png

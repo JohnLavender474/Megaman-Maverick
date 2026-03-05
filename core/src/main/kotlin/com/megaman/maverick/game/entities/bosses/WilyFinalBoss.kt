@@ -70,6 +70,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     companion object {
         const val TAG = "WilyFinalBoss"
 
+        private const val WILY_DEATH_PLANE_LAZOR_RESIDUAL = "WilyDeathPlaneLazorResidual"
+
         private const val WILY_DEATH_PLANE_SPRITE_WIDTH = 16f
         private const val WILY_DEATH_PLANE_SPRITE_HEIGHT = 16f
 
@@ -117,8 +119,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
-            animDefs.keys().forEach { regions.put(it, atlas.findRegion(it)) }
+            val bossAtlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            animDefs.keys().forEach { regions.put(it, bossAtlas.findRegion(it)) }
+
+            val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            regions.put(WILY_DEATH_PLANE_LAZOR_RESIDUAL, decorationsAtlas.findRegion(WILY_DEATH_PLANE_LAZOR_RESIDUAL))
         }
         super.init()
         buildStateMachines()
@@ -401,6 +406,34 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
             }
         }
+        .sprite(
+            WILY_DEATH_PLANE_LAZOR_RESIDUAL,
+            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+                .also { sprite ->
+                    sprite.setSize(
+                        WILY_DEATH_PLANE_SPRITE_WIDTH * ConstVals.PPM,
+                        WILY_DEATH_PLANE_SPRITE_HEIGHT * ConstVals.PPM
+                    )
+                }
+        )
+        .preProcess { _, sprite ->
+            val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
+            sprite.setCenter(center)
+
+            val visible = when (currentPhase) {
+                WilyFinalBossPhase.PHASE_1 -> {
+                    val phase1StateMachine =
+                        stateMachines.get(currentPhase) as StateMachine<WilyPhase1State>
+                    val state = phase1StateMachine.getCurrentElement()
+
+                    state == WilyPhase1State.FIRE_LAZORS &&
+                        !phase1Handler.lazorCompletionStarted &&
+                        phase1Handler.lazorStartPauseTimer.isFinished()
+                }
+                else -> false
+            }
+            sprite.hidden = !visible
+        }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
@@ -520,6 +553,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         var flyByDone = false
         var flyByMovingRight = false
 
+        var flyByRenderOnlyOneWarning = false
+
         var currentFlyByStartCol = 0
         var currentFlyByStartRow = 0
 
@@ -542,8 +577,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         var lazorChance = Phase1ConstVals.INIT_LAZOR_CHANCE
         var lazorWarmUpScalar = Phase1ConstVals.LAZOR_WARM_UP_START
 
-        private val lazorStartPauseTimer = Timer(Phase1ConstVals.LAZOR_START_PAUSE_TIME)
-        private val lazorEndPauseTimer = Timer(Phase1ConstVals.LAZOR_END_PAUSE_TIME)
+        val lazorStartPauseTimer = Timer(Phase1ConstVals.LAZOR_START_PAUSE_TIME)
+        val lazorEndPauseTimer = Timer(Phase1ConstVals.LAZOR_END_PAUSE_TIME)
 
         var leftLazor: WilyDeathPlaneLazor? = null
         var rightLazor: WilyDeathPlaneLazor? = null
@@ -746,11 +781,16 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         fun updateWarningSigns(state: WilyPhase1State) {
             warningSigns.values().forEach { it.on = false }
 
+            if (initSequence) return
+
             when (state) {
                 WilyPhase1State.FLY_IN ->
                     warningSigns[getGridSignKey(currentFlyInCol, currentFlyInRow)]?.on = true
                 WilyPhase1State.FLY_BY ->
-                    for (col in 0..1) warningSigns[getGridSignKey(col, currentFlyByStartRow)]?.on = true
+                    if (flyByRenderOnlyOneWarning) {
+                        val destCol = if (flyByMovingRight) 1 else 0
+                        warningSigns[getGridSignKey(destCol, currentFlyByStartRow)]?.on = true
+                    } else for (col in 0..1) warningSigns[getGridSignKey(col, currentFlyByStartRow)]?.on = true
                 WilyPhase1State.SWOOP ->
                     for (i in 1..5) warningSigns["ground_warning_sign_$i"]?.on = true
                 else -> {}
@@ -809,6 +849,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         fun beginFlyByFromHover() {
+            flyByRenderOnlyOneWarning = true
+
             currentFlyByStartCol = currentFlyInCol
             currentFlyByStartRow = currentFlyInRow
 
@@ -826,6 +868,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         fun beginNextFlyBy() {
+            flyByRenderOnlyOneWarning = false
+
             flyByMovingRight = currentFlyByStartCol == 0
 
             body.setCenter(flyInStartPositions[currentFlyByStartCol, currentFlyByStartRow]!!)
@@ -954,8 +998,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             leftLazor?.on = true
             rightLazor?.on = true
 
-            leftLazor?.body?.setTopCenterToPoint(x - 4f * ConstVals.PPM, y - 1f * ConstVals.PPM)
-            rightLazor?.body?.setTopCenterToPoint(x + 4f * ConstVals.PPM, y - 1f * ConstVals.PPM)
+            leftLazor?.body?.setTopCenterToPoint(x - 4f * ConstVals.PPM, y - 0.5f * ConstVals.PPM)
+            rightLazor?.body?.setTopCenterToPoint(x + 4f * ConstVals.PPM, y - 0.5f * ConstVals.PPM)
 
             return false
         }
@@ -981,6 +1025,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             flyByCount = 0
             flyByDone = false
             flyByMovingRight = false
+            flyByRenderOnlyOneWarning = false
 
             currentFlyByStartCol = 0
             currentFlyByStartRow = 0

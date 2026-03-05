@@ -3835,8 +3835,8 @@
     <property name="top_right_warning_sign" type="object" value="674"/>
    </properties>
   </object>
-  <object id="658" name="FlyIn_Target1" x="11640" y="3832" width="32" height="32"/>
-  <object id="659" name="FlyIn_Target2" x="11568" y="3840" width="32" height="32"/>
+  <object id="658" name="FlyIn_Target1" x="11600" y="3872" width="32" height="32"/>
+  <object id="659" name="FlyIn_Target2" x="11600" y="3872" width="32" height="32"/>
   <object id="661" name="FlyIn_Target3" x="11600" y="4064" width="32" height="32"/>
   <object id="662" name="FlyIn_Target4" x="11600" y="4064" width="32" height="32"/>
   <object id="663" name="FlyIn_Start1" x="11040" y="3872" width="32" height="32"/>

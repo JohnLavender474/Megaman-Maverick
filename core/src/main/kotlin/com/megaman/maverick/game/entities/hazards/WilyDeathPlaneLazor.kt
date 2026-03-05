@@ -42,10 +42,11 @@ class WilyDeathPlaneLazor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         private const val MIN_FRAME = 1
         private const val MAX_FRAME = 5
 
-        private const val FRAME_DUR = 0.1f
-        private const val FRAME_ROWS = 4
-        private const val FRAME_WIDTH = 1f
-        private const val FRAME_HEIGHT = 3f
+        private const val FRAME_DUR = 0.05f
+
+        private const val FRAME_ROWS = 2
+        private const val FRAME_WIDTH = 2f
+        private const val FRAME_HEIGHT = 6f
 
         private const val BODY_WIDTH = FRAME_WIDTH
         private const val BODY_HEIGHT = FRAME_ROWS * FRAME_HEIGHT
@@ -111,7 +112,7 @@ class WilyDeathPlaneLazor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
         val preProcessFuncs = OrderedMap<Any, UpdateFunction<GameSprite>>()
 
         for (i in 0 until FRAME_ROWS) {
-            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
+            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 4))
             sprite.setSize(FRAME_WIDTH * ConstVals.PPM, FRAME_HEIGHT * ConstVals.PPM)
             sprites.put(i, sprite)
 

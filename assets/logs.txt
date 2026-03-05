@@ -1,35 +1,99 @@
-===== SESSION STARTED: 2026-03-05T17:32:25.645570934 =====
-17:32:35 | DEBUG | WilyFinalBoss | init()
-17:32:35 | DEBUG | WilyFinalBoss | onSpawn(): spawnProps=Properties({
+===== SESSION STARTED: 2026-03-05T17:57:11.204815365 =====
+17:57:18 | DEBUG | WilyFinalBoss | init()
+17:57:18 | DEBUG | WilyFinalBoss | onSpawn(): spawnProps=Properties({
 	[orb=false]
-	[ground_warning_sign_4=com.badlogic.gdx.maps.objects.RectangleMapObject@755e4404]
-	[lazor_left_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@67f7ccb3]
+	[ground_warning_sign_4=com.badlogic.gdx.maps.objects.RectangleMapObject@23f43f9a]
+	[lazor_left_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@28e89444]
 	[bounds=[11600.0,4096.0,32.0,32.0]]
-	[fly_in_target_3=com.badlogic.gdx.maps.objects.RectangleMapObject@49649e09]
-	[fly_in_start_3=com.badlogic.gdx.maps.objects.RectangleMapObject@7b16ae7b]
+	[fly_in_target_3=com.badlogic.gdx.maps.objects.RectangleMapObject@4fcf2ed5]
+	[fly_in_start_3=com.badlogic.gdx.maps.objects.RectangleMapObject@31308c01]
 	[x=11600.0]
-	[ground_warning_sign_1=com.badlogic.gdx.maps.objects.RectangleMapObject@7c6fbb79]
+	[ground_warning_sign_1=com.badlogic.gdx.maps.objects.RectangleMapObject@33ba6d52]
 	[height=32.0]
 	[end=false]
-	[top_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@25a47213]
-	[top_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@485d3478]
-	[ground_warning_sign_3=com.badlogic.gdx.maps.objects.RectangleMapObject@6f62e7e]
+	[top_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@5f9c85d5]
+	[top_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@6913a175]
+	[ground_warning_sign_3=com.badlogic.gdx.maps.objects.RectangleMapObject@5cf668d2]
 	[music=MMX7_OUR_BLOOD_BOILS_MUSIC]
-	[fly_in_target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@743f9aa]
+	[fly_in_target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@3c464ee3]
 	[id=641]
-	[fly_in_start_2=com.badlogic.gdx.maps.objects.RectangleMapObject@17137bb]
-	[ground_warning_sign_5=com.badlogic.gdx.maps.objects.RectangleMapObject@202e2d19]
-	[bottom_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@179c72bc]
-	[fly_in_target_4=com.badlogic.gdx.maps.objects.RectangleMapObject@f8a574c]
-	[lazor_right_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@74e65e9]
-	[fly_in_start_4=com.badlogic.gdx.maps.objects.RectangleMapObject@5659d6fc]
+	[fly_in_start_2=com.badlogic.gdx.maps.objects.RectangleMapObject@7cfd693]
+	[ground_warning_sign_5=com.badlogic.gdx.maps.objects.RectangleMapObject@73a3c716]
+	[bottom_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@1cfc8148]
+	[fly_in_target_4=com.badlogic.gdx.maps.objects.RectangleMapObject@12c3f562]
+	[lazor_right_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@6bc1d2e7]
+	[fly_in_start_4=com.badlogic.gdx.maps.objects.RectangleMapObject@63723fe]
 	[y=4096.0]
 	[width=32.0]
-	[ground_warning_sign_2=com.badlogic.gdx.maps.objects.RectangleMapObject@22a45719]
-	[fly_in_target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@7f495436]
-	[bottom_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@bdc071b]
-	[fly_in_start_1=com.badlogic.gdx.maps.objects.RectangleMapObject@132adeaa]
+	[ground_warning_sign_2=com.badlogic.gdx.maps.objects.RectangleMapObject@7eb904b1]
+	[fly_in_target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@735c96e1]
+	[bottom_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@16ef2487]
+	[fly_in_start_1=com.badlogic.gdx.maps.objects.RectangleMapObject@29f8cd77]
 })
-17:32:35 | DEBUG | WilyFinalBoss | Phase1Handler: init()
-17:32:35 | DEBUG | WilyFinalBoss | onDestroy()
-17:32:35 | DEBUG | WilyFinalBoss | Phase1Handler: reset()
+17:57:18 | DEBUG | WilyFinalBoss | Phase1Handler: init()
+17:57:20 | DEBUG | WilyFinalBoss | update(): phase 1 - swoop: go to next state
+17:57:20 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_IN, previous=SWOOP
+17:57:22 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=HOVER, previous=FLY_IN
+17:57:22 | DEBUG | WilyFinalBoss | onChangeState(): end init sequence
+17:57:25 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=SHOOT_MISSILES, previous=HOVER
+17:57:25 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): lazorChance=0.5
+17:57:28 | DEBUG | WilyFinalBoss | update(): phase 1 - shoot missiles: go to next state
+17:57:28 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_BY, previous=SHOOT_MISSILES
+17:57:28 | DEBUG | WilyFinalBoss | Phase1Handler: beginFlyByFromHover(): col=0, row=1, movingRight=true
+17:57:29 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=1
+17:57:29 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=1, col=1, row=0, movingRight=false
+17:57:31 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=2
+17:57:31 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=2, col=0, row=1, movingRight=true
+17:57:34 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=3
+17:57:34 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_IN, previous=FLY_BY
+17:57:35 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=HOVER, previous=FLY_IN
+17:57:36 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_OUT, previous=HOVER
+17:57:36 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): lazorChance=0.75
+17:57:36 | DEBUG | WilyFinalBoss | update(): phase 1 - fly out: go to next state
+17:57:36 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=SWOOP, previous=FLY_OUT
+17:57:39 | DEBUG | WilyFinalBoss | update(): phase 1 - swoop: go to next state
+17:57:39 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_IN, previous=SWOOP
+17:57:40 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=HOVER, previous=FLY_IN
+17:57:41 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_BY, previous=HOVER
+17:57:41 | DEBUG | WilyFinalBoss | Phase1Handler: beginFlyByFromHover(): col=1, row=0, movingRight=false
+17:57:41 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): missilesChance=0.5
+17:57:42 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=1
+17:57:42 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=1, col=0, row=1, movingRight=true
+17:57:45 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=2
+17:57:45 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=2, col=1, row=0, movingRight=false
+17:57:47 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=3
+17:57:48 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_IN, previous=FLY_BY
+17:57:49 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=HOVER, previous=FLY_IN
+17:57:50 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=SHOOT_MISSILES, previous=HOVER
+17:57:50 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): lazorChance=1.0
+17:57:52 | DEBUG | WilyFinalBoss | update(): phase 1 - shoot missiles: go to next state
+17:57:52 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_BY, previous=SHOOT_MISSILES
+17:57:52 | DEBUG | WilyFinalBoss | Phase1Handler: beginFlyByFromHover(): col=1, row=1, movingRight=false
+17:57:53 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=1
+17:57:53 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=1, col=0, row=0, movingRight=true
+17:57:56 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=2
+17:57:56 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=2, col=1, row=1, movingRight=false
+17:57:58 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=3
+17:57:59 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=SWOOP, previous=FLY_BY
+17:58:01 | DEBUG | WilyFinalBoss | update(): phase 1 - swoop: go to next state
+17:58:01 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_IN, previous=SWOOP
+17:58:03 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=HOVER, previous=FLY_IN
+17:58:04 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=SHOOT_MISSILES, previous=HOVER
+17:58:04 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): lazorChance=1.0
+17:58:06 | DEBUG | WilyFinalBoss | update(): phase 1 - shoot missiles: go to next state
+17:58:06 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_BY, previous=SHOOT_MISSILES
+17:58:06 | DEBUG | WilyFinalBoss | Phase1Handler: beginFlyByFromHover(): col=1, row=1, movingRight=false
+17:58:07 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=1
+17:58:07 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=1, col=0, row=0, movingRight=true
+17:58:10 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=2
+17:58:10 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=2, col=1, row=1, movingRight=false
+17:58:12 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=3
+17:58:13 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_IN, previous=FLY_BY
+17:58:14 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=HOVER, previous=FLY_IN
+17:58:15 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FIRE_LAZORS, previous=HOVER
+17:58:15 | DEBUG | WilyFinalBoss | Phase1Handler: startLazors()
+17:58:15 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): missilesChance=1.0
+17:58:43 | DEBUG | WilyFinalBoss | update(): phase 1 - fire lazors: go to next state
+17:58:43 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_OUT, previous=FIRE_LAZORS
+17:58:44 | DEBUG | WilyFinalBoss | onDestroy()
+17:58:44 | DEBUG | WilyFinalBoss | Phase1Handler: reset()
