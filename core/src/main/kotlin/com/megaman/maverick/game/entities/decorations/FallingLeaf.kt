@@ -83,7 +83,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
 
     private var minY = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/$TAG")
         super.init()

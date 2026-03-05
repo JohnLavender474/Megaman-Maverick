@@ -98,7 +98,7 @@ class SpreadExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         )
     )
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             SpreadExplosionColor.entries.forEach { color ->

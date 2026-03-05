@@ -44,7 +44,7 @@ class MuzzleFlash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     override fun getType() = EntityType.DECORATION
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())

@@ -42,7 +42,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
     var trajectory: Vector2? = null
     var passThroughBlocks = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (rockRegion == null)
             rockRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "$TAG/Rock")
         super.init()

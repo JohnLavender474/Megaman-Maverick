@@ -31,7 +31,7 @@ class Life(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
         private var region: TextureRegion? = null
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         super.init()

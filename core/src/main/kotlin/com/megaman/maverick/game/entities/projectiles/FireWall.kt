@@ -56,7 +56,7 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     private val ignoreBlockSet = ObjectSet<Int>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put("disintegrate", atlas.findRegion("$TAG/disintegrate"))

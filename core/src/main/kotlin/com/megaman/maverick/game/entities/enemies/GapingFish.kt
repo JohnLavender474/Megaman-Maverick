@@ -71,7 +71,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     private val chomping: Boolean
         get() = !chompTimer.isFinished()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         damageOverrides.putAll(
             UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH),

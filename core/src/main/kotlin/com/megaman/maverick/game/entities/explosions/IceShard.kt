@@ -76,7 +76,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     private val fadeOutTimer = Timer(FADE_OUT_DUR)
     private var fadeOut = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (TEXTURES.isEmpty) {
             val region1 = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "BreakableIce/Shards")

@@ -18,7 +18,7 @@ class AsyncFileWriter(filePath: String, private val deleteIfExists: Boolean = tr
     private val fileHandle = Gdx.files.local(filePath)
     private var disposed = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (disposed) throw IllegalStateException("Cannot call init() after calling dispose()")
 
         if (deleteIfExists && fileHandle.exists()) fileHandle.delete()

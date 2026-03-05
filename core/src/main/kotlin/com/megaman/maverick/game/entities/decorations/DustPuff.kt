@@ -46,7 +46,7 @@ class DustPuff(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     private val timer = Timer(DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         GameLogger.debug(TAG, "init()")
         super.init()

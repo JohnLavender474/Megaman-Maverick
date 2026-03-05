@@ -628,6 +628,7 @@ sprites/frames/Decorations1/BulletResidual.png
 sprites/frames/Decorations1/MockingByteNest.png
 sprites/frames/Decorations1/CrystalConveyorBKG.png
 sprites/frames/Decorations1/BreathBubbles.png
+sprites/frames/Decorations1/WarningSign.png
 sprites/frames/Decorations1/RainSplash.png
 sprites/frames/Decorations1/UnderWaterBubble.png
 sprites/frames/Decorations1/Furnace.png
@@ -2602,6 +2603,7 @@ sprites/frames/SMB3_Items/coin.png
 sprites/frames/Ui2/MegamanSubtitle.png
 sprites/frames/Ui2/TitleScreenBackgroundv2.png
 sprites/frames/Ui2/MegamanTitle.png
+sprites/frames/Ui2/warning.png
 sprites/frames/Ui2/TitleScreenBackground.png
 sprites/frames/Ui2/TitleScreenBackgroundv3.png
 sprites/frames/Ui1/menu_screen_bkg.png
@@ -3850,7 +3852,6 @@ music/vinnyz_inferno_intro_track.mp3
 music/MMX_Sigma1st.mp3
 music/vinnyz_stage_select_v1.mp3
 music/vinnyz_inferno_loop_track.mp3
-music/mmx7_our_blood_boils.wav
 music/Mega_Quest_2_Level_1.ogg
 music/MM8_FrostMan_Alt.mp3
 music/vinnyz_glacier_track.wav
@@ -3907,6 +3908,7 @@ music/Mega_Quest_2_Level_1.mp3
 music/MM6_WilyBattle.mp3
 music/vinnyz_weapon_get_theme.mp3
 music/vinnyz_main_menu.wav
+music/MMX7_our_blood_boils.wav
 music/MMX5_IzzyGlow.mp3
 music/vinnyz_intro_stage.wav
 music/Cody_O_Quinn_Action_Man.mp3
@@ -3918,7 +3920,6 @@ music/MMX_Sigma1st.txt
 music/Cody_O_Quinn_Battle_Man_loop.wav
 music/MMX5_IzzyGlow.txt
 music/SnakeManMM3.mp3
-music/our_blood_boils.mp3
 music/Famitard_OC_1.mp3
 music/MMX3_IntroStage.ogg
 music/smb3_overworld_1.mp3

@@ -83,7 +83,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
     private var blink = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("fly", "blink").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

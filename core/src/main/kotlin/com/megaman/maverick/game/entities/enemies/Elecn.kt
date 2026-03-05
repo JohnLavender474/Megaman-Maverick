@@ -79,7 +79,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM)
 
     private var zigzagUp = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         addComponent(defineAnimationsComponent())

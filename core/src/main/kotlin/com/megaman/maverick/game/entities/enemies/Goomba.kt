@@ -82,7 +82,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     private val tempOut = ObjectSet<MegaGameEntity>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {

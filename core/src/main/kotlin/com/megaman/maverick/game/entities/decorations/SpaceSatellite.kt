@@ -30,7 +30,7 @@ class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     private val position = Vector2()
     private var left = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())

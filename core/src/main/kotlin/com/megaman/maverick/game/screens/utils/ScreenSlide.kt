@@ -33,7 +33,7 @@ class ScreenSlide(
         if (setToEnd) setToEnd()
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         val position = if (reversed) endPoint else startPoint
         camera.position.set(position)
 

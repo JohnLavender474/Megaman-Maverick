@@ -148,7 +148,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
 
     private val reusableFloatArray = Array<Float>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (bodyRegion == null || bodyDamagedRegion == null || bodyTittyShootRegion == null || bodyTittyShootDamagedRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             bodyRegion = atlas.findRegion("SigmaRat/Body")

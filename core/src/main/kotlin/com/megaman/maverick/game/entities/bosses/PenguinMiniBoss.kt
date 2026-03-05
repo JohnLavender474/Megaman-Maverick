@@ -75,7 +75,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     private var launchPenguins = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.BOSSES_1.source, "$TAG/$TAG")
         super.init()
         addComponent(defineAnimationsComponent())

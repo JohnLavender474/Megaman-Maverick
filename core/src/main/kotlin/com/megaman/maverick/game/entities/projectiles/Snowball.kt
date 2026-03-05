@@ -42,7 +42,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var region: TextureRegion? = null
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball2")
         super.init()
     }

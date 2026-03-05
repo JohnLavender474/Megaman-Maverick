@@ -68,7 +68,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     private val ignore = ObjectSet<Int>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("still", "shake").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }

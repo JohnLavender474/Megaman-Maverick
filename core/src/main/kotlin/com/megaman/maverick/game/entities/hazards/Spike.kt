@@ -89,7 +89,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
     // be destroyed when a boss is defeated.
     private var destroyOnBossDefeated = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
         super.init()

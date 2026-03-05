@@ -31,7 +31,7 @@ class BlocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val INFERNO_CHAIN_PLATFORM = "InfernoChainPlatform"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(STANDARD, GameEntityPoolCreator.create { Block(game) })
         pools.put(ANIMATED_BLOCK, GameEntityPoolCreator.create { AnimatedBlock(game) })
         pools.put(ICE_BLOCK, GameEntityPoolCreator.create { IceBlock(game) })

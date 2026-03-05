@@ -152,7 +152,7 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
     private val shielded: Boolean
         get() = blastTimer.isFinished()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

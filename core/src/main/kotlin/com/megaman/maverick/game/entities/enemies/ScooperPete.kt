@@ -119,7 +119,7 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
     private val currentStateTimer: Timer
         get() = stateTimers[currentState]
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

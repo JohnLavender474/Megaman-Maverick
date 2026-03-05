@@ -75,7 +75,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
     private val timeToSpawnEnemyTimer = Timer(TIME_TO_SPAWN_ENEMY)
     private var enemyToSpawn: String? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             regions.put(ConstKeys.PLATFORM, atlas.findRegion("$TAG/${ConstKeys.PLATFORM}"))

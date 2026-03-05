@@ -21,7 +21,7 @@ open class SelectorBehavior(val childBehaviors: Array<IBehavior>) : AbstractBeha
         } else return selectedBehavior!!.evaluate(delta)
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         selectedBehavior?.init()
     }
 

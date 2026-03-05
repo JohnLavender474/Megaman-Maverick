@@ -61,7 +61,7 @@ class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val AXE = "axe"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(BULLET, GameEntityPoolCreator.create { Bullet(game) })
         pools.put(CHARGED_SHOT, GameEntityPoolCreator.create { ChargedShot(game) })
         pools.put(PURPLE_BLAST, GameEntityPoolCreator.create { PurpleBlast(game) })

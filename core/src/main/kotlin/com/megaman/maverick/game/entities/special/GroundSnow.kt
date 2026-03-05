@@ -93,7 +93,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private val feetTimers = OrderedMap<IGameEntity, Timer>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             gdxArrayOf("left", "middle", "right", "back").forEach { regions.put(it, atlas.findRegion("${TAG}/$it")) }

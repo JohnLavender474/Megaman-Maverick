@@ -51,7 +51,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("egg", atlas.findRegion("Pipi/Egg"))

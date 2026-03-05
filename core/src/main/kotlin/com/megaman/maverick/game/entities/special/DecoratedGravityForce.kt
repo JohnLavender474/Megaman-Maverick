@@ -43,7 +43,7 @@ class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
     override fun getTag() = TAG
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         addComponent(defineCullablesComponent())
     }

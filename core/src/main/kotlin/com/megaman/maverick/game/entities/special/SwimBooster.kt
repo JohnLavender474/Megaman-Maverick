@@ -32,7 +32,7 @@ class SwimBooster(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
 
     private val bounds = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineCullablesComponent())

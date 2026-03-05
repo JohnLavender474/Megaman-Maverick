@@ -62,7 +62,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size
     private lateinit var triggerBox: GameRectangle
     private lateinit var startPosition: Vector2
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("swim", atlas.findRegion("$TAG/swim"))

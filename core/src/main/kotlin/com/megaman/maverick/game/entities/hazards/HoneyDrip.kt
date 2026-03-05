@@ -66,7 +66,7 @@ class HoneyDrip(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private val splashTimer = Timer(SPLASH_DUR)
     private var splash = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

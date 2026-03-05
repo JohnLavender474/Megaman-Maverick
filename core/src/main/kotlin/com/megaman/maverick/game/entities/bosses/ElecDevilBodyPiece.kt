@@ -78,7 +78,7 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
 
     private var speed = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init(): hashcode=${hashCode()}")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()

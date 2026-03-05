@@ -61,7 +61,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
     protected var gravity = GRAVITY
     protected var velClamp = VEL_CLAMP
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
 

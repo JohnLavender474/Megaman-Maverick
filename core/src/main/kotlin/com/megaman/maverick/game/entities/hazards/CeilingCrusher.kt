@@ -75,7 +75,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     override fun getTag() = TAG
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (crusherRegion == null || barRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             crusherRegion = atlas.findRegion("CeilingCrusher/Crusher")

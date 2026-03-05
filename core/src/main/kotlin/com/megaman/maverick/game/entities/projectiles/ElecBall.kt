@@ -68,7 +68,7 @@ class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     private val hitTimer = Timer(HIT_DUR)
     private var hit = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

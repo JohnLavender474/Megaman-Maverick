@@ -107,7 +107,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private val target = Vector2()
     private val triggers = Array<TriggerDef>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (heliRegion == null || flameRegion == null) {
             heliRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "${TAG}/fly")

@@ -97,7 +97,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
     private var minY = DEFAULT_MIN_Y
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

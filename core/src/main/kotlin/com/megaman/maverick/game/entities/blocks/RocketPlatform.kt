@@ -66,7 +66,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<Meg
         get() = !game.isCameraRotating()
     private var hidden = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "${TAG}${REGION_SUFFIX}")
         super.init()

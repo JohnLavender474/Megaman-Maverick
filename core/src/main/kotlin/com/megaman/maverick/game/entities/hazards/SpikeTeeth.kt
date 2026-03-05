@@ -64,7 +64,7 @@ class SpikeTeeth(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     override var owner: IGameEntity? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())

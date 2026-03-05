@@ -22,7 +22,7 @@ class Fade(private val type: FadeType, duration: Float) : ITypable<FadeType>, In
 
     override fun getType() = type
 
-    override fun init() = timer.reset()
+    override fun init(vararg params: Any) = timer.reset()
 
     override fun update(delta: Float) = timer.update(delta)
 

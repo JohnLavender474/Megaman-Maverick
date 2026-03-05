@@ -35,7 +35,7 @@ class SpecialsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val GROUND_SNOW = "GroundSnow"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(WATER, GameEntityPoolCreator.create { Water(game) })
         pools.put(POLYGON_WATER, GameEntityPoolCreator.create { PolygonWater(game) })
         pools.put(SPRING_BOUNCER, GameEntityPoolCreator.create { SpringBouncer(game) })

@@ -41,7 +41,7 @@ class ForceDecoration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     override fun getType() = EntityType.DECORATION
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Force")
         addComponent(defineSpritesComponent())

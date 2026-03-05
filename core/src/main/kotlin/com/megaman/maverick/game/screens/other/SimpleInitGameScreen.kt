@@ -24,7 +24,7 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
     private val uiCamera = game.getUiCamera()
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) {
             GameLogger.debug(TAG, "init(): already initialized, do nothing")
             return

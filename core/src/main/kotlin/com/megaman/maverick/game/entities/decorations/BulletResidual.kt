@@ -37,7 +37,7 @@ class BulletResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     private val center = Vector2()
     private var rotation = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
@@ -61,7 +61,7 @@ class BulletResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
-            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
                 .also { sprite -> sprite.setSize(0.75f * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->

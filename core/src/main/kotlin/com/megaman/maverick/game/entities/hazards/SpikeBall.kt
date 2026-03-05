@@ -51,7 +51,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     override fun getType() = EntityType.HAZARD
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (spikeRegion == null || chainRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             spikeRegion = atlas.findRegion("SpikeBall/SpikeBall")

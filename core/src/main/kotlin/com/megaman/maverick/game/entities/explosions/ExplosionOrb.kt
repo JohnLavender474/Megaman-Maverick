@@ -50,7 +50,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineBodyComponent())

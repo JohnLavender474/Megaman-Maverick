@@ -44,7 +44,7 @@ class WhiteBurst(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     override var owner: MegaGameEntity? = null
     override var on = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()

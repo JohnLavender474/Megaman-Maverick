@@ -53,7 +53,7 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private var rotation = 0f
     private val rotationTimer = Timer(ROTATION_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)

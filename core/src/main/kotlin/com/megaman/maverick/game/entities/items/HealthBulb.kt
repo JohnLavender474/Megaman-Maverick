@@ -31,7 +31,7 @@ class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimate
         private val regions = ObjectMap<String, ObjectMap<String, TextureRegion>>()
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()

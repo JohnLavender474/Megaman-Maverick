@@ -41,7 +41,7 @@ class PreciousBlock(game: MegamanMaverickGame) : ShieldBlock(game), ISpritesEnti
     private val cells = Matrix<GameRectangle>()
     private var spawn: Vector2? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
         super.init()

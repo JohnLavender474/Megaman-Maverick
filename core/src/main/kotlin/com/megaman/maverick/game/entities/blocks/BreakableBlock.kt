@@ -80,7 +80,7 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
     private val connectedBlockIds = OrderedSet<Int>()
     private val connectedBlocks = OrderedSet<BreakableBlock>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val platformsAtlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)

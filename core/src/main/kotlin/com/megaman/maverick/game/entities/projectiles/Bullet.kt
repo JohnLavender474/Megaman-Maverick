@@ -55,7 +55,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     private var followTraj = true
     private var bounced = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()

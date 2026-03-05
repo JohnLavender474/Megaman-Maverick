@@ -49,7 +49,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
     private lateinit var currentState: LiftState
     private lateinit var stopPoint: Vector2
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
         addComponent(defineSpritesComponent())

@@ -43,7 +43,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
         EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")

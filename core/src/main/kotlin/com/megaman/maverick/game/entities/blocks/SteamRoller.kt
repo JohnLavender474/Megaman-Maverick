@@ -105,7 +105,7 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         .setRunOnJustFinished { smash() }
     private val smashDelay = Timer(SMASH_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)

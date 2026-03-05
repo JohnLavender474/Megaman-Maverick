@@ -48,7 +48,7 @@ class MockSpriteEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
     }
     private val swapFacingTimer = Timer(1f)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(
             TextureAsset.BOSSES_3.source, "${ElecDevil.TAG}/${ConstKeys.GRID}"

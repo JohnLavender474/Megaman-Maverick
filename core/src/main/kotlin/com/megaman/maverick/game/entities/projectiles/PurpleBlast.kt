@@ -54,7 +54,7 @@ class PurpleBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     private val chargeDelayTimer = Timer(CHARGE_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (chargeRegion == null || blastRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

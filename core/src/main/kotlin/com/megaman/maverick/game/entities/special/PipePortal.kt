@@ -55,7 +55,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private var thisKey = -1
     private var nextKey = -1
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(AudioComponent())

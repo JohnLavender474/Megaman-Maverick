@@ -52,7 +52,7 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     private val spinDelayTimer = Timer(SPIN_DELAY)
     private var xSpeed = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())

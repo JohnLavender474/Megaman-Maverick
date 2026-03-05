@@ -60,7 +60,7 @@ class ControllerSettingsScreen(
 
     private var actionOnNextUpdate: (() -> Unit)? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) return
         initialized = true
 

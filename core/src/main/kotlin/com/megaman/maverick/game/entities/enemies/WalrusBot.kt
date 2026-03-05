@@ -79,7 +79,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private lateinit var walrusBotState: WalrusBotState
     private lateinit var stateQueudForAfterShoot: WalrusBotState
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("stand", atlas.findRegion("$TAG/stand"))

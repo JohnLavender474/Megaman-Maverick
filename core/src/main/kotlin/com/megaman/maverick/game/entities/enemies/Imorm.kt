@@ -49,7 +49,7 @@ class Imorm(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL),
     override lateinit var direction: Direction
 
     private val slitherTimer = Timer(SLITHER_DURATION)
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Imorm")
         super.init()

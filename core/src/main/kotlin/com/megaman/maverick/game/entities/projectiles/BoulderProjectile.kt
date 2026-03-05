@@ -74,7 +74,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     private val spawnExplodeDelay = Timer(SPAWN_EXPLODE_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (largeRegion == null || mediumRegion == null || smallRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             largeRegion = atlas.findRegion("Boulder/Large")

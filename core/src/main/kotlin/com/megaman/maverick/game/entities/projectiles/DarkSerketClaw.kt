@@ -66,7 +66,7 @@ class DarkSerketClaw(game: MegamanMaverickGame) : AbstractHealthEntity(game), IP
     override var lightSourceRadius = LIGHT_RADIUS
     override var lightSourceRadiance = LIGHT_RADIANCE
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()

@@ -56,7 +56,7 @@ class MockingByteNest(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     private lateinit var spawnRoom: String
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()

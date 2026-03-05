@@ -58,7 +58,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
 
     private val blockIds = ObjectSet<Int>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         if (angles.isEmpty) {

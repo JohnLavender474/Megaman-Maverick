@@ -128,7 +128,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     private var bounces = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

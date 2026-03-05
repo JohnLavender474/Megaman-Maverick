@@ -41,7 +41,7 @@ class LavaDropSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
 
     override fun getType() = EntityType.HAZARD
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())

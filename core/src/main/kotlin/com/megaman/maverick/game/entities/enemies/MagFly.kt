@@ -57,7 +57,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private var flash = false
     private lateinit var forceFixture: Fixture
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         addComponent(defineAnimationsComponent())

@@ -78,7 +78,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private var stuckToMegaman = false
     private var presses = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (grayRegion == null || blinkWhiteRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             grayRegion = atlas.findRegion("$TAG/Gray")

@@ -70,7 +70,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         get() = (body.getX() < megaman.body.getX() && isFacing(Facing.LEFT)) ||
             (body.getX() > megaman.body.getX() && isFacing(Facing.RIGHT))
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("unleashed", "compressed").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

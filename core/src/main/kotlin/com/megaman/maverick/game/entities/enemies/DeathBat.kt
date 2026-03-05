@@ -80,7 +80,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
         damageOverrides.put(Fireball::class, null)

@@ -43,7 +43,7 @@ class AirConditioner(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
 
     private val bounds = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             gdxArrayOf("machine", "pipe").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }

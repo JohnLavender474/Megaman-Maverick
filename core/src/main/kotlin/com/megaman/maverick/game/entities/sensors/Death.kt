@@ -21,7 +21,7 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         const val TAG = "Death"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         addComponent(defineBodyComponent())
     }

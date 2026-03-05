@@ -42,7 +42,7 @@ class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICul
 
     override fun getTag(): String = TAG
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         addComponent(defineBodyComponent())
     }
 

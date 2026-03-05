@@ -69,7 +69,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
     private var finished = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
         if (!initialized) {

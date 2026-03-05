@@ -65,7 +65,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         )
     private val damageTimer = Timer(DAMAGE_DURATION)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Petal")
         super.init()

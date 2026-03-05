@@ -102,7 +102,7 @@ class SpikeBot_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
     )
     private lateinit var animator: Animator
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("jump", "walk", "shoot", "stand").forEach { key ->

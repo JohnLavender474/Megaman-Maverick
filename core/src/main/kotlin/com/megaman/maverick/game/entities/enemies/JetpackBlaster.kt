@@ -101,7 +101,7 @@ class JetpackBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     private var aimLine: GameLine? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             DistanceType.entries.forEach { d ->

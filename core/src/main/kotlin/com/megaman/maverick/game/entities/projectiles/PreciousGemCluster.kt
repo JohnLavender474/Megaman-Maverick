@@ -52,7 +52,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
 
     private var maxDistFromOrigin = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineBodyComponent())

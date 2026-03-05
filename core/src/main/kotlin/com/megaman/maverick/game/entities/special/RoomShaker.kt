@@ -46,7 +46,7 @@ class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListen
 
     override fun getType() = EntityType.SPECIAL
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         addComponent(defineUpdatablesComponent())
         addComponent(AudioComponent())
     }

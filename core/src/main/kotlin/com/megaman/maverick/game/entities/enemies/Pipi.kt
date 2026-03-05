@@ -53,7 +53,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM),
 
     private var hasEgg = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("with_egg", atlas.findRegion("$TAG/PipiWithEgg"))

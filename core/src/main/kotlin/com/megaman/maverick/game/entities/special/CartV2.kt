@@ -67,7 +67,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
     private val moving: Boolean
         get() = abs(body.physics.velocity.x) > MIN_VEL_X * ConstVals.PPM
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)

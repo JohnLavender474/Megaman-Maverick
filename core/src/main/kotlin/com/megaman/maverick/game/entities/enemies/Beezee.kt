@@ -115,7 +115,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private val reusableBoundsMatrix = Matrix<GameRectangle>()
     private val reusableBoundsArray = Array<GameRectangle>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init(): hashCode=${hashCode()}")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

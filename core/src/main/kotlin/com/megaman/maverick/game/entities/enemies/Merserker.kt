@@ -68,7 +68,7 @@ class Merserker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         get() = loop.getCurrent()
     private val timers = ObjectMap<MerserkerState, Timer>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             ANIM_DEFS.keys().forEach { regions.put(it.name.lowercase(), atlas.findRegion("$TAG/$it")) }

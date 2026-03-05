@@ -75,7 +75,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private lateinit var fireMetState: FireMetState
     private var flame: FireMetFlame? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         damageOverrides.put(Fireball::class, null)
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

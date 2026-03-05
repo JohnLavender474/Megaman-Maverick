@@ -63,7 +63,7 @@ class MagmaExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private val timer = Timer(EXPLOSION_DUR)
     private var scalar = 1f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())

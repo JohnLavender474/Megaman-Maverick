@@ -33,7 +33,7 @@ class Ladder(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
     private var ladderTop: LadderTop? = null
     private val ladderRectangle = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         addComponent(defineBodyComponent())
     }
 

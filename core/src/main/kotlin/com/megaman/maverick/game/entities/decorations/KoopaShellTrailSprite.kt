@@ -40,7 +40,7 @@ class KoopaShellTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), I
     private val position = Vector2()
     private val fadeTimer = Timer(FADE_DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_EFFECTS.source)

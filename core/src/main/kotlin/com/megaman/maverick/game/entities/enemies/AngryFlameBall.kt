@@ -51,7 +51,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     private val bounceDelayTimer = Timer(BOUNCE_DELAY)
     private var spawnY = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())

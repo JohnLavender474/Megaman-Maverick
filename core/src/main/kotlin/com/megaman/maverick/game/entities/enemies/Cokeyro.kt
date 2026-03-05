@@ -104,7 +104,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
     private val dieTimer = Timer(DIE_DUR)
     private val explodeTimer = Timer(EXPLODE_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

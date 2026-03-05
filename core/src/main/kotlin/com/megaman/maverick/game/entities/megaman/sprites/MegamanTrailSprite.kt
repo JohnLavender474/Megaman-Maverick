@@ -48,7 +48,7 @@ class MegamanTrailSprite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
 
     private val fadeTimer = Timer(FADE_DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_TRAIL_SPRITE.source)
             gdxArrayOf(AIR_DASH, GROUND_SLIDE, GROUND_SLIDE_SHOOT).forEach { regions.put(it, atlas.findRegion(it)) }

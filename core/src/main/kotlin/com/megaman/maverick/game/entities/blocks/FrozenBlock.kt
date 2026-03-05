@@ -37,7 +37,7 @@ class FrozenBlock(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity {
         private var region: TextureRegion? = null
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())

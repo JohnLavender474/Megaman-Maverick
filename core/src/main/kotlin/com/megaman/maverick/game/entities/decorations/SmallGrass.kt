@@ -44,7 +44,7 @@ class SmallGrass(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     private val brushTimer = Timer(BRUSH_DUR)
     private var hitByBeam = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             gdxArrayOf("still", "brush").forEach {

@@ -63,7 +63,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     private var coolingDown = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (timers.isEmpty) {
             timers.put("cooldown", Timer(COOLDOWN_DUR))
             timers.put("meteor_shower", Timer(METEOR_SHOWER_DUR))

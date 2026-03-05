@@ -1,7 +1,5 @@
 package com.mega.game.engine.common.enums
 
-import com.mega.game.engine.common.enums.Position.entries
-
 
 enum class Position(val x: Int, val y: Int) {
     BOTTOM_LEFT(0, 0),
@@ -17,9 +15,10 @@ enum class Position(val x: Int, val y: Int) {
     companion object {
 
         private val cardinals = listOf(TOP_CENTER, CENTER_LEFT, BOTTOM_CENTER, CENTER_RIGHT)
+        private val diagonals = listOf(TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT)
 
         fun get(x: Int, y: Int): Position {
-            if (x < 0 || x > 2 || y < 0 || y > 2)
+            if (x !in 0..2 || y !in 0..2)
                 throw IndexOutOfBoundsException("No position value for x=$x and y=$y")
 
             val index = x + y * 3
@@ -27,6 +26,8 @@ enum class Position(val x: Int, val y: Int) {
         }
 
         fun getCardinalPositions() = cardinals
+
+        fun getDiagonalPositions() = diagonals
     }
 
     fun move(direction: Direction) = when (direction) {
@@ -81,14 +82,5 @@ enum class Position(val x: Int, val y: Int) {
             else -> 0
         }
         return get(newX, y)
-    }
-
-    fun flipVertically(): Position {
-        val newY = when (y) {
-            0 -> 2
-            1 -> 1
-            else -> 0
-        }
-        return get(x, newY)
     }
 }

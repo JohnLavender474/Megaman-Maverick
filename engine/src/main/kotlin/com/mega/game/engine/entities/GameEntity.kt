@@ -22,7 +22,7 @@ abstract class GameEntity(
     override var initialized = false
     override var spawned = false
 
-    override fun init() {}
+    override fun init(vararg params: Any) {}
 
     override fun spawn(spawnProps: Properties) = engine.spawn(this, spawnProps)
 

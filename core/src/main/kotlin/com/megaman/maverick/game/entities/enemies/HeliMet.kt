@@ -100,7 +100,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private val target = Vector2()
     private val tempTargetsQueue = Array<Vector2>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

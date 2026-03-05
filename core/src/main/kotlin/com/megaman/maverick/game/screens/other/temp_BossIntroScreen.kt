@@ -52,7 +52,7 @@ class temp_BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen()
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) return
         initialized = true
 

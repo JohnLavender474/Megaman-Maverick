@@ -81,7 +81,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
 
     private var toLeftBounds = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         if (textureRegion == null) {

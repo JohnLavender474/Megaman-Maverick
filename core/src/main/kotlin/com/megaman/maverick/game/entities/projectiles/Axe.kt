@@ -63,7 +63,7 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
     private var gravityScalar = 1f
     private var bounces = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, "$TAG/spin")
         super.init()

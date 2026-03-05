@@ -30,7 +30,7 @@ class Lantern(game: MegamanMaverickGame) : LightSourceEntity(game), ISpritesEnti
         private var region: TextureRegion? = null
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()

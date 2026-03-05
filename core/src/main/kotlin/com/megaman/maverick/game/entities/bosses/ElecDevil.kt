@@ -124,7 +124,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     private lateinit var eye: IGameShape2D
     private lateinit var hand: IGameShape2D
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         damageOverrides.put(Axe::class, dmgNeg(2))

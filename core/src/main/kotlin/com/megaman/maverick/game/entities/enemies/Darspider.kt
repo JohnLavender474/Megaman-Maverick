@@ -76,7 +76,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
     private var minXOffCeiling = 0f
     private var maxXOffCeiling = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("crawl", "frozen", "jump", "still").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }

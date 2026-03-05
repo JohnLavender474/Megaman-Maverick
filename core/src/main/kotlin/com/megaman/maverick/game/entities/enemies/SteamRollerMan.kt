@@ -118,7 +118,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
 
     private lateinit var shieldFixture1: Fixture
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

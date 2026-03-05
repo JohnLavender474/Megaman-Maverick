@@ -41,7 +41,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
 
     override lateinit var facing: Facing
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         addComponent(defineAnimationsComponent())

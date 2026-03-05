@@ -57,7 +57,7 @@ class SwingingAxe(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private val debugSwingRotationTimer = Timer(DEBUG_SWING_ROTATION_SPEED)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (textureRegion == null) textureRegion = game.assMan.getTextureRegion(
             TextureAsset.HAZARDS_1.source, "SwingingAxe_HandleEndCentered"
         )

@@ -58,7 +58,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
     private var wasSideOnGround = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (runRegion == null || jumpRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             runRegion = atlas.findRegion("SuicideBummer/Run")

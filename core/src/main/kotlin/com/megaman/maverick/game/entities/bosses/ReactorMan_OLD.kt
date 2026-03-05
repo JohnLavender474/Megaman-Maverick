@@ -103,7 +103,7 @@ class ReactorMan_OLD(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
 
     private lateinit var currentState: ReactorManState
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

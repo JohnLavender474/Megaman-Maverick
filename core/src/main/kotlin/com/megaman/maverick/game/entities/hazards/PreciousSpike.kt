@@ -49,7 +49,7 @@ class PreciousSpike(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     override lateinit var direction: Direction
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         GameLogger.debug(TAG, "init()")
         super.init()

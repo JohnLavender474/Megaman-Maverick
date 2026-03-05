@@ -54,7 +54,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
     override lateinit var facing: Facing
     var whooshing = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put("still", atlas.findRegion("Flame3/Still"))

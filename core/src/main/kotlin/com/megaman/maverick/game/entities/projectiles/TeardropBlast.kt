@@ -43,7 +43,7 @@ class TeardropBlast(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     private var rotation = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())

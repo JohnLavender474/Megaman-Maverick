@@ -58,7 +58,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
     private var platform: RailTrackPlatform? = null
     private var platformRight = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("left", "right", "middle", "drop").forEach { key ->
@@ -200,7 +200,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
     val dropped: Boolean
         get() = !body.physics.collisionOn
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("platform", "platform_drop").forEach { key ->

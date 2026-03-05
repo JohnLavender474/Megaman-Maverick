@@ -34,7 +34,7 @@ class MegamanAnimations(
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         MegamanWeapon.entries.forEach { weapon ->
             val assetSource = when (weapon) {
                 MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source

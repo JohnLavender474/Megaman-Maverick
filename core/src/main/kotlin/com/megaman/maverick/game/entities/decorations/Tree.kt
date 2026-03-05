@@ -35,7 +35,7 @@ class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IC
 
     override fun getType() = EntityType.DECORATION
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Trees/Tree1")
         addComponent(defineSpritesComponent())

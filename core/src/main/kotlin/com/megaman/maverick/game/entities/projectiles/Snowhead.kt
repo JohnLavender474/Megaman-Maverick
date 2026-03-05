@@ -78,7 +78,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     private val tempSnowballsArray = Array<Snowball>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             animDefs.keys().forEach { key ->

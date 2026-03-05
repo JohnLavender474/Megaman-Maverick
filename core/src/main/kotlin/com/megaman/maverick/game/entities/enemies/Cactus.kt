@@ -158,7 +158,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     private val scanner = GameCircle().setRadius(SCANNER_RADIUS * ConstVals.PPM).also { it.drawingColor = Color.GRAY }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

@@ -88,7 +88,7 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     private val standByBlinkTimer = Timer(STAND_BY_BLINK_DELAY)
     private var standByBlink = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
             ElecDevilConstants.forEachCell { row, column ->

@@ -19,7 +19,7 @@ class BehaviorTest :
 
                 override fun evaluate(delta: Float) = evaluate
 
-                override fun init() {
+                override fun init(vararg params: Any) {
                     init = true
                 }
 

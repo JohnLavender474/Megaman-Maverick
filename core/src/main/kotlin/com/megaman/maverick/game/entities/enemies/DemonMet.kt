@@ -112,7 +112,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private var targetReached = false
     private var exploded = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         damageOverrides.put(Fireball::class, null)
         if (regions.isEmpty) {

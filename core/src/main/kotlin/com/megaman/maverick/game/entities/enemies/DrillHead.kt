@@ -125,7 +125,7 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
     private val hoverSpots = Array<Vector2>()
     private val tempVec2Set = OrderedSet<Vector2>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

@@ -59,7 +59,7 @@ class WilyDeathPlaneLazor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     private var currentFrame = MIN_FRAME
     private val frameTimer = Timer(FRAME_DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_2.source)

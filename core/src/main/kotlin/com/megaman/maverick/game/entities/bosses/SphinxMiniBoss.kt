@@ -100,7 +100,7 @@ class SphinxMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game, size = Size
     private var sphinxBall: SphinxBall? = null
     private var chunkOrbs = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             regions.put("defeated", atlas.findRegion("$TAG/defeated"))

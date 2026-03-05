@@ -86,7 +86,7 @@ class TotemPolem(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     )
     private var shootPositionIndex = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("eyes_closed", atlas.findRegion("$TAG/eyes_closed"))

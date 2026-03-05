@@ -66,7 +66,7 @@ class BabySpider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     private var wasHeadTouchingBlock = false
     private var wasFeetTouchingBlock = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (runRegion == null || stillRegion == null) {
             runRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Run")
             stillRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Still")

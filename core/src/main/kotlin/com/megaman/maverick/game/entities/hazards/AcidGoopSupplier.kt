@@ -46,7 +46,7 @@ class AcidGoopSupplier(game: MegamanMaverickGame) : MegaGameEntity(game), IHazar
     private val dropDelayTimer = Timer(DROP_DELAY)
     private var acidGoop: AcidGoop? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineUpdatablesComponent())

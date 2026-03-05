@@ -59,7 +59,7 @@ class SniperJoeShield(game: MegamanMaverickGame) : AbstractProjectile(game), IFa
     private val rotationTimer = Timer(ROTATION_DURATION)
     private val thrownRotations = Loop(gdxArrayOf(0f, 90f, 180f, 270f))
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (orangeRegion == null || blueRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
             orangeRegion = atlas.findRegion("$TAG/$ORANGE_TYPE")

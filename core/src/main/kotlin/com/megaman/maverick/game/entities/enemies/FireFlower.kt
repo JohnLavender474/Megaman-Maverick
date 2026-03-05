@@ -105,7 +105,7 @@ class FireFlower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
     private var blockId = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)

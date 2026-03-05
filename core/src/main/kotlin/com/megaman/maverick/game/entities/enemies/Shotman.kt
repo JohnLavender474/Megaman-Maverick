@@ -60,7 +60,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     private val crouchTimer = Timer(CROUCH_TIME)
     private val shootLoop = Loop(gdxArrayOf(true, true, false), true)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (shootRegion == null || launchRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             shootRegion = atlas.findRegion("Shotman/Shoot")

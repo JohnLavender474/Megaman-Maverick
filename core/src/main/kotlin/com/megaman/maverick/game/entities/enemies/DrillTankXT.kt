@@ -128,7 +128,7 @@ class DrillTankXT(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     private val canDrillBlock: Boolean
         get() = !drillBlocks.isEmpty && body.isSensing(BodySense.FEET_ON_GROUND)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

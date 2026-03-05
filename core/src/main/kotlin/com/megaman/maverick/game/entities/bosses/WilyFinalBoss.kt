@@ -13,6 +13,7 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.interfaces.Resettable
@@ -53,6 +54,7 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.O
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -112,7 +114,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     val delayBetweenStates = Timer()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
@@ -131,7 +133,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         super.onSpawn(spawnProps)
 
-        phase1Handler.init()
+        phase1Handler.init(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -200,6 +202,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
 
             delayBetweenStates.update(delta)
+
+            if (currentPhase == WilyFinalBossPhase.PHASE_1) {
+                val state = (stateMachines.get(currentPhase) as StateMachine<WilyPhase1State>).getCurrentElement()
+                phase1Handler.updateWarningSigns(state)
+            }
+
             if (!delayBetweenStates.isFinished()) {
                 body.physics.velocity.setZero()
                 return@add
@@ -372,9 +380,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     sprite.priority.value = when (state) {
                         WilyPhase1State.SWOOP -> when {
                             phase1Handler.stateTimers[state].getRatio() < 0.8f -> -1
-                            else -> 0
+                            else -> 3
                         }
-                        else -> 0
+                        else -> 3
                     }
 
                     val flipX = when (state) {
@@ -477,6 +485,16 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val LAZOR_NEAR_CENTER_SIN_THRESHOLD = 0.3f
         const val LAZOR_WARM_UP_START = 0.25f
         const val LAZOR_WARM_UP_RATE = 0.5f
+
+        val WARNING_SIGN_KEYS = Array<String>()
+            .also { keys ->
+                Position.getDiagonalPositions().forEach {
+                    keys.add("${it.name.lowercase()}_warning_sign")
+                }
+            }
+            .also { keys ->
+                for (i in 1..5) keys.add("ground_warning_sign_$i")
+            }
     }
 
     private inner class Phase1Handler : Initializable, Resettable {
@@ -527,6 +545,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private val lazorStartPauseTimer = Timer(Phase1ConstVals.LAZOR_START_PAUSE_TIME)
         private val lazorEndPauseTimer = Timer(Phase1ConstVals.LAZOR_END_PAUSE_TIME)
 
+        var leftLazor: WilyDeathPlaneLazor? = null
+        var rightLazor: WilyDeathPlaneLazor? = null
+
+        val warningSigns = OrderedMap<String, WarningSign>()
+
         val stateQueue = Queue<WilyPhase1State>()
 
         val stateTimers = orderedMapOf(
@@ -537,10 +560,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             WilyPhase1State.SHOOT_MISSILES pairTo Timer(Phase1ConstVals.SHOOT_MISSILES_STATE_DUR)
         )
 
-        var leftLazor: WilyDeathPlaneLazor? = null
-        var rightLazor: WilyDeathPlaneLazor? = null
-
-        override fun init() {
+        override fun init(vararg params: Any) {
             GameLogger.debug(TAG, "Phase1Handler: init()")
 
             leftLazor = MegaEntityFactory.fetch(WilyDeathPlaneLazor::class)!!
@@ -548,6 +568,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             leftLazor!!.spawn(props(ConstKeys.OWNER pairTo this@WilyFinalBoss))
             rightLazor!!.spawn(props(ConstKeys.OWNER pairTo this@WilyFinalBoss))
+
+            val spawnProps = params[0] as Properties
+
+            Phase1ConstVals.WARNING_SIGN_KEYS.forEach { key ->
+                val center = spawnProps.get(key, RectangleMapObject::class)!!.rectangle.getCenter()
+                val warningSign = MegaEntityFactory.fetch(WarningSign::class)!!
+                warningSign.spawn(props(ConstKeys.CENTER pairTo center))
+                warningSigns.put(key, warningSign)
+            }
         }
 
         fun buildStateMachine() = EnumStateMachineBuilder
@@ -706,6 +735,27 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         fun shouldFireLazors() =
             stateQueue.size >= STATE_QUEUE_MAX_SIZE && // Do not trigger lazor too soon after boss spawns
                 currentFlyInRow == 1 && UtilMethods.getRandom(0f, 1f) <= lazorChance
+
+        private fun getGridSignKey(col: Int, row: Int) = when {
+            col == 0 && row == 0 -> "bottom_left_warning_sign"
+            col == 1 && row == 0 -> "bottom_right_warning_sign"
+            col == 0 && row == 1 -> "top_left_warning_sign"
+            else -> "top_right_warning_sign"
+        }
+
+        fun updateWarningSigns(state: WilyPhase1State) {
+            warningSigns.values().forEach { it.on = false }
+
+            when (state) {
+                WilyPhase1State.FLY_IN ->
+                    warningSigns[getGridSignKey(currentFlyInCol, currentFlyInRow)]?.on = true
+                WilyPhase1State.FLY_BY ->
+                    for (col in 0..1) warningSigns[getGridSignKey(col, currentFlyByStartRow)]?.on = true
+                WilyPhase1State.SWOOP ->
+                    for (i in 1..5) warningSigns["ground_warning_sign_$i"]?.on = true
+                else -> {}
+            }
+        }
 
         fun hover(delta: Float): Boolean {
             body.physics.velocity.setZero()
@@ -942,6 +992,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             leftLazor = null
             rightLazor?.destroy()
             rightLazor = null
+
+            warningSigns.values().forEach { it.destroy() }
+            warningSigns.clear()
         }
     }
 

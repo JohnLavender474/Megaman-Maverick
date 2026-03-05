@@ -128,7 +128,7 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
 
     private val tempVec2Arr = Array<Vector2>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

@@ -48,7 +48,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     private val durationTimer = Timer(DURATION)
     private val reusableRect = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())

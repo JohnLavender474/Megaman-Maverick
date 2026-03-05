@@ -20,7 +20,7 @@ abstract class AbstractBehaviorImpl : IBehavior {
     /**
      * Default implementation is a no-op.
      */
-    override fun init() {
+    override fun init(vararg params: Any) {
         // default no-op implementation
     }
 

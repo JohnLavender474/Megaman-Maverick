@@ -57,7 +57,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
 
     private lateinit var explosionType: String
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
     }

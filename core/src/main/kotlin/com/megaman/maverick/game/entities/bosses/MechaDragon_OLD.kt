@@ -128,7 +128,7 @@ class MechaDragon_OLD(game: MegamanMaverickGame) : AbstractBoss(game, size = Siz
 
     private var firesShot = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             gdxArrayOf("fly", "shoot", "turning", "defeated").forEach { key ->

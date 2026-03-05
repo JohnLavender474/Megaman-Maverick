@@ -7,41 +7,37 @@ import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.drawables.sorting.DrawingPriority
+import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import kotlin.math.max
 
-class GravitySwitchAura(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IActivatable {
 
     companion object {
-        const val TAG = "GravitySwitchAura"
-
-        private const val INIT_SIZE = 2f
-        private const val SIZE_DELTA_SCALE = 2f
-        private const val SCALE_TIMES = 10f
-        private const val DELTA_DUR = 0.1f
-
+        const val TAG = "WarningSign"
         private var region: TextureRegion? = null
     }
 
-    private val deltaTimer = Timer(DELTA_DUR)
-    private var deltaIndex = 0
+    override var on = false
+        set(value) {
+            field = value
+            animators.values().forEach { it.reset() }
+        }
 
-    private val center = Vector2()
-    private var size = INIT_SIZE
+    val center = Vector2()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -49,50 +45,39 @@ class GravitySwitchAura(game: MegamanMaverickGame) : MegaGameEntity(game), ISpri
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
-        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val center = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val center = spawnProps.getOrDefault(ConstKeys.CENTER, Vector2.Zero, Vector2::class)!!
         this.center.set(center)
-
-        size = INIT_SIZE
-
-        deltaTimer.reset()
-        deltaIndex = 0
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
-        deltaTimer.update(delta)
-        if (deltaTimer.isFinished()) {
-            deltaIndex++
-            deltaTimer.reset()
-            size *= SIZE_DELTA_SCALE
-        }
-        if (deltaIndex >= SCALE_TIMES) {
-            destroy()
-            return@update
-        }
-    })
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+    }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite())
+        .sprite(
+            TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND))
+                .also { it.setSize(2f * ConstVals.PPM.toFloat()) }
+        )
         .preProcess { _, sprite ->
-            sprite.setSize(size * ConstVals.PPM)
+            sprite.hidden = !on
             sprite.setCenter(center)
-            val alpha = max(0f, 1f - ((1f / SCALE_TIMES) * deltaIndex))
-            sprite.setAlpha(alpha)
         }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG).animator(Animator(Animation(region!!, 2, 2, 0.1f, true)))
+        .key(TAG)
+        .animator(
+            Animator(Animation(region!!, 2, 1, 0.1f, true))
+                .also { it.shouldAnimatePredicate = { on } }
+        )
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

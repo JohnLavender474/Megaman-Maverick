@@ -58,7 +58,7 @@ class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game)
     private var hit = false
     private var explosionDirection: Direction? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (ballRegion == null || hitRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             ballRegion = atlas.findRegion("SigmaRat/ElectricBall")

@@ -45,7 +45,7 @@ class CrumblingBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity {
 
     private val cells = Matrix<GameRectangle>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
         super.init()
