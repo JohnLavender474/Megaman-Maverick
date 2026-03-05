@@ -11,7 +11,7 @@ phase_1/fly_out
 phase_1/hover
   bounds: 256, 0, 256, 256
 phase_1/lazors
-  bounds: 256, 512, 256, 512
+  bounds: 0, 1024, 256, 768
 phase_1/open_hatch
   bounds: 0, 256, 256, 256
 phase_1/shoot_missiles
@@ -21,4 +21,4 @@ phase_1/swoop
 phase_1/tilt
   bounds: 256, 256, 256, 256
 phase_1/tilt_lazors
-  bounds: 0, 1024, 256, 512
+  bounds: 256, 512, 256, 512
