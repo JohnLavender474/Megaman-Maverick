@@ -10,8 +10,12 @@ class UpdatablesSystem : GameSystem(UpdatablesComponent::class) {
         if (!on) return
 
         entities.forEach { entity ->
-            val component = entity.getComponent(UpdatablesComponent::class)
-            component?.updatables?.values()?.forEach { it.update(delta) }
+            try {
+                val component = entity.getComponent(UpdatablesComponent::class)
+                component?.updatables?.values()?.forEach { it.update(delta) }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing updatables for entity: $entity", e)
+            }
         }
     }
 }

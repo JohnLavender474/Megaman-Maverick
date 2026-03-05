@@ -18,10 +18,14 @@ class CullablesSystem(private val culler: GameEntityCuller) : GameSystem(Cullabl
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
         entities.forEach { entity ->
-            val cullables = entity.getComponent(CullablesComponent::class)?.cullables?.values()
-            for (cullable in cullables ?: return) if (cullable.shouldBeCulled(delta)) {
-                culler.cull(entity)
-                break
+            try {
+                val cullables = entity.getComponent(CullablesComponent::class)?.cullables?.values()
+                for (cullable in cullables ?: return) if (cullable.shouldBeCulled(delta)) {
+                    culler.cull(entity)
+                    break
+                }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing cullables for entity: $entity", e)
             }
         }
     }

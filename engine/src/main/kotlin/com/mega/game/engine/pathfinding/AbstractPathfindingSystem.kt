@@ -21,26 +21,30 @@ abstract class AbstractPathfindingSystem(private val factory: IPathfinderFactory
         if (!on) return
         val entries = OrderedMap<PathfindingComponent, IPathfinder>()
         entities.forEach { entity ->
-            val component = entity.getComponent(PathfindingComponent::class) ?: return@forEach
+            try {
+                val component = entity.getComponent(PathfindingComponent::class) ?: return@forEach
 
-            // Consume the current path
-            val currentPath = component.currentPath
-            if (currentPath != null) component.consumer(currentPath)
+                // Consume the current path
+                val currentPath = component.currentPath
+                if (currentPath != null) component.consumer(currentPath)
 
-            // Update the interval timer
-            val updateIntervalTimer = component.intervalTimer
-            updateIntervalTimer.update(delta)
-            if (!updateIntervalTimer.isFinished()) return@forEach
+                // Update the interval timer
+                val updateIntervalTimer = component.intervalTimer
+                updateIntervalTimer.update(delta)
+                if (!updateIntervalTimer.isFinished()) return@forEach
 
-            // Reset the update interval timer
-            updateIntervalTimer.reset()
+                // Reset the update interval timer
+                updateIntervalTimer.reset()
 
-            // Check if the component should update
-            if (!component.doUpdate()) return@forEach
+                // Check if the component should update
+                if (!component.doUpdate()) return@forEach
 
-            // Create the pathfinder and add it to the entries map
-            val pathfinder = factory.getPathfinder(component.params)
-            entries.put(component, pathfinder)
+                // Create the pathfinder and add it to the entries map
+                val pathfinder = factory.getPathfinder(component.params)
+                entries.put(component, pathfinder)
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing pathfinding for entity: $entity", e)
+            }
         }
         handleEntries(entries)
     }

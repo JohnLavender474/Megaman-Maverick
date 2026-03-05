@@ -17,9 +17,13 @@ class FontsSystem(protected val fontsCollector: (BitmapFontHandle) -> Unit) :
         if (!on) return
 
         entities.forEach { entity ->
-            val fontsComponent = entity.getComponent(FontsComponent::class)
-            fontsComponent?.update(delta)
-            fontsComponent?.fonts?.values()?.forEach { font -> fontsCollector.invoke(font) }
+            try {
+                val fontsComponent = entity.getComponent(FontsComponent::class)
+                fontsComponent?.update(delta)
+                fontsComponent?.fonts?.values()?.forEach { font -> fontsCollector.invoke(font) }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing fonts for entity: $entity", e)
+            }
         }
     }
 

@@ -18,17 +18,21 @@ class DrawableShapesSystem(
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
 
-        entities.forEach { e ->
-            val shapeComponent = e.getComponent(DrawableShapesComponent::class)!!
+        entities.forEach { entity ->
+            try {
+                val shapeComponent = entity.getComponent(DrawableShapesComponent::class)!!
 
-            shapeComponent.prodShapeSuppliers.forEach { shapeSupplier ->
-                shapeSupplier()?.let { shapesCollector.invoke(it) }
-            }
-
-            if (debug && shapeComponent.debug)
-                shapeComponent.debugShapeSuppliers.forEach { shapeSupplier ->
+                shapeComponent.prodShapeSuppliers.forEach { shapeSupplier ->
                     shapeSupplier()?.let { shapesCollector.invoke(it) }
                 }
+
+                if (debug && shapeComponent.debug)
+                    shapeComponent.debugShapeSuppliers.forEach { shapeSupplier ->
+                        shapeSupplier()?.let { shapesCollector.invoke(it) }
+                    }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing drawable shapes for entity: $entity", e)
+            }
         }
     }
 }

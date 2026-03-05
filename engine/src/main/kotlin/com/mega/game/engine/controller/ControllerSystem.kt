@@ -13,21 +13,25 @@ class ControllerSystem(private val poller: IControllerPoller) :
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
 
-        entities.forEach {
-            val component = it.getComponent(ControllerComponent::class)!!
-            val actuators = component.actuators
+        entities.forEach { entity ->
+            try {
+                val component = entity.getComponent(ControllerComponent::class)!!
+                val actuators = component.actuators
 
-            for (entry in actuators) {
-                val key = entry.key
-                val actuator = entry.value() ?: continue
+                for (entry in actuators) {
+                    val key = entry.key
+                    val actuator = entry.value() ?: continue
 
-                val status = poller.getStatus(key) ?: continue
-                when (status) {
-                    ButtonStatus.JUST_PRESSED -> actuator.onJustPressed(poller)
-                    ButtonStatus.PRESSED -> actuator.onPressContinued(poller, delta)
-                    ButtonStatus.JUST_RELEASED -> actuator.onJustReleased(poller)
-                    ButtonStatus.RELEASED -> actuator.onReleaseContinued(poller, delta)
+                    val status = poller.getStatus(key) ?: continue
+                    when (status) {
+                        ButtonStatus.JUST_PRESSED -> actuator.onJustPressed(poller)
+                        ButtonStatus.PRESSED -> actuator.onPressContinued(poller, delta)
+                        ButtonStatus.JUST_RELEASED -> actuator.onJustReleased(poller)
+                        ButtonStatus.RELEASED -> actuator.onReleaseContinued(poller, delta)
+                    }
                 }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing controller for entity: $entity", e)
             }
         }
     }

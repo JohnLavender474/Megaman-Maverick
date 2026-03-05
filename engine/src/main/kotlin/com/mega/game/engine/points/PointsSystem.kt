@@ -11,13 +11,17 @@ class PointsSystem : GameSystem(PointsComponent::class) {
         if (!on) return
 
         entities.forEach { entity ->
-            val pointsComponent = entity.getComponent(PointsComponent::class)
-            pointsComponent?.pointsListeners?.forEach { e ->
-                val key = e.key
-                val listener = e.value
+            try {
+                val pointsComponent = entity.getComponent(PointsComponent::class)
+                pointsComponent?.pointsListeners?.forEach { e ->
+                    val key = e.key
+                    val listener = e.value
 
-                val points = pointsComponent.pointsMap[key]
-                if (points != null) listener.invoke(points)
+                    val points = pointsComponent.pointsMap[key]
+                    if (points != null) listener.invoke(points)
+                }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing points for entity: $entity", e)
             }
         }
     }
