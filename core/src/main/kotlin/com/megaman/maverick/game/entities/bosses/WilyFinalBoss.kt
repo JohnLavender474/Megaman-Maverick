@@ -48,6 +48,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
+import kotlin.math.min
 
 class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity {
 
@@ -86,9 +87,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             "phase_1/lazors" pairTo AnimationDef(3, 1, 0.1f, true),
             "phase_1/open_hatch" pairTo AnimationDef(),
             "phase_1/shoot_missiles" pairTo AnimationDef(
-                rows = 7,
-                cols = 1,
-                durations = gdxFilledArrayOf(7, 0.1f).also { it[3] = 1f },
+                rows = 3,
+                cols = 3,
+                durations = gdxFilledArrayOf(9, 0.1f).also { it[4] = 1f },
                 loop = false
             ),
             "phase_1/swoop" pairTo AnimationDef(
@@ -428,6 +429,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         var currentFlyByStartCol = 0
         var currentFlyByStartRow = 0
 
+        var missilesChance = 0.2f
+
         val lazorLeftBound = Vector2()
         val lazorRightBound = Vector2()
 
@@ -441,6 +444,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         var lazorCompletionStarted = false
         var lazorNearCenter = false
         var lazorMovingRight = false
+
+        var lazorChance = 0.5f
 
         private val lazorStartPauseTimer = Timer(LAZOR_START_PAUSE_TIME)
         private val lazorEndPauseTimer = Timer(LAZOR_END_PAUSE_TIME)
@@ -551,8 +556,23 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         initSequence = false
                     }
                 }
-                WilyPhase1State.FIRE_LAZORS -> startLazors()
+                WilyPhase1State.FIRE_LAZORS -> {
+                    lazorChance = 0.5f
+                    startLazors()
+                }
                 WilyPhase1State.FLY_OUT -> body.physics.velocity.setZero()
+                WilyPhase1State.SHOOT_MISSILES -> missilesChance = 0.2f
+            }
+
+            when (previous) {
+                WilyPhase1State.HOVER ->
+                    if (currentFlyInRow == 1 && current != WilyPhase1State.FIRE_LAZORS) {
+                        lazorChance = min(1f, lazorChance + 0.1f)
+                        GameLogger.debug(TAG, "Phase1Handler: onChangeState(): lazorChance=$lazorChance")
+                    } else if (current != WilyPhase1State.SHOOT_MISSILES) {
+                        missilesChance = min(1f, missilesChance + 0.1f)
+                        GameLogger.debug(TAG, "Phase1Handler: onChangeState(): missilesChance=$missilesChance")
+                    }
                 else -> {}
             }
         }
@@ -566,10 +586,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         fun shouldShootMissiles(): Boolean {
             if (currentFlyInRow == 0) return true
-            return UtilMethods.getRandomBool()
+            return UtilMethods.getRandom(0f, 1f) <= missilesChance
         }
 
-        fun shouldFireLazors() = currentFlyInRow == 1 && UtilMethods.getRandomBool()
+        fun shouldFireLazors() = currentFlyInRow == 1 && UtilMethods.getRandom(0f, 1f) <= lazorChance
 
         fun hover(delta: Float): Boolean {
             body.physics.velocity.setZero()
