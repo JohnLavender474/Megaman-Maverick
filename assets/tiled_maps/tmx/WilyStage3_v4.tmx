@@ -2869,8 +2869,8 @@
    </properties>
   </object>
   <object id="563" name="AsteroidSpawnBounds" x="9440" y="1456" width="256" height="160"/>
-  <object id="671" name="LazorLeftBound" x="11328" y="3776" width="32" height="32"/>
-  <object id="672" name="LazorRightBound" x="11872" y="3776" width="32" height="32"/>
+  <object id="671" name="LazorLeftBound" x="11360" y="3776" width="32" height="32"/>
+  <object id="672" name="LazorRightBound" x="11840" y="3776" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="blocks" visible="0">
   <object id="2" x="0" y="7296" width="864" height="256"/>
