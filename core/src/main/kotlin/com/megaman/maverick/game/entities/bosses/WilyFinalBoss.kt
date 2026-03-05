@@ -124,7 +124,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MUSIC, MusicAsset.OUR_BLOOD_BOILS_MUSIC.name)
+        spawnProps.put(ConstKeys.MUSIC, MusicAsset.MMX7_OUR_BLOOD_BOILS_MUSIC.name)
         spawnProps.put(ConstKeys.ORB, false)
         spawnProps.put(ConstKeys.END, false)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
