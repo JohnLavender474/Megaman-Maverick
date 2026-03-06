@@ -1,1 +1,8 @@
-===== SESSION STARTED: 2026-02-14T12:49:03.289116316 =====
+===== SESSION STARTED: 2026-03-06T13:27:36.405694869 =====
+13:27:50 | DEBUG | HealthBulb | init()
+13:27:50 | DEBUG | HealthBulb | init()
+13:27:50 | DEBUG | HealthBulb | init()
+13:27:50 | DEBUG | HealthBulb | init()
+13:27:50 | DEBUG | HealthBulb | init()
+13:27:50 | DEBUG | HealthBulb | init()
+13:27:53 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=1399398408] }

@@ -67,8 +67,11 @@ import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
@@ -319,6 +322,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         headDamageable.drawingColor = Color.PURPLE
         debugShapes.add { headDamageable }
 
+        val flyByBodyShield = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(4f * ConstVals.PPM))
+        flyByBodyShield.attachedToBody = false
+        body.addFixture(flyByBodyShield)
+        debugShapes.add add@{
+            flyByBodyShield.drawingColor = if (flyByBodyShield.isActive()) Color.BLUE else Color.GRAY
+            return@add flyByBodyShield
+        }
+
         val bodyDamager = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(bodyDamager)
         /*
@@ -339,6 +350,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
          */
 
+        val leftThrusterShield =
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+        leftThrusterShield.attachedToBody = false
+        body.addFixture(leftThrusterShield)
+        debugShapes.add add@{
+            leftThrusterShield.drawingColor = if (leftThrusterShield.isActive()) Color.RED else Color.GRAY
+            return@add leftThrusterShield
+        }
+
         val rightThrusterDamager =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
         rightThrusterDamager.attachedToBody = false
@@ -349,6 +369,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             return@add rightThrusterDamager
         }
          */
+
+        val rightThrusterShield =
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+        rightThrusterShield.attachedToBody = false
+        body.addFixture(rightThrusterShield)
+        debugShapes.add add@{
+            rightThrusterShield.drawingColor = if (rightThrusterShield.isActive()) Color.RED else Color.GRAY
+            return@add rightThrusterShield
+        }
 
         val flyByTailDamager = Fixture(
             body,
@@ -375,6 +404,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
          */
 
+        val leftWingHoverShield =
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+        leftWingHoverShield.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
+        body.addFixture(leftWingHoverShield)
+        debugShapes.add add@{
+            leftWingHoverShield.drawingColor = if (leftWingHoverShield.isActive()) Color.BLUE else Color.GRAY
+            return@add leftWingHoverShield
+        }
+
         val rightWingHoverDamager =
             Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
         rightWingHoverDamager.offsetFromBodyAttachment.set(6f * ConstVals.PPM, 0f)
@@ -385,6 +423,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             return@add rightWingHoverDamager
         }
          */
+
+        val rightWingHoverShield =
+            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+        rightWingHoverShield.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
+        body.addFixture(rightWingHoverShield)
+        debugShapes.add add@{
+            rightWingHoverShield.drawingColor = if (rightWingHoverShield.isActive()) Color.BLUE else Color.GRAY
+            return@add rightWingHoverShield
+        }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             when (currentPhase) {
@@ -423,36 +470,57 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         WilyPhase1State.SHOOT_MISSILES,
                     ) || (state == WilyPhase1State.FLY_IN && phase1Handler.flyInDecelerating)
 
-                    if (hovering) headDamageable.offsetFromBodyAttachment.setZero()
-                    else {
+                    if (hovering) {
+                        headDamageable.offsetFromBodyAttachment.setZero()
+                        flyByBodyShield.setActive(false)
+                    } else {
                         headDamageable.offsetFromBodyAttachment.x = 2f * ConstVals.PPM
                         val left = body.physics.velocity.x < 0f
                         if (left) headDamageable.offsetFromBodyAttachment.x *= -1f
+
+                        flyByBodyShield.setActive(true)
+                        (flyByBodyShield.rawShape as GameRectangle).let {
+                            val position = if (left) Position.CENTER_LEFT else Position.CENTER_RIGHT
+                            val point = (headDamageable.rawShape as GameCircle)
+                                .getBoundingRectangle()
+                                .getPositionPoint(position.opposite())
+                            it.positionOnPoint(point, position)
+                        }
                     }
 
                     leftWingHoverDamager.setActive(hovering)
+                    leftWingHoverShield.setActive(hovering)
                     rightWingHoverDamager.setActive(hovering)
+                    rightWingHoverShield.setActive(hovering)
 
                     if (hovering) {
                         leftThrusterDamager.setActive(true)
                         (leftThrusterDamager.rawShape as GameRectangle)
-                            .setCenterX(body.getX())
+                            .setCenterX(body.getMaxX())
+                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+                        (leftThrusterShield.rawShape as GameRectangle)
+                            .setCenterX(body.getMaxX())
                             .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
 
                         rightThrusterDamager.setActive(true)
                         (rightThrusterDamager.rawShape as GameRectangle)
                             .setCenterX(body.getMaxX())
                             .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+                        (rightThrusterShield.rawShape as GameRectangle)
+                            .setCenterX(body.getMaxX())
+                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
                     } else {
                         leftThrusterDamager.setActive(false)
+                        leftThrusterShield.setActive(false)
                         rightThrusterDamager.setActive(false)
+                        rightThrusterShield.setActive(false)
                     }
                 }
                 else -> body.forEachFixture { it.setActive(true) }
             }
         }
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -1245,8 +1313,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 val warningSign = warningSigns.get(key)
                 val center = warningSign.center
                 (0..1).forEach { _ ->
-                    val delay = UtilMethods.getRandom(0.5f, 1f)
-                    MegaUtilMethods.delayRun(game, delay) {
+                    MegaUtilMethods.delayRun(game, 0.5f) {
                         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
                         explosion.spawn(
                             props(
