@@ -23,9 +23,11 @@ import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.TimeMarkedRunnable
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -66,8 +68,11 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -202,6 +207,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
+    // No matter what, all weapons deal only 1 health point aganist Wily
+    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = 1
+
     override fun onDefeated(delta: Float) {
         GameLogger.debug(TAG, "onDefeated()")
         super.onDefeated(delta)
@@ -298,18 +306,47 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         body.physics.collisionOn = false
         body.physics.receiveFrictionX = false
         body.physics.receiveFrictionY = false
-        body.setSize(6f * ConstVals.PPM, 4f * ConstVals.PPM)
+        body.setSize(8f * ConstVals.PPM, 4f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
+        // debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+        val headDamageable = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(2.5f * ConstVals.PPM))
+        body.addFixture(headDamageable)
+        headDamageable.drawingColor = Color.PURPLE
+        debugShapes.add { headDamageable }
 
         val bodyDamager = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(bodyDamager)
+        /*
         debugShapes.add add@{
             bodyDamager.drawingColor = if (bodyDamager.isActive()) Color.RED else Color.GRAY
             return@add bodyDamager
         }
+         */
+
+        val leftThrusterDamager =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+        leftThrusterDamager.attachedToBody = false
+        body.addFixture(leftThrusterDamager)
+        /*
+        debugShapes.add add@{
+            leftThrusterDamager.drawingColor = if (leftThrusterDamager.isActive()) Color.RED else Color.GRAY
+            return@add leftThrusterDamager
+        }
+         */
+
+        val rightThrusterDamager =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+        rightThrusterDamager.attachedToBody = false
+        body.addFixture(rightThrusterDamager)
+        /*
+        debugShapes.add add@{
+            rightThrusterDamager.drawingColor = if (rightThrusterDamager.isActive()) Color.RED else Color.GRAY
+            return@add rightThrusterDamager
+        }
+         */
 
         val flyByTailDamager = Fixture(
             body,
@@ -318,10 +355,34 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         )
         flyByTailDamager.offsetFromBodyAttachment.y = 2f * ConstVals.PPM
         body.addFixture(flyByTailDamager)
+        /*
         debugShapes.add add@{
             flyByTailDamager.drawingColor = if (flyByTailDamager.isActive()) Color.RED else Color.GRAY
             return@add flyByTailDamager
         }
+         */
+
+        val leftWingHoverDamager =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+        leftWingHoverDamager.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
+        body.addFixture(leftWingHoverDamager)
+        /*
+        debugShapes.add add@{
+            leftWingHoverDamager.drawingColor = if (leftWingHoverDamager.isActive()) Color.RED else Color.GRAY
+            return@add leftWingHoverDamager
+        }
+         */
+
+        val rightWingHoverDamager =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+        rightWingHoverDamager.offsetFromBodyAttachment.set(6f * ConstVals.PPM, 0f)
+        body.addFixture(rightWingHoverDamager)
+        /*
+        debugShapes.add add@{
+            rightWingHoverDamager.drawingColor = if (rightWingHoverDamager.isActive()) Color.RED else Color.GRAY
+            return@add rightWingHoverDamager
+        }
+         */
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             when (currentPhase) {
@@ -329,9 +390,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     val state =
                         stateMachines.get(currentPhase).getCurrentElement() as WilyPhase1State
 
-                    if (state.equalsAny(WilyPhase1State.FLY_OUT, WilyPhase1State.SWOOP))
+                    if (state.equalsAny(WilyPhase1State.FLY_OUT, WilyPhase1State.SWOOP)) {
                         body.forEachFixture { it.setActive(false) }
-                    else body.forEachFixture { it.setActive(true) }
+                        return@put
+                    } else body.forEachFixture { it.setActive(true) }
 
                     if ((state == WilyPhase1State.FLY_BY && delayBetweenStates.isFinished()) ||
                         (state == WilyPhase1State.FLY_IN && !phase1Handler.flyInDecelerating)
@@ -347,6 +409,37 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         bodyDamager.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
 
                         flyByTailDamager.setActive(false)
+                    }
+
+                    val hovering = state.equalsAny(
+                        WilyPhase1State.HOVER,
+                        WilyPhase1State.SHOOT_MISSILES,
+                        WilyPhase1State.FIRE_LAZORS
+                    ) || (state == WilyPhase1State.FLY_IN && phase1Handler.flyInDecelerating)
+
+                    if (hovering) headDamageable.offsetFromBodyAttachment.setZero()
+                    else {
+                        headDamageable.offsetFromBodyAttachment.x = 2f * ConstVals.PPM
+                        val left = body.physics.velocity.x < 0f
+                        if (left) headDamageable.offsetFromBodyAttachment.x *= -1f
+                    }
+
+                    leftWingHoverDamager.setActive(hovering)
+                    rightWingHoverDamager.setActive(hovering)
+
+                    if (hovering) {
+                        leftThrusterDamager.setActive(true)
+                        (leftThrusterDamager.rawShape as GameRectangle)
+                            .setCenterX(body.getX())
+                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+
+                        rightThrusterDamager.setActive(true)
+                        (rightThrusterDamager.rawShape as GameRectangle)
+                            .setCenterX(body.getMaxX())
+                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+                    } else {
+                        leftThrusterDamager.setActive(false)
+                        rightThrusterDamager.setActive(false)
                     }
                 }
                 else -> body.forEachFixture { it.setActive(true) }
@@ -500,6 +593,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val INIT_LAZOR_CHANCE = 0.25f
 
         const val SWOOP_CHANCE_INCR = 0.25f
+        const val LAZOR_CHANCE_INCR = 0.25f
         const val MISSILES_CHANCE_INCR = 0.25f
 
         const val FLY_IN_SPEED = 16f
@@ -730,6 +824,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     flyByCount = 0
                     flyByDone = false
 
+                    missilesChance = min(1f, missilesChance + Phase1ConstVals.MISSILES_CHANCE_INCR)
+                    lazorChance = min(1f, lazorChance + Phase1ConstVals.LAZOR_CHANCE_INCR)
+
                     stateTimers[WilyPhase1State.FLY_BY].reset()
 
                     if (previous.equalsAny(WilyPhase1State.HOVER, WilyPhase1State.SHOOT_MISSILES))
@@ -752,7 +849,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                             else -> currentFlyInRow
                         }
                     }
-
                     body.setCenter(flyInStartPositions[currentFlyInCol, currentFlyInRow]!!)
                 }
                 WilyPhase1State.HOVER -> {
@@ -763,17 +859,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
                 WilyPhase1State.FIRE_LAZORS -> {
                     lazorChance = Phase1ConstVals.INIT_LAZOR_CHANCE
-
-                    // increase the chance of the missiles so that it is more favorable than the lazors
-                    missilesChance = min(1f, missilesChance + 2f * Phase1ConstVals.MISSILES_CHANCE_INCR)
-
+                    missilesChance = min(1f, missilesChance + Phase1ConstVals.MISSILES_CHANCE_INCR)
                     startLazors()
                 }
                 WilyPhase1State.FLY_OUT -> {
-                    requestToPlaySound(SoundAsset.JET_SOUND, false)
                     body.physics.velocity.setZero()
+                    requestToPlaySound(SoundAsset.JET_SOUND, false)
+                    lazorChance = min(1f, lazorChance + Phase1ConstVals.LAZOR_CHANCE_INCR)
+                    missilesChance = min(1f, missilesChance + Phase1ConstVals.MISSILES_CHANCE_INCR)
                 }
-                WilyPhase1State.SHOOT_MISSILES -> missilesChance = Phase1ConstVals.INIT_MISSILES_CHANCE
+                WilyPhase1State.SHOOT_MISSILES -> {
+                    missilesChance = Phase1ConstVals.INIT_MISSILES_CHANCE
+                    lazorChance = min(1f, lazorChance + Phase1ConstVals.LAZOR_CHANCE_INCR)
+                }
             }
 
             when (previous) {
@@ -822,13 +920,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         fun shouldFlyOut() =
             currentFlyInRow == 1 &&
-                hoverPatternIndex % 4 == 2 &&
+                UtilMethods.getRandomBool() &&
                 !stateQueue.contains(WilyPhase1State.FLY_OUT)
 
-        fun shouldShootMissiles() = hoverPatternIndex % 4 == 1 || hoverPatternIndex % 4 == 3
+        fun shouldShootMissiles() = (hoverPatternIndex % 4 == 1 || hoverPatternIndex % 4 == 3) &&
+            UtilMethods.getRandom(0f, 1f) <= missilesChance
 
         fun shouldFireLazors() =
-            (hoverPatternIndex % 4 == 3 || UtilMethods.getRandom(0f, 1f) <= 0.25f) &&
+            (hoverPatternIndex % 4 == 3 || UtilMethods.getRandom(0f, 1f) <= lazorChance) &&
                 stateQueue.size >= STATE_QUEUE_MAX_SIZE && // Do not trigger lazor too soon after boss spawns
                 currentFlyInRow == 1
 
