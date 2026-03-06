@@ -3857,14 +3857,12 @@
   <object id="664" name="FlyIn_Start2" x="12160" y="3872" width="32" height="32"/>
   <object id="665" name="FlyIn_Start3" x="12160" y="4048" width="32" height="32"/>
   <object id="667" name="FlyIn_Start4" x="11040" y="4048" width="32" height="32"/>
-  <object id="677" name="GroundWarningSign1" x="11360" y="4048" width="32" height="32"/>
-  <object id="678" name="GroundWarningSign2" x="11424" y="4112" width="32" height="32"/>
-  <object id="679" name="GroundWarningSign3" x="11504" y="4080" width="32" height="32"/>
-  <object id="680" name="GroundWarningSign4" x="11568" y="4112" width="32" height="32"/>
-  <object id="681" name="GroundWarningSign5" x="11632" y="4112" width="32" height="32"/>
-  <object id="683" name="GroundWarningSign6" x="11696" y="4080" width="32" height="32"/>
-  <object id="684" name="GroundWarningSign7" x="11776" y="4112" width="32" height="32"/>
-  <object id="686" name="GroundWarningSign8" x="11840" y="4048" width="32" height="32"/>
+  <object id="677" name="GroundWarningSign1" x="11424" y="4112" width="32" height="32"/>
+  <object id="678" name="GroundWarningSign2" x="11504" y="4080" width="32" height="32"/>
+  <object id="679" name="GroundWarningSign3" x="11576" y="4112" width="32" height="32"/>
+  <object id="680" name="GroundWarningSign4" x="11632" y="4112" width="32" height="32"/>
+  <object id="681" name="GroundWarningSign5" x="11696" y="4080" width="32" height="32"/>
+  <object id="683" name="GroundWarningSign6" x="11776" y="4112" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="27" name="items">
   <object id="373" name="HealthBulb" x="7552" y="5536" width="32" height="32">

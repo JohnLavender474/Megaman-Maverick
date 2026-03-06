@@ -1,1 +1,13 @@
-===== SESSION STARTED: 2026-03-06T00:19:04.964064613 =====
+===== SESSION STARTED: 2026-03-06T08:15:05.033120372 =====
+08:15:13 | DEBUG | HealthBulb | init()
+08:15:13 | DEBUG | HealthBulb | init()
+08:15:13 | DEBUG | HealthBulb | init()
+08:15:13 | DEBUG | HealthBulb | init()
+08:15:13 | DEBUG | HealthBulb | init()
+08:15:13 | DEBUG | HealthBulb | init()
+08:15:16 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
+08:15:16 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
+08:15:17 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
+08:15:17 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
+08:15:18 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
+08:15:18 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }

@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.StarExplosion
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -52,7 +53,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     companion object {
         const val TAG = "HomingMissile"
 
-        private const val SPEED = 6f
+        private const val SPEED = 8f
 
         private const val DAMAGE_DURATION = 0.1f
 
@@ -142,9 +143,17 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
+                ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
-                ConstKeys.OWNER pairTo this
+            )
+        )
+
+        val halo = MegaEntityFactory.fetch(StarExplosion::class)!!
+        halo.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo body.getCenter()
             )
         )
     }
