@@ -59,8 +59,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         private const val RECALC_DELAY = 0.5f
         private const val TIME_BEFORE_FIRST_RECALC = 1f
 
-        private const val TTL = 3f
-        private const val FLASH_START = 1.5f
+        private const val TTL = 3.5f
+        private const val FLASH_START = 2.5f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = orderedMapOf(
@@ -122,11 +122,18 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         if (isHealthDepleted()) explode()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        GameLogger.debug(TAG, "onDamageInflictedTo(): damageable=$damageable")
+        explodeAndDie()
+    }
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture")
+        explodeAndDie()
+    }
 
     override fun explodeAndDie(vararg params: Any?) {
+        GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
         explode()
     }
@@ -143,9 +150,11 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && damager != owner && damager !is HomingMissile
+        !invincible && damager != owner && damager !is HomingMissile && damager !is Explosion
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
+        GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
+
         val damage = StandardDamageNegotiator.get(Size.SMALL, damager)
         translateHealth(-damage)
 
@@ -175,6 +184,12 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        ttl.update(delta)
+        if (ttl.isFinished()) {
+            explodeAndDie()
+            return@UpdatablesComponent
+        }
+
         damageTimer.update(delta)
 
         if (!recalcDelay.isFinished()) {

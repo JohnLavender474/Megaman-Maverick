@@ -500,13 +500,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val SWOOP_CHANCE_INCR = 0.25f
         const val MISSILES_CHANCE_INCR = 0.25f
-        const val LAZOR_CHANCE_INCR = 0.25f
 
         const val FLY_IN_SPEED = 16f
         const val FLY_IN_SLOW_DOWN_DISTANCE = 1.5f
 
         const val MAX_FLY_BYS = 3
         const val FLY_BY_SPEED = 16f
+        const val FLY_BY_CHANCE = 0.5f
+        const val FLY_BY_AFTER_SWOOP_REPEAT_CHANCE = 0.15f
         const val OFF_SCREEN_BUFFER = 4f
 
         const val STATE_QUEUE_MAX_SIZE = 4
@@ -533,9 +534,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val SHOOT_BULLETS_DUR = 1f
         const val BULLET_SPEED = 10f
         val BULLET_TRAJECTORIES = gdxArrayOf(
-            Vector2(-0.25f, -1f),
+            Vector2(-0.75f, -1f),
             Vector2(0f, -1f),
-            Vector2(0.25f, -1f)
+            Vector2(0.75f, -1f)
         )
 
         val MISSILE_ANGLES = gdxArrayOf(225f, 180f, 180f, 135f)
@@ -575,8 +576,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         var flyByCount = 0
         var flyByDone = false
         var flyByMovingRight = false
+        var lastSwoopFollowedByFlyBy = false
 
         var flyByRenderOnlyOneWarning = false
+
+        var hoverPatternIndex = 0
 
         var currentFlyByStartCol = 0
         var currentFlyByStartRow = 0
@@ -650,17 +654,27 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             .initialState(WilyPhase1State.SWOOP)
             .onChangeState(::onChangeState)
             // swoop
-            .transition(WilyPhase1State.SWOOP, WilyPhase1State.FLY_BY) { shouldFlyBy() }
+            .transition(WilyPhase1State.SWOOP, WilyPhase1State.FLY_BY) { shouldFlyByAfterSwoop() }
             .transition(WilyPhase1State.SWOOP, WilyPhase1State.FLY_IN) { true }
             // fly in
             .transition(WilyPhase1State.FLY_IN, WilyPhase1State.HOVER) { true }
             // fly by
             .transition(WilyPhase1State.FLY_BY, WilyPhase1State.SWOOP) { shouldSwoop() }
             .transition(WilyPhase1State.FLY_BY, WilyPhase1State.FLY_IN) { true }
-            // hover
-            .transition(WilyPhase1State.HOVER, WilyPhase1State.SHOOT_MISSILES) { shouldShootMissiles() }
-            .transition(WilyPhase1State.HOVER, WilyPhase1State.FIRE_LAZORS) { shouldFireLazors() }
-            .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_OUT) { shouldFlyOut() }
+            // hover — deterministic 4-step cycle:
+            //   step 0: FLY_BY
+            //   step 1: SHOOT_MISSILES
+            //   step 2: FLY_OUT  (fallback: FLY_BY)
+            //   step 3: FIRE_LAZORS  (fallback: SHOOT_MISSILES)
+            .transition(WilyPhase1State.HOVER, WilyPhase1State.FIRE_LAZORS) {
+                hoverPatternIndex % 4 == 3 && shouldFireLazors()
+            }
+            .transition(WilyPhase1State.HOVER, WilyPhase1State.SHOOT_MISSILES) {
+                hoverPatternIndex % 4 == 1 || hoverPatternIndex % 4 == 3
+            }
+            .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_OUT) {
+                hoverPatternIndex % 4 == 2 && shouldFlyOut()
+            }
             .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_BY) { true }
             // shoot missiles
             .transition(WilyPhase1State.SHOOT_MISSILES, WilyPhase1State.FLY_BY) { true }
@@ -768,14 +782,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
 
             when (previous) {
-                WilyPhase1State.HOVER ->
-                    if (currentFlyInRow == 1 && current != WilyPhase1State.FIRE_LAZORS) {
-                        lazorChance = min(1f, lazorChance + Phase1ConstVals.LAZOR_CHANCE_INCR)
-                        GameLogger.debug(TAG, "Phase1Handler: onChangeState(): lazorChance=$lazorChance")
-                    } else if (current != WilyPhase1State.SHOOT_MISSILES) {
-                        missilesChance = min(1f, missilesChance + Phase1ConstVals.MISSILES_CHANCE_INCR)
-                        GameLogger.debug(TAG, "Phase1Handler: onChangeState(): missilesChance=$missilesChance")
-                    }
+                WilyPhase1State.HOVER -> hoverPatternIndex++
                 WilyPhase1State.FIRE_LAZORS -> {
                     leftLazor?.on = false
                     rightLazor?.on = false
@@ -797,6 +804,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             if (current == WilyPhase1State.FLY_IN &&
                 previous.equalsAny(WilyPhase1State.FLY_BY, WilyPhase1State.FLY_OUT)
             ) swoopChance = min(1f, swoopChance + Phase1ConstVals.SWOOP_CHANCE_INCR)
+
+            // Track whether the last swoop was followed by a fly-by
+            if (previous == WilyPhase1State.SWOOP) lastSwoopFollowedByFlyBy = current == WilyPhase1State.FLY_BY
         }
 
         fun shouldSwoop() =
@@ -804,14 +814,22 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         fun shouldFlyBy() = !initSequence && UtilMethods.getRandomBool()
 
-        fun shouldFlyOut() = currentFlyInRow == 1 && !stateQueue.contains(WilyPhase1State.FLY_OUT)
+        fun shouldFlyByAfterSwoop(): Boolean {
+            if (initSequence) return false
 
-        fun shouldShootMissiles() =
-            !stateQueue.contains(WilyPhase1State.SHOOT_MISSILES) && UtilMethods.getRandom(0f, 1f) <= missilesChance
+            val chance = when {
+                lastSwoopFollowedByFlyBy -> Phase1ConstVals.FLY_BY_AFTER_SWOOP_REPEAT_CHANCE
+                else -> Phase1ConstVals.FLY_BY_CHANCE
+            }
+
+            return UtilMethods.getRandom(0f, 1f) <= chance
+        }
+
+        fun shouldFlyOut() = currentFlyInRow == 1 && !stateQueue.contains(WilyPhase1State.FLY_OUT)
 
         fun shouldFireLazors() =
             stateQueue.size >= STATE_QUEUE_MAX_SIZE && // Do not trigger lazor too soon after boss spawns
-                currentFlyInRow == 1 && UtilMethods.getRandom(0f, 1f) <= lazorChance
+                currentFlyInRow == 1
 
         private fun getGridSignKey(col: Int, row: Int) = when {
             col == 0 && row == 0 -> "bottom_left_warning_sign"
@@ -1072,8 +1090,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         ConstKeys.COLLIDE pairTo false,
                         ConstKeys.POSITION pairTo center,
                         ConstKeys.TYPE pairTo Bullet.LAZOR,
+                        ConstKeys.TRAJECTORY pairTo trajectory,
                         ConstKeys.OWNER pairTo this@WilyFinalBoss,
-                        ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat())
                     )
                 )
             }
@@ -1083,11 +1101,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             for (i in 0 until Phase1ConstVals.MISSILE_ANGLES.size) {
                 val bodyCenter = body.getCenter()
 
+                val offsetY = if (up) -1.5f else -2f
                 val position = when (i) {
-                    0 -> bodyCenter.add(-1f * ConstVals.PPM, -2f * ConstVals.PPM)
-                    1 -> bodyCenter.add(-0.5f * ConstVals.PPM, -2f * ConstVals.PPM)
-                    2 -> bodyCenter.add(0.5f * ConstVals.PPM, -2f * ConstVals.PPM)
-                    3 -> bodyCenter.add(1f * ConstVals.PPM, -2f * ConstVals.PPM)
+                    0 -> bodyCenter.add(-1f * ConstVals.PPM, offsetY * ConstVals.PPM)
+                    1 -> bodyCenter.add(-0.5f * ConstVals.PPM, offsetY * ConstVals.PPM)
+                    2 -> bodyCenter.add(0.5f * ConstVals.PPM, offsetY * ConstVals.PPM)
+                    3 -> bodyCenter.add(1f * ConstVals.PPM, offsetY * ConstVals.PPM)
                     else -> throw IllegalStateException("Index not supported: $i")
                 }
 
