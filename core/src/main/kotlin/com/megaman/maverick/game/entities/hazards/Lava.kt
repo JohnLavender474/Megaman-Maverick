@@ -96,7 +96,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     private val pair = GamePair<Int, Int>(0, 0)
     private val matrix = Matrix<GameRectangle>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put(FLOW, atlas.findRegion("$TAG/${FLOW}"))

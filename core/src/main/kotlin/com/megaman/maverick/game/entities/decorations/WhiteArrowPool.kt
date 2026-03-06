@@ -48,7 +48,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
 
     private val matrix = Matrix<GameRectangle>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         addComponent(defineDrawableShapesComponent())
         addComponent(defineUpdatablesComponent())

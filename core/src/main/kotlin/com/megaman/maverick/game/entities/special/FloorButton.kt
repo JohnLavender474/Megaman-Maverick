@@ -72,7 +72,7 @@ class FloorButton(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISprit
     private lateinit var spawnRoom: String
     private var key = -1
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)

@@ -38,7 +38,7 @@ class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
     private var doCullAfterTime = false
     private var cullTimer = Timer()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ITEMS.source)

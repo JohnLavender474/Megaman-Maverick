@@ -138,7 +138,7 @@ class Animation : IAnimation {
             currentLoopDuration -= durations[tempIndex]
             tempIndex++
         }
-        currentIndex = tempIndex
+        currentIndex = minOf(tempIndex, frames.size - 1)
     }
 
     override fun reset() {
@@ -187,7 +187,7 @@ class Animation : IAnimation {
             currentLoopDuration -= durations[tempIndex]
             tempIndex++
         }
-        currentIndex = tempIndex
+        currentIndex = minOf(tempIndex, frames.size - 1)
     }
 
     override fun getCurrentTime() = elapsedTime

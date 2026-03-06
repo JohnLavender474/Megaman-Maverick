@@ -69,7 +69,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     private val overlapRooms = ObjectSet<String>()
     private val reusableRoomsArray = Array<RectangleMapObject>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
             SwitchGateState.entries.forEach { state ->

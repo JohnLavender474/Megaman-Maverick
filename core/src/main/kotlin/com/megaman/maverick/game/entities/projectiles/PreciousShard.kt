@@ -69,7 +69,7 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game), IDire
     private val spawnNoCollisionTimer = Timer(SPAWN_NO_COLLISION_DUR)
     private var doNoCollisionOnSpawn = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

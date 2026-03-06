@@ -92,7 +92,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private val turnAroundScanner = GameRectangle()
     private lateinit var animations: ObjectMap<String, IAnimation>
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

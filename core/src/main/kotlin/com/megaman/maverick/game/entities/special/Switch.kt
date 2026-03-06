@@ -22,7 +22,7 @@ abstract class Switch(game: MegamanMaverickGame) : MegaGameEntity(game) {
     lateinit var state: SwitchState
         private set
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
         super.init()

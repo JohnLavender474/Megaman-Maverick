@@ -52,7 +52,7 @@ class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDama
 
     override fun getType() = EntityType.EXPLOSION
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (burstRegion == null) burstRegion =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Burst")
         addComponent(AudioComponent())

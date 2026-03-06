@@ -12,7 +12,8 @@ open class ControllerPoller(val controllerButtons: ControllerButtons) : IControl
     private val statusMap = ObjectMap<Any, ButtonStatus>()
     private var initialized = false
 
-    override fun init() = controllerButtons.keys().forEach { statusMap.put(it, ButtonStatus.RELEASED) }
+    override fun init(vararg params: Any) =
+        controllerButtons.keys().forEach { statusMap.put(it, ButtonStatus.RELEASED) }
 
     override fun getStatus(key: Any): ButtonStatus? = statusMap[key]
 

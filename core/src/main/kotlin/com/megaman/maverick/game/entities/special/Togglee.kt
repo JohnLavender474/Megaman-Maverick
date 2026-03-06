@@ -106,7 +106,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
     private var switcharooAlpha = 1f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val enemyAtlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("${ENEMY_TYPE}/${ToggleeState.TOGGLED_ON.name}", enemyAtlas.findRegion("$TAG/Left"))

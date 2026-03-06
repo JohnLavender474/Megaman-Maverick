@@ -39,7 +39,7 @@ open class LightSourceEntity(game: MegamanMaverickGame) : MegaGameEntity(game), 
 
     protected val bounds = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(CullablesComponent())

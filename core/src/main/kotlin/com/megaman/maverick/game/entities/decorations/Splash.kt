@@ -89,7 +89,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     private val cullTimer = Timer(CULL_TIME)
     private lateinit var type: SplashType
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)

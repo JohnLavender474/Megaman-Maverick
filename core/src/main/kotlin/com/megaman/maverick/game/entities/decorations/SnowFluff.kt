@@ -34,7 +34,7 @@ class SnowFluff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         private var region: TextureRegion? = null
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, Snow.TAG)
         super.init()
         addComponent(defineBodyComponent())

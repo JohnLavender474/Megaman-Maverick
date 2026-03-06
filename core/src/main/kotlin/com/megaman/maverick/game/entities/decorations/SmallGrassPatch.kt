@@ -46,7 +46,7 @@ class SmallGrassPatch(game: MegamanMaverickGame) : MegaGameEntity(game) {
     private val bounds = GameRectangle()
     private val grass = Array<SmallGrass>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         addComponent(defineCullablesComponent())
     }

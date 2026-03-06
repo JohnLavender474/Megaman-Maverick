@@ -52,7 +52,7 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
     private val collisionIdsToIgnore = ObjectSet<Int>()
     private val knockabilityDelayTimer = Timer(KNOCKABILITY_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SMB3_ENEMIES.source, "${TAG}/missile")
         super.init()

@@ -62,7 +62,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     private var newRock: CaveRock? = null
     private var newRockOffsetY = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (standingRegion == null || throwingRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

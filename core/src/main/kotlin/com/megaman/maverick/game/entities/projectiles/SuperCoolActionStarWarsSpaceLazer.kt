@@ -46,7 +46,7 @@ class SuperCoolActionStarWarsSpaceLazer(game: MegamanMaverickGame) : AbstractPro
     private var burst = false
     private val burstTimer = Timer(BURST_DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
         if (regions.isEmpty) {

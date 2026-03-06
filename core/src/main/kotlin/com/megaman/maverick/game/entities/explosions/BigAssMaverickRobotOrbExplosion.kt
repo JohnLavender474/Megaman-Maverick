@@ -65,7 +65,7 @@ class BigAssMaverickRobotOrbExplosion(game: MegamanMaverickGame) : MegaGameEntit
 
     override fun getType() = EntityType.EXPLOSION
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (explosionRegion == null || dissipateRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             explosionRegion = atlas.findRegion("$TAG/ElectricPulse")

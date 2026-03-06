@@ -40,7 +40,7 @@ class ExplosionField(game: MegamanMaverickGame): MegaGameEntity(game), IOwnable<
     private var explodeOnStart = true
     private var started = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         addComponent(defineUpdatablesComponent())
     }

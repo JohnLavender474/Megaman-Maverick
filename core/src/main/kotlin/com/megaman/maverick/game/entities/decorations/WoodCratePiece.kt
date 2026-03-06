@@ -43,7 +43,7 @@ class WoodCratePiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     private val cullTimer = Timer(CULL_TIME)
     private var index = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)

@@ -53,7 +53,7 @@ class MockingByteEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private var region: TextureRegion? = null
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region =
             game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "$TAG/${ConstKeys.WHOLE}")
@@ -140,7 +140,7 @@ class MockingByteEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), I
 
     private var index = -1
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

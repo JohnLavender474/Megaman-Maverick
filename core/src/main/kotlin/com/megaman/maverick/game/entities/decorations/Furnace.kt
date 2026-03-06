@@ -35,7 +35,7 @@ class Furnace(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity,
 
     private val bounds = GameRectangle().setSize(SIZE * ConstVals.PPM)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineCullablesComponent())

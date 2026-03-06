@@ -75,7 +75,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private val throwTimer = Timer(THROW_DUR)
         .addRunnable(TimeMarkedRunnable(THROW_TIME) { throwPicket() })
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("stand", "throw").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

@@ -43,7 +43,7 @@ class GravitySwitchAura(game: MegamanMaverickGame) : MegaGameEntity(game), ISpri
     private val center = Vector2()
     private var size = INIT_SIZE
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()

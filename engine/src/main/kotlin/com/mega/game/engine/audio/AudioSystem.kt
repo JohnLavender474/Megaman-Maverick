@@ -38,12 +38,16 @@ class AudioSystem(
 
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         entities.forEach { entity ->
-            val audioComponent = entity.getComponent(AudioComponent::class)
-            if (on || playSoundsWhenOff) audioComponent?.playSoundRequests?.forEach { soundRequestProcessor(it) }
-            if (on || playMusicWhenOff) audioComponent?.playMusicRequests?.forEach { musicRequestProcessor(it) }
-            if (on || stopSoundsWhenOff) audioComponent?.stopSoundRequests?.forEach { soundStopper(it) }
-            if (on || stopMusicWhenOff) audioComponent?.stopMusicRequests?.forEach { musicStopper(it) }
-            audioComponent?.reset()
+            try {
+                val audioComponent = entity.getComponent(AudioComponent::class)
+                if (on || playSoundsWhenOff) audioComponent?.playSoundRequests?.forEach { soundRequestProcessor(it) }
+                if (on || playMusicWhenOff) audioComponent?.playMusicRequests?.forEach { musicRequestProcessor(it) }
+                if (on || stopSoundsWhenOff) audioComponent?.stopSoundRequests?.forEach { soundStopper(it) }
+                if (on || stopMusicWhenOff) audioComponent?.stopMusicRequests?.forEach { musicStopper(it) }
+                audioComponent?.reset()
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing audio for entity: $entity", e)
+            }
         }
     }
 }

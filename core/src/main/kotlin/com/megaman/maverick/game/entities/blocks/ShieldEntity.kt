@@ -30,7 +30,7 @@ class ShieldEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override var owner: IFreezableEntity? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineBodyComponent())

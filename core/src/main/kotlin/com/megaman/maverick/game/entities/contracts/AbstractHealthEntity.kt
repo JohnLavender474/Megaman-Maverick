@@ -47,7 +47,7 @@ abstract class AbstractHealthEntity(
 
     private var wasHealthDepleted = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         addComponent(definePointsComponent())
         val updatablesComponent = UpdatablesComponent()

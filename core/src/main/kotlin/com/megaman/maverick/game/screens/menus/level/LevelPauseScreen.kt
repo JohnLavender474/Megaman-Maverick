@@ -124,7 +124,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) return
         initialized = true
 
@@ -557,7 +557,7 @@ private class LevelPauseScreenBitsBar(
     private val bitSprites = Array<GameSprite>()
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) return
         initialized = true
 

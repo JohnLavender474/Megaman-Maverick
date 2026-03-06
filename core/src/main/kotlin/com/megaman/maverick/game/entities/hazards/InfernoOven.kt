@@ -95,7 +95,7 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     private val timers = OrderedMap<InfernoOvenState, Timer>()
     private lateinit var spawnRoom: String
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             InfernoOvenState.entries.forEach { state ->

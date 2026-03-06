@@ -119,7 +119,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     private var shot = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (closedRegion == null || openCenterRegion == null || openTopRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

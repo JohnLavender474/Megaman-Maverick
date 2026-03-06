@@ -68,7 +68,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         "reload" pairTo Timer(RELOAD_DUR)
     )
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("fire", "reload", "wait").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

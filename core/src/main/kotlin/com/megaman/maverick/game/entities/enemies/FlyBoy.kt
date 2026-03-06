@@ -60,7 +60,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     private val flyTimer = Timer(FLY_DUR)
     private val standTimer = Timer(STAND_DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         addComponent(defineAnimationsComponent())
     }

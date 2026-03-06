@@ -47,7 +47,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL),
 
     override lateinit var facing: Facing
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())

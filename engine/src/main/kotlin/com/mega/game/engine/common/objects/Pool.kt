@@ -21,7 +21,7 @@ open class Pool<T>(
     protected open val queue = Array<T>()
     protected open val hashCodeSet = ObjectSet<Int>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         (0 until startAmount).forEach { _ -> free(supplyNew()) }
         initialized = true
     }

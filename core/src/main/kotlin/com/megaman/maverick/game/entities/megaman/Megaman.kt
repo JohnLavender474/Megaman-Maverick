@@ -325,7 +325,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     private val damageListeners = OrderedSet<IMegamanDamageListener>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
 

@@ -56,7 +56,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     private var launchedBomb = false
     private var speed = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())

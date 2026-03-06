@@ -38,7 +38,7 @@ class BombPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
     private lateinit var stateMachine: StateMachine<BPBState>
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("fly", atlas.findRegion("$TAG/fly"))

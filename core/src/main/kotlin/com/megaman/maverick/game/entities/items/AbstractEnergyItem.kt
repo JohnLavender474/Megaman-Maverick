@@ -61,7 +61,7 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
     private var warning = false
     private var timeCull = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineSpritesCompoent())

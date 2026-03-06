@@ -49,7 +49,7 @@ class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     private val polygon = GamePolygon()
     private val bounds = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         addComponent(defineCullablesComponent())
         addComponent(SpritesComponent())

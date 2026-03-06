@@ -44,7 +44,7 @@ class SharpStar(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private val trajectory = Vector2()
     private var rotation = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()

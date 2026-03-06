@@ -15,7 +15,7 @@ class GroundSlideBlocker(game: MegamanMaverickGame): AbstractBlock(game) {
         const val TAG = "GroundSlideBlock"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
     }

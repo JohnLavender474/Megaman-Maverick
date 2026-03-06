@@ -56,7 +56,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     private var type = 0
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (purpleRegion == null || blueRegion == null || orangeRegion == null) {
             purpleRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Purple")
             blueRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Blue")

@@ -34,7 +34,7 @@ class TreeStump(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntit
 
     override fun getType() = EntityType.DECORATION
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.name, "TreeStump")
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())

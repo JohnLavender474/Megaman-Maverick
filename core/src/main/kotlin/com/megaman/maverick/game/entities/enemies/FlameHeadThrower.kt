@@ -66,7 +66,7 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = S
     private val standTimer = Timer(STAND_DUR)
     private val throwTimer = Timer(THROW_DUR, TimeMarkedRunnable(0.2f) { throwFlame() })
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("stand", atlas.findRegion("$TAG/Stand"))

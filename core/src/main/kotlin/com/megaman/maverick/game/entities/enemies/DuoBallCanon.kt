@@ -124,7 +124,7 @@ class DuoBallCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
     private val shooting: Boolean
         get() = !shootAnimTimer.isFinished()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

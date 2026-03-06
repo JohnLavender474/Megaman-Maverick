@@ -67,7 +67,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(PlayerSpawnEventHandler.TAG, "init()")
 
         if (!initialized) {

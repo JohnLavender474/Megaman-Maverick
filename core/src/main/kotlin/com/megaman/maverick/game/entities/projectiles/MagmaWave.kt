@@ -71,7 +71,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private val dropFlameDelay = Timer()
     private val disintegrationTimer = Timer(DISINTEGRATE_TIME)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)

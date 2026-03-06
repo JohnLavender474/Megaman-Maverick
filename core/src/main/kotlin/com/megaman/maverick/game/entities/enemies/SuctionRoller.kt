@@ -70,7 +70,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     private var onWall = false
     private var wasOnWall = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

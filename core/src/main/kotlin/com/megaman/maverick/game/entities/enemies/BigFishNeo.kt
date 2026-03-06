@@ -77,7 +77,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     private var minX = 0f
     private var maxX = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

@@ -40,7 +40,7 @@ class HazardsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val RISING_LAVA_RIVER = "RisingLavaRiver"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(SAW, GameEntityPoolCreator.create { Saw(game) })
         pools.put(SWINGING_AXE, GameEntityPoolCreator.create { SwingingAxe(game) })
         pools.put(SPIKE, GameEntityPoolCreator.create { Spike(game) })

@@ -176,7 +176,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private val reusableCircle = GameCircle()
     private val reusableRect = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         super.init()
         addComponent(SpritesComponent())

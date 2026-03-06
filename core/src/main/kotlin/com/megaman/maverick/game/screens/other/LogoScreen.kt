@@ -58,7 +58,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         timers.putAll(
             LogoScreenState.INIT pairTo Timer(INIT_DUR),
             LogoScreenState.FADE_IN_LOGO pairTo Timer(LOGO_FADE_IN_DUR),

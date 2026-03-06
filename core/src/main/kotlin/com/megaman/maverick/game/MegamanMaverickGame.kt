@@ -82,8 +82,8 @@ import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
+import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -137,7 +137,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(PipePortal.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(HealthBulb.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.DEATH)
         }
@@ -612,7 +612,6 @@ class MegamanMaverickGame(
         val engine = GameEngine(
             systems = gdxArrayOf(
                 ControllerSystem(controllerPoller),
-                AnimationsSystem(),
                 BehaviorsSystem(),
                 WorldSystem(
                     ppm = ConstVals.PPM,
@@ -672,6 +671,7 @@ class MegamanMaverickGame(
                 PointsSystem(),
                 UpdatablesSystem(),
                 FontsSystem(this::addDrawable),
+                AnimationsSystem(),
                 SpritesSystem(this::addDrawable),
                 DrawableShapesSystem({ shapes.add(it) }, params.debugShapes),
                 AudioSystem(

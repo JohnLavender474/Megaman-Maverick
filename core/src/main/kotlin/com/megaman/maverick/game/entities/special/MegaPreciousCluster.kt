@@ -15,7 +15,7 @@ class MegaPreciousCluster(game: MegamanMaverickGame): MegaGameEntity(game) {
         const val TAG = "PreciousCluster"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
     }

@@ -63,7 +63,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private var splashSound = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
         if (blueReg == null) blueReg = atlas.findRegion(BLUE_REG)
         if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)

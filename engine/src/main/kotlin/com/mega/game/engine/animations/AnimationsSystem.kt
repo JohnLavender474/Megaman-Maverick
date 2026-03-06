@@ -10,15 +10,19 @@ class AnimationsSystem : GameSystem(AnimationsComponent::class) {
         if (!on) return
 
         for (entity in entities) {
-            val component = entity.getComponent(AnimationsComponent::class)!!
-            if (component.shouldAnimate.invoke(delta)) component.animators.forEach { e ->
-                val animator = e.value
-                if (!animator.shouldAnimate(delta)) return@forEach
+            try {
+                val component = entity.getComponent(AnimationsComponent::class)!!
+                if (component.shouldAnimate.invoke(delta)) component.animators.forEach { e ->
+                    val animator = e.value
+                    if (!animator.shouldAnimate(delta)) return@forEach
 
-                val key = e.key
+                    val key = e.key
 
-                val sprite = component.sprites[key] ?: return@forEach
-                animator.animate(sprite, delta)
+                    val sprite = component.sprites[key] ?: return@forEach
+                    animator.animate(sprite, delta)
+                }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing animations for entity: $entity", e)
             }
         }
     }

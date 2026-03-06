@@ -60,7 +60,7 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
 
     override fun getType() = EntityType.HAZARD
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (fallingRegion == null || splatRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             fallingRegion = atlas.findRegion("LavaDrop/Falling")

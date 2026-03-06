@@ -80,9 +80,13 @@ class WorldSystem(
 
         accumulator += delta
         if (accumulator >= fixedStep) {
-            entities.forEach {
-                val component = it.getComponent(BodyComponent::class)!!
-                if (component.doUpdate()) reusableBodyArray.add(component.body)
+            entities.forEach { entity ->
+                try {
+                    val component = entity.getComponent(BodyComponent::class)!!
+                    if (component.doUpdate()) reusableBodyArray.add(component.body)
+                } catch (e: Exception) {
+                    throw Exception("Exception occured while processing world for entity: $entity", e)
+                }
             }
 
             while (accumulator >= fixedStep) {

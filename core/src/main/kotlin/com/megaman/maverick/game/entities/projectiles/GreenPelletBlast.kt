@@ -49,7 +49,7 @@ class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, siz
     private val burstTimer = Timer(BURST_DUR)
     private var burst = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

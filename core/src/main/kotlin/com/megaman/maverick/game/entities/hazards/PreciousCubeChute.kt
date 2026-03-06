@@ -49,7 +49,7 @@ class PreciousCubeChute(game: MegamanMaverickGame) : MegaGameEntity(game), ISpri
 
     private val colorLoop = Loop(PreciousCubeColor.entries.toGdxArray())
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)

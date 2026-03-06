@@ -63,7 +63,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
     private val dissipateTimer = Timer(DISSIPATE_DUR)
     private var dissipating = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (fallingRegion == null || splatRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             fallingRegion = atlas.findRegion("$TAG/falling")

@@ -65,7 +65,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     private lateinit var type: String
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (orangeRegion == null || greenRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             orangeRegion = atlas.findRegion("PetitDevil/LargeOrange")
@@ -222,7 +222,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
     private lateinit var type: String
     private var scalar = START_SCALAR
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (greenRegion == null || orangeRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             greenRegion = atlas.findRegion("PetitDevil/SmallGreen")

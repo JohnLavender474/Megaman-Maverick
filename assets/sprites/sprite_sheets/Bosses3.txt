@@ -1,7 +1,7 @@
-Bosses3-0.png
+Bosses3.png
 size: 940, 1870
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 BigAssMaverickRobot/Body/body
   rotate: false

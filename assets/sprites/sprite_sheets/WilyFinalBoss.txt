@@ -1,0 +1,26 @@
+WilyFinalBoss-0.png
+size: 768, 3584
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pma: false
+phase_1/fly_by
+  bounds: 0, 0, 256, 256
+phase_1/fly_out
+  bounds: 256, 256, 256, 512
+phase_1/hover
+  bounds: 256, 0, 256, 256
+phase_1/lazors
+  bounds: 0, 768, 256, 768
+phase_1/open_hatch
+  bounds: 512, 0, 256, 256
+phase_1/open_mouth
+  bounds: 0, 2304, 256, 1280
+phase_1/shoot_missiles
+  bounds: 0, 1536, 768, 768
+phase_1/swoop
+  bounds: 256, 2304, 512, 1280
+phase_1/tilt
+  bounds: 0, 256, 256, 256
+phase_1/tilt_lazors
+  bounds: 512, 256, 256, 512

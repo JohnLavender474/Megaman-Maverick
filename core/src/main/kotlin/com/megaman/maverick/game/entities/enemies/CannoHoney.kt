@@ -119,7 +119,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     private val beeCycleDelay = Timer()
     private val reusableBeeArray = Array<Beezee>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)

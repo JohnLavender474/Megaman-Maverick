@@ -43,7 +43,7 @@ class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     private var large = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (smallRegion == null) smallRegion = game.assMan.getTextureRegion(
             TextureAsset.PROJECTILES_1.source, "Electric/SmallElectric"
         )

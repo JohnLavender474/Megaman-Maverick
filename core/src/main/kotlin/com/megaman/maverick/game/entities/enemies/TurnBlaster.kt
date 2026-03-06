@@ -70,7 +70,7 @@ class TurnBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.M
 
     private var debug = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("base", "dial", "tube").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

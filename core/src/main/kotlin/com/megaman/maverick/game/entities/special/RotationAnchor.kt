@@ -49,7 +49,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     override fun getType() = EntityType.SPECIAL
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(MotionComponent())

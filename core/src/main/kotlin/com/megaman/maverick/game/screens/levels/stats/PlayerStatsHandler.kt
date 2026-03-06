@@ -55,7 +55,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     val finished: Boolean
         get() = timerQueue.isEmpty
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) return
 
         GameLogger.debug(TAG, "init()")

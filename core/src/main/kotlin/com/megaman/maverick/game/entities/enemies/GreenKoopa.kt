@@ -81,7 +81,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
     private val tempOut = ObjectSet<MegaGameEntity>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {

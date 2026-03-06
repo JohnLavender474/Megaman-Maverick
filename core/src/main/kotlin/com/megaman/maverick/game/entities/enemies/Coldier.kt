@@ -101,7 +101,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
     private val blowForce: Float
         get() = if (currentState == ColdierState.SMALL_BLOW) SMALL_BLOW_FORCE else BIG_BLOW_FORCE
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

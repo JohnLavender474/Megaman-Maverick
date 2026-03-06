@@ -60,7 +60,7 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
 
     private var minY = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineUpdatablesComponent())

@@ -12,28 +12,28 @@ import com.megaman.maverick.game.spawns.SpawnsManager
 
 data class MegaMapLayerBuildersParams(val game: MegamanMaverickGame, val spawnsManager: SpawnsManager)
 
-class MegaMapLayerBuilders(private val params: MegaMapLayerBuildersParams) : TiledMapLayerBuilders(), Initializable {
+class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParams) : TiledMapLayerBuilders(), Initializable {
 
     override val layerBuilders = OrderedMap<String, ITiledMapLayerBuilder>()
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) return
         initialized = true
         layerBuilders.put(ConstKeys.GAME_ROOMS, GameRoomsLayerBuilder())
         layerBuilders.put(ConstKeys.PLAYER, PlayerLayerBuilder())
-        layerBuilders.put(ConstKeys.ENEMIES, SpawnersLayerBuilder(params))
-        layerBuilders.put(ConstKeys.BLOCKS, SpawnersLayerBuilder(params))
-        layerBuilders.put(ConstKeys.ITEMS, SpawnersLayerBuilder(params))
-        layerBuilders.put(ConstKeys.TRIGGERS, TriggersLayerBuilder(params))
-        layerBuilders.put(ConstKeys.BACKGROUNDS, BackgroundLayerBuilder(params))
-        layerBuilders.put(ConstKeys.FOREGROUNDS, ForegroundLayerBuilder(params))
-        layerBuilders.put(ConstKeys.HAZARDS, SpawnersLayerBuilder(params))
-        layerBuilders.put(ConstKeys.SPECIALS, SpawnersLayerBuilder(params))
+        layerBuilders.put(ConstKeys.ENEMIES, SpawnersLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.BLOCKS, SpawnersLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.ITEMS, SpawnersLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.TRIGGERS, TriggersLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.BACKGROUNDS, BackgroundLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.FOREGROUNDS, ForegroundLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.HAZARDS, SpawnersLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.SPECIALS, SpawnersLayerBuilder(mapLayerParams))
         layerBuilders.put(ConstKeys.SENSORS, SensorsLayerBuilder())
-        layerBuilders.put(ConstKeys.DECORATIONS, SpawnersLayerBuilder(params))
-        layerBuilders.put(ConstKeys.PROJECTILES, SpawnersLayerBuilder(params))
+        layerBuilders.put(ConstKeys.DECORATIONS, SpawnersLayerBuilder(mapLayerParams))
+        layerBuilders.put(ConstKeys.PROJECTILES, SpawnersLayerBuilder(mapLayerParams))
     }
 
     override fun build(layers: MapLayers, returnProps: Properties) {

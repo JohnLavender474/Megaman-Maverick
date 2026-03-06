@@ -49,7 +49,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private var maxToSpawn = DEFAULT_MAX_SPAWNED
     private var dropItemOnDeath = DEFAULT_DROP_ITEM_ON_DEATH
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineBodyComponent())

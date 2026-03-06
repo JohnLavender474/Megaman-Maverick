@@ -65,7 +65,7 @@ class ElectrocutieChild(game: MegamanMaverickGame) : MegaGameEntity(game), IHaza
 
     override fun getType() = EntityType.HAZARD
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (moveRegion == null || chargeRegion == null || shockRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             moveRegion = atlas.findRegion("Electrocutie/Move")

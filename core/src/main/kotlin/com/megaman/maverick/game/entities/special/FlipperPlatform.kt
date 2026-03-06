@@ -76,7 +76,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     private val bounds = GameRectangle()
     private var block: Block? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)

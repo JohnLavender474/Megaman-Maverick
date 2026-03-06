@@ -57,7 +57,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     private var ballInHand = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponents(defineProjectileComponents(OUT_OF_BOUNDS_CULL_TIME))

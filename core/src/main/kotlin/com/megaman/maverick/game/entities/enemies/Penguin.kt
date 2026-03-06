@@ -62,7 +62,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     private val standTimer = Timer(STAND_DUR)
     private val slideTimer = Timer(SLIDE_DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         addComponent(defineAnimationsComponent())

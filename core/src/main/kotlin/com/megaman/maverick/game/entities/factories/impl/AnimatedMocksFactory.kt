@@ -6,7 +6,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactory
 
 class AnimatedMocksFactory(private val game: MegamanMaverickGame) : EntityFactory() {
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         // TODO
     }
 

@@ -114,7 +114,7 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     private var feetOnGround = false
     private var scaleBullet = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         if (standRegion == null || jumpRegion == null) {

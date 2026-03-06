@@ -33,7 +33,7 @@ class CrystalConveyorBKG(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
 
     private val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())

@@ -21,7 +21,7 @@ class CanonMet(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntity,
 
     override lateinit var facing: Facing
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
     }
 

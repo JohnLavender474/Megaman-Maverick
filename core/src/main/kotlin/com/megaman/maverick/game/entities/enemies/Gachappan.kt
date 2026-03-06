@@ -75,7 +75,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     private lateinit var loop: Loop<GamePair<GachappanState, Timer>>
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (waitRegion == null || shootRegion == null || openRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             waitRegion = atlas.findRegion("Gachappan/Wait")

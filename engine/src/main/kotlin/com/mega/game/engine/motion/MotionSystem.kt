@@ -12,17 +12,21 @@ class MotionSystem : GameSystem(MotionComponent::class) {
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
 
-        entities.forEach {
-            it.getComponent(MotionComponent::class)?.let { motionComponent ->
-                motionComponent.definitions.values().forEach { definition ->
-                    if (definition.doUpdate()) {
-                        val motion = definition.motion
-                        motion.update(delta)
+        entities.forEach { entity ->
+            try {
+                entity.getComponent(MotionComponent::class)?.let { motionComponent ->
+                    motionComponent.definitions.values().forEach { definition ->
+                        if (definition.doUpdate()) {
+                            val motion = definition.motion
+                            motion.update(delta)
 
-                        val value = motion.getMotionValue(out)
-                        if (value != null) definition.function(value, delta)
+                            val value = motion.getMotionValue(out)
+                            if (value != null) definition.function(value, delta)
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing motion for entity: $entity", e)
             }
         }
     }

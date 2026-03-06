@@ -33,7 +33,7 @@ class MockTimberWoman(private val game: MegamanMaverickGame): MockRobotMaster {
     private val sprite = GameSprite()
     private lateinit var animator: IAnimator
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
             AnimationUtils.loadRegions(TimberWoman.TAG, atlas, animDefs.keys(), regions)

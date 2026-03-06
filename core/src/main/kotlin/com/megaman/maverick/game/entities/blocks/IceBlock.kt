@@ -16,7 +16,7 @@ open class IceBlock(game: MegamanMaverickGame) : ShieldBlock(game) {
 
     private lateinit var ice: Fixture
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
 

@@ -101,7 +101,7 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezable
 
     private val sensor = GameRectangle().setSize(SENSOR_WIDTH * ConstVals.PPM, SENSOR_HEIGHT * ConstVals.PPM)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

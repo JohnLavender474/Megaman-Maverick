@@ -19,7 +19,7 @@ class MockGameEntity(
 
     override var initialized = false
 
-    override fun init() = init.invoke(this)
+    override fun init(vararg params: Any) = init.invoke(this)
 
     override fun onSpawn(spawnProps: Properties) = onSpawn.invoke(this, spawnProps)
 

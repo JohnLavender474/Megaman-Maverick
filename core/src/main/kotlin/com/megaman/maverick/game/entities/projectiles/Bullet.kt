@@ -2,11 +2,15 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
+import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureRegion
+import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.extensions.set
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
@@ -26,6 +30,7 @@ import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -36,6 +41,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.BulletResidual
 import com.megaman.maverick.game.entities.explosions.Disintegration
+import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
@@ -44,26 +50,45 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     companion object {
         const val TAG = "Bullet"
+
         private const val CLAMP = 10f
         private const val BOUNCE_MAX = 1
-        private var region: TextureRegion? = null
+
+        const val DEFAULT = "default"
+        const val LAZOR = "lazor"
+
+        private val regions = ObjectMap<String, TextureRegion>()
+        private val animDefs = orderedMapOf(
+            "default" pairTo AnimationDef(),
+            "lazor" pairTo AnimationDef(2, 2, 0.1f, true)
+        )
     }
 
     override lateinit var direction: Direction
+
+    private var type = DEFAULT
 
     private val trajectory = Vector2()
     private var followTraj = true
     private var bounced = 0
 
-    override fun init() {
+    private var shouldCollide = true
+
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
+        }
         super.init()
+        addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, DEFAULT, String::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -92,6 +117,8 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         val shouldSpawnResidual =
             spawnProps.getOrDefault("${ConstKeys.SPAWN}_${ConstKeys.RESIDUAL}", true, Boolean::class)
         if (shouldSpawnResidual) spawnResidual(residualRotation)
+
+        shouldCollide = spawnProps.getOrDefault(ConstKeys.COLLIDE, true, Boolean::class)
     }
 
     private fun spawnResidual(residualRotation: Float) {
@@ -109,17 +136,25 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (!shouldCollide) return
+
         val entity = bodyFixture.getEntity()
         if (entity is AbstractEnemy && owner is AbstractEnemy) return
         if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
-    override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (!shouldCollide) return
+        explodeAndDie()
+    }
 
-    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
+    override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (!shouldCollide) return
+        explodeAndDie()
+    }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (owner == shieldFixture.getEntity()) return
+        if (!shouldCollide || owner == shieldFixture.getEntity()) return
 
         if (shieldFixture.getEntity() is GutsTankFist && owner is GutsTank) return
 
@@ -204,10 +239,10 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         sprite.setSize(2f * ConstVals.PPM)
-        val component = SpritesComponent(sprite)
-        component.putPreProcess { _, _ ->
+        val component = SpritesComponent(TAG pairTo sprite)
+        component.putPreProcess(TAG) { _, _ ->
             sprite.setCenter(body.getCenter())
             val flipX = when (megaman.direction) {
                 Direction.UP -> body.physics.velocity.x < 0f
@@ -221,4 +256,14 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         }
         return component
     }
+
+    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { type }
+                .applyToAnimations { AnimationUtils.loadAnimationDefs(animDefs, it, regions) }
+                .build()
+        )
+        .build()
 }

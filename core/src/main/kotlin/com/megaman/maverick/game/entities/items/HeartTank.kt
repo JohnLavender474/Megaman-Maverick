@@ -73,7 +73,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
     private val spawnOnContact = Array<RectangleMapObject>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         super.init()

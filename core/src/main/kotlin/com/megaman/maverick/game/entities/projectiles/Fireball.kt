@@ -84,7 +84,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     private val collisionsToIgnore = ObjectSet<Int>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val fireballAtlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)

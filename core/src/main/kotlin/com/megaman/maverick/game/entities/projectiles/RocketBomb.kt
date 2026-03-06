@@ -51,7 +51,7 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
 
     override lateinit var direction: Direction
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "RocketBomb")
         super.init()

@@ -29,7 +29,7 @@ class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     override fun getType() = EntityType.SPECIAL
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         addComponent(defineBodyComponent())
     }
 

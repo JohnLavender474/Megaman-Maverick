@@ -59,7 +59,7 @@ class UpNDown(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     private var up = false
     private var left = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (redRegion == null || blueRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             redRegion = atlas.findRegion("UpNDown/Red")

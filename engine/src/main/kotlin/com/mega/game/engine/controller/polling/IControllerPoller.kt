@@ -8,7 +8,7 @@ import com.mega.game.engine.controller.buttons.ButtonStatus
 
 interface IControllerPoller : IActivatable, Runnable, Initializable {
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         // default implementation is a no-op
     }
 

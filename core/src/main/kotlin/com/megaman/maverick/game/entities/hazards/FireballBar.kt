@@ -44,7 +44,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
     private lateinit var rotatingLine: RotatingLine
     private lateinit var spawnRoom: String
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineUpdatablesComponent())

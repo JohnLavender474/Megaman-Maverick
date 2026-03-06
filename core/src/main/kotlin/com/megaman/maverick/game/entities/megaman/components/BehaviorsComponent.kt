@@ -123,7 +123,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
         }
 
-        override fun init() {
+        override fun init(vararg params: Any) {
             GameLogger.debug(MEGAMAN_SWIM_BEHAVIOR_TAG, "Init method called")
 
             timer.reset()
@@ -276,7 +276,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return aButtonTask == AButtonTask.AIR_DASH && isAirDashButtonJustActivated()
         }
 
-        override fun init() {
+        override fun init(vararg params: Any) {
             GameLogger.debug(MEGAMAN_AIR_DASH_BEHAVIOR_TAG, "init()")
 
             minTimer.reset()
@@ -374,7 +374,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return timer.isFinished()
         }
 
-        override fun init() {
+        override fun init(vararg params: Any) {
             if (direction.isVertical()) body.physics.velocity.x = 0f else body.physics.velocity.y = 0f
 
             when (direction) {
@@ -423,7 +423,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
         }
 
-        override fun init() {
+        override fun init(vararg params: Any) {
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "init()")
 
             minTimer.reset()
@@ -576,7 +576,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return false
         }
 
-        override fun init() {
+        override fun init(vararg params: Any) {
             game.setFocusSnappedAway(true)
 
             aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
@@ -695,7 +695,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             )
         }
 
-        override fun init() {
+        override fun init(vararg params: Any) {
             body.physics.gravityOn = false
         }
 

@@ -52,7 +52,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
     private var targetReached = false
     private var targetY = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("up", "turn", "down").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

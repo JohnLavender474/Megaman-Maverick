@@ -51,7 +51,7 @@ class WoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnima
     private val onFireTimer = Timer(ON_FIRE_DUR)
     private var onFire = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

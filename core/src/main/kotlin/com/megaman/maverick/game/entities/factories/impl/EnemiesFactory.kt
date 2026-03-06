@@ -94,7 +94,7 @@ class EnemiesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val CANNON_HOPPER = "CannonHopper"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(TEST_ENEMY, GameEntityPoolCreator.create { TestEnemy(game) })
         pools.put(BAT, GameEntityPoolCreator.create { Bat(game) })
         pools.put(MET, GameEntityPoolCreator.create { Met(game) })

@@ -82,7 +82,7 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private val out = Vector2()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()

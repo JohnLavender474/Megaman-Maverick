@@ -51,7 +51,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     override fun getType() = EntityType.EXPLOSION
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

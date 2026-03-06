@@ -81,7 +81,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
     private val throwHeadTimer = Timer(THROW_HEAD_DELAY + THROW_HEAD_DUR)
         .addRunnables(TimeMarkedRunnable(THROW_HEAD_TIME) { throwHead() })
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

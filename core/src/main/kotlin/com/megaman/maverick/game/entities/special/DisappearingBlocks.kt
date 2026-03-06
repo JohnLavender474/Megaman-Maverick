@@ -41,7 +41,7 @@ class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IPar
 
     private lateinit var loop: Loop<String>
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(AudioComponent())

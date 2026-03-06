@@ -52,7 +52,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     private val loop = Loop(DropperLiftState.entries.toTypedArray().toGdxArray())
     private val timer = Timer(DURATION)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (closedRegion == null || openingRegion == null || openRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)

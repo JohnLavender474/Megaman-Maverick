@@ -35,7 +35,7 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
 
     private val megaman = game.megaman
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
         deathTimer.reset()

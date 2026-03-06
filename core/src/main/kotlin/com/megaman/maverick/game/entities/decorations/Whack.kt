@@ -44,7 +44,7 @@ class Whack(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
 
     private val timer = Timer()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_EFFECTS.source)

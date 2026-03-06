@@ -100,7 +100,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
 
     private var maxY = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (closedRegion == null || openRegion == null || shockRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             closedRegion = atlas.findRegion("SigmaRat/ClawClosed")

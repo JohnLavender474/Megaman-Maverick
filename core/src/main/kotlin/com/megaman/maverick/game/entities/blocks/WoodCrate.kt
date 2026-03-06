@@ -125,7 +125,7 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
 
     private val reusableEntitySet = ObjectSet<MegaGameEntity>()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)

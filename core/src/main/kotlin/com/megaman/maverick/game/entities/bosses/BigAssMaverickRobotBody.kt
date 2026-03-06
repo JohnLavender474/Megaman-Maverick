@@ -38,7 +38,7 @@ class BigAssMaverickRobotBody(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     internal val bounds = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(
             TextureAsset.BOSSES_3.source,

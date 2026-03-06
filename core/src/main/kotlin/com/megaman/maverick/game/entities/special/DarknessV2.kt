@@ -171,7 +171,9 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private val reusableEntitiesSet = ObjectSet<MegaGameEntity>()
     private val reusableMnMs = MinsAndMaxes()
 
-    override fun init() {
+    private var timeSinceLastUpdate = 0f
+
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         super.init()
@@ -207,6 +209,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         allTiles = Matrix(rows, columns)
 
         darkMode = false
+
+        timeSinceLastUpdate = 1f
     }
 
     override fun onDestroy() {
@@ -347,7 +351,14 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         }
     }
 
+    private fun shouldUpdate() = darkMode && timeSinceLastUpdate >= TIME_TO_UPDATE
+
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        timeSinceLastUpdate += delta
+        if (!shouldUpdate()) return@UpdatablesComponent
+
+        timeSinceLastUpdate = 0f
+
         val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
         entities.forEach { entity -> tryToLightUp(entity) }
         entities.clear()

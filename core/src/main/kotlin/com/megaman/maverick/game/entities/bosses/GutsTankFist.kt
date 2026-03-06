@@ -113,7 +113,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     private val attachment: Vector2
         get() = (parent as GutsTank).body.getCenter().add(FIST_OFFSET_X * ConstVals.PPM, FIST_OFFSET_Y * ConstVals.PPM)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (launchedRegion == null || fistRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)

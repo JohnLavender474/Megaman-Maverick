@@ -99,7 +99,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
         val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
         backgroundSprite.setRegion(backgroundRegion)

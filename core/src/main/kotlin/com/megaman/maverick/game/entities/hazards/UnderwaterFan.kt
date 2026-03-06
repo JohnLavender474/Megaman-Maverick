@@ -109,7 +109,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         dist1.compareTo(dist2)
     })
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)

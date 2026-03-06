@@ -68,7 +68,7 @@ class Electrocutie(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, I
 
     override fun getTag() = TAG
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
     }

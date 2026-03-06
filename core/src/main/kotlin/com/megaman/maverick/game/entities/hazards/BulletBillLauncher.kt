@@ -57,7 +57,7 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     private var canShootLeft = true
     private var canShootRight = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)

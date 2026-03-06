@@ -266,6 +266,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Decorations1/ChargedShot_Residual_Half.png</key>
+            <key type="filename">../frames/Decorations1/WarningSign.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -615,6 +616,21 @@
                 <rect>7,7,13,13</rect>
                 <key>scale9Paddings</key>
                 <rect>7,7,13,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Decorations1/WilyDeathPlaneLazorResidual.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,128,128,256</rect>
+                <key>scale9Paddings</key>
+                <rect>64,128,128,256</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

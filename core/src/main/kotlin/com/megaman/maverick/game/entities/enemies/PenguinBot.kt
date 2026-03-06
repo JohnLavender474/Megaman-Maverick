@@ -54,7 +54,7 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game, size = Size.MED
 
     private lateinit var penguinBotState: PenguinBotState
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("wait", atlas.findRegion("$TAG/wait"))

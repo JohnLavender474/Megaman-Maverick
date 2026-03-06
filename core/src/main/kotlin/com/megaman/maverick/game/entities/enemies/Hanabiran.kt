@@ -81,7 +81,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
 
     private lateinit var hanabiranState: HanabiranState
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         addComponent(defineAnimationsComponent())

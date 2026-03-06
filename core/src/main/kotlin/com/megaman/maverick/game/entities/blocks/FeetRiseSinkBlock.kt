@@ -29,7 +29,7 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
     protected var risingSpeed = 0f
     protected var fallingSpeed = 0f
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
         super.init()

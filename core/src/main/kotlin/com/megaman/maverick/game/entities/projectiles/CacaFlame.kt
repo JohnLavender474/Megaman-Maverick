@@ -41,7 +41,7 @@ class CacaFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private val burstTimer = Timer(BURST_DUR)
     private var burst = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             gdxArrayOf("burst", "fall").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }

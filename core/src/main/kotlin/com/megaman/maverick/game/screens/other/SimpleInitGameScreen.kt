@@ -24,7 +24,7 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
     private val uiCamera = game.getUiCamera()
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) {
             GameLogger.debug(TAG, "init(): already initialized, do nothing")
             return
@@ -62,7 +62,7 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
             game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
             game.setCurrentScreen(ScreenEnum.LOGO_SCREEN.name)
-            // game.startLevel(LevelDefinition.SMB3_1)
+            // game.startLevel(LevelDefinition.WILY_STAGE_3)
         }
     }
 }

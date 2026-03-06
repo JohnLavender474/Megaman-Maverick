@@ -110,6 +110,16 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                     val spawner = SpawnerFactory.spawnerForOnEvent(
                         predicate = predicate@{ event ->
+                            val eventsToAccept = spawnProps.get(ConstKeys.EVENTS, String::class)
+                                ?.split(",")
+                                ?.map { str -> EventType.valueOf(str.uppercase()) } ?:
+                                objectSetOf(
+                                    EventType.PLAYER_READY,
+                                    EventType.BEGIN_ROOM_TRANS,
+                                    EventType.SET_TO_ROOM_NO_TRANS
+                                )
+                            if (!eventsToAccept.contains(event.key)) return@predicate false
+
                             val currentRoomName = game.getCurrentRoom()?.name
                             val shouldSpawn = currentRoomName == roomName
 
@@ -124,8 +134,9 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                             return@predicate shouldSpawn
                         },
-                        eventKeyMask = objectSetOf<Any>(
+                        eventKeyMask = objectSetOf(
                             EventType.PLAYER_READY,
+                            EventType.END_ROOM_TRANS,
                             EventType.BEGIN_ROOM_TRANS,
                             EventType.SET_TO_ROOM_NO_TRANS
                         ),

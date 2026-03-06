@@ -37,7 +37,7 @@ class FallingLeaves(game: MegamanMaverickGame) : MegaGameEntity(game), ICullable
     private var spawnRoom: String? = null
     private val spawnTimer = Timer()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(CullablesComponent())

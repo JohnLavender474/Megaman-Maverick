@@ -46,7 +46,7 @@ private class ToxicWaterWaveAnimator(private val game: MegamanMaverickGame) : IA
     private lateinit var animation: IAnimation
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) return
         initialized = true
 
@@ -79,7 +79,7 @@ class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private var water: Water? = null
     private val bounds = GameRectangle()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (waterRegion == null)
             waterRegion = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "$TAG/water")

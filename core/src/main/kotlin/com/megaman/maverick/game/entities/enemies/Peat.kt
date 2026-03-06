@@ -59,7 +59,7 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     private var midPoint: Vector2? = null
     private var moving = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()

@@ -111,7 +111,7 @@ abstract class AbstractEnemy(
     protected var dropItemOnDeath = true
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
 
         addComponent(AudioComponent())

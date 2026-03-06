@@ -24,7 +24,7 @@ class BossesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val SPHINX_MINI_BOSS = "SphinxMiniBoss"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(REACTOR_MAN, GameEntityPoolCreator.create { ReactorMan_OLD(game) })
         pools.put(GLACIER_MAN, GameEntityPoolCreator.create { GlacierMan(game) })
         pools.put(DESERT_MAN, GameEntityPoolCreator.create { DesertMan(game) })

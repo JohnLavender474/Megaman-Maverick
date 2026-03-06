@@ -70,7 +70,7 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE)
     private val robbitTimer: Timer
         get() = robbitTimers[robbitLoop.getCurrent()]!!
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         super.init()
         if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         addComponent(defineAnimationsComponent())

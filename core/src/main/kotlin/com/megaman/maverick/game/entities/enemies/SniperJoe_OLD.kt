@@ -130,7 +130,7 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
     override fun getTag() = TAG
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             joeTypes.forEach { joeType ->

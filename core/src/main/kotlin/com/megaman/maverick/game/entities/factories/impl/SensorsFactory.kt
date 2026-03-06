@@ -14,7 +14,7 @@ class SensorsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
         const val DEATH = "Death"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(GATE, GameEntityPoolCreator.create { Gate(game) })
         pools.put(DEATH, GameEntityPoolCreator.create { Death(game) })
     }

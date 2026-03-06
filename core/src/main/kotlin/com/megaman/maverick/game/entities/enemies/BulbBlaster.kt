@@ -83,7 +83,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
     private val timer = Timer(STATE_DUR)
     private var light = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (lightRegion == null || darkRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)

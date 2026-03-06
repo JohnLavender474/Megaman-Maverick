@@ -75,7 +75,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
 
     private var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) {
             GameLogger.debug(TAG, "init(): already initialized, nothing to do")
             return
@@ -304,7 +304,7 @@ private class MugshotV2(
     val faceSprite = GameSprite()
     var initialized = false
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (initialized) {
             GameLogger.debug(TAG, "init(): already initialized, nothing to do")
             return

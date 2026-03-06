@@ -83,7 +83,7 @@ class ChompFlower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     private val currentState: ChompFlowerState
         get() = stateLoopHandler.getCurrentState()
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)

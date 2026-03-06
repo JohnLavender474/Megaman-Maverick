@@ -19,7 +19,7 @@ class FunctionalBehaviorImpl(
 
     override fun evaluate(delta: Float) = evaluate.invoke(delta)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         init?.invoke()
     }
 

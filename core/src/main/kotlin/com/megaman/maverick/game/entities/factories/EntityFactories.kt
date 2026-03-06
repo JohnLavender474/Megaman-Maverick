@@ -23,7 +23,7 @@ object EntityFactories : Factories<Any?, MegaGameEntity>(), Initializable, IClea
         factories.put(EntityType.SENSOR, SensorsFactory(game))
     }
 
-    override fun init() = factories.forEach { (it.value as EntityFactory).init() }
+    override fun init(vararg params: Any) = factories.forEach { (it.value as EntityFactory).init() }
 
     override fun clear() = factories.forEach { (it.value as EntityFactory).clear() }
 }

@@ -76,7 +76,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
     private val shootDelayTimer = Timer(SHOOT_DELAY)
     private lateinit var scanner: GameRectangle
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("stand", "shoot", "frozen").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

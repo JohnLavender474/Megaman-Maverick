@@ -99,7 +99,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
     private var megaHeartTank: MegaHeartTank? = null
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
             gdxArrayOf("stand", "stand_damaged", "throw", "throw_damaged").forEach { key ->

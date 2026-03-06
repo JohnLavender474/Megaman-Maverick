@@ -85,7 +85,7 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
     private val tempOut = ObjectSet<MegaGameEntity>()
     private val trailSpriteTimer = Timer(ConstVals.STANDARD_TRAIL_SPRITE_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {

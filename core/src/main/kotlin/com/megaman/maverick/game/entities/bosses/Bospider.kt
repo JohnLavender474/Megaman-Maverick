@@ -153,7 +153,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     private val spawn = Vector2()
     private var firstSpawn = true
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)

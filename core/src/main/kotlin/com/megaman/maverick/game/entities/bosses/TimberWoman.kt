@@ -241,7 +241,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
     // Delay for spawning random leaves while in hard mode
     private val hardModeLeafSpawnDelay = Timer(HARD_MODE_LEAF_SPAWN_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
         if (regions.isEmpty) {

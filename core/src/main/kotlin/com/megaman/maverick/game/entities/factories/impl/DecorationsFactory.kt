@@ -45,7 +45,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         const val SMOKE = "Smoke"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(SPLASH, GameEntityPoolCreator.create { Splash(game) })
         pools.put(FORCE_DECORATION, GameEntityPoolCreator.create { ForceDecoration(game) })
         pools.put(WINDY_GRASS, GameEntityPoolCreator.create { WindyGrass(game) })

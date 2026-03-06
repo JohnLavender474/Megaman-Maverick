@@ -50,6 +50,7 @@ enum class TextureAsset(src: String) : IAsset {
     BOSSES_1("Bosses1.txt"),
     BOSSES_2("Bosses2.txt"),
     BOSSES_3("Bosses3.txt"),
+    WILY_FINAL_BOSS("WilyFinalBoss.txt"),
     TIMBER_WOMAN("TimberWoman.txt"),
     RODENT_MAN("RodentMan.txt"),
     GUTS_TANK("GutsTank.txt"),

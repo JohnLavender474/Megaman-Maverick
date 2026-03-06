@@ -52,7 +52,7 @@ class Copipi(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     private val freezeHandler = FreezableEntityHandler(this)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "${Pipi.TAG}/$TAG")
         super.init()

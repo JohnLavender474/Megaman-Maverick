@@ -62,7 +62,7 @@ class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private val timer = Timer(EXPLOSION_DUR)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         super.init()

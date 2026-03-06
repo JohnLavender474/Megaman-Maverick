@@ -28,7 +28,7 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
         const val MAGMA_GOOP_EXPLOSION = "MagmaGoopExplosion"
     }
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         pools.put(EXPLOSION, GameEntityPoolCreator.create { Explosion(game) })
         pools.put(SNOWBALL_EXPLOSION, GameEntityPoolCreator.create { SnowballExplosion(game) })
         pools.put(DISINTEGRATION, GameEntityPoolCreator.create { Disintegration(game) })

@@ -10,13 +10,17 @@ class BehaviorsSystem : GameSystem(BehaviorsComponent::class) {
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
         entities.forEach { entity ->
-            val behaviorsComponent = entity.getComponent(BehaviorsComponent::class)!!
-            behaviorsComponent.behaviors.forEach { entry ->
-                val key = entry.key
-                if (behaviorsComponent.isBehaviorAllowed(key)) {
-                    val behavior = entry.value
-                    behavior.update(delta)
+            try {
+                val behaviorsComponent = entity.getComponent(BehaviorsComponent::class)!!
+                behaviorsComponent.behaviors.forEach { entry ->
+                    val key = entry.key
+                    if (behaviorsComponent.isBehaviorAllowed(key)) {
+                        val behavior = entry.value
+                        behavior.update(delta)
+                    }
                 }
+            } catch (e: Exception) {
+                throw Exception("Exception occured while processing behaviors for entity: $entity", e)
             }
         }
     }

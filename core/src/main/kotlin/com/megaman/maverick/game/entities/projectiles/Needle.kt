@@ -73,7 +73,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
 
     private val ownerCollisionDelay = Timer(OWNER_COLLISION_DELAY)
 
-    override fun init() {
+    override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
