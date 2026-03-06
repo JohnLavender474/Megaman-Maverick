@@ -10,11 +10,14 @@ import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setPosition
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -26,13 +29,15 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class GroundExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class GroundExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IDamager,
+    IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "GroundExplosion"
@@ -44,7 +49,10 @@ class GroundExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         private var region: TextureRegion? = null
     }
 
-    private val timer = Timer(DURATION)
+    override var owner: IGameEntity? = null
+
+        private
+    val timer = Timer(DURATION)
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -64,11 +72,16 @@ class GroundExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         body.positionOnPoint(position, Position.BOTTOM_CENTER)
 
         timer.reset()
+
+        owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
     }
+
+    override fun canDamage(damageable: IDamageable) = damageable != owner
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        owner = null
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

@@ -61,7 +61,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         private const val DAMAGE_DURATION = 0.1f
 
         private const val RECALC_DELAY = 0.25f
-        private const val TIME_BEFORE_FIRST_RECALC = 0.25f
+        private const val TIME_BEFORE_FIRST_RECALC = 0.5f
 
         private const val TTL = 3f
         private const val FLASH_START = 2f

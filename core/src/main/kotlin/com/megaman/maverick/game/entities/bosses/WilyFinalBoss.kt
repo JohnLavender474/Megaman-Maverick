@@ -699,13 +699,21 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val SHOOT_BULLETS_DELAY = 0.75f
         const val SHOOT_BULLETS_DUR = 0.5f
         const val BULLET_SPEED = 10f
-        val BULLET_TRAJECTORIES = gdxArrayOf(
+        val BULLET_TRAJECTORIES_1 = gdxArrayOf(
             Vector2(-1f, -1f),
             Vector2(-0.75f, -1f),
             Vector2(-0.1f, -1f),
             Vector2(0.1f, -1f),
             Vector2(0.75f, -1f),
             Vector2(1f, -1f)
+        )
+        val BULLET_TRAJECTORIES_2 = gdxArrayOf(
+            Vector2(-0.8f, -1f),
+            Vector2(-0.2f, -1f),
+            Vector2(-0.1f, -1f),
+            Vector2(0.1f, -1f),
+            Vector2(0.2f, -1f),
+            Vector2(0.8f, -1f)
         )
 
         val MISSILE_ANGLES = gdxArrayOf(225f, 180f, 180f, 135f)
@@ -714,7 +722,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val GROUND_WARNING_SIGN_START_INDEX = 1
         const val GROUND_WARNING_SIGN_END_INDEX = 11
-        const val GROUND_WARNING_SIGNS_TO_BLOW = 5
+        const val GROUND_WARNING_SIGNS_TO_BLOW = 6
         val WARNING_SIGN_KEYS = Array<String>()
             .also { keys ->
                 Position.getDiagonalPositions().forEach {
@@ -805,6 +813,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 })
         )
 
+        private var bulletTraj1 = true
+
         override fun init(vararg params: Any) {
             GameLogger.debug(TAG, "Phase1Handler: init()")
 
@@ -858,7 +868,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private fun getStateDelay(current: WilyPhase1State, previous: WilyPhase1State): Float {
             if (current == WilyPhase1State.FLY_IN)
-                return 1f
+                return 0.75f
 
             if (current == WilyPhase1State.FLY_BY) return when {
                 previous.equalsAny(WilyPhase1State.FLY_OUT, WilyPhase1State.SWOOP) -> 1f
@@ -1189,6 +1199,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             shootBulletsDelay.reset()
             shootBulletsTimer.setToEnd()
+
+            bulletTraj1 = true
         }
 
         fun updateLazors(delta: Float): Boolean {
@@ -1265,7 +1277,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             val center = body.getCenter().sub(0f, 1.75f * ConstVals.PPM)
 
-            Phase1ConstVals.BULLET_TRAJECTORIES.forEach {
+            val trajectories =
+                if (bulletTraj1) Phase1ConstVals.BULLET_TRAJECTORIES_1 else Phase1ConstVals.BULLET_TRAJECTORIES_2
+
+            trajectories.forEach {
                 val trajectory = GameObjectPools.fetch(Vector2::class)
                     .set(it)
                     .scl(Phase1ConstVals.BULLET_SPEED * ConstVals.PPM)
@@ -1281,6 +1296,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     )
                 )
             }
+
+            bulletTraj1 = !bulletTraj1
 
             requestToPlaySound(SoundAsset.SOLAR_BLAZE_SOUND, false)
         }
@@ -1327,7 +1344,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 MegaUtilMethods.delayRun(game, delay) {
                     val explosion = MegaEntityFactory.fetch(GroundExplosion::class)!!
-                    explosion.spawn(props(ConstKeys.POSITION pairTo bottomCenter))
+                    explosion.spawn(
+                        props(
+                            ConstKeys.POSITION pairTo bottomCenter,
+                            ConstKeys.OWNER pairTo this@WilyFinalBoss
+                        )
+                    )
 
                     GameObjectPools.free(bottomCenter)
                 }
