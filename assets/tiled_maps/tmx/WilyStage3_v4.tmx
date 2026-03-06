@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="28" nextobjectid="687">
+<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="28" nextobjectid="694">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
   <data encoding="csv">
@@ -3608,7 +3608,12 @@
   <object id="628" x="11136" y="1248" width="64" height="128"/>
   <object id="643" x="11680" y="1696" width="160" height="96"/>
   <object id="645" x="11264" y="1792" width="128" height="1920"/>
-  <object id="648" x="11232" y="3712" width="320" height="64"/>
+  <object id="648" x="11232" y="3712" width="320" height="64">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
   <object id="650" x="11552" y="3752" width="128" height="24">
    <properties>
     <property name="events" value="end_room_trans"/>
@@ -3616,7 +3621,12 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="651" x="11680" y="3712" width="320" height="64"/>
+  <object id="651" x="11680" y="3712" width="320" height="64">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
+   </properties>
+  </object>
   <object id="653" name="AbstractBlock" x="11296" y="3776" width="72" height="384"/>
   <object id="654" name="AbstractBlock" x="11864" y="3776" width="72" height="384"/>
   <object id="655" x="11232" y="4160" width="768" height="160"/>
@@ -3895,6 +3905,60 @@
   </object>
   <object id="590" name="Life" x="9184" y="1504" width="32" height="32"/>
   <object id="591" name="Life" x="7648" y="5536" width="32" height="32"/>
+  <object id="687" name="HealthBulb" x="11408" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="688" name="HealthBulb" x="11456" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="689" name="HealthBulb" x="11696" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="690" name="HealthBulb" x="11744" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="691" name="HealthBulb" x="11792" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="692" name="HealthBulb" x="11504" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="9" name="hazards">
   <object id="25" name="WanaanLauncher" x="1568" y="7328" width="64" height="32">
@@ -4410,7 +4474,7 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="player">
-  <object id="642" name="0" x="11488" y="3680" width="32" height="32"/>
+  <object id="642" name="0" x="11488" y="1664" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="temp">
   <object id="4" name="0" x="304" y="6080" width="32" height="32"/>

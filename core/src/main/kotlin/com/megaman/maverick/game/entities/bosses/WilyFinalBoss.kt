@@ -207,6 +207,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
+    override fun canBeDamagedBy(damager: IDamager): Boolean {
+        if (!super.canBeDamagedBy(damager)) return false
+        return damager !is Explosion
+    }
+
     // No matter what, all weapons deal only 1 health point aganist Wily
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = 1
 
@@ -607,7 +612,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val STATE_QUEUE_MAX_SIZE = 4
 
-        const val SWOOP_ENTRY_DELAY = 1f
+        const val SWOOP_ENTRY_DELAY = 0.25f
         const val SWOOP_STATE_DUR = 0.75f
         const val HOVER_STATE_DUR = 0.75f
         const val FLY_BY_STATE_DUR = 0.5f

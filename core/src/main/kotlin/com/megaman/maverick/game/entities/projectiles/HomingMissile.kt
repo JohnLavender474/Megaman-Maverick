@@ -52,7 +52,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     companion object {
         const val TAG = "HomingMissile"
 
-        private const val SPEED = 5f
+        private const val SPEED = 6f
 
         private const val DAMAGE_DURATION = 0.1f
 
