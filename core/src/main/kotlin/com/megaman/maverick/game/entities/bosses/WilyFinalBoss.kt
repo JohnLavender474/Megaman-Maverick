@@ -61,6 +61,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.explosions.GroundExplosion
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
@@ -666,11 +667,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val LAZOR_CHANCE_INCR = 0.25f
         const val MISSILES_CHANCE_INCR = 0.25f
 
-        const val FLY_IN_SPEED = 18f
+        const val FLY_IN_SPEED = 20f
         const val FLY_IN_SLOW_DOWN_DISTANCE = 1.5f
 
         const val MAX_FLY_BYS = 3
-        const val FLY_BY_SPEED = 18f
+        const val FLY_BY_SPEED = 20f
         const val FLY_BY_CHANCE = 0.5f
         const val FLY_BY_AFTER_SWOOP_REPEAT_CHANCE = 0.15f
         const val OFF_SCREEN_BUFFER = 4f
@@ -1316,19 +1317,23 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         fun loadSwoopExplosions() {
             for (i in swoopExplosionIndices) {
                 val key = "ground_warning_sign_$i"
+
                 val warningSign = warningSigns.get(key)
-                val center = warningSign.center
-                MegaUtilMethods.delayRun(game, 0.5f) {
-                    val explosion = MegaEntityFactory.fetch(Explosion::class)!!
-                    explosion.spawn(
-                        props(
-                            ConstKeys.POSITION pairTo center,
-                            ConstKeys.OWNER pairTo this@WilyFinalBoss,
-                        )
-                    )
+
+                val bottomCenter = GameObjectPools.fetch(Vector2::class, false)
+                    .set(warningSign.center.x, warningSign.center.y - 0.5f * ConstVals.PPM)
+
+                val delay = UtilMethods.getRandom(0.5f, 0.75f)
+
+                MegaUtilMethods.delayRun(game, delay) {
+                    val explosion = MegaEntityFactory.fetch(GroundExplosion::class)!!
+                    explosion.spawn(props(ConstKeys.POSITION pairTo bottomCenter))
+
+                    GameObjectPools.free(bottomCenter)
                 }
+
+                MegaUtilMethods.delayRun(game, delay) { requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false) }
             }
-            MegaUtilMethods.delayRun(game, 0.5f) { requestToPlaySound(SoundAsset.EXPLOSION_1_SOUND, false) }
         }
 
         override fun reset() {

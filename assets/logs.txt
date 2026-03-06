@@ -1,11 +1,26 @@
-===== SESSION STARTED: 2026-03-06T14:54:30.445033847 =====
-14:54:38 | DEBUG | HealthBulb | init()
-14:54:38 | DEBUG | HealthBulb | init()
-14:54:38 | DEBUG | HealthBulb | init()
-14:54:38 | DEBUG | HealthBulb | init()
-14:54:38 | DEBUG | HealthBulb | init()
-14:54:38 | DEBUG | HealthBulb | init()
-14:54:41 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
-14:54:41 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
-14:54:41 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
-14:54:42 | DEBUG | HealthBulb | contactWithPlayer(): megaman={ Megaman:[id=642, dead=false, hashCode=2065730373] }
+===== SESSION STARTED: 2026-03-06T16:03:18.131343715 =====
+16:04:20 | DEBUG | GroundExplosion | init()
+16:04:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11416.0,3840.0)]
+})
+16:04:20 | DEBUG | GroundExplosion | init()
+16:04:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11712.0,3872.0)]
+})
+16:04:20 | DEBUG | GroundExplosion | init()
+16:04:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11616.0,3840.0)]
+})
+16:04:20 | DEBUG | GroundExplosion | init()
+16:04:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+})
+16:04:20 | DEBUG | GroundExplosion | init()
+16:04:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11576.0,3840.0)]
+})
+16:04:21 | DEBUG | GroundExplosion | onDestroy()
+16:04:21 | DEBUG | GroundExplosion | onDestroy()
+16:04:21 | DEBUG | GroundExplosion | onDestroy()
+16:04:21 | DEBUG | GroundExplosion | onDestroy()
+16:04:21 | DEBUG | GroundExplosion | onDestroy()

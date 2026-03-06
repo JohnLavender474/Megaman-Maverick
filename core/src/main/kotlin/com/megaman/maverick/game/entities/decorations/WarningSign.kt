@@ -49,7 +49,7 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         on = spawnProps.getOrDefault(ConstKeys.ON, false, Boolean::class)
 
-        val center = spawnProps.getOrDefault(ConstKeys.CENTER, Vector2.Zero, Vector2::class)!!
+        val center = spawnProps.getOrDefault(ConstKeys.CENTER, Vector2.Zero, Vector2::class)
         this.center.set(center)
     }
 
