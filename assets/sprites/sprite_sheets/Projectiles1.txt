@@ -1,5 +1,5 @@
 Projectiles1.png
-size: 512, 948
+size: 512, 1044
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -33,7 +33,7 @@ BigAssMaverickRobotOrb/ball
   index: -1
 BigAssMaverickRobotOrb/hit
   rotate: false
-  xy: 0, 756
+  xy: 0, 852
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -45,23 +45,30 @@ BouncingPebble
   orig: 8, 8
   offset: 0, 0
   index: -1
-Bullet
+Bullet/default
   rotate: false
   xy: 352, 16
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+Bullet/lazor
+  rotate: false
+  xy: 0, 260
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 CacaFlame/burst
   rotate: false
-  xy: 464, 196
+  xy: 64, 260
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: -1
 CacaFlame/fall
   rotate: false
-  xy: 64, 388
+  xy: 256, 388
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -75,35 +82,35 @@ CannonBall
   index: -1
 CaveRock/Burst
   rotate: false
-  xy: 0, 484
+  xy: 0, 580
   size: 384, 128
   orig: 384, 128
   offset: 0, 0
   index: -1
 CaveRock/Rock
   rotate: false
-  xy: 384, 484
+  xy: 384, 580
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ChargedShot
   rotate: false
-  xy: 0, 260
+  xy: 112, 260
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 ChargedShot_v2
   rotate: false
-  xy: 32, 260
+  xy: 144, 260
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 Cokonut
   rotate: false
-  xy: 64, 260
+  xy: 176, 260
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -117,7 +124,7 @@ CryoPellet
   index: -1
 DarkSerketClaw
   rotate: false
-  xy: 112, 388
+  xy: 304, 388
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -138,14 +145,14 @@ DuoBall
   index: -1
 ElecBall/hit
   rotate: false
-  xy: 0, 612
+  xy: 0, 708
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ElecBall/orb
   rotate: false
-  xy: 192, 756
+  xy: 192, 852
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -194,7 +201,7 @@ Electric/Zap
   index: -1
 Fire/Fireball
   rotate: false
-  xy: 96, 260
+  xy: 208, 260
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -208,14 +215,14 @@ FirePellet
   index: -1
 FireWall/disintegrate
   rotate: false
-  xy: 160, 388
+  xy: 352, 388
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 FireWall/fire
   rotate: false
-  xy: 320, 612
+  xy: 320, 708
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -229,23 +236,51 @@ GachappanBall
   index: -1
 GreenPelletBlast/blast
   rotate: false
-  xy: 160, 260
+  xy: 272, 260
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 GreenPelletBlast/burst
   rotate: false
-  xy: 256, 388
+  xy: 448, 388
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 192, 260
+  xy: 304, 260
   size: 32, 64
   orig: 32, 64
+  offset: 0, 0
+  index: -1
+HomingMissile/angled
+  rotate: false
+  xy: 336, 260
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+HomingMissile/angled_flash
+  rotate: false
+  xy: 368, 260
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+HomingMissile/straight
+  rotate: false
+  xy: 432, 260
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+HomingMissile/straight_flash
+  rotate: false
+  xy: 0, 324
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 HoneyDrip/drip
@@ -257,7 +292,7 @@ HoneyDrip/drip
   index: -1
 HoneyDrip/splash
   rotate: false
-  xy: 288, 388
+  xy: 480, 388
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -320,7 +355,7 @@ LampeonBullet/4
   index: -1
 MeanTorpedo
   rotate: false
-  xy: 320, 388
+  xy: 0, 484
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -369,21 +404,21 @@ MockingByteEgg/whole
   index: -1
 Monkey_Ball
   rotate: false
-  xy: 224, 260
+  xy: 64, 324
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Nuclear_Monkey_Ball
   rotate: false
-  xy: 288, 260
+  xy: 128, 324
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Petal
   rotate: false
-  xy: 0, 324
+  xy: 192, 324
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -397,28 +432,28 @@ Picket
   index: -1
 PreciousGem/blue
   rotate: false
-  xy: 256, 324
+  xy: 448, 324
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/green
   rotate: false
-  xy: 320, 324
+  xy: 0, 388
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/pink
   rotate: false
-  xy: 384, 324
+  xy: 64, 388
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/purple
   rotate: false
-  xy: 448, 324
+  xy: 128, 388
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -558,28 +593,28 @@ ReactorManProjectile/small
   index: -1
 ReactorMonkeyBall/0
   rotate: false
-  xy: 0, 388
+  xy: 192, 388
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/1
   rotate: false
-  xy: 128, 612
+  xy: 128, 708
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/2
   rotate: false
-  xy: 192, 612
+  xy: 192, 708
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ReactorMonkeyBall/3
   rotate: false
-  xy: 256, 612
+  xy: 256, 708
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
@@ -621,7 +656,7 @@ SealionBall
   index: -1
 SlashWave
   rotate: false
-  xy: 416, 388
+  xy: 96, 484
   size: 64, 96
   orig: 64, 96
   offset: 0, 0

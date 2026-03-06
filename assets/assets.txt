@@ -481,6 +481,7 @@ sprites/frames/WilyFinalBoss/phase_1/fly_by.png
 sprites/frames/WilyFinalBoss/phase_1/shoot_missiles.png
 sprites/frames/WilyFinalBoss/phase_1/hover.png
 sprites/frames/WilyFinalBoss/phase_1/tilt.png
+sprites/frames/WilyFinalBoss/phase_1/open_mouth.png
 sprites/frames/WilyFinalBoss/phase_1/swoop.png
 sprites/frames/WilyFinalBoss/phase_1/open_hatch.png
 sprites/frames/WilyFinalBoss/phase_1/fly_out.png
@@ -1868,6 +1869,10 @@ sprites/frames/Projectiles1/CacaFlame/burst.png
 sprites/frames/Projectiles1/CryoPellet.png
 sprites/frames/Projectiles1/SubmarineMissile.png
 sprites/frames/Projectiles1/SnowballForm.png
+sprites/frames/Projectiles1/HomingMissile/angled_flash.png
+sprites/frames/Projectiles1/HomingMissile/straight.png
+sprites/frames/Projectiles1/HomingMissile/angled.png
+sprites/frames/Projectiles1/HomingMissile/straight_flash.png
 sprites/frames/Projectiles1/RocketBomb.png
 sprites/frames/Projectiles1/Cokonut.png
 sprites/frames/Projectiles1/Petal.png
@@ -1884,7 +1889,6 @@ sprites/frames/Projectiles1/Monkey_Ball.png
 sprites/frames/Projectiles1/SpiderWeb/White.png
 sprites/frames/Projectiles1/SpiderWeb/BlinkWhite.png
 sprites/frames/Projectiles1/SpiderWeb/Gray.png
-sprites/frames/Projectiles1/Bullet.png
 sprites/frames/Projectiles1/GachappanBall.png
 sprites/frames/Projectiles1/Snowball2.png
 sprites/frames/Projectiles1/UFOBomb.png
@@ -1907,6 +1911,8 @@ sprites/frames/Projectiles1/Nuclear_Monkey_Ball.png
 sprites/frames/Projectiles1/DarkSerketClaw.png
 sprites/frames/Projectiles1/PreciousShot/Form.png
 sprites/frames/Projectiles1/PreciousShot/Shoot.png
+sprites/frames/Projectiles1/Bullet/default.png
+sprites/frames/Projectiles1/Bullet/lazor.png
 sprites/frames/Projectiles1/GreenPelletBlast/burst.png
 sprites/frames/Projectiles1/GreenPelletBlast/blast.png
 sprites/frames/Projectiles1/IceBomb.png

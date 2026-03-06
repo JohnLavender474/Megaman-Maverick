@@ -3841,8 +3841,8 @@
   <object id="662" name="FlyIn_Target4" x="11600" y="4064" width="32" height="32"/>
   <object id="663" name="FlyIn_Start1" x="11040" y="3872" width="32" height="32"/>
   <object id="664" name="FlyIn_Start2" x="12160" y="3872" width="32" height="32"/>
-  <object id="665" name="FlyIn_Start3" x="12160" y="4064" width="32" height="32"/>
-  <object id="667" name="FlyIn_Start4" x="11040" y="4064" width="32" height="32"/>
+  <object id="665" name="FlyIn_Start3" x="12160" y="4048" width="32" height="32"/>
+  <object id="667" name="FlyIn_Start4" x="11040" y="4048" width="32" height="32"/>
   <object id="677" name="GroundWarningSign1" x="11424" y="4128" width="32" height="32"/>
   <object id="678" name="GroundWarningSign2" x="11504" y="4096" width="32" height="32"/>
   <object id="679" name="GroundWarningSign3" x="11600" y="4128" width="32" height="32"/>

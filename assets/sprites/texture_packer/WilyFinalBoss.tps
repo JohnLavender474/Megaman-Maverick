@@ -222,6 +222,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/open_mouth.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,320,128,640</rect>
+                <key>scale9Paddings</key>
+                <rect>64,320,128,640</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/WilyFinalBoss/phase_1/shoot_missiles.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

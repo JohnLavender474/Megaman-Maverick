@@ -219,9 +219,10 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Projectiles1/BigAssMaverickRobotOrb/hit.png</key>
-            <key type="filename">../frames/Projectiles1/Bullet.png</key>
+            <key type="filename">../frames/Projectiles1/Bullet/default.png</key>
             <key type="filename">../frames/Projectiles1/CannonBall.png</key>
             <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
+            <key type="filename">../frames/Projectiles1/HomingMissile/straight.png</key>
             <key type="filename">../frames/Projectiles1/HoneyDrip/drip.png</key>
             <key type="filename">../frames/Projectiles1/KibboHammer.png</key>
             <key type="filename">../frames/Projectiles1/Prickly.png</key>
@@ -264,6 +265,33 @@
                 <rect>2,2,4,4</rect>
                 <key>scale9Paddings</key>
                 <rect>2,2,4,4</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles1/Bullet/lazor.png</key>
+            <key type="filename">../frames/Projectiles1/ElecDevilBodyPiece.png</key>
+            <key type="filename">../frames/Projectiles1/HomingMissile/angled_flash.png</key>
+            <key type="filename">../frames/Projectiles1/HomingMissile/straight_flash.png</key>
+            <key type="filename">../frames/Projectiles1/Monkey_Ball.png</key>
+            <key type="filename">../frames/Projectiles1/Nuclear_Monkey_Ball.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/blue.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/green.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/pink.png</key>
+            <key type="filename">../frames/Projectiles1/PreciousGem/purple.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/0.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/1.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9Paddings</key>
+                <rect>16,16,32,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -332,6 +360,7 @@
             <key type="filename">../frames/Projectiles1/ChargedShot_v2.png</key>
             <key type="filename">../frames/Projectiles1/Cokonut.png</key>
             <key type="filename">../frames/Projectiles1/GreenPelletBlast/blast.png</key>
+            <key type="filename">../frames/Projectiles1/HomingMissile/angled.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -433,30 +462,6 @@
                 <rect>8,24,16,48</rect>
                 <key>scale9Paddings</key>
                 <rect>8,24,16,48</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Projectiles1/ElecDevilBodyPiece.png</key>
-            <key type="filename">../frames/Projectiles1/Monkey_Ball.png</key>
-            <key type="filename">../frames/Projectiles1/Nuclear_Monkey_Ball.png</key>
-            <key type="filename">../frames/Projectiles1/PreciousGem/blue.png</key>
-            <key type="filename">../frames/Projectiles1/PreciousGem/green.png</key>
-            <key type="filename">../frames/Projectiles1/PreciousGem/pink.png</key>
-            <key type="filename">../frames/Projectiles1/PreciousGem/purple.png</key>
-            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/0.png</key>
-            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/1.png</key>
-            <key type="filename">../frames/Projectiles1/ReactorMonkeyBall/2.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,16,32,32</rect>
-                <key>scale9Paddings</key>
-                <rect>16,16,32,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
