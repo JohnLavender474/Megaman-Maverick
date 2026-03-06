@@ -52,15 +52,15 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     companion object {
         const val TAG = "HomingMissile"
 
-        private const val SPEED = 3f
+        private const val SPEED = 5f
 
         private const val DAMAGE_DURATION = 0.1f
 
         private const val RECALC_DELAY = 0.5f
-        private const val TIME_BEFORE_FIRST_RECALC = 1f
+        private const val TIME_BEFORE_FIRST_RECALC = 0.5f
 
-        private const val TTL = 3.5f
-        private const val FLASH_START = 2.5f
+        private const val TTL = 3f
+        private const val FLASH_START = 2f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = orderedMapOf(

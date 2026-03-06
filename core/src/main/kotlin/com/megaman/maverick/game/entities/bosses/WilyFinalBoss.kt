@@ -58,6 +58,7 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.S
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
@@ -550,7 +551,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
             }
             .also { keys ->
-                for (i in 1..5) keys.add("ground_warning_sign_$i")
+                for (i in 1..8) keys.add("ground_warning_sign_$i")
             }
     }
 
@@ -666,15 +667,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             //   step 1: SHOOT_MISSILES
             //   step 2: FLY_OUT  (fallback: FLY_BY)
             //   step 3: FIRE_LAZORS  (fallback: SHOOT_MISSILES)
-            .transition(WilyPhase1State.HOVER, WilyPhase1State.FIRE_LAZORS) {
-                hoverPatternIndex % 4 == 3 && shouldFireLazors()
-            }
-            .transition(WilyPhase1State.HOVER, WilyPhase1State.SHOOT_MISSILES) {
-                hoverPatternIndex % 4 == 1 || hoverPatternIndex % 4 == 3
-            }
-            .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_OUT) {
-                hoverPatternIndex % 4 == 2 && shouldFlyOut()
-            }
+            .transition(WilyPhase1State.HOVER, WilyPhase1State.FIRE_LAZORS) { shouldFireLazors() }
+            .transition(WilyPhase1State.HOVER, WilyPhase1State.SHOOT_MISSILES) { shouldShootMissiles() }
+            .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_OUT) { shouldFlyOut() }
             .transition(WilyPhase1State.HOVER, WilyPhase1State.FLY_BY) { true }
             // shoot missiles
             .transition(WilyPhase1State.SHOOT_MISSILES, WilyPhase1State.FLY_BY) { true }
@@ -825,10 +820,16 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             return UtilMethods.getRandom(0f, 1f) <= chance
         }
 
-        fun shouldFlyOut() = currentFlyInRow == 1 && !stateQueue.contains(WilyPhase1State.FLY_OUT)
+        fun shouldFlyOut() =
+            currentFlyInRow == 1 &&
+                hoverPatternIndex % 4 == 2 &&
+                !stateQueue.contains(WilyPhase1State.FLY_OUT)
+
+        fun shouldShootMissiles() = hoverPatternIndex % 4 == 1 || hoverPatternIndex % 4 == 3
 
         fun shouldFireLazors() =
-            stateQueue.size >= STATE_QUEUE_MAX_SIZE && // Do not trigger lazor too soon after boss spawns
+            (hoverPatternIndex % 4 == 3 || UtilMethods.getRandom(0f, 1f) <= 0.25f) &&
+                stateQueue.size >= STATE_QUEUE_MAX_SIZE && // Do not trigger lazor too soon after boss spawns
                 currentFlyInRow == 1
 
         private fun getGridSignKey(col: Int, row: Int) = when {
@@ -852,7 +853,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         warningSigns[getGridSignKey(destCol, currentFlyByStartRow)]?.on = true
                     } else for (col in 0..1) warningSigns[getGridSignKey(col, currentFlyByStartRow)]?.on = true
                 WilyPhase1State.SWOOP ->
-                    for (i in 1..5) warningSigns["ground_warning_sign_$i"]?.on = true
+                    for (i in 1..8) warningSigns["ground_warning_sign_$i"]?.on = true
                 else -> {}
             }
         }
@@ -873,6 +874,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             if (!swoopEntryDelayTimer.isFinished()) return false
 
             val timer = stateTimers[WilyPhase1State.SWOOP]
+            if (!initSequence && timer.isAtBeginning()) loadSwoopExplosions()
             timer.update(delta)
 
             return timer.isFinished()
@@ -1019,12 +1021,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
 
             // Short pause before the sine wave begins
+            lazorStartPauseTimer.update(delta)
             if (!lazorStartPauseTimer.isFinished()) {
-                lazorStartPauseTimer.update(delta)
                 body.setCenter(lazorAnchor)
                 body.physics.velocity.setZero()
                 return false
             }
+
+            if (lazorStartPauseTimer.isJustFinished()) requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)
 
             // Ramp up horizontal amplitude from Phase1ConstVals.LAZOR_WARM_UP_START to 1
             lazorWarmUpScalar = minOf(1f, lazorWarmUpScalar + Phase1ConstVals.LAZOR_WARM_UP_RATE * delta)
@@ -1095,6 +1099,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     )
                 )
             }
+
+            requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
         }
 
         fun shootMissiles(up: Boolean) {
@@ -1122,6 +1128,29 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     )
                 )
             }
+
+            requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
+        }
+
+        fun loadSwoopExplosions() {
+            for (i in 1..8) {
+                val key = "ground_warning_sign_$i"
+                val warningSign = warningSigns.get(key)
+                val center = warningSign.center
+                (0..1).forEach { _ ->
+                    val delay = UtilMethods.getRandom(0.5f, 1f)
+                    MegaUtilMethods.delayRun(game, delay) {
+                        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+                        explosion.spawn(
+                            props(
+                                ConstKeys.POSITION pairTo center,
+                                ConstKeys.OWNER pairTo this@WilyFinalBoss,
+                            )
+                        )
+                    }
+                }
+            }
+            MegaUtilMethods.delayRun(game, 0.5f) { requestToPlaySound(SoundAsset.EXPLOSION_1_SOUND, false) }
         }
 
         override fun reset() {
