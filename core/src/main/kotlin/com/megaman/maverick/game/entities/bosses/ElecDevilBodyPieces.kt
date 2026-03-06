@@ -171,7 +171,7 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     private fun lightUp(row: Int, column: Int, bright: Boolean) {
         LightSourceUtils.sendLightSourceEvent(
-            game,
+            this,
             lightSourceKeys,
             owner!!.getPositionOf(row, column).add(
                 ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM / 2f,

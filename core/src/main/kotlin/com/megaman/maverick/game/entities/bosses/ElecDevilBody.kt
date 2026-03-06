@@ -142,7 +142,7 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             on -> {
                 lightSourceSendEventDelay.update(delta)
                 if (lightSourceSendEventDelay.isFinished()) {
-                    LightSourceUtils.sendLightSourceEvent(game, this)
+                    LightSourceUtils.sendLightSourceEvent(this)
                     lightSourceSendEventDelay.reset()
                 }
             }

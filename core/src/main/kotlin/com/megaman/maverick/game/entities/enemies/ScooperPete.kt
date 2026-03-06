@@ -173,7 +173,7 @@ class ScooperPete(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
                 currentStateTimer.reset()
             }
 
-            LightSourceUtils.sendLightSourceEvent(game, this)
+            LightSourceUtils.sendLightSourceEvent(this)
         }
     }
 

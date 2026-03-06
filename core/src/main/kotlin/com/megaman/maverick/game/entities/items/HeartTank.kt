@@ -151,7 +151,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
         super.defineUpdatablesComponent(component)
         component.add {
             if (game.getCurrentLevel() == LevelDefinition.DESERT_MAN)
-                LightSourceUtils.sendLightSourceEvent(game, this)
+                LightSourceUtils.sendLightSourceEvent(this)
         }
     }
 

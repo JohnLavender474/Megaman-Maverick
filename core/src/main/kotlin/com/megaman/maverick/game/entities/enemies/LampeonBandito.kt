@@ -298,7 +298,7 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezabl
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
 
         LightSourceUtils.sendLightSourceEvent(
-            game,
+            this,
             objectSetOf(1, 2, 3),
             body.getCenter(),
             LIGHT_RADIANCE,

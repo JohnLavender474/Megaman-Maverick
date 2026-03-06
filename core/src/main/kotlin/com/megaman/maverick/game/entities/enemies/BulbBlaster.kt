@@ -117,7 +117,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
         )
         timer.reset()
 
-        if (light) LightSourceUtils.sendLightSourceEvent(game, this)
+        if (light) LightSourceUtils.sendLightSourceEvent(this)
 
         if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) {
             val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
@@ -173,7 +173,7 @@ class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
                 timer.reset()
             }
 
-            if (light) LightSourceUtils.sendLightSourceEvent(game, this)
+            if (light) LightSourceUtils.sendLightSourceEvent(this)
         }
     }
 

@@ -588,7 +588,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             val position = MegaUtilMethods.interpolate(worldPoint1, worldPoint2, point.toFloat() / parts.toFloat())
 
             LightSourceUtils.sendLightSourceEvent(
-                game,
+                this,
                 lightSourceKeys,
                 position,
                 LIGHT_SOURCE_RADIANCE,

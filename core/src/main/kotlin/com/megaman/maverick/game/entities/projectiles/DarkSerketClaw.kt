@@ -112,7 +112,7 @@ class DarkSerketClaw(game: MegamanMaverickGame) : AbstractHealthEntity(game), IP
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add { LightSourceUtils.sendLightSourceEvent(game, this) }
+        updatablesComponent.add { LightSourceUtils.sendLightSourceEvent(this) }
     }
 
     override fun defineBodyComponent(): BodyComponent {

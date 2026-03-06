@@ -1,9 +1,11 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -50,11 +52,11 @@ import kotlin.math.ceil
 import kotlin.math.min
 import kotlin.reflect.KClass
 
-class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener,
+class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener,
     IGameShapeOverlappable {
 
     companion object {
-        const val TAG = "DarknessV2"
+        const val TAG = "DarknessV4"
 
         const val MIN_ALPHA = 0f
         const val MAX_ALPHA = 1f
@@ -119,17 +121,74 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         private const val TIME_TO_UPDATE = 0.25f
     }
 
+    // ========================================
+    // Data classes for thread-safe processing
+    // ========================================
+
+    /**
+     * Immutable input data for background thread processing.
+     * Contains all data needed to calculate light without accessing game objects.
+     */
+    private data class LightProcessingInput(
+        val lightSources: List<LightSourceData>,
+        val camBoundsMinX: Int,
+        val camBoundsMinY: Int,
+        val camBoundsMaxX: Int,
+        val camBoundsMaxY: Int,
+        val boundsX: Float,
+        val boundsY: Float,
+        val boundsWidth: Float,
+        val boundsHeight: Float,
+        val dividedPPM: Float,
+        val darkMode: Boolean,
+        val rows: Int,
+        val columns: Int,
+        val previousTileCoords: Set<Pair<Int, Int>>,
+        val delta: Float
+    )
+
+    /**
+     * Immutable light source data extracted from game entities.
+     */
+    private data class LightSourceData(
+        val centerX: Float,
+        val centerY: Float,
+        val radius: Int,
+        val radiance: Float
+    )
+
+    /**
+     * Result of tile alpha calculation from background thread.
+     */
+    private data class TileAlphaResult(
+        val x: Int,
+        val y: Int,
+        val alpha: Float,
+        val wasInPrevious: Boolean
+    )
+
+    /**
+     * Complete result set from background thread processing.
+     */
+    private data class LightProcessingResult(
+        val tileAlphas: List<TileAlphaResult>,
+        val darkMode: Boolean,
+        val delta: Float
+    )
+
+    // ========================================
+    // Tile class for main thread
+    // ========================================
+
     private class BlackTile(
         val bounds: GameRectangle,
         var currentAlpha: Float = 1f,
         var darkenStepScalar: Float = DARKEN_STEP_SCALAR,
         var lightenStepScalar: Float = LIGHTEN_STEP_SCALAR
     ) {
-
         fun update(delta: Float, darken: Boolean) {
             if (darken) currentAlpha += abs(darkenStepScalar) * delta
             else currentAlpha -= abs(lightenStepScalar) * delta
-
             currentAlpha = currentAlpha.coerceIn(MIN_ALPHA, MAX_ALPHA)
         }
 
@@ -140,6 +199,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     private data class LightSourceDef(var center: Vector2, var radius: Int, var radiance: Float)
 
+    // ========================================
+    // Event listener
+    // ========================================
+
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_READY,
         EventType.BEGIN_ROOM_TRANS,
@@ -148,11 +211,15 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         EventType.ADD_LIGHT_SOURCE
     )
 
+    // ========================================
+    // Instance fields
+    // ========================================
+
     var key = -1
         private set
 
     private val rooms = ObjectSet<String>()
-    private val lightSourceQueue = SimpleQueueSet<LightSourceDef>()
+    private val lightSourceQueue = OrderedMap<MegaGameEntity, LightSourceDef>()
     private val previousTiles = OrderedSet<BlackTile>()
     private val currentTiles = OrderedSet<BlackTile>()
 
@@ -166,10 +233,25 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     private var darkMode = false
 
     private val reusableCircle = GameCircle()
-    private val reusableRect = GameRectangle()
 
     private val reusableEntitiesSet = ObjectSet<MegaGameEntity>()
     private val reusableMnMs = MinsAndMaxes()
+
+    private var timeSinceLastUpdate = 1f
+
+    // ========================================
+    // Threading fields
+    // ========================================
+
+    @Volatile
+    private var isProcessing = false
+
+    private var pendingResult: LightProcessingResult? = null
+    private val resultLock = Any()
+
+    // ========================================
+    // Lifecycle methods
+    // ========================================
 
     override fun init() {
         GameLogger.debug(TAG, "init()")
@@ -181,7 +263,8 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             startAmount = 0,
             supplier = { GameSprite(region!!, DrawingPriority(DrawingSection.FOREGROUND, 5)) },
             onFree = { sprite -> sprite.hidden = true },
-            onFetch = { sprite -> sprite.hidden = false })
+            onFetch = { sprite -> sprite.hidden = false }
+        )
         lightSourcePool = Pool(startAmount = 0, supplier = { LightSourceDef(Vector2(), 0, 0f) })
     }
 
@@ -207,6 +290,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         allTiles = Matrix(rows, columns)
 
         darkMode = false
+        isProcessing = false
+        pendingResult = null
+
+        timeSinceLastUpdate = 1f
     }
 
     override fun onDestroy() {
@@ -222,7 +309,15 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         tileSpritesPool.clear()
         lightSourcePool.clear()
         lightSourceQueue.clear()
+
+        synchronized(resultLock) {
+            pendingResult = null
+        }
     }
+
+    // ========================================
+    // Event handling
+    // ========================================
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
@@ -279,16 +374,17 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                     lightSourceDef.radius = radius
                     lightSourceDef.radiance = radiance
 
-                    if (!lightSourceQueue.contains(lightSourceDef)) {
-                        lightSourceQueue.add(lightSourceDef)
+                    val owner = event.getProperty(ConstKeys.OWNER, MegaGameEntity::class)
 
-                        // TODO: If MAX is specified and adding new light source exceeds MAX,
-                        //  then remove oldest element here...
-                    }
+                    if (!lightSourceQueue.containsKey(owner)) lightSourceQueue.put(owner, lightSourceDef)
                 }
             }
         }
     }
+
+    // ========================================
+    // Helper methods
+    // ========================================
 
     private fun getMinsAndMaxes(rect: GameRectangle): MinsAndMaxes {
         val minX = ((rect.getX() - bounds.getX()) / dividedPPM).toInt().coerceIn(0, allTiles.columns - 1)
@@ -308,7 +404,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         return allTiles[x, y]!!
     }
 
-    private fun tryToLightUp(entity: IGameEntity) {
+    private fun tryToLightUp(entity: MegaGameEntity) {
         if (entity is IBodyEntity &&
             entity.body.getBounds().overlaps(bounds) &&
             LIGHT_UP_ENTITIES.containsKey(entity::class)
@@ -321,37 +417,111 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.radiance = second
             }
 
-            lightSourceQueue.add(lightSourceDef)
+            lightSourceQueue.put(entity, lightSourceDef)
         }
     }
 
-    private fun handleLightSource(lightSourceDef: LightSourceDef) {
+    private fun shouldUpdate() = darkMode && timeSinceLastUpdate >= TIME_TO_UPDATE
+
+    // ========================================
+    // Background thread: Pure calculation
+    // ========================================
+
+    /**
+     * Pure function that calculates tile alphas based on light sources.
+     * This runs on the background thread and has NO access to game objects, sprites, or Megaman.
+     * All required data is passed in via [input].
+     */
+    private fun calculateLightAlphas(input: LightProcessingInput): LightProcessingResult {
         val startTime = System.currentTimeMillis()
-        val (center, radius, radiance) = lightSourceDef
 
-        reusableCircle.setRadius(radius.toFloat()).setCenter(center)
-        reusableRect.setSize(2f * radius).setCenter(center)
+        // Map to track minimum alpha for each tile coordinate
+        val tileAlphaMap = mutableMapOf<Pair<Int, Int>, Float>()
 
-        val (minX, minY, maxX, maxY) = getMinsAndMaxes(reusableRect)
-        for (x in minX..maxX) for (y in minY..maxY) {
-            val tile = getTile(x, y)
-            if (reusableCircle.overlaps(tile.bounds)) {
-                val alpha = ((tile.bounds.getCenter().dst(center) / radius) / radiance)
-                tile.currentAlpha = min(alpha.coerceIn(MIN_ALPHA, MAX_ALPHA), tile.currentAlpha)
+        // Initialize all visible tiles to max alpha (fully dark)
+        for (x in input.camBoundsMinX..input.camBoundsMaxX) {
+            for (y in input.camBoundsMinY..input.camBoundsMaxY) {
+                tileAlphaMap[x to y] = MAX_ALPHA
             }
         }
 
-        debugTime(startTime) {
-            "update(): updating light source took too long: " +
-                "time=$it, lightSource=$lightSourceDef, minX=$minX, minY=$minY, maxX=$maxX, maxY=$maxY"
+        // Reusable shapes for calculations (thread-local, no shared state)
+        val circle = GameCircle()
+        val rect = GameRectangle()
+
+        // Process each light source
+        for (lightSource in input.lightSources) {
+            val center = Vector2(lightSource.centerX, lightSource.centerY)
+            val radius = lightSource.radius
+            val radiance = lightSource.radiance
+
+            circle.setRadius(radius.toFloat()).setCenter(center)
+            rect.setSize(2f * radius).setCenter(center)
+
+            // Calculate tile bounds affected by this light source
+            val minX = ((rect.getX() - input.boundsX) / input.dividedPPM).toInt()
+                .coerceIn(0, input.columns - 1)
+            val minY = ((rect.getY() - input.boundsY) / input.dividedPPM).toInt()
+                .coerceIn(0, input.rows - 1)
+            val maxX = ceil((rect.getMaxX() - input.boundsX) / input.dividedPPM).toInt()
+                .coerceIn(0, input.columns - 1)
+            val maxY = ceil((rect.getMaxY() - input.boundsY) / input.dividedPPM).toInt()
+                .coerceIn(0, input.rows - 1)
+
+            for (x in minX..maxX) {
+                for (y in minY..maxY) {
+                    // Calculate tile bounds
+                    val tileX = input.boundsX + (x * input.dividedPPM)
+                    val tileY = input.boundsY + (y * input.dividedPPM)
+                    val tileBounds = GameRectangle(tileX, tileY, input.dividedPPM, input.dividedPPM)
+
+                    if (circle.overlaps(tileBounds)) {
+                        val tileCenter = tileBounds.getCenter()
+                        val alpha = ((tileCenter.dst(center) / radius) / radiance)
+                            .coerceIn(MIN_ALPHA, MAX_ALPHA)
+
+                        val currentAlpha = tileAlphaMap[x to y] ?: MAX_ALPHA
+                        tileAlphaMap[x to y] = min(alpha, currentAlpha)
+                    }
+                }
+            }
         }
+
+        // Convert map to result list
+        val results = mutableListOf<TileAlphaResult>()
+        for ((coords, alpha) in tileAlphaMap) {
+            val (x, y) = coords
+            val wasInPrevious = input.previousTileCoords.contains(coords)
+            results.add(TileAlphaResult(x, y, alpha, wasInPrevious))
+        }
+
+        debugTime(startTime) { "calculateLightAlphas(): took $it seconds" }
+
+        return LightProcessingResult(results, input.darkMode, input.delta)
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+    /**
+     * Starts background processing of light calculations.
+     * Collects all required data on the main thread, then dispatches to background thread.
+     */
+    private fun startBackgroundProcessing(delta: Float) {
+        if (isProcessing) {
+            GameLogger.debug(TAG, "startBackgroundProcessing(): already processing, skipping")
+            return
+        }
+
+        val startTime = System.currentTimeMillis()
+
+        // ========================================
+        // Collect all data on main thread
+        // ========================================
+
+        // Collect light sources from entities (main thread only)
         val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
         entities.forEach { entity -> tryToLightUp(entity) }
         entities.clear()
 
+        // Collect Megaman light source on main thread
         if (megaman.ready && megaman.body.getBounds().overlaps(bounds)) {
             val lightSourceDef = lightSourcePool.fetch()
             lightSourceDef.center = megaman.body.getCenter()
@@ -370,63 +540,197 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.radiance = STANDARD_LIGHT_SOURCE.second
             }
 
-            lightSourceQueue.add(lightSourceDef)
+            lightSourceQueue.put(megaman, lightSourceDef)
         }
 
+        // Collect beam light source
         val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
         if (beaming) {
             val beamCenter = game.getProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", Vector2::class)
-
             if (beamCenter != null) {
                 val lightSourceDef = lightSourcePool.fetch()
-
                 lightSourceDef.center = beamCenter
                 lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
-
-                lightSourceQueue.add(lightSourceDef)
+                lightSourceQueue.put(megaman, lightSourceDef)
             }
         }
 
-        while (!lightSourceQueue.isEmpty()) {
-            val lightSourceDef = lightSourceQueue.poll()
+        // Convert light source queue to immutable list of data
+        val lightSourceDataList = mutableListOf<LightSourceData>()
+
+        val lightSourceQueueIter = lightSourceQueue.entries().iterator()
+        while (!lightSourceQueueIter.hasNext()) {
+            val entry = lightSourceQueueIter.next()
+
+            val lightSourceDef = entry.value
+
             if (lightSourceDef != null) {
-                handleLightSource(lightSourceDef)
+                lightSourceDataList.add(
+                    LightSourceData(
+                        centerX = lightSourceDef.center.x,
+                        centerY = lightSourceDef.center.y,
+                        radius = lightSourceDef.radius,
+                        radiance = lightSourceDef.radiance
+                    )
+                )
                 lightSourcePool.free(lightSourceDef)
             }
         }
+        lightSourceQueue.clear()
 
+        // Get camera bounds
         val camBounds = game.getGameCamera().getRotatedBounds()
         camBounds.translate(-CAM_BOUNDS_BUFFER * ConstVals.PPM, -CAM_BOUNDS_BUFFER * ConstVals.PPM)
         camBounds.translateSize(2f * CAM_BOUNDS_BUFFER * ConstVals.PPM, 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM)
 
-        previousTiles.forEach { t -> if (!camBounds.overlaps(t.bounds)) t.reset(darkMode) }
+        val (minX, minY, maxX, maxY) = getMinsAndMaxes(camBounds)
+
+        // Collect previous tile coordinates
+        val previousTileCoords = mutableSetOf<Pair<Int, Int>>()
+        previousTiles.forEach { tile ->
+            val tileX = ((tile.bounds.getX() - bounds.getX()) / dividedPPM).toInt()
+            val tileY = ((tile.bounds.getY() - bounds.getY()) / dividedPPM).toInt()
+            previousTileCoords.add(tileX to tileY)
+        }
+
+        // Create immutable input
+        val input = LightProcessingInput(
+            lightSources = lightSourceDataList.toList(),
+            camBoundsMinX = minX,
+            camBoundsMinY = minY,
+            camBoundsMaxX = maxX,
+            camBoundsMaxY = maxY,
+            boundsX = bounds.getX(),
+            boundsY = bounds.getY(),
+            boundsWidth = bounds.getWidth(),
+            boundsHeight = bounds.getHeight(),
+            dividedPPM = dividedPPM,
+            darkMode = darkMode,
+            rows = allTiles.rows,
+            columns = allTiles.columns,
+            previousTileCoords = previousTileCoords,
+            delta = delta
+        )
+
+        debugTime(startTime) { "startBackgroundProcessing(): data collection took $it seconds" }
+
+        // ========================================
+        // Dispatch to background thread
+        // ========================================
+
+        isProcessing = true
+
+        Thread {
+            try {
+                val result = calculateLightAlphas(input)
+
+                // Post result back to main thread
+                Gdx.app.postRunnable {
+                    synchronized(resultLock) {
+                        pendingResult = result
+                    }
+                    isProcessing = false
+                }
+            } catch (e: Exception) {
+                GameLogger.error(TAG, "Background processing failed: ${e.message}")
+                Gdx.app.postRunnable {
+                    isProcessing = false
+                }
+            }
+        }.start()
+    }
+
+    /**
+     * Applies pending results from background thread to sprites.
+     * This runs on the main thread and handles all sprite manipulation.
+     */
+    private fun applyPendingResults() {
+        val result: LightProcessingResult?
+
+        synchronized(resultLock) {
+            result = pendingResult
+            pendingResult = null
+        }
+
+        if (result == null) return
+
+        val startTime = System.currentTimeMillis()
+
+        // Reset tiles that are no longer in camera bounds
+        previousTiles.forEach { tile ->
+            val tileX = ((tile.bounds.getX() - bounds.getX()) / dividedPPM).toInt()
+            val tileY = ((tile.bounds.getY() - bounds.getY()) / dividedPPM).toInt()
+
+            val stillVisible = result.tileAlphas.any { it.x == tileX && it.y == tileY }
+            if (!stillVisible) {
+                tile.reset(result.darkMode)
+            }
+        }
+
         previousTiles.clear()
         previousTiles.addAll(currentTiles)
         currentTiles.clear()
 
-        sprites.values().forEach { t -> tileSpritesPool.free(t) }
+        // Free all existing sprites
+        sprites.values().forEach { sprite -> tileSpritesPool.free(sprite) }
         sprites.clear()
 
-        val (minX, minY, maxX, maxY) = getMinsAndMaxes(camBounds)
-        for (x in minX..maxX) for (y in minY..maxY) {
-            val tile = getTile(x, y)
+        // Apply results to tiles and create sprites
+        for (tileResult in result.tileAlphas) {
+            val tile = getTile(tileResult.x, tileResult.y)
             currentTiles.add(tile)
 
-            if (!previousTiles.contains(tile)) tile.reset(darkMode) else tile.update(delta, darkMode)
+            // Apply the calculated alpha, then update for animation
+            if (!tileResult.wasInPrevious) {
+                tile.reset(result.darkMode)
+            }
 
+            // Set the alpha from background calculation
+            tile.currentAlpha = min(tileResult.alpha, tile.currentAlpha)
+
+            // Then apply the darken/lighten animation step
+            tile.update(result.delta, result.darkMode)
+
+            // Create sprite
             val sprite = tileSpritesPool.fetch()
             sprite.setBounds(
-                bounds.getX() + x * sprite.width,
-                bounds.getY() + y * sprite.height,
+                bounds.getX() + tileResult.x * dividedPPM,
+                bounds.getY() + tileResult.y * dividedPPM,
                 dividedPPM,
                 dividedPPM
             )
             sprite.setAlpha(tile.currentAlpha)
 
-            sprites.put("${x}_${y}", sprite)
+            sprites.put("${tileResult.x}_${tileResult.y}", sprite)
         }
+
+        debugTime(startTime) { "applyPendingResults(): took $it seconds" }
+    }
+
+    // ========================================
+    // Update component
+    // ========================================
+
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        timeSinceLastUpdate += delta
+
+        // Always try to apply any pending results from background thread
+        applyPendingResults()
+
+        // Check if we should start new processing
+        if (!shouldUpdate()) return@UpdatablesComponent
+        if (isProcessing) return@UpdatablesComponent
+
+        timeSinceLastUpdate = 0f
+
+        // Start background processing
+        startBackgroundProcessing(delta)
     })
+
+    // ========================================
+    // Interface implementations
+    // ========================================
 
     override fun overlaps(shape: IGameShape2D) = this.bounds.overlaps(shape)
 
@@ -434,3 +738,4 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun getTag() = TAG
 }
+

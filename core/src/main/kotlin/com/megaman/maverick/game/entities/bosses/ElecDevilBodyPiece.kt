@@ -139,7 +139,7 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
 
         lightSourceSendEventDelay.update(delta)
         if (lightSourceSendEventDelay.isFinished()) {
-            LightSourceUtils.sendLightSourceEvent(game, this)
+            LightSourceUtils.sendLightSourceEvent(this)
             lightSourceSendEventDelay.reset()
         }
 

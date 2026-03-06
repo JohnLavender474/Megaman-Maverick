@@ -262,7 +262,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                             danceNeedlesTimer.reset()
                         }
 
-                        if (inDarkness) LightSourceUtils.sendLightSourceEvent(game, this)
+                        if (inDarkness) LightSourceUtils.sendLightSourceEvent(this)
                     }
 
                     val danceTimer = timers["dance"]

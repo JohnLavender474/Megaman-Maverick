@@ -124,7 +124,7 @@ abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game
             if (!darknesses.isEmpty) {
                 lightSourceKeys.clear()
                 darknesses.forEach { darkness -> lightSourceKeys.add((darkness as DarknessV2).key) }
-                LightSourceUtils.sendLightSourceEvent(game, this)
+                LightSourceUtils.sendLightSourceEvent(this)
             }
 
             if (timeCull) {

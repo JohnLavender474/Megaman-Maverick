@@ -78,7 +78,7 @@ open class LightSourceEntity(game: MegamanMaverickGame) : MegaGameEntity(game), 
         lightSourceKeys.clear()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ LightSourceUtils.sendLightSourceEvent(game, this) })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ LightSourceUtils.sendLightSourceEvent(this) })
 
     override fun getType() = EntityType.DECORATION
 

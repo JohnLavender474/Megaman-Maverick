@@ -127,7 +127,7 @@ class ElecBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        LightSourceUtils.sendLightSourceEvent(game, this)
+        LightSourceUtils.sendLightSourceEvent(this)
 
         if (hit) {
             body.physics.velocity.setZero()

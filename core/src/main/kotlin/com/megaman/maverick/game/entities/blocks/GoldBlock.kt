@@ -40,6 +40,6 @@ class GoldBlock(game: MegamanMaverickGame) : AnimatedBlock(game), ILightSource {
 
     override fun defineUpdateablesComponent(updateablesComponent: UpdatablesComponent) {
         super.defineUpdateablesComponent(updateablesComponent)
-        updateablesComponent.add { delta -> LightSourceUtils.sendLightSourceEvent(game, this) }
+        updateablesComponent.add { LightSourceUtils.sendLightSourceEvent(this) }
     }
 }
