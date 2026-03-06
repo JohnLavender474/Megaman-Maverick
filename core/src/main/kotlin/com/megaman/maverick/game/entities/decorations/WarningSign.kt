@@ -73,7 +73,7 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.05f, true)))
+        .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.1f, true)))
         .build()
 
     override fun getType() = EntityType.DECORATION

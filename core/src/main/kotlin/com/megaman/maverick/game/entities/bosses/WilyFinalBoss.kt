@@ -9,7 +9,9 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
+import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
+import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
@@ -475,6 +477,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
                 .build()
         )
+        .key(WILY_DEATH_PLANE_LAZOR_RESIDUAL)
+        .animator(Animator(Animation(regions[WILY_DEATH_PLANE_LAZOR_RESIDUAL], 2, 1, 0.1f, true)))
         .build()
 
     private fun goToNextPhase() {
@@ -518,6 +522,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val LAZOR_NEAR_CENTER_SIN_THRESHOLD = 0.3f
         const val LAZOR_WARM_UP_START = 0.25f
         const val LAZOR_WARM_UP_RATE = 0.5f
+
+        const val FLY_IN_ALT_ROW_CHANCE = 0.67f
 
         val WARNING_SIGN_KEYS = Array<String>()
             .also { keys ->
@@ -699,7 +705,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         currentFlyInRow = 1
                     } else {
                         currentFlyInCol = UtilMethods.getRandom(0, 1)
-                        currentFlyInRow = UtilMethods.getRandom(0, 1)
+                        currentFlyInRow = when {
+                            UtilMethods.getRandom(0f, 1f) <=
+                                Phase1ConstVals.FLY_IN_ALT_ROW_CHANCE -> 1 - currentFlyInRow
+                            else -> currentFlyInRow
+                        }
                     }
 
                     body.setCenter(flyInStartPositions[currentFlyInCol, currentFlyInRow]!!)
@@ -998,8 +1008,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             leftLazor?.on = true
             rightLazor?.on = true
 
-            leftLazor?.body?.setTopCenterToPoint(x - 4f * ConstVals.PPM, y - 0.5f * ConstVals.PPM)
-            rightLazor?.body?.setTopCenterToPoint(x + 4f * ConstVals.PPM, y - 0.5f * ConstVals.PPM)
+            leftLazor?.body?.setTopCenterToPoint(x - 4f * ConstVals.PPM, y - 2f * ConstVals.PPM)
+            rightLazor?.body?.setTopCenterToPoint(x + 4f * ConstVals.PPM, y - 2f * ConstVals.PPM)
 
             return false
         }
