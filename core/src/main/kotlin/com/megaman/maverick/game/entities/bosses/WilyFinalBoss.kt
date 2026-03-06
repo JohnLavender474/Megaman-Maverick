@@ -70,12 +70,8 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -670,11 +666,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val LAZOR_CHANCE_INCR = 0.25f
         const val MISSILES_CHANCE_INCR = 0.25f
 
-        const val FLY_IN_SPEED = 16f
+        const val FLY_IN_SPEED = 18f
         const val FLY_IN_SLOW_DOWN_DISTANCE = 1.5f
 
         const val MAX_FLY_BYS = 3
-        const val FLY_BY_SPEED = 16f
+        const val FLY_BY_SPEED = 18f
         const val FLY_BY_CHANCE = 0.5f
         const val FLY_BY_AFTER_SWOOP_REPEAT_CHANCE = 0.15f
         const val OFF_SCREEN_BUFFER = 4f
@@ -703,15 +699,21 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val SHOOT_BULLETS_DUR = 0.5f
         const val BULLET_SPEED = 10f
         val BULLET_TRAJECTORIES = gdxArrayOf(
+            Vector2(-1f, -1f),
             Vector2(-0.75f, -1f),
-            Vector2(0f, -1f),
-            Vector2(0.75f, -1f)
+            Vector2(-0.1f, -1f),
+            Vector2(0.1f, -1f),
+            Vector2(0.75f, -1f),
+            Vector2(1f, -1f)
         )
 
         val MISSILE_ANGLES = gdxArrayOf(225f, 180f, 180f, 135f)
 
         const val FLY_IN_ALT_ROW_CHANCE = 0.67f
 
+        const val GROUND_WARNING_SIGN_START_INDEX = 1
+        const val GROUND_WARNING_SIGN_END_INDEX = 11
+        const val GROUND_WARNING_SIGNS_TO_BLOW = 5
         val WARNING_SIGN_KEYS = Array<String>()
             .also { keys ->
                 Position.getDiagonalPositions().forEach {
@@ -719,7 +721,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
             }
             .also { keys ->
-                for (i in 1..6) keys.add("ground_warning_sign_$i")
+                for (i in GROUND_WARNING_SIGN_START_INDEX..GROUND_WARNING_SIGN_END_INDEX) keys
+                    .add("ground_warning_sign_$i")
             }
     }
 
@@ -889,7 +892,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     swoopChance = Phase1ConstVals.INIT_SWOOP_CHANCE
 
                     swoopExplosionIndices.clear()
-                    (1..6).shuffled().take(4).forEach { swoopExplosionIndices.add(it) }
+                    (Phase1ConstVals.GROUND_WARNING_SIGN_START_INDEX..Phase1ConstVals.GROUND_WARNING_SIGN_END_INDEX)
+                        .shuffled()
+                        .take(Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW)
+                        .forEach { swoopExplosionIndices.add(it) }
 
                     val position = flyInTargetPositions[0, 1]!!
                     body.setCenter(position)
@@ -1275,7 +1281,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 )
             }
 
-            requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, false)
+            requestToPlaySound(SoundAsset.SOLAR_BLAZE_SOUND, false)
         }
 
         fun shootMissiles(up: Boolean) {
@@ -1312,16 +1318,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 val key = "ground_warning_sign_$i"
                 val warningSign = warningSigns.get(key)
                 val center = warningSign.center
-                (0..1).forEach { _ ->
-                    MegaUtilMethods.delayRun(game, 0.5f) {
-                        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
-                        explosion.spawn(
-                            props(
-                                ConstKeys.POSITION pairTo center,
-                                ConstKeys.OWNER pairTo this@WilyFinalBoss,
-                            )
+                MegaUtilMethods.delayRun(game, 0.5f) {
+                    val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+                    explosion.spawn(
+                        props(
+                            ConstKeys.POSITION pairTo center,
+                            ConstKeys.OWNER pairTo this@WilyFinalBoss,
                         )
-                    }
+                    )
                 }
             }
             MegaUtilMethods.delayRun(game, 0.5f) { requestToPlaySound(SoundAsset.EXPLOSION_1_SOUND, false) }

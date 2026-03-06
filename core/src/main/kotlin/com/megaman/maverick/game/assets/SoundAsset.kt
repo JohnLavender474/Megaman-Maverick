@@ -14,7 +14,7 @@ enum class SoundAsset(src: String, val seconds: Float) : IAsset {
     CHILL_SHOOT_SOUND("chill_shoot.mp3", 1f),
     WHOOSH_SOUND("whoosh.mp3", 2f),
     PAUSE_SOUND("pause_menu.mp3", 1f),
-    EXPLOSION_1_SOUND("explosion1.mp3", 2f),
+    EXPLOSION_1_SOUND("explosion1.wav", 2f),
     EXPLOSION_2_SOUND("explosion2.wav", 0.5f),
     BEAM_OUT_SOUND("teleport_out.mp3", 1f),
     ENERGY_FILL_SOUND("energy_fill_mm9.mp3", 1f),

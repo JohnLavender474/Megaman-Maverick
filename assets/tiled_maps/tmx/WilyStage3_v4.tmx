@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="28" nextobjectid="694">
+<map version="1.10" tiledversion="1.11.90" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="700">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
   <data encoding="csv">
@@ -3835,13 +3835,16 @@
     <property name="fly_in_target_3" type="object" value="661"/>
     <property name="fly_in_target_4" type="object" value="662"/>
     <property name="ground_warning_sign_1" type="object" value="677"/>
+    <property name="ground_warning_sign_10" type="object" value="698"/>
+    <property name="ground_warning_sign_11" type="object" value="695"/>
     <property name="ground_warning_sign_2" type="object" value="678"/>
     <property name="ground_warning_sign_3" type="object" value="679"/>
     <property name="ground_warning_sign_4" type="object" value="680"/>
     <property name="ground_warning_sign_5" type="object" value="681"/>
     <property name="ground_warning_sign_6" type="object" value="683"/>
-    <property name="ground_warning_sign_7" type="object" value="684"/>
-    <property name="ground_warning_sign_8" type="object" value="686"/>
+    <property name="ground_warning_sign_7" type="object" value="694"/>
+    <property name="ground_warning_sign_8" type="object" value="696"/>
+    <property name="ground_warning_sign_9" type="object" value="697"/>
     <property name="lazor_left_bound" type="object" value="671"/>
     <property name="lazor_right_bound" type="object" value="672"/>
     <property name="swoop_explosion_bounds" type="object" value="682"/>
@@ -3857,12 +3860,17 @@
   <object id="664" name="FlyIn_Start2" x="12160" y="3872" width="32" height="32"/>
   <object id="665" name="FlyIn_Start3" x="12160" y="4048" width="32" height="32"/>
   <object id="667" name="FlyIn_Start4" x="11040" y="4048" width="32" height="32"/>
-  <object id="677" name="GroundWarningSign1" x="11424" y="4112" width="32" height="32"/>
-  <object id="678" name="GroundWarningSign2" x="11504" y="4080" width="32" height="32"/>
-  <object id="679" name="GroundWarningSign3" x="11576" y="4112" width="32" height="32"/>
-  <object id="680" name="GroundWarningSign4" x="11632" y="4112" width="32" height="32"/>
-  <object id="681" name="GroundWarningSign5" x="11696" y="4080" width="32" height="32"/>
-  <object id="683" name="GroundWarningSign6" x="11776" y="4112" width="32" height="32"/>
+  <object id="677" name="GroundWarningSign1" x="11360" y="4048" width="32" height="32"/>
+  <object id="678" name="GroundWarningSign2" x="11400" y="4112" width="32" height="32"/>
+  <object id="679" name="GroundWarningSign3" x="11448" y="4112" width="32" height="32"/>
+  <object id="680" name="GroundWarningSign4" x="11504" y="4080" width="32" height="32"/>
+  <object id="681" name="GroundWarningSign5" x="11560" y="4112" width="32" height="32"/>
+  <object id="683" name="GroundWarningSign6" x="11600" y="4112" width="32" height="32"/>
+  <object id="694" name="GroundWarningSign7" x="11640" y="4112" width="32" height="32"/>
+  <object id="695" name="GroundWarningSign11" x="11840" y="4048" width="32" height="32"/>
+  <object id="696" name="GroundWarningSign8" x="11696" y="4080" width="32" height="32"/>
+  <object id="697" name="GroundWarningSign9" x="11752" y="4112" width="32" height="32"/>
+  <object id="698" name="GroundWarningSign10" x="11800" y="4112" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="27" name="items">
   <object id="373" name="HealthBulb" x="7552" y="5536" width="32" height="32">

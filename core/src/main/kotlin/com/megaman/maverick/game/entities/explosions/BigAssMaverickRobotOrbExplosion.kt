@@ -8,6 +8,7 @@ import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.IAnimation
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -66,6 +67,7 @@ class BigAssMaverickRobotOrbExplosion(game: MegamanMaverickGame) : MegaGameEntit
     override fun getType() = EntityType.EXPLOSION
 
     override fun init(vararg params: Any) {
+        GameLogger.debug(TAG, "init()")
         if (explosionRegion == null || dissipateRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             explosionRegion = atlas.findRegion("$TAG/ElectricPulse")
@@ -78,6 +80,7 @@ class BigAssMaverickRobotOrbExplosion(game: MegamanMaverickGame) : MegaGameEntit
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)

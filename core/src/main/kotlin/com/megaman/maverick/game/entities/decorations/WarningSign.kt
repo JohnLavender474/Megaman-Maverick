@@ -61,10 +61,7 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND))
-                .also {
-                    it.setAlpha(0.75f)
-                    it.setSize(2f * ConstVals.PPM.toFloat())
-                }
+                .also { it.setSize(2f * ConstVals.PPM.toFloat()) }
         )
         .preProcess { _, sprite ->
             sprite.hidden = !on

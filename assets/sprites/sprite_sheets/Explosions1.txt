@@ -1,5 +1,5 @@
 Explosions1.png
-size: 1024, 584
+size: 1024, 616
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -162,5 +162,12 @@ TubeBeamExplosion
   xy: 0, 296
   size: 192, 192
   orig: 192, 192
+  offset: 0, 0
+  index: -1
+WhiteExplosion
+  rotate: false
+  xy: 960, 296
+  size: 64, 320
+  orig: 64, 320
   offset: 0, 0
   index: -1

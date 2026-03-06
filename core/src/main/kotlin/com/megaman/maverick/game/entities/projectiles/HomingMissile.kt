@@ -43,10 +43,13 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.explosions.StarExplosion
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 
 class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageable {
 
@@ -57,8 +60,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
         private const val DAMAGE_DURATION = 0.1f
 
-        private const val RECALC_DELAY = 0.5f
-        private const val TIME_BEFORE_FIRST_RECALC = 0.5f
+        private const val RECALC_DELAY = 0.25f
+        private const val TIME_BEFORE_FIRST_RECALC = 0.25f
 
         private const val TTL = 3f
         private const val FLASH_START = 2f
@@ -103,10 +106,14 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
         setHealth(ConstVals.MAX_HEALTH)
 
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val spawn = when {
+            spawnProps.containsKey(ConstKeys.BOUNDS) ->
+                spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+            else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        }
         body.setCenter(spawn)
 
-        currentAngle = spawnProps.getOrDefault(ConstKeys.ANGLE, 0f, Int::class)
+        currentAngle = spawnProps.getOrDefault(ConstKeys.ANGLE, 0, Int::class)
         setVelocityFromAngle(currentAngle)
 
         recalcDelay.reset()
@@ -144,18 +151,10 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         explosion.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo body.getCenter(),
-                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
-            )
-        )
-
-        val halo = MegaEntityFactory.fetch(StarExplosion::class)!!
-        halo.spawn(
-            props(
-                ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo body.getCenter()
             )
         )
+        requestToPlaySound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
