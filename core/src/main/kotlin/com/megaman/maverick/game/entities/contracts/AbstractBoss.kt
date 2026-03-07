@@ -102,7 +102,7 @@ abstract class AbstractBoss(
     override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN, EventType.PLAYER_SPAWN)
 
     protected open val defeatTimer = Timer(defeatDur)
-    protected open val explosionTimer = Timer(EXPLOSION_TIME)
+    protected open val spawnDefeatExplosionTimer = Timer(EXPLOSION_TIME)
 
     var ready = false
     var mini = false
@@ -223,13 +223,15 @@ abstract class AbstractBoss(
         }
     }
 
+    protected open fun shouldTriggerDefeat(health: Int) = health <= ConstVals.MIN_HEALTH && !defeated
+
     override fun definePointsComponent(): PointsComponent {
         val pointsComponent = PointsComponent()
         pointsComponent.putPoints(
             ConstKeys.HEALTH, max = ConstVals.MAX_HEALTH, current = ConstVals.MAX_HEALTH, min = ConstVals.MIN_HEALTH
         )
         pointsComponent.putListener(ConstKeys.HEALTH) {
-            if (it.current <= ConstVals.MIN_HEALTH && !defeated) triggerDefeat()
+            if (shouldTriggerDefeat(it.current)) triggerDefeat()
         }
         return pointsComponent
     }
@@ -284,10 +286,10 @@ abstract class AbstractBoss(
     protected open fun onDefeated(delta: Float) {}
 
     protected open fun explodeOnDefeat(delta: Float) {
-        explosionTimer.update(delta)
-        if (explosionTimer.isFinished()) {
+        spawnDefeatExplosionTimer.update(delta)
+        if (spawnDefeatExplosionTimer.isFinished()) {
             spawnDefeatExplosion()
-            explosionTimer.reset()
+            spawnDefeatExplosionTimer.reset()
         }
     }
 
@@ -297,13 +299,14 @@ abstract class AbstractBoss(
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(
-                ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
                 ConstKeys.POSITION pairTo body.getCenter().add(
                     (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM
                 ),
-                ConstKeys.DAMAGER pairTo false
+                ConstKeys.DAMAGER pairTo false,
             )
         )
+
+        playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun getType() = EntityType.BOSS

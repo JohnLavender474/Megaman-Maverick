@@ -674,7 +674,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                             HealthFillType.BIT_BY_BIT -> {
                                 { game.audioMan.pauseMusic() }
                             }
-
                             else -> null
                         }
 

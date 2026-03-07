@@ -1,281 +1,297 @@
-===== SESSION STARTED: 2026-03-07T15:58:57.251051066 =====
-15:59:47 | DEBUG | GroundExplosion | init()
-15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+===== SESSION STARTED: 2026-03-07T18:44:43.230807679 =====
+18:44:48 | DEBUG | MegaLevelScreen | start(): set camera-manager-for-rooms absolute min and max: 256.0, 16000.0
+18:44:48 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_SPAWN, properties=Properties({
+}))
+18:44:48 | DEBUG | MegaLevelScreen | onEvent(): player spawn --> spawn Megaman: Properties({
+	[bounds=[11488.0,6304.0,32.0,32.0]]
+	[x=11488.0]
+	[height=32.0]
+	[id=701]
+	[name=0]
+	[y=6304.0]
+	[width=32.0]
 })
-15:59:47 | DEBUG | GroundExplosion | init()
-15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11520.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+18:44:50 | LOG | MegaLevelScreen | event(): event=Event(key=PLAYER_READY, properties=Properties({
+}))
+18:44:51 | DEBUG | MegaLevelScreen | begin transition logic for rooms manager: current=room9, prior=room8
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:51 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6223.5615) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6222.769) megaman.body.getCenter=(11621.437,6223.5615)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6221.976) megaman.body.getCenter=(11621.437,6222.769)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6221.1284) megaman.body.getCenter=(11621.437,6221.976)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6220.391) megaman.body.getCenter=(11621.437,6221.1284)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6219.598) megaman.body.getCenter=(11621.437,6220.391)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6218.8057) megaman.body.getCenter=(11621.437,6219.598)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6218.013) megaman.body.getCenter=(11621.437,6218.8057)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6217.2207) megaman.body.getCenter=(11621.437,6218.013)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6216.4277) megaman.body.getCenter=(11621.437,6217.2207)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6215.6353) megaman.body.getCenter=(11621.437,6216.4277)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6214.843) megaman.body.getCenter=(11621.437,6215.6353)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6214.05) megaman.body.getCenter=(11621.437,6214.843)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6213.2573) megaman.body.getCenter=(11621.437,6214.05)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6212.4644) megaman.body.getCenter=(11621.437,6213.2573)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6211.672) megaman.body.getCenter=(11621.437,6212.4644)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6210.824) megaman.body.getCenter=(11621.437,6211.672)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6210.0864) megaman.body.getCenter=(11621.437,6210.824)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6209.294) megaman.body.getCenter=(11621.437,6210.0864)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6208.501) megaman.body.getCenter=(11621.437,6209.294)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6207.7085) megaman.body.getCenter=(11621.437,6208.501)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6206.916) megaman.body.getCenter=(11621.437,6207.7085)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6206.123) megaman.body.getCenter=(11621.437,6206.916)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6205.329) megaman.body.getCenter=(11621.437,6206.123)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6204.5376) megaman.body.getCenter=(11621.437,6205.329)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6203.745) megaman.body.getCenter=(11621.437,6204.5376)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6202.952) megaman.body.getCenter=(11621.437,6203.745)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6202.1597) megaman.body.getCenter=(11621.437,6202.952)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6201.307) megaman.body.getCenter=(11621.437,6202.1597)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6200.574) megaman.body.getCenter=(11621.437,6201.307)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6199.7817) megaman.body.getCenter=(11621.437,6200.574)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6198.989) megaman.body.getCenter=(11621.437,6199.7817)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6198.196) megaman.body.getCenter=(11621.437,6198.989)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6197.4023) megaman.body.getCenter=(11621.437,6198.196)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6196.611) megaman.body.getCenter=(11621.437,6197.4023)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6195.818) megaman.body.getCenter=(11621.437,6196.611)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6195.0254) megaman.body.getCenter=(11621.437,6195.818)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6194.233) megaman.body.getCenter=(11621.437,6195.0254)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6193.44) megaman.body.getCenter=(11621.437,6194.233)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6192.6475) megaman.body.getCenter=(11621.437,6193.44)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6191.8545) megaman.body.getCenter=(11621.437,6192.6475)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6191.0054) megaman.body.getCenter=(11621.437,6191.8545)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6190.269) megaman.body.getCenter=(11621.437,6191.0054)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6189.4766) megaman.body.getCenter=(11621.437,6190.269)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6188.6836) megaman.body.getCenter=(11621.437,6189.4766)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6187.891) megaman.body.getCenter=(11621.437,6188.6836)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6187.0986) megaman.body.getCenter=(11621.437,6187.891)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6186.306) megaman.body.getCenter=(11621.437,6187.0986)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6185.513) megaman.body.getCenter=(11621.437,6186.306)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6184.72) megaman.body.getCenter=(11621.437,6185.513)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6183.9277) megaman.body.getCenter=(11621.437,6184.72)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6183.1353) megaman.body.getCenter=(11621.437,6183.9277)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6182.3423) megaman.body.getCenter=(11621.437,6183.1353)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6181.4927) megaman.body.getCenter=(11621.437,6182.3423)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6180.7563) megaman.body.getCenter=(11621.437,6181.4927)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6179.963) megaman.body.getCenter=(11621.437,6180.7563)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6179.171) megaman.body.getCenter=(11621.437,6179.963)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6178.3784) megaman.body.getCenter=(11621.437,6179.171)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6177.5854) megaman.body.getCenter=(11621.437,6178.3784)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6176.793) megaman.body.getCenter=(11621.437,6177.5854)
+18:44:52 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11621.437,6176.0) megaman.body.getCenter=(11621.437,6176.793)
+18:44:53 | DEBUG | MegaLevelScreen | end transition logic for rooms manager: current=room9, prior=room8
+18:44:56 | DEBUG | MegaLevelScreen | begin transition logic for rooms manager: current=wily_room, prior=room9
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4274.3525) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4272.9795) megaman.body.getCenter=(11608.315,4274.3525)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4271.6074) megaman.body.getCenter=(11608.315,4272.9795)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4270.2334) megaman.body.getCenter=(11608.315,4271.6074)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4268.8623) megaman.body.getCenter=(11608.315,4270.2334)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4267.4897) megaman.body.getCenter=(11608.315,4268.8623)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4266.117) megaman.body.getCenter=(11608.315,4267.4897)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4264.672) megaman.body.getCenter=(11608.315,4266.117)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4263.372) megaman.body.getCenter=(11608.315,4264.672)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4261.9995) megaman.body.getCenter=(11608.315,4263.372)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4260.627) megaman.body.getCenter=(11608.315,4261.9995)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4259.2544) megaman.body.getCenter=(11608.315,4260.627)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4257.8823) megaman.body.getCenter=(11608.315,4259.2544)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4256.5093) megaman.body.getCenter=(11608.315,4257.8823)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4255.137) megaman.body.getCenter=(11608.315,4256.5093)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4253.7646) megaman.body.getCenter=(11608.315,4255.137)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4252.392) megaman.body.getCenter=(11608.315,4253.7646)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4251.0195) megaman.body.getCenter=(11608.315,4252.392)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4249.647) megaman.body.getCenter=(11608.315,4251.0195)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4248.2744) megaman.body.getCenter=(11608.315,4249.647)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4246.828) megaman.body.getCenter=(11608.315,4248.2744)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4245.5293) megaman.body.getCenter=(11608.315,4246.828)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4244.1567) megaman.body.getCenter=(11608.315,4245.5293)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4242.7837) megaman.body.getCenter=(11608.315,4244.1567)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4240.999) megaman.body.getCenter=(11608.315,4242.7837)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4239.4976) megaman.body.getCenter=(11608.315,4240.999)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4238.1196) megaman.body.getCenter=(11608.315,4239.4976)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4236.9995) megaman.body.getCenter=(11608.315,4238.1196)
+18:44:56 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4235.8477) megaman.body.getCenter=(11608.315,4236.9995)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4234.5493) megaman.body.getCenter=(11608.315,4235.8477)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4233.137) megaman.body.getCenter=(11608.315,4234.5493)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4231.8037) megaman.body.getCenter=(11608.315,4233.137)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4230.1963) megaman.body.getCenter=(11608.315,4231.8037)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4228.7983) megaman.body.getCenter=(11608.315,4230.1963)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4227.27) megaman.body.getCenter=(11608.315,4228.7983)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4225.4985) megaman.body.getCenter=(11608.315,4227.27)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4223.3174) megaman.body.getCenter=(11608.315,4225.4985)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4221.723) megaman.body.getCenter=(11608.315,4223.3174)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4220.7886) megaman.body.getCenter=(11608.315,4221.723)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4220.034) megaman.body.getCenter=(11608.315,4220.7886)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4218.978) megaman.body.getCenter=(11608.315,4220.034)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4217.606) megaman.body.getCenter=(11608.315,4218.978)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4216.2334) megaman.body.getCenter=(11608.315,4217.606)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4214.861) megaman.body.getCenter=(11608.315,4216.2334)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4213.489) megaman.body.getCenter=(11608.315,4214.861)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4212.1157) megaman.body.getCenter=(11608.315,4213.489)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4210.743) megaman.body.getCenter=(11608.315,4212.1157)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4209.3706) megaman.body.getCenter=(11608.315,4210.743)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4207.9614) megaman.body.getCenter=(11608.315,4209.3706)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4206.626) megaman.body.getCenter=(11608.315,4207.9614)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4205.211) megaman.body.getCenter=(11608.315,4206.626)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4203.881) megaman.body.getCenter=(11608.315,4205.211)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4202.5083) megaman.body.getCenter=(11608.315,4203.881)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4201.1357) megaman.body.getCenter=(11608.315,4202.5083)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4199.763) megaman.body.getCenter=(11608.315,4201.1357)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4198.3906) megaman.body.getCenter=(11608.315,4199.763)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4197.018) megaman.body.getCenter=(11608.315,4198.3906)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4195.6455) megaman.body.getCenter=(11608.315,4197.018)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4194.273) megaman.body.getCenter=(11608.315,4195.6455)
+18:44:57 | DEBUG | MegaLevelScreen | continue transition logic for rooms manager: transitionInterpolation=(11608.315,4192.9004) megaman.body.getCenter=(11608.315,4194.273)
+18:44:57 | DEBUG | MegaLevelScreen | end transition logic for rooms manager: current=wily_room, prior=room9
+18:44:57 | LOG | MegaLevelScreen | event(): event=Event(key=ENTER_BOSS_ROOM, properties=Properties({
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@50d2eea8]
+}))
+18:44:57 | DEBUG | WilyFinalBoss | init()
+18:44:57 | DEBUG | WilyFinalBoss | onSpawn(): spawnProps=Properties({
+	[orb=false]
+	[ground_warning_sign_4=com.badlogic.gdx.maps.objects.RectangleMapObject@73588c0d]
+	[lazor_left_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@4d87bbb8]
+	[bounds=[11600.0,4096.0,32.0,32.0]]
+	[fly_in_target_3=com.badlogic.gdx.maps.objects.RectangleMapObject@724e8538]
+	[ground_warning_sign_9=com.badlogic.gdx.maps.objects.RectangleMapObject@67fa425c]
+	[fly_in_start_3=com.badlogic.gdx.maps.objects.RectangleMapObject@50f5924a]
+	[x=11600.0]
+	[ground_warning_sign_1=com.badlogic.gdx.maps.objects.RectangleMapObject@20dfb997]
+	[ground_warning_sign_11=com.badlogic.gdx.maps.objects.RectangleMapObject@263e9ff1]
+	[height=32.0]
+	[ground_warning_sign_6=com.badlogic.gdx.maps.objects.RectangleMapObject@1363c1c8]
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@50d2eea8]
+	[end=false]
+	[top_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@6ff8662c]
+	[top_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@32366945]
+	[ground_warning_sign_3=com.badlogic.gdx.maps.objects.RectangleMapObject@60a5b9e5]
+	[music=MMX7_OUR_BLOOD_BOILS_MUSIC]
+	[fly_in_target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@6dc559b8]
+	[ground_warning_sign_8=com.badlogic.gdx.maps.objects.RectangleMapObject@41209b2a]
+	[id=641]
+	[fly_in_start_2=com.badlogic.gdx.maps.objects.RectangleMapObject@40ddae0a]
+	[ground_warning_sign_10=com.badlogic.gdx.maps.objects.RectangleMapObject@dfa4d65]
+	[swoop_explosion_bounds=null]
+	[ground_warning_sign_5=com.badlogic.gdx.maps.objects.RectangleMapObject@4ab5cdfb]
+	[bottom_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@f09e64c]
+	[fly_in_target_4=com.badlogic.gdx.maps.objects.RectangleMapObject@2289a459]
+	[lazor_right_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@7d474408]
+	[fly_in_start_4=com.badlogic.gdx.maps.objects.RectangleMapObject@19f9944e]
+	[y=4096.0]
+	[width=32.0]
+	[ground_warning_sign_2=com.badlogic.gdx.maps.objects.RectangleMapObject@59023abb]
+	[fly_in_target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@3646f6ae]
+	[bottom_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@71e6836a]
+	[ground_warning_sign_7=com.badlogic.gdx.maps.objects.RectangleMapObject@24e832fc]
+	[fly_in_start_1=com.badlogic.gdx.maps.objects.RectangleMapObject@6c770338]
 })
-15:59:47 | DEBUG | GroundExplosion | init()
-15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+18:44:57 | DEBUG | AbstractBoss | onSpawn(): spawnProps=Properties({
+	[orb=false]
+	[ground_warning_sign_4=com.badlogic.gdx.maps.objects.RectangleMapObject@73588c0d]
+	[lazor_left_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@4d87bbb8]
+	[bounds=[11600.0,4096.0,32.0,32.0]]
+	[fly_in_target_3=com.badlogic.gdx.maps.objects.RectangleMapObject@724e8538]
+	[ground_warning_sign_9=com.badlogic.gdx.maps.objects.RectangleMapObject@67fa425c]
+	[fly_in_start_3=com.badlogic.gdx.maps.objects.RectangleMapObject@50f5924a]
+	[x=11600.0]
+	[ground_warning_sign_1=com.badlogic.gdx.maps.objects.RectangleMapObject@20dfb997]
+	[ground_warning_sign_11=com.badlogic.gdx.maps.objects.RectangleMapObject@263e9ff1]
+	[height=32.0]
+	[ground_warning_sign_6=com.badlogic.gdx.maps.objects.RectangleMapObject@1363c1c8]
+	[room=com.badlogic.gdx.maps.objects.RectangleMapObject@50d2eea8]
+	[end=false]
+	[top_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@6ff8662c]
+	[top_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@32366945]
+	[ground_warning_sign_3=com.badlogic.gdx.maps.objects.RectangleMapObject@60a5b9e5]
+	[music=MMX7_OUR_BLOOD_BOILS_MUSIC]
+	[fly_in_target_2=com.badlogic.gdx.maps.objects.RectangleMapObject@6dc559b8]
+	[ground_warning_sign_8=com.badlogic.gdx.maps.objects.RectangleMapObject@41209b2a]
+	[id=641]
+	[fly_in_start_2=com.badlogic.gdx.maps.objects.RectangleMapObject@40ddae0a]
+	[ground_warning_sign_10=com.badlogic.gdx.maps.objects.RectangleMapObject@dfa4d65]
+	[swoop_explosion_bounds=null]
+	[ground_warning_sign_5=com.badlogic.gdx.maps.objects.RectangleMapObject@4ab5cdfb]
+	[bottom_left_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@f09e64c]
+	[fly_in_target_4=com.badlogic.gdx.maps.objects.RectangleMapObject@2289a459]
+	[lazor_right_bound=com.badlogic.gdx.maps.objects.RectangleMapObject@7d474408]
+	[fly_in_start_4=com.badlogic.gdx.maps.objects.RectangleMapObject@19f9944e]
+	[y=4096.0]
+	[width=32.0]
+	[ground_warning_sign_2=com.badlogic.gdx.maps.objects.RectangleMapObject@59023abb]
+	[fly_in_target_1=com.badlogic.gdx.maps.objects.RectangleMapObject@3646f6ae]
+	[bottom_right_warning_sign=com.badlogic.gdx.maps.objects.RectangleMapObject@71e6836a]
+	[ground_warning_sign_7=com.badlogic.gdx.maps.objects.RectangleMapObject@24e832fc]
+	[fly_in_start_1=com.badlogic.gdx.maps.objects.RectangleMapObject@6c770338]
 })
-15:59:47 | DEBUG | GroundExplosion | init()
-15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11416.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-15:59:47 | DEBUG | GroundExplosion | init()
-15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-15:59:47 | DEBUG | GroundExplosion | onDestroy()
-15:59:47 | DEBUG | GroundExplosion | onDestroy()
-15:59:47 | DEBUG | GroundExplosion | onDestroy()
-15:59:47 | DEBUG | GroundExplosion | onDestroy()
-15:59:47 | DEBUG | GroundExplosion | onDestroy()
-16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11464.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11712.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11416.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11376.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:00:38 | DEBUG | GroundExplosion | onDestroy()
-16:00:38 | DEBUG | GroundExplosion | onDestroy()
-16:00:38 | DEBUG | GroundExplosion | onDestroy()
-16:00:39 | DEBUG | GroundExplosion | onDestroy()
-16:00:39 | DEBUG | GroundExplosion | onDestroy()
-16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11416.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11712.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11520.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11656.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:01:06 | DEBUG | GroundExplosion | onDestroy()
-16:01:06 | DEBUG | GroundExplosion | onDestroy()
-16:01:06 | DEBUG | GroundExplosion | onDestroy()
-16:01:06 | DEBUG | GroundExplosion | onDestroy()
-16:01:06 | DEBUG | GroundExplosion | onDestroy()
-16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11712.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11376.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11768.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:11 | DEBUG | GroundExplosion | onDestroy()
-16:02:11 | DEBUG | GroundExplosion | onDestroy()
-16:02:11 | DEBUG | GroundExplosion | onDestroy()
-16:02:11 | DEBUG | GroundExplosion | onDestroy()
-16:02:11 | DEBUG | GroundExplosion | onDestroy()
-16:02:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11656.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11520.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11768.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:39 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:39 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:02:39 | DEBUG | GroundExplosion | onDestroy()
-16:02:39 | DEBUG | GroundExplosion | onDestroy()
-16:02:39 | DEBUG | GroundExplosion | onDestroy()
-16:02:39 | DEBUG | GroundExplosion | onDestroy()
-16:02:39 | DEBUG | GroundExplosion | onDestroy()
-16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11856.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11520.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11712.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11768.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11376.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:03:13 | DEBUG | GroundExplosion | onDestroy()
-16:03:13 | DEBUG | GroundExplosion | onDestroy()
-16:03:13 | DEBUG | GroundExplosion | onDestroy()
-16:03:13 | DEBUG | GroundExplosion | onDestroy()
-16:03:13 | DEBUG | GroundExplosion | onDestroy()
-16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11520.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11856.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11464.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11768.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:05:26 | DEBUG | GroundExplosion | onDestroy()
-16:05:26 | DEBUG | GroundExplosion | onDestroy()
-16:05:26 | DEBUG | GroundExplosion | onDestroy()
-16:05:26 | DEBUG | GroundExplosion | onDestroy()
-16:05:26 | DEBUG | GroundExplosion | onDestroy()
-16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11376.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11656.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:20 | DEBUG | GroundExplosion | onDestroy()
-16:06:21 | DEBUG | GroundExplosion | onDestroy()
-16:06:21 | DEBUG | GroundExplosion | onDestroy()
-16:06:21 | DEBUG | GroundExplosion | onDestroy()
-16:06:21 | DEBUG | GroundExplosion | onDestroy()
-16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11416.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11656.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11712.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:36 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:06:36 | DEBUG | GroundExplosion | onDestroy()
-16:06:36 | DEBUG | GroundExplosion | onDestroy()
-16:06:36 | DEBUG | GroundExplosion | onDestroy()
-16:06:36 | DEBUG | GroundExplosion | onDestroy()
-16:06:36 | DEBUG | GroundExplosion | onDestroy()
-16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11768.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11520.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11856.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11464.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:16 | DEBUG | GroundExplosion | onDestroy()
-16:07:17 | DEBUG | GroundExplosion | onDestroy()
-16:07:17 | DEBUG | GroundExplosion | onDestroy()
-16:07:17 | DEBUG | GroundExplosion | onDestroy()
-16:07:17 | DEBUG | GroundExplosion | onDestroy()
-16:07:34 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11520.0,3872.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:34 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:34 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11376.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11856.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11656.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
-})
-16:07:35 | DEBUG | GroundExplosion | onDestroy()
-16:07:35 | DEBUG | GroundExplosion | onDestroy()
-16:07:35 | DEBUG | GroundExplosion | onDestroy()
-16:07:35 | DEBUG | GroundExplosion | onDestroy()
-16:07:35 | DEBUG | GroundExplosion | onDestroy()
+18:44:57 | DEBUG | WilyFinalBoss | Phase1Handler: init()
+18:44:57 | DEBUG | WilyFinalBoss | PhaseTransitionHandler: reset()
+18:44:59 | DEBUG | WilyFinalBoss | update(): phase 1 - swoop: go to next state
+18:44:59 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_IN, previous=SWOOP
+18:45:01 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=HOVER, previous=FLY_IN
+18:45:01 | DEBUG | WilyFinalBoss | onChangeState(): end init sequence
+18:45:01 | DEBUG | AbstractBoss | onReady()
+18:45:01 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
+	[boss={ WilyFinalBoss:[id=641, dead=false, hashCode=113847420] }]
+	[health_fill_type=BIT_BY_BIT]
+}))
+18:45:03 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+18:45:03 | DEBUG | AbstractBoss | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+18:45:03 | DEBUG | WilyFinalBoss | onEndBossSpawnEvent()
+18:45:03 | DEBUG | AbstractBoss | onEndBossSpawnEvent()
+18:45:04 | DEBUG | WilyFinalBoss | Phase1Handler: onChangeState(): current=FLY_BY, previous=HOVER
+18:45:04 | DEBUG | WilyFinalBoss | Phase1Handler: beginFlyByFromHover(): col=0, row=1, movingRight=true
+18:45:05 | DEBUG | WilyFinalBoss | Phase1Handler: updateFlyBy(): fly-by complete, flyByCount=1
+18:45:05 | DEBUG | WilyFinalBoss | Phase1Handler: beginNextFlyBy(): flyByCount=1, col=1, row=0, movingRight=false
+18:45:05 | DEBUG | WilyFinalBoss | triggerDefeat(): currentPhase=PHASE_1
+18:45:05 | DEBUG | WilyFinalBoss | PhaseTransitionHandler: start()
+18:45:08 | DEBUG | WilyFinalBoss | PhaseTransitionHandler: EXPLODING -> FLY_UP
+18:45:09 | DEBUG | WilyFinalBoss | PhaseTransitionHandler: FLY_UP -> PAUSE
+18:45:11 | DEBUG | WilyFinalBoss | PhaseTransitionHandler: PAUSE -> DROP_DOWN
+18:45:12 | DEBUG | WilyFinalBoss | PhaseTransitionHandler: DROP_DOWN complete, starting next phase
+18:45:12 | DEBUG | WilyFinalBoss | PhaseTransitionHandler: finishTransition()
+18:45:12 | DEBUG | WilyFinalBoss | goToNextPhase(): oldPhase=PHASE_1, currentPhase=PHASE_2
+18:45:12 | DEBUG | AbstractBoss | onReady()
+18:45:12 | LOG | MegaLevelScreen | event(): event=Event(key=BOSS_READY, properties=Properties({
+	[boss={ WilyFinalBoss:[id=641, dead=false, hashCode=113847420] }]
+	[health_fill_type=BIT_BY_BIT]
+}))
+18:45:15 | LOG | MegaLevelScreen | event(): event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+18:45:15 | DEBUG | AbstractBoss | onEvent: event=Event(key=END_BOSS_SPAWN, properties=Properties({
+}))
+18:45:15 | DEBUG | WilyFinalBoss | onEndBossSpawnEvent()
+18:45:15 | DEBUG | AbstractBoss | onEndBossSpawnEvent()
+18:45:19 | DEBUG | WilyFinalBoss | onDestroy()
+18:45:19 | DEBUG | AbstractBoss | onDestroy()
+18:45:19 | DEBUG | WilyFinalBoss | Phase1Handler: reset()
+18:45:19 | DEBUG | MegaLevelScreen | dispose(): Disposing level screen

@@ -50,7 +50,8 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
             (ConstVals.VIEW_WIDTH - (ConstVals.HEALTH_BAR_X + ConstVals.STAT_BIT_WIDTH)) * ConstVals.PPM,
             ConstVals.STATS_BAR_Y * ConstVals.PPM,
             { health },
-            { entity.getMaxHealth() })
+            { entity.getMaxHealth() }
+        )
         bar!!.init()
 
         when (type) {
@@ -70,7 +71,6 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
 
                 this.timer = timer
             }
-
             HealthFillType.ALL_AT_ONCE -> {
                 runOnFirstUpdate?.invoke()
                 runOnFinished?.invoke()

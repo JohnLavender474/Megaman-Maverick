@@ -101,7 +101,11 @@ class MegaAudioManager(
 
             if (fadeOutMusicTimer!!.isFinished()) {
                 fadeOutMusicTimer = null
+
                 stopMusic()
+
+                currentMusic = null
+                currentMusicAss = null
             }
         }
     }

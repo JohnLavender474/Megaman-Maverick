@@ -80,6 +80,8 @@ import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -137,7 +139,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(GroundExplosion.TAG)
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(MegaLevelScreen.TAG, AbstractBoss.TAG, WilyFinalBoss.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.DEATH)
         }
