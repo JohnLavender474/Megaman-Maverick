@@ -49,15 +49,18 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IBossListener
+import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
@@ -81,6 +84,7 @@ import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
@@ -98,7 +102,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         private const val ROOM_DISTANCE_ON_TRANSITION = 2f
         private const val TRANSITION_SCANNER_SIZE = 5f
         private const val FADE_OUT_MUSIC_DUR = 1f
-        private const val DISPLAY_ROOMS_DEBUG_TEXT = false
         private const val CHECKPOINT_TIMER = 2f
         private const val CHECKPOINT_ALPHA_DELAY = 1.5f
     }
@@ -348,6 +351,18 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     eventsMan.submitEvent(Event(roomEvent, props))
                 }
                 else -> eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+            }
+
+            if (currentRoom?.properties?.containsKey("megaman_direction") == true) {
+                val direction = Direction.valueOf(
+                    currentRoom.properties.get("megaman_direction", String::class.java).uppercase()
+                )
+                megaman.direction = direction
+
+                val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
+                aura.spawn(props(ConstKeys.POSITION pairTo megaman.body.getCenter()))
+
+                audioMan.playSound(SoundAsset.LIFT_OFF_SOUND, false)
             }
 
             game.getSystem(BehaviorsSystem::class).on = true
