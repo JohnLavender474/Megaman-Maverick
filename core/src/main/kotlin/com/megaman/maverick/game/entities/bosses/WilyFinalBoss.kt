@@ -745,8 +745,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val GROUND_WARNING_SIGN_START_INDEX = 1
         const val GROUND_WARNING_SIGN_END_INDEX = 11
-        const val GROUND_WARNING_SIGNS_TO_BLOW = 5
-        const val GROUND_WARNING_SIGNS_TO_BLOW_HARD = 6
+        const val GROUND_WARNING_SIGNS_TO_BLOW = 4
+        const val GROUND_WARNING_SIGNS_TO_BLOW_HARD = 5
         val WARNING_SIGN_KEYS = Array<String>()
             .also { keys ->
                 Position.getDiagonalPositions().forEach {
