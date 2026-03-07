@@ -723,20 +723,20 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             Vector2(1f, -1f)
         )
         val BULLET_TRAJECTORIES_1_HARD = gdxArrayOf(
-            Vector2(-1f, -1f),
             Vector2(-0.75f, -1f),
-            Vector2(-0.1f, -1f),
-            Vector2(0.1f, -1f),
-            Vector2(0.75f, -1f),
-            Vector2(1f, -1f)
+            Vector2(-0.5f, -1f),
+            Vector2(-0.05f, -1f),
+            Vector2(0.05f, -1f),
+            Vector2(0.5f, -1f),
+            Vector2(0.75f, -1f)
         )
         val BULLET_TRAJECTORIES_2_HARD = gdxArrayOf(
-            Vector2(-0.8f, -1f),
-            Vector2(-0.2f, -1f),
-            Vector2(-0.1f, -1f),
-            Vector2(0.1f, -1f),
-            Vector2(0.2f, -1f),
-            Vector2(0.8f, -1f)
+            Vector2(-1f, -1f),
+            Vector2(-0.75f, -1f),
+            Vector2(-0.5f, -1f),
+            Vector2(0.5f, -1f),
+            Vector2(0.75f, -1f),
+            Vector2(1f, -1f)
         )
 
         val MISSILE_ANGLES = gdxArrayOf(225f, 180f, 180f, 135f)
