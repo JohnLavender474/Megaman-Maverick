@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -56,12 +57,14 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     companion object {
         const val TAG = "HomingMissile"
 
-        private const val SPEED = 8f
+        private const val SPEED = 6f
+        private const val SPEED_HARD = 8f
 
         private const val DAMAGE_DURATION = 0.1f
 
         private const val RECALC_DELAY = 0.25f
-        private const val TIME_BEFORE_FIRST_RECALC = 0.5f
+        private const val TIME_BEFORE_FIRST_RECALC = 1f
+        private const val TIME_BEFORE_FIRST_RECALC_HARD = 0.5f
 
         private const val TTL = 3f
         private const val FLASH_START = 2f
@@ -78,7 +81,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
-    private val recalcDelay = Timer(TIME_BEFORE_FIRST_RECALC)
+    private val recalcDelay = Timer()
     private val recalcTimer = Timer(RECALC_DELAY)
 
     private val damageTimer = Timer(DAMAGE_DURATION)
@@ -116,7 +119,10 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         currentAngle = spawnProps.getOrDefault(ConstKeys.ANGLE, 0, Int::class)
         setVelocityFromAngle(currentAngle)
 
-        recalcDelay.reset()
+        recalcDelay.resetDuration(
+            if (game.state.hardMode) TIME_BEFORE_FIRST_RECALC_HARD
+            else TIME_BEFORE_FIRST_RECALC
+        )
         recalcTimer.reset()
 
         damageTimer.setToEnd()
@@ -177,7 +183,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         // Convert game angle (0=up, clockwise) to math angle (0=right, CCW)
         val mathAngle = 90 - gameAngle
         val velocity = GameObjectPools.fetch(Vector2::class)
-            .set(0f, SPEED * ConstVals.PPM)
+            .set(0f, (if (game.state.hardMode) SPEED_HARD else SPEED) * ConstVals.PPM)
             .setAngleDeg(mathAngle.toFloat())
         body.physics.velocity.set(velocity)
     }

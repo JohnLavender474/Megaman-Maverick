@@ -51,9 +51,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_BY_SPEED
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
-import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SPEED
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
@@ -65,6 +63,7 @@ import com.megaman.maverick.game.entities.explosions.GroundExplosion
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -667,11 +666,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val LAZOR_CHANCE_INCR = 0.25f
         const val MISSILES_CHANCE_INCR = 0.25f
 
-        const val FLY_IN_SPEED = 20f
+        const val FLY_IN_SPEED = 16f
+        const val FLY_IN_SPEED_HARD = 20f
         const val FLY_IN_SLOW_DOWN_DISTANCE = 1.5f
 
         const val MAX_FLY_BYS = 3
-        const val FLY_BY_SPEED = 20f
+        const val FLY_BY_SPEED = 16f
+        const val FLY_BY_SPEED_HARD = 20f
         const val FLY_BY_CHANCE = 0.5f
         const val FLY_BY_AFTER_SWOOP_REPEAT_CHANCE = 0.15f
         const val OFF_SCREEN_BUFFER = 4f
@@ -680,10 +681,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val SWOOP_ENTRY_DELAY = 0.5f
         const val SWOOP_STATE_DUR = 0.75f
-        const val HOVER_STATE_DUR = 0.75f
+        const val HOVER_STATE_DUR = 1.0f
+        const val HOVER_STATE_DUR_HARD = 0.75f
         const val FLY_BY_STATE_DUR = 0.5f
         const val FLY_OUT_STATE_DUR = 0.1f
-        const val SHOOT_MISSILES_STATE_DUR = 2f
+        const val SHOOT_MISSILES_STATE_DUR = 2.5f
+        const val SHOOT_MISSILES_STATE_DUR_HARD = 2f
+
+        const val FLY_IN_STATE_DELAY = 1.0f
+        const val FLY_IN_STATE_DELAY_HARD = 0.75f
+        const val FLY_BY_FROM_OUT_SWOOP_STATE_DELAY = 1.25f
+        const val FLY_BY_FROM_OUT_SWOOP_STATE_DELAY_HARD = 1f
+        const val SHOOT_MISSILES_STATE_DELAY = 0.4f
+        const val SHOOT_MISSILES_STATE_DELAY_HARD = 0.25f
 
         const val LAZOR_MAX_PASSES = 3
         const val LAZOR_CENTER_EPSILON = 0.15f
@@ -696,10 +706,23 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val LAZOR_WARM_UP_START = 0.25f
         const val LAZOR_WARM_UP_RATE = 0.5f
 
-        const val SHOOT_BULLETS_DELAY = 0.75f
+        const val SHOOT_BULLETS_DELAY = 1.25f
+        const val SHOOT_BULLETS_DELAY_HARD = 0.75f
         const val SHOOT_BULLETS_DUR = 0.5f
         const val BULLET_SPEED = 10f
         val BULLET_TRAJECTORIES_1 = gdxArrayOf(
+            Vector2(-1f, -1f),
+            Vector2(-0.75f, -1f),
+            Vector2(0.75f, -1f),
+            Vector2(1f, -1f)
+        )
+        val BULLET_TRAJECTORIES_2 = gdxArrayOf(
+            Vector2(-1f, -1f),
+            Vector2(-0.1f, -1f),
+            Vector2(0.1f, -1f),
+            Vector2(1f, -1f)
+        )
+        val BULLET_TRAJECTORIES_1_HARD = gdxArrayOf(
             Vector2(-1f, -1f),
             Vector2(-0.75f, -1f),
             Vector2(-0.1f, -1f),
@@ -707,7 +730,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             Vector2(0.75f, -1f),
             Vector2(1f, -1f)
         )
-        val BULLET_TRAJECTORIES_2 = gdxArrayOf(
+        val BULLET_TRAJECTORIES_2_HARD = gdxArrayOf(
             Vector2(-0.8f, -1f),
             Vector2(-0.2f, -1f),
             Vector2(-0.1f, -1f),
@@ -722,7 +745,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val GROUND_WARNING_SIGN_START_INDEX = 1
         const val GROUND_WARNING_SIGN_END_INDEX = 11
-        const val GROUND_WARNING_SIGNS_TO_BLOW = 6
+        const val GROUND_WARNING_SIGNS_TO_BLOW = 5
+        const val GROUND_WARNING_SIGNS_TO_BLOW_HARD = 6
         val WARNING_SIGN_KEYS = Array<String>()
             .also { keys ->
                 Position.getDiagonalPositions().forEach {
@@ -790,7 +814,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         val lazorStartPauseTimer = Timer(Phase1ConstVals.LAZOR_START_PAUSE_TIME)
         val lazorEndPauseTimer = Timer(Phase1ConstVals.LAZOR_END_PAUSE_TIME)
 
-        val shootBulletsDelay = Timer(Phase1ConstVals.SHOOT_BULLETS_DELAY)
+        val shootBulletsDelay = Timer()
         val shootBulletsTimer = Timer(Phase1ConstVals.SHOOT_BULLETS_DUR)
             .setToEnd()
             .addRunnable(TimeMarkedRunnable(0.15f) { shootBullets() })
@@ -867,11 +891,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             .build()
 
         private fun getStateDelay(current: WilyPhase1State, previous: WilyPhase1State): Float {
+            val hardMode = game.state.hardMode
+
             if (current == WilyPhase1State.FLY_IN)
-                return 0.75f
+                return if (hardMode) Phase1ConstVals.FLY_IN_STATE_DELAY_HARD else Phase1ConstVals.FLY_IN_STATE_DELAY
 
             if (current == WilyPhase1State.FLY_BY) return when {
-                previous.equalsAny(WilyPhase1State.FLY_OUT, WilyPhase1State.SWOOP) -> 1f
+                previous.equalsAny(WilyPhase1State.FLY_OUT, WilyPhase1State.SWOOP) ->
+                    if (hardMode) Phase1ConstVals.FLY_BY_FROM_OUT_SWOOP_STATE_DELAY_HARD
+                    else Phase1ConstVals.FLY_BY_FROM_OUT_SWOOP_STATE_DELAY
                 previous.equalsAny(WilyPhase1State.HOVER, WilyPhase1State.SHOOT_MISSILES) -> 0.1f
                 else -> 0.25f
             }
@@ -879,7 +907,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             if (current == WilyPhase1State.SWOOP && initSequence) return 0.25f
 
             if (current == WilyPhase1State.SHOOT_MISSILES)
-                return 0.25f
+                return if (hardMode) Phase1ConstVals.SHOOT_MISSILES_STATE_DELAY_HARD
+                else Phase1ConstVals.SHOOT_MISSILES_STATE_DELAY
 
             if (current == WilyPhase1State.SWOOP)
                 return 0.1f
@@ -903,9 +932,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     swoopChance = Phase1ConstVals.INIT_SWOOP_CHANCE
 
                     swoopExplosionIndices.clear()
+                    val signsToBlow = if (game.state.hardMode) Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW_HARD
+                    else Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW
                     (Phase1ConstVals.GROUND_WARNING_SIGN_START_INDEX..Phase1ConstVals.GROUND_WARNING_SIGN_END_INDEX)
                         .shuffled()
-                        .take(Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW)
+                        .take(signsToBlow)
                         .forEach { swoopExplosionIndices.add(it) }
 
                     val position = flyInTargetPositions[0, 1]!!
@@ -945,6 +976,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     body.setCenter(flyInStartPositions[currentFlyInCol, currentFlyInRow]!!)
                 }
                 WilyPhase1State.HOVER -> {
+                    stateTimers[WilyPhase1State.HOVER]!!.resetDuration(
+                        if (game.state.hardMode) Phase1ConstVals.HOVER_STATE_DUR_HARD else Phase1ConstVals.HOVER_STATE_DUR
+                    )
                     if (initSequence) {
                         GameLogger.debug(TAG, "onChangeState(): end init sequence")
                         initSequence = false
@@ -962,6 +996,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     missilesChance = min(1f, missilesChance + Phase1ConstVals.MISSILES_CHANCE_INCR)
                 }
                 WilyPhase1State.SHOOT_MISSILES -> {
+                    stateTimers[WilyPhase1State.SHOOT_MISSILES]!!.resetDuration(
+                        if (game.state.hardMode) Phase1ConstVals.SHOOT_MISSILES_STATE_DUR_HARD
+                        else Phase1ConstVals.SHOOT_MISSILES_STATE_DUR
+                    )
                     missilesChance = Phase1ConstVals.INIT_MISSILES_CHANCE
                     lazorChance = min(1f, lazorChance + Phase1ConstVals.LAZOR_CHANCE_INCR)
                 }
@@ -1090,12 +1128,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             flyInDecelerating = distance <= slowDownThreshold
 
+            val flyInSpeed =
+                if (game.state.hardMode) Phase1ConstVals.FLY_IN_SPEED_HARD else Phase1ConstVals.FLY_IN_SPEED
             val speed = when {
                 flyInDecelerating -> minOf(
-                    FLY_IN_SPEED * ConstVals.PPM * (distance / slowDownThreshold),
+                    flyInSpeed * ConstVals.PPM * (distance / slowDownThreshold),
                     distance / delta
                 )
-                else -> FLY_IN_SPEED * ConstVals.PPM
+                else -> flyInSpeed * ConstVals.PPM
             }
             body.physics.velocity.set(toTarget.nor().scl(speed))
 
@@ -1110,8 +1150,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             flyByMovingRight = currentFlyByStartCol == 0
 
-            body.physics.velocity.x =
-                if (flyByMovingRight) FLY_BY_SPEED * ConstVals.PPM else -FLY_BY_SPEED * ConstVals.PPM
+            val flyBySpeed =
+                if (game.state.hardMode) Phase1ConstVals.FLY_BY_SPEED_HARD else Phase1ConstVals.FLY_BY_SPEED
+            body.physics.velocity.x = if (flyByMovingRight) flyBySpeed * ConstVals.PPM else -flyBySpeed * ConstVals.PPM
             body.physics.velocity.y = 0f
 
             GameLogger.debug(
@@ -1127,8 +1168,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             flyByMovingRight = currentFlyByStartCol == 0
 
             body.setCenter(flyInStartPositions[currentFlyByStartCol, currentFlyByStartRow]!!)
-            body.physics.velocity.x =
-                if (flyByMovingRight) FLY_BY_SPEED * ConstVals.PPM else -FLY_BY_SPEED * ConstVals.PPM
+            val flyBySpeed =
+                if (game.state.hardMode) Phase1ConstVals.FLY_BY_SPEED_HARD else Phase1ConstVals.FLY_BY_SPEED
+            body.physics.velocity.x = if (flyByMovingRight) flyBySpeed * ConstVals.PPM else -flyBySpeed * ConstVals.PPM
             body.physics.velocity.y = 0f
 
             GameLogger.debug(
@@ -1146,8 +1188,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 return timer.isFinished()
             }
 
-            body.physics.velocity.x =
-                if (flyByMovingRight) FLY_BY_SPEED * ConstVals.PPM else -FLY_BY_SPEED * ConstVals.PPM
+            val flyBySpeed =
+                if (game.state.hardMode) Phase1ConstVals.FLY_BY_SPEED_HARD else Phase1ConstVals.FLY_BY_SPEED
+            body.physics.velocity.x = if (flyByMovingRight) flyBySpeed * ConstVals.PPM else -flyBySpeed * ConstVals.PPM
             body.physics.velocity.y = 0f
 
             val camBounds = game.getGameCamera().getRotatedBounds()
@@ -1197,7 +1240,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             lazorStartPauseTimer.reset()
             lazorEndPauseTimer.reset()
 
-            shootBulletsDelay.reset()
+            shootBulletsDelay.resetDuration(
+                if (game.state.hardMode) Phase1ConstVals.SHOOT_BULLETS_DELAY_HARD
+                else Phase1ConstVals.SHOOT_BULLETS_DELAY
+            )
             shootBulletsTimer.setToEnd()
 
             bulletTraj1 = true
@@ -1277,8 +1323,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             val center = body.getCenter().sub(0f, 1.75f * ConstVals.PPM)
 
-            val trajectories =
-                if (bulletTraj1) Phase1ConstVals.BULLET_TRAJECTORIES_1 else Phase1ConstVals.BULLET_TRAJECTORIES_2
+            val trajectories = when {
+                game.state.hardMode -> when {
+                    bulletTraj1 -> Phase1ConstVals.BULLET_TRAJECTORIES_1_HARD
+                    else -> Phase1ConstVals.BULLET_TRAJECTORIES_2_HARD
+                }
+                bulletTraj1 -> Phase1ConstVals.BULLET_TRAJECTORIES_1
+                else -> Phase1ConstVals.BULLET_TRAJECTORIES_2
+            }
 
             trajectories.forEach {
                 val trajectory = GameObjectPools.fetch(Vector2::class)
