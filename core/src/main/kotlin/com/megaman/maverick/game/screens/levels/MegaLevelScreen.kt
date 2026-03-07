@@ -357,12 +357,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val direction = Direction.valueOf(
                     currentRoom.properties.get("megaman_direction", String::class.java).uppercase()
                 )
-                megaman.direction = direction
+                if (direction != megaman.direction) {
+                    megaman.direction = direction
 
-                val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
-                aura.spawn(props(ConstKeys.POSITION pairTo megaman.body.getCenter()))
+                    val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
+                    aura.spawn(props(ConstKeys.POSITION pairTo megaman.body.getCenter()))
 
-                audioMan.playSound(SoundAsset.LIFT_OFF_SOUND, false)
+                    audioMan.playSound(SoundAsset.LIFT_OFF_SOUND, false)
+                }
             }
 
             game.getSystem(BehaviorsSystem::class).on = true
@@ -712,9 +714,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                             )
                         )
                     )
-
                     megaman.canBeDamaged = false
-
                     audioMan.unsetMusic()
                 }
 

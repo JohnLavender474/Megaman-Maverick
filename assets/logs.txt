@@ -1,106 +1,281 @@
-===== SESSION STARTED: 2026-03-07T10:00:17.711320504 =====
-10:01:43 | DEBUG | GroundExplosion | init()
-10:01:43 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11464.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:01:44 | DEBUG | GroundExplosion | init()
-10:01:44 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11768.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:01:44 | DEBUG | GroundExplosion | init()
-10:01:44 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:01:44 | DEBUG | GroundExplosion | init()
-10:01:44 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+===== SESSION STARTED: 2026-03-07T15:58:57.251051066 =====
+15:59:47 | DEBUG | GroundExplosion | init()
+15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
 	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:01:44 | DEBUG | GroundExplosion | init()
-10:01:44 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+15:59:47 | DEBUG | GroundExplosion | init()
+15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:01:44 | DEBUG | GroundExplosion | onDestroy()
-10:01:44 | DEBUG | GroundExplosion | onDestroy()
-10:01:44 | DEBUG | GroundExplosion | onDestroy()
-10:01:44 | DEBUG | GroundExplosion | onDestroy()
-10:01:44 | DEBUG | GroundExplosion | onDestroy()
-10:02:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11464.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:02:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11416.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:02:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11856.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:02:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:02:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+15:59:47 | DEBUG | GroundExplosion | init()
+15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
 	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:02:13 | DEBUG | GroundExplosion | onDestroy()
-10:02:13 | DEBUG | GroundExplosion | onDestroy()
-10:02:13 | DEBUG | GroundExplosion | onDestroy()
-10:02:14 | DEBUG | GroundExplosion | onDestroy()
-10:02:14 | DEBUG | GroundExplosion | onDestroy()
-10:02:41 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11768.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+15:59:47 | DEBUG | GroundExplosion | init()
+15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11416.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:02:41 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+15:59:47 | DEBUG | GroundExplosion | init()
+15:59:47 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
 	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:02:41 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+15:59:47 | DEBUG | GroundExplosion | onDestroy()
+15:59:47 | DEBUG | GroundExplosion | onDestroy()
+15:59:47 | DEBUG | GroundExplosion | onDestroy()
+15:59:47 | DEBUG | GroundExplosion | onDestroy()
+15:59:47 | DEBUG | GroundExplosion | onDestroy()
+16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11464.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11616.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11712.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11416.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:00:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11376.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:00:38 | DEBUG | GroundExplosion | onDestroy()
+16:00:38 | DEBUG | GroundExplosion | onDestroy()
+16:00:38 | DEBUG | GroundExplosion | onDestroy()
+16:00:39 | DEBUG | GroundExplosion | onDestroy()
+16:00:39 | DEBUG | GroundExplosion | onDestroy()
+16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11816.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11416.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11712.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:01:05 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
 	[position=(11656.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:02:41 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+16:01:06 | DEBUG | GroundExplosion | onDestroy()
+16:01:06 | DEBUG | GroundExplosion | onDestroy()
+16:01:06 | DEBUG | GroundExplosion | onDestroy()
+16:01:06 | DEBUG | GroundExplosion | onDestroy()
+16:01:06 | DEBUG | GroundExplosion | onDestroy()
+16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11712.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
 	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:02:41 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11856.0,3904.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:02:41 | DEBUG | GroundExplosion | onDestroy()
-10:02:41 | DEBUG | GroundExplosion | onDestroy()
-10:02:41 | DEBUG | GroundExplosion | onDestroy()
-10:02:41 | DEBUG | GroundExplosion | onDestroy()
-10:02:41 | DEBUG | GroundExplosion | onDestroy()
-10:03:15 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11464.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:03:15 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11416.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:03:15 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
-	[position=(11816.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
-})
-10:03:15 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
 	[position=(11576.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:03:15 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11376.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:11 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11768.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:11 | DEBUG | GroundExplosion | onDestroy()
+16:02:11 | DEBUG | GroundExplosion | onDestroy()
+16:02:11 | DEBUG | GroundExplosion | onDestroy()
+16:02:11 | DEBUG | GroundExplosion | onDestroy()
+16:02:11 | DEBUG | GroundExplosion | onDestroy()
+16:02:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11656.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:38 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11768.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:39 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11576.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:39 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11816.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:02:39 | DEBUG | GroundExplosion | onDestroy()
+16:02:39 | DEBUG | GroundExplosion | onDestroy()
+16:02:39 | DEBUG | GroundExplosion | onDestroy()
+16:02:39 | DEBUG | GroundExplosion | onDestroy()
+16:02:39 | DEBUG | GroundExplosion | onDestroy()
+16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11856.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11712.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11768.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:03:13 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11376.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:03:13 | DEBUG | GroundExplosion | onDestroy()
+16:03:13 | DEBUG | GroundExplosion | onDestroy()
+16:03:13 | DEBUG | GroundExplosion | onDestroy()
+16:03:13 | DEBUG | GroundExplosion | onDestroy()
+16:03:13 | DEBUG | GroundExplosion | onDestroy()
+16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11856.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
 	[position=(11616.0,3840.0)]
-	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=1369158446] }]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
 })
-10:03:16 | DEBUG | GroundExplosion | onDestroy()
-10:03:16 | DEBUG | GroundExplosion | onDestroy()
-10:03:16 | DEBUG | GroundExplosion | onDestroy()
-10:03:16 | DEBUG | GroundExplosion | onDestroy()
-10:03:16 | DEBUG | GroundExplosion | onDestroy()
+16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11464.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:05:26 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11768.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:05:26 | DEBUG | GroundExplosion | onDestroy()
+16:05:26 | DEBUG | GroundExplosion | onDestroy()
+16:05:26 | DEBUG | GroundExplosion | onDestroy()
+16:05:26 | DEBUG | GroundExplosion | onDestroy()
+16:05:26 | DEBUG | GroundExplosion | onDestroy()
+16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11816.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11616.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11376.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11656.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:20 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11576.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:20 | DEBUG | GroundExplosion | onDestroy()
+16:06:21 | DEBUG | GroundExplosion | onDestroy()
+16:06:21 | DEBUG | GroundExplosion | onDestroy()
+16:06:21 | DEBUG | GroundExplosion | onDestroy()
+16:06:21 | DEBUG | GroundExplosion | onDestroy()
+16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11416.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11656.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11616.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11712.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:36 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11816.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:06:36 | DEBUG | GroundExplosion | onDestroy()
+16:06:36 | DEBUG | GroundExplosion | onDestroy()
+16:06:36 | DEBUG | GroundExplosion | onDestroy()
+16:06:36 | DEBUG | GroundExplosion | onDestroy()
+16:06:36 | DEBUG | GroundExplosion | onDestroy()
+16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11768.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11856.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11576.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:16 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11464.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:16 | DEBUG | GroundExplosion | onDestroy()
+16:07:17 | DEBUG | GroundExplosion | onDestroy()
+16:07:17 | DEBUG | GroundExplosion | onDestroy()
+16:07:17 | DEBUG | GroundExplosion | onDestroy()
+16:07:17 | DEBUG | GroundExplosion | onDestroy()
+16:07:34 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11520.0,3872.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:34 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11576.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:34 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11376.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11856.0,3904.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:35 | DEBUG | GroundExplosion | onSpawn(): spawnProps=Properties({
+	[position=(11656.0,3840.0)]
+	[owner={ WilyFinalBoss:[id=641, dead=false, hashCode=696342006] }]
+})
+16:07:35 | DEBUG | GroundExplosion | onDestroy()
+16:07:35 | DEBUG | GroundExplosion | onDestroy()
+16:07:35 | DEBUG | GroundExplosion | onDestroy()
+16:07:35 | DEBUG | GroundExplosion | onDestroy()
+16:07:35 | DEBUG | GroundExplosion | onDestroy()

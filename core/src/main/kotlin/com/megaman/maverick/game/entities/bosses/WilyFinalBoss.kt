@@ -127,10 +127,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private val stateMachines = OrderedMap<WilyFinalBossPhase, StateMachine<*>>()
 
     private val phase1Handler = Phase1Handler()
-
     private var initSequence = false
-
     val delayBetweenStates = Timer()
+
+    private val room = GameRectangle()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -158,6 +158,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
+        val room = spawnProps.get(ConstKeys.ROOM, RectangleMapObject::class)!!.rectangle
+        this.room.set(room)
 
         val colRowOrder = gdxArrayOf(0 to 1, 1 to 1, 1 to 0, 0 to 0)
         for (i in 1..4) {
@@ -196,19 +199,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         phase1Handler.reset()
     }
 
-    override fun onHealthDepleted() {
-        if (currentPhase == WilyFinalBossPhase.PHASE_3) {
-            GameLogger.debug(TAG, "onHealthDepleted(): reached final phase, dying")
-            super.onHealthDepleted()
-        } else {
-            GameLogger.debug(TAG, "onHealthDepleted(): going to next phase")
-            goToNextPhase()
-        }
-    }
-
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (!super.canBeDamagedBy(damager)) return false
         return damager !is Explosion
+    }
+
+    override fun triggerDefeat() {
+        GameLogger.debug(TAG, "triggerDefeat(): currentPhase=$currentPhase")
+        if (currentPhase == WilyFinalBossPhase.PHASE_3) super.onHealthDepleted() else startNextPhase()
     }
 
     override fun onDefeated(delta: Float) {
@@ -651,7 +649,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .animator(Animator(Animation(regions[WILY_DEATH_PLANE_LAZOR_RESIDUAL], 2, 1, 0.1f, true)))
         .build()
 
-    private fun goToNextPhase() {
+    private fun startNextPhase() {
         val oldPhase = currentPhase
         currentPhase = WilyFinalBossPhase.entries[currentPhase.ordinal + 1]
         GameLogger.debug(TAG, "goToNextPhase(): oldPhase=$oldPhase, currentPhase=$currentPhase")
