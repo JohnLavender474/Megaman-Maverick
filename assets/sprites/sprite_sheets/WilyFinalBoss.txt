@@ -1,26 +1,82 @@
 WilyFinalBoss-0.png
 size: 768, 3584
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Nearest,Nearest
 repeat: none
-pma: false
 phase_1/fly_by
-  bounds: 0, 0, 256, 256
+  rotate: false
+  xy: 0, 0
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 phase_1/fly_out
-  bounds: 256, 256, 256, 512
+  rotate: false
+  xy: 512, 256
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1
 phase_1/hover
-  bounds: 256, 0, 256, 256
+  rotate: false
+  xy: 256, 0
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 phase_1/lazors
-  bounds: 0, 768, 256, 768
+  rotate: false
+  xy: 256, 768
+  size: 256, 768
+  orig: 256, 768
+  offset: 0, 0
+  index: -1
 phase_1/open_hatch
-  bounds: 512, 0, 256, 256
+  rotate: false
+  xy: 512, 0
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 phase_1/open_mouth
-  bounds: 0, 2304, 256, 1280
+  rotate: false
+  xy: 0, 2304
+  size: 256, 1280
+  orig: 256, 1280
+  offset: 0, 0
+  index: -1
 phase_1/shoot_missiles
-  bounds: 0, 1536, 768, 768
+  rotate: false
+  xy: 0, 1536
+  size: 768, 768
+  orig: 768, 768
+  offset: 0, 0
+  index: -1
 phase_1/swoop
-  bounds: 256, 2304, 512, 1280
+  rotate: false
+  xy: 256, 2304
+  size: 512, 1280
+  orig: 512, 1280
+  offset: 0, 0
+  index: -1
 phase_1/tilt
-  bounds: 0, 256, 256, 256
+  rotate: false
+  xy: 0, 256
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 phase_1/tilt_lazors
-  bounds: 512, 256, 256, 512
+  rotate: false
+  xy: 0, 768
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1
+WilySkullHead
+  rotate: false
+  xy: 256, 256
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1

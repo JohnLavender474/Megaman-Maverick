@@ -3262,6 +3262,7 @@ sprites/frames/Decorations1/UnderWaterBubble.png
 sprites/frames/Decorations1/BulletResidual.png
 sprites/frames/Decorations1/MockingByteNest.png
 sprites/frames/Decorations1/WhiteArrow.png
+sprites/frames/WilyFinalBoss/WilySkullHead.png
 sprites/frames/WilyFinalBoss/phase_1/tilt_lazors.png
 sprites/frames/WilyFinalBoss/phase_1/open_hatch.png
 sprites/frames/WilyFinalBoss/phase_1/lazors.png

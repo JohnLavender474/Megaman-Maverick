@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="702">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="703">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/mm9endless.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
@@ -2884,6 +2884,7 @@
   <object id="674" name="TopRightWarningSign" x="11776" y="3872" width="32" height="32"/>
   <object id="675" name="BottomRightWarningSign" x="11776" y="4064" width="32" height="32"/>
   <object id="676" name="BottomLeftWarningSign" x="11424" y="4064" width="32" height="32"/>
+  <object id="702" name="SkullHeadTarget" x="11600" y="4032" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="blocks">
   <object id="2" x="0" y="7296" width="864" height="256"/>
@@ -3857,6 +3858,7 @@
     <property name="lazor_left_bound" type="object" value="671"/>
     <property name="lazor_right_bound" type="object" value="672"/>
     <property name="room" type="object" value="636"/>
+    <property name="skull_head_target" type="object" value="702"/>
     <property name="swoop_explosion_bounds" type="object" value="682"/>
     <property name="top_left_warning_sign" type="object" value="673"/>
     <property name="top_right_warning_sign" type="object" value="674"/>

@@ -59,10 +59,10 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.S
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.mega.game.engine.events.Event
-import com.mega.game.engine.points.PointsComponent
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.entities.decorations.WarningSign
+import com.megaman.maverick.game.entities.decorations.WilySkullHead
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
@@ -130,7 +130,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private enum class WilyPhase2State { HOVER }
 
-    private enum class WilyPhaseTransState { EXPLODING, FLY_UP, PAUSE, DROP_DOWN }
+    private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN }
 
     private lateinit var currentPhase: WilyFinalBossPhase
     private val stateMachines = OrderedMap<WilyFinalBossPhase, StateMachine<*>>()
@@ -168,8 +168,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         super.onSpawn(spawnProps)
 
-        phase1Handler.init(spawnProps)
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         spawnCenter.set(spawn)
@@ -177,6 +175,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         val room = spawnProps.get(ConstKeys.ROOM, RectangleMapObject::class)!!.rectangle
         this.room.set(room)
 
+        phase1Handler.init(spawnProps)
         val colRowOrder = gdxArrayOf(0 to 1, 1 to 1, 1 to 0, 0 to 0)
         for (i in 1..4) {
             val (col, row) = colRowOrder[i - 1]
@@ -191,7 +190,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 .rectangle.getCenter(false)
             phase1Handler.flyInTargetPositions[col, row] = flyInTarget
         }
-
         phase1Handler.lazorLeftBound.set(
             spawnProps.get("lazor_left_bound", RectangleMapObject::class)!!.rectangle.getCenter()
         )
@@ -201,7 +199,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         currentPhase = WilyFinalBossPhase.PHASE_1
         stateMachines.values().forEach { it.reset() }
+
         phaseTransitionHandler.reset()
+        val skullHeadTarget = spawnProps
+            .get("skull_head_target", RectangleMapObject::class)!!
+            .rectangle.getCenter()
+        phaseTransitionHandler.skullHeadTarget.set(skullHeadTarget)
 
         initSequence = true
 
@@ -236,13 +239,29 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         GameLogger.debug(TAG, "triggerDefeat(): currentPhase=$currentPhase")
         when (currentPhase) {
             WilyFinalBossPhase.PHASE_3 -> super.triggerDefeat()
-            else ->phaseTransitionHandler.start()
+            else -> phaseTransitionHandler.start()
         }
     }
 
     override fun onDefeated(delta: Float) {
         GameLogger.debug(TAG, "onDefeated()")
         super.onDefeated(delta)
+    }
+
+    override fun spawnDefeatExplosion() {
+        val position = Position.entries.random()
+
+        val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+        explosion.spawn(
+            props(
+                ConstKeys.POSITION pairTo body.getCenter().add(
+                    (position.x - 1) * 2f * ConstVals.PPM, (position.y - 1) * 2f * ConstVals.PPM
+                ),
+                ConstKeys.DAMAGER pairTo false,
+            )
+        )
+
+        playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun isReady(delta: Float) = !initSequence
@@ -590,10 +609,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 sprite.priority.section = DrawingSection.PLAYGROUND
                 sprite.priority.value = 3
                 sprite.hidden = when (phaseTransitionHandler.state) {
-                    WilyPhaseTransState.EXPLODING -> false
-                    WilyPhaseTransState.FLY_UP -> body.getY() > room.getMaxY()
+                    WilyPhaseTransState.FLY_UP -> damageBlink || body.getY() > room.getMaxY()
                     WilyPhaseTransState.PAUSE -> true
-                    WilyPhaseTransState.DROP_DOWN -> false
+                    else -> damageBlink
                 }
                 return@preProcess
             } else when (currentPhase) {
@@ -1553,17 +1571,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private inner class PhaseTransitionHandler : Updatable, Resettable {
 
         var active = false
-        var state = WilyPhaseTransState.EXPLODING
+        var state = WilyPhaseTransState.INIT
 
         val explodeTimer = Timer(PhaseTransitionConstVals.EXPLODE_DUR)
         val pauseTimer = Timer(PhaseTransitionConstVals.PAUSE_DUR)
+
+        val skullHeadTarget = Vector2()
 
         fun start() {
             GameLogger.debug(TAG, "PhaseTransitionHandler: start()")
 
             active = true
             explodeTimer.reset()
-            state = WilyPhaseTransState.EXPLODING
+            state = WilyPhaseTransState.INIT
 
             phase1Handler.leftLazor?.on = false
             phase1Handler.rightLazor?.on = false
@@ -1583,8 +1603,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         override fun update(delta: Float) {
             when (state) {
-                WilyPhaseTransState.EXPLODING -> {
+                WilyPhaseTransState.INIT -> {
                     body.physics.velocity.setZero()
+
+                    // Reset the damage timer to activate the default sprite blink for when the entity is damaged
+                    if (damageTimer.isFinished()) damageTimer.reset()
+
                     explodeOnDefeat(delta)
                     explodeTimer.update(delta)
                     if (explodeTimer.isFinished()) {
@@ -1595,15 +1619,26 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyPhaseTransState.FLY_UP -> {
                     body.physics.velocity.set(0f, PhaseTransitionConstVals.FLY_UP_SPEED * ConstVals.PPM)
+
+                    // Reset the damage timer to activate the default sprite blink for when the entity is damaged
+                    if (damageTimer.isFinished()) damageTimer.reset()
+
+                    explodeOnDefeat(delta)
                     if (body.getY() - 5f * ConstVals.PPM > room.getMaxY()) {
                         GameLogger.debug(TAG, "PhaseTransitionHandler: FLY_UP -> PAUSE")
+
+                        body.setCenter(spawnCenter.x, room.getMaxY() + body.getHeight())
                         body.physics.velocity.setZero()
+
                         state = WilyPhaseTransState.PAUSE
                         pauseTimer.reset()
+                        spawnSkullHead()
                     }
                 }
 
                 WilyPhaseTransState.PAUSE -> {
+                    damageTimer.setToEnd()
+
                     pauseTimer.update(delta)
                     if (pauseTimer.isFinished()) {
                         GameLogger.debug(TAG, "PhaseTransitionHandler: PAUSE -> DROP_DOWN")
@@ -1624,6 +1659,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
         }
 
+        private fun spawnSkullHead() {
+            GameLogger.debug(TAG, "spawnSkullHead()")
+            val skullHead = MegaEntityFactory.fetch(WilySkullHead::class)!!
+            skullHead.spawn(
+                props(
+                    ConstKeys.TARGET pairTo skullHeadTarget,
+                    ConstKeys.POSITION pairTo body.getCenter(),
+                )
+            )
+        }
+
         private fun finishTransition() {
             GameLogger.debug(TAG, "PhaseTransitionHandler: finishTransition()")
             active = false
@@ -1640,7 +1686,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         override fun reset() {
             GameLogger.debug(TAG, "PhaseTransitionHandler: reset()")
-            state = WilyPhaseTransState.EXPLODING
+            state = WilyPhaseTransState.INIT
             active = false
             explodeTimer.reset()
             pauseTimer.reset()

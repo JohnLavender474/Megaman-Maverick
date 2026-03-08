@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.9.0</string>
+        <string>7.6.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -173,6 +173,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../frames/WilyFinalBoss/WilySkullHead.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/fly_by.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/hover.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/open_hatch.png</key>
@@ -301,12 +302,6 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties">
-            <key>libgdx::legacy-output</key>
-            <struct type="ExporterProperty">
-                <key>value</key>
-                <string>false</string>
-            </struct>
-        </map>
+        <map type="ExporterProperties"/>
     </struct>
 </data>
