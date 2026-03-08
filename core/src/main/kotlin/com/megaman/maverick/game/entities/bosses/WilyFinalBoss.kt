@@ -1015,6 +1015,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private fun getStateDelay(current: WilyPhase1State, previous: WilyPhase1State): Float {
             val hardMode = game.state.hardMode
 
+            if (previous == WilyPhase1State.DROP_BOMB) return 1f
+
             if (current == WilyPhase1State.FLY_IN)
                 return if (hardMode) Phase1ConstVals.FLY_IN_STATE_DELAY_HARD else Phase1ConstVals.FLY_IN_STATE_DELAY
 
