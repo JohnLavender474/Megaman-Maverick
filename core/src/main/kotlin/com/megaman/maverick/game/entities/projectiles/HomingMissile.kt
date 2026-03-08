@@ -57,14 +57,12 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     companion object {
         const val TAG = "HomingMissile"
 
-        private const val SPEED = 6f
-        private const val SPEED_HARD = 8f
+        private const val SPEED = 5f
+        private const val SPEED_HARD = 6f
 
         private const val DAMAGE_DURATION = 0.1f
 
         private const val RECALC_DELAY = 0.25f
-        private const val TIME_BEFORE_FIRST_RECALC = 1f
-        private const val TIME_BEFORE_FIRST_RECALC_HARD = 0.5f
 
         private const val TTL = 3f
         private const val FLASH_START = 2f
@@ -81,9 +79,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
-    private val recalcDelay = Timer()
+    private val initTimer = Timer()
     private val recalcTimer = Timer(RECALC_DELAY)
-
     private val damageTimer = Timer(DAMAGE_DURATION)
 
     // Game-space angle: 0=up, 90=right, 180=down, 270=left (clockwise)
@@ -119,9 +116,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         currentAngle = spawnProps.getOrDefault(ConstKeys.ANGLE, 0, Int::class)
         setVelocityFromAngle(currentAngle)
 
-        recalcDelay.resetDuration(
-            if (game.state.hardMode) TIME_BEFORE_FIRST_RECALC_HARD
-            else TIME_BEFORE_FIRST_RECALC
+        initTimer.resetDuration(
+           spawnProps.getOrDefault("${ConstKeys.INIT}_${ConstKeys.DELAY}", 0f, Float::class)
         )
         recalcTimer.reset()
 
@@ -206,8 +202,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
         damageTimer.update(delta)
 
-        if (!recalcDelay.isFinished()) {
-            recalcDelay.update(delta)
+        if (!initTimer.isFinished()) {
+            initTimer.update(delta)
             return@UpdatablesComponent
         }
 

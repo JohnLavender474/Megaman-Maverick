@@ -370,6 +370,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         headDamageable.drawingColor = Color.PURPLE
         debugShapes.add { headDamageable }
 
+        val flyByUnderbellyDamager =
+            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(6f * ConstVals.PPM, 1f * ConstVals.PPM))
+        flyByUnderbellyDamager.attachedToBody = false
+        body.addFixture(flyByUnderbellyDamager)
+        debugShapes.add add@{
+            flyByUnderbellyDamager.drawingColor = if (flyByUnderbellyDamager.isActive()) Color.RED else Color.GRAY
+            return@add flyByUnderbellyDamager
+        }
+
         val flyByBodyShield = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(4f * ConstVals.PPM))
         flyByBodyShield.attachedToBody = false
         body.addFixture(flyByBodyShield)
@@ -501,19 +510,22 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     } else body.forEachFixture { it.setActive(true) }
 
                     if ((state == WilyPhase1State.FLY_BY && delayBetweenStates.isFinished()) ||
-                        (state == WilyPhase1State.FLY_IN && !phase1Handler.flyInDecelerating)
+                        (state == WilyPhase1State.FLY_IN && !phase1Handler.flyInDecelerating) ||
+                        state == WilyPhase1State.DROP_BOMB
                     ) {
                         bodyDamager.offsetFromBodyAttachment.setZero()
 
                         flyByTailDamager.setActive(true)
                         flyByTailDamager.offsetFromBodyAttachment.x = 4f * ConstVals.PPM
-                        if ((state == WilyPhase1State.FLY_BY && phase1Handler.flyByMovingRight) ||
-                            body.physics.velocity.x >= 0f
-                        ) flyByTailDamager.offsetFromBodyAttachment.x *= -1f
+                        if (body.physics.velocity.x >= 0f) flyByTailDamager.offsetFromBodyAttachment.x *= -1f
+
+                        flyByUnderbellyDamager.setActive(true)
+                        (flyByUnderbellyDamager.rawShape as GameRectangle)
+                            .setTopCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
                     } else {
                         bodyDamager.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
-
                         flyByTailDamager.setActive(false)
+                        flyByUnderbellyDamager.setActive(false)
                     }
 
                     val hovering = state.equalsAny(
@@ -766,7 +778,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val STATE_QUEUE_MAX_SIZE = 4
 
-        const val SWOOP_ENTRY_DELAY = 0.5f
+        const val SWOOP_ENTRY_DELAY = 0.75f
         const val SWOOP_STATE_DUR = 0.75f
         const val HOVER_STATE_DUR = 1.0f
         const val HOVER_STATE_DUR_HARD = 0.75f
@@ -830,6 +842,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         )
 
         val MISSILE_ANGLES = gdxArrayOf(225f, 180f, 180f, 135f)
+        const val TIME_BEFORE_FIRST_RECALC = 1f
+        const val TIME_BEFORE_FIRST_RECALC_HARD = 0.5f
 
         const val FLY_IN_ALT_ROW_CHANCE = 0.67f
 
@@ -1598,12 +1612,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 var angle = Phase1ConstVals.MISSILE_ANGLES[if (up) 3 - i else i].toInt()
                 if (up) angle = (angle + 180) % 360
 
+                var initDelay = when {
+                    game.state.hardMode -> Phase1ConstVals.TIME_BEFORE_FIRST_RECALC_HARD
+                    else -> Phase1ConstVals.TIME_BEFORE_FIRST_RECALC
+                }
+                if (i == 0 || i == 3) initDelay *= 0.25f
+
                 val missile = MegaEntityFactory.fetch(HomingMissile::class)!!
                 missile.spawn(
                     props(
                         ConstKeys.ANGLE pairTo angle,
                         ConstKeys.POSITION pairTo position,
-                        ConstKeys.OWNER pairTo this@WilyFinalBoss
+                        ConstKeys.OWNER pairTo this@WilyFinalBoss,
+                    "${ConstKeys.INIT}_${ConstKeys.DELAY}" pairTo initDelay
                     )
                 )
             }
@@ -1671,6 +1692,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             dropBombHatchOpen = false
             bombDropIndex = 0
+            bombXTriggers.clear()
 
             leftLazor?.destroy()
             leftLazor = null
