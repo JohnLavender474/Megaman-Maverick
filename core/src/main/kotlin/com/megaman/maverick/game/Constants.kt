@@ -47,6 +47,10 @@ object ConstVals {
     const val MAX_CURRENCY = 999
     const val STANDARD_TRAIL_SPRITE_DELAY = 0.1f
     const val AGGREGATE_FLOATING_POINTS_DUR = 1f
+    const val SHAKE_X = 0f
+    const val SHAKE_Y = 0.005f
+    const val SHAKE_DUR = 1f
+    const val SHAKE_INTERVAL = 0.1f
 }
 
 object ConstKeys {

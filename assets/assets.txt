@@ -3008,6 +3008,7 @@ sprites/frames/Projectiles2/FallingIcicle/still.png
 sprites/frames/Projectiles2/FallingIcicle/shatter.png
 sprites/frames/Projectiles2/FallingIcicle/shake.png
 sprites/frames/Projectiles2/SpitFireball.png
+sprites/frames/Projectiles2/WilyPlaneBomb.png
 sprites/frames/Projectiles2/CactusMissile/blink.png
 sprites/frames/Projectiles2/CactusMissile/fly.png
 sprites/frames/Projectiles2/Harpoon.png

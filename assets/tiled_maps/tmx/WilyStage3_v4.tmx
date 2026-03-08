@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="703">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="711">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/mm9endless.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
@@ -2885,6 +2885,8 @@
   <object id="675" name="BottomRightWarningSign" x="11776" y="4064" width="32" height="32"/>
   <object id="676" name="BottomLeftWarningSign" x="11424" y="4064" width="32" height="32"/>
   <object id="702" name="SkullHeadTarget" x="11600" y="4048" width="32" height="32"/>
+  <object id="709" name="BombRightWarningSign" x="11776" y="3808" width="32" height="32"/>
+  <object id="710" name="BombLeftWarningSign" x="11424" y="3808" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="blocks">
   <object id="2" x="0" y="7296" width="864" height="256"/>
@@ -3834,6 +3836,13 @@
   </object>
   <object id="641" name="WilyFinalBoss" x="11600" y="3872" width="32" height="32">
    <properties>
+    <property name="bomb_left_warning_sign" type="object" value="710"/>
+    <property name="bomb_pos_1" type="object" value="706"/>
+    <property name="bomb_pos_2" type="object" value="707"/>
+    <property name="bomb_pos_3" type="object" value="708"/>
+    <property name="bomb_right_warning_sign" type="object" value="709"/>
+    <property name="bomb_start_left" type="object" value="704"/>
+    <property name="bomb_start_right" type="object" value="703"/>
     <property name="bottom_left_warning_sign" type="object" value="676"/>
     <property name="bottom_right_warning_sign" type="object" value="675"/>
     <property name="fly_in_start_1" type="object" value="663"/>
@@ -3883,6 +3892,11 @@
   <object id="696" name="GroundWarningSign8" x="11696" y="4096" width="32" height="32"/>
   <object id="697" name="GroundWarningSign9" x="11752" y="4128" width="32" height="32"/>
   <object id="698" name="GroundWarningSign10" x="11800" y="4128" width="32" height="32"/>
+  <object id="703" name="BombStartRight" x="12160" y="3808" width="32" height="32"/>
+  <object id="704" name="BombStartLeft" x="11040" y="3808" width="32" height="32"/>
+  <object id="706" name="BombPos1" x="11360" y="4032" width="32" height="32"/>
+  <object id="707" name="BombPos2" x="11600" y="4032" width="32" height="32"/>
+  <object id="708" name="BombPos3" x="11840" y="4032" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="27" name="items">
   <object id="373" name="HealthBulb" x="7552" y="5536" width="32" height="32">
