@@ -2884,7 +2884,7 @@
   <object id="674" name="TopRightWarningSign" x="11776" y="3872" width="32" height="32"/>
   <object id="675" name="BottomRightWarningSign" x="11776" y="4064" width="32" height="32"/>
   <object id="676" name="BottomLeftWarningSign" x="11424" y="4064" width="32" height="32"/>
-  <object id="702" name="SkullHeadTarget" x="11600" y="4032" width="32" height="32"/>
+  <object id="702" name="SkullHeadTarget" x="11600" y="4048" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="blocks">
   <object id="2" x="0" y="7296" width="864" height="256"/>

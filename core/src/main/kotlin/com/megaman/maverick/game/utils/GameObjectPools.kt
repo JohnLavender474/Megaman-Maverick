@@ -128,7 +128,8 @@ object GameObjectPools {
 
     fun <T : Any> fetch(clazz: KClass<T>, reclaim: Boolean = true): T {
         val value = clazz.cast(pools[clazz]!!.fetch(reclaim))
-        GameLogger.debug(TAG, "fetch(): clazz=${clazz.simpleName}, reclaim=$reclaim, value=$value")
+        if (GameLogger.tagsToLog.contains(TAG))
+            GameLogger.debug(TAG, "fetch(): clazz=${clazz.simpleName}, reclaim=$reclaim, value=$value")
         return value
     }
 

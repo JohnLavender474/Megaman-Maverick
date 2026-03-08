@@ -130,7 +130,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private enum class WilyPhase2State { HOVER }
 
-    private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN }
+    private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN, END }
 
     private lateinit var currentPhase: WilyFinalBossPhase
     private val stateMachines = OrderedMap<WilyFinalBossPhase, StateMachine<*>>()
@@ -214,7 +214,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
         phase1Handler.reset()
     }
 
@@ -909,6 +908,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         val lazorStartPauseTimer = Timer(Phase1ConstVals.LAZOR_START_PAUSE_TIME)
         val lazorEndPauseTimer = Timer(Phase1ConstVals.LAZOR_END_PAUSE_TIME)
 
+        var lazorLeft = true
+
         val shootBulletsDelay = Timer()
         val shootBulletsTimer = Timer(Phase1ConstVals.SHOOT_BULLETS_DUR)
             .setToEnd()
@@ -1331,19 +1332,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             GameLogger.debug(TAG, "Phase1Handler: startLazors()")
 
             lazorPasses = 0
-
             lazorTheta = 0f
-
-            lazorCompletionStarted = false
-
             lazorNearCenter = false
             lazorMovingRight = false
+            lazorCompletionStarted = false
             lazorWarmUpScalar = Phase1ConstVals.LAZOR_WARM_UP_START
 
             val centerX = (lazorLeftBound.x + lazorRightBound.x) / 2f
             lazorAnchor.set(centerX, body.getCenter().y)
 
-            lazorDirectionSign = if (UtilMethods.getRandomBool()) 1f else -1f
+            lazorDirectionSign = if (lazorLeft) -1f else 1f
+            lazorLeft = !lazorLeft
 
             lazorStartPauseTimer.reset()
             lazorEndPauseTimer.reset()
@@ -1553,6 +1552,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             rightLazor?.destroy()
             rightLazor = null
 
+            lazorLeft = true
+
             warningSigns.values().forEach { it.destroy() }
             warningSigns.clear()
 
@@ -1598,6 +1599,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     )
                 )
             )
+            megaman.body.physics.velocity.x = 0f
             megaman.canBeDamaged = false
         }
 
@@ -1644,6 +1646,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         GameLogger.debug(TAG, "PhaseTransitionHandler: PAUSE -> DROP_DOWN")
                         body.setCenter(spawnCenter.x, room.getMaxY() + body.getHeight())
                         state = WilyPhaseTransState.DROP_DOWN
+                        // Go ahead and start the next phase before dropping down so that the animations
+                        // are updated to use the next phase
+                        startNextPhase()
                     }
                 }
 
@@ -1653,8 +1658,20 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         GameLogger.debug(TAG, "PhaseTransitionHandler: DROP_DOWN complete, starting next phase")
                         body.setCenter(spawnCenter)
                         body.physics.velocity.setZero()
-                        finishTransition()
+                        state = WilyPhaseTransState.END
                     }
+                }
+
+                WilyPhaseTransState.END -> {
+                    // TODO: Add timer here so that end of transition can be filled with an animation
+
+                    active = false
+
+                    game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+                    megaman.body.physics.velocity.x = 0f
+                    megaman.canBeDamaged = true
+
+                    setHealthToMax()
                 }
             }
         }
@@ -1668,20 +1685,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     ConstKeys.POSITION pairTo body.getCenter(),
                 )
             )
-        }
-
-        private fun finishTransition() {
-            GameLogger.debug(TAG, "PhaseTransitionHandler: finishTransition()")
-            active = false
-
-            // Set health to max BEFORE changing phase to prevent the health listener
-            // from firing triggerDefeat() for the new phase
-            setHealthToMax()
-            startNextPhase()
-
-            // Set ready to false so the AbstractBoss updatable triggers onReady() -> BOSS_READY
-            // which fills the health bar and eventually fires END_BOSS_SPAWN -> TURN_CONTROLLER_ON
-            ready = false
         }
 
         override fun reset() {

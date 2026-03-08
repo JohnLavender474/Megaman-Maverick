@@ -105,7 +105,7 @@ class WilySkullHead(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEnt
             val movement = target.cpy().sub(current).nor().scl(FALL_SPEED * ConstVals.PPM * delta)
             current.add(movement)
 
-            if (current.epsilonEquals(target, 0.1f * ConstVals.PPM)) {
+            if (current.y <= target.y) {
                 current.set(target)
                 targetReached = true
             }
