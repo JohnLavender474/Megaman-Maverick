@@ -43,8 +43,8 @@ class WilyPlaneBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val GRAVITY = 0.25f
         private const val VEL_Y = 10f
         private const val BLAST_DUR = 1f
-        private const val EXPLODE_PERIOD = 0.1f
-        private const val EXPLOSION_RADIUS = 3f
+        private const val EXPLODE_PERIOD = 0.05f
+        private const val EXPLOSION_RADIUS = 2.5f
         private var region: TextureRegion? = null
     }
 

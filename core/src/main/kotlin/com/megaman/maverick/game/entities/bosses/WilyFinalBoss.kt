@@ -37,6 +37,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.events.Event
 import com.mega.game.engine.state.EnumStateMachineBuilder
 import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -58,8 +59,6 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.O
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.mega.game.engine.events.Event
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.decorations.WilySkullHead
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -69,6 +68,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
 import com.megaman.maverick.game.entities.utils.hardMode
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -365,7 +365,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         // debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        val headDamageable = Fixture(body, FixtureType.DAMAGEABLE, GameCircle().setRadius(2.5f * ConstVals.PPM))
+        val headDamageable = Fixture(body, FixtureType.DAMAGEABLE, GameCircle())
         body.addFixture(headDamageable)
         headDamageable.drawingColor = Color.PURPLE
         debugShapes.add { headDamageable }
@@ -536,12 +536,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     ) || (state == WilyPhase1State.FLY_IN && phase1Handler.flyInDecelerating)
 
                     if (hovering) {
+                        (headDamageable.rawShape as GameCircle).setRadius(2.5f * ConstVals.PPM)
                         headDamageable.offsetFromBodyAttachment.setZero()
                         flyByBodyShield.setActive(false)
                     } else {
+                        (headDamageable.rawShape as GameCircle).setRadius(3f * ConstVals.PPM)
                         headDamageable.offsetFromBodyAttachment.x = 2f * ConstVals.PPM
                         val left = body.physics.velocity.x < 0f
                         if (left) headDamageable.offsetFromBodyAttachment.x *= -1f
+                        headDamageable.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
 
                         flyByBodyShield.setActive(true)
                         (flyByBodyShield.rawShape as GameRectangle).let {
@@ -1431,10 +1434,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     else -> body.getCenter().x <= nextX - ConstVals.PPM
                 }
                 if (crossed) {
-                    if (bombDropIndex == 0) dropBombHatchOpen = true
+                    dropBombHatchOpen = true
 
                     val position = GameObjectPools.fetch(Vector2::class)
-                        .set(nextX, body.getPositionPoint(Position.BOTTOM_CENTER).y)
+                        .set(body.getPositionPoint(Position.BOTTOM_CENTER))
+                        .add(1f * ConstVals.PPM * if (flyByMovingRight) -1f else 1f, -1f * ConstVals.PPM)
                     dropBomb(position)
 
                     if (flyByMovingRight) bombDropIndex++ else bombDropIndex--

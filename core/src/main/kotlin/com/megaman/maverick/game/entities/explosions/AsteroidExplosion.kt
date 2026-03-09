@@ -56,6 +56,7 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     override var owner: IGameEntity? = null
 
+    private var damager = true
     private val timer = Timer(EXPLOSION_DUR)
 
     override fun init(vararg params: Any) {
@@ -81,11 +82,12 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         timer.reset()
 
         val sound = spawnProps.getOrDefault(ConstKeys.SOUND, true, Boolean::class)
-
         if (sound &&
             overlapsGameCamera() &&
             !game.audioMan.isSoundPlaying(SoundAsset.ASTEROID_EXPLODE_SOUND)
         ) requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)
+
+        damager = spawnProps.getOrDefault(ConstKeys.DAMAGER, false, Boolean::class)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -95,14 +97,21 @@ class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat())
+        body.setSize(2f * ConstVals.PPM.toFloat())
 
         val debugShapes = Array<() -> IDrawableShape?>()
 
-        val explosionFixture = Fixture(body, FixtureType.EXPLOSION, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        val explosionFixture = Fixture(body, FixtureType.EXPLOSION, GameCircle().setRadius(1f * ConstVals.PPM))
         body.addFixture(explosionFixture)
         explosionFixture.drawingColor = Color.RED
         debugShapes.add { explosionFixture}
+
+        val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1f * ConstVals.PPM))
+        body.addFixture(damagerFixture)
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            body.fixtures[FixtureType.DAMAGER].first().setActive(damager)
+        }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

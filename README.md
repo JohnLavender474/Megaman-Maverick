@@ -149,7 +149,8 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Other Bosses
 
-- Big Ass Maverick (Intro Boss) - [Ansimuz](https://ansimuz.itch.io/mega-bot)
+- Final Boss (Wily) - [kwad_rat](https://www.fiverr.com/kwad_rat)
+- Maverick Robot (Intro Boss) - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Inferno Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Reactor Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
