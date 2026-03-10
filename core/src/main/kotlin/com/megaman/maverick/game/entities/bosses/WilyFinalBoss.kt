@@ -845,8 +845,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         )
 
         val MISSILE_ANGLES = gdxArrayOf(225f, 180f, 180f, 135f)
-        const val TIME_BEFORE_FIRST_RECALC = 1f
-        const val TIME_BEFORE_FIRST_RECALC_HARD = 0.5f
+        const val TIME_BEFORE_FIRST_RECALC = 0.75f
 
         const val FLY_IN_ALT_ROW_CHANCE = 0.67f
 
@@ -1220,15 +1219,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 !stateQueue.contains(WilyPhase1State.FLY_OUT)
 
         fun shouldShootMissiles() = (hoverPatternIndex % 4 == 1 || hoverPatternIndex % 4 == 3) &&
-            rollChance(WilyPhase1State.SHOOT_MISSILES)
+            !stateQueue.contains(WilyPhase1State.SHOOT_MISSILES) && rollChance(WilyPhase1State.SHOOT_MISSILES)
 
         fun shouldFireLazors() =
-            (hoverPatternIndex % 4 == 3 || rollChance(WilyPhase1State.FIRE_LAZORS)) &&
+            hoverPatternIndex % 4 == 3 && rollChance(WilyPhase1State.FIRE_LAZORS) &&
                 stateQueue.size >= STATE_QUEUE_MAX_SIZE && // Do not trigger lazor too soon after boss spawns
                 !stateQueue.contains(WilyPhase1State.FIRE_LAZORS) && currentFlyInRow == 1
 
         fun shouldDropBomb() =
-            stateQueue.size >= Phase1ConstVals.STATE_QUEUE_MAX_SIZE &&
+            stateQueue.size >= STATE_QUEUE_MAX_SIZE &&
                 !stateQueue.contains(WilyPhase1State.DROP_BOMB) &&
                 rollChance(WilyPhase1State.DROP_BOMB) &&
                 currentFlyInRow == 1
@@ -1616,11 +1615,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 var angle = Phase1ConstVals.MISSILE_ANGLES[if (up) 3 - i else i].toInt()
                 if (up) angle = (angle + 180) % 360
 
-                var initDelay = when {
-                    game.state.hardMode -> Phase1ConstVals.TIME_BEFORE_FIRST_RECALC_HARD
-                    else -> Phase1ConstVals.TIME_BEFORE_FIRST_RECALC
-                }
-                if (i == 0 || i == 3) initDelay *= 0.25f
+                var initDelay = Phase1ConstVals.TIME_BEFORE_FIRST_RECALC
+                if (i == 0 || i == 3) initDelay *= 0.75f
 
                 val missile = MegaEntityFactory.fetch(HomingMissile::class)!!
                 missile.spawn(

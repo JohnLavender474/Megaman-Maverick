@@ -84,7 +84,7 @@ class WilyPlaneBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        GameLogger.debug(TAG, "startBlasting()")
+        GameLogger.debug(TAG, "explodeAndDie()")
 
         body.physics.velocity.setZero()
         body.physics.gravityOn = false
@@ -107,6 +107,8 @@ class WilyPlaneBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     private fun spawnExplosion() {
+        GameLogger.debug(TAG, "spawnExplosion()")
+
         val angle = MathUtils.random(MathUtils.PI2)
         val distance = MathUtils.random(0f, EXPLOSION_RADIUS * ConstVals.PPM)
 
@@ -119,9 +121,10 @@ class WilyPlaneBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val explosion = MegaEntityFactory.fetch(AsteroidExplosion::class)!!
         explosion.spawn(
             props(
-                ConstKeys.OWNER pairTo owner,
-                ConstKeys.POSITION pairTo position,
                 ConstKeys.SOUND pairTo true,
+                ConstKeys.OWNER pairTo owner,
+                ConstKeys.DAMAGER pairTo true,
+                ConstKeys.POSITION pairTo position,
             )
         )
     }
