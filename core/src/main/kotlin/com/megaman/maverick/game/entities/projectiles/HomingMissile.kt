@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -51,6 +52,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getPositionPoint
 
 class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageable {
 
@@ -185,7 +187,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     private fun recalcDirection() {
-        val toMegaman = megaman.body.getCenter().sub(body.getCenter())
+        val position = if (body.getX() < megaman.body.getX()) Position.TOP_LEFT else Position.TOP_RIGHT
+        val toMegaman = megaman.body.getPositionPoint(position).sub(body.getCenter())
         val mathAngle = toMegaman.angleDeg()
         val gameAngle = 90f - mathAngle
         val snapped = MathUtils.round(gameAngle / 45f) * 45
