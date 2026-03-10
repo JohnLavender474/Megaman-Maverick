@@ -347,16 +347,12 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             allowDiagonal = { true },
             filter = filter@{ coordinate ->
                 game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
-
                 var passable = true
-
                 for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
                     break
                 }
-
                 reusableBodySet.clear()
-
                 return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
