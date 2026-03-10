@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
+import com.badlogic.gdx.utils.OrderedSet
 import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
@@ -36,6 +37,7 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
+import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.state.EnumStateMachineBuilder
@@ -53,11 +55,13 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.decorations.WilySkullHead
@@ -77,6 +81,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
+import javax.crypto.spec.DESKeySpec
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -89,6 +94,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private const val WILY_DEATH_PLANE_SPRITE_WIDTH = 16f
         private const val WILY_DEATH_PLANE_SPRITE_HEIGHT = 16f
+
+        private val DESTROY_ON_TRANS = gdxArrayOf(HomingMissile.TAG, Bullet.TAG)
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = orderedMapOf(
@@ -145,6 +152,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private val room = GameRectangle()
     private val spawnCenter = Vector2()
+
+    private val tempEntities = OrderedSet<MegaGameEntity>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -758,15 +767,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     }
 
     object Phase1ConstVals {
-        const val INIT_SWOOP_CHANCE = 0.25f
-        const val INIT_MISSILES_CHANCE = 0.25f
-        const val INIT_LAZOR_CHANCE = 0.25f
-        const val INIT_DROP_BOMB_CHANCE = 0.25f
+        const val MAX_ATTACK_CHANCE = 0.8f
 
-        const val SWOOP_CHANCE_INCR = 0.25f
-        const val LAZOR_CHANCE_INCR = 0.25f
-        const val MISSILES_CHANCE_INCR = 0.25f
-        const val DROP_BOMB_CHANCE_INCR = 0.25f
+        const val INIT_SWOOP_CHANCE = 0.2f
+        const val INIT_MISSILES_CHANCE = 0.2f
+        const val INIT_LAZOR_CHANCE = 0.2f
+        const val INIT_DROP_BOMB_CHANCE = 0.2f
+
+        const val SWOOP_CHANCE_INCR = 0.2f
+        const val LAZOR_CHANCE_INCR = 0.2f
+        const val MISSILES_CHANCE_INCR = 0.2f
+        const val DROP_BOMB_CHANCE_INCR = 0.2f
 
         const val FLY_IN_SPEED = 16f
         const val FLY_IN_SPEED_HARD = 20f
@@ -1237,7 +1248,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         fun incrementChance(state: WilyPhase1State, amount: Float) {
-            attackChances.put(state, min(1f, attackChances[state]!! + amount))
+            attackChances.put(state, min(Phase1ConstVals.MAX_ATTACK_CHANCE, attackChances[state]!! + amount))
         }
 
         fun rollChance(state: WilyPhase1State) = UtilMethods.getRandom(0f, 1f) <= attackChances[state]!!
@@ -1748,6 +1759,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             )
             megaman.body.physics.velocity.x = 0f
             megaman.canBeDamaged = false
+
+            val entitiesToDestroy = MegaGameEntities.getOfTags(tempEntities, DESTROY_ON_TRANS)
+            entitiesToDestroy.forEach { it.destroy() }
+            entitiesToDestroy.clear()
         }
 
         override fun update(delta: Float) {
