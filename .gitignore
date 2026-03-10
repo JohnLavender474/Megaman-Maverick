@@ -178,3 +178,5 @@ Thumbs.db
 /game-builds/*-mac.zip
 
 ## Assets
+/assets/assets.txt
+/assets/logs.txt
