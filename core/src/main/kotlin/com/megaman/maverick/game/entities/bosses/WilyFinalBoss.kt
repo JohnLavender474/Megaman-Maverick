@@ -5,11 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.OrderedMap
-import com.badlogic.gdx.utils.OrderedSet
-import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
@@ -37,7 +34,6 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.events.Event
 import com.mega.game.engine.state.EnumStateMachineBuilder
@@ -81,7 +77,6 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
-import javax.crypto.spec.DESKeySpec
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -1635,7 +1630,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         ConstKeys.ANGLE pairTo angle,
                         ConstKeys.POSITION pairTo position,
                         ConstKeys.OWNER pairTo this@WilyFinalBoss,
-                    "${ConstKeys.INIT}_${ConstKeys.DELAY}" pairTo initDelay
+                        "${ConstKeys.INIT}_${ConstKeys.DELAY}" pairTo initDelay
                     )
                 )
             }
