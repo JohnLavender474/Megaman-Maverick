@@ -122,6 +122,27 @@ import kotlin.math.sqrt
  *
  * ---
  *
+ * ## Anchor and target drift
+ *
+ * Both the [anchor] and the idle tip position drift continuously around their spawn-time origins
+ * ([anchorOrigin] and [targetOrigin]) using independent two-axis sine oscillators:
+ *
+ *     anchor.x = anchorOrigin.x + sin(time * ANCHOR_DRIFT_SPEED_X + phaseX) * ANCHOR_DRIFT_RADIUS
+ *     anchor.y = anchorOrigin.y + sin(time * ANCHOR_DRIFT_SPEED_Y + phaseY) * ANCHOR_DRIFT_RADIUS
+ *
+ * The X and Y speeds are intentionally incommensurable (e.g. 0.8 and 0.57) so the path traces an
+ * aperiodic Lissajous-like curve rather than a simple back-and-forth line. The anchor and target
+ * each have their own set of speeds, and all four phase offsets ([anchorDriftPhaseX],
+ * [anchorDriftPhaseY], [targetDriftPhaseX], [targetDriftPhaseY]) are randomised on every spawn,
+ * ensuring the two endpoints never drift in parallel with each other or with themselves across
+ * multiple spawns.
+ *
+ * During IDLE, [target] is set directly to [idleTarget] each frame so the tip follows the drift.
+ * During RETURNING the tip moves toward the drifting [idleTarget], so the return destination
+ * shifts naturally rather than snapping back to a fixed point.
+ *
+ * ---
+ *
  * ## Rendering
  *
  * Line segments update every frame for smooth movement. Joint sphere positions update on a fixed
@@ -164,6 +185,16 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
         private const val RETURN_SPEED = 5f * ConstVals.PPM
 
         private const val WAVE_BLEND_SPEED = 5f
+
+        // Anchor drifts on independent X/Y frequencies to trace a Lissajous-like path
+        private const val ANCHOR_DRIFT_RADIUS = 0.75f * ConstVals.PPM
+        private const val ANCHOR_DRIFT_SPEED_X = 0.8f
+        private const val ANCHOR_DRIFT_SPEED_Y = 0.57f   // irrational ratio → never repeats simply
+
+        // Target drifts with different speeds so it is never in sync with the anchor
+        private const val TARGET_DRIFT_RADIUS = 1.25f * ConstVals.PPM
+        private const val TARGET_DRIFT_SPEED_X = 0.65f
+        private const val TARGET_DRIFT_SPEED_Y = 0.43f
     }
 
     private enum class TentacleState { IDLE, LUNGING, PAUSING, RETURNING }
@@ -188,15 +219,25 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
     private var lines = Array<GameLine>()
     private var circles = Array<GameCircle>()
 
+    private var state = TentacleState.IDLE
+
     private var time = 0f
     private var circleUpdateTimer = 0f
 
-    private var tentacleState = TentacleState.IDLE
     private var idleTimer = 0f
     private var pauseTimer = 0f
+    private val anchorOrigin = Vector2()
+    private val targetOrigin = Vector2()
     private val idleTarget = Vector2()
     private val lungeTarget = Vector2()
     private var waveBlend = 1f
+
+    // Per-axis phase offsets randomized on each spawn so anchor and target
+    // drift independently and are never visually parallel to each other
+    private var anchorDriftPhaseX = 0f
+    private var anchorDriftPhaseY = 0f
+    private var targetDriftPhaseX = 0f
+    private var targetDriftPhaseY = 0f
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -211,9 +252,12 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
 
         time = 0f
         circleUpdateTimer = 0f
+
         idleTimer = 0f
         pauseTimer = 0f
-        tentacleState = TentacleState.IDLE
+
+        state = TentacleState.IDLE
+
         waveBlend = 1f
 
         segmentCount = spawnProps.getOrDefault(ConstKeys.COUNT, DEFAULT_SEGMENT_COUNT, Int::class)
@@ -226,10 +270,17 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
 
         val anchorPos = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         anchor.set(anchorPos)
+        anchorOrigin.set(anchorPos)
 
         val targetPos = spawnProps.get(ConstKeys.TARGET, RectangleMapObject::class)!!.rectangle.getCenter()
         target.set(targetPos)
         idleTarget.set(targetPos)
+        targetOrigin.set(targetPos)
+
+        anchorDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
+        anchorDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
+        targetDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
+        targetDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
 
         val jointCount = segmentCount + 1
         (0 until jointCount).forEach { _ ->
@@ -271,14 +322,22 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
     override fun update(delta: Float) {
         time += delta
 
-        when (tentacleState) {
+        // Drift anchor and idle target around their spawn origins with independent Lissajous paths.
+        // Different X/Y frequencies per point mean neither axis nor either endpoint stays in sync.
+        anchor.x = anchorOrigin.x + MathUtils.sin(time * ANCHOR_DRIFT_SPEED_X + anchorDriftPhaseX) * ANCHOR_DRIFT_RADIUS
+        anchor.y = anchorOrigin.y + MathUtils.sin(time * ANCHOR_DRIFT_SPEED_Y + anchorDriftPhaseY) * ANCHOR_DRIFT_RADIUS
+        idleTarget.x = targetOrigin.x + MathUtils.sin(time * TARGET_DRIFT_SPEED_X + targetDriftPhaseX) * TARGET_DRIFT_RADIUS
+        idleTarget.y = targetOrigin.y + MathUtils.sin(time * TARGET_DRIFT_SPEED_Y + targetDriftPhaseY) * TARGET_DRIFT_RADIUS
+
+        when (state) {
             TentacleState.IDLE -> {
                 waveBlend = MathUtils.lerp(waveBlend, 1f, WAVE_BLEND_SPEED * delta)
+                target.set(idleTarget)
                 idleTimer += delta
                 if (idleTimer >= IDLE_DURATION) {
                     idleTimer = 0f
                     lungeTarget.set(game.megaman.body.getCenter())
-                    tentacleState = TentacleState.LUNGING
+                    state = TentacleState.LUNGING
                 }
             }
 
@@ -292,7 +351,7 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
                     target.set(lungeTarget)
                     waveBlend = 0f
                     pauseTimer = 0f
-                    tentacleState = TentacleState.PAUSING
+                    state = TentacleState.PAUSING
                 } else {
                     target.x += dx / dist * step
                     target.y += dy / dist * step
@@ -301,7 +360,7 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
 
             TentacleState.PAUSING -> {
                 pauseTimer += delta
-                if (pauseTimer >= LUNGE_PAUSE_DURATION) tentacleState = TentacleState.RETURNING
+                if (pauseTimer >= LUNGE_PAUSE_DURATION) state = TentacleState.RETURNING
             }
 
             TentacleState.RETURNING -> {
@@ -312,7 +371,7 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
                 val step = RETURN_SPEED * delta
                 if (dist <= step) {
                     target.set(idleTarget)
-                    tentacleState = TentacleState.IDLE
+                    state = TentacleState.IDLE
                 } else {
                     target.x += dx / dist * step
                     target.y += dy / dist * step
