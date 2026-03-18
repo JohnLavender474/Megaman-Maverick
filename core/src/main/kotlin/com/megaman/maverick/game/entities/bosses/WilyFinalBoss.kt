@@ -50,6 +50,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
@@ -162,6 +163,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         super.init()
         buildStateMachines()
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(Bullet::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -380,6 +382,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         GameLogger.debug(TAG, "resetBody()")
         body.fixtures.clear()
         body.preProcess.clear()
+        body.postProcess.clear()
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -1885,7 +1888,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         override fun buildBody(body: Body) {
-            GameLogger.debug(TAG, "Phase2Handler: buildBody()")
+            GameLogger.debug(TAG, "Phase2Handler: buildBody(): fixtures.size=${body.fixtures.size}")
+
+            val center = body.getCenter()
+            body.setSize(3f * ConstVals.PPM)
+            body.setCenter(center)
+
+            val debugShapes = Array<() -> IDrawableShape?>()
+            addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+            debugShapes.add { body.getBounds() }
 
             BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
         }
