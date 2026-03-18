@@ -3793,7 +3793,7 @@
     <property name="spawn_room" value="room7"/>
    </properties>
   </object>
-  <object id="712" name="TestTentacle" x="11600" y="1408" width="32" height="32">
+  <object id="712" name="TestWavyTentacleController" x="11600" y="1408" width="32" height="32">
    <properties>
     <property name="target" type="object" value="713"/>
    </properties>
