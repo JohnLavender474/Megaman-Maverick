@@ -172,14 +172,18 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         super.onSpawn(spawnProps)
 
+        resetBody()
+        phase1Handler.buildBody(body)
+
+        phase1Handler.init(spawnProps)
+        phase2Handler.init(spawnProps)
+
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
         spawnCenter.set(spawn)
 
         val room = spawnProps.get(ConstKeys.ROOM, RectangleMapObject::class)!!.rectangle
         this.room.set(room)
-
-        phase1Handler.init(spawnProps)
 
         currentPhase = WilyFinalBossPhase.PHASE_1
         stateMachines.values().forEach { it.reset() }
@@ -198,7 +202,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        resetBody()
         phase1Handler.reset()
+        phase2Handler.reset()
     }
 
     override fun onEndBossSpawnEvent() {
@@ -222,7 +228,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         GameLogger.debug(TAG, "triggerDefeat(): currentPhase=$currentPhase")
         when (currentPhase) {
             WilyFinalBossPhase.PHASE_3 -> super.triggerDefeat()
-            else -> phaseTransitionHandler.start()
+            else -> {
+                phase1Handler.reset()
+                phase2Handler.reset()
+                phaseTransitionHandler.start()
+            }
         }
     }
 
@@ -363,237 +373,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         body.physics.collisionOn = false
         body.physics.receiveFrictionX = false
         body.physics.receiveFrictionY = false
-        body.setSize(8f * ConstVals.PPM, 4f * ConstVals.PPM)
+        return BodyComponentCreator.create(this, body)
+    }
 
-        val debugShapes = Array<() -> IDrawableShape?>()
-        // debugShapes.add { body.getBounds() }
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-
-        val headDamageable = Fixture(body, FixtureType.DAMAGEABLE, GameCircle())
-        body.addFixture(headDamageable)
-        headDamageable.drawingColor = Color.PURPLE
-        debugShapes.add { headDamageable }
-
-        val flyByUnderbellyDamager =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(6f * ConstVals.PPM, 1f * ConstVals.PPM))
-        flyByUnderbellyDamager.attachedToBody = false
-        body.addFixture(flyByUnderbellyDamager)
-        debugShapes.add add@{
-            flyByUnderbellyDamager.drawingColor = if (flyByUnderbellyDamager.isActive()) Color.RED else Color.GRAY
-            return@add flyByUnderbellyDamager
-        }
-
-        val flyByBodyShield = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(4f * ConstVals.PPM))
-        flyByBodyShield.attachedToBody = false
-        body.addFixture(flyByBodyShield)
-        debugShapes.add add@{
-            flyByBodyShield.drawingColor = if (flyByBodyShield.isActive()) Color.BLUE else Color.GRAY
-            return@add flyByBodyShield
-        }
-
-        val bodyDamager = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
-        body.addFixture(bodyDamager)
-        /*
-        debugShapes.add add@{
-            bodyDamager.drawingColor = if (bodyDamager.isActive()) Color.RED else Color.GRAY
-            return@add bodyDamager
-        }
-         */
-
-        val leftThrusterDamager =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
-        leftThrusterDamager.attachedToBody = false
-        body.addFixture(leftThrusterDamager)
-        /*
-        debugShapes.add add@{
-            leftThrusterDamager.drawingColor = if (leftThrusterDamager.isActive()) Color.RED else Color.GRAY
-            return@add leftThrusterDamager
-        }
-         */
-
-        val leftThrusterShield =
-            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
-        leftThrusterShield.attachedToBody = false
-        body.addFixture(leftThrusterShield)
-        debugShapes.add add@{
-            leftThrusterShield.drawingColor = if (leftThrusterShield.isActive()) Color.RED else Color.GRAY
-            return@add leftThrusterShield
-        }
-
-        val rightThrusterDamager =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
-        rightThrusterDamager.attachedToBody = false
-        body.addFixture(rightThrusterDamager)
-        /*
-        debugShapes.add add@{
-            rightThrusterDamager.drawingColor = if (rightThrusterDamager.isActive()) Color.RED else Color.GRAY
-            return@add rightThrusterDamager
-        }
-         */
-
-        val rightThrusterShield =
-            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
-        rightThrusterShield.attachedToBody = false
-        body.addFixture(rightThrusterShield)
-        debugShapes.add add@{
-            rightThrusterShield.drawingColor = if (rightThrusterShield.isActive()) Color.RED else Color.GRAY
-            return@add rightThrusterShield
-        }
-
-        val flyByTailDamager = Fixture(
-            body,
-            FixtureType.DAMAGER,
-            GameRectangle().setSize(2f * ConstVals.PPM, 4f * ConstVals.PPM)
-        )
-        flyByTailDamager.offsetFromBodyAttachment.y = 2f * ConstVals.PPM
-        body.addFixture(flyByTailDamager)
-        /*
-        debugShapes.add add@{
-            flyByTailDamager.drawingColor = if (flyByTailDamager.isActive()) Color.RED else Color.GRAY
-            return@add flyByTailDamager
-        }
-         */
-
-        val leftWingHoverDamager =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        leftWingHoverDamager.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
-        body.addFixture(leftWingHoverDamager)
-        /*
-        debugShapes.add add@{
-            leftWingHoverDamager.drawingColor = if (leftWingHoverDamager.isActive()) Color.RED else Color.GRAY
-            return@add leftWingHoverDamager
-        }
-         */
-
-        val leftWingHoverShield =
-            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        leftWingHoverShield.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
-        body.addFixture(leftWingHoverShield)
-        debugShapes.add add@{
-            leftWingHoverShield.drawingColor = if (leftWingHoverShield.isActive()) Color.BLUE else Color.GRAY
-            return@add leftWingHoverShield
-        }
-
-        val rightWingHoverDamager =
-            Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        rightWingHoverDamager.offsetFromBodyAttachment.set(6f * ConstVals.PPM, 0f)
-        body.addFixture(rightWingHoverDamager)
-        /*
-        debugShapes.add add@{
-            rightWingHoverDamager.drawingColor = if (rightWingHoverDamager.isActive()) Color.RED else Color.GRAY
-            return@add rightWingHoverDamager
-        }
-         */
-
-        val rightWingHoverShield =
-            Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
-        rightWingHoverShield.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
-        body.addFixture(rightWingHoverShield)
-        debugShapes.add add@{
-            rightWingHoverShield.drawingColor = if (rightWingHoverShield.isActive()) Color.BLUE else Color.GRAY
-            return@add rightWingHoverShield
-        }
-
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            if (phaseTransitionHandler.active) {
-                body.forEachFixture { it.setActive(false) }
-                return@put
-            }
-
-            when (currentPhase) {
-                WilyFinalBossPhase.PHASE_1 -> {
-                    val state =
-                        stateMachines.get(currentPhase).getCurrentElement() as WilyPhase1State
-
-                    if (state == WilyPhase1State.FLY_OUT ||
-                        (state == WilyPhase1State.SWOOP &&
-                            phase1Handler.stateTimers[state].time !in 0.45f..0.65f)
-                    ) {
-                        body.forEachFixture { it.setActive(false) }
-                        return@put
-                    } else body.forEachFixture { it.setActive(true) }
-
-                    if ((state == WilyPhase1State.FLY_BY && delayBetweenStates.isFinished()) ||
-                        (state == WilyPhase1State.FLY_IN && !phase1Handler.flyInDecelerating) ||
-                        state == WilyPhase1State.DROP_BOMB
-                    ) {
-                        bodyDamager.offsetFromBodyAttachment.setZero()
-
-                        flyByTailDamager.setActive(true)
-                        flyByTailDamager.offsetFromBodyAttachment.x = 4f * ConstVals.PPM
-                        if (body.physics.velocity.x >= 0f) flyByTailDamager.offsetFromBodyAttachment.x *= -1f
-
-                        flyByUnderbellyDamager.setActive(true)
-                        (flyByUnderbellyDamager.rawShape as GameRectangle)
-                            .setTopCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
-                    } else {
-                        bodyDamager.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
-                        flyByTailDamager.setActive(false)
-                        flyByUnderbellyDamager.setActive(false)
-                    }
-
-                    val hovering = state.equalsAny(
-                        WilyPhase1State.HOVER,
-                        WilyPhase1State.SWOOP,
-                        WilyPhase1State.FIRE_LAZORS,
-                        WilyPhase1State.SHOOT_MISSILES,
-                    ) || (state == WilyPhase1State.FLY_IN && phase1Handler.flyInDecelerating)
-
-                    if (hovering) {
-                        (headDamageable.rawShape as GameCircle).setRadius(2.5f * ConstVals.PPM)
-                        headDamageable.offsetFromBodyAttachment.setZero()
-                        flyByBodyShield.setActive(false)
-                    } else {
-                        (headDamageable.rawShape as GameCircle).setRadius(3f * ConstVals.PPM)
-                        headDamageable.offsetFromBodyAttachment.x = 2f * ConstVals.PPM
-                        val left = body.physics.velocity.x < 0f
-                        if (left) headDamageable.offsetFromBodyAttachment.x *= -1f
-                        headDamageable.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
-
-                        flyByBodyShield.setActive(true)
-                        (flyByBodyShield.rawShape as GameRectangle).let {
-                            val position = if (left) Position.CENTER_LEFT else Position.CENTER_RIGHT
-                            val point = (headDamageable.rawShape as GameCircle)
-                                .getBoundingRectangle()
-                                .getPositionPoint(position.opposite())
-                            it.positionOnPoint(point, position)
-                        }
-                    }
-
-                    leftWingHoverDamager.setActive(hovering)
-                    leftWingHoverShield.setActive(hovering)
-                    rightWingHoverDamager.setActive(hovering)
-                    rightWingHoverShield.setActive(hovering)
-
-                    if (hovering) {
-                        leftThrusterDamager.setActive(true)
-                        (leftThrusterDamager.rawShape as GameRectangle)
-                            .setCenterX(body.getMaxX())
-                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
-                        (leftThrusterShield.rawShape as GameRectangle)
-                            .setCenterX(body.getMaxX())
-                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
-
-                        rightThrusterDamager.setActive(true)
-                        (rightThrusterDamager.rawShape as GameRectangle)
-                            .setCenterX(body.getMaxX())
-                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
-                        (rightThrusterShield.rawShape as GameRectangle)
-                            .setCenterX(body.getMaxX())
-                            .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
-                    } else {
-                        leftThrusterDamager.setActive(false)
-                        leftThrusterShield.setActive(false)
-                        rightThrusterDamager.setActive(false)
-                        rightThrusterShield.setActive(false)
-                    }
-                }
-
-                else -> body.forEachFixture { it.setActive(false) }
-            }
-        }
-
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
+    private fun resetBody() {
+        GameLogger.debug(TAG, "resetBody()")
+        body.fixtures.clear()
+        body.preProcess.clear()
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -759,6 +545,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         val oldPhase = currentPhase
         currentPhase = WilyFinalBossPhase.entries[currentPhase.ordinal + 1]
         GameLogger.debug(TAG, "goToNextPhase(): oldPhase=$oldPhase, currentPhase=$currentPhase")
+
+        resetBody()
+        when (currentPhase) {
+            WilyFinalBossPhase.PHASE_2 -> phase2Handler.buildBody(body)
+            WilyFinalBossPhase.PHASE_3 -> TODO()
+            else -> throw IllegalStateException("Should not transition to phase 1 in 'startNextPhase()'")
+        }
     }
 
     object Phase1ConstVals {
@@ -875,7 +668,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
     }
 
-    private inner class Phase1Handler : Initializable, Resettable {
+    private inner class Phase1Handler : PhaseHandler {
 
         val attackChances = orderedMapOf(
             WilyPhase1State.SWOOP pairTo Phase1ConstVals.INIT_SWOOP_CHANCE,
@@ -952,7 +745,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         )
 
         override fun init(vararg params: Any) {
-            GameLogger.debug(TAG, "Phase1Handler: init()")
+            GameLogger.debug(TAG, "Phase1Handler: init(): params=$params")
 
             leftLazor = MegaEntityFactory.fetch(WilyDeathPlaneLazor::class)!!
             rightLazor = MegaEntityFactory.fetch(WilyDeathPlaneLazor::class)!!
@@ -1001,6 +794,235 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             for (i in 1..3) bombXTriggers.add(
                 spawnProps.get("bomb_pos_$i", RectangleMapObject::class)!!.rectangle.getCenter().x
             )
+        }
+
+        override fun buildBody(body: Body) {
+            GameLogger.debug(TAG, "Phase1Handler: buildBody()")
+
+            body.setSize(8f * ConstVals.PPM, 4f * ConstVals.PPM)
+
+            val debugShapes = Array<() -> IDrawableShape?>()
+            addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+            val headDamageable = Fixture(body, FixtureType.DAMAGEABLE, GameCircle())
+            body.addFixture(headDamageable)
+            headDamageable.drawingColor = Color.PURPLE
+            debugShapes.add { headDamageable }
+
+            val flyByUnderbellyDamager =
+                Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(6f * ConstVals.PPM, 1f * ConstVals.PPM))
+            flyByUnderbellyDamager.attachedToBody = false
+            body.addFixture(flyByUnderbellyDamager)
+            debugShapes.add add@{
+                flyByUnderbellyDamager.drawingColor = if (flyByUnderbellyDamager.isActive()) Color.RED else Color.GRAY
+                return@add flyByUnderbellyDamager
+            }
+
+            val flyByBodyShield = Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(4f * ConstVals.PPM))
+            flyByBodyShield.attachedToBody = false
+            body.addFixture(flyByBodyShield)
+            debugShapes.add add@{
+                flyByBodyShield.drawingColor = if (flyByBodyShield.isActive()) Color.BLUE else Color.GRAY
+                return@add flyByBodyShield
+            }
+
+            val bodyDamager = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+            body.addFixture(bodyDamager)
+            /*
+            debugShapes.add add@{
+                bodyDamager.drawingColor = if (bodyDamager.isActive()) Color.RED else Color.GRAY
+                return@add bodyDamager
+            }
+             */
+
+            val leftThrusterDamager =
+                Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+            leftThrusterDamager.attachedToBody = false
+            body.addFixture(leftThrusterDamager)
+            /*
+            debugShapes.add add@{
+                leftThrusterDamager.drawingColor = if (leftThrusterDamager.isActive()) Color.RED else Color.GRAY
+                return@add leftThrusterDamager
+            }
+             */
+
+            val leftThrusterShield =
+                Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+            leftThrusterShield.attachedToBody = false
+            body.addFixture(leftThrusterShield)
+            debugShapes.add add@{
+                leftThrusterShield.drawingColor = if (leftThrusterShield.isActive()) Color.RED else Color.GRAY
+                return@add leftThrusterShield
+            }
+
+            val rightThrusterDamager =
+                Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+            rightThrusterDamager.attachedToBody = false
+            body.addFixture(rightThrusterDamager)
+            /*
+            debugShapes.add add@{
+                rightThrusterDamager.drawingColor = if (rightThrusterDamager.isActive()) Color.RED else Color.GRAY
+                return@add rightThrusterDamager
+            }
+             */
+
+            val rightThrusterShield =
+                Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM))
+            rightThrusterShield.attachedToBody = false
+            body.addFixture(rightThrusterShield)
+            debugShapes.add add@{
+                rightThrusterShield.drawingColor = if (rightThrusterShield.isActive()) Color.RED else Color.GRAY
+                return@add rightThrusterShield
+            }
+
+            val flyByTailDamager = Fixture(
+                body,
+                FixtureType.DAMAGER,
+                GameRectangle().setSize(2f * ConstVals.PPM, 4f * ConstVals.PPM)
+            )
+            flyByTailDamager.offsetFromBodyAttachment.y = 2f * ConstVals.PPM
+            body.addFixture(flyByTailDamager)
+            /*
+            debugShapes.add add@{
+                flyByTailDamager.drawingColor = if (flyByTailDamager.isActive()) Color.RED else Color.GRAY
+                return@add flyByTailDamager
+            }
+             */
+
+            val leftWingHoverDamager =
+                Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+            leftWingHoverDamager.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
+            body.addFixture(leftWingHoverDamager)
+            /*
+            debugShapes.add add@{
+                leftWingHoverDamager.drawingColor = if (leftWingHoverDamager.isActive()) Color.RED else Color.GRAY
+                return@add leftWingHoverDamager
+            }
+             */
+
+            val leftWingHoverShield =
+                Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+            leftWingHoverShield.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
+            body.addFixture(leftWingHoverShield)
+            debugShapes.add add@{
+                leftWingHoverShield.drawingColor = if (leftWingHoverShield.isActive()) Color.BLUE else Color.GRAY
+                return@add leftWingHoverShield
+            }
+
+            val rightWingHoverDamager =
+                Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+            rightWingHoverDamager.offsetFromBodyAttachment.set(6f * ConstVals.PPM, 0f)
+            body.addFixture(rightWingHoverDamager)
+            /*
+            debugShapes.add add@{
+                rightWingHoverDamager.drawingColor = if (rightWingHoverDamager.isActive()) Color.RED else Color.GRAY
+                return@add rightWingHoverDamager
+            }
+             */
+
+            val rightWingHoverShield =
+                Fixture(body, FixtureType.SHIELD, GameRectangle().setSize(3f * ConstVals.PPM, 1.5f * ConstVals.PPM))
+            rightWingHoverShield.offsetFromBodyAttachment.set(-6f * ConstVals.PPM, 0f)
+            body.addFixture(rightWingHoverShield)
+            debugShapes.add add@{
+                rightWingHoverShield.drawingColor = if (rightWingHoverShield.isActive()) Color.BLUE else Color.GRAY
+                return@add rightWingHoverShield
+            }
+
+            body.preProcess.put(ConstKeys.DEFAULT) {
+                if (phaseTransitionHandler.active) {
+                    body.forEachFixture { it.setActive(false) }
+                    return@put
+                }
+
+                val state =
+                    stateMachines.get(WilyFinalBossPhase.PHASE_1).getCurrentElement() as WilyPhase1State
+
+                if (state == WilyPhase1State.FLY_OUT ||
+                    (state == WilyPhase1State.SWOOP &&
+                        phase1Handler.stateTimers[state].time !in 0.45f..0.65f)
+                ) {
+                    body.forEachFixture { it.setActive(false) }
+                    return@put
+                } else body.forEachFixture { it.setActive(true) }
+
+                if ((state == WilyPhase1State.FLY_BY && delayBetweenStates.isFinished()) ||
+                    (state == WilyPhase1State.FLY_IN && !phase1Handler.flyInDecelerating) ||
+                    state == WilyPhase1State.DROP_BOMB
+                ) {
+                    bodyDamager.offsetFromBodyAttachment.setZero()
+
+                    flyByTailDamager.setActive(true)
+                    flyByTailDamager.offsetFromBodyAttachment.x = 4f * ConstVals.PPM
+                    if (body.physics.velocity.x >= 0f) flyByTailDamager.offsetFromBodyAttachment.x *= -1f
+
+                    flyByUnderbellyDamager.setActive(true)
+                    (flyByUnderbellyDamager.rawShape as GameRectangle)
+                        .setTopCenterToPoint(body.getPositionPoint(Position.BOTTOM_CENTER))
+                } else {
+                    bodyDamager.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
+                    flyByTailDamager.setActive(false)
+                    flyByUnderbellyDamager.setActive(false)
+                }
+
+                val hovering = state.equalsAny(
+                    WilyPhase1State.HOVER,
+                    WilyPhase1State.SWOOP,
+                    WilyPhase1State.FIRE_LAZORS,
+                    WilyPhase1State.SHOOT_MISSILES,
+                ) || (state == WilyPhase1State.FLY_IN && phase1Handler.flyInDecelerating)
+
+                if (hovering) {
+                    (headDamageable.rawShape as GameCircle).setRadius(2.5f * ConstVals.PPM)
+                    headDamageable.offsetFromBodyAttachment.setZero()
+                    flyByBodyShield.setActive(false)
+                } else {
+                    (headDamageable.rawShape as GameCircle).setRadius(3f * ConstVals.PPM)
+                    headDamageable.offsetFromBodyAttachment.x = 2f * ConstVals.PPM
+                    val left = body.physics.velocity.x < 0f
+                    if (left) headDamageable.offsetFromBodyAttachment.x *= -1f
+                    headDamageable.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
+
+                    flyByBodyShield.setActive(true)
+                    (flyByBodyShield.rawShape as GameRectangle).let {
+                        val position = if (left) Position.CENTER_LEFT else Position.CENTER_RIGHT
+                        val point = (headDamageable.rawShape as GameCircle)
+                            .getBoundingRectangle()
+                            .getPositionPoint(position.opposite())
+                        it.positionOnPoint(point, position)
+                    }
+                }
+
+                leftWingHoverDamager.setActive(hovering)
+                leftWingHoverShield.setActive(hovering)
+                rightWingHoverDamager.setActive(hovering)
+                rightWingHoverShield.setActive(hovering)
+
+                if (hovering) {
+                    leftThrusterDamager.setActive(true)
+                    (leftThrusterDamager.rawShape as GameRectangle)
+                        .setCenterX(body.getMaxX())
+                        .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+                    (leftThrusterShield.rawShape as GameRectangle)
+                        .setCenterX(body.getMaxX())
+                        .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+
+                    rightThrusterDamager.setActive(true)
+                    (rightThrusterDamager.rawShape as GameRectangle)
+                        .setCenterX(body.getMaxX())
+                        .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+                    (rightThrusterShield.rawShape as GameRectangle)
+                        .setCenterX(body.getMaxX())
+                        .setMaxY(body.getMaxY() - 1f * ConstVals.PPM)
+                } else {
+                    leftThrusterDamager.setActive(false)
+                    leftThrusterShield.setActive(false)
+                    rightThrusterDamager.setActive(false)
+                    rightThrusterShield.setActive(false)
+                }
+            }
+
+            BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
         }
 
         fun buildStateMachine() = EnumStateMachineBuilder
@@ -1739,10 +1761,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             explodeTimer.reset()
             state = WilyPhaseTransState.INIT
 
-            phase1Handler.leftLazor?.on = false
-            phase1Handler.rightLazor?.on = false
-            phase1Handler.warningSigns.values().forEach { it.on = false }
-
             body.physics.velocity.setZero()
 
             game.eventsMan.submitEvent(
@@ -1813,8 +1831,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     body.physics.velocity.set(0f, -PhaseTransitionConstVals.DROP_DOWN_SPEED * ConstVals.PPM)
                     if (body.getCenter().y <= spawnCenter.y) {
                         GameLogger.debug(TAG, "PhaseTransitionHandler: DROP_DOWN complete, starting next phase")
+
                         body.setCenter(spawnCenter)
                         body.physics.velocity.setZero()
+
                         state = WilyPhaseTransState.END
                     }
                 }
@@ -1853,12 +1873,31 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
-    private inner class Phase2Handler {
+    private inner class Phase2Handler : PhaseHandler {
 
         fun buildStateMachine() = EnumStateMachineBuilder
             .create<WilyPhase2State>()
             .initialState(WilyPhase2State.HOVER)
             .build()
+
+        override fun init(vararg params: Any) {
+            GameLogger.debug(TAG, "Phase2Handler: init(): params=$params")
+        }
+
+        override fun buildBody(body: Body) {
+            GameLogger.debug(TAG, "Phase2Handler: buildBody()")
+
+            BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
+        }
+
+        override fun reset() {
+            GameLogger.debug(TAG, "Phase1Handler: reset()")
+        }
+    }
+
+    private interface PhaseHandler: Initializable, Resettable {
+
+        fun buildBody(body: Body)
     }
 
     private fun buildStateMachines() {
