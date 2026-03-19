@@ -68,6 +68,7 @@ import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
+import com.megaman.maverick.game.entities.special.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -131,7 +132,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         SWOOP, HOVER, FLY_IN, FLY_BY, FLY_OUT, FIRE_LAZORS, SHOOT_MISSILES, DROP_BOMB
     }
 
-    private enum class WilyPhase2State { HOVER }
+    private enum class WilyPhase2State { HOVER, ATTACK }
 
     private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN, END }
 
@@ -178,7 +179,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         phase1Handler.buildBody(body)
 
         phase1Handler.init(spawnProps)
-        phase2Handler.init(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -360,9 +360,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 WilyFinalBossPhase.PHASE_2 -> {
-                    // TODO: implement behaviors for phase 2
-                    game.setDebugText("PHASE 2")
-                    body.physics.velocity.setZero()
+                    phase2Handler.update(delta)
                 }
 
                 WilyFinalBossPhase.PHASE_3 -> TODO()
@@ -551,7 +549,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         resetBody()
         when (currentPhase) {
-            WilyFinalBossPhase.PHASE_2 -> phase2Handler.buildBody(body)
+            WilyFinalBossPhase.PHASE_2 -> {
+                phase2Handler.init()
+                phase2Handler.buildBody(body)
+            }
             WilyFinalBossPhase.PHASE_3 -> TODO()
             else -> throw IllegalStateException("Should not transition to phase 1 in 'startNextPhase()'")
         }
@@ -1740,6 +1741,174 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
+    private object Phase2HandlerConstVals {
+        const val TENTACLE_OFFSET_X = 1.5f
+        const val TENTACLE_OFFSET_Y = -1.5f
+        const val TENTACLE_IDLE_OFFSET_X = 0f
+        const val TENTACLE_IDLE_OFFSET_Y = -3f
+        const val HOVER_DURATION = 3f
+
+        // Sine-based lateral body oscillation (similar to lazor phase)
+        const val SWAY_AMPLITUDE = 3f
+        const val SWAY_ANGULAR_SPEED = MathUtils.PI2 / 8f
+        const val VERTICAL_BOB_AMPLITUDE = 0.5f
+        const val VERTICAL_BOB_SPEED_MULT = 3f
+    }
+
+    private inner class Phase2Handler : PhaseHandler, Updatable {
+
+        private var leftTentacle: WilyCapsuleTentacle? = null
+        private var rightTentacle: WilyCapsuleTentacle? = null
+
+        private val hoverTimer = Timer(Phase2HandlerConstVals.HOVER_DURATION)
+
+        private var lungeLeft = true
+        private var lungeLaunched = false
+
+        // Sway state
+        private var swayTheta = 0f
+        private var swayAnchor: Vector2? = null
+
+        fun buildStateMachine() = EnumStateMachineBuilder
+            .create<WilyPhase2State>()
+            .initialState(WilyPhase2State.HOVER)
+            .transition(WilyPhase2State.HOVER, WilyPhase2State.ATTACK) { true }
+            .transition(WilyPhase2State.ATTACK, WilyPhase2State.HOVER) { true }
+            .onChangeState { current, _ ->
+                when (current) {
+                    WilyPhase2State.HOVER -> hoverTimer.reset()
+                    WilyPhase2State.ATTACK -> {
+                        lungeLaunched = false
+                        lungeLeft = !lungeLeft
+                    }
+                }
+            }
+            .build()
+
+        override fun init(vararg params: Any) {
+            GameLogger.debug(TAG, "Phase2Handler: init()")
+
+            hoverTimer.reset()
+
+            lungeLeft = true
+            lungeLaunched = false
+
+            swayTheta = 0f
+
+            swayAnchor?.let { GameObjectPools.free(it) }
+            swayAnchor = null
+
+            val center = body.getCenter()
+
+            val idleOffset = GameObjectPools.fetch(Vector2::class)
+                .set(Phase2HandlerConstVals.TENTACLE_IDLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_IDLE_OFFSET_Y)
+                .scl(ConstVals.PPM.toFloat())
+
+            val leftBounds = GameRectangle().setCenter(
+                center.x - Phase2HandlerConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2HandlerConstVals.TENTACLE_OFFSET_Y * ConstVals.PPM
+            )
+            leftTentacle = MegaEntityFactory.fetch(WilyCapsuleTentacle::class)!!
+            leftTentacle!!.spawn(
+                props(
+                    ConstKeys.BOUNDS pairTo leftBounds,
+                    ConstKeys.OFFSET pairTo Vector2(idleOffset)
+                )
+            )
+
+            val rightBounds = GameRectangle().setCenter(
+                center.x + Phase2HandlerConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2HandlerConstVals.TENTACLE_OFFSET_Y * ConstVals.PPM
+            )
+            rightTentacle = MegaEntityFactory.fetch(WilyCapsuleTentacle::class)!!
+            rightTentacle!!.spawn(
+                props(
+                    ConstKeys.BOUNDS pairTo rightBounds,
+                    ConstKeys.OFFSET pairTo Vector2(idleOffset)
+                )
+            )
+        }
+
+        override fun buildBody(body: Body) {
+            GameLogger.debug(TAG, "Phase2Handler: buildBody(): fixtures.size=${body.fixtures.size}")
+
+            val center = body.getCenter()
+            body.setSize(3f * ConstVals.PPM)
+            body.setCenter(center)
+
+            val debugShapes = Array<() -> IDrawableShape?>()
+            addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+            debugShapes.add { body.getBounds() }
+
+            BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
+        }
+
+        override fun update(delta: Float) {
+            // Sine-based lateral sway (like lazor phase)
+            if (swayAnchor == null)
+                swayAnchor = GameObjectPools.fetch(Vector2::class, false).set(body.getCenter())
+
+            swayTheta += Phase2HandlerConstVals.SWAY_ANGULAR_SPEED * delta
+
+            val swayX = swayAnchor!!.x +
+                Phase2HandlerConstVals.SWAY_AMPLITUDE * ConstVals.PPM * MathUtils.sin(swayTheta)
+            val swayY = swayAnchor!!.y +
+                Phase2HandlerConstVals.VERTICAL_BOB_AMPLITUDE * ConstVals.PPM *
+                MathUtils.sin(swayTheta * Phase2HandlerConstVals.VERTICAL_BOB_SPEED_MULT)
+
+            body.setCenter(swayX, swayY)
+
+            body.physics.velocity.setZero()
+
+            // Update tentacle anchors to track the boss body
+            val center = body.getCenter()
+
+            leftTentacle?.setAnchor(
+                GameObjectPools.fetch(Vector2::class)
+                    .set(-Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
+                    .scl(ConstVals.PPM.toFloat())
+                    .add(center)
+            )
+
+            rightTentacle?.setAnchor(
+                GameObjectPools.fetch(Vector2::class)
+                    .set(Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
+                    .scl(ConstVals.PPM.toFloat())
+                    .add(center)
+            )
+
+            val phase2StateMachine =
+                stateMachines.get(WilyFinalBossPhase.PHASE_2) as StateMachine<WilyPhase2State>
+            when (phase2StateMachine.getCurrentElement()) {
+                WilyPhase2State.HOVER -> {
+                    hoverTimer.update(delta)
+                    if (hoverTimer.isFinished()) phase2StateMachine.next()
+                }
+
+                WilyPhase2State.ATTACK -> {
+                    val attacker = if (lungeLeft) leftTentacle else rightTentacle
+                    if (!lungeLaunched) {
+                        attacker?.lunge(GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter()))
+                        lungeLaunched = true
+                    } else if (attacker?.isIdle() == true) phase2StateMachine.next()
+                }
+            }
+        }
+
+        override fun reset() {
+            GameLogger.debug(TAG, "Phase2Handler: reset()")
+
+            swayTheta = 0f
+            swayAnchor = null
+
+            leftTentacle?.destroy()
+            leftTentacle = null
+
+            rightTentacle?.destroy()
+            rightTentacle = null
+        }
+    }
+
     object PhaseTransitionConstVals {
         const val EXPLODE_DUR = 3f
         const val FLY_UP_SPEED = 16f
@@ -1873,36 +2042,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             active = false
             explodeTimer.reset()
             pauseTimer.reset()
-        }
-    }
-
-    private inner class Phase2Handler : PhaseHandler {
-
-        fun buildStateMachine() = EnumStateMachineBuilder
-            .create<WilyPhase2State>()
-            .initialState(WilyPhase2State.HOVER)
-            .build()
-
-        override fun init(vararg params: Any) {
-            GameLogger.debug(TAG, "Phase2Handler: init(): params=$params")
-        }
-
-        override fun buildBody(body: Body) {
-            GameLogger.debug(TAG, "Phase2Handler: buildBody(): fixtures.size=${body.fixtures.size}")
-
-            val center = body.getCenter()
-            body.setSize(3f * ConstVals.PPM)
-            body.setCenter(center)
-
-            val debugShapes = Array<() -> IDrawableShape?>()
-            addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-            debugShapes.add { body.getBounds() }
-
-            BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
-        }
-
-        override fun reset() {
-            GameLogger.debug(TAG, "Phase1Handler: reset()")
         }
     }
 

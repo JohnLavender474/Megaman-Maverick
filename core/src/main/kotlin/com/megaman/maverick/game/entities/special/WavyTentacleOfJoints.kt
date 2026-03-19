@@ -111,9 +111,9 @@ class WavyTentacleOfJoints(game: MegamanMaverickGame) : MegaGameEntity(game), Up
 
     fun setTarget(x: Float, y: Float) = _target.set(x, y)
 
-    fun setAnchor(v: Vector2) = _anchor.set(v)
+    fun setAnchor(v: Vector2): Vector2 = _anchor.set(v)
 
-    fun setTarget(v: Vector2) = _target.set(v)
+    fun setTarget(v: Vector2): Vector2 = _target.set(v)
 
     fun getJoint(index: Int, out: Vector2): Vector2 = out.set(joints[index])
 

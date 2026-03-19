@@ -3793,11 +3793,6 @@
     <property name="spawn_room" value="room7"/>
    </properties>
   </object>
-  <object id="712" name="TestWavyTentacleController" x="11600" y="1408" width="32" height="32">
-   <properties>
-    <property name="target" type="object" value="713"/>
-   </properties>
-  </object>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="26" x="1568" y="7072" width="64" height="256"/>
@@ -3902,7 +3897,6 @@
   <object id="706" name="BombPos1" x="11360" y="4032" width="32" height="32"/>
   <object id="707" name="BombPos2" x="11600" y="4032" width="32" height="32"/>
   <object id="708" name="BombPos3" x="11840" y="4032" width="32" height="32"/>
-  <object id="713" name="Target" x="11600" y="1552" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="27" name="items">
   <object id="373" name="HealthBulb" x="7552" y="5536" width="32" height="32">
@@ -4512,7 +4506,7 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="player">
-  <object id="711" name="0" x="11424" y="1664" width="32" height="32"/>
+  <object id="711" name="0" x="11440" y="3552" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="temp">
   <object id="4" name="0" x="304" y="6080" width="32" height="32"/>
