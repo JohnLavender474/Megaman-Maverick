@@ -35,7 +35,6 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.events.Event
 import com.mega.game.engine.state.EnumStateMachineBuilder
 import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -58,19 +57,19 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.M
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
-import com.megaman.maverick.game.entities.decorations.WilySkullHead
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
+import com.megaman.maverick.game.entities.hazards.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
+import com.megaman.maverick.game.entities.hazards.WilyPlaneBody
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
-import com.megaman.maverick.game.entities.special.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.utils.hardMode
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -91,6 +90,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private const val WILY_DEATH_PLANE_SPRITE_WIDTH = 16f
         private const val WILY_DEATH_PLANE_SPRITE_HEIGHT = 16f
+
+        private const val WILY_PHASE_2_SPRITE_WIDTH = 8f
+        private const val WILY_PHASE_2_SPRITE_HEIGHT = 8f
 
         private val DESTROY_ON_TRANS = gdxArrayOf(HomingMissile.TAG, Bullet.TAG)
 
@@ -120,7 +122,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 cols = 1,
                 durations = gdxFilledArrayOf(5, 0.05f).also { it[2] = 0.25f },
                 loop = false
-            )
+            ),
+            "phase_2/hover" pairTo AnimationDef(3, 1, gdxArrayOf(0.5f, 0.1f, 0.1f), true),
+            "phase_2/angry" pairTo AnimationDef(3, 1, 0.1f, true),
+            "phase_2/laugh" pairTo AnimationDef(2, 1, 0.1f, true),
+            "phase_2/scared" pairTo AnimationDef(2, 1, 0.1f, true)
         )
     }
 
@@ -191,10 +197,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         stateMachines.values().forEach { it.reset() }
 
         phaseTransitionHandler.reset()
-        val skullHeadTarget = spawnProps
+        val planeBodyTarget = spawnProps
             .get("skull_head_target", RectangleMapObject::class)!!
             .rectangle.getCenter()
-        phaseTransitionHandler.skullHeadTarget.set(skullHeadTarget)
+        phaseTransitionHandler.planeBodyTarget.set(planeBodyTarget)
 
         initSequence = true
 
@@ -397,6 +403,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
             sprite.setCenter(center)
 
+            if (currentPhase == WilyFinalBossPhase.PHASE_2) sprite.setSize(
+                WILY_PHASE_2_SPRITE_WIDTH * ConstVals.PPM,
+                WILY_PHASE_2_SPRITE_HEIGHT * ConstVals.PPM
+            ) else sprite.setSize(
+                WILY_DEATH_PLANE_SPRITE_WIDTH * ConstVals.PPM,
+                WILY_DEATH_PLANE_SPRITE_HEIGHT * ConstVals.PPM
+            )
+
             if (phaseTransitionHandler.active) {
                 sprite.setFlip(false, false)
                 sprite.priority.section = DrawingSection.PLAYGROUND
@@ -452,6 +466,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     sprite.setFlip(flipX, false)
                 }
 
+                WilyFinalBossPhase.PHASE_2 -> {
+                    sprite.priority.section = DrawingSection.PLAYGROUND
+                    sprite.priority.value = -1
+                    sprite.setFlip(false, false)
+                    sprite.hidden = false
+                }
+
                 else -> {
                     sprite.priority.section = DrawingSection.PLAYGROUND
                     sprite.setFlip(false, false)
@@ -492,25 +513,34 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
-                    if (phaseTransitionHandler.active || currentPhase == WilyFinalBossPhase.PHASE_2)
-                        return@keySupplier "phase_1/hover"
-
                     val prefix = currentPhase.name.lowercase()
 
-                    val suffix = when (val state = stateMachines.get(currentPhase).getCurrentElement()) {
-                        WilyPhase1State.FLY_BY ->
-                            if (!delayBetweenStates.isFinished()) "tilt" else "fly_by"
+                    val suffix = when {
+                        else -> when (currentPhase) {
+                            WilyFinalBossPhase.PHASE_1 -> when {
+                                phaseTransitionHandler.active -> "hover"
 
-                        WilyPhase1State.FLY_IN ->
-                            if (phase1Handler.flyInDecelerating) "tilt" else "fly_by"
+                                else -> when (
+                                    val state = stateMachines.get(WilyFinalBossPhase.PHASE_1).getCurrentElement()
+                                ) {
+                                    WilyPhase1State.FLY_BY ->
+                                        if (!delayBetweenStates.isFinished()) "tilt" else "fly_by"
 
-                        WilyPhase1State.FIRE_LAZORS ->
-                            if (phase1Handler.shootBulletsTimer.isFinished()) "hover" else "open_mouth"
+                                    WilyPhase1State.FLY_IN ->
+                                        if (phase1Handler.flyInDecelerating) "tilt" else "fly_by"
 
-                        WilyPhase1State.DROP_BOMB ->
-                            if (phase1Handler.dropBombHatchOpen) "open_hatch" else "fly_by"
+                                    WilyPhase1State.FIRE_LAZORS ->
+                                        if (phase1Handler.shootBulletsTimer.isFinished()) "hover" else "open_mouth"
 
-                        else -> (state as Enum<*>).name.lowercase()
+                                    WilyPhase1State.DROP_BOMB ->
+                                        if (phase1Handler.dropBombHatchOpen) "open_hatch" else "fly_by"
+
+                                    else -> (state as Enum<*>).name.lowercase()
+                                }
+                            }
+                            WilyFinalBossPhase.PHASE_2 -> "hover"
+                            WilyFinalBossPhase.PHASE_3 -> TODO()
+                        }
                     }
 
                     return@keySupplier "${prefix}/${suffix}"
@@ -934,11 +964,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
 
             body.preProcess.put(ConstKeys.DEFAULT) {
-                if (phaseTransitionHandler.active) {
-                    body.forEachFixture { it.setActive(false) }
-                    return@put
-                }
-
                 val state =
                     stateMachines.get(WilyFinalBossPhase.PHASE_1).getCurrentElement() as WilyPhase1State
 
@@ -969,12 +994,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     flyByUnderbellyDamager.setActive(false)
                 }
 
-                val hovering = state.equalsAny(
-                    WilyPhase1State.HOVER,
-                    WilyPhase1State.SWOOP,
-                    WilyPhase1State.FIRE_LAZORS,
-                    WilyPhase1State.SHOOT_MISSILES,
-                ) || (state == WilyPhase1State.FLY_IN && phase1Handler.flyInDecelerating)
+                val hovering = phaseTransitionHandler.active ||
+                    (state == WilyPhase1State.FLY_IN && phase1Handler.flyInDecelerating) ||
+                    state.equalsAny(
+                        WilyPhase1State.HOVER,
+                        WilyPhase1State.SWOOP,
+                        WilyPhase1State.FIRE_LAZORS,
+                        WilyPhase1State.SHOOT_MISSILES,
+                    )
 
                 if (hovering) {
                     (headDamageable.rawShape as GameCircle).setRadius(2.5f * ConstVals.PPM)
@@ -1749,7 +1776,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val HOVER_DURATION = 3f
 
         // Sine-based lateral body oscillation (similar to lazor phase)
-        const val SWAY_AMPLITUDE = 3f
+        const val SWAY_AMPLITUDE = 4f
         const val SWAY_ANGULAR_SPEED = MathUtils.PI2 / 8f
         const val VERTICAL_BOB_AMPLITUDE = 0.5f
         const val VERTICAL_BOB_SPEED_MULT = 3f
@@ -1843,6 +1870,22 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
         }
 
+        fun updateAnchors() {
+            val center = body.getCenter()
+            leftTentacle?.setAnchor(
+                GameObjectPools.fetch(Vector2::class)
+                    .set(-Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
+                    .scl(ConstVals.PPM.toFloat())
+                    .add(center)
+            )
+            rightTentacle?.setAnchor(
+                GameObjectPools.fetch(Vector2::class)
+                    .set(Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
+                    .scl(ConstVals.PPM.toFloat())
+                    .add(center)
+            )
+        }
+
         override fun update(delta: Float) {
             // Sine-based lateral sway (like lazor phase)
             if (swayAnchor == null)
@@ -1860,22 +1903,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             body.physics.velocity.setZero()
 
-            // Update tentacle anchors to track the boss body
-            val center = body.getCenter()
-
-            leftTentacle?.setAnchor(
-                GameObjectPools.fetch(Vector2::class)
-                    .set(-Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
-                    .scl(ConstVals.PPM.toFloat())
-                    .add(center)
-            )
-
-            rightTentacle?.setAnchor(
-                GameObjectPools.fetch(Vector2::class)
-                    .set(Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
-                    .scl(ConstVals.PPM.toFloat())
-                    .add(center)
-            )
+            updateAnchors()
 
             val phase2StateMachine =
                 stateMachines.get(WilyFinalBossPhase.PHASE_2) as StateMachine<WilyPhase2State>
@@ -1924,7 +1952,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         val explodeTimer = Timer(PhaseTransitionConstVals.EXPLODE_DUR)
         val pauseTimer = Timer(PhaseTransitionConstVals.PAUSE_DUR)
 
-        val skullHeadTarget = Vector2()
+        val planeBodyTarget = Vector2()
 
         fun start() {
             GameLogger.debug(TAG, "PhaseTransitionHandler: start()")
@@ -1935,18 +1963,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             body.physics.velocity.setZero()
 
-            game.eventsMan.submitEvent(
-                Event(
-                    EventType.TURN_CONTROLLER_OFF, props(
-                        "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" pairTo false
-                    )
-                )
-            )
             megaman.body.physics.velocity.x = 0f
-            megaman.canBeDamaged = false
 
             val entitiesToDestroy = MegaGameEntities.getOfTags(tempEntities, DESTROY_ON_TRANS)
-            entitiesToDestroy.forEach { it.destroy() }
+            entitiesToDestroy.forEach { if (it is IProjectileEntity && it.owner == this@WilyFinalBoss) it.destroy() }
             entitiesToDestroy.clear()
         }
 
@@ -1981,7 +2001,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                         state = WilyPhaseTransState.PAUSE
                         pauseTimer.reset()
-                        spawnSkullHead()
+                        spawnPlaneBody()
                     }
                 }
 
@@ -2001,6 +2021,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyPhaseTransState.DROP_DOWN -> {
                     body.physics.velocity.set(0f, -PhaseTransitionConstVals.DROP_DOWN_SPEED * ConstVals.PPM)
+
                     if (body.getCenter().y <= spawnCenter.y) {
                         GameLogger.debug(TAG, "PhaseTransitionHandler: DROP_DOWN complete, starting next phase")
 
@@ -2009,28 +2030,24 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                         state = WilyPhaseTransState.END
                     }
+
+                    phase2Handler.updateAnchors()
                 }
 
                 WilyPhaseTransState.END -> {
                     // TODO: Add timer here so that end of transition can be filled with an animation
-
                     active = false
-
-                    game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-                    megaman.body.physics.velocity.x = 0f
-                    megaman.canBeDamaged = true
-
                     setHealthToMax()
                 }
             }
         }
 
-        private fun spawnSkullHead() {
-            GameLogger.debug(TAG, "spawnSkullHead()")
-            val skullHead = MegaEntityFactory.fetch(WilySkullHead::class)!!
-            skullHead.spawn(
+        private fun spawnPlaneBody() {
+            GameLogger.debug(TAG, "spawnPlaneBody()")
+            val planeBody = MegaEntityFactory.fetch(WilyPlaneBody::class)!!
+            planeBody.spawn(
                 props(
-                    ConstKeys.TARGET pairTo skullHeadTarget,
+                    ConstKeys.TARGET pairTo planeBodyTarget,
                     ConstKeys.POSITION pairTo body.getCenter(),
                 )
             )
@@ -2045,7 +2062,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
-    private interface PhaseHandler: Initializable, Resettable {
+    private interface PhaseHandler : Initializable, Resettable {
 
         fun buildBody(body: Body)
     }

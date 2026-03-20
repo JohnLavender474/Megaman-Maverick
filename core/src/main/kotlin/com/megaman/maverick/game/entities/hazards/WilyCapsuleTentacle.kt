@@ -1,7 +1,7 @@
-package com.megaman.maverick.game.entities.special
+package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -10,7 +10,6 @@ import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -22,16 +21,12 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints.TentacleState
+import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.sqrt
 
-/**
- * Controller entity that owns a [WavyTentacleOfJoints] child and drives it through
- * an idle/lunge/pause/return cycle. The anchor position is set externally each frame
- * by the boss via [setAnchor]. The idle tip position is computed as anchor + [idleOffset]
- * plus a small sine drift for organic feel.
- */
 class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     MegaGameEntity(game), IDrawableShapesEntity, Updatable {
 
@@ -39,7 +34,6 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         const val TAG = "WilyCapsuleTentacle"
 
         private const val SEGMENT_COUNT = 6
-        private const val JOINT_RADIUS = 0.5f * ConstVals.PPM
         private const val LINE_THICKNESS = 0.1f * ConstVals.PPM
 
         // Idle tip drift: sine base + random wander layered on top
@@ -54,8 +48,11 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val WANDER_RETARGET_MAX = 3f
         private const val WANDER_LERP_SPEED = 3f
 
-        // How fast the drawn circles lerp toward their joint positions
-        private const val CIRCLE_LERP_SPEED = 12f
+        // How fast joint entities lerp toward their joint positions
+        private const val JOINT_LERP_SPEED = 12f
+        private const val JOINT_UPDATE_INTERVAL = 0.05f
+
+        private const val LOG_INTERVAL = 2f
 
         // Lunge movement constants (boss decides *when* to lunge; this class handles the motion)
         private const val LUNGE_SPEED = 18f * ConstVals.PPM
@@ -71,8 +68,11 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     // --- Drawable shapes ---
 
     private val lines = Array<GameLine>()
-    private val circles = Array<GameCircle>()
-    private val circlePositions = Array<Vector2>()
+
+    // --- Joint entities ---
+
+    private val jointPositions = Array<Vector2>()
+    private val jointEntities = Array<WilyCapsuleTentacleJoint>()
 
     // --- Anchor and idle offset ---
 
@@ -103,18 +103,23 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     // Reusable scratch vector
     private val scratch = Vector2()
 
+    // Logging timer
+    private var logTimer = 0f
+
     // --- Public API ---
 
-    fun setAnchor(v: Vector2) {
-        anchor.set(v)
-    }
+    fun setAnchor(v: Vector2): Vector2 = anchor.set(v)
 
-    fun isIdle(): Boolean = tentacle?.getState() == TentacleState.IDLE
+    fun getAnchor(out: Vector2) = tentacle?.getAnchor(out)
+
+    fun getTarget(out: Vector2) = tentacle?.getTarget(out)
+
+    fun isIdle(): Boolean = tentacle?.getState() == WavyTentacleOfJoints.TentacleState.IDLE
 
     fun lunge(target: Vector2) {
-        if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
+        if (tentacle == null || tentacle!!.getState() != WavyTentacleOfJoints.TentacleState.IDLE) return
         lungeTarget.set(target)
-        tentacle!!.setState(TentacleState.LUNGING)
+        tentacle!!.setState(WavyTentacleOfJoints.TentacleState.LUNGING)
     }
 
     // --- Lifecycle ---
@@ -131,6 +136,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         super.onSpawn(spawnProps)
 
         time = 0f
+        logTimer = 0f
         pauseTimer = 0f
 
         val anchorPos = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -174,8 +180,12 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         tentacle = null
 
         lines.clear()
-        circles.clear()
-        circlePositions.clear()
+
+        jointPositions.forEach { GameObjectPools.free(it) }
+        jointPositions.clear()
+
+        for (joint in jointEntities) joint.destroy()
+        jointEntities.clear()
     }
 
     // --- Per-frame update ---
@@ -184,37 +194,40 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         if (!tentacleSpawned && tentacle!!.spawned) {
             tentacleSpawned = true
 
-            // Build drawables sized to match the child's joint count
-            val jointCount = tentacle!!.jointCount
-            lines.clear()
-            circles.clear()
-            circlePositions.clear()
+            for (joint in jointEntities) joint.destroy()
+            jointEntities.clear()
+
             repeat(SEGMENT_COUNT) {
                 lines.add(GameLine().also { line ->
                     line.drawingColor = Color.GREEN
-                    line.drawingShapeType = ShapeType.Filled
+                    line.drawingShapeType = ShapeRenderer.ShapeType.Filled
                     line.drawingRenderType = GameLine.GameLineRenderingType.RECT_LINE
                     line.drawingThickness = LINE_THICKNESS
                 })
             }
+
+            val jointCount = tentacle!!.jointCount
             repeat(jointCount) { i ->
-                val pos = Vector2()
+                val pos = GameObjectPools.fetch(Vector2::class, false)
                 tentacle!!.getJoint(i, pos)
-                circlePositions.add(pos)
-                circles.add(GameCircle().also { circle ->
-                    circle.drawingColor = Color.YELLOW
-                    circle.drawingShapeType = ShapeType.Filled
-                    circle.setRadius(JOINT_RADIUS)
-                    circle.setCenter(pos)
-                })
+                jointPositions.add(pos)
+
+                val jointEntity = MegaEntityFactory.fetch(WilyCapsuleTentacleJoint::class)!!
+                jointEntity.owner = this
+                jointEntity.spawn(props(ConstKeys.CENTER pairTo pos))
+                jointEntities.add(jointEntity)
             }
 
             clearProdShapeSuppliers()
             for (line in lines) addProdShapeSupplier { line }
-            for (circle in circles) addProdShapeSupplier { circle }
+
+            return
         }
 
         if (!tentacleSpawned) return
+
+        if (jointEntities.any { !it.spawned })
+            throw IllegalStateException("Joint entities should be spawned by this point")
 
         time += delta
 
@@ -238,12 +251,12 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
         // Run the lunge state machine
         when (tentacle!!.getState()) {
-            TentacleState.IDLE -> {
+            WavyTentacleOfJoints.TentacleState.IDLE -> {
                 currentTipTarget.set(currentIdleTarget)
                 tentacle!!.setTarget(currentTipTarget)
             }
 
-            TentacleState.LUNGING -> {
+            WavyTentacleOfJoints.TentacleState.LUNGING -> {
                 val dx = lungeTarget.x - currentTipTarget.x
                 val dy = lungeTarget.y - currentTipTarget.y
                 val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
@@ -252,7 +265,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
                 if (dist <= step) {
                     currentTipTarget.set(lungeTarget)
                     pauseTimer = 0f
-                    tentacle!!.setState(TentacleState.PAUSING)
+                    tentacle!!.setState(WavyTentacleOfJoints.TentacleState.PAUSING)
                 } else {
                     currentTipTarget.x += dx / dist * step
                     currentTipTarget.y += dy / dist * step
@@ -260,13 +273,13 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
                 tentacle!!.setTarget(currentTipTarget)
             }
 
-            TentacleState.PAUSING -> {
+            WavyTentacleOfJoints.TentacleState.PAUSING -> {
                 pauseTimer += delta
                 if (pauseTimer >= LUNGE_PAUSE_DURATION)
-                    tentacle!!.setState(TentacleState.RETURNING)
+                    tentacle!!.setState(WavyTentacleOfJoints.TentacleState.RETURNING)
             }
 
-            TentacleState.RETURNING -> {
+            WavyTentacleOfJoints.TentacleState.RETURNING -> {
                 val dx = currentIdleTarget.x - currentTipTarget.x
                 val dy = currentIdleTarget.y - currentTipTarget.y
                 val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
@@ -274,7 +287,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
                 if (dist <= step) {
                     currentTipTarget.set(currentIdleTarget)
-                    tentacle!!.setState(TentacleState.IDLE)
+                    tentacle!!.setState(WavyTentacleOfJoints.TentacleState.IDLE)
                 } else {
                     currentTipTarget.x += dx / dist * step
                     currentTipTarget.y += dy / dist * step
@@ -283,19 +296,37 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             }
         }
 
-        // Update line segments every frame for smooth motion
-        for (i in 0 until SEGMENT_COUNT) {
-            lines[i].set(tentacle!!.getJoint(i, scratch), tentacle!!.getJoint(i + 1, Vector2()))
+        // Periodic debug logging: joint count and positions
+        logTimer += delta
+        if (logTimer >= LOG_INTERVAL) {
+            logTimer = 0f
+            val sb = StringBuilder("update(): jointEntities.size=${jointEntities.size}")
+            for (i in 0 until jointEntities.size) {
+                val center = jointEntities[i].body.getCenter()
+                sb.append(", joint[$i]=(${center.x}, ${center.y})")
+            }
+            GameLogger.debug(TAG, sb.toString())
         }
 
-        // Smoothly lerp circle positions toward their joint positions each frame
+        // Update line segments every frame for smooth motion
+        for (i in 0 until SEGMENT_COUNT) {
+            lines[i].let {
+                it.setFirstLocalPoint(
+                    tentacle!!.getJoint(i, scratch),
+                )
+                it.setSecondLocalPoint(
+                    tentacle!!.getJoint(i + 1, scratch)
+                )
+            }
+        }
+
         val jointCount = tentacle!!.jointCount
         for (i in 0 until jointCount) {
             val jointPos = tentacle!!.getJoint(i, scratch)
-            val circlePos = circlePositions[i]
-            circlePos.x = MathUtils.lerp(circlePos.x, jointPos.x, CIRCLE_LERP_SPEED * delta)
-            circlePos.y = MathUtils.lerp(circlePos.y, jointPos.y, CIRCLE_LERP_SPEED * delta)
-            circles[i].setCenter(circlePos)
+            val lerpedPos = jointPositions[i]
+            lerpedPos.x = MathUtils.lerp(lerpedPos.x, jointPos.x, JOINT_LERP_SPEED * JOINT_UPDATE_INTERVAL)
+            lerpedPos.y = MathUtils.lerp(lerpedPos.y, jointPos.y, JOINT_LERP_SPEED * JOINT_UPDATE_INTERVAL)
+            jointEntities[i].body.setCenter(lerpedPos)
         }
     }
 

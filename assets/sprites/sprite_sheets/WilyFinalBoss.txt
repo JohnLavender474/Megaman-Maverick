@@ -1,81 +1,137 @@
 WilyFinalBoss-0.png
-size: 768, 3584
+size: 768, 3712
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 phase_1/fly_by
   rotate: false
-  xy: 0, 0
+  xy: 48, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 phase_1/fly_out
   rotate: false
-  xy: 512, 256
+  xy: 0, 896
   size: 256, 512
   orig: 256, 512
   offset: 0, 0
   index: -1
 phase_1/hover
   rotate: false
-  xy: 256, 0
+  xy: 304, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 phase_1/lazors
   rotate: false
-  xy: 256, 768
+  xy: 512, 896
   size: 256, 768
   orig: 256, 768
   offset: 0, 0
   index: -1
 phase_1/open_hatch
   rotate: false
-  xy: 512, 0
+  xy: 0, 256
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 phase_1/open_mouth
   rotate: false
-  xy: 0, 2304
+  xy: 0, 2432
   size: 256, 1280
   orig: 256, 1280
   offset: 0, 0
   index: -1
 phase_1/shoot_missiles
   rotate: false
-  xy: 0, 1536
+  xy: 0, 1664
   size: 768, 768
   orig: 768, 768
   offset: 0, 0
   index: -1
 phase_1/swoop
   rotate: false
-  xy: 256, 2304
+  xy: 256, 2432
   size: 512, 1280
   orig: 512, 1280
   offset: 0, 0
   index: -1
 phase_1/tilt
   rotate: false
-  xy: 0, 256
+  xy: 256, 256
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 phase_1/tilt_lazors
   rotate: false
-  xy: 0, 768
+  xy: 256, 896
   size: 256, 512
   orig: 256, 512
   offset: 0, 0
   index: -1
+phase_2/angry
+  rotate: false
+  xy: 512, 512
+  size: 128, 384
+  orig: 128, 384
+  offset: 0, 0
+  index: -1
+phase_2/hover
+  rotate: false
+  xy: 640, 512
+  size: 128, 384
+  orig: 128, 384
+  offset: 0, 0
+  index: -1
+phase_2/joints/0
+  rotate: false
+  xy: 0, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+phase_2/joints/1
+  rotate: false
+  xy: 16, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+phase_2/joints/2
+  rotate: false
+  xy: 32, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+phase_2/laugh
+  rotate: false
+  xy: 512, 256
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+phase_2/scared
+  rotate: false
+  xy: 640, 256
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+WilyPlaneBody
+  rotate: false
+  xy: 0, 512
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 WilySkullHead
   rotate: false
-  xy: 256, 256
+  xy: 256, 512
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
