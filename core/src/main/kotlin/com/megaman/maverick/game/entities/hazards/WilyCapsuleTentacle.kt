@@ -35,7 +35,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     companion object {
         const val TAG = "WilyCapsuleTentacle"
 
-        private const val SEGMENT_COUNT = 2
+        private const val SEGMENT_COUNT = 3
         private const val LINE_THICKNESS = 0.1f * ConstVals.PPM
 
         private const val DEFAULT_IDLE_OFFSET = 2.5f
@@ -69,6 +69,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         // Lunge-past-and-swipe
         private const val LUNGE_PAST_OVERSHOOT = 3f
         private const val SWIPE_DISTANCE = 6f
+        private const val SWIPE_HORIZONTAL_EXTEND = 3f
         private const val COIL_BACK_DISTANCE = 4f
         private const val COIL_BACK_SPEED = 6f * ConstVals.PPM
     }
@@ -389,15 +390,19 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
                                 val swipeUp = megaman.body.getY() > currentTipTarget.y
                                 val swipeDir = if (swipeUp) 1f else -1f
 
+                                // Extend further horizontally away from the anchor during swipe
+                                val horizDir = if (currentTipTarget.x > anchor.x) 1f else -1f
+                                val horizExtend = horizDir * SWIPE_HORIZONTAL_EXTEND * ConstVals.PPM
+
                                 // Swipe target
                                 lungeTarget.set(
-                                    currentTipTarget.x,
+                                    currentTipTarget.x + horizExtend,
                                     currentTipTarget.y + swipeDir * SWIPE_DISTANCE * ConstVals.PPM
                                 )
 
-                                // Coil back target (opposite direction)
+                                // Coil back target (opposite direction vertically, same horizontal extend)
                                 coilBackTarget.set(
-                                    currentTipTarget.x,
+                                    currentTipTarget.x + horizExtend * 0.5f,
                                     currentTipTarget.y - swipeDir * COIL_BACK_DISTANCE * ConstVals.PPM
                                 )
                                 coilingBack = true

@@ -49,7 +49,6 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
@@ -173,7 +172,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         super.init()
         buildStateMachines()
         addComponent(defineAnimationsComponent())
-        damageOverrides.put(Bullet::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -619,45 +617,45 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val MAX_ATTACK_CHANCE = 0.8f
 
         const val INIT_SWOOP_CHANCE = 0.2f
-        const val INIT_MISSILES_CHANCE = 0.2f
-        const val INIT_LAZOR_CHANCE = 0.2f
+        const val INIT_MISSILES_CHANCE = 0.4f
+        const val INIT_LAZOR_CHANCE = 0.35f
         const val INIT_DROP_BOMB_CHANCE = 0.2f
 
         const val SWOOP_CHANCE_INCR = 0.2f
-        const val LAZOR_CHANCE_INCR = 0.2f
-        const val MISSILES_CHANCE_INCR = 0.2f
+        const val LAZOR_CHANCE_INCR = 0.3f
+        const val MISSILES_CHANCE_INCR = 0.3f
         const val DROP_BOMB_CHANCE_INCR = 0.2f
 
-        const val FLY_IN_SPEED = 16f
-        const val FLY_IN_SPEED_HARD = 20f
+        const val FLY_IN_SPEED = 18f
+        const val FLY_IN_SPEED_HARD = 24f
         const val FLY_IN_SLOW_DOWN_DISTANCE = 1.5f
 
-        const val MAX_FLY_BYS = 3
-        const val FLY_BY_SPEED = 16f
-        const val FLY_BY_SPEED_HARD = 20f
-        const val FLY_BY_CHANCE = 0.5f
+        const val MAX_FLY_BYS = 2
+        const val FLY_BY_SPEED = 20f
+        const val FLY_BY_SPEED_HARD = 24f
+        const val FLY_BY_CHANCE = 0.35f
         const val FLY_BY_AFTER_SWOOP_REPEAT_CHANCE = 0.15f
         const val OFF_SCREEN_BUFFER = 4f
 
-        const val STATE_QUEUE_MAX_SIZE = 4
+        const val STATE_QUEUE_MAX_SIZE = 3
 
         const val SWOOP_ENTRY_DELAY = 0.75f
         const val SWOOP_STATE_DUR = 0.75f
-        const val HOVER_STATE_DUR = 1.0f
-        const val HOVER_STATE_DUR_HARD = 0.75f
+        const val HOVER_STATE_DUR = 0.75f
+        const val HOVER_STATE_DUR_HARD = 0.5f
         const val FLY_BY_STATE_DUR = 0.5f
         const val FLY_OUT_STATE_DUR = 0.1f
-        const val SHOOT_MISSILES_STATE_DUR = 2.5f
-        const val SHOOT_MISSILES_STATE_DUR_HARD = 2f
+        const val SHOOT_MISSILES_STATE_DUR = 2f
+        const val SHOOT_MISSILES_STATE_DUR_HARD = 1.5f
 
         const val FLY_IN_STATE_DELAY = 1.0f
         const val FLY_IN_STATE_DELAY_HARD = 0.75f
-        const val FLY_BY_FROM_OUT_SWOOP_STATE_DELAY = 1.25f
-        const val FLY_BY_FROM_OUT_SWOOP_STATE_DELAY_HARD = 1f
+        const val FLY_BY_FROM_OUT_SWOOP_STATE_DELAY = 1f
+        const val FLY_BY_FROM_OUT_SWOOP_STATE_DELAY_HARD = 0.75f
         const val SHOOT_MISSILES_STATE_DELAY = 0.4f
         const val SHOOT_MISSILES_STATE_DELAY_HARD = 0.25f
-        const val DROP_BOMB_STATE_DELAY = 1f
-        const val DROP_BOMB_STATE_DELAY_HARD = 0.75f
+        const val DROP_BOMB_STATE_DELAY = 0.75f
+        const val DROP_BOMB_STATE_DELAY_HARD = 0.5f
         const val BOMB_RUN_DELAY = 0.75f
 
         const val LAZOR_MAX_PASSES = 3
@@ -671,7 +669,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val LAZOR_WARM_UP_START = 0.25f
         const val LAZOR_WARM_UP_RATE = 0.5f
 
-        const val SHOOT_BULLETS_DELAY = 1.25f
+        const val SHOOT_BULLETS_DELAY = 1f
         const val SHOOT_BULLETS_DELAY_HARD = 0.75f
         const val SHOOT_BULLETS_DUR = 0.5f
         const val BULLET_SPEED = 10f
@@ -1304,11 +1302,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 UtilMethods.getRandomBool() &&
                 !stateQueue.contains(WilyPhase1State.FLY_OUT)
 
-        fun shouldShootMissiles() = (hoverPatternIndex % 4 == 1 || hoverPatternIndex % 4 == 3) &&
+        fun shouldShootMissiles() = hoverPatternIndex % 2 == 1 &&
             !stateQueue.contains(WilyPhase1State.SHOOT_MISSILES) && rollChance(WilyPhase1State.SHOOT_MISSILES)
 
         fun shouldFireLazors() =
-            hoverPatternIndex % 4 == 3 && rollChance(WilyPhase1State.FIRE_LAZORS) &&
+            hoverPatternIndex % 2 == 1 && rollChance(WilyPhase1State.FIRE_LAZORS) &&
                 stateQueue.size >= STATE_QUEUE_MAX_SIZE && // Do not trigger lazor too soon after boss spawns
                 !stateQueue.contains(WilyPhase1State.FIRE_LAZORS) && currentFlyInRow == 1
 
@@ -1800,11 +1798,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val TENTACLE_OFFSET_Y = -1.5f
         const val TENTACLE_IDLE_OFFSET_X = 0f
         const val TENTACLE_IDLE_OFFSET_Y = -3f
-        const val HOVER_DURATION = 3f
-        const val PREPARE_DURATION = 1.25f
+        const val HOVER_DURATION = 3.25f
+        const val PREPARE_DURATION = 1.5f
 
         // Sine-based lateral body oscillation (similar to lazor phase)
-        const val SWAY_AMPLITUDE = 5f
+        const val SWAY_AMPLITUDE = 4f
         const val SWAY_ANGULAR_SPEED = MathUtils.PI2 / 8f
         const val VERTICAL_BOB_AMPLITUDE = 1f
         const val VERTICAL_BOB_SPEED_MULT = 4f
@@ -1812,11 +1810,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         // Cannon orb firing
         const val CANNON_OFFSET_X = 3f
         const val CANNON_OFFSET_Y = 0f
-        const val CANNON_FIRE_INTERVAL = 5f
+        const val CANNON_FIRE_INTERVAL = 6f
         const val ORB_FLYOUT_OFFSET_X = 3f
         const val ORB_FLYOUT_OFFSET_Y = -2f
         const val ORB_FLYOUT_SPEED = 12f
-        const val ORB_PAUSE_DURATION = 1f
+        const val ORB_PAUSE_DURATION = 0.75f
         const val ORB_LAUNCH_SPEED = 12f
     }
 

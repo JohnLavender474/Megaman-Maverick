@@ -54,6 +54,9 @@ run {
   setIgnoreExitValue(true)
 
   jvmArgs += ['-Xms512m', '-Xmx1500m', '-XX:+UseZGC']
+  if (JavaVersion.current() >= JavaVersion.VERSION_21) {
+    jvmArgs += '-XX:+ZGenerational'
+  }
   if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
 
