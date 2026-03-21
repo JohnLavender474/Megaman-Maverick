@@ -138,7 +138,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         SWOOP, HOVER, FLY_IN, FLY_BY, FLY_OUT, FIRE_LAZORS, SHOOT_MISSILES, DROP_BOMB
     }
 
-    private enum class WilyPhase2State { HOVER, ATTACK }
+    private enum class WilyPhase2State { HOVER, PREPARE, ATTACK }
 
     private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN, END }
 
@@ -1768,18 +1768,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
-    private object Phase2HandlerConstVals {
+    private object Phase2ConstVals {
         const val TENTACLE_OFFSET_X = 1.5f
         const val TENTACLE_OFFSET_Y = -1.5f
         const val TENTACLE_IDLE_OFFSET_X = 0f
         const val TENTACLE_IDLE_OFFSET_Y = -3f
         const val HOVER_DURATION = 3f
+        const val PREPARE_DURATION = 1f
 
         // Sine-based lateral body oscillation (similar to lazor phase)
-        const val SWAY_AMPLITUDE = 4f
+        const val SWAY_AMPLITUDE = 5f
         const val SWAY_ANGULAR_SPEED = MathUtils.PI2 / 8f
-        const val VERTICAL_BOB_AMPLITUDE = 0.5f
-        const val VERTICAL_BOB_SPEED_MULT = 3f
+        const val VERTICAL_BOB_AMPLITUDE = 1f
+        const val VERTICAL_BOB_SPEED_MULT = 4f
     }
 
     private inner class Phase2Handler : PhaseHandler, Updatable {
@@ -1787,7 +1788,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private var leftTentacle: WilyCapsuleTentacle? = null
         private var rightTentacle: WilyCapsuleTentacle? = null
 
-        private val hoverTimer = Timer(Phase2HandlerConstVals.HOVER_DURATION)
+        private val hoverTimer = Timer(Phase2ConstVals.HOVER_DURATION)
+        private val prepareTimer = Timer(Phase2ConstVals.PREPARE_DURATION)
 
         private var lungeLeft = true
         private var lungeLaunched = false
@@ -1799,11 +1801,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         fun buildStateMachine() = EnumStateMachineBuilder
             .create<WilyPhase2State>()
             .initialState(WilyPhase2State.HOVER)
-            .transition(WilyPhase2State.HOVER, WilyPhase2State.ATTACK) { true }
+            .transition(WilyPhase2State.HOVER, WilyPhase2State.PREPARE) { true }
+            .transition(WilyPhase2State.PREPARE, WilyPhase2State.ATTACK) { true }
             .transition(WilyPhase2State.ATTACK, WilyPhase2State.HOVER) { true }
             .onChangeState { current, _ ->
                 when (current) {
                     WilyPhase2State.HOVER -> hoverTimer.reset()
+                    WilyPhase2State.PREPARE -> prepareTimer.reset()
                     WilyPhase2State.ATTACK -> {
                         lungeLaunched = false
                         lungeLeft = !lungeLeft
@@ -1828,12 +1832,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val center = body.getCenter()
 
             val idleOffset = GameObjectPools.fetch(Vector2::class)
-                .set(Phase2HandlerConstVals.TENTACLE_IDLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_IDLE_OFFSET_Y)
+                .set(Phase2ConstVals.TENTACLE_IDLE_OFFSET_X, Phase2ConstVals.TENTACLE_IDLE_OFFSET_Y)
                 .scl(ConstVals.PPM.toFloat())
 
             val leftBounds = GameRectangle().setCenter(
-                center.x - Phase2HandlerConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
-                center.y + Phase2HandlerConstVals.TENTACLE_OFFSET_Y * ConstVals.PPM
+                center.x - Phase2ConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2ConstVals.TENTACLE_OFFSET_Y * ConstVals.PPM
             )
             leftTentacle = MegaEntityFactory.fetch(WilyCapsuleTentacle::class)!!
             leftTentacle!!.spawn(
@@ -1844,8 +1848,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             )
 
             val rightBounds = GameRectangle().setCenter(
-                center.x + Phase2HandlerConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
-                center.y + Phase2HandlerConstVals.TENTACLE_OFFSET_Y * ConstVals.PPM
+                center.x + Phase2ConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2ConstVals.TENTACLE_OFFSET_Y * ConstVals.PPM
             )
             rightTentacle = MegaEntityFactory.fetch(WilyCapsuleTentacle::class)!!
             rightTentacle!!.spawn(
@@ -1874,13 +1878,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val center = body.getCenter()
             leftTentacle?.setAnchor(
                 GameObjectPools.fetch(Vector2::class)
-                    .set(-Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
+                    .set(-Phase2ConstVals.TENTACLE_OFFSET_X, Phase2ConstVals.TENTACLE_OFFSET_Y)
                     .scl(ConstVals.PPM.toFloat())
                     .add(center)
             )
             rightTentacle?.setAnchor(
                 GameObjectPools.fetch(Vector2::class)
-                    .set(Phase2HandlerConstVals.TENTACLE_OFFSET_X, Phase2HandlerConstVals.TENTACLE_OFFSET_Y)
+                    .set(Phase2ConstVals.TENTACLE_OFFSET_X, Phase2ConstVals.TENTACLE_OFFSET_Y)
                     .scl(ConstVals.PPM.toFloat())
                     .add(center)
             )
@@ -1891,26 +1895,34 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             if (swayAnchor == null)
                 swayAnchor = GameObjectPools.fetch(Vector2::class, false).set(body.getCenter())
 
-            swayTheta += Phase2HandlerConstVals.SWAY_ANGULAR_SPEED * delta
+            val phase2StateMachine =
+                stateMachines.get(WilyFinalBossPhase.PHASE_2) as StateMachine<WilyPhase2State>
+            val currentState = phase2StateMachine.getCurrentElement()
+
+            // Only advance sway during HOVER; freeze during PREPARE
+            if (currentState != WilyPhase2State.PREPARE)
+                swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED * delta
 
             val swayX = swayAnchor!!.x +
-                Phase2HandlerConstVals.SWAY_AMPLITUDE * ConstVals.PPM * MathUtils.sin(swayTheta)
+                Phase2ConstVals.SWAY_AMPLITUDE * ConstVals.PPM * MathUtils.sin(swayTheta)
             val swayY = swayAnchor!!.y +
-                Phase2HandlerConstVals.VERTICAL_BOB_AMPLITUDE * ConstVals.PPM *
-                MathUtils.sin(swayTheta * Phase2HandlerConstVals.VERTICAL_BOB_SPEED_MULT)
+                Phase2ConstVals.VERTICAL_BOB_AMPLITUDE * ConstVals.PPM *
+                MathUtils.sin(swayTheta * Phase2ConstVals.VERTICAL_BOB_SPEED_MULT)
 
             body.setCenter(swayX, swayY)
-
             body.physics.velocity.setZero()
 
             updateAnchors()
 
-            val phase2StateMachine =
-                stateMachines.get(WilyFinalBossPhase.PHASE_2) as StateMachine<WilyPhase2State>
-            when (phase2StateMachine.getCurrentElement()) {
+            when (currentState) {
                 WilyPhase2State.HOVER -> {
                     hoverTimer.update(delta)
                     if (hoverTimer.isFinished()) phase2StateMachine.next()
+                }
+
+                WilyPhase2State.PREPARE -> {
+                    prepareTimer.update(delta)
+                    if (prepareTimer.isFinished()) phase2StateMachine.next()
                 }
 
                 WilyPhase2State.ATTACK -> {
@@ -2022,10 +2034,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyPhaseTransState.DROP_DOWN -> {
                     body.physics.velocity.set(0f, -PhaseTransitionConstVals.DROP_DOWN_SPEED * ConstVals.PPM)
 
-                    if (body.getCenter().y <= spawnCenter.y) {
+                    if (body.getCenter().y <= spawnCenter.y + 1.5f * ConstVals.PPM) {
                         GameLogger.debug(TAG, "PhaseTransitionHandler: DROP_DOWN complete, starting next phase")
 
-                        body.setCenter(spawnCenter)
+                        body.setCenter(spawnCenter.x, spawnCenter.y + 1.5f * ConstVals.PPM)
                         body.physics.velocity.setZero()
 
                         state = WilyPhaseTransState.END

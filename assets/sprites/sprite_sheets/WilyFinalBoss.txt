@@ -1,11 +1,11 @@
 WilyFinalBoss-0.png
 size: 768, 3712
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Nearest,Nearest
 repeat: none
 phase_1/fly_by
   rotate: false
-  xy: 48, 0
+  xy: 144, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -19,7 +19,7 @@ phase_1/fly_out
   index: -1
 phase_1/hover
   rotate: false
-  xy: 304, 0
+  xy: 400, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -120,6 +120,20 @@ phase_2/scared
   xy: 640, 256
   size: 128, 256
   orig: 128, 256
+  offset: 0, 0
+  index: -1
+phase_2/scissors/chop
+  rotate: false
+  xy: 96, 0
+  size: 48, 64
+  orig: 48, 64
+  offset: 0, 0
+  index: -1
+phase_2/scissors/closed
+  rotate: false
+  xy: 48, 0
+  size: 48, 32
+  orig: 48, 32
   offset: 0, 0
   index: -1
 WilyPlaneBody

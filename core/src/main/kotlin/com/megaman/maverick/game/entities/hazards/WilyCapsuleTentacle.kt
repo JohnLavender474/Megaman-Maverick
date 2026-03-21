@@ -35,8 +35,10 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     companion object {
         const val TAG = "WilyCapsuleTentacle"
 
-        private const val SEGMENT_COUNT = 5
+        private const val SEGMENT_COUNT = 2
         private const val LINE_THICKNESS = 0.1f * ConstVals.PPM
+
+        private const val DEFAULT_IDLE_OFFSET = 2.5f
 
         // Idle tip drift: sine base + random wander layered on top
         private const val TIP_DRIFT_RADIUS = 0.5f * ConstVals.PPM
@@ -62,8 +64,10 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val RETURN_SPEED = 6f * ConstVals.PPM
 
         // Lunge-past-and-swipe
-        private const val LUNGE_PAST_OVERSHOOT = 3f   // tiles past the initial target
-        private const val SWIPE_DISTANCE = 4f          // tiles swept up or down
+        private const val LUNGE_PAST_OVERSHOOT = 3f
+        private const val SWIPE_DISTANCE = 6f
+        private const val COIL_BACK_DISTANCE = 4f
+        private const val COIL_BACK_SPEED = 8f * ConstVals.PPM
     }
 
     enum class LungeType { SIMPLE, MULTI_STEP, LUNGE_PAST_AND_SWIPE }
@@ -72,6 +76,10 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
     private var tentacle: WavyTentacleOfJoints? = null
     private var tentacleSpawned = false
+
+    // --- Scissor tip entity ---
+
+    private var scissor: WilyCapsuleTentacleScissor? = null
 
     // --- Drawable shapes ---
 
@@ -106,10 +114,13 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
     private var pauseTimer = 0f
     private val lungeTarget = Vector2()
+    private var coilingBack = false
+    private val coilBackTarget = Vector2()
 
     // Cycles SIMPLE → MULTI_STEP → LUNGE_PAST_AND_SWIPE → SIMPLE → …
     // setIndex(-1) before first use so that the first next() returns SIMPLE.
     private var currentLungeType = LungeType.SIMPLE
+
     // Phase 0 = first step, phase 1 = second step (for MULTI_STEP and LUNGE_PAST_AND_SWIPE)
     private var lungePhase = 0
     private var lungeCount = 0
@@ -136,6 +147,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         time = 0f
         logTimer = 0f
         pauseTimer = 0f
+        coilingBack = false
 
         lungePhase = 0
         lungeCount = 0
@@ -145,7 +157,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         anchor.set(anchorPos)
 
         val offset = spawnProps.get(ConstKeys.OFFSET, Vector2::class)
-        if (offset != null) idleOffset.set(offset) else idleOffset.set(0f, -3f * ConstVals.PPM)
+        if (offset != null) idleOffset.set(offset) else idleOffset.set(0f, -DEFAULT_IDLE_OFFSET * ConstVals.PPM)
 
         currentIdleTarget.set(anchor).add(idleOffset)
         currentTipTarget.set(currentIdleTarget)
@@ -185,6 +197,9 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
         for (joint in jointEntities) joint.destroy()
         jointEntities.clear()
+
+        scissor?.destroy()
+        scissor = null
     }
 
     // --- Public API ---
@@ -197,6 +212,14 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
     fun isIdle(): Boolean = tentacle?.getState() == TentacleState.IDLE
 
+    fun getTentacleState(): TentacleState? = tentacle?.getState()
+
+    fun getPenultimateJointPosition(out: Vector2): Vector2? {
+        val jointCount = tentacle?.jointCount ?: return null
+        if (jointCount < 2) return null
+        return out.set(jointPositions[jointCount - 2])
+    }
+
     fun lunge(
         target: Vector2 = megaman.body.getCenter(),
         lungeType: LungeType = when {
@@ -207,6 +230,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
 
         lungePhase = 0
+        coilingBack = false
         currentLungeType = lungeType
         GameLogger.debug(TAG, "lunge(): type=$currentLungeType, target=$target")
 
@@ -252,19 +276,28 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             }
 
             val jointCount = tentacle!!.jointCount
+            val lastJointIndex = jointCount - 1
             repeat(jointCount) { i ->
                 val pos = GameObjectPools.fetch(Vector2::class, false)
                 tentacle!!.getJoint(i, pos)
                 jointPositions.add(pos)
 
-                val jointEntity = MegaEntityFactory.fetch(WilyCapsuleTentacleJoint::class)!!
-                jointEntity.owner = this
-                jointEntity.spawn(props(ConstKeys.CENTER pairTo pos))
-                jointEntities.add(jointEntity)
+                if (i == lastJointIndex) {
+                    // Spawn scissor at the tip instead of a regular joint
+                    val scissorEntity = MegaEntityFactory.fetch(WilyCapsuleTentacleScissor::class)!!
+                    scissorEntity.owner = this
+                    scissorEntity.spawn(props(ConstKeys.CENTER pairTo pos))
+                    scissor = scissorEntity
+                } else {
+                    val jointEntity = MegaEntityFactory.fetch(WilyCapsuleTentacleJoint::class)!!
+                    jointEntity.owner = this
+                    jointEntity.spawn(props(ConstKeys.CENTER pairTo pos))
+                    jointEntities.add(jointEntity)
+                }
             }
 
-            clearProdShapeSuppliers()
-            for (line in lines) addProdShapeSupplier { line }
+            clearDebugShapeSuppliers()
+            for (line in lines) addDebugShapeSupplier { line }
 
             return
         }
@@ -302,15 +335,22 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             }
 
             TentacleState.LUNGING -> {
-                val dx = lungeTarget.x - currentTipTarget.x
-                val dy = lungeTarget.y - currentTipTarget.y
+                val target = if (coilingBack) coilBackTarget else lungeTarget
+                val speed = if (coilingBack) COIL_BACK_SPEED else LUNGE_SPEED
+                val dx = target.x - currentTipTarget.x
+                val dy = target.y - currentTipTarget.y
                 val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-                val step = LUNGE_SPEED * delta
+                val step = speed * delta
 
                 if (dist <= step) {
-                    currentTipTarget.set(lungeTarget)
-                    pauseTimer = 0f
-                    tentacle!!.setState(TentacleState.PAUSING)
+                    currentTipTarget.set(target)
+                    if (coilingBack) {
+                        coilingBack = false
+                        // Stay in LUNGING — next frame will chase lungeTarget
+                    } else {
+                        pauseTimer = 0f
+                        tentacle!!.setState(TentacleState.PAUSING)
+                    }
                 } else {
                     currentTipTarget.x += dx / dist * step
                     currentTipTarget.y += dy / dist * step
@@ -337,14 +377,24 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
                         LungeType.LUNGE_PAST_AND_SWIPE -> {
                             if (lungePhase == 0) {
-                                // Swipe up or down from the current overshoot position
-                                lungePhase = 1
-                                val swipeUp = megaman.body.getY() > lungeTarget.y
+                                // Coil back before swiping
+                                val swipeUp = megaman.body.getY() > currentTipTarget.y
+                                val swipeDir = if (swipeUp) 1f else -1f
+
+                                // Swipe target
                                 lungeTarget.set(
                                     currentTipTarget.x,
-                                    currentTipTarget.y +
-                                        (if (swipeUp) SWIPE_DISTANCE else -SWIPE_DISTANCE) * ConstVals.PPM
+                                    currentTipTarget.y + swipeDir * SWIPE_DISTANCE * ConstVals.PPM
                                 )
+
+                                // Coil back target (opposite direction)
+                                coilBackTarget.set(
+                                    currentTipTarget.x,
+                                    currentTipTarget.y - swipeDir * COIL_BACK_DISTANCE * ConstVals.PPM
+                                )
+                                coilingBack = true
+
+                                lungePhase = 1
                                 tentacle!!.setState(TentacleState.LUNGING)
                             } else tentacle!!.setState(TentacleState.RETURNING)
                         }
@@ -369,7 +419,6 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             }
         }
 
-        // Periodic debug logging
         logTimer += delta
         if (logTimer >= LOG_INTERVAL) {
             logTimer = 0f
@@ -381,21 +430,22 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             GameLogger.debug(TAG, sb.toString())
         }
 
-        // Update line segments every frame for smooth motion
-        for (i in 0 until SEGMENT_COUNT) {
-            lines[i].let {
-                it.setFirstLocalPoint(tentacle!!.getJoint(i, scratch))
-                it.setSecondLocalPoint(tentacle!!.getJoint(i + 1, scratch))
-            }
+        for (i in 0 until SEGMENT_COUNT) lines[i].let {
+            it.setFirstLocalPoint(tentacle!!.getJoint(i, scratch))
+            it.setSecondLocalPoint(tentacle!!.getJoint(i + 1, scratch))
         }
 
         val jointCount = tentacle!!.jointCount
+        val lastJointIndex = jointCount - 1
         for (i in 0 until jointCount) {
             val jointPos = tentacle!!.getJoint(i, scratch)
+
             val lerpedPos = jointPositions[i]
             lerpedPos.x = MathUtils.lerp(lerpedPos.x, jointPos.x, JOINT_LERP_SPEED * JOINT_UPDATE_INTERVAL)
             lerpedPos.y = MathUtils.lerp(lerpedPos.y, jointPos.y, JOINT_LERP_SPEED * JOINT_UPDATE_INTERVAL)
-            jointEntities[i].body.setCenter(lerpedPos)
+
+            if (i == lastJointIndex) scissor?.body?.setCenter(lerpedPos)
+            else jointEntities[i].body.setCenter(lerpedPos)
         }
     }
 

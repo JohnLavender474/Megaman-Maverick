@@ -88,6 +88,10 @@ class WilyCapsuleTentacleJoint(game: MegamanMaverickGame) : MegaGameEntity(game)
         body.addFixture(damagerFixture)
         debugShapes.add { damagerFixture }
 
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(BODY_RADIUS * ConstVals.PPM))
+        body.addFixture(shieldFixture)
+        debugShapes.add { shieldFixture }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
