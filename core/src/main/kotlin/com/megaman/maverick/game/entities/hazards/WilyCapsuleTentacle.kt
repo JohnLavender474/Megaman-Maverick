@@ -59,15 +59,18 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val LOG_INTERVAL = 2f
 
         // Lunge movement
-        private const val LUNGE_SPEED = 18f * ConstVals.PPM
-        private const val LUNGE_PAUSE_DURATION = 0.3f
+        private const val LUNGE_SPEED = 14f * ConstVals.PPM
+        private const val LUNGE_PAUSE_DURATION = 0.5f
         private const val RETURN_SPEED = 6f * ConstVals.PPM
+
+        // Multi-step: pull 2nd lunge slightly toward anchor so it's not directly at Mega Man
+        private const val MULTI_STEP_PULL_TOWARD_ANCHOR = 0.2f
 
         // Lunge-past-and-swipe
         private const val LUNGE_PAST_OVERSHOOT = 3f
         private const val SWIPE_DISTANCE = 6f
         private const val COIL_BACK_DISTANCE = 4f
-        private const val COIL_BACK_SPEED = 8f * ConstVals.PPM
+        private const val COIL_BACK_SPEED = 6f * ConstVals.PPM
     }
 
     enum class LungeType { SIMPLE, MULTI_STEP, LUNGE_PAST_AND_SWIPE }
@@ -223,7 +226,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     fun lunge(
         target: Vector2 = megaman.body.getCenter(),
         lungeType: LungeType = when {
-            lungeCount == 0 || lungeCount % 3 == 0 -> LungeType.entries.random()
+            lungeCount == 0 || lungeCount % 4 == 0 -> LungeType.entries.random()
             else -> LungeType.SIMPLE
         }
     ) {
@@ -368,9 +371,14 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
                         LungeType.MULTI_STEP -> {
                             if (lungePhase == 0) {
-                                // Fire the second lunge from the same spot
+                                // Fire the second lunge, pulled slightly toward the anchor
+                                // so it's not aimed perfectly at Mega Man
                                 lungePhase = 1
-                                lungeTarget.set(megaman.body.getCenter())
+                                val megaCenter = megaman.body.getCenter()
+                                lungeTarget.set(
+                                    megaCenter.x + (anchor.x - megaCenter.x) * MULTI_STEP_PULL_TOWARD_ANCHOR,
+                                    megaCenter.y + (anchor.y - megaCenter.y) * MULTI_STEP_PULL_TOWARD_ANCHOR
+                                )
                                 tentacle!!.setState(TentacleState.LUNGING)
                             } else tentacle!!.setState(TentacleState.RETURNING)
                         }

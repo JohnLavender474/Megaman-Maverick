@@ -303,6 +303,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/WilyFinalBoss/phase_2/laugh.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_2/orb_glow.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_2/scared.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

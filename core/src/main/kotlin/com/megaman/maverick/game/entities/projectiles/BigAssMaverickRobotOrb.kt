@@ -188,7 +188,7 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)))
+        .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15)))
         .preProcess { _, sprite ->
             val size = if (hit) 4f else 2f
             sprite.setSize(size * ConstVals.PPM)

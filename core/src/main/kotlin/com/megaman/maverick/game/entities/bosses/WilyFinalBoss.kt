@@ -66,9 +66,11 @@ import com.megaman.maverick.game.entities.explosions.GroundExplosion
 import com.megaman.maverick.game.entities.hazards.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.hazards.WilyPlaneBody
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -126,7 +128,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             "phase_2/hover" pairTo AnimationDef(3, 1, gdxArrayOf(0.5f, 0.1f, 0.1f), true),
             "phase_2/angry" pairTo AnimationDef(3, 1, 0.1f, true),
             "phase_2/laugh" pairTo AnimationDef(2, 1, 0.1f, true),
-            "phase_2/scared" pairTo AnimationDef(2, 1, 0.1f, true)
+            "phase_2/scared" pairTo AnimationDef(2, 1, 0.1f, true),
+            "phase_2/orb_glow" pairTo AnimationDef(2, 1, 0.05f, true)
         )
     }
 
@@ -506,6 +509,20 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
             sprite.hidden = !visible
         }
+        .sprite(
+            "phase_2/orb_glow", GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 6))
+                .also {
+                    it.setSize(
+                        WILY_PHASE_2_SPRITE_WIDTH * ConstVals.PPM,
+                        WILY_PHASE_2_SPRITE_HEIGHT * ConstVals.PPM
+                    )
+                }
+        )
+        .preProcess { _, sprite ->
+            val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
+            sprite.setCenter(center)
+            sprite.hidden = phase2Handler.getCannonTimeRatio() < 0.8f
+        }
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
@@ -538,6 +555,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                                     else -> (state as Enum<*>).name.lowercase()
                                 }
                             }
+
                             WilyFinalBossPhase.PHASE_2 -> "hover"
                             WilyFinalBossPhase.PHASE_3 -> TODO()
                         }
@@ -570,6 +588,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         )
         .key(WILY_DEATH_PLANE_LAZOR_RESIDUAL)
         .animator(Animator(Animation(regions[WILY_DEATH_PLANE_LAZOR_RESIDUAL], 2, 1, 0.1f, true)))
+        .key("phase_2/orb_glow")
+        .animator(
+            Animator(
+                animDefs["phase_2/orb_glow"].let {
+                    Animation(regions["phase_2/orb_glow"], it.rows, it.cols, it.durations, it.loop)
+                }
+            )
+        )
         .build()
 
     private fun startNextPhase() {
@@ -583,6 +609,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 phase2Handler.init()
                 phase2Handler.buildBody(body)
             }
+
             WilyFinalBossPhase.PHASE_3 -> TODO()
             else -> throw IllegalStateException("Should not transition to phase 1 in 'startNextPhase()'")
         }
@@ -1774,14 +1801,26 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val TENTACLE_IDLE_OFFSET_X = 0f
         const val TENTACLE_IDLE_OFFSET_Y = -3f
         const val HOVER_DURATION = 3f
-        const val PREPARE_DURATION = 1f
+        const val PREPARE_DURATION = 1.25f
 
         // Sine-based lateral body oscillation (similar to lazor phase)
         const val SWAY_AMPLITUDE = 5f
         const val SWAY_ANGULAR_SPEED = MathUtils.PI2 / 8f
         const val VERTICAL_BOB_AMPLITUDE = 1f
         const val VERTICAL_BOB_SPEED_MULT = 4f
+
+        // Cannon orb firing
+        const val CANNON_OFFSET_X = 3f
+        const val CANNON_OFFSET_Y = 0f
+        const val CANNON_FIRE_INTERVAL = 5f
+        const val ORB_FLYOUT_OFFSET_X = 3f
+        const val ORB_FLYOUT_OFFSET_Y = -2f
+        const val ORB_FLYOUT_SPEED = 12f
+        const val ORB_PAUSE_DURATION = 1f
+        const val ORB_LAUNCH_SPEED = 12f
     }
+
+    private enum class CannonOrbPhase { IDLE, FLYING_OUT, PAUSING }
 
     private inner class Phase2Handler : PhaseHandler, Updatable {
 
@@ -1790,9 +1829,18 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private val hoverTimer = Timer(Phase2ConstVals.HOVER_DURATION)
         private val prepareTimer = Timer(Phase2ConstVals.PREPARE_DURATION)
+        private val cannonTimer = Timer(Phase2ConstVals.CANNON_FIRE_INTERVAL)
+        private val orbPauseTimer = Timer(Phase2ConstVals.ORB_PAUSE_DURATION)
 
         private var lungeLeft = true
         private var lungeLaunched = false
+
+        // Cannon orb state
+        private var cannonOrbPhase = CannonOrbPhase.IDLE
+        private var leftOrb: BigAssMaverickRobotOrb? = null
+        private var rightOrb: BigAssMaverickRobotOrb? = null
+        private val leftOrbTarget = Vector2()
+        private val rightOrbTarget = Vector2()
 
         // Sway state
         private var swayTheta = 0f
@@ -1820,9 +1868,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             GameLogger.debug(TAG, "Phase2Handler: init()")
 
             hoverTimer.reset()
+            cannonTimer.reset()
 
             lungeLeft = true
             lungeLaunched = false
+
+            cannonOrbPhase = CannonOrbPhase.IDLE
+            leftOrb = null
+            rightOrb = null
 
             swayTheta = 0f
 
@@ -1874,6 +1927,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
         }
 
+        fun getCannonTimeRatio() = cannonTimer.getRatio()
+
         fun updateAnchors() {
             val center = body.getCenter()
             leftTentacle?.setAnchor(
@@ -1914,6 +1969,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             updateAnchors()
 
+            updateCannonOrbs(delta)
+
             when (currentState) {
                 WilyPhase2State.HOVER -> {
                     hoverTimer.update(delta)
@@ -1935,6 +1992,158 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
         }
 
+        private fun updateCannonOrbs(delta: Float) {
+            if (leftOrb != null && !leftOrb!!.spawned) leftOrb = null
+            if (rightOrb != null && !rightOrb!!.spawned) rightOrb = null
+
+            when (cannonOrbPhase) {
+                CannonOrbPhase.IDLE -> {
+                    cannonTimer.update(delta)
+                    if (cannonTimer.isFinished()) {
+                        cannonTimer.reset()
+                        spawnCannonOrbs()
+                        cannonOrbPhase = CannonOrbPhase.FLYING_OUT
+                    }
+                }
+
+                CannonOrbPhase.FLYING_OUT -> {
+                    var allReached = true
+
+                    leftOrb?.let { orb ->
+                        if (moveOrbToward(orb, leftOrbTarget, delta))
+                            orb.body.physics.velocity.setZero()
+                        else allReached = false
+                    }
+
+                    rightOrb?.let { orb ->
+                        if (moveOrbToward(orb, rightOrbTarget, delta))
+                            orb.body.physics.velocity.setZero()
+                        else allReached = false
+                    }
+
+                    if (allReached) {
+                        orbPauseTimer.reset()
+                        cannonOrbPhase = CannonOrbPhase.PAUSING
+                    }
+                }
+
+                CannonOrbPhase.PAUSING -> {
+                    orbPauseTimer.update(delta)
+                    if (orbPauseTimer.isFinished()) {
+                        launchOrbs()
+                        cannonOrbPhase = CannonOrbPhase.IDLE
+                    }
+                }
+            }
+        }
+
+        private fun spawnCannonOrbs() {
+            val center = body.getCenter()
+
+            val leftCannonPos = GameObjectPools.fetch(Vector2::class).set(
+                center.x - Phase2ConstVals.CANNON_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2ConstVals.CANNON_OFFSET_Y * ConstVals.PPM
+            )
+            val rightCannonPos = GameObjectPools.fetch(Vector2::class).set(
+                center.x + Phase2ConstVals.CANNON_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2ConstVals.CANNON_OFFSET_Y * ConstVals.PPM
+            )
+
+            // Compute flyout targets: outward and downward from each cannon
+            leftOrbTarget.set(
+                leftCannonPos.x - Phase2ConstVals.ORB_FLYOUT_OFFSET_X * ConstVals.PPM,
+                leftCannonPos.y + Phase2ConstVals.ORB_FLYOUT_OFFSET_Y * ConstVals.PPM
+            )
+            rightOrbTarget.set(
+                rightCannonPos.x + Phase2ConstVals.ORB_FLYOUT_OFFSET_X * ConstVals.PPM,
+                rightCannonPos.y + Phase2ConstVals.ORB_FLYOUT_OFFSET_Y * ConstVals.PPM
+            )
+
+            leftOrb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!.also { orb ->
+                orb.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo leftCannonPos,
+                        ConstKeys.OWNER pairTo this@WilyFinalBoss,
+                        ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                    )
+                )
+            }
+
+            rightOrb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!.also { orb ->
+                orb.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo rightCannonPos,
+                        ConstKeys.OWNER pairTo this@WilyFinalBoss,
+                        ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                    )
+                )
+            }
+
+            requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+        }
+
+        private fun moveOrbToward(orb: BigAssMaverickRobotOrb, target: Vector2, delta: Float): Boolean {
+            val center = orb.body.getCenter()
+            val dx = target.x - center.x
+            val dy = target.y - center.y
+            val dist = kotlin.math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+            val step = Phase2ConstVals.ORB_FLYOUT_SPEED * ConstVals.PPM * delta
+
+            if (dist <= step) {
+                orb.body.setCenter(target)
+                orb.body.physics.velocity.setZero()
+                return true
+            }
+
+            orb.body.physics.velocity.set(
+                dx / dist * Phase2ConstVals.ORB_FLYOUT_SPEED * ConstVals.PPM,
+                dy / dist * Phase2ConstVals.ORB_FLYOUT_SPEED * ConstVals.PPM
+            )
+            return false
+        }
+
+        private fun launchOrbs() {
+            val megamanCenter = megaman.body.getCenter()
+
+            leftOrb?.let { orb ->
+                val center = orb.body.getCenter()
+                val dx = megamanCenter.x - center.x
+                val dy = megamanCenter.y - center.y
+                val dist = kotlin.math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+                if (dist > 0.0001f) {
+                    orb.body.physics.velocity.set(
+                        dx / dist * Phase2ConstVals.ORB_LAUNCH_SPEED * ConstVals.PPM,
+                        dy / dist * Phase2ConstVals.ORB_LAUNCH_SPEED * ConstVals.PPM
+                    )
+                }
+                leftOrb?.putCullable(
+                    ConstKeys.CULL_OUT_OF_BOUNDS,
+                    getGameCameraCullingLogic(leftOrb!!, 1f)
+                )
+                leftOrb = null
+            }
+
+            rightOrb?.let { orb ->
+                val center = orb.body.getCenter()
+                val dx = megamanCenter.x - center.x
+                val dy = megamanCenter.y - center.y
+                val dist = kotlin.math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+                if (dist > 0.0001f) {
+                    orb.body.physics.velocity.set(
+                        dx / dist * Phase2ConstVals.ORB_LAUNCH_SPEED * ConstVals.PPM,
+                        dy / dist * Phase2ConstVals.ORB_LAUNCH_SPEED * ConstVals.PPM
+                    )
+                }
+                rightOrb?.putCullable(
+                    ConstKeys.CULL_OUT_OF_BOUNDS,
+                    getGameCameraCullingLogic(rightOrb!!, 1f)
+                )
+                rightOrb = null
+            }
+
+            requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
+        }
+
         override fun reset() {
             GameLogger.debug(TAG, "Phase2Handler: reset()")
 
@@ -1946,6 +2155,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             rightTentacle?.destroy()
             rightTentacle = null
+
+            cannonOrbPhase = CannonOrbPhase.IDLE
+            leftOrb?.destroy()
+            leftOrb = null
+            rightOrb?.destroy()
+            rightOrb = null
         }
     }
 
