@@ -21,7 +21,9 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
+import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints.TentacleState
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
@@ -33,7 +35,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     companion object {
         const val TAG = "WilyCapsuleTentacle"
 
-        private const val SEGMENT_COUNT = 6
+        private const val SEGMENT_COUNT = 5
         private const val LINE_THICKNESS = 0.1f * ConstVals.PPM
 
         // Idle tip drift: sine base + random wander layered on top
@@ -41,24 +43,30 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val TIP_DRIFT_SPEED_X = 0.65f
         private const val TIP_DRIFT_SPEED_Y = 0.43f
 
-        // Random wander: the idle target smoothly drifts toward a random offset that is
-        // re-rolled periodically, giving an organic, unpredictable sway
+        // Random wander
         private const val WANDER_RADIUS = 1.25f * ConstVals.PPM
         private const val WANDER_RETARGET_MIN = 1f
         private const val WANDER_RETARGET_MAX = 3f
         private const val WANDER_LERP_SPEED = 3f
 
-        // How fast joint entities lerp toward their joint positions
+        // Joint lerp
         private const val JOINT_LERP_SPEED = 12f
         private const val JOINT_UPDATE_INTERVAL = 0.05f
 
+        // Logging
         private const val LOG_INTERVAL = 2f
 
-        // Lunge movement constants (boss decides *when* to lunge; this class handles the motion)
+        // Lunge movement
         private const val LUNGE_SPEED = 18f * ConstVals.PPM
         private const val LUNGE_PAUSE_DURATION = 0.3f
         private const val RETURN_SPEED = 6f * ConstVals.PPM
+
+        // Lunge-past-and-swipe
+        private const val LUNGE_PAST_OVERSHOOT = 3f   // tiles past the initial target
+        private const val SWIPE_DISTANCE = 4f          // tiles swept up or down
     }
+
+    enum class LungeType { SIMPLE, MULTI_STEP, LUNGE_PAST_AND_SWIPE }
 
     // --- Child tentacle ---
 
@@ -85,7 +93,6 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     private var tipDriftPhaseX = 0f
     private var tipDriftPhaseY = 0f
 
-    // Random wander state
     private val wanderOffset = Vector2()
     private val wanderGoal = Vector2()
     private var wanderTimer = 0f
@@ -95,32 +102,23 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     private val currentIdleTarget = Vector2()
     private val currentTipTarget = Vector2()
 
-    // --- Lunge state machine (motion only; boss triggers via lunge()) ---
+    // --- Lunge state ---
 
     private var pauseTimer = 0f
     private val lungeTarget = Vector2()
+
+    // Cycles SIMPLE → MULTI_STEP → LUNGE_PAST_AND_SWIPE → SIMPLE → …
+    // setIndex(-1) before first use so that the first next() returns SIMPLE.
+    private var currentLungeType = LungeType.SIMPLE
+    // Phase 0 = first step, phase 1 = second step (for MULTI_STEP and LUNGE_PAST_AND_SWIPE)
+    private var lungePhase = 0
+    private var lungeCount = 0
 
     // Reusable scratch vector
     private val scratch = Vector2()
 
     // Logging timer
     private var logTimer = 0f
-
-    // --- Public API ---
-
-    fun setAnchor(v: Vector2): Vector2 = anchor.set(v)
-
-    fun getAnchor(out: Vector2) = tentacle?.getAnchor(out)
-
-    fun getTarget(out: Vector2) = tentacle?.getTarget(out)
-
-    fun isIdle(): Boolean = tentacle?.getState() == WavyTentacleOfJoints.TentacleState.IDLE
-
-    fun lunge(target: Vector2) {
-        if (tentacle == null || tentacle!!.getState() != WavyTentacleOfJoints.TentacleState.IDLE) return
-        lungeTarget.set(target)
-        tentacle!!.setState(WavyTentacleOfJoints.TentacleState.LUNGING)
-    }
 
     // --- Lifecycle ---
 
@@ -139,6 +137,10 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         logTimer = 0f
         pauseTimer = 0f
 
+        lungePhase = 0
+        lungeCount = 0
+        currentLungeType = LungeType.SIMPLE
+
         val anchorPos = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         anchor.set(anchorPos)
 
@@ -148,17 +150,14 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         currentIdleTarget.set(anchor).add(idleOffset)
         currentTipTarget.set(currentIdleTarget)
 
-        // Randomize drift phases
         tipDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
         tipDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
 
-        // Initialize wander
         wanderOffset.setZero()
         rollWanderGoal()
         wanderTimer = 0f
         wanderRetargetTime = MathUtils.random(WANDER_RETARGET_MIN, WANDER_RETARGET_MAX)
 
-        // Spawn the child tentacle
         tentacle = MegaEntityFactory.fetch(WavyTentacleOfJoints::class)!!
         tentacle!!.spawn(
             props(
@@ -186,6 +185,52 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
         for (joint in jointEntities) joint.destroy()
         jointEntities.clear()
+    }
+
+    // --- Public API ---
+
+    fun setAnchor(v: Vector2): Vector2 = anchor.set(v)
+
+    fun getAnchor(out: Vector2) = tentacle?.getAnchor(out)
+
+    fun getTarget(out: Vector2) = tentacle?.getTarget(out)
+
+    fun isIdle(): Boolean = tentacle?.getState() == TentacleState.IDLE
+
+    fun lunge(
+        target: Vector2 = megaman.body.getCenter(),
+        lungeType: LungeType = when {
+            lungeCount == 0 || lungeCount % 3 == 0 -> LungeType.entries.random()
+            else -> LungeType.SIMPLE
+        }
+    ) {
+        if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
+
+        lungePhase = 0
+        currentLungeType = lungeType
+        GameLogger.debug(TAG, "lunge(): type=$currentLungeType, target=$target")
+
+        when (currentLungeType) {
+            LungeType.SIMPLE -> lungeTarget.set(target)
+            LungeType.MULTI_STEP -> lungeTarget.set(target)
+            LungeType.LUNGE_PAST_AND_SWIPE -> {
+                // Overshoot past the target in the anchor→target direction
+                val dx = target.x - anchor.x
+                val dy = target.y - anchor.y
+                val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+                if (dist > 0.0001f) {
+                    val dirX = dx / dist
+                    val dirY = dy / dist
+                    lungeTarget.set(
+                        target.x + dirX * LUNGE_PAST_OVERSHOOT * ConstVals.PPM,
+                        target.y + dirY * LUNGE_PAST_OVERSHOOT * ConstVals.PPM
+                    )
+                } else lungeTarget.set(target)
+                // Swipe direction is decided when the first pause ends
+            }
+        }
+
+        tentacle!!.setState(TentacleState.LUNGING)
     }
 
     // --- Per-frame update ---
@@ -231,7 +276,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
         time += delta
 
-        // Update random wander: smoothly lerp toward a random goal, re-roll periodically
+        // Update random wander
         wanderTimer += delta
         if (wanderTimer >= wanderRetargetTime) {
             wanderTimer = 0f
@@ -251,12 +296,12 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
         // Run the lunge state machine
         when (tentacle!!.getState()) {
-            WavyTentacleOfJoints.TentacleState.IDLE -> {
+            TentacleState.IDLE -> {
                 currentTipTarget.set(currentIdleTarget)
                 tentacle!!.setTarget(currentTipTarget)
             }
 
-            WavyTentacleOfJoints.TentacleState.LUNGING -> {
+            TentacleState.LUNGING -> {
                 val dx = lungeTarget.x - currentTipTarget.x
                 val dy = lungeTarget.y - currentTipTarget.y
                 val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
@@ -265,7 +310,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
                 if (dist <= step) {
                     currentTipTarget.set(lungeTarget)
                     pauseTimer = 0f
-                    tentacle!!.setState(WavyTentacleOfJoints.TentacleState.PAUSING)
+                    tentacle!!.setState(TentacleState.PAUSING)
                 } else {
                     currentTipTarget.x += dx / dist * step
                     currentTipTarget.y += dy / dist * step
@@ -273,13 +318,41 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
                 tentacle!!.setTarget(currentTipTarget)
             }
 
-            WavyTentacleOfJoints.TentacleState.PAUSING -> {
+            TentacleState.PAUSING -> {
                 pauseTimer += delta
-                if (pauseTimer >= LUNGE_PAUSE_DURATION)
-                    tentacle!!.setState(WavyTentacleOfJoints.TentacleState.RETURNING)
+                if (pauseTimer >= LUNGE_PAUSE_DURATION) {
+                    pauseTimer = 0f
+                    when (currentLungeType) {
+                        LungeType.SIMPLE ->
+                            tentacle!!.setState(TentacleState.RETURNING)
+
+                        LungeType.MULTI_STEP -> {
+                            if (lungePhase == 0) {
+                                // Fire the second lunge from the same spot
+                                lungePhase = 1
+                                lungeTarget.set(megaman.body.getCenter())
+                                tentacle!!.setState(TentacleState.LUNGING)
+                            } else tentacle!!.setState(TentacleState.RETURNING)
+                        }
+
+                        LungeType.LUNGE_PAST_AND_SWIPE -> {
+                            if (lungePhase == 0) {
+                                // Swipe up or down from the current overshoot position
+                                lungePhase = 1
+                                val swipeUp = megaman.body.getY() > lungeTarget.y
+                                lungeTarget.set(
+                                    currentTipTarget.x,
+                                    currentTipTarget.y +
+                                        (if (swipeUp) SWIPE_DISTANCE else -SWIPE_DISTANCE) * ConstVals.PPM
+                                )
+                                tentacle!!.setState(TentacleState.LUNGING)
+                            } else tentacle!!.setState(TentacleState.RETURNING)
+                        }
+                    }
+                }
             }
 
-            WavyTentacleOfJoints.TentacleState.RETURNING -> {
+            TentacleState.RETURNING -> {
                 val dx = currentIdleTarget.x - currentTipTarget.x
                 val dy = currentIdleTarget.y - currentTipTarget.y
                 val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
@@ -287,7 +360,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
                 if (dist <= step) {
                     currentTipTarget.set(currentIdleTarget)
-                    tentacle!!.setState(WavyTentacleOfJoints.TentacleState.IDLE)
+                    tentacle!!.setState(TentacleState.IDLE)
                 } else {
                     currentTipTarget.x += dx / dist * step
                     currentTipTarget.y += dy / dist * step
@@ -296,7 +369,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             }
         }
 
-        // Periodic debug logging: joint count and positions
+        // Periodic debug logging
         logTimer += delta
         if (logTimer >= LOG_INTERVAL) {
             logTimer = 0f
@@ -311,12 +384,8 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         // Update line segments every frame for smooth motion
         for (i in 0 until SEGMENT_COUNT) {
             lines[i].let {
-                it.setFirstLocalPoint(
-                    tentacle!!.getJoint(i, scratch),
-                )
-                it.setSecondLocalPoint(
-                    tentacle!!.getJoint(i + 1, scratch)
-                )
+                it.setFirstLocalPoint(tentacle!!.getJoint(i, scratch))
+                it.setSecondLocalPoint(tentacle!!.getJoint(i + 1, scratch))
             }
         }
 

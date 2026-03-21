@@ -1916,7 +1916,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyPhase2State.ATTACK -> {
                     val attacker = if (lungeLeft) leftTentacle else rightTentacle
                     if (!lungeLaunched) {
-                        attacker?.lunge(GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter()))
+                        attacker?.lunge()
                         lungeLaunched = true
                     } else if (attacker?.isIdle() == true) phase2StateMachine.next()
                 }
