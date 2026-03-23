@@ -1884,7 +1884,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             val idleOffset = GameObjectPools.fetch(Vector2::class)
                 .set(Phase2ConstVals.TENTACLE_IDLE_OFFSET_X, Phase2ConstVals.TENTACLE_IDLE_OFFSET_Y)
-                .scl(ConstVals.PPM.toFloat())
 
             val leftBounds = GameRectangle().setCenter(
                 center.x - Phase2ConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
@@ -1894,7 +1893,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             leftTentacle!!.spawn(
                 props(
                     ConstKeys.BOUNDS pairTo leftBounds,
-                    ConstKeys.OFFSET pairTo Vector2(idleOffset)
+                    ConstKeys.OFFSET pairTo idleOffset
                 )
             )
 
@@ -1906,7 +1905,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             rightTentacle!!.spawn(
                 props(
                     ConstKeys.BOUNDS pairTo rightBounds,
-                    ConstKeys.OFFSET pairTo Vector2(idleOffset)
+                    ConstKeys.OFFSET pairTo idleOffset
                 )
             )
         }
@@ -1921,6 +1920,18 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val debugShapes = Array<() -> IDrawableShape?>()
             addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
             debugShapes.add { body.getBounds() }
+
+            val damageable = Fixture(
+                body, FixtureType.DAMAGEABLE,
+                GameRectangle().setSize(3f * ConstVals.PPM, 2.5f * ConstVals.PPM)
+            )
+            damageable.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
+            body.addFixture(damageable)
+            damageable.drawingColor = Color.PURPLE
+            debugShapes.add { damageable }
+
+            val damager = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+            body.addFixture(damager)
 
             BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
         }
@@ -2181,18 +2192,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         fun start() {
             GameLogger.debug(TAG, "PhaseTransitionHandler: start()")
-
             active = true
             explodeTimer.reset()
-            state = WilyPhaseTransState.INIT
-
             body.physics.velocity.setZero()
-
-            megaman.body.physics.velocity.x = 0f
-
-            val entitiesToDestroy = MegaGameEntities.getOfTags(tempEntities, DESTROY_ON_TRANS)
-            entitiesToDestroy.forEach { if (it is IProjectileEntity && it.owner == this@WilyFinalBoss) it.destroy() }
-            entitiesToDestroy.clear()
+            state = WilyPhaseTransState.INIT
         }
 
         override fun update(delta: Float) {
@@ -2218,7 +2221,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     if (damageTimer.isFinished()) damageTimer.reset()
 
                     explodeOnDefeat(delta)
-                    if (body.getY() - 5f * ConstVals.PPM > room.getMaxY()) {
+                    if (body.getY() - 10f * ConstVals.PPM > room.getMaxY()) {
                         GameLogger.debug(TAG, "PhaseTransitionHandler: FLY_UP -> PAUSE")
 
                         body.setCenter(spawnCenter.x, room.getMaxY() + body.getHeight())

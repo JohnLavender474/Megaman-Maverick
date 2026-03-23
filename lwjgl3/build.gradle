@@ -53,9 +53,11 @@ run {
   workingDir = rootProject.file('assets').path
   setIgnoreExitValue(true)
 
-  jvmArgs += ['-Xms512m', '-Xmx1500m', '-XX:+UseZGC']
+  jvmArgs += ['-Xms512m', '-Xmx1500m']
   if (JavaVersion.current() >= JavaVersion.VERSION_21) {
     jvmArgs += '-XX:+ZGenerational'
+  } else {
+    jvmArgs += "-XX:+UseZGC"
   }
   if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
