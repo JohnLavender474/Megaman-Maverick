@@ -158,8 +158,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private val room = GameRectangle()
     private val spawnCenter = Vector2()
 
-    private val tempEntities = OrderedSet<MegaGameEntity>()
-
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -366,10 +364,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     }
                 }
 
-                WilyFinalBossPhase.PHASE_2 -> {
-                    phase2Handler.update(delta)
-                }
-
+                WilyFinalBossPhase.PHASE_2 -> phase2Handler.update(delta)
                 WilyFinalBossPhase.PHASE_3 -> TODO()
             }
         }
@@ -471,7 +466,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     sprite.priority.section = DrawingSection.PLAYGROUND
                     sprite.priority.value = -1
                     sprite.setFlip(false, false)
-                    sprite.hidden = false
+                    sprite.hidden = damageBlink
                 }
 
                 else -> {
@@ -1884,6 +1879,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             val idleOffset = GameObjectPools.fetch(Vector2::class)
                 .set(Phase2ConstVals.TENTACLE_IDLE_OFFSET_X, Phase2ConstVals.TENTACLE_IDLE_OFFSET_Y)
+                .scl(ConstVals.PPM.toFloat())
 
             val leftBounds = GameRectangle().setCenter(
                 center.x - Phase2ConstVals.TENTACLE_OFFSET_X * ConstVals.PPM,
@@ -2248,6 +2244,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 WilyPhaseTransState.DROP_DOWN -> {
+                    phase2Handler.updateAnchors()
+
                     body.physics.velocity.set(0f, -PhaseTransitionConstVals.DROP_DOWN_SPEED * ConstVals.PPM)
 
                     if (body.getCenter().y <= spawnCenter.y + 1.5f * ConstVals.PPM) {
@@ -2258,8 +2256,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                         state = WilyPhaseTransState.END
                     }
-
-                    phase2Handler.updateAnchors()
                 }
 
                 WilyPhaseTransState.END -> {

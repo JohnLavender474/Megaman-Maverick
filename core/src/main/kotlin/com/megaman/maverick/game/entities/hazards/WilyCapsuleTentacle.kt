@@ -283,6 +283,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             val lastJointIndex = jointCount - 1
             repeat(jointCount) { i ->
                 val pos = GameObjectPools.fetch(Vector2::class, false)
+                    .set(-100f, -100f).scl(ConstVals.PPM.toFloat())
                 tentacle!!.getJoint(i, pos)
                 jointPositions.add(pos)
 

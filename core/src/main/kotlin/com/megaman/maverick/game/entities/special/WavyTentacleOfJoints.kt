@@ -9,9 +9,11 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import kotlin.math.sqrt
 
@@ -74,7 +76,11 @@ class WavyTentacleOfJoints(game: MegamanMaverickGame) : MegaGameEntity(game), Up
 
         joints.clear()
         val jointCount = segmentCount + 1
-        repeat(jointCount) { joints.add(Vector2()) }
+        repeat(jointCount) {
+            val joint = GameObjectPools.fetch(Vector2::class, false)
+                .set(-100f, -100f).scl(ConstVals.PPM.toFloat())
+            joints.add(joint)
+        }
 
         updateJoints()
     }
@@ -82,6 +88,7 @@ class WavyTentacleOfJoints(game: MegamanMaverickGame) : MegaGameEntity(game), Up
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        joints.forEach { GameObjectPools.free(it) }
         joints.clear()
     }
 
