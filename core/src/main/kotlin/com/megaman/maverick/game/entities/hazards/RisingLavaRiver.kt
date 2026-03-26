@@ -13,6 +13,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.Properties
@@ -176,7 +177,6 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         state = RisingLavaRiverState.DORMANT
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        body.set(bounds)
         fullBounds.set(bounds)
         startPosition.set(bounds.getPosition())
         velocity.setZero()
@@ -362,7 +362,14 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             fullBounds.toGdxRectangle(),
             tempRect
         )
-        if (overlap) body.set(tempRect)
+        if (overlap) {
+            if (tempRect.height > 2f * ConstVals.PPM) {
+                val topY = tempRect.getPositionPoint(Position.TOP_CENTER).y
+                tempRect.setHeight(2f * ConstVals.PPM)
+                tempRect.setY(topY - 2f * ConstVals.PPM)
+            }
+            body.set(tempRect)
+        } else body.setSize(0f)
     })
 
     private fun defineBodyComponent(): BodyComponent {

@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedMap
+import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.Animator
@@ -50,14 +52,11 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -490,14 +489,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
             sprite.setCenter(center)
 
-            val visible = when (currentPhase) {
+            val visible = if (phaseTransitionHandler.active) false else when (currentPhase) {
                 WilyFinalBossPhase.PHASE_1 -> {
                     val phase1StateMachine =
                         stateMachines.get(currentPhase) as StateMachine<WilyPhase1State>
                     val state = phase1StateMachine.getCurrentElement()
                     state == WilyPhase1State.FIRE_LAZORS && !phase1Handler.lazorCompletionStarted
                 }
-
                 else -> false
             }
             sprite.hidden = !visible
@@ -514,7 +512,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .preProcess { _, sprite ->
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
             sprite.setCenter(center)
-            sprite.hidden = phase2Handler.getCannonTimeRatio() < 0.8f
+            sprite.hidden = phaseTransitionHandler.active || phase2Handler.getCannonTimeRatio() < 0.8f
         }
         .build()
 
@@ -601,8 +599,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             WilyFinalBossPhase.PHASE_2 -> {
                 phase2Handler.init()
                 phase2Handler.buildBody(body)
+                phase2Handler.updateAnchors()
             }
-
             WilyFinalBossPhase.PHASE_3 -> TODO()
             else -> throw IllegalStateException("Should not transition to phase 1 in 'startNextPhase()'")
         }

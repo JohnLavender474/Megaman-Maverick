@@ -28,12 +28,10 @@ class WorldSystem(
     private val collisionHandler: ICollisionHandler,
     private val contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
-    var upperBound: Int = DEFAULT_UPPER_BOUND
 ) : GameSystem(BodyComponent::class) {
 
     companion object {
         const val TAG = "WorldSystem"
-        private const val DEFAULT_UPPER_BOUND = 5
     }
 
     init {
@@ -80,7 +78,7 @@ class WorldSystem(
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
 
-        accumulator += if (upperBound > 0) delta.coerceAtMost(fixedStep * upperBound) else delta
+        accumulator += delta
 
         if (accumulator >= fixedStep) {
             entities.forEach { entity ->
