@@ -296,6 +296,8 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Elec Devil - [Rockman X5 - Shadow Devil [Famitracker, VRC6]](https://www.youtube.com/watch?v=uVEBE9i7n7M)
 - [François Gérin-Lajoie](https://oragus.itch.io/)
   - Wily Stage 2 - [8-bit Robotics - Cybernetic Factory](https://oragus.itch.io/8-bit-robotics)
+- [MetallicWarrior]
+  - Final Boss Fight - [Our Blood Boils (VRC6)](https://youtu.be/n0oa6aMa-dA)
 - Capcom
   - Logo Intro - [MM6 Capcom Logo](https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3)
 - TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.

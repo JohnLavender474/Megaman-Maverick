@@ -1,47 +1,67 @@
 # Pixel Art
 
+## Megaman
+
+Megaman spritesheet - Samuel_X7
+
 ## Title Screen
 
 Title Card - Samuel_X7
-MM Pose - PixelBoy127
+MM Pose - PixelBoy127, Samuel_X7
 
 ## Robot Masters / Bosses
 
-Timber Woman - Samuel_X7
-Rodent Man - Samuel_X7
-Reactor Man - Balloon Cart
+Timber Woman - oldlavygenes, Samuel_X7
+Rodent Man - oldlavygenes, Samuel_X7
+Precious Woman - oldlavygenes
+Inferno Man - boberatu, Samuel_X7
+Moon Man - boberatu, Samuel_X7
+Reactor Man - Balloon Cart, Samuel_X7
 Glacier Man - Balloon Cart
-Moon Man - boberatu
 Desert Man - rcrdcat
-Precious Woman - Rodrigo
-Inferno Man - boberatu
+Final Boss (Wily) - kwad_rat
+Maverick Robot (Intro Boss) - Ansimuz
 Inferno Dragon - Ansimuz
 Moon Head - oldlavygenes
 Reactor Monkey - Balloon Cart
-Bospider - Capcom
+Bospider - Bean and Shawn
 Elec Devil - boberatu
+Guts Tank - Mister Mike (not yet used)
+Penpen Maker - Mister Mike (not yet used)
+Sphinx - Mister Mike (not yet used)
+
+## Dr. Wily
+
+Wily Mugshot - Toni
 
 ## Enemies
 
 Samuel_X7
+Nachtyama
 MegaRed225
 Balloon Cart
 Mister Mike
 Capcom
 
+## Blocks / Platforms
+
+Samuel_X7
+
 ## Tilesets
 
-Intro Stage - Super Icon Ltd
+Intro Stage - Ansimuz
 Reactor Man - Balloon Cart
 Glacier Man - Balloon Cart
 Rodent Man - Ansimuz
 Inferno Man - Ansimuz
 Timber Woman - Ansimuz & Anokolisa
-Moon Man - Samuel_X7
-Precious Woman - oldlavygenes
 Desert Man - Super Icon Ltd
 Wily 1 - AxeW1eld3r
 Wily 2 - Gektorne
+Bongwater-bandit
+Mister Mike
+Rabbid4240
+Megaman Maker
 Capcom
 
 ## Other
@@ -54,12 +74,13 @@ Kofi K
 # Music
 
 Famitard
-Vinnyz29
+vinnyz29
 Cody O'Quinn
 ryanavx
 Wyatt
 JXChip
 François Gérin-Lajoie
+MetallicWarrior
 Capcom
 
 --------------------------------------------
@@ -67,6 +88,7 @@ Capcom
 # Sound Effects
 
 Capcom
+Nintendo
 
 --------------------------------------------
 
