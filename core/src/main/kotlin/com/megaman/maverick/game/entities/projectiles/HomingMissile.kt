@@ -60,12 +60,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         const val TAG = "HomingMissile"
 
         private const val SPEED = 5f
-        private const val SPEED_HARD = 6f
-
         private const val DAMAGE_DURATION = 0.1f
-
         private const val RECALC_DELAY = 0.25f
-
         private const val TTL = 3f
         private const val FLASH_START = 2f
 
@@ -181,7 +177,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         // Convert game angle (0=up, clockwise) to math angle (0=right, CCW)
         val mathAngle = 90 - gameAngle
         val velocity = GameObjectPools.fetch(Vector2::class)
-            .set(0f, (if (game.state.hardMode) SPEED_HARD else SPEED) * ConstVals.PPM)
+            .set(0f, SPEED * ConstVals.PPM)
             .setAngleDeg(mathAngle.toFloat())
         body.physics.velocity.set(velocity)
     }

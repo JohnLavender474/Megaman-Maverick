@@ -7,3 +7,5 @@ fun Float.round(decimals: Int = 2) = "%.${decimals}f".format(this).toFloat()
 fun Float.coerceIn(abs: Float) = coerceIn(-abs(abs), abs(abs))
 
 fun Float.epsilonEquals(other: Float, epsilon: Float) = abs(other - this) <= epsilon
+
+fun Float.isBetween(i: Float, j: Float) = this in i..j

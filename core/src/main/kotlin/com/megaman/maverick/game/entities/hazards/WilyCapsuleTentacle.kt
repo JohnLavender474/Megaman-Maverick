@@ -20,6 +20,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
@@ -38,7 +39,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val SEGMENT_COUNT = 3
         private const val LINE_THICKNESS = 0.1f * ConstVals.PPM
 
-        private const val DEFAULT_IDLE_OFFSET = 2.5f
+        private const val DEFAULT_IDLE_OFFSET = 2f
 
         // Idle tip drift: sine base + random wander layered on top
         private const val TIP_DRIFT_RADIUS = 0.5f * ConstVals.PPM
@@ -46,7 +47,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val TIP_DRIFT_SPEED_Y = 0.43f
 
         // Random wander
-        private const val WANDER_RADIUS = 1.25f * ConstVals.PPM
+        private const val WANDER_RADIUS = 1f * ConstVals.PPM
         private const val WANDER_RETARGET_MIN = 1f
         private const val WANDER_RETARGET_MAX = 3f
         private const val WANDER_LERP_SPEED = 3f
@@ -59,9 +60,12 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val LOG_INTERVAL = 2f
 
         // Lunge movement
-        private const val LUNGE_SPEED = 14f * ConstVals.PPM
+        private const val LUNGE_SPEED = 10f * ConstVals.PPM
         private const val LUNGE_PAUSE_DURATION = 0.5f
-        private const val RETURN_SPEED = 6f * ConstVals.PPM
+        private const val RETURN_SPEED = 10f * ConstVals.PPM
+
+        // Pin hold
+        private const val PIN_DURATION = 2f
 
         // Multi-step: pull 2nd lunge slightly toward anchor so it's not directly at Mega Man
         private const val MULTI_STEP_PULL_TOWARD_ANCHOR = 0.2f
@@ -70,8 +74,8 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val LUNGE_PAST_OVERSHOOT = 3f
         private const val SWIPE_DISTANCE = 6f
         private const val SWIPE_HORIZONTAL_EXTEND = 3f
-        private const val COIL_BACK_DISTANCE = 4f
-        private const val COIL_BACK_SPEED = 6f * ConstVals.PPM
+        private const val COIL_BACK_DISTANCE = 3f
+        private const val COIL_BACK_SPEED = 8f * ConstVals.PPM
     }
 
     enum class LungeType { SIMPLE, MULTI_STEP, LUNGE_PAST_AND_SWIPE }
@@ -117,9 +121,14 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     // --- Lunge state ---
 
     private var pauseTimer = 0f
+
     private val lungeTarget = Vector2()
+
     private var coilingBack = false
     private val coilBackTarget = Vector2()
+
+    private var pinned = false
+    private var pinTimer = 0f
 
     // Cycles SIMPLE → MULTI_STEP → LUNGE_PAST_AND_SWIPE → SIMPLE → …
     // setIndex(-1) before first use so that the first next() returns SIMPLE.
@@ -151,6 +160,8 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         time = 0f
         logTimer = 0f
         pauseTimer = 0f
+        pinned = false
+        pinTimer = 0f
         coilingBack = false
 
         lungePhase = 0
@@ -261,6 +272,33 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         tentacle!!.setState(TentacleState.LUNGING)
     }
 
+    fun pin(target: Vector2 = megaman.body.getCenter()) {
+        if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
+        pinned = true
+        pinTimer = 0f
+        lunge(target = target, lungeType = LungeType.SIMPLE)
+    }
+
+    fun isPinned() = pinned
+
+    fun explodeAndDestroy() {
+        for (joint in jointEntities) {
+            val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+            explosion.spawn(props(
+                ConstKeys.POSITION pairTo joint.body.getCenter(),
+                ConstKeys.DAMAGER pairTo false,
+            ))
+        }
+        scissor?.let {
+            val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+            explosion.spawn(props(
+                ConstKeys.POSITION pairTo it.body.getCenter(),
+                ConstKeys.DAMAGER pairTo false,
+            ))
+        }
+        destroy()
+    }
+
     // --- Per-frame update ---
 
     override fun update(delta: Float) {
@@ -303,6 +341,11 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
             clearDebugShapeSuppliers()
             for (line in lines) addDebugShapeSupplier { line }
+
+            for (i in 0 until SEGMENT_COUNT) lines[i].let {
+                it.setFirstLocalPoint(tentacle!!.getJoint(i, scratch))
+                it.setSecondLocalPoint(tentacle!!.getJoint(i + 1, scratch))
+            }
 
             return
         }
@@ -364,53 +407,61 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
             }
 
             TentacleState.PAUSING -> {
-                pauseTimer += delta
-                if (pauseTimer >= LUNGE_PAUSE_DURATION) {
-                    pauseTimer = 0f
-                    when (currentLungeType) {
-                        LungeType.SIMPLE ->
-                            tentacle!!.setState(TentacleState.RETURNING)
+                if (pinned) {
+                    pinTimer += delta
+                    if (pinTimer >= PIN_DURATION) {
+                        pinned = false
+                        tentacle!!.setState(TentacleState.RETURNING)
+                    }
+                } else {
+                    pauseTimer += delta
+                    if (pauseTimer >= LUNGE_PAUSE_DURATION) {
+                        pauseTimer = 0f
+                        when (currentLungeType) {
+                            LungeType.SIMPLE ->
+                                tentacle!!.setState(TentacleState.RETURNING)
 
-                        LungeType.MULTI_STEP -> {
-                            if (lungePhase == 0) {
-                                // Fire the second lunge, pulled slightly toward the anchor
-                                // so it's not aimed perfectly at Mega Man
-                                lungePhase = 1
-                                val megaCenter = megaman.body.getCenter()
-                                lungeTarget.set(
-                                    megaCenter.x + (anchor.x - megaCenter.x) * MULTI_STEP_PULL_TOWARD_ANCHOR,
-                                    megaCenter.y + (anchor.y - megaCenter.y) * MULTI_STEP_PULL_TOWARD_ANCHOR
-                                )
-                                tentacle!!.setState(TentacleState.LUNGING)
-                            } else tentacle!!.setState(TentacleState.RETURNING)
-                        }
+                            LungeType.MULTI_STEP -> {
+                                if (lungePhase == 0) {
+                                    // Fire the second lunge, pulled slightly toward the anchor
+                                    // so it's not aimed perfectly at Mega Man
+                                    lungePhase = 1
+                                    val megaCenter = megaman.body.getCenter()
+                                    lungeTarget.set(
+                                        megaCenter.x + (anchor.x - megaCenter.x) * MULTI_STEP_PULL_TOWARD_ANCHOR,
+                                        megaCenter.y + (anchor.y - megaCenter.y) * MULTI_STEP_PULL_TOWARD_ANCHOR
+                                    )
+                                    tentacle!!.setState(TentacleState.LUNGING)
+                                } else tentacle!!.setState(TentacleState.RETURNING)
+                            }
 
-                        LungeType.LUNGE_PAST_AND_SWIPE -> {
-                            if (lungePhase == 0) {
-                                // Coil back before swiping
-                                val swipeUp = megaman.body.getY() > currentTipTarget.y
-                                val swipeDir = if (swipeUp) 1f else -1f
+                            LungeType.LUNGE_PAST_AND_SWIPE -> {
+                                if (lungePhase == 0) {
+                                    // Coil back before swiping
+                                    val swipeUp = megaman.body.getY() > currentTipTarget.y
+                                    val swipeDir = if (swipeUp) 1f else -1f
 
-                                // Extend further horizontally away from the anchor during swipe
-                                val horizDir = if (currentTipTarget.x > anchor.x) 1f else -1f
-                                val horizExtend = horizDir * SWIPE_HORIZONTAL_EXTEND * ConstVals.PPM
+                                    // Extend further horizontally away from the anchor during swipe
+                                    val horizDir = if (currentTipTarget.x > anchor.x) 1f else -1f
+                                    val horizExtend = horizDir * SWIPE_HORIZONTAL_EXTEND * ConstVals.PPM
 
-                                // Swipe target
-                                lungeTarget.set(
-                                    currentTipTarget.x + horizExtend,
-                                    currentTipTarget.y + swipeDir * SWIPE_DISTANCE * ConstVals.PPM
-                                )
+                                    // Swipe target
+                                    lungeTarget.set(
+                                        currentTipTarget.x + horizExtend,
+                                        currentTipTarget.y + swipeDir * SWIPE_DISTANCE * ConstVals.PPM
+                                    )
 
-                                // Coil back target (opposite direction vertically, same horizontal extend)
-                                coilBackTarget.set(
-                                    currentTipTarget.x + horizExtend * 0.5f,
-                                    currentTipTarget.y - swipeDir * COIL_BACK_DISTANCE * ConstVals.PPM
-                                )
-                                coilingBack = true
+                                    // Coil back target (opposite direction vertically, same horizontal extend)
+                                    coilBackTarget.set(
+                                        currentTipTarget.x + horizExtend * 0.5f,
+                                        currentTipTarget.y - swipeDir * COIL_BACK_DISTANCE * ConstVals.PPM
+                                    )
+                                    coilingBack = true
 
-                                lungePhase = 1
-                                tentacle!!.setState(TentacleState.LUNGING)
-                            } else tentacle!!.setState(TentacleState.RETURNING)
+                                    lungePhase = 1
+                                    tentacle!!.setState(TentacleState.LUNGING)
+                                } else tentacle!!.setState(TentacleState.RETURNING)
+                            }
                         }
                     }
                 }

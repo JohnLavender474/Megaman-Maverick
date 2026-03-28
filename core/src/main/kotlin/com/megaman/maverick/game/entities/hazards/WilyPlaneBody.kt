@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -51,8 +52,9 @@ class WilyPlaneBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private const val SPRITE_WIDTH = 16f
         private const val SPRITE_HEIGHT = 16f
         private const val TTL = 1f
-        private const val EXPLOSION_DELAY = 0.25f
-        private const val BLINK_DELAY = 0.1f
+        private const val EXPLOSION_DELAY = 0.1f
+        private const val EXPLOSION_MAX_OFFSET = 5f
+        private const val BLINK_DELAY = 0.05f
         private var region: TextureRegion? = null
     }
 
@@ -102,9 +104,11 @@ class WilyPlaneBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         explosionDelay.update(delta)
         if (explosionDelay.isFinished()) {
-            val position = current.cpy().add(
-                UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM,
-                UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM,
+            val position = GameObjectPools.fetch(Vector2::class)
+                .set(current)
+                .add(
+                UtilMethods.getRandom(-EXPLOSION_MAX_OFFSET, EXPLOSION_MAX_OFFSET) * ConstVals.PPM,
+                UtilMethods.getRandom(-EXPLOSION_MAX_OFFSET, EXPLOSION_MAX_OFFSET) * ConstVals.PPM,
             )
             val explosion = MegaEntityFactory.fetch(Explosion::class)!!
             explosion.spawn(

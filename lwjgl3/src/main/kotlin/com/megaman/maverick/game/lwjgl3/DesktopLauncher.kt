@@ -66,12 +66,13 @@ object DesktopLauncher {
 
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
+        config.setIdleFPS(ConstVals.FPS)
         config.setForegroundFPS(ConstVals.FPS)
         config.setResizable(appArgs.resizable)
         config.setWindowIcon(WINDOW_ICON_PATH)
         config.setPauseWhenMinimized(false)
         config.setPauseWhenMinimized(false)
-        config.useVsync(false)
+        config.useVsync(true)
         when {
             appArgs.fullScreen -> config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
             appArgs.maximized -> config.setMaximized(true)

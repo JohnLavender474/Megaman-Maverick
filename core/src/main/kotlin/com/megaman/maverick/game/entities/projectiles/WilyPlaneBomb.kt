@@ -167,7 +167,7 @@ class WilyPlaneBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
+        val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 2))
         sprite.setSize(2f * ConstVals.PPM, 3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
