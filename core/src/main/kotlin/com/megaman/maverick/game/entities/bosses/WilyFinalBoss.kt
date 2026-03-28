@@ -51,7 +51,6 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
@@ -138,7 +137,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         SWOOP, HOVER, FLY_IN, FLY_BY, FLY_OUT, FIRE_LAZORS, SHOOT_MISSILES, DROP_BOMB
     }
 
-    private enum class WilyPhase2State { HOVER, PREPARE, ATTACK, DIVE, PIN }
+    private enum class WilyPhase2State { HOVER, PREPARE, LUNGE, DIVE, PIN }
 
     private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN, END }
 
@@ -548,7 +547,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         }
 
                         WilyFinalBossPhase.PHASE_2 -> when {
-                            defeated -> "scared"
+                            getCurrentHealth() == 0 -> "scared"
                             !damageTimer.isFinished() -> when {
                                 damageTimer.getRatio() < 0.5f -> "scared"
                                 else -> "angry"
@@ -1882,10 +1881,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             .create<WilyPhase2State>()
             .initialState(WilyPhase2State.HOVER)
             .transition(WilyPhase2State.HOVER, WilyPhase2State.PREPARE) { true }
-            .transition(WilyPhase2State.PREPARE, WilyPhase2State.ATTACK) { true }
-            .transition(WilyPhase2State.ATTACK, WilyPhase2State.DIVE) { shouldDive() }
-            .transition(WilyPhase2State.ATTACK, WilyPhase2State.PIN) { shouldPin() }
-            .transition(WilyPhase2State.ATTACK, WilyPhase2State.HOVER) { true }
+            .transition(WilyPhase2State.PREPARE, WilyPhase2State.DIVE) { shouldDive() }
+            .transition(WilyPhase2State.PREPARE, WilyPhase2State.PIN) { shouldPin() }
+            .transition(WilyPhase2State.PREPARE, WilyPhase2State.LUNGE) { true }
+            .transition(WilyPhase2State.LUNGE, WilyPhase2State.HOVER) { true }
             .transition(WilyPhase2State.DIVE, WilyPhase2State.HOVER) { true }
             .transition(WilyPhase2State.PIN, WilyPhase2State.HOVER) { true }
             .onChangeState(this::onChangeState)
@@ -1908,7 +1907,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             when (current) {
                 WilyPhase2State.HOVER -> hoverTimer.reset()
                 WilyPhase2State.PREPARE -> prepareTimer.reset()
-                WilyPhase2State.ATTACK -> {
+                WilyPhase2State.LUNGE -> {
                     lungeLaunched = false
                     lungeLeft = !lungeLeft
                     attackCount++
@@ -2076,7 +2075,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     if (prepareTimer.isFinished()) phase2StateMachine.next()
                 }
 
-                WilyPhase2State.ATTACK -> {
+                WilyPhase2State.LUNGE -> {
                     val attacker = if (lungeLeft) leftTentacle else rightTentacle
                     if (!lungeLaunched) {
                         attacker?.lunge()
