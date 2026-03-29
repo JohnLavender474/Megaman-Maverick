@@ -52,6 +52,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
@@ -578,27 +579,33 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 .setKeySupplier keySupplier@{
                     val prefix = currentPhase.name.lowercase()
 
-                    var suffix = when (currentPhase) {
-                        WilyFinalBossPhase.PHASE_1 -> when {
-                            phaseTransitionHandler.active -> "hover"
+                    val suffix = when (currentPhase) {
+                        WilyFinalBossPhase.PHASE_1 -> {
+                            var temp = when {
+                                phaseTransitionHandler.active -> "hover"
 
-                            else -> when (
-                                val state = stateMachines.get(WilyFinalBossPhase.PHASE_1).getCurrentElement()
-                            ) {
-                                WilyPhase1State.FLY_BY ->
-                                    if (!delayBetweenStates.isFinished()) "tilt" else "fly_by"
+                                else -> when (
+                                    val state = stateMachines.get(WilyFinalBossPhase.PHASE_1).getCurrentElement()
+                                ) {
+                                    WilyPhase1State.FLY_BY ->
+                                        if (!delayBetweenStates.isFinished()) "tilt" else "fly_by"
 
-                                WilyPhase1State.FLY_IN ->
-                                    if (phase1Handler.flyInDecelerating) "tilt" else "fly_by"
+                                    WilyPhase1State.FLY_IN ->
+                                        if (phase1Handler.flyInDecelerating) "tilt" else "fly_by"
 
-                                WilyPhase1State.FIRE_LAZORS ->
-                                    if (phase1Handler.shootBulletsTimer.isFinished()) "hover" else "open_mouth"
+                                    WilyPhase1State.FIRE_LAZORS ->
+                                        if (phase1Handler.shootBulletsTimer.isFinished()) "hover" else "open_mouth"
 
-                                WilyPhase1State.DROP_BOMB ->
-                                    if (phase1Handler.dropBombHatchOpen) "open_hatch" else "fly_by"
+                                    WilyPhase1State.DROP_BOMB ->
+                                        if (phase1Handler.dropBombHatchOpen) "open_hatch" else "fly_by"
 
-                                else -> (state as Enum<*>).name.lowercase()
+                                    else -> (state as Enum<*>).name.lowercase()
+                                }
                             }
+
+                            if (frozen) temp += "_frozen"
+
+                            temp
                         }
 
                         WilyFinalBossPhase.PHASE_2 -> when {
@@ -615,8 +622,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                         WilyFinalBossPhase.PHASE_3 -> TODO()
                     }
-
-                    if (frozen) suffix += "_frozen"
 
                     return@keySupplier "${prefix}/${suffix}"
                 }
@@ -641,8 +646,12 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 .shouldUpdateAnimation { key, _, _ -> !key.contains("_frozen") }
                 .setOnChangeKeyListener { animator, curr, next ->
                     if (next?.contains("_frozen") == true) {
-                        val time = animator.animations[curr].getCurrentTime()
-                        animator.animations[next].setCurrentTime(time)
+                        try {
+                            val time = animator.animations[curr].getCurrentTime()
+                            animator.animations[next].setCurrentTime(time)
+                        } catch (e: Exception) {
+                            GameLogger.error(TAG, "defineAnimationsComponent(): setOnChangeKeyListener: error=$e")
+                        }
                     }
                 }
                 .applyToAnimations { animations ->
