@@ -182,13 +182,11 @@ class MegaAudioManager(
 
     fun isSoundPlaying(sound: SoundAsset) = playingSoundEntries.any { it.ass == sound }
 
-    fun fadeOutMusic(time: Float) {
+    fun fadeOutMusic(time: Float, onFinished: (() -> Unit)? = null) {
         fadeOutMusicTimer = Timer(time)
-        fadeOutMusicTimer!!.setRunOnJustFinished { currentMusic?.volume = musicVolume }
-    }
-
-    fun stopFadingOutMusic() {
-        fadeOutMusicTimer = null
-        currentMusic?.volume = musicVolume
+        fadeOutMusicTimer!!.setRunOnJustFinished {
+            currentMusic?.volume = musicVolume
+            onFinished?.invoke()
+        }
     }
 }

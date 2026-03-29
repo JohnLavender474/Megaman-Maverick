@@ -183,6 +183,7 @@
             <key type="filename">../frames/WilyFinalBoss/phase_1/open_hatch_frozen.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/tilt.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/tilt_frozen.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/fake/bounce.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -319,6 +320,9 @@
             </struct>
             <key type="filename">../frames/WilyFinalBoss/phase_2/angry.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_2/hover.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/angry.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/fake/hover.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/hover.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -334,6 +338,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/WilyFinalBoss/phase_2/frozen.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -368,6 +373,9 @@
             <key type="filename">../frames/WilyFinalBoss/phase_2/laugh.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_2/orb_glow.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_2/scared.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/laugh.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/orb_glow.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/scared.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

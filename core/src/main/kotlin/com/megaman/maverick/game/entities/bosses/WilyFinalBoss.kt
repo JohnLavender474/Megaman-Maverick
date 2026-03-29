@@ -59,13 +59,16 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.M
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
 import com.megaman.maverick.game.entities.hazards.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
+import com.megaman.maverick.game.entities.hazards.WilyFakeCapsule
 import com.megaman.maverick.game.entities.hazards.WilyPlaneBody
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -98,6 +101,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val WILY_PHASE_2_SPRITE_WIDTH = 8f
         private const val WILY_PHASE_2_SPRITE_HEIGHT = 8f
 
+        private const val FREEZE_DUR = 0.75f
+
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = orderedMapOf(
             "phase_1/fly_by" pairTo AnimationDef(),
@@ -128,13 +133,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             "phase_2/laugh" pairTo AnimationDef(2, 1, 0.1f, true),
             "phase_2/scared" pairTo AnimationDef(2, 1, 0.1f, true),
             "phase_2/orb_glow" pairTo AnimationDef(2, 1, 0.05f, true),
-            "phase_2/frozen" pairTo AnimationDef()
+            "phase_2/frozen" pairTo AnimationDef(),
+            "phase_3/hover" pairTo AnimationDef(3, 1, gdxArrayOf(0.5f, 0.1f, 0.1f), true),
+            "phase_3/angry" pairTo AnimationDef(3, 1, 0.1f, true),
+            "phase_3/laugh" pairTo AnimationDef(2, 1, 0.1f, true),
+            "phase_3/scared" pairTo AnimationDef(2, 1, 0.1f, true),
+            "phase_3/orb_glow" pairTo AnimationDef(2, 1, 0.05f, true),
+            "phase_3/frozen" pairTo AnimationDef(),
         )
     }
 
-    private enum class WilyFinalBossPhase {
-        PHASE_1, PHASE_2, PHASE_3
-    }
+    private enum class WilyFinalBossPhase { PHASE_1, PHASE_2, PHASE_3 }
 
     private enum class WilyPhase1State {
         SWOOP, HOVER, FLY_IN, FLY_BY, FLY_OUT, FIRE_LAZORS, SHOOT_MISSILES, DROP_BOMB
@@ -142,7 +151,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private enum class WilyPhase2State { HOVER, PREPARE, LUNGE, DIVE, PIN }
 
-    private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN, END }
+    private enum class WilyPhase3State { WAIT, APPEAR, ATTACK, VANISH }
+
+    private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, POST_PAUSE, END }
+
+    override var damageNegotiator = object : BossDamageNegotiator() {
+
+        override fun get(damager: IDamager): Int {
+            if (damager is IFreezerEntity || damager is IFireEntity) return 2
+            return super.get(damager)
+        }
+    }
 
     override var frozen: Boolean
         get() = freezeHandler.isFrozen()
@@ -151,9 +170,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
     private val freezeHandler = FreezableEntityHandler(
-        this,
-        duration = 0.5f,
+        entity = this,
         forceSound = true,
+        duration = FREEZE_DUR,
         noDamageOnFrozen = false,
         onJustFinished = { damageTimer.reset() }
     )
@@ -166,11 +185,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private val phase1Handler = Phase1Handler()
     private val phase2Handler = Phase2Handler()
+    private val phase3Handler = Phase3Handler()
 
     private var initSequence = false
 
     private val room = GameRectangle()
     private val spawnCenter = Vector2()
+
+    private var cachedSpawnProps: Properties? = null
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -213,6 +235,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         body.setCenter(spawn)
         spawnCenter.set(spawn)
 
+        cachedSpawnProps = spawnProps
+
         val room = spawnProps.get(ConstKeys.ROOM, RectangleMapObject::class)!!.rectangle
         this.room.set(room)
 
@@ -233,9 +257,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+
         resetBody()
+
         phase1Handler.reset()
         phase2Handler.reset()
+        phase3Handler.reset()
+
         frozen = false
     }
 
@@ -258,14 +286,16 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     override fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat(): currentPhase=$currentPhase")
+
+        frozen = false
+
+        phase1Handler.reset()
+        phase2Handler.reset()
+        phase3Handler.reset()
+
         when (currentPhase) {
             WilyFinalBossPhase.PHASE_3 -> super.triggerDefeat()
-            else -> {
-                frozen = false
-                phase1Handler.reset()
-                phase2Handler.reset()
-                phaseTransitionHandler.start()
-            }
+            else -> phaseTransitionHandler.start()
         }
     }
 
@@ -418,7 +448,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 WilyFinalBossPhase.PHASE_2 -> phase2Handler.update(delta)
-                WilyFinalBossPhase.PHASE_3 -> TODO()
+                WilyFinalBossPhase.PHASE_3 -> phase3Handler.update(delta)
             }
         }
     }
@@ -451,7 +481,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .preProcess { _, sprite ->
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
 
-            if (currentPhase == WilyFinalBossPhase.PHASE_2) sprite.setSize(
+            if (currentPhase == WilyFinalBossPhase.PHASE_2 || currentPhase == WilyFinalBossPhase.PHASE_3) sprite.setSize(
                 WILY_PHASE_2_SPRITE_WIDTH * ConstVals.PPM,
                 WILY_PHASE_2_SPRITE_HEIGHT * ConstVals.PPM
             ) else sprite.setSize(
@@ -511,6 +541,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         else -> false
                     }
                     sprite.setFlip(flipX, false)
+
+                    sprite.setAlpha(1f)
                 }
 
                 WilyFinalBossPhase.PHASE_2 -> {
@@ -518,12 +550,16 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     sprite.priority.value = -1
                     sprite.setFlip(false, false)
                     sprite.hidden = damageBlink
+                    sprite.setAlpha(1f)
                 }
 
-                else -> {
+                WilyFinalBossPhase.PHASE_3 -> {
                     sprite.priority.section = DrawingSection.PLAYGROUND
+                    sprite.priority.value = -1
                     sprite.setFlip(false, false)
-                    sprite.hidden = false
+                    sprite.hidden = damageBlink
+                    val alpha = phase3Handler.getSpriteAlpha()
+                    sprite.setAlpha(alpha)
                 }
             }
         }
@@ -568,7 +604,26 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .preProcess { _, sprite ->
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
             sprite.setCenter(center)
-            sprite.hidden = frozen || phaseTransitionHandler.active || phase2Handler.getCannonTimeRatio() < 0.8f
+            sprite.hidden = frozen || phaseTransitionHandler.active ||
+                currentPhase != WilyFinalBossPhase.PHASE_2 ||
+                phase2Handler.getCannonTimeRatio() < 0.8f
+        }
+        .sprite(
+            "phase_3/orb_glow", GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 6))
+                .also {
+                    it.setSize(
+                        WILY_PHASE_2_SPRITE_WIDTH * ConstVals.PPM,
+                        WILY_PHASE_2_SPRITE_HEIGHT * ConstVals.PPM
+                    )
+                }
+        )
+        .preProcess { _, sprite ->
+            val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
+            sprite.setCenter(center)
+            sprite.hidden = frozen || phaseTransitionHandler.active ||
+                currentPhase != WilyFinalBossPhase.PHASE_3 ||
+                phase3Handler.cannonOrbPhase != CannonOrbPhase.IDLE ||
+                stateMachines.get(WilyFinalBossPhase.PHASE_3).getCurrentElement() != WilyPhase3State.ATTACK
         }
         .build()
 
@@ -620,7 +675,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                             else -> "hover"
                         }
 
-                        WilyFinalBossPhase.PHASE_3 -> TODO()
+                        WilyFinalBossPhase.PHASE_3 -> when {
+                            frozen -> "frozen"
+                            getCurrentHealth() == 0 -> "scared"
+                            !damageTimer.isFinished() -> when {
+                                damageTimer.getRatio() < 0.5f -> "scared"
+                                else -> "angry"
+                            }
+
+                            megaman.damaged -> "laugh"
+                            else -> "hover"
+                        }
                     }
 
                     return@keySupplier "${prefix}/${suffix}"
@@ -669,6 +734,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
             )
         )
+        .key("phase_3/orb_glow")
+        .animator(
+            Animator(
+                animDefs["phase_3/orb_glow"].let {
+                    Animation(regions["phase_3/orb_glow"], it.rows, it.cols, it.durations, it.loop)
+                }
+            )
+        )
         .build()
 
     private fun startNextPhase() {
@@ -677,6 +750,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         GameLogger.debug(TAG, "goToNextPhase(): oldPhase=$oldPhase, currentPhase=$currentPhase")
 
         resetBody()
+
         when (currentPhase) {
             WilyFinalBossPhase.PHASE_2 -> {
                 phase2Handler.init()
@@ -684,7 +758,16 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 phase2Handler.updateAnchors()
             }
 
-            WilyFinalBossPhase.PHASE_3 -> TODO()
+            WilyFinalBossPhase.PHASE_3 -> {
+                phase3Handler.init(cachedSpawnProps!!)
+                phase3Handler.buildBody(body)
+                game.audioMan.fadeOutMusic(0.25f) {
+                    MegaUtilMethods.delayRun(game, 0.1f) {
+                        game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_INTRO_MUSIC)
+                    }
+                }
+            }
+
             else -> throw IllegalStateException("Should not transition to phase 1 in 'startNextPhase()'")
         }
     }
@@ -2080,7 +2163,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             GameLogger.debug(TAG, "Phase2Handler: buildBody(): fixtures.size=${body.fixtures.size}")
 
             val center = body.getCenter()
-            body.setSize(3f * ConstVals.PPM)
+            body.setSize(3f * ConstVals.PPM, 4f * ConstVals.PPM)
             body.setCenter(center)
 
             val debugShapes = Array<() -> IDrawableShape?>()
@@ -2106,6 +2189,34 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             val damager = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
             body.addFixture(damager)
+
+            val topDamagerFixture = Fixture(
+                body,
+                FixtureType.DAMAGER,
+                GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
+            )
+            topDamagerFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
+            body.addFixture(topDamagerFixture)
+            debugShapes.add { topDamagerFixture }
+
+            val topBodyFixture = Fixture(
+                body,
+                FixtureType.BODY,
+                GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
+            )
+            topBodyFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
+            body.addFixture(topBodyFixture)
+            debugShapes.add { topBodyFixture }
+
+            val leftCannonDamager = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1f * ConstVals.PPM))
+            leftCannonDamager.offsetFromBodyAttachment.set(-2f, 0.5f).scl(ConstVals.PPM.toFloat())
+            body.addFixture(leftCannonDamager)
+            debugShapes.add { leftCannonDamager }
+
+            val rightCannonDamager = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1f * ConstVals.PPM))
+            rightCannonDamager.offsetFromBodyAttachment.set(2f, 0.5f).scl(ConstVals.PPM.toFloat())
+            body.addFixture(rightCannonDamager)
+            debugShapes.add { rightCannonDamager }
 
             BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
         }
@@ -2411,11 +2522,439 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
     }
 
+    private object Phase3ConstVals {
+        const val FAKE_CAPSULE_COUNT = 1
+        const val WAIT_DUR = 1f
+        const val FADE_DUR = 0.75f
+        const val ATTACK_DUR = 2f
+        const val CANNON_WAIT_DUR = 0.5f
+        const val CANNON_BOTTOM_OFFSET_Y = 2f
+        const val ORB_FLYOUT_BOTTOM_Y = -4f
+    }
+
+    private inner class Phase3Handler : PhaseHandler {
+
+        val introPositions = Array<Vector2>()
+        var intro = true
+            private set
+
+        val spawnPositions = Array<Vector2>()
+
+        val fakeCapsules = Array<WilyFakeCapsule>()
+
+        private val waitTimer = Timer(Phase3ConstVals.WAIT_DUR)
+        private val alphaTimer = Timer(Phase3ConstVals.FADE_DUR)
+        private val attackTimer = Timer(Phase3ConstVals.ATTACK_DUR)
+        private val cannonTimer = Timer(Phase3ConstVals.CANNON_WAIT_DUR)
+        private val orbPauseTimer = Timer(Phase2ConstVals.ORB_PAUSE_DURATION)
+
+        var cannonOrbPhase = CannonOrbPhase.IDLE
+            private set
+
+        private var leftOrb: BigAssMaverickRobotOrb? = null
+        private var rightOrb: BigAssMaverickRobotOrb? = null
+        private var bottomOrb: BigAssMaverickRobotOrb? = null
+
+        private val leftOrbTarget = Vector2()
+        private val rightOrbTarget = Vector2()
+        private val bottomOrbTarget = Vector2()
+
+        private var hasFiredMissiles = false
+
+        private val tempVec2Arr = Array<Vector2>()
+
+        fun buildStateMachine() = EnumStateMachineBuilder
+            .create<WilyPhase3State>()
+            .initialState(WilyPhase3State.WAIT)
+            .transition(WilyPhase3State.WAIT, WilyPhase3State.APPEAR) { true }
+            .transition(WilyPhase3State.APPEAR, WilyPhase3State.VANISH) { intro }
+            .transition(WilyPhase3State.APPEAR, WilyPhase3State.ATTACK) { true }
+            .transition(WilyPhase3State.ATTACK, WilyPhase3State.VANISH) { true }
+            .transition(WilyPhase3State.VANISH, WilyPhase3State.WAIT) { true }
+            .onChangeState(this::onChangeState)
+            .build()
+
+        fun getSpriteAlpha(): Float {
+            val sm = stateMachines.get(WilyFinalBossPhase.PHASE_3) as StateMachine<WilyPhase3State>
+            val rawAlpha = when (sm.getCurrentElement()) {
+                WilyPhase3State.WAIT -> 0f
+                WilyPhase3State.ATTACK -> 1f
+                WilyPhase3State.APPEAR -> alphaTimer.getRatio()
+                WilyPhase3State.VANISH -> 1f - alphaTimer.getRatio()
+            }
+            val roundedAlpha = (rawAlpha / 0.05f).toInt() * 0.05f
+            return roundedAlpha
+        }
+
+        private fun onChangeState(current: WilyPhase3State, previous: WilyPhase3State) {
+            GameLogger.debug(TAG, "Phase3Handler: onChangeState(): current=$current, previous=$previous")
+            when (current) {
+                WilyPhase3State.WAIT -> {
+                    fakeCapsules.forEach { it.body.setCenter(Vector2.Zero) }
+                    waitTimer.reset()
+                }
+
+                WilyPhase3State.APPEAR -> {
+                    val spawns = when {
+                        intro -> introPositions
+                        else -> spawnPositions.getRandomElements(
+                            Phase3ConstVals.FAKE_CAPSULE_COUNT + 1,
+                            tempVec2Arr
+                        )
+                    }
+
+                    body.setCenter(spawns.first())
+
+                    for (i in 1 until spawns.size) {
+                        val spawn = spawns[i]
+                        val fakeCapsule = fakeCapsules[i - 1]
+                        fakeCapsule.body.setCenter(spawn)
+                    }
+
+                    alphaTimer.resetDuration(Phase3ConstVals.FADE_DUR)
+                }
+
+                WilyPhase3State.ATTACK -> {
+                    fakeCapsules.forEach { it.on = true }
+                    attackTimer.reset()
+                    hasFiredMissiles = false
+                    cannonTimer.reset()
+                    cannonOrbPhase = CannonOrbPhase.IDLE
+                }
+
+                WilyPhase3State.VANISH -> {
+                    alphaTimer.resetDuration(Phase3ConstVals.FADE_DUR)
+                    fakeCapsules.forEach { it.on = false }
+                    intro = false
+                }
+            }
+        }
+
+        override fun init(vararg params: Any) {
+            GameLogger.debug(TAG, "Phase3Handler: init()")
+
+            intro = true
+
+            val spawnProps = params[0] as Properties
+            spawnProps.forEach { key, value ->
+                if (key.toString().contains("phase3_intro")) {
+                    val rect = (value as RectangleMapObject).rectangle
+                    introPositions.add(rect.getCenter(false))
+                } else if (key.toString().contains("phase3_spawn")) {
+                    val rect = (value as RectangleMapObject).rectangle
+                    spawnPositions.add(rect.getCenter(false))
+                }
+            }
+
+            (0 until Phase3ConstVals.FAKE_CAPSULE_COUNT).forEach { _ ->
+                val fakeCapsule = MegaEntityFactory.fetch(WilyFakeCapsule::class)!!
+                fakeCapsule.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo Vector2.Zero,
+                        ConstKeys.OWNER pairTo this@WilyFinalBoss
+                    )
+                )
+                fakeCapsules.add(fakeCapsule)
+            }
+        }
+
+        override fun buildBody(body: Body) {
+            GameLogger.debug(TAG, "Phase3Handler: buildBody()")
+
+            val center = body.getCenter()
+            body.setSize(3f * ConstVals.PPM, 4f * ConstVals.PPM)
+            body.setCenter(center)
+
+            val debugShapes = Array<() -> IDrawableShape?>()
+            addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+            debugShapes.add { body.getBounds() }
+
+            val damageable = Fixture(
+                body, FixtureType.DAMAGEABLE,
+                GameRectangle().setSize(3f * ConstVals.PPM, 2.5f * ConstVals.PPM)
+            )
+            damageable.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
+            body.addFixture(damageable)
+            damageable.drawingColor = Color.PURPLE
+            debugShapes.add { damageable }
+
+            val bodyFixture = Fixture(
+                body, FixtureType.BODY,
+                GameRectangle().setSize(3f * ConstVals.PPM, 2.5f * ConstVals.PPM)
+            )
+            bodyFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
+            body.addFixture(bodyFixture)
+            debugShapes.add { bodyFixture }
+
+            val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
+            body.addFixture(damagerFixture)
+
+            val topBodyFixture = Fixture(
+                body,
+                FixtureType.DAMAGER,
+                GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
+            )
+            topBodyFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
+            body.addFixture(topBodyFixture)
+            debugShapes.add { topBodyFixture }
+
+            val topDamagerFixture = Fixture(
+                body,
+                FixtureType.DAMAGER,
+                GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
+            )
+            topDamagerFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
+            body.addFixture(topDamagerFixture)
+            debugShapes.add { topDamagerFixture }
+
+            val leftCannonDamager = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1f * ConstVals.PPM))
+            leftCannonDamager.offsetFromBodyAttachment.set(-2f, 0.5f).scl(ConstVals.PPM.toFloat())
+            body.addFixture(leftCannonDamager)
+            debugShapes.add { leftCannonDamager }
+
+            val rightCannonDamager = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1f * ConstVals.PPM))
+            rightCannonDamager.offsetFromBodyAttachment.set(2f, 0.5f).scl(ConstVals.PPM.toFloat())
+            body.addFixture(rightCannonDamager)
+            debugShapes.add { rightCannonDamager }
+
+            body.preProcess.put(ConstKeys.DEFAULT) {
+                val sm = stateMachines.get(WilyFinalBossPhase.PHASE_3) as StateMachine<WilyPhase3State>
+                val state = sm.getCurrentElement()
+                body.forEachFixture { fixture ->
+                    if (fixture.getType().equalsAny(FixtureType.DAMAGER, FixtureType.DAMAGEABLE))
+                        fixture.setActive(state == WilyPhase3State.ATTACK)
+                    else fixture.setActive(state != WilyPhase3State.WAIT)
+                }
+            }
+
+            BodyComponentCreator.amend(this@WilyFinalBoss, bodyComponent)
+        }
+
+        fun update(delta: Float) {
+            if (leftOrb != null && leftOrb!!.dead) leftOrb = null
+            if (rightOrb != null && rightOrb!!.dead) rightOrb = null
+            if (bottomOrb != null && bottomOrb!!.dead) bottomOrb = null
+
+            val phase3StateMachine =
+                stateMachines.get(WilyFinalBossPhase.PHASE_3) as StateMachine<WilyPhase3State>
+            val currentState = phase3StateMachine.getCurrentElement()
+
+            when (currentState) {
+                WilyPhase3State.WAIT -> {
+                    waitTimer.update(delta)
+                    if (waitTimer.isFinished()) phase3StateMachine.next()
+                }
+
+                WilyPhase3State.APPEAR -> {
+                    alphaTimer.update(delta)
+                    fakeCapsules.forEach { it.spriteAlpha = getSpriteAlpha() }
+                    if (alphaTimer.isFinished()) phase3StateMachine.next()
+                }
+
+                WilyPhase3State.ATTACK -> {
+                    updateCannonOrbs(delta)
+
+                    fakeCapsules.forEach { it.spriteAlpha = getSpriteAlpha() }
+
+                    if (!hasFiredMissiles) {
+                        fakeCapsules.forEach { it.shootMissiles() }
+                        hasFiredMissiles = true
+                    }
+
+                    attackTimer.update(delta)
+                    if (attackTimer.isFinished() &&
+                        leftOrb == null &&
+                        rightOrb == null &&
+                        bottomOrb == null
+                    ) phase3StateMachine.next()
+                }
+
+                WilyPhase3State.VANISH -> {
+                    alphaTimer.update(delta)
+                    fakeCapsules.forEach { it.spriteAlpha = getSpriteAlpha() }
+                    if (alphaTimer.isFinished()) phase3StateMachine.next()
+                }
+            }
+        }
+
+        private fun updateCannonOrbs(delta: Float) {
+            when (cannonOrbPhase) {
+                CannonOrbPhase.IDLE -> {
+                    cannonTimer.update(delta)
+                    if (cannonTimer.isFinished()) {
+                        cannonTimer.reset()
+                        spawnCannonOrbs()
+                        cannonOrbPhase = CannonOrbPhase.FLYING_OUT
+                    }
+                }
+
+                CannonOrbPhase.FLYING_OUT -> {
+                    var allReached = true
+
+                    leftOrb?.let { orb ->
+                        if (moveOrbToward(orb, leftOrbTarget, delta)) orb.body.physics.velocity.setZero()
+                        else allReached = false
+                    }
+                    rightOrb?.let { orb ->
+                        if (moveOrbToward(orb, rightOrbTarget, delta)) orb.body.physics.velocity.setZero()
+                        else allReached = false
+                    }
+                    bottomOrb?.let { orb ->
+                        if (moveOrbToward(orb, bottomOrbTarget, delta)) orb.body.physics.velocity.setZero()
+                        else allReached = false
+                    }
+
+                    if (allReached) {
+                        orbPauseTimer.reset()
+                        cannonOrbPhase = CannonOrbPhase.PAUSING
+                    }
+                }
+
+                CannonOrbPhase.PAUSING -> {
+                    orbPauseTimer.update(delta)
+                    if (orbPauseTimer.isJustFinished()) launchOrbs()
+                }
+            }
+        }
+
+        private fun spawnCannonOrbs() {
+            val center = body.getCenter()
+
+            val leftCannonPos = GameObjectPools.fetch(Vector2::class).set(
+                center.x - Phase2ConstVals.CANNON_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2ConstVals.CANNON_OFFSET_Y * ConstVals.PPM
+            )
+            val rightCannonPos = GameObjectPools.fetch(Vector2::class).set(
+                center.x + Phase2ConstVals.CANNON_OFFSET_X * ConstVals.PPM,
+                center.y + Phase2ConstVals.CANNON_OFFSET_Y * ConstVals.PPM
+            )
+            val bottomCannonPos = GameObjectPools.fetch(Vector2::class).set(
+                center.x,
+                center.y - Phase3ConstVals.CANNON_BOTTOM_OFFSET_Y * ConstVals.PPM
+            )
+
+            leftOrbTarget.set(
+                leftCannonPos.x - Phase2ConstVals.ORB_FLYOUT_OFFSET_X * ConstVals.PPM,
+                leftCannonPos.y + Phase2ConstVals.ORB_FLYOUT_OFFSET_Y * ConstVals.PPM
+            )
+            rightOrbTarget.set(
+                rightCannonPos.x + Phase2ConstVals.ORB_FLYOUT_OFFSET_X * ConstVals.PPM,
+                rightCannonPos.y + Phase2ConstVals.ORB_FLYOUT_OFFSET_Y * ConstVals.PPM
+            )
+            bottomOrbTarget.set(
+                bottomCannonPos.x,
+                bottomCannonPos.y + Phase3ConstVals.ORB_FLYOUT_BOTTOM_Y * ConstVals.PPM
+            )
+
+            leftOrb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!.also { orb ->
+                orb.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo leftCannonPos,
+                        ConstKeys.OWNER pairTo this@WilyFinalBoss,
+                        ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                    )
+                )
+            }
+            rightOrb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!.also { orb ->
+                orb.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo rightCannonPos,
+                        ConstKeys.OWNER pairTo this@WilyFinalBoss,
+                        ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                    )
+                )
+            }
+            bottomOrb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!.also { orb ->
+                orb.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo bottomCannonPos,
+                        ConstKeys.OWNER pairTo this@WilyFinalBoss,
+                        ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                    )
+                )
+            }
+
+            requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+        }
+
+        private fun moveOrbToward(orb: BigAssMaverickRobotOrb, target: Vector2, delta: Float): Boolean {
+            val center = orb.body.getCenter()
+            val dx = target.x - center.x
+            val dy = target.y - center.y
+            val dist = kotlin.math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+            val step = Phase2ConstVals.ORB_FLYOUT_SPEED * ConstVals.PPM * delta
+
+            if (dist <= step) {
+                orb.body.setCenter(target)
+                orb.body.physics.velocity.setZero()
+                return true
+            }
+
+            orb.body.physics.velocity.set(
+                dx / dist * Phase2ConstVals.ORB_FLYOUT_SPEED * ConstVals.PPM,
+                dy / dist * Phase2ConstVals.ORB_FLYOUT_SPEED * ConstVals.PPM
+            )
+            return false
+        }
+
+        private fun launchOrbs() {
+            val megamanCenter = megaman.body.getCenter()
+
+            listOf(leftOrb, rightOrb, bottomOrb).forEach { orb ->
+                orb?.let {
+                    val center = it.body.getCenter()
+                    val dx = megamanCenter.x - center.x
+                    val dy = megamanCenter.y - center.y
+                    val dist = kotlin.math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+                    if (dist > 0.0001f) {
+                        it.body.physics.velocity.set(
+                            dx / dist * Phase2ConstVals.ORB_LAUNCH_SPEED * ConstVals.PPM,
+                            dy / dist * Phase2ConstVals.ORB_LAUNCH_SPEED * ConstVals.PPM
+                        )
+                    }
+                    it.putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(it, 1f))
+                }
+            }
+
+            leftOrb = null
+            rightOrb = null
+            bottomOrb = null
+
+            requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
+        }
+
+        fun destroyFakeCapsules() {
+            fakeCapsules.forEach { it.explodeAndDestroy() }
+            fakeCapsules.clear()
+        }
+
+        override fun reset() {
+            GameLogger.debug(TAG, "Phase3Handler: reset()")
+
+            introPositions.forEach { GameObjectPools.free(it) }
+            introPositions.clear()
+
+            spawnPositions.forEach { GameObjectPools.free(it) }
+            spawnPositions.clear()
+
+            destroyFakeCapsules()
+
+            cannonOrbPhase = CannonOrbPhase.IDLE
+            leftOrb?.destroy()
+            leftOrb = null
+            rightOrb?.destroy()
+            rightOrb = null
+            bottomOrb?.destroy()
+            bottomOrb = null
+        }
+    }
+
     object PhaseTransitionConstVals {
         const val EXPLODE_DUR = 3f
         const val FLY_UP_SPEED = 16f
-        const val PAUSE_DUR = 2f
+        const val PAUSE_DUR = 1f
         const val DROP_DOWN_SPEED = 8f
+        const val PHASE_3_POST_PAUSE_DUR = 1f
     }
 
     private inner class PhaseTransitionHandler : Updatable, Resettable {
@@ -2425,6 +2964,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         val explodeTimer = Timer(PhaseTransitionConstVals.EXPLODE_DUR)
         val pauseTimer = Timer(PhaseTransitionConstVals.PAUSE_DUR)
+        val phase3PostPauseTimer = Timer(PhaseTransitionConstVals.PHASE_3_POST_PAUSE_DUR)
 
         val planeBodyTarget = Vector2()
 
@@ -2479,30 +3019,34 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     if (pauseTimer.isFinished()) {
                         GameLogger.debug(TAG, "PhaseTransitionHandler: PAUSE -> DROP_DOWN")
                         body.setCenter(spawnCenter.x, room.getMaxY() + body.getHeight())
-                        state = WilyPhaseTransState.DROP_DOWN
+                        state = WilyPhaseTransState.POST_PAUSE
                         // Go ahead and start the next phase before dropping down so that the animations
                         // are updated to use the next phase
                         startNextPhase()
                     }
                 }
 
-                WilyPhaseTransState.DROP_DOWN -> {
-                    phase2Handler.updateAnchors()
+                WilyPhaseTransState.POST_PAUSE -> {
+                    if (currentPhase == WilyFinalBossPhase.PHASE_2) {
+                        phase2Handler.updateAnchors()
 
-                    body.physics.velocity.set(0f, -PhaseTransitionConstVals.DROP_DOWN_SPEED * ConstVals.PPM)
+                        body.physics.velocity.set(0f, -PhaseTransitionConstVals.DROP_DOWN_SPEED * ConstVals.PPM)
 
-                    if (body.getCenter().y <= spawnCenter.y + 1.5f * ConstVals.PPM) {
-                        GameLogger.debug(TAG, "PhaseTransitionHandler: DROP_DOWN complete, starting next phase")
+                        if (body.getCenter().y <= spawnCenter.y + 1.5f * ConstVals.PPM) {
+                            GameLogger.debug(TAG, "PhaseTransitionHandler: DROP_DOWN complete, starting next phase")
 
-                        body.setCenter(spawnCenter.x, spawnCenter.y + 1.5f * ConstVals.PPM)
-                        body.physics.velocity.setZero()
+                            body.setCenter(spawnCenter.x, spawnCenter.y + 1.5f * ConstVals.PPM)
+                            body.physics.velocity.setZero()
 
-                        state = WilyPhaseTransState.END
+                            state = WilyPhaseTransState.END
+                        }
+                    } else {
+                        phase3PostPauseTimer.update(delta)
+                        if (phase3PostPauseTimer.isFinished()) state = WilyPhaseTransState.END
                     }
                 }
 
                 WilyPhaseTransState.END -> {
-                    // TODO: Add timer here so that end of transition can be filled with an animation
                     active = false
                     setHealthToMax()
                 }
@@ -2526,6 +3070,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             active = false
             explodeTimer.reset()
             pauseTimer.reset()
+            phase3PostPauseTimer.reset()
         }
     }
 
@@ -2537,6 +3082,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private fun buildStateMachines() {
         stateMachines.put(WilyFinalBossPhase.PHASE_1, phase1Handler.buildStateMachine())
         stateMachines.put(WilyFinalBossPhase.PHASE_2, phase2Handler.buildStateMachine())
+        stateMachines.put(WilyFinalBossPhase.PHASE_3, phase3Handler.buildStateMachine())
     }
 
     override fun getTag() = TAG

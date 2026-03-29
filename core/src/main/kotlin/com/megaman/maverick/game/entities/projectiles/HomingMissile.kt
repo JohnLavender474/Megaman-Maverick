@@ -107,6 +107,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+
             else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         }
         body.setCenter(spawn)
@@ -115,7 +116,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         setVelocityFromAngle(currentAngle)
 
         initTimer.resetDuration(
-           spawnProps.getOrDefault("${ConstKeys.INIT}_${ConstKeys.DELAY}", 0f, Float::class)
+            spawnProps.getOrDefault("${ConstKeys.INIT}_${ConstKeys.DELAY}", 0f, Float::class)
         )
         recalcTimer.reset()
 
@@ -158,7 +159,11 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        !invincible && damager != owner && damager !is HomingMissile && damager !is Explosion
+        !invincible &&
+            damager != owner &&
+            damager !is Explosion &&
+            damager !is HomingMissile &&
+            damager !is BigAssMaverickRobotOrb
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")

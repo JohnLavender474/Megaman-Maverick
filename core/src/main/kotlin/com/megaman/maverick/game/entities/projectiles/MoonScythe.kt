@@ -101,12 +101,6 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = shieldFixture.getEntity()
         if (entity.isAny(MoonScythe::class, SharpStar::class, Asteroid::class)) return
-        /*
-        if (entity is PreciousGem) {
-            fading = true
-            return
-        }
-         */
         hit(thisShape, otherShape)
     }
 
