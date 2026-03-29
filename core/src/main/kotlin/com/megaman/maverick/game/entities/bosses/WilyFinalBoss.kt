@@ -35,6 +35,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
+import com.mega.game.engine.drawables.sprites.containsRegion
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.state.EnumStateMachineBuilder
@@ -57,6 +58,7 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.M
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -68,6 +70,7 @@ import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -81,7 +84,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 import kotlin.math.min
 
-class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity {
+class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFreezableEntity {
 
     companion object {
         const val TAG = "WilyFinalBoss"
@@ -98,7 +101,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private val animDefs = orderedMapOf(
             "phase_1/fly_by" pairTo AnimationDef(),
             "phase_1/hover" pairTo AnimationDef(),
-            // "phase_1/lazors" pairTo AnimationDef(3, 1, 0.1f, true),
             "phase_1/open_hatch" pairTo AnimationDef(),
             "phase_1/shoot_missiles" pairTo AnimationDef(
                 rows = 3,
@@ -113,7 +115,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 loop = false
             ),
             "phase_1/tilt" pairTo AnimationDef(),
-            // "phase_1/tilt_lazors" pairTo AnimationDef(2, 1, 0.1f, true),
             "phase_1/fly_out" pairTo AnimationDef(2, 1, 0.05f, false),
             "phase_1/open_mouth" pairTo AnimationDef(
                 rows = 5,
@@ -141,6 +142,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private enum class WilyPhaseTransState { INIT, FLY_UP, PAUSE, DROP_DOWN, END }
 
+    override var frozen: Boolean
+        get() = freezeHandler.isFrozen()
+        set(value) {
+            freezeHandler.setFrozen(value)
+        }
+
+    private val freezeHandler = FreezableEntityHandler(this)
+
     private lateinit var currentPhase: WilyFinalBossPhase
     private val stateMachines = OrderedMap<WilyFinalBossPhase, StateMachine<*>>()
     private val delayBetweenStates = Timer()
@@ -159,7 +168,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val bossAtlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
-            animDefs.keys().forEach { regions.put(it, bossAtlas.findRegion(it)) }
+            animDefs.keys().forEach {
+                regions.put(it, bossAtlas.findRegion(it))
+
+                val frozenKey = "${it}_frozen"
+                if (bossAtlas.containsRegion(frozenKey))
+                    regions.put(frozenKey, bossAtlas.findRegion(frozenKey))
+            }
 
             val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             regions.put(WILY_DEATH_PLANE_LAZOR_RESIDUAL, decorationsAtlas.findRegion(WILY_DEATH_PLANE_LAZOR_RESIDUAL))
@@ -176,6 +191,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         super.onSpawn(spawnProps)
+
+        frozen = false
 
         resetBody()
         phase1Handler.buildBody(body)
@@ -209,6 +226,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         resetBody()
         phase1Handler.reset()
         phase2Handler.reset()
+        frozen = false
     }
 
     override fun onEndBossSpawnEvent() {
@@ -233,6 +251,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         when (currentPhase) {
             WilyFinalBossPhase.PHASE_3 -> super.triggerDefeat()
             else -> {
+                frozen = false
                 phase1Handler.reset()
                 phase2Handler.reset()
                 phaseTransitionHandler.start()
@@ -278,12 +297,37 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 return@add
             }
 
-            delayBetweenStates.update(delta)
+            if (frozen) {
+                body.physics.velocity.setZero()
+
+                when (currentPhase) {
+                    WilyFinalBossPhase.PHASE_1 -> {
+                        phase1Handler.leftLazor?.on = false
+                        phase1Handler.rightLazor?.on = false
+                    }
+
+                    WilyFinalBossPhase.PHASE_2 -> {
+                        phase2Handler.leftTentacle?.on = false
+                        phase2Handler.rightTentacle?.on = false
+                    }
+
+                    else -> {}
+                }
+
+                return@add
+            }
 
             if (currentPhase == WilyFinalBossPhase.PHASE_1) {
                 val state = (stateMachines.get(currentPhase) as StateMachine<WilyPhase1State>).getCurrentElement()
                 phase1Handler.updateWarningSigns(state)
             }
+
+            if (currentPhase == WilyFinalBossPhase.PHASE_2) {
+                phase2Handler.leftTentacle?.on = true
+                phase2Handler.rightTentacle?.on = true
+            }
+
+            delayBetweenStates.update(delta)
 
             if (!delayBetweenStates.isFinished()) {
                 body.physics.velocity.setZero()
@@ -488,15 +532,18 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
             sprite.setCenter(center)
 
-            val visible = if (phaseTransitionHandler.active) false else when (currentPhase) {
-                WilyFinalBossPhase.PHASE_1 -> {
-                    val phase1StateMachine =
-                        stateMachines.get(currentPhase) as StateMachine<WilyPhase1State>
-                    val state = phase1StateMachine.getCurrentElement()
-                    state == WilyPhase1State.FIRE_LAZORS && !phase1Handler.lazorCompletionStarted
-                }
+            val visible = when {
+                frozen || phaseTransitionHandler.active -> false
+                else -> when (currentPhase) {
+                    WilyFinalBossPhase.PHASE_1 -> {
+                        val phase1StateMachine =
+                            stateMachines.get(currentPhase) as StateMachine<WilyPhase1State>
+                        val state = phase1StateMachine.getCurrentElement()
+                        state == WilyPhase1State.FIRE_LAZORS && !phase1Handler.lazorCompletionStarted
+                    }
 
-                else -> false
+                    else -> false
+                }
             }
             sprite.hidden = !visible
         }
@@ -512,7 +559,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .preProcess { _, sprite ->
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
             sprite.setCenter(center)
-            sprite.hidden = phaseTransitionHandler.active || phase2Handler.getCannonTimeRatio() < 0.8f
+            sprite.hidden = frozen || phaseTransitionHandler.active || phase2Handler.getCannonTimeRatio() < 0.8f
         }
         .build()
 
@@ -523,7 +570,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 .setKeySupplier keySupplier@{
                     val prefix = currentPhase.name.lowercase()
 
-                    val suffix = when (currentPhase) {
+                    var suffix = when (currentPhase) {
                         WilyFinalBossPhase.PHASE_1 -> when {
                             phaseTransitionHandler.active -> "hover"
 
@@ -560,6 +607,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         WilyFinalBossPhase.PHASE_3 -> TODO()
                     }
 
+                    if (frozen) suffix += "_frozen"
+
                     return@keySupplier "${prefix}/${suffix}"
                 }
                 .shouldAnimate shouldAnimate@{
@@ -578,6 +627,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         }
 
                         else -> true
+                    }
+                }
+                .shouldUpdateAnimation { key, _, _ -> !key.contains("_frozen") }
+                .setOnChangeKeyListener { animator, curr, next ->
+                    if (next?.contains("_frozen") == true) {
+                        val time = animator.animations[curr].getCurrentTime()
+                        animator.animations[next].setCurrentTime(time)
                     }
                 }
                 .applyToAnimations { animations ->
@@ -1832,6 +1888,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val CANNON_OFFSET_X = 3f
         const val CANNON_OFFSET_Y = 0f
         const val CANNON_FIRE_INTERVAL = 6f
+        const val CANNON_FIRE_INTERVAL_HARD = 4.5f
         const val ORB_FLYOUT_OFFSET_X = 3f
         const val ORB_FLYOUT_OFFSET_Y = -2f
         const val ORB_FLYOUT_SPEED = 12f
@@ -1845,8 +1902,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private inner class Phase2Handler : PhaseHandler, Updatable {
 
-        private var leftTentacle: WilyCapsuleTentacle? = null
-        private var rightTentacle: WilyCapsuleTentacle? = null
+        var leftTentacle: WilyCapsuleTentacle? = null
+        var rightTentacle: WilyCapsuleTentacle? = null
 
         private val hoverTimer = Timer(Phase2ConstVals.HOVER_DURATION)
         private val prepareTimer = Timer(Phase2ConstVals.PREPARE_DURATION)
@@ -1932,7 +1989,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             GameLogger.debug(TAG, "Phase2Handler: init()")
 
             hoverTimer.reset()
-            cannonTimer.reset()
+
+            cannonTimer.resetDuration(
+                if (game.state.hardMode) Phase2ConstVals.CANNON_FIRE_INTERVAL_HARD
+                else Phase2ConstVals.CANNON_FIRE_INTERVAL
+            )
 
             lungeLeft = true
             lungeLaunched = false

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -30,8 +31,8 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.sqrt
 
-class WilyCapsuleTentacle(game: MegamanMaverickGame) :
-    MegaGameEntity(game), IDrawableShapesEntity, Updatable {
+class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableShapesEntity, Updatable,
+    IActivatable {
 
     companion object {
         const val TAG = "WilyCapsuleTentacle"
@@ -79,6 +80,8 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     }
 
     enum class LungeType { SIMPLE, MULTI_STEP, LUNGE_PAST_AND_SWIPE }
+
+    override var on = true
 
     // --- Child tentacle ---
 
@@ -157,11 +160,16 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        on = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
+
         time = 0f
         logTimer = 0f
+
         pauseTimer = 0f
+
         pinned = false
         pinTimer = 0f
+
         coilingBack = false
 
         lungePhase = 0
@@ -237,10 +245,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
     fun lunge(
         target: Vector2 = megaman.body.getCenter(),
-        lungeType: LungeType = when {
-            lungeCount == 0 || lungeCount % 4 == 0 -> LungeType.entries.random()
-            else -> LungeType.SIMPLE
-        }
+        lungeType: LungeType = LungeType.entries.random()
     ) {
         if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
 
@@ -287,17 +292,21 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     fun explodeAndDestroy() {
         for (joint in jointEntities) {
             val explosion = MegaEntityFactory.fetch(Explosion::class)!!
-            explosion.spawn(props(
-                ConstKeys.POSITION pairTo joint.body.getCenter(),
-                ConstKeys.DAMAGER pairTo false,
-            ))
+            explosion.spawn(
+                props(
+                    ConstKeys.POSITION pairTo joint.body.getCenter(),
+                    ConstKeys.DAMAGER pairTo false,
+                )
+            )
         }
         scissor?.let {
             val explosion = MegaEntityFactory.fetch(Explosion::class)!!
-            explosion.spawn(props(
-                ConstKeys.POSITION pairTo it.body.getCenter(),
-                ConstKeys.DAMAGER pairTo false,
-            ))
+            explosion.spawn(
+                props(
+                    ConstKeys.POSITION pairTo it.body.getCenter(),
+                    ConstKeys.DAMAGER pairTo false,
+                )
+            )
         }
         destroy()
     }
@@ -305,6 +314,8 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     // --- Per-frame update ---
 
     override fun update(delta: Float) {
+        if (!on) return
+
         if (!tentacleSpawned && tentacle!!.spawned) {
             tentacleSpawned = true
 

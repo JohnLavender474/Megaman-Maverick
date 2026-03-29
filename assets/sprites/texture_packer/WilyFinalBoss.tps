@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.6.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -176,9 +176,13 @@
             <key type="filename">../frames/WilyFinalBoss/WilyPlaneBody.png</key>
             <key type="filename">../frames/WilyFinalBoss/WilySkullHead.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/fly_by.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/fly_by_frozen.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/hover.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/hover_frozen.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/open_hatch.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/open_hatch_frozen.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_1/tilt.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/tilt_frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -208,8 +212,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/WilyFinalBoss/phase_1/lazors.png</key>
-            <key type="filename">../frames/WilyFinalBoss/phase_1/tilt_lazors.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/hover_lazors.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -218,9 +221,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>64,128,128,256</rect>
+                <rect>64,192,128,384</rect>
                 <key>scale9Paddings</key>
-                <rect>64,128,128,256</rect>
+                <rect>64,192,128,384</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -254,6 +257,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/shoot_missiles_frozen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>192,192,384,384</rect>
+                <key>scale9Paddings</key>
+                <rect>192,192,384,384</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/WilyFinalBoss/phase_1/swoop.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -266,6 +284,36 @@
                 <rect>640,48,1280,96</rect>
                 <key>scale9Paddings</key>
                 <rect>640,48,1280,96</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/swoop_frozen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>128,320,256,640</rect>
+                <key>scale9Paddings</key>
+                <rect>128,320,256,640</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/WilyFinalBoss/phase_1/tilt_lazors.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,128,128,256</rect>
+                <key>scale9Paddings</key>
+                <rect>64,128,128,256</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

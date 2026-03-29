@@ -12,6 +12,7 @@ open class Animator(
     var updateScalar: Float = 1f,
     var onChangeKey: ((Animator, String?, String?) -> Unit)? = null,
     var shouldAnimatePredicate: (Float) -> Boolean = { true },
+    var shouldUpdateAnimationPredicate: (String, IAnimation, Float) -> Boolean = { _, _, _ -> true },
     var postProcessKey: ((Animator, String?, String?) -> String?)? = null,
     var shouldEqualKeysTriggerChange: (String?) -> Boolean = { false }
 ) : IAnimator {
@@ -46,7 +47,8 @@ open class Animator(
         }
 
         currentAnimation?.let {
-            it.update(delta * updateScalar)
+            if (shouldUpdateAnimationPredicate.invoke(currentKey!!, it, delta))
+                it.update(delta * updateScalar)
             it.getCurrentRegion()?.let { region -> sprite.setRegion(region) }
         }
     }
@@ -65,6 +67,7 @@ class AnimatorBuilder {
     private var updateScalar: Float = 1f
     private var onChangeKey: ((Animator, String?, String?) -> Unit)? = null
     private var shouldAnimatePredicate: (Float) -> Boolean = { true }
+    private var shouldUpdateAnimationPredicate: (String, IAnimation, Float) -> Boolean = { _, _, _ -> true }
 
     fun setKeySupplier(supplier: (String?) -> String?) = apply {
         this.keySupplier = supplier
@@ -100,8 +103,19 @@ class AnimatorBuilder {
         this.shouldAnimatePredicate = shouldAnimatePredicate
     }
 
+    fun shouldUpdateAnimation(shouldUpdateAnimationPredicate: (String, IAnimation, Float) -> Boolean) = apply {
+        this.shouldUpdateAnimationPredicate = shouldUpdateAnimationPredicate
+    }
+
     fun build(): Animator {
         require(animations.size > 0) { "Animator must have at least one animation." }
-        return Animator(keySupplier, animations, updateScalar, onChangeKey, shouldAnimatePredicate)
+        return Animator(
+            keySupplier,
+            animations,
+            updateScalar,
+            onChangeKey,
+            shouldAnimatePredicate,
+            shouldUpdateAnimationPredicate
+        )
     }
 }

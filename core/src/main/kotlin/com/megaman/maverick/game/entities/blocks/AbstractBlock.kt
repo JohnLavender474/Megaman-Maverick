@@ -5,6 +5,7 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.world.body.FixtureLabel
 
@@ -24,7 +25,7 @@ open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
         spawnProps.put(ConstKeys.FRICTION_X, 0f)
         spawnProps.put(ConstKeys.FRICTION_Y, 0f)
         spawnProps.put(ConstKeys.FIXTURE_LABELS, FIXTURE_LABELS)
-        spawnProps.put(ConstKeys.BLOCK_FILTERS, objectSetOf(MoonScythe.TAG))
+        spawnProps.put(ConstKeys.BLOCK_FILTERS, objectSetOf(MoonScythe.TAG, SmallIceCube.TAG))
         spawnProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
