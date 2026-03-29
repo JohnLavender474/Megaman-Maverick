@@ -53,6 +53,11 @@ open class GameCircle(x: Float, y: Float, radius: Float) : IGameShape2D {
         return this
     }
 
+    fun set(other: GameCircle) {
+        setRadius(other.getRadius())
+        setCenter(other.getCenter(tempVec1))
+    }
+
     fun getRadius() = libgdxCircle.radius
 
     fun setRadius(radius: Float): GameCircle {

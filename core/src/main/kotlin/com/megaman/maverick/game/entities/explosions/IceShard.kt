@@ -65,10 +65,17 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
         private val TEXTURES = ObjectMap<String, Array<TextureRegion>>()
 
-        fun spawn5(center: Vector2, tag: String = BreakableIce.TAG) {
+        fun spawn5(center: Vector2, tag: String = BreakableIce.TAG, forceSound: Boolean = false) {
             for (i in 0 until 5) {
                 val shard = MegaEntityFactory.fetch(IceShard::class)!!
-                shard.spawn(props(ConstKeys.POSITION pairTo center, ConstKeys.INDEX pairTo i, ConstKeys.TAG pairTo tag))
+                shard.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo center,
+                        ConstKeys.INDEX pairTo i,
+                        ConstKeys.TAG pairTo tag,
+                        ConstKeys.SOUND pairTo forceSound
+                    )
+                )
             }
         }
     }
@@ -119,7 +126,9 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         defaultSprite.setRegion(region)
         defaultSprite.setSize(scalar * ConstVals.PPM)
 
-        if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
+        val forceSound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
+        if (forceSound || overlapsGameCamera())
+            requestToPlaySound(SoundAsset.ICE_SHARD_2_SOUND, false)
 
         fadeOutTimer.reset()
         fadeOut = false

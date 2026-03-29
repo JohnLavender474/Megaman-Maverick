@@ -24,7 +24,9 @@ class FreezableEntityHandler(
     private val frozenShieldBoundsSupplier: (() -> GameRectangle)? = {
         (entity as IBodyEntity).body.getBounds()
     },
-    duration: Float = ConstVals.STANDARD_FROZEN_DUR
+    duration: Float = ConstVals.STANDARD_FROZEN_DUR,
+    private val forceSound: Boolean = false,
+    noDamageOnFrozen: Boolean = true
 ) : Updatable {
 
     companion object {
@@ -45,7 +47,7 @@ class FreezableEntityHandler(
             }
         }
 
-        if (entity is AbstractEnemy) entity.canDamagePredicates.add { !entity.frozen }
+        if (noDamageOnFrozen && entity is AbstractEnemy) entity.canDamagePredicates.add { !entity.frozen }
     }
 
     private val shieldEntity = ShieldEntity((entity as MegaGameEntity).game)
@@ -75,7 +77,7 @@ class FreezableEntityHandler(
         if (timer.isJustFinished()) {
             GameLogger.debug(TAG, "update(): timer just finished")
             onJustFinished.invoke()
-            IceShard.spawn5((entity as IBodyEntity).body.getCenter())
+            IceShard.spawn5((entity as IBodyEntity).body.getCenter(), forceSound = forceSound)
         }
 
         if (isFrozen() && shieldEntity.spawned) {

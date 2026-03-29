@@ -148,7 +148,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             freezeHandler.setFrozen(value)
         }
 
-    private val freezeHandler = FreezableEntityHandler(this)
+    private val freezeHandler = FreezableEntityHandler(
+        this,
+        duration = 0.5f,
+        forceSound = true,
+        noDamageOnFrozen = false,
+        onJustFinished = { damageTimer.reset() }
+    )
 
     private lateinit var currentPhase: WilyFinalBossPhase
     private val stateMachines = OrderedMap<WilyFinalBossPhase, StateMachine<*>>()
@@ -172,8 +178,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 regions.put(it, bossAtlas.findRegion(it))
 
                 val frozenKey = "${it}_frozen"
-                if (bossAtlas.containsRegion(frozenKey))
+                if (bossAtlas.containsRegion(frozenKey)) {
+                    animDefs.put(frozenKey, animDefs[it].copy())
                     regions.put(frozenKey, bossAtlas.findRegion(frozenKey))
+                }
             }
 
             val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
@@ -296,6 +304,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 game.setDebugText("${phaseTransitionHandler.state}")
                 return@add
             }
+
+            freezeHandler.update(delta)
 
             if (frozen) {
                 body.physics.velocity.setZero()
@@ -494,11 +504,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     }
 
                     val flipX = when (state) {
-                        WilyPhase1State.FLY_BY, WilyPhase1State.DROP_BOMB ->
-                            if (!delayBetweenStates.isFinished()) phase1Handler.flyByMovingRight
-                            else body.physics.velocity.x > 0f
-
-                        WilyPhase1State.FLY_IN -> body.physics.velocity.x > 0f
+                        WilyPhase1State.FLY_BY, WilyPhase1State.DROP_BOMB -> phase1Handler.flyByMovingRight
+                        WilyPhase1State.FLY_IN -> phase1Handler.currentFlyInCol == 0
                         else -> false
                     }
                     sprite.setFlip(flipX, false)
@@ -930,6 +937,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             body.addFixture(headBody)
             debugShapes.add { headBody }
 
+            val headFrozenShield = Fixture(body, FixtureType.SHIELD, GameCircle())
+            body.addFixture(headFrozenShield)
+
             val flyByUnderbellyDamager =
                 Fixture(body, FixtureType.DAMAGER, GameRectangle().setSize(6f * ConstVals.PPM, 1f * ConstVals.PPM))
             flyByUnderbellyDamager.attachedToBody = false
@@ -1093,15 +1103,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 if (hovering) {
                     (headDamageable.rawShape as GameCircle).setRadius(2.5f * ConstVals.PPM)
                     headDamageable.offsetFromBodyAttachment.setZero()
+
                     (headBody.rawShape as GameCircle).setRadius(2.5f * ConstVals.PPM)
                     headBody.offsetFromBodyAttachment.setZero()
+
                     flyByBodyShield.setActive(false)
                 } else {
                     (headDamageable.rawShape as GameCircle).setRadius(3f * ConstVals.PPM)
                     headDamageable.offsetFromBodyAttachment.x = 2f * ConstVals.PPM
+
                     val left = body.physics.velocity.x < 0f
                     if (left) headDamageable.offsetFromBodyAttachment.x *= -1f
                     headDamageable.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
+
                     (headBody.rawShape as GameCircle).setRadius(3f * ConstVals.PPM)
                     headBody.offsetFromBodyAttachment.set(headDamageable.offsetFromBodyAttachment)
 
@@ -1114,6 +1128,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         it.positionOnPoint(point, position)
                     }
                 }
+
+                headFrozenShield.setActive(frozen)
+                if (frozen) (headFrozenShield.rawShape as GameCircle).set(headBody.getShape() as GameCircle)
 
                 leftWingHoverDamager.setActive(hovering)
                 leftWingHoverShield.setActive(hovering)
