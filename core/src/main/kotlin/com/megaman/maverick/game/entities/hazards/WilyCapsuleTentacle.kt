@@ -61,11 +61,11 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
 
         // Lunge movement
         private const val LUNGE_SPEED = 10f * ConstVals.PPM
-        private const val LUNGE_PAUSE_DURATION = 0.5f
-        private const val RETURN_SPEED = 10f * ConstVals.PPM
+        private const val LUNGE_PAUSE_DURATION = 0.25f
+        private const val RETURN_SPEED = 12f * ConstVals.PPM
 
         // Pin hold
-        private const val PIN_DURATION = 2f
+        private const val PIN_DURATION = 0.5f
 
         // Multi-step: pull 2nd lunge slightly toward anchor so it's not directly at Mega Man
         private const val MULTI_STEP_PULL_TOWARD_ANCHOR = 0.2f
@@ -75,7 +75,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
         private const val SWIPE_DISTANCE = 6f
         private const val SWIPE_HORIZONTAL_EXTEND = 3f
         private const val COIL_BACK_DISTANCE = 3f
-        private const val COIL_BACK_SPEED = 8f * ConstVals.PPM
+        private const val COIL_BACK_SPEED = 12f * ConstVals.PPM
     }
 
     enum class LungeType { SIMPLE, MULTI_STEP, LUNGE_PAST_AND_SWIPE }
@@ -273,13 +273,16 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) :
     }
 
     fun pin(target: Vector2 = megaman.body.getCenter()) {
-        if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
+        if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) {
+            GameLogger.error(TAG, "pin(): failed to pin")
+            return
+        }
+
         pinned = true
         pinTimer = 0f
+
         lunge(target = target, lungeType = LungeType.SIMPLE)
     }
-
-    fun isPinned() = pinned
 
     fun explodeAndDestroy() {
         for (joint in jointEntities) {

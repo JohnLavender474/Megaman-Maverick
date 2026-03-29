@@ -1819,6 +1819,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         // Capsule dive / pin (special attacks)
         const val ATTACKS_PER_SPECIAL = 2
+
         const val DIVE_SPEED = 10f
         const val DIVE_ASCEND_SPEED = 8f
         const val DIVE_TARGET_OFFSET_Y = 2f
