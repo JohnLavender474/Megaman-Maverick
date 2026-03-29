@@ -126,7 +126,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             "phase_2/angry" pairTo AnimationDef(3, 1, 0.1f, true),
             "phase_2/laugh" pairTo AnimationDef(2, 1, 0.1f, true),
             "phase_2/scared" pairTo AnimationDef(2, 1, 0.1f, true),
-            "phase_2/orb_glow" pairTo AnimationDef(2, 1, 0.05f, true)
+            "phase_2/orb_glow" pairTo AnimationDef(2, 1, 0.05f, true),
+            "phase_2/frozen" pairTo AnimationDef()
         )
     }
 
@@ -601,6 +602,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         }
 
                         WilyFinalBossPhase.PHASE_2 -> when {
+                            frozen -> "frozen"
                             getCurrentHealth() == 0 -> "scared"
                             !damageTimer.isFinished() -> when {
                                 damageTimer.getRatio() < 0.5f -> "scared"
