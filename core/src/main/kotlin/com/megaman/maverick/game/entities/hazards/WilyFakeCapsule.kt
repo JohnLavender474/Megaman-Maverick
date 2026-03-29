@@ -43,6 +43,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
+import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase3ConstVals
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -71,6 +72,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         private const val MISSILE_ANGLE_DOWN = 180
         private const val MISSILE_ANGLE_RIGHT = 135
         private const val MISSILE_INIT_DELAY = 0.75f
+        private const val BLINK_DELAY = 0.05f
         private val animDefs = objectMapOf(
             "hover" pairTo AnimationDef(3, 1, 0.1f, true),
             "bounce" pairTo AnimationDef(2, 2, 0.1f, true)
@@ -128,6 +130,8 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     override fun update(delta: Float) {
         if (!on) bounceTimer.setToEnd() else bounceTimer.update(delta)
+
+
     }
 
     fun shootMissiles() {

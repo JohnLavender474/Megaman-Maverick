@@ -52,17 +52,12 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
-import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.IFireEntity
-import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
@@ -70,10 +65,7 @@ import com.megaman.maverick.game.entities.hazards.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.hazards.WilyFakeCapsule
 import com.megaman.maverick.game.entities.hazards.WilyPlaneBody
-import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.HomingMissile
-import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.hardMode
@@ -158,8 +150,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override var damageNegotiator = object : BossDamageNegotiator() {
 
         override fun get(damager: IDamager): Int {
-            if (damager is IFreezerEntity || damager is IFireEntity) return 2
-            return super.get(damager)
+            if (damager is Bullet) return 1
+            val actualDamage = super.get(damager)
+            return if (actualDamage == 1) 2 else actualDamage
         }
     }
 
@@ -548,7 +541,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyFinalBossPhase.PHASE_2 -> {
                     sprite.priority.section = DrawingSection.PLAYGROUND
                     sprite.priority.value = -1
+
                     sprite.setFlip(false, false)
+
                     sprite.hidden = damageBlink
                     sprite.setAlpha(1f)
                 }
@@ -556,8 +551,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyFinalBossPhase.PHASE_3 -> {
                     sprite.priority.section = DrawingSection.PLAYGROUND
                     sprite.priority.value = -1
+
                     sprite.setFlip(false, false)
+
                     sprite.hidden = damageBlink
+
                     val alpha = phase3Handler.getSpriteAlpha()
                     sprite.setAlpha(alpha)
                 }
@@ -2525,7 +2523,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private object Phase3ConstVals {
         const val FAKE_CAPSULE_COUNT = 1
         const val WAIT_DUR = 1f
-        const val FADE_DUR = 0.75f
+        const val FADE_DUR = 1f
+        const val BLINK_DELAY = 0.05f
         const val ATTACK_DUR = 2f
         const val CANNON_WAIT_DUR = 0.5f
         const val CANNON_BOTTOM_OFFSET_Y = 2f
@@ -2547,6 +2546,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private val attackTimer = Timer(Phase3ConstVals.ATTACK_DUR)
         private val cannonTimer = Timer(Phase3ConstVals.CANNON_WAIT_DUR)
         private val orbPauseTimer = Timer(Phase2ConstVals.ORB_PAUSE_DURATION)
+
+        private val blinkTimer = Timer(Phase3ConstVals.BLINK_DELAY)
+        var blink = false
+            private set
 
         var cannonOrbPhase = CannonOrbPhase.IDLE
             private set
@@ -2575,6 +2578,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             .build()
 
         fun getSpriteAlpha(): Float {
+            if (blink) return 0f
+
             val sm = stateMachines.get(WilyFinalBossPhase.PHASE_3) as StateMachine<WilyPhase3State>
             val rawAlpha = when (sm.getCurrentElement()) {
                 WilyPhase3State.WAIT -> 0f
@@ -2616,8 +2621,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyPhase3State.ATTACK -> {
                     fakeCapsules.forEach { it.on = true }
+
                     attackTimer.reset()
                     hasFiredMissiles = false
+
                     cannonTimer.reset()
                     cannonOrbPhase = CannonOrbPhase.IDLE
                 }
@@ -2656,6 +2663,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 )
                 fakeCapsules.add(fakeCapsule)
             }
+
+            blink = false
         }
 
         override fun buildBody(body: Body) {
@@ -2746,9 +2755,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 WilyPhase3State.APPEAR -> {
+                    blinkTimer.update(delta)
+                    if (blinkTimer.isFinished()) {
+                        blink = !blink
+                        blinkTimer.reset()
+                    }
+
                     alphaTimer.update(delta)
                     fakeCapsules.forEach { it.spriteAlpha = getSpriteAlpha() }
-                    if (alphaTimer.isFinished()) phase3StateMachine.next()
+
+                    if (alphaTimer.isFinished()) {
+                        blink = false
+                        phase3StateMachine.next()
+                    }
                 }
 
                 WilyPhase3State.ATTACK -> {
@@ -2770,9 +2789,19 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 WilyPhase3State.VANISH -> {
+                    blinkTimer.update(delta)
+                    if (blinkTimer.isFinished()) {
+                        blink = !blink
+                        blinkTimer.reset()
+                    }
+
                     alphaTimer.update(delta)
                     fakeCapsules.forEach { it.spriteAlpha = getSpriteAlpha() }
-                    if (alphaTimer.isFinished()) phase3StateMachine.next()
+
+                    if (alphaTimer.isFinished()) {
+                        blink = false
+                        phase3StateMachine.next()
+                    }
                 }
             }
         }
@@ -2946,6 +2975,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             rightOrb = null
             bottomOrb?.destroy()
             bottomOrb = null
+
+            blink = false
         }
     }
 
