@@ -30,6 +30,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -88,7 +89,8 @@ abstract class AbstractBoss(
             Needle::class pairTo dmgNeg(1),
             SlashWave::class pairTo dmgNeg(1),
             PreciousGem::class pairTo dmgNeg(1),
-            ReactorManProjectile::class pairTo dmgNeg(1)
+            ReactorManProjectile::class pairTo dmgNeg(1),
+            IceBombExplosion::class pairTo dmgNeg(1)
         )
 
         private val DEFAULT_BOSS_BATTLE_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name

@@ -57,7 +57,9 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.F
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.IFreezableEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
@@ -65,7 +67,10 @@ import com.megaman.maverick.game.entities.hazards.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.hazards.WilyFakeCapsule
 import com.megaman.maverick.game.entities.hazards.WilyPlaneBody
-import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.HomingMissile
+import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.hardMode
@@ -759,11 +764,13 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             WilyFinalBossPhase.PHASE_3 -> {
                 phase3Handler.init(cachedSpawnProps!!)
                 phase3Handler.buildBody(body)
+                /*
                 game.audioMan.fadeOutMusic(0.25f) {
                     MegaUtilMethods.delayRun(game, 0.1f) {
                         game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_INTRO_MUSIC)
                     }
                 }
+                 */
             }
 
             else -> throw IllegalStateException("Should not transition to phase 1 in 'startNextPhase()'")
