@@ -2605,7 +2605,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyPhase3State.APPEAR -> {
                     hasFiredMissiles = false
-                    
+
                     val spawns = when {
                         intro -> introPositions
                         else -> spawnPositions.getRandomElements(

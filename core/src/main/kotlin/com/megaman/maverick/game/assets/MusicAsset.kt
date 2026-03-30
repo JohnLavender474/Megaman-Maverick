@@ -43,11 +43,11 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX6_BOSS_FIGHT_MUSIC("MMX6_BossFight.mp3"),
     MMX2_MORPH_MOTH_MUSIC("MMX2_MorphMoth.mp3"),
     MM7_FINAL_BOSS_INTRO_MUSIC(
-        src = "MM7_Final_Boss_Intro.mp3",
+        src = "MM7_Final_Boss_Intro.wav",
         loop = false,
         onCompletion = { it.playMusic(MM7_FINAL_BOSS_LOOP_MUSIC, true) }
     ),
-    MM7_FINAL_BOSS_LOOP_MUSIC("MM7_Final_Boss_Loop.mp3"),
+    MM7_FINAL_BOSS_LOOP_MUSIC("MM7_Final_Boss_Loop.wav"),
     MMX_VILE_MUSIC("MMX_Vile.mp3"),
     MM7_SLASH_MAN_MUSIC("MM7_SlashMan.mp3"),
     MMX3_NEON_TIGER_MUSIC("MMX3_NeonTiger.mp3"),
