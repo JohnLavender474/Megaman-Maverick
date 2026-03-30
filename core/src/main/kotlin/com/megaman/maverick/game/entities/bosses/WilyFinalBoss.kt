@@ -2523,10 +2523,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private object Phase3ConstVals {
         const val FAKE_CAPSULE_COUNT = 1
         const val WAIT_DUR = 1f
-        const val FADE_DUR = 1f
-        const val BLINK_DELAY = 0.05f
+        const val FADE_DUR = 1.5f
+        const val BLINK_DELAY = 0.1f
         const val ATTACK_DUR = 2f
-        const val CANNON_WAIT_DUR = 0.5f
+        const val CANNON_WAIT_DUR = 1f
         const val CANNON_BOTTOM_OFFSET_Y = 2f
         const val ORB_FLYOUT_BOTTOM_Y = -4f
     }
@@ -2563,6 +2563,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private val bottomOrbTarget = Vector2()
 
         private var hasFiredMissiles = false
+            set(value) {
+                field = value
+                fakeCapsules.forEach { it.hasFiredMissiles = value }
+            }
 
         private val tempVec2Arr = Array<Vector2>()
 
@@ -2600,6 +2604,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 WilyPhase3State.APPEAR -> {
+                    hasFiredMissiles = false
+                    
                     val spawns = when {
                         intro -> introPositions
                         else -> spawnPositions.getRandomElements(
@@ -2623,7 +2629,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     fakeCapsules.forEach { it.on = true }
 
                     attackTimer.reset()
-                    hasFiredMissiles = false
 
                     cannonTimer.reset()
                     cannonOrbPhase = CannonOrbPhase.IDLE

@@ -87,7 +87,8 @@ abstract class AbstractBoss(
             Axe::class pairTo dmgNeg(1),
             Needle::class pairTo dmgNeg(1),
             SlashWave::class pairTo dmgNeg(1),
-            PreciousGem::class pairTo dmgNeg(1)
+            PreciousGem::class pairTo dmgNeg(1),
+            ReactorManProjectile::class pairTo dmgNeg(1)
         )
 
         private val DEFAULT_BOSS_BATTLE_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name

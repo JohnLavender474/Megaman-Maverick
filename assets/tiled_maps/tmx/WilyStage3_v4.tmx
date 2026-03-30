@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="725">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="729">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/mm9endless.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
@@ -3949,24 +3949,6 @@
   </object>
   <object id="590" name="Life" x="9184" y="1504" width="32" height="32"/>
   <object id="591" name="Life" x="7648" y="5536" width="32" height="32"/>
-  <object id="687" name="HealthBulb" x="11408" y="3616" width="32" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="large" type="bool" value="true"/>
-    <property name="spawn_room" value="room9"/>
-    <property name="spawn_type" value="spawn_room"/>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="688" name="HealthBulb" x="11456" y="3616" width="32" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="large" type="bool" value="true"/>
-    <property name="spawn_room" value="room9"/>
-    <property name="spawn_type" value="spawn_room"/>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
   <object id="689" name="HealthBulb" x="11696" y="3616" width="32" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
@@ -3986,15 +3968,6 @@
    </properties>
   </object>
   <object id="691" name="HealthBulb" x="11792" y="3616" width="32" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="large" type="bool" value="true"/>
-    <property name="spawn_room" value="room9"/>
-    <property name="spawn_type" value="spawn_room"/>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="692" name="HealthBulb" x="11504" y="3616" width="32" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="large" type="bool" value="true"/>
@@ -4035,6 +4008,33 @@
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="large" type="bool" value="true"/>
     <property name="spawn_room" value="room7"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="725" name="Life" x="11456" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="727" name="HealthBulb" x="11504" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="timed" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="728" name="HealthBulb" x="11408" y="3616" width="32" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="large" type="bool" value="true"/>
+    <property name="spawn_room" value="room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="timed" type="bool" value="false"/>
    </properties>
@@ -4554,7 +4554,7 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="player">
-  <object id="711" name="0" x="11440" y="3552" width="32" height="32"/>
+  <object id="726" name="0" x="11488" y="1664" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="temp">
   <object id="4" name="0" x="304" y="6080" width="32" height="32"/>

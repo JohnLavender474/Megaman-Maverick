@@ -338,6 +338,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/WilyFinalBoss/phase_2/frozen.png</key>
+            <key type="filename">../frames/WilyFinalBoss/phase_3/fake/missiles.png</key>
             <key type="filename">../frames/WilyFinalBoss/phase_3/frozen.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
