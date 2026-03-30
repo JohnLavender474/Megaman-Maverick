@@ -44,15 +44,10 @@ import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.BodyFixtureDef
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageable {
 
@@ -64,6 +59,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         private const val RECALC_DELAY = 0.25f
         private const val TTL = 3f
         private const val FLASH_START = 2f
+        private const val CULL_TIME = 3f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = orderedMapOf(
@@ -99,6 +95,7 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 

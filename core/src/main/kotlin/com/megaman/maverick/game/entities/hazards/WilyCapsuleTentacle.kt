@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
@@ -21,11 +22,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints.TentacleState
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
@@ -61,9 +63,10 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
         private const val LOG_INTERVAL = 2f
 
         // Lunge movement
-        private const val LUNGE_SPEED = 10f * ConstVals.PPM
+        private const val LUNGE_SPEED = 8f
+        private const val LUNGE_SPEED_HARD = 10f
         private const val LUNGE_PAUSE_DURATION = 0.25f
-        private const val RETURN_SPEED = 12f * ConstVals.PPM
+        private const val RETURN_SPEED = 12f
 
         // Pin hold
         private const val PIN_DURATION = 0.5f
@@ -76,7 +79,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
         private const val SWIPE_DISTANCE = 6f
         private const val SWIPE_HORIZONTAL_EXTEND = 3f
         private const val COIL_BACK_DISTANCE = 3f
-        private const val COIL_BACK_SPEED = 12f * ConstVals.PPM
+        private const val COIL_BACK_SPEED = 12f
     }
 
     enum class LungeType { SIMPLE, MULTI_STEP, LUNGE_PAST_AND_SWIPE }
@@ -245,7 +248,10 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
 
     fun lunge(
         target: Vector2 = megaman.body.getCenter(),
-        lungeType: LungeType = LungeType.entries.random()
+        lungeType: LungeType = when {
+            game.state.hardMode -> LungeType.entries.random()
+            else -> UtilMethods.getRandom(LungeType.SIMPLE, LungeType.MULTI_STEP)
+        }
     ) {
         if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
 
@@ -398,11 +404,16 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
 
             TentacleState.LUNGING -> {
                 val target = if (coilingBack) coilBackTarget else lungeTarget
-                val speed = if (coilingBack) COIL_BACK_SPEED else LUNGE_SPEED
+
                 val dx = target.x - currentTipTarget.x
                 val dy = target.y - currentTipTarget.y
                 val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-                val step = speed * delta
+
+                val speed = when {
+                    coilingBack -> COIL_BACK_SPEED
+                    else -> if (game.state.hardMode) LUNGE_SPEED_HARD else LUNGE_SPEED
+                }
+                val step = speed * delta * ConstVals.PPM
 
                 if (dist <= step) {
                     currentTipTarget.set(target)
@@ -485,7 +496,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
                 val dx = currentIdleTarget.x - currentTipTarget.x
                 val dy = currentIdleTarget.y - currentTipTarget.y
                 val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-                val step = RETURN_SPEED * delta
+                val step = RETURN_SPEED * delta * ConstVals.PPM
 
                 if (dist <= step) {
                     currentTipTarget.set(currentIdleTarget)
