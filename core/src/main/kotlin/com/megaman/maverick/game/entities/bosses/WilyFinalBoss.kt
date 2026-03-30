@@ -623,7 +623,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         .preProcess { _, sprite ->
             val center = body.getCenter().add(0f, 0.5f * ConstVals.PPM)
             sprite.setCenter(center)
-            sprite.hidden = frozen || phaseTransitionHandler.active ||
+            sprite.hidden = defeated || frozen || phaseTransitionHandler.active ||
                 currentPhase != WilyFinalBossPhase.PHASE_3 ||
                 phase3Handler.cannonOrbPhase != CannonOrbPhase.IDLE ||
                 stateMachines.get(WilyFinalBossPhase.PHASE_3).getCurrentElement() != WilyPhase3State.ATTACK
