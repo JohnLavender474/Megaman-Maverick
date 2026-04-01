@@ -1017,14 +1017,14 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
 
-        // axe wallslide
+        // axe wall slide
         .sprite(
             AXE_WALLSLIDE_REGION,
             GameSprite(regions[AXE_WALLSLIDE_REGION], DrawingPriority(DrawingSection.PLAYGROUND, 2))
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
-            val show = currentState == TimberWomanState.WALLSLIDE
+            val show = currentState == TimberWomanState.WALLSLIDE || defeated
             sprite.hidden = !show
 
             val anchor = sprites[TAG].boundingRectangle.getPositionPoint(Position.BOTTOM_CENTER)
@@ -1040,7 +1040,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
-            val show = when {
+            val show = if (defeated) false else when {
                 currentState != TimberWomanState.STAND_SWING -> false
                 else -> {
                     val animKey = TimberWomanState.STAND_SWING.name.lowercase()
@@ -1065,7 +1065,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
-            val show = when {
+            val show = if (defeated) false else when {
                 currentState != TimberWomanState.STAND_SWING -> false
                 else -> {
                     val animKey = TimberWomanState.STAND_SWING.name.lowercase()
@@ -1090,7 +1090,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
-            val show = when {
+            val show = if (defeated) false else when {
                 currentState != TimberWomanState.STAND_POUND -> false
                 else -> {
                     val animation = (animators[TAG] as Animator).currentAnimation as Animation
@@ -1115,7 +1115,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
-            val show = when {
+            val show = if (defeated) false else when {
                 currentState != TimberWomanState.STAND_POUND -> false
                 else -> {
                     val animation = (animators[TAG] as Animator).currentAnimation as Animation

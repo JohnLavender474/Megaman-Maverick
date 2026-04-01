@@ -2801,6 +2801,9 @@
    <properties>
     <property name="atlas" value="Backgrounds3.txt"/>
     <property name="columns" type="int" value="100"/>
+    <property name="offset_x" type="float" value="20"/>
+    <property name="offset_y" type="float" value="20"/>
+    <property name="parallax_y" type="float" value="0.1"/>
     <property name="region" value="BKG18"/>
     <property name="rows" type="int" value="100"/>
    </properties>
@@ -4553,10 +4556,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="26" name="player">
+ <objectgroup id="26" name="temp">
   <object id="726" name="0" x="11488" y="1664" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="2" name="temp">
+ <objectgroup id="2" name="player">
   <object id="4" name="0" x="304" y="6080" width="32" height="32"/>
   <object id="129" name="1" x="304" y="7264" width="32" height="32"/>
   <object id="327" name="2" x="2304" y="7200" width="32" height="32"/>
