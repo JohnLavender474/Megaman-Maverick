@@ -222,6 +222,9 @@ private fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
 
         tornado.setCenter(center)
 
+        tornado.setOriginCenter()
+        tornado.rotation = getSpriteRotation()
+
         if (currentWeapon != MegamanWeapon.NEEDLE_SPIN || !shooting) {
             tornado.hidden = true
             return@putPreProcess

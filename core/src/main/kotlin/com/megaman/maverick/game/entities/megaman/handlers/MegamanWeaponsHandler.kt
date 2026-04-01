@@ -186,6 +186,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING))
                     out.y -= GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
             }
+
             Direction.DOWN -> {
                 val xOffset = when {
                     megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
@@ -215,6 +216,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 if (megaman.isBehaviorActive(BehaviorType.GROUND_SLIDING))
                     out.y += GROUND_SLIDE_SPRITE_OFFSET_Y * ConstVals.PPM
             }
+
             Direction.LEFT -> {
                 val yOffset = when {
                     megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
@@ -236,6 +238,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
                     !megaman.body.isSensing(BodySense.FEET_ON_GROUND) ->
                         if (megaman.body.physics.velocity.x > 0f) -0.2f else -0.3f
+
                     else -> 0f
                 }
 
@@ -247,6 +250,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     else -> out.y += 0.2f * ConstVals.PPM
                 }
             }
+
             Direction.RIGHT -> {
                 val yOffset = when {
                     megaman.isBehaviorActive(BehaviorType.AIR_DASHING) -> 1f
@@ -268,6 +272,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     megaman.isBehaviorActive(BehaviorType.CLIMBING) -> 0.15f
                     !megaman.body.isSensing(BodySense.FEET_ON_GROUND) ->
                         if (megaman.body.physics.velocity.x < 0f) 0.05f else 0.2f
+
                     else -> 0f
                 }
 
@@ -308,6 +313,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             fullyChargedCost = { 3 },
             chargeable = { _ -> false /* TODO: true */ }
         )
+
         MegamanWeapon.INFERNAL_BARRAGE -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 5 },
@@ -316,6 +322,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             chargeable = { _ -> false /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ },
             canFireWeapon = { _, _ -> true /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ }
         )
+
         MegamanWeapon.MOON_SCYTHES -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { 3 },
@@ -367,6 +374,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 maxWaitTime.update(delta)
             }
         }
+
         MegamanWeapon.PRECIOUS_GUARD -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { if (it.getSpawnedCount(MegaChargeStatus.NOT_CHARGED) > 0) 0 else 6 },
@@ -426,12 +434,14 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 }
             }
         }
+
         MegamanWeapon.AXE_SWINGER -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 2 },
             chargeable = { false },
             canFireWeapon = { _, _ -> true }
         )
+
         MegamanWeapon.NEEDLE_SPIN -> object : MegaWeaponHandler(
             cooldown = Timer(0.25f),
             normalCost = { 2 },
@@ -445,6 +455,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 canFireWeapon = { _, _ -> canSpin }
             }
         }
+
         MegamanWeapon.RODENT_CLAWS -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { 2 },
@@ -471,6 +482,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                                 BehaviorType.JUMPING,
                                 BehaviorType.CROUCHING
                             ) -> 1
+
                         else -> priorSlashIndex + 1
                     }
 
@@ -498,6 +510,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 }
             }
         }
+
         MegamanWeapon.REACTOR_SHOT -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
             normalCost = { 3 },
@@ -548,6 +561,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 weaponEntry.ammo = MegamanValues.MAX_WEAPON_AMMO
                 return diff
             }
+
             weaponEntry.ammo < 0 -> {
                 weaponEntry.ammo = 0
                 return 0
@@ -784,6 +798,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
                 weaponHandlers[MegamanWeapon.MEGA_BUSTER].addSpawned(stat, bullet)
             }
+
             MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED -> {
                 megaman.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND, false)
                 megaman.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
@@ -862,10 +877,13 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 val spawn = when (megaman.direction) {
                     Direction.UP -> megaman.body.getPositionPoint(Position.BOTTOM_CENTER)
                         .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+
                     Direction.DOWN -> megaman.body.getPositionPoint(Position.TOP_CENTER)
                         .add(ConstVals.PPM.toFloat() * -megaman.facing.value, 0f)
+
                     Direction.LEFT -> megaman.body.getPositionPoint(Position.CENTER_RIGHT)
                         .add(-ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat() * megaman.facing.value)
+
                     Direction.RIGHT -> megaman.body.getPositionPoint(Position.CENTER_LEFT)
                         .add(ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat() * -megaman.facing.value)
                 }
@@ -873,10 +891,13 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 val trajectory = when (megaman.direction) {
                     Direction.UP -> GameObjectPools.fetch(Vector2::class)
                         .set(MegamanValues.MAGMA_WAVE_VEL * megaman.facing.value * ConstVals.PPM, 0f)
+
                     Direction.DOWN -> GameObjectPools.fetch(Vector2::class)
                         .set(MegamanValues.MAGMA_WAVE_VEL * -megaman.facing.value * ConstVals.PPM, 0f)
+
                     Direction.LEFT -> GameObjectPools.fetch(Vector2::class)
                         .set(0f, MegamanValues.MAGMA_WAVE_VEL * megaman.facing.value * ConstVals.PPM)
+
                     Direction.RIGHT -> GameObjectPools.fetch(Vector2::class)
                         .set(0f, MegamanValues.MAGMA_WAVE_VEL * -megaman.facing.value * ConstVals.PPM)
                 }
@@ -1011,14 +1032,17 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 MegamanValues.AXE_IMPULSE_X * megaman.facing.value,
                 MegamanValues.AXE_IMPULSE_Y
             )
+
             Direction.DOWN -> impulse.set(
                 MegamanValues.AXE_IMPULSE_X * -megaman.facing.value,
                 -MegamanValues.AXE_IMPULSE_Y
             )
+
             Direction.LEFT -> impulse.set(
                 -MegamanValues.AXE_IMPULSE_Y,
                 MegamanValues.AXE_IMPULSE_X * megaman.facing.value
             )
+
             Direction.RIGHT -> impulse.set(
                 MegamanValues.AXE_IMPULSE_Y,
                 MegamanValues.AXE_IMPULSE_X * -megaman.facing.value,
@@ -1055,16 +1079,37 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     private fun spinNeedles() {
         GameLogger.debug(TAG, "spinNeedles()")
 
+        val direction = megaman.direction
+        val impulseScalar = MegamanValues.NEEDLE_IMPULSE * ConstVals.PPM * megaman.movementScalar
+        val gravMag = MegamanValues.NEEDLE_GRAV * ConstVals.PPM * megaman.gravityScalar
+
         for (i in 0 until MegamanValues.NEEDLE_ANGLES.size) {
             val angle = MegamanValues.NEEDLE_ANGLES[i]
             val xOffset = MegamanValues.NEEDLE_X_OFFSETS[i]
-            val position = megaman.body.getCenter().add(
-                xOffset * ConstVals.PPM, MegamanValues.NEEDLE_Y_OFFSET * ConstVals.PPM
-            )
+
+            val position = megaman.body.getCenter()
+            when (direction) {
+                Direction.UP -> position.add(xOffset * ConstVals.PPM, MegamanValues.NEEDLE_Y_OFFSET * ConstVals.PPM)
+                Direction.DOWN -> position.add(xOffset * ConstVals.PPM, -MegamanValues.NEEDLE_Y_OFFSET * ConstVals.PPM)
+                Direction.LEFT -> position.add(-MegamanValues.NEEDLE_Y_OFFSET * ConstVals.PPM, xOffset * ConstVals.PPM)
+                Direction.RIGHT -> position.add(MegamanValues.NEEDLE_Y_OFFSET * ConstVals.PPM, xOffset * ConstVals.PPM)
+            }
+
             val impulse = GameObjectPools.fetch(Vector2::class)
-                .set(0f, MegamanValues.NEEDLE_IMPULSE * ConstVals.PPM * megaman.movementScalar)
-                .rotateDeg(angle)
-            val gravity = MegamanValues.NEEDLE_GRAV * ConstVals.PPM * megaman.gravityScalar
+            when (direction) {
+                Direction.UP -> impulse.set(0f, impulseScalar)
+                Direction.DOWN -> impulse.set(0f, -impulseScalar)
+                Direction.LEFT -> impulse.set(-impulseScalar, 0f)
+                Direction.RIGHT -> impulse.set(impulseScalar, 0f)
+            }.rotateDeg(angle)
+
+            val gravity = GameObjectPools.fetch(Vector2::class)
+            when (direction) {
+                Direction.UP -> gravity.set(0f, gravMag)
+                Direction.DOWN -> gravity.set(0f, -gravMag)
+                Direction.LEFT -> gravity.set(-gravMag, 0f)
+                Direction.RIGHT -> gravity.set(gravMag, 0f)
+            }
 
             val needle = MegaEntityFactory.fetch(Needle::class)!!
             needle.spawn(
@@ -1103,6 +1148,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     BehaviorType.JUMPING,
                     BehaviorType.CROUCHING
                 ) -> 1
+
             else -> megaman.getOrDefaultProperty("slash_index", 1, Int::class)
         }
 
@@ -1113,10 +1159,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(165f, 180f)
                 else UtilMethods.getRandom(0f, 15f)
             )
+
             2 -> gdxArrayOf(
                 if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(150f, 165f)
                 else UtilMethods.getRandom(30f, 45f)
             )
+
             else -> when (megaman.facing) {
                 Facing.LEFT -> gdxArrayOf(135f, 180f)
                 else -> gdxArrayOf(0f, 45f)
@@ -1131,14 +1179,17 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                         0.25f * ConstVals.PPM * megaman.facing.value,
                         ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
                     )
+
                     Direction.DOWN -> it.add(
                         -0.25f * ConstVals.PPM * megaman.facing.value,
                         -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
                     )
+
                     Direction.LEFT -> it.add(
                         -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
                         -0.25f * ConstVals.PPM * megaman.facing.value
                     )
+
                     Direction.RIGHT -> it.add(
                         ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
                         0.25f * ConstVals.PPM * megaman.facing.value
@@ -1176,14 +1227,17 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                         slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value,
                         ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
                     )
+
                     Direction.DOWN -> it.add(
                         -slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value,
                         -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f
                     )
+
                     Direction.LEFT -> it.add(
                         -ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
                         slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value
                     )
+
                     Direction.RIGHT -> it.add(
                         ConstVals.PPM * if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) 0.5f else 0f,
                         slashDissipationOffsetX * ConstVals.PPM * megaman.facing.value

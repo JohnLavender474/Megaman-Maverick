@@ -68,7 +68,9 @@ object GameLogger : ApplicationLogger {
         print(GameLogLevel.ERROR, tag, message, exception)
 
     private fun print(level: GameLogLevel, tag: String, message: String, throwable: Throwable? = null) {
-        if (!levels[level] || (filterByTag && !tagsToLog.contains(tag))) return
+        if (level != GameLogLevel.ERROR &&
+            (!levels[level] || (filterByTag && !tagsToLog.contains(tag)))
+        ) return
 
         val time = LocalTime.now()
         val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm:ss"))

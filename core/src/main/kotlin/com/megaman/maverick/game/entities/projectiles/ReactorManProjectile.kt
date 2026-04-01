@@ -14,12 +14,15 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.orderedMapOf
+import com.mega.game.engine.common.extensions.setToDirection
+import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.damage.IDamageable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
@@ -28,6 +31,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -43,7 +47,7 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.world.body.*
 
-class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "ReactorManProjectile"
@@ -118,6 +122,12 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    override var direction: Direction
+        get() = body.direction
+        set(value) {
+            body.direction = value
+        }
+
     var big = false
     var active = false
 
@@ -142,6 +152,8 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
 
         big = spawnProps.get(ConstKeys.BIG, Boolean::class)!!
 
@@ -168,8 +180,19 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         bounces = 0
     }
 
-    fun setTrajectory(trajectory: Vector2) {
-        body.physics.velocity.set(trajectory)
+    fun setTrajectory(trajectory: Vector2): Vector2 = body.physics.velocity.set(trajectory)
+
+    override fun onDamageInflictedTo(damageable: IDamageable) {
+        if (big) try {
+            val shape = (damageable as IBodyEntity)
+                .body.fixtures.get(FixtureType.DAMAGEABLE).first().getShape()
+            shatter(shape)
+        } catch (e: Exception) {
+            GameLogger.error(TAG, "onDamagedInflictedTo(): failed to extract fixture shape from damageable", e)
+            shatter(body.getBounds())
+        }
+
+        explodeAndDie()
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -217,16 +240,16 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
             )
         )
 
-        val direction = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
+        val overlapDirection = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
 
         val trajectories = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
             SHATTER_TRAJS_HARD else SHATTER_TRAJS
 
-        trajectories.get(direction).forEach { trajectory ->
+        trajectories.get(overlapDirection).forEach { trajectory ->
             val projectile = MegaEntityFactory.fetch(ReactorManProjectile::class)!!
             projectile.spawn(
                 props(
-                    ConstKeys.POSITION pairTo when (direction) {
+                    ConstKeys.POSITION pairTo when (overlapDirection) {
                         Direction.UP -> body.getPositionPoint(Position.TOP_CENTER)
                         Direction.DOWN -> body.getPositionPoint(Position.BOTTOM_CENTER)
                         Direction.LEFT -> body.getPositionPoint(Position.CENTER_LEFT)
@@ -236,6 +259,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
                     ConstKeys.OWNER pairTo owner,
                     ConstKeys.ACTIVE pairTo true,
                     ConstKeys.GRAVITY_ON pairTo true,
+                    ConstKeys.DIRECTION pairTo direction,
                     ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat()),
                 )
             )
@@ -257,7 +281,9 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.physics.gravity.y = ConstVals.PPM * if (big && growTimer.isFinished()) BIG_GRAVITY else SMALL_GRAVITY
+            body.physics.gravity
+                .setToDirection(direction)
+                .scl(ConstVals.PPM * if (big && growTimer.isFinished()) BIG_GRAVITY else SMALL_GRAVITY)
 
             val size = if (big && growTimer.isFinished()) BIG_SIZE else SMALL_SIZE
             val center = body.getCenter()

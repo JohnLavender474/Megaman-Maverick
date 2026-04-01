@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -95,8 +96,13 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
             spawnProps.getOrDefault("${ConstKeys.BODY}_${ConstKeys.POSITION}", Position.CENTER, Position::class)
         body.positionOnPoint(spawn, bodyPosition)
 
-        val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, 0f, Float::class)
-        body.physics.gravity.set(0f, gravity)
+        body.physics.gravity.set(
+            when (val gravityProp = spawnProps.get(ConstKeys.GRAVITY)) {
+                is Vector2 -> gravityProp
+                is Float -> GameObjectPools.fetch(Vector2::class).set(0f, gravityProp)
+                else -> Vector2.Zero
+            }
+        )
 
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(impulse)
