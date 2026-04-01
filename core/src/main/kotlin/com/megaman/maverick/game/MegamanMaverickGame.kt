@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -80,7 +81,6 @@ import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -113,6 +113,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
 class MegamanMaverickGameParams {
+    var fps: Int = 60
     var writeLogsToFile: Boolean = false
     var debugWindow: Boolean = false
     var debugShapes: Boolean = false
@@ -620,7 +621,8 @@ class MegamanMaverickGame(
                     contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
                     collisionHandler = MegaCollisionHandler(this),
                     contactFilter = MegaContactFilter(),
-                    fixedStepScalar = params.fixedStepScalar
+                    fixedStepScalar = params.fixedStepScalar,
+                    maxIterations = MathUtils.ceil(params.fixedStepScalar / (ConstVals.FIXED_TIME_STEP * params.fps))
                 ),
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {

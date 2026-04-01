@@ -18,6 +18,7 @@ object DesktopLauncher {
     private const val TITLE = "Megaman Maverick"
     private const val WINDOW_ICON_PATH = "Megaman.png"
 
+    private const val DEFAULT_FPS = 60
     private const val DEFAULT_WIDTH = 1920
     private const val DEFAULT_HEIGHT = 1080
     private const val DEFAULT_RESIZABLE = true
@@ -54,6 +55,7 @@ object DesktopLauncher {
         }
 
         println("Game loaded with arguments:")
+        println("- FPS: " + appArgs.fps)
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
         println("- Fullscreen: " + appArgs.fullScreen)
@@ -66,8 +68,8 @@ object DesktopLauncher {
 
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
-        config.setIdleFPS(ConstVals.FPS)
-        config.setForegroundFPS(ConstVals.FPS)
+        config.setIdleFPS(appArgs.fps)
+        config.setForegroundFPS(appArgs.fps)
         config.setResizable(appArgs.resizable)
         config.setWindowIcon(WINDOW_ICON_PATH)
         config.setPauseWhenMinimized(false)
@@ -80,6 +82,7 @@ object DesktopLauncher {
         }
 
         val params = MegamanMaverickGameParams()
+        params.fps = appArgs.fps
         params.debugText = appArgs.debugText
         params.debugWindow = appArgs.debugWindow
         params.debugShapes = appArgs.debugShapes
@@ -134,6 +137,12 @@ object DesktopLauncher {
     }
 
     class DesktopAppArgs {
+        @Parameter(
+            names = ["--fps"],
+            description = "FPS of the game"
+        )
+        var fps = DEFAULT_FPS
+
         @Parameter(
             names = ["--width"],
             description = "Window width: min of 600. Default value = $DEFAULT_WIDTH."

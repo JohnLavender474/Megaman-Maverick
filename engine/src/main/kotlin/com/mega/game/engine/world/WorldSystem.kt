@@ -28,6 +28,7 @@ class WorldSystem(
     private val collisionHandler: ICollisionHandler,
     private val contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
+    var maxIterations: Int = Int.MAX_VALUE // max iters cap does not account for fixed step scalar
 ) : GameSystem(BodyComponent::class) {
 
     companion object {
@@ -90,9 +91,14 @@ class WorldSystem(
                 }
             }
 
+            var iterations = 0
             while (accumulator >= fixedStep) {
                 accumulator -= fixedStep / fixedStepScalar
                 cycle(reusableBodyArray, fixedStep)
+                if (++iterations >= maxIterations) {
+                    accumulator = 0f  // drop leftover time — physics lags, but no spiral
+                    break
+                }
             }
 
             worldContainer.clear()
