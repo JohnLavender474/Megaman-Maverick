@@ -57,7 +57,7 @@ object FacingUtils {
 
             return facing ?: if (megaman.body.getX() < entity.body.getX()) Facing.LEFT else Facing.RIGHT
         } catch (e: Exception) {
-            GameLogger.error(TAG, "get(): ran into error while trying to get preferred facing value", e)
+            GameLogger.log(TAG, "get(): ran into error while trying to get preferred facing value", e)
 
             return if (megaman.body.getX() < entity.body.getX()) Facing.LEFT else Facing.RIGHT
         }
