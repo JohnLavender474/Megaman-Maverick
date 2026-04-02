@@ -340,8 +340,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             }
         }
 
-        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
-
         updateFacing()
 
         cyclesSinceLastJump = 0

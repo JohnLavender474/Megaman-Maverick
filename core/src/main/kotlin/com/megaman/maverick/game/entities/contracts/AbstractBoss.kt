@@ -147,6 +147,8 @@ abstract class AbstractBoss(
         if (spawnProps.containsKey(ConstKeys.MUSIC)) putProperty(ConstKeys.MUSIC, spawnProps.get(ConstKeys.MUSIC))
 
         super.onSpawn(spawnProps)
+
+        putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
     }
 
     override fun onDestroy() {
