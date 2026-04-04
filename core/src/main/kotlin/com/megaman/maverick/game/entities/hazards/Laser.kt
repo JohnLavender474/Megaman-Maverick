@@ -250,7 +250,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         lightSourceKeys.clear()
 
+        obstacles.forEach { GameObjectPools.free(it) }
         obstacles.clear()
+
         ignoring.clear()
 
         hitShieldFixture = null
