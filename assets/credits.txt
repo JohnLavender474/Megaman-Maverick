@@ -36,7 +36,7 @@ Reactor Man - Balloon Cart
 Glacier Man - Balloon Cart
 Rodent Man - Ansimuz
 Inferno Man - Ansimuz
-Timber Woman - Ansimuz & Anokolisa
+Timber Woman - Ansimuz
 Desert Man - Super Icon Ltd
 Wily 1 - AxeW1eld3r
 Wily 2 - Gektorne
@@ -66,3 +66,5 @@ Capcom
 
 Level Design:
 oldlavygenes
+
+THANKS FOR PLAYING!
