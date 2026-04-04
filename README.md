@@ -331,6 +331,10 @@ Works by Famitard:
 
 <img src="./img/permissions/famitard.png" width="300">
 
+Works by Metallic Warrior:
+
+<img src="./img/permissions/metallic_warrior.png" width="300">
+
 ---
 
 ## GDX Liftoff
