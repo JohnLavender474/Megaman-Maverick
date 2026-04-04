@@ -58,6 +58,7 @@ import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
@@ -72,6 +73,7 @@ import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.CameraShaker
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
+import com.megaman.maverick.game.screens.levels.events.EndGameHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
@@ -168,6 +170,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var levelStateHandler: LevelStateHandler
 
     private lateinit var endLevelEventHandler: EndLevelEventHandler
+    private lateinit var endGameHandler: EndGameHandler
 
     private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
@@ -206,7 +209,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         initialized = true
 
         levelStateHandler = LevelStateHandler(game)
+
         endLevelEventHandler = EndLevelEventHandler(game)
+        endGameHandler = EndGameHandler(game)
 
         drawables = game.getDrawables()
         shapes = game.getShapes()
@@ -427,6 +432,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerDeathEventHandler.setToEnd()
 
         endLevelEventHandler.reset()
+        endGameHandler.reset()
 
         game.setFocusSnappedAway(false)
         camerasSetToGameCamera = false
@@ -744,7 +750,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
             EventType.VICTORY_EVENT -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): victory event")
-                endLevelEventHandler.init()
+
+                val endGame = event.getOrDefaultProperty(ConstKeys.END, false, Boolean::class)
+                if (endGame) endGameHandler.init() else endLevelEventHandler.init()
             }
             EventType.SHAKE_CAM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): request to shake game cam")
@@ -832,10 +840,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 spawnsIter.remove()
             }
 
-            // because I'm not good at software design, there's a case tight coupling in this block
-            // essentially, the order in which these handlers are updated must not be modified or
+            // Because I'm not good at software design, there's some tight coupling in this block
+            // Essentially, the order in which these handlers are updated must not be modified or
             // else the flow of events in the game might become broken
             when {
+                !endGameHandler.finished -> endGameHandler.update(delta)
                 !bossHealthHandler.finished -> bossHealthHandler.update(delta)
                 !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
                 !playerSpawnEventHandler.isFinished() -> playerSpawnEventHandler.update(delta)
@@ -1005,6 +1014,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerDeathEventHandler.setToEnd()
 
         endLevelEventHandler.reset()
+        endGameHandler.reset()
 
         backgrounds.forEach { background -> background.reset() }
 

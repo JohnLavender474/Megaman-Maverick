@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="740">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="742">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/mm9endless.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
@@ -3881,14 +3881,16 @@
     <property name="swoop_explosion_bounds" type="object" value="682"/>
     <property name="top_left_warning_sign" type="object" value="673"/>
     <property name="top_right_warning_sign" type="object" value="674"/>
+    <property name="wily_lower_target" type="object" value="741"/>
+    <property name="wily_upper_target" type="object" value="740"/>
    </properties>
   </object>
   <object id="658" name="FlyIn_Target1" x="11600" y="3864" width="32" height="32"/>
   <object id="659" name="FlyIn_Target2" x="11600" y="3864" width="32" height="32"/>
   <object id="661" name="FlyIn_Target3" x="11600" y="4048" width="32" height="32"/>
   <object id="662" name="FlyIn_Target4" x="11600" y="4048" width="32" height="32"/>
-  <object id="663" name="FlyIn_Start1" x="11040" y="3872" width="32" height="32"/>
-  <object id="664" name="FlyIn_Start2" x="12160" y="3872" width="32" height="32"/>
+  <object id="663" name="FlyIn_Start1" x="11040" y="3864" width="32" height="32"/>
+  <object id="664" name="FlyIn_Start2" x="12160" y="3864" width="32" height="32"/>
   <object id="665" name="FlyIn_Start3" x="12160" y="4048" width="32" height="32"/>
   <object id="667" name="FlyIn_Start4" x="11040" y="4048" width="32" height="32"/>
   <object id="677" name="GroundWarningSign1" x="11360" y="4064" width="32" height="32"/>
@@ -3912,6 +3914,8 @@
   <object id="722" name="Phase3Spawn" x="11600" y="3864" width="32" height="32"/>
   <object id="723" name="Phase3Spawn" x="11440" y="4000" width="32" height="32"/>
   <object id="724" name="Phase3Spawn" x="11760" y="4000" width="32" height="32"/>
+  <object id="740" name="WilyMaxY" x="11600" y="3648" width="32" height="32"/>
+  <object id="741" name="WilyLowerTarget" x="11600" y="4128" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="27" name="items">
   <object id="373" name="HealthBulb" x="7552" y="5536" width="32" height="32">

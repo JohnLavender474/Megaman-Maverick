@@ -3,16 +3,37 @@ size: 2048, 2688
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+defeated/beg
+  rotate: false
+  xy: 160, 0
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+defeated/jump
+  rotate: false
+  xy: 48, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+defeated/still
+  rotate: false
+  xy: 80, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 phase_1/fly_by
   rotate: false
-  xy: 912, 0
+  xy: 1008, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 phase_1/fly_by_frozen
   rotate: false
-  xy: 1168, 0
+  xy: 1264, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -26,14 +47,14 @@ phase_1/fly_out
   index: -1
 phase_1/hover
   rotate: false
-  xy: 1424, 0
+  xy: 1520, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 phase_1/hover_frozen
   rotate: false
-  xy: 1680, 0
+  xy: 1776, 0
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -124,7 +145,7 @@ phase_2/angry
   index: -1
 phase_2/frozen
   rotate: false
-  xy: 144, 0
+  xy: 240, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -159,35 +180,35 @@ phase_2/joints/2
   index: -1
 phase_2/laugh
   rotate: false
-  xy: 400, 0
+  xy: 496, 0
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 phase_2/orb_glow
   rotate: false
-  xy: 528, 0
+  xy: 624, 0
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 phase_2/scared
   rotate: false
-  xy: 656, 0
+  xy: 752, 0
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 phase_2/scissors/chop
   rotate: false
-  xy: 96, 0
+  xy: 192, 0
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: -1
 phase_2/scissors/closed
   rotate: false
-  xy: 48, 0
+  xy: 112, 0
   size: 48, 32
   orig: 48, 32
   offset: 0, 0
@@ -215,14 +236,14 @@ phase_3/fake/hover
   index: -1
 phase_3/fake/missiles
   rotate: false
-  xy: 272, 0
+  xy: 368, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 phase_3/frozen
   rotate: false
-  xy: 144, 0
+  xy: 240, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -236,21 +257,21 @@ phase_3/hover
   index: -1
 phase_3/laugh
   rotate: false
-  xy: 400, 0
+  xy: 496, 0
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 phase_3/orb_glow
   rotate: false
-  xy: 784, 0
+  xy: 880, 0
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 phase_3/scared
   rotate: false
-  xy: 656, 0
+  xy: 752, 0
   size: 128, 256
   orig: 128, 256
   offset: 0, 0

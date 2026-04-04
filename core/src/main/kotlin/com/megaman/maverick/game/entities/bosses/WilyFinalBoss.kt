@@ -192,6 +192,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private var cachedSpawnProps: Properties? = null
 
+    private val wilyUpperTarget = Vector2()
+    private val wilyLowerTarget = Vector2()
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -250,6 +253,17 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         initSequence = true
 
         delayBetweenStates.setToEnd()
+
+        wilyUpperTarget.set(
+            spawnProps
+                .get("wily_upper_target", RectangleMapObject::class)!!
+                .rectangle.getCenter()
+        )
+        wilyLowerTarget.set(
+            spawnProps
+                .get("wily_lower_target", RectangleMapObject::class)!!
+                .rectangle.getCenter()
+        )
     }
 
     override fun onDestroy() {
