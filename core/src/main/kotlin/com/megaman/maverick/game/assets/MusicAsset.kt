@@ -62,7 +62,7 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX5_BOSS_FIGHT_MUSIC("MMX5_BossFight.mp3"),
     MMX7_BOSS_FIGHT_MUSIC("MMX7_BossFight.mp3"),
     MMX_SIGMA_FORTRESS_1_MUSIC("MMX_Sigma1st.mp3"),
-    VINNYZ_WIP_1_MUSIC("vinnyz_wip_1.mp3"),
+    VINNYZ_WIP_1_MUSIC("vinnyz_wip_1.wav"),
     MMX5_STAGE_SELECT_1_MUSIC("MMX5_StageSelect.mp3"),
     MMX5_STAGE_SELECT_2_MUSIC("MMX5_Zero_Stage_1.mp3"),
     FAMITARD_OC_1_MUSIC("Famitard_OC_1.mp3"),

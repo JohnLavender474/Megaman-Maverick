@@ -3,12 +3,14 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.getTextureAtlas
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.orderedMapOf
 import com.mega.game.engine.common.interfaces.IFaceable
 import com.mega.game.engine.common.interfaces.Updatable
@@ -23,37 +25,42 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.AnimationUtils
 
-class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable {
+class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
+    IEventListener {
 
     companion object {
         const val TAG = "DrWily"
         private const val SPRITE_SIZE = 2f
         private const val FLY_UP_SPEED = 12f
         private const val FALL_SPEED = 12f
-        private const val BEG_DUR = 1f
-        private const val STILL_DUR = 1f
+        private const val BEG_DUR = 5f
+        private const val STILL_DUR = 2f
         private val animDefs = orderedMapOf(
             "jump" pairTo AnimationDef(),
             "still" pairTo AnimationDef(),
-            "beg" pairTo AnimationDef(2, 1, 0.1f, true),
+            "beg" pairTo AnimationDef(2, 1, 0.25f, true),
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     private enum class DrWilyState { FLY_UP, FALL, LAND }
 
+    override val eventKeyMask: ObjectSet<Any> = objectSetOf(EventType.PLAYER_DONE_DYIN)
     override lateinit var facing: Facing
 
     private lateinit var state: DrWilyState
@@ -84,6 +91,8 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        game.eventsMan.addListener(this)
+
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -99,6 +108,17 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
 
         begTimer.reset()
         stillTimer.setToEnd()
+    }
+
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        game.eventsMan.removeListener(this)
+    }
+
+    override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+        if (event.key == EventType.PLAYER_DONE_DYIN) destroy()
     }
 
     override fun update(delta: Float) {
@@ -117,6 +137,8 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (position.y <= target.y) {
                     position.set(target)
                     state = DrWilyState.LAND
+                    if (!megaman.dead)
+                        game.audioMan.playMusic(MusicAsset.MM3_ALL_CLEAR_MUSIC, false)
                 }
             }
 
@@ -125,8 +147,8 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (begTimer.isJustFinished()) stillTimer.reset()
                 if (begTimer.isFinished()) {
                     stillTimer.update(delta)
-                    if (stillTimer.isJustFinished())
-                        game.eventsMan.submitEvent(Event(EventType.VICTORY_EVENT, props(ConstKeys.END pairTo true)))
+                    if (stillTimer.isJustFinished() && !megaman.dead)
+                        game.setCurrentScreen(ScreenEnum.CREDITS_SCREEN.name)
                 }
             }
         }

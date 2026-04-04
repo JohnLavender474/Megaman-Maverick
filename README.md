@@ -131,7 +131,7 @@ comprehensive listing of the credits for the artwork used in this game.
 - Rodent Man 
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137571452)
-- Precious Man - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Precious-Man-Megaman-Maverick-1087800596)
+- Precious Woman - [mrgranade](https://www.fiverr.com/mrgranade)
 - Timber Woman:
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/Timber-Woman-Mugshot-1137568070)

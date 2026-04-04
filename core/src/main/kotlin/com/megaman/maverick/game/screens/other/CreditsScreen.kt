@@ -3,8 +3,11 @@ package com.megaman.maverick.game.screens.other
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Queue
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
@@ -35,17 +38,22 @@ class CreditsScreen(
     companion object {
         const val TAG = "CreditsScreen"
         private const val DELAY_TIME = 1f
-        private const val SPEED = 1.5f
+        private const val SPEED = 2.5f
+        private const val LERP_ALPHA = 10f
         private const val FADE_OUT_TIME = 2f
     }
 
     private val delayTimer = Timer(DELAY_TIME)
     private val fadeOutTimer = Timer(FADE_OUT_TIME)
+
     private val activeFonts = Array<MegaFontHandle>()
+    private val fontTargets = ObjectMap<MegaFontHandle, Float>()
+
     private lateinit var creditsQueue: Queue<MegaFontHandle>
     private var creditsComplete = false
 
     override fun show() {
+        GameLogger.debug(TAG, "show()")
         delayTimer.reset()
         creditsQueue = CreditsLoader.load()
         game.getUiCamera().setToDefaultPosition()
@@ -83,8 +91,15 @@ class CreditsScreen(
         while (iter.hasNext()) {
             val font = iter.next()
             font.positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
-            font.positionY += SPEED * delta * ConstVals.PPM
-            if (font.positionY >= (ConstVals.VIEW_HEIGHT + 1) * ConstVals.PPM) iter.remove()
+
+            val target = fontTargets[font] + SPEED * delta * ConstVals.PPM
+            fontTargets.put(font, target)
+
+            font.positionY = MathUtils.lerp(font.positionY, target, LERP_ALPHA * delta)
+            if (font.positionY >= (ConstVals.VIEW_HEIGHT + 1) * ConstVals.PPM) {
+                iter.remove()
+                fontTargets.remove(font)
+            }
         }
         if (creditsQueue.isEmpty && activeFonts.isEmpty) {
             creditsComplete = true
@@ -96,6 +111,7 @@ class CreditsScreen(
     private fun spawnNextFont() {
         val nextFont = creditsQueue.removeFirst()
         nextFont.positionY = 0f
+        fontTargets.put(nextFont, 0f)
         activeFonts.add(nextFont)
     }
 

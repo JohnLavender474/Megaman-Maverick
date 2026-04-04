@@ -1,41 +1,28 @@
-# Pixel Art
+# CREDITS
 
-## Megaman
-
-Megaman spritesheet - Samuel_X7
-
-## Title Screen
-
+Megaman - Samuel_X7
 Title Card - Samuel_X7
 MM Pose - PixelBoy127, Samuel_X7
 
-## Robot Masters / Bosses
-
-Timber Woman - oldlavygenes, Samuel_X7
-Rodent Man - oldlavygenes, Samuel_X7
-Precious Woman - oldlavygenes
-Inferno Man - boberatu, Samuel_X7
-Moon Man - boberatu, Samuel_X7
-Reactor Man - Balloon Cart, Samuel_X7
+Bosses:
+Timber Woman - Samuel_X7
+Rodent Man - Samuel_X7
+Precious Woman - mrgranade
+Inferno Man - boberatu
+Moon Man - boberatu
+Reactor Man - Balloon Cart
 Glacier Man - Balloon Cart
 Desert Man - rcrdcat
-Final Boss (Wily) - kwad_rat
-Maverick Robot (Intro Boss) - Ansimuz
+Final Boss - kwad_rat
+Maverick Robot - Ansimuz
 Inferno Dragon - Ansimuz
 Moon Head - oldlavygenes
 Reactor Monkey - Balloon Cart
-Bospider - Bean and Shawn
 Elec Devil - boberatu
-Guts Tank - Mister Mike (not yet used)
-Penpen Maker - Mister Mike (not yet used)
-Sphinx - Mister Mike (not yet used)
-
-## Dr. Wily
 
 Wily Mugshot - Toni
 
-## Enemies
-
+Enemies:
 Samuel_X7
 Nachtyama
 MegaRed225
@@ -43,12 +30,7 @@ Balloon Cart
 Mister Mike
 Capcom
 
-## Blocks / Platforms
-
-Samuel_X7
-
-## Tilesets
-
+Tilesets:
 Intro Stage - Ansimuz
 Reactor Man - Balloon Cart
 Glacier Man - Balloon Cart
@@ -64,15 +46,11 @@ Rabbid4240
 Megaman Maker
 Capcom
 
-## Other
-
+Other:
 PJCosta5
 Kofi K
 
---------------------------------------------
-
-# Music
-
+Music:
 Famitard
 vinnyz29
 Cody O'Quinn
@@ -83,15 +61,8 @@ François Gérin-Lajoie
 MetallicWarrior
 Capcom
 
---------------------------------------------
-
-# Sound Effects
-
+Sound Effects:
 Capcom
-Nintendo
 
---------------------------------------------
-
-# Level Design
-
+Level Design:
 oldlavygenes

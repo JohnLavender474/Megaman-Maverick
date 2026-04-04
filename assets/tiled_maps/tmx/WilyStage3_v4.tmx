@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="742">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="743">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/mm9endless.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
@@ -3914,8 +3914,8 @@
   <object id="722" name="Phase3Spawn" x="11600" y="3864" width="32" height="32"/>
   <object id="723" name="Phase3Spawn" x="11440" y="4000" width="32" height="32"/>
   <object id="724" name="Phase3Spawn" x="11760" y="4000" width="32" height="32"/>
-  <object id="740" name="WilyMaxY" x="11600" y="3648" width="32" height="32"/>
-  <object id="741" name="WilyLowerTarget" x="11600" y="4128" width="32" height="32"/>
+  <object id="740" name="WilyMaxY" x="11600" y="3552" width="32" height="32"/>
+  <object id="741" name="WilyLowerTarget" x="11600" y="4144" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="27" name="items">
   <object id="373" name="HealthBulb" x="7552" y="5536" width="32" height="32">
@@ -4621,7 +4621,7 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="temp">
-  <object id="735" name="0" x="9904" y="1664" width="32" height="32"/>
+  <object id="742" name="0" x="11456" y="3536" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="player">
   <object id="4" name="0" x="304" y="6080" width="32" height="32"/>
