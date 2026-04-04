@@ -95,7 +95,8 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     SMB3_OVERWORLD_1_MUSIC("smb3_overworld_1.mp3"),
     SMB3_UNDERGROUND_MUSIC("smb3_underground.mp3"),
     MMX7_OUR_BLOOD_BOILS_MUSIC("MMX7_our_blood_boils.wav"),
-    OUR_BLOOD_BOILS_8_BIT("our_blood_boils_8bit_metallicwarrior.wav");
+    OUR_BLOOD_BOILS_8_BIT("our_blood_boils_8bit_metallicwarrior.wav"),
+    MM3_ALL_CLEAR_MUSIC("mm3_all_clear.mp3", loop = false);
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

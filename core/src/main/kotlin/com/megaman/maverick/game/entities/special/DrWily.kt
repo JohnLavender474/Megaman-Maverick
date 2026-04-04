@@ -31,6 +31,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.AnimationUtils
 
@@ -42,10 +43,11 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         private const val FLY_UP_SPEED = 12f
         private const val FALL_SPEED = 12f
         private const val BEG_DUR = 1f
+        private const val STILL_DUR = 1f
         private val animDefs = orderedMapOf(
             "jump" pairTo AnimationDef(),
+            "still" pairTo AnimationDef(),
             "beg" pairTo AnimationDef(2, 1, 0.1f, true),
-            "still" pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -61,15 +63,15 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     private var maxY = 0f
 
     private val begTimer = Timer(BEG_DUR)
+    private val stillTimer = Timer(STILL_DUR)
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             animDefs.keys().forEach {
-                val key = "defeated/$it"
-                val region = atlas.findRegion(key)
-                regions.put(key, region)
+                val region = atlas.findRegion("defeated/$it")
+                regions.put(it, region)
             }
         }
         super.init()
@@ -96,6 +98,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         state = DrWilyState.FLY_UP
 
         begTimer.reset()
+        stillTimer.setToEnd()
     }
 
     override fun update(delta: Float) {
@@ -105,6 +108,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (position.y >= maxY) {
                     position.x = target.x
                     state = DrWilyState.FALL
+                    facing = if (megaman.body.getX() > position.x) Facing.RIGHT else Facing.LEFT
                 }
             }
 
@@ -118,8 +122,12 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
 
             DrWilyState.LAND -> {
                 begTimer.update(delta)
-                if (begTimer.isJustFinished())
-                    game.eventsMan.submitEvent(Event(EventType.VICTORY_EVENT, props(ConstKeys.END pairTo true)))
+                if (begTimer.isJustFinished()) stillTimer.reset()
+                if (begTimer.isFinished()) {
+                    stillTimer.update(delta)
+                    if (stillTimer.isJustFinished())
+                        game.eventsMan.submitEvent(Event(EventType.VICTORY_EVENT, props(ConstKeys.END pairTo true)))
+                }
             }
         }
     }

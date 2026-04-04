@@ -11,14 +11,14 @@ class EndGameHandler(private val game: MegamanMaverickGame): Initializable, Upda
         get() = true
 
     override fun init(vararg params: Any) {
-        TODO("Not yet implemented")
+        // TODO
     }
 
     override fun update(delta: Float) {
-        TODO("Not yet implemented")
+        // TODO
     }
 
     override fun reset() {
-        TODO("Not yet implemented")
+        // TODO
     }
 }

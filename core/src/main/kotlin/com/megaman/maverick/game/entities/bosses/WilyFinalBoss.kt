@@ -15,6 +15,7 @@ import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
+import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.Initializable
@@ -38,6 +39,7 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.containsRegion
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.events.Event
 import com.mega.game.engine.state.EnumStateMachineBuilder
 import com.mega.game.engine.state.StateMachine
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -58,6 +60,7 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.M
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.special.DrWily
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
@@ -71,9 +74,11 @@ import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
+import com.megaman.maverick.game.entities.special.EventTrigger
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.hardMode
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -268,6 +273,25 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
+
+        if (isHealthDepleted()) {
+            val wily = MegaEntityFactory.fetch(DrWily::class)!!
+            val facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+            wily.spawn(
+                props(
+                    ConstKeys.POSITION pairTo body.getCenter(),
+                    ConstKeys.TARGET pairTo wilyLowerTarget,
+                    ConstKeys.MAX_Y pairTo wilyUpperTarget.y,
+                    ConstKeys.FACING pairTo facing
+                )
+            )
+
+            megaman.canBeDamaged = false
+            megaman.facing = if (body.getCenter().x > megaman.body.getX()) Facing.RIGHT else Facing.LEFT
+
+            game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+        }
+
         super.onDestroy()
 
         resetBody()
@@ -278,6 +302,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         frozen = false
     }
+
+    // Do not trigger an event when defeated. Instead, spawn Dr. Wily when destroyed.
+    override fun getEventOnDefeated() = null
 
     override fun onEndBossSpawnEvent() {
         GameLogger.debug(TAG, "onEndBossSpawnEvent()")
