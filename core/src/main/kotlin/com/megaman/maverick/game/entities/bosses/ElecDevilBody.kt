@@ -73,6 +73,10 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override var owner: ElecDevil? = null
     override lateinit var facing: Facing
     override var on = false
+        set(value) {
+            field = value
+            GameLogger.debug(TAG, "facing=$facing, on=$field")
+        }
 
     override val lightSourceKeys = ObjectSet<Int>()
     override val lightSourceCenter: Vector2
@@ -90,10 +94,10 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             keys.forEach { key -> regions.put(key, atlas.findRegion("${ElecDevil.TAG}/$key")) }
         }
         super.init()
-        addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -124,16 +128,13 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     internal fun getPositionOf(row: Int, column: Int): Vector2 {
         // fetched Vector2 should be freed manually
         val out = GameObjectPools.fetch(Vector2::class, false)
-
         val x = body.getX().plus(
             ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM * when {
                 isFacing(Facing.RIGHT) -> column
                 else -> ElecDevilConstants.PIECE_COLUMNS - column - 1
             }
         )
-
         val y = body.getY().plus(row * ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM)
-
         return out.set(x, y)
     }
 

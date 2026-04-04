@@ -144,18 +144,6 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         )
     }
 
-    override val damageNegotiator = object : IDamageNegotiator {
-
-        override fun get(damager: IDamager): Int {
-            if (damager !is IProjectileEntity || damager.owner != megaman) return 0
-            return when (damager) {
-                // is ChargedShot -> if (damager.fullyCharged) 2 else 1
-                is MoonScythe, /* is MagmaWave, */ is Axe -> 2
-                else -> 1
-            }
-        }
-    }
-
     internal var tankBlock: Block? = null
     internal val runningMets = Array<Met>()
     internal val heliMets = Array<HeliMet>()

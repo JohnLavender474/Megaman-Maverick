@@ -11,6 +11,7 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
+import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
@@ -58,8 +59,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(3),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) 8 else 5
-            }
+                if (it.big) 10 else 8
+            },
+            ReactorExplosion::class pairTo dmgNeg(8)
         )
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -96,8 +98,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(10),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) 15 else 10
-            }
+                if (it.big) 20 else 15
+            },
+            ReactorExplosion::class pairTo dmgNeg(15)
         )
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
@@ -134,8 +137,9 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) ConstVals.MAX_HEALTH else 15
-            }
+                if (it.big) ConstVals.MAX_HEALTH else 25
+            },
+            ReactorExplosion::class pairTo dmgNeg(25)
         )
 
         // damage is determined by the damageable's size instead of the damager's size
