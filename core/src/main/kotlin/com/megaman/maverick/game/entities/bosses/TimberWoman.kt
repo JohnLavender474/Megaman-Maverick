@@ -1022,7 +1022,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
-            val show = currentState == TimberWomanState.WALLSLIDE || defeated
+            val show = if (defeated) false else currentState == TimberWomanState.WALLSLIDE
             sprite.hidden = !show
 
             val anchor = sprites[TAG].boundingRectangle.getPositionPoint(Position.BOTTOM_CENTER)

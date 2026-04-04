@@ -115,8 +115,6 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             val totalTime = (end - start) / 1000f
             if (totalTime > DEBUG_THRESHOLD_SECS) GameLogger.debug(TAG, messageOnTooLong.invoke(totalTime))
         }
-
-        private const val TIME_TO_UPDATE = 0.25f
     }
 
     private class BlackTile(
@@ -351,14 +349,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         }
     }
 
-    private fun shouldUpdate() = darkMode && timeSinceLastUpdate >= TIME_TO_UPDATE
-
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        timeSinceLastUpdate += delta
-        if (!shouldUpdate()) return@UpdatablesComponent
-
-        timeSinceLastUpdate = 0f
-
         val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
         entities.forEach { entity -> tryToLightUp(entity) }
         entities.clear()
