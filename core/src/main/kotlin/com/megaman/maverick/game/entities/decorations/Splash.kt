@@ -79,7 +79,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                     props(
                         ConstKeys.TYPE pairTo type,
                         ConstKeys.POSITION pairTo spawn,
-                        ConstKeys.SOUND pairTo makeSound,
+                        // TODO: ConstKeys.SOUND pairTo makeSound,
                     )
                 )
             }
@@ -112,6 +112,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 rawType as? SplashType ?: if (rawType is String) SplashType.valueOf(rawType.uppercase())
                 else throw IllegalArgumentException("Type value must be a string or SplashType: $rawType")
             }
+
             else -> SplashType.BLUE
         }
 
@@ -138,10 +139,11 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
 
         cullTimer.reset()
 
-        val makeSound = spawnProps.getOrDefault(ConstKeys.SOUND, true, Boolean::class)
+        val makeSound = spawnProps.getOrDefault(ConstKeys.SOUND, type == SplashType.SAND, Boolean::class)
         if (makeSound) when (type) {
             SplashType.BLUE, SplashType.WHITE, SplashType.TOXIC ->
                 requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
+
             SplashType.SAND -> requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
             else -> {}
         }
