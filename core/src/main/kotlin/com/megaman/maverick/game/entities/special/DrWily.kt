@@ -148,7 +148,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (begTimer.isFinished()) {
                     stillTimer.update(delta)
                     if (stillTimer.isJustFinished() && !megaman.dead)
-                        game.setCurrentScreen(ScreenEnum.CREDITS_SCREEN.name)
+                        game.setCurrentScreen(ScreenEnum.ENDING_SCREEN.name)
                 }
             }
         }

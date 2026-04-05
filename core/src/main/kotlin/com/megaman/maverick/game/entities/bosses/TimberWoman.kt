@@ -56,6 +56,7 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
@@ -308,6 +309,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         damageOverrides.put(Fireball::class, dmgNeg(5))
         damageOverrides.put(MagmaWave::class, dmgNeg(5))
         damageOverrides.put(MagmaFlame::class, dmgNeg(5))
+        damageOverrides.put(ReactorExplosion::class, dmgNeg(3))
+        damageOverrides.put(ReactorManProjectile::class, dmgNeg(3))
     }
 
     override fun onSpawn(spawnProps: Properties) {

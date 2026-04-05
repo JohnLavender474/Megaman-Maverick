@@ -351,6 +351,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.ROBOT_MASTER_INTRO_SCREEN.name, RobotMasterIntroScreen(this))
         screens.put(ScreenEnum.GET_WEAPONS_SCREEN.name, GetWeaponScreen(this))
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
+        screens.put(ScreenEnum.ENDING_SCREEN.name, EndingScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
         setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)

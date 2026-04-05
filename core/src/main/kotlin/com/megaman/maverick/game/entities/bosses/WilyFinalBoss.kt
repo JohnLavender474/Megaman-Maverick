@@ -54,14 +54,12 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.OFF_SCREEN_BUFFER
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.special.DrWily
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.WarningSign
@@ -75,7 +73,7 @@ import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
-import com.megaman.maverick.game.entities.special.EventTrigger
+import com.megaman.maverick.game.entities.special.DrWily
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.hardMode

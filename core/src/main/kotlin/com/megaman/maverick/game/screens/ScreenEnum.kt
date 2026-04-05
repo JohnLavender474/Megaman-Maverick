@@ -14,5 +14,6 @@ enum class ScreenEnum {
     GET_WEAPONS_SCREEN,
     SAVE_GAME_SCREEN,
     GAME_OVER_SCREEN,
+    ENDING_SCREEN,
     CREDITS_SCREEN
 }
