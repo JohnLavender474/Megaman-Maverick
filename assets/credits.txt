@@ -67,4 +67,10 @@ Capcom
 Level Design:
 oldlavygenes
 
+Programming:
+oldlavygenes
+
+Director:
+oldlavygenes
+
 THANKS FOR PLAYING!

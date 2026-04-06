@@ -8,7 +8,6 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -17,6 +16,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class EndingScreen(private val game: MegamanMaverickGame) : BaseScreen() {
@@ -59,21 +59,17 @@ class EndingScreen(private val game: MegamanMaverickGame) : BaseScreen() {
 
     private enum class SlideState { FADE_IN, SHOW, FADE_OUT }
 
-    private val fadeInTimer = Timer(FADE_IN_DUR)
+    private val fadeIn = Fade(Fade.FadeType.FADE_IN, FADE_IN_DUR)
+    private val fadeOut = Fade(Fade.FadeType.FADE_OUT, FADE_OUT_DUR)
+
     private val showTimer = Timer(SHOW_DUR)
-    private val fadeOutTimer = Timer(FADE_OUT_DUR)
+    private val doneTimer = Timer(DONE_DUR)
 
     private val slideQueue = Queue<Array<MegaFontHandle>>()
     private var currentLines = Array<MegaFontHandle>()
     private var slideState = SlideState.FADE_IN
 
     private var done = false
-    private val doneTimer = Timer(DONE_DUR)
-
-    // Alpha of the black overlay: 1 = fully black (text hidden), 0 = transparent (text visible).
-    // Using an overlay instead of font alpha sidesteps unreliable BitmapFont alpha behavior.
-    private var overlayAlpha = 1f
-    private val overlay = GameSprite()
 
     override fun show() {
         GameLogger.debug(TAG, "show()")
@@ -82,15 +78,25 @@ class EndingScreen(private val game: MegamanMaverickGame) : BaseScreen() {
         game.getUiCamera().setToDefaultPosition()
 
         val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
-        overlay.setRegion(black)
-        overlay.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val w = ConstVals.VIEW_WIDTH * ConstVals.PPM
+        val h = ConstVals.VIEW_HEIGHT * ConstVals.PPM
+
+        fadeIn.setRegion(black)
+        fadeIn.setX(0f)
+        fadeIn.setY(0f)
+        fadeIn.setWidth(w)
+        fadeIn.setHeight(h)
+
+        fadeOut.setRegion(black)
+        fadeOut.setX(0f)
+        fadeOut.setY(0f)
+        fadeOut.setWidth(w)
+        fadeOut.setHeight(h)
 
         slideQueue.clear()
 
         done = false
         doneTimer.reset()
-
-        overlayAlpha = 1f
 
         STORY_SLIDES.forEach { lines ->
             val n = lines.size
@@ -116,18 +122,16 @@ class EndingScreen(private val game: MegamanMaverickGame) : BaseScreen() {
         if (slideQueue.isEmpty) {
             done = true
             game.audioMan.fadeOutMusic(DONE_DUR)
-            overlayAlpha = 1f
             return
         }
 
         currentLines = slideQueue.removeFirst()
         slideState = SlideState.FADE_IN
 
-        overlayAlpha = 1f
+        fadeIn.init()
+        fadeOut.init()
 
-        fadeInTimer.reset()
         showTimer.reset()
-        fadeOutTimer.reset()
     }
 
     override fun render(delta: Float) {
@@ -139,21 +143,18 @@ class EndingScreen(private val game: MegamanMaverickGame) : BaseScreen() {
 
         when (slideState) {
             SlideState.FADE_IN -> {
-                fadeInTimer.update(delta)
-                overlayAlpha = 1f - fadeInTimer.getRatio()
-                if (fadeInTimer.isFinished()) slideState = SlideState.SHOW
+                fadeIn.update(delta)
+                if (fadeIn.isFinished()) slideState = SlideState.SHOW
             }
 
             SlideState.SHOW -> {
                 showTimer.update(delta)
-                overlayAlpha = 0f
                 if (showTimer.isFinished()) slideState = SlideState.FADE_OUT
             }
 
             SlideState.FADE_OUT -> {
-                fadeOutTimer.update(delta)
-                overlayAlpha = fadeOutTimer.getRatio()
-                if (fadeOutTimer.isFinished()) advanceSlide()
+                fadeOut.update(delta)
+                if (fadeOut.isFinished()) advanceSlide()
             }
         }
     }
@@ -162,8 +163,11 @@ class EndingScreen(private val game: MegamanMaverickGame) : BaseScreen() {
         drawer.projectionMatrix = game.getUiCamera().combined
         drawer.begin()
         if (!done) currentLines.forEach { it.draw(drawer) }
-        overlay.setAlpha(overlayAlpha)
-        overlay.draw(drawer)
+        when (slideState) {
+            SlideState.FADE_IN -> fadeIn.draw(drawer)
+            SlideState.FADE_OUT -> fadeOut.draw(drawer)
+            else -> {}
+        }
         drawer.end()
     }
 }
