@@ -876,10 +876,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             MegaChargeStatus.FULLY_CHARGED -> {
                 val spawn = when (megaman.direction) {
                     Direction.UP -> megaman.body.getPositionPoint(Position.BOTTOM_CENTER)
-                        .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0f)
+                        .add(ConstVals.PPM.toFloat() * megaman.facing.value, 0.25f * ConstVals.PPM)
 
                     Direction.DOWN -> megaman.body.getPositionPoint(Position.TOP_CENTER)
-                        .add(ConstVals.PPM.toFloat() * -megaman.facing.value, 0f)
+                        .add(ConstVals.PPM.toFloat() * -megaman.facing.value, -0.25f * ConstVals.PPM)
 
                     Direction.LEFT -> megaman.body.getPositionPoint(Position.CENTER_RIGHT)
                         .add(-ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat() * megaman.facing.value)
