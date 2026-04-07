@@ -5,15 +5,16 @@
 Megaman Maverick is a non-commercial fan game based on the [classic Megaman series by Capcom](https://megaman.fandom.com/wiki/Mega_Man_(original_series)). 
 All rights to "Megaman" are owned by Capcom, and this project aligns with their lenient stance on fan works.
 
-Currently in pre-alpha, the game features assets from official Capcom titles and the community (see [Credits](#Credits)). 
-Special thanks to these creators for helping make this dream project a reality!
-
-- Framework: [LibGDX](https://libgdx.com/)
-- Language: [Kotlin](https://kotlinlang.org/)
+Download and play the game on [itch.io](https://oldlavygenes474.itch.io/mega-man-maverick)!
 
 Check out my [YouTube channel](https://youtube.com/playlist?list=PL4ZszXL-HC0r0E6Eb5NCFGhsi93AXoDZj&si=IITydzhhTSKmxc5-) for demos!
 
-Join the [Discord server](https://discord.gg/Cab2XMKs) for updates!
+
+The game features assets from official Capcom titles and the community (see [Credits](#Credits)).
+Special thanks to these creators for helping make this dream project become a reality!
+
+- Framework: [LibGDX](https://libgdx.com/)
+- Language: [Kotlin](https://kotlinlang.org/)
 
 <img src="img/MainScreen.png" width="600px"/>
 <img src="img/BossSelectScreen.png" width="600px"/>
