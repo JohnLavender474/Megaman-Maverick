@@ -309,16 +309,12 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         MegamanWeapon.FRIGID_SHOT -> MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { 1 },
-            halfChargedCost = { 2 },
-            fullyChargedCost = { 3 },
             chargeable = { _ -> false /* TODO: true */ }
         )
 
         MegamanWeapon.INFERNAL_BARRAGE -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
-            normalCost = { 5 },
-            halfChargedCost = { 7 },
-            fullyChargedCost = { 9 },
+            normalCost = { 3 },
             chargeable = { _ -> false /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ },
             canFireWeapon = { _, _ -> true /* TODO: !megaman.body.isSensing(BodySense.IN_WATER) */ }
         )
@@ -326,8 +322,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         MegamanWeapon.MOON_SCYTHES -> object : MegaWeaponHandler(
             cooldown = Timer(0.1f),
             normalCost = { 3 },
-            halfChargedCost = { 3 },
-            fullyChargedCost = { 3 },
             chargeable = chargeable@{ return@chargeable false },
         ) {
 
@@ -513,7 +507,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         MegamanWeapon.REACTOR_SHOT -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
-            normalCost = { 3 },
+            normalCost = { 2 },
             chargeable = { false },
             canFireWeapon = { _, _ -> true }
         )

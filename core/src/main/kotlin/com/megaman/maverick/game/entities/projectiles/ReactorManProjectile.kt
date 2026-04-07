@@ -10,11 +10,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.extensions.setToDirection
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -199,7 +195,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         if (!active || shieldFixture.getEntity() == owner) return
 
         if (bounces >= 3) {
-            explodeAndDie()
+            if (big) shatter(otherShape) else explodeAndDie()
             return
         }
 
