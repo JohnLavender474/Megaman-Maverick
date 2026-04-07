@@ -142,6 +142,12 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         explodeAndDie()
     }
 
+    override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val id = shieldFixture.getEntity().id
+        if (ignore.contains(id)) return
+        explodeAndDie()
+    }
+
     override fun hitExplosion(explosionFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
         explodeAndDie()
 

@@ -33,7 +33,7 @@ AppearingBrick
   index: -1
 AppearingBrick2
   rotate: false
-  xy: 164, 650
+  xy: 182, 650
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -113,6 +113,13 @@ BreakableIce/Shards
   xy: 0, 52
   size: 160, 32
   orig: 160, 32
+  offset: 0, 0
+  index: -1
+BreakableIce/SmallShards
+  rotate: false
+  xy: 164, 650
+  size: 16, 80
+  orig: 16, 80
   offset: 0, 0
   index: -1
 Brick
@@ -285,7 +292,7 @@ GearTrolleyPlatform
   index: -1
 GoldBlock
   rotate: false
-  xy: 232, 650
+  xy: 250, 650
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -348,7 +355,7 @@ Platform2
   index: -1
 PreciousBlock
   rotate: false
-  xy: 198, 650
+  xy: 216, 650
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -376,7 +383,7 @@ RocketPlatform
   index: -1
 RocketPlatform_v2
   rotate: false
-  xy: 428, 650
+  xy: 446, 650
   size: 24, 448
   orig: 24, 448
   offset: 0, 0
@@ -425,7 +432,7 @@ WoodBlock1
   index: -1
 WoodCrate/burning
   rotate: false
-  xy: 362, 650
+  xy: 380, 650
   size: 64, 192
   orig: 64, 192
   offset: 0, 0

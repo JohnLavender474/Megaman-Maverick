@@ -14,6 +14,7 @@ import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -26,8 +27,10 @@ import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.setHitByProjectileReceiver
 
 class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, IAudioEntity {
 
@@ -76,12 +79,28 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
     }
 
     override fun hitByProjectile(projectileFixture: IFixture) {
-        val projectile = projectileFixture.getEntity() as IProjectileEntity
-        when (projectile) {
+        when (val projectile = projectileFixture.getEntity() as IProjectileEntity) {
             is Bullet, is TeardropBlast, is SlashWave -> hit()
             is MoonScythe, is IFireEntity -> explodeAndDie()
             is ChargedShot -> if (projectile.fullyCharged) explodeAndDie() else hit(2)
         }
+    }
+
+    override fun defineBodyComponent(): BodyComponent {
+        val component = super.defineBodyComponent()
+        val body = component.body
+        body.forEachFixture { fixture ->
+            if (fixture.getType() == FixtureType.SHIELD) {
+                fixture.setHitByProjectileReceiver { projectile ->
+                    when (projectile) {
+                        is Bullet, is TeardropBlast, is SlashWave -> hit()
+                        is MoonScythe, is IFireEntity -> explodeAndDie()
+                        is ChargedShot -> if (projectile.fullyCharged) explodeAndDie() else hit(2)
+                    }
+                }
+            }
+        }
+        return component
     }
 
     private fun hit(increment: Int = 1) {

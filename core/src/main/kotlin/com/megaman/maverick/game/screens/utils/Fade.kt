@@ -42,7 +42,7 @@ class Fade(private val type: FadeType, duration: Float, private val steps: Int? 
 
     override fun draw(drawer: Batch) {
         val raw = timer.getRatio()
-        val ratio = if (steps != null) floor(raw * steps).toFloat() / steps else raw
+        val ratio = if (steps != null) floor(raw * steps) / steps else raw
         val alpha = when (type) {
             FadeType.FADE_IN -> 1f - ratio
             FadeType.FADE_OUT -> ratio

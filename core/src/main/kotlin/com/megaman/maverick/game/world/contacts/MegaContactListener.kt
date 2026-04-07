@@ -659,6 +659,7 @@ class MegaContactListener(
 
                     // If the body has a "shield" property set to true, then the projectile should ignore
                     // the block fixture and instead make contact only with the other body's shield fixture.
+                    // IMPORTANT: If the body does NOT have a shield fixture, then nothing will trigger.
                     val shielded = otherFixture.getBody().isProperty(ConstKeys.SHIELD, true)
                     if (shielded) return
 

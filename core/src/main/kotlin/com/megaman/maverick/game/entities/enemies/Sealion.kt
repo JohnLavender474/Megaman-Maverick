@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.floor
 
 class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
     IFreezableEntity, IDrawableShapesEntity {
@@ -54,9 +55,10 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         private const val WAIT_DUR = 0.25f
         private const val TAUNT_DUR = 1f
         private const val BEFORE_THROW_BALL_DELAY = 0.25f
-        private const val POUT_SINK_DELAY = 1f
-        private const val POUT_FADE_OUT_DUR = 2.5f
-        private const val SINK_VELOCITY_Y = -0.75f
+        private const val POUT_SINK_DELAY = 0.5f
+        private const val POUT_FADE_OUT_DUR = 0.5f
+        private const val POUT_FADE_ALPHA_STEPS = 5
+        private const val SINK_VELOCITY_Y = -1f
         private const val BALL_CATCH_BOUNDS_OFFSET_X = -0.25f
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -260,7 +262,8 @@ class Sealion(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
             when {
                 fadingOut -> {
                     val fadeOutTimer = timers["pout_fade_out"]
-                    sprite.setAlpha(1f - fadeOutTimer.getRatio())
+                    val alpha = floor(fadeOutTimer.getRatio() * POUT_FADE_ALPHA_STEPS) / POUT_FADE_ALPHA_STEPS
+                    sprite.setAlpha(1f - alpha)
                 }
 
                 else -> sprite.setAlpha(1f)

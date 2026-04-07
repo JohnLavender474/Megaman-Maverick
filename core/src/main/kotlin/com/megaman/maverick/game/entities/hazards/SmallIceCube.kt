@@ -151,7 +151,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
 
     override fun shatterAndDie() {
         GameLogger.debug(TAG, "shatterAndDie()")
-        IceShard.spawn5(body.getCenter())
+        IceShard.spawn5(body.getCenter(), TAG)
         if (owner == megaman) {
             val explosion = MegaEntityFactory.fetch(IceBombExplosion::class)!!
             explosion.spawn(props(ConstKeys.OWNER pairTo megaman, ConstKeys.POSITION pairTo body.getCenter()))

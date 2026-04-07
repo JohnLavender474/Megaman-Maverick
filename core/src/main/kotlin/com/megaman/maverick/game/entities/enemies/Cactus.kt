@@ -352,7 +352,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
             GameLogger.debug(TAG, "onChangeState(): spawn needles")
             spawnNeedles()
         } else if (previous == CactusState.FROZEN) {
-            IceShard.spawn5(body.getCenter())
+            IceShard.spawn5(body.getCenter(), SmallIceCube.TAG)
             damageTimer.reset()
         }
     }

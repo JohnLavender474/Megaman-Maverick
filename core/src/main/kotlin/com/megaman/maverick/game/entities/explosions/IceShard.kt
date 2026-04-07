@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableIce
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -50,11 +51,8 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         private val SPAWNED_QUEUE = Queue<IceShard>()
 
         private const val FADE_OUT_DUR = 0.25f
-
         private const val GRAVITY = -0.15f
-
         private val SCALARS = ObjectMap<String, Float>()
-
         private val TRAJECTORIES = gdxArrayOf(
             Vector2(-7f, 5f),
             Vector2(-3f, 7f),
@@ -90,13 +88,19 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             val array1 = Array<TextureRegion>()
             val out1 = region1.splitAndFlatten(1, 5, array1)
             TEXTURES.put(BreakableIce.TAG, out1)
-            SCALARS.put(BreakableIce.TAG, 1f)
+            SCALARS.put(BreakableIce.TAG, 2f)
 
             val region2 = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "IcicleShards")
             val array2 = Array<TextureRegion>()
-            val out2 = region2.splitAndFlatten(1, 5, array2)
+            val out2 = region2.splitAndFlatten(5, 1, array2)
             TEXTURES.put(FallingIcicle.TAG, out2)
-            SCALARS.put(FallingIcicle.TAG, 0.5f)
+            SCALARS.put(FallingIcicle.TAG, 1f)
+
+            val region3 = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "BreakableIce/SmallShards")
+            val array3 = Array<TextureRegion>()
+            val out3 = region3.splitAndFlatten(5, 1, array3)
+            TEXTURES.put(SmallIceCube.TAG, out3)
+            SCALARS.put(SmallIceCube.TAG, 1f)
         }
         super.init()
         addComponent(AudioComponent())
@@ -113,15 +117,14 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        val tag = spawnProps.getOrDefault(ConstKeys.TAG, BreakableIce.TAG, String::class)
-        val scalar = SCALARS[tag]
-
         val index = spawnProps.get(ConstKeys.INDEX, Int::class)!!
         val velocity = GameObjectPools.fetch(Vector2::class)
             .set(TRAJECTORIES[index])
-            .scl(scalar * ConstVals.PPM)
+            .scl(ConstVals.PPM.toFloat())
         body.physics.velocity.set(velocity)
 
+        val tag = spawnProps.getOrDefault(ConstKeys.TAG, BreakableIce.TAG, String::class)
+        val scalar = SCALARS[tag]
         val region = TEXTURES[tag].get(index)
         defaultSprite.setRegion(region)
         defaultSprite.setSize(scalar * ConstVals.PPM)
@@ -171,7 +174,6 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        sprite.setSize(ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.setCenter(body.getCenter())
