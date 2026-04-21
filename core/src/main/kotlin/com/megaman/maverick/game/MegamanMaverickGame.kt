@@ -384,7 +384,9 @@ class MegamanMaverickGame(
                 batch.end()
             }
         } else {
-            val delta = Gdx.graphics.deltaTime
+            // Coerce the FPS to be no greater than 1/30 seconds.
+            // The FPS for this game should be 1/60 seconds.
+            val delta = Gdx.graphics.deltaTime.coerceAtMost(1f / 30f)
 
             controllerPoller.run()
             screenController?.update(delta)
