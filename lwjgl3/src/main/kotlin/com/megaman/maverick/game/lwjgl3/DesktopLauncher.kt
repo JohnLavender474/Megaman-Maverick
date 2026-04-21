@@ -7,7 +7,6 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
 import com.mega.game.engine.common.GameLogLevel
-import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.MegamanMaverickGameParams
 import kotlin.system.exitProcess
@@ -72,9 +71,8 @@ object DesktopLauncher {
         config.setForegroundFPS(appArgs.fps)
         config.setResizable(appArgs.resizable)
         config.setWindowIcon(WINDOW_ICON_PATH)
-        config.setPauseWhenMinimized(false)
-        config.setPauseWhenMinimized(false)
-        config.useVsync(true)
+        config.setPauseWhenMinimized(true)
+        config.useVsync(false)
         when {
             appArgs.fullScreen -> config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
             appArgs.maximized -> config.setMaximized(true)
