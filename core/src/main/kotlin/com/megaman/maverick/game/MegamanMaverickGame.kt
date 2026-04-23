@@ -401,7 +401,10 @@ class MegamanMaverickGame(
 
             val delta = Gdx.graphics.deltaTime
 
+            diagnostics?.beginEntry("controllerPoller")
             controllerPoller.run()
+            diagnostics?.endEntry()
+
             screenController?.update(delta)
 
             val screen = currentScreen
@@ -427,8 +430,14 @@ class MegamanMaverickGame(
                 }
             }
 
+            diagnostics?.beginEntry("eventsMan")
             eventsMan.run()
+            diagnostics?.endEntry()
+
+            diagnostics?.beginEntry("audioMan")
             audioMan.update(delta)
+            diagnostics?.endEntry()
+
             updatables.values().forEach { it.update(delta) }
 
             diagnostics?.endFrame()

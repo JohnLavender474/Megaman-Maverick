@@ -9,6 +9,7 @@ import com.mega.game.engine.common.objects.Pool
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
 import com.mega.game.engine.world.body.BodyComponent
@@ -18,7 +19,6 @@ import com.mega.game.engine.world.collisions.ICollisionHandler
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.contacts.IContactFilter
 import com.mega.game.engine.world.contacts.IContactListener
-import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.world.container.IWorldContainer
 
 class WorldSystem(
@@ -101,9 +101,11 @@ class WorldSystem(
             while (accumulator >= fixedStep) {
                 accumulator -= fixedStep / fixedStepScalar
                 iterations++
+
                 diagnostics?.beginEntry("cycle[$iterations]")
                 cycle(reusableBodyArray, fixedStep)
                 diagnostics?.endEntry()
+
                 if (iterations >= maxIterations) {
                     accumulator = 0f  // drop leftover time — physics lags, but no spiral
                     break

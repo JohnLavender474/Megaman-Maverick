@@ -183,5 +183,5 @@ Thumbs.db
 /assets/*-diagnostics.txt
 /assets/diagnostics_output/
 
-## Diagnostics tooling
-/utils/diagnostics/.venv/
+## venv
+.venv/
