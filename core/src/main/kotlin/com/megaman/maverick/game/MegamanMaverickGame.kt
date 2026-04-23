@@ -42,6 +42,7 @@ import com.mega.game.engine.controller.buttons.ControllerButtons
 import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.cullables.CullablesSystem
 import com.mega.game.engine.cullables.GameEntityCuller
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.drawables.fonts.FontsSystem
 import com.mega.game.engine.drawables.shapes.DrawableShapesSystem
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -124,6 +125,8 @@ class MegamanMaverickGameParams {
     var soundVolume: Float = 0.5f
     var allowScreenshots: Boolean = false
     var showScreenController: Boolean = false
+    var vsync: Boolean = false
+    var diagnostics: Boolean = false
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
 }
 
@@ -191,6 +194,10 @@ class MegamanMaverickGame(
     private var debugWindow: DebugWindow? = null
 
     private var pixelPerfect = false
+    private var vsync = false
+
+    var diagnostics: RuntimeDiagnostics? = null
+        private set
 
     override fun create() {
         params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
@@ -226,10 +233,14 @@ class MegamanMaverickGame(
         eventsMan = EventsManager()
         eventsMan.addListener(this)
 
+        if (params.diagnostics)
+            diagnostics = RuntimeDiagnostics("${System.currentTimeMillis()}-diagnostics.txt")
+
         engine = createGameEngine()
         state = GameState()
 
         this.pixelPerfect = params.pixelPerfect
+        this.vsync = params.vsync
 
         val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
@@ -361,6 +372,8 @@ class MegamanMaverickGame(
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+        setDebugText("FPS: ${Gdx.graphics.framesPerSecond}")
+
         while (!runQueue.isEmpty) {
             val runnable = runQueue.removeLast()
             runnable.invoke()
@@ -384,9 +397,9 @@ class MegamanMaverickGame(
                 batch.end()
             }
         } else {
-            // Coerce the FPS to be no greater than 1/30 seconds.
-            // The FPS for this game should be 1/60 seconds.
-            val delta = Gdx.graphics.deltaTime.coerceAtMost(1f / 30f)
+            diagnostics?.beginFrame()
+
+            val delta = Gdx.graphics.deltaTime
 
             controllerPoller.run()
             screenController?.update(delta)
@@ -417,6 +430,8 @@ class MegamanMaverickGame(
             eventsMan.run()
             audioMan.update(delta)
             updatables.values().forEach { it.update(delta) }
+
+            diagnostics?.endFrame()
         }
 
         if (params.debugText) {
@@ -535,6 +550,7 @@ class MegamanMaverickGame(
         }
         disposeActions.add { debugWindow?.dispose() }
         disposeActions.add { logFileWriter?.dispose() }
+        disposeActions.add { diagnostics?.dispose() }
 
         disposeActions.forEach {
             try {
@@ -625,7 +641,8 @@ class MegamanMaverickGame(
                     collisionHandler = MegaCollisionHandler(this),
                     contactFilter = MegaContactFilter(),
                     fixedStepScalar = params.fixedStepScalar,
-                    maxIterations = MathUtils.ceil(params.fixedStepScalar / (ConstVals.FIXED_TIME_STEP * params.fps))
+                    maxIterations = MathUtils.ceil(params.fixedStepScalar / (ConstVals.FIXED_TIME_STEP * params.fps)),
+                    diagnostics = diagnostics
                 ),
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {
@@ -800,4 +817,12 @@ class MegamanMaverickGame(
     fun isFocusSnappedAway() = getOrDefaultProperty("focus_snapped_away", false, Boolean::class)
 
     fun isPixelPerfect() = pixelPerfect
+
+    fun isVsync() = vsync
+
+    fun setVsync(value: Boolean) {
+        if (vsync == value) return
+        vsync = value
+        Gdx.graphics.setVSync(value)
+    }
 }

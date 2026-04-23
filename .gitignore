@@ -180,3 +180,8 @@ Thumbs.db
 ## Assets
 /assets/assets.txt
 /assets/logs.txt
+/assets/*-diagnostics.txt
+/assets/diagnostics_output/
+
+## Diagnostics tooling
+/utils/diagnostics/.venv/

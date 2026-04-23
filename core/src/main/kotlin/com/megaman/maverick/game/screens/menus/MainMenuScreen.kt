@@ -52,6 +52,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         MUSIC_VOLUME("MUSIC VOLUME"),
         EFFECTS_VOLUME("SFX VOLUME"),
         PIXEL_PERFECT("PIXEL PERFECT"),
+        VSYNC("VSYNC"),
         KEYBOARD_SETTINGS("KEYBOARD SETTINGS"),
         CONTROLLER_SETTINGS("CONTROLLER SETTINGS")
     }
@@ -116,6 +117,9 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             val textSupplier: () -> String = when (it) {
                 MainScreenSettingsButton.PIXEL_PERFECT -> {
                     { "${it.text}: ${game.isPixelPerfect().toString().uppercase()}" }
+                }
+                MainScreenSettingsButton.VSYNC -> {
+                    { "${it.text}: ${game.isVsync().toString().uppercase()}" }
                 }
                 else -> {
                     { it.text }
@@ -378,7 +382,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
-                    Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    Direction.DOWN -> MainScreenSettingsButton.VSYNC.text
                     Direction.LEFT, Direction.RIGHT -> {
                         val pixelPerfect = game.isPixelPerfect()
 
@@ -396,6 +400,25 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         )
 
         buttons.put(
+            MainScreenSettingsButton.VSYNC.text,
+            object : IMenuButton {
+
+                override fun onSelect(delta: Float): Boolean {
+                    game.setVsync(!game.isVsync())
+                    return false
+                }
+
+                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                    Direction.UP -> MainScreenSettingsButton.PIXEL_PERFECT.text
+                    Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    Direction.LEFT, Direction.RIGHT -> {
+                        game.setVsync(!game.isVsync())
+                        buttonKey
+                    }
+                }
+            })
+
+        buttons.put(
             MainScreenSettingsButton.KEYBOARD_SETTINGS.text,
             object : IMenuButton {
 
@@ -405,7 +428,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.PIXEL_PERFECT.text
+                    Direction.UP -> MainScreenSettingsButton.VSYNC.text
                     Direction.DOWN -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
                     else -> buttonKey
                 }

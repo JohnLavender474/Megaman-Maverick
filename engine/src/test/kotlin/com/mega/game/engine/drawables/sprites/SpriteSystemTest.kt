@@ -35,7 +35,9 @@ class SpriteSystemTest :
                 map.put("3", mockSprite3)
                 mockSpritesComponent = mockk {
                     every { sprites } returns map
-                    every { update(any()) } just Runs
+                    every { doUpdateAndDraw } returns { true }
+                    every { preProcess(any()) } just Runs
+                    every { postProcess(any()) } just Runs
                 }
 
                 entity = MockGameEntity()

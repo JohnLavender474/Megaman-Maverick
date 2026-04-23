@@ -16,3 +16,12 @@ dependencies {
   testImplementation "io.kotest:kotest-property:4.0.2"
   testImplementation "io.mockk:mockk:1.13.7"
 }
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+    showStandardStreams = false
+    exceptionFormat = "full"
+  }
+}

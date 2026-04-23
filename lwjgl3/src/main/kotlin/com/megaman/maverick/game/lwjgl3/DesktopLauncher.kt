@@ -37,6 +37,8 @@ object DesktopLauncher {
     private const val DEFAULT_ALLOW_SCREENSHOTS = false
     private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
     private const val DEFAULT_PIXEL_PERFECT = false
+    private const val DEFAULT_VSYNC = false
+    private const val DEFAULT_DIAGNOSTICS = false
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -71,8 +73,8 @@ object DesktopLauncher {
         config.setForegroundFPS(appArgs.fps)
         config.setResizable(appArgs.resizable)
         config.setWindowIcon(WINDOW_ICON_PATH)
-        config.setPauseWhenMinimized(true)
-        config.useVsync(false)
+        config.setPauseWhenMinimized(false)
+        config.useVsync(appArgs.vsync)
         when {
             appArgs.fullScreen -> config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode())
             appArgs.maximized -> config.setMaximized(true)
@@ -81,6 +83,7 @@ object DesktopLauncher {
 
         val params = MegamanMaverickGameParams()
         params.fps = appArgs.fps
+        params.vsync = appArgs.vsync
         params.debugText = appArgs.debugText
         params.debugWindow = appArgs.debugWindow
         params.debugShapes = appArgs.debugShapes
@@ -91,6 +94,7 @@ object DesktopLauncher {
         params.fixedStepScalar = appArgs.fixedStepScalar
         params.allowScreenshots = appArgs.allowScreenshots
         params.showScreenController = appArgs.showScreenController
+        params.diagnostics = appArgs.diagnostics
 
         val logLevels = appArgs.logLevels.replace("\\s+", "").split(",").filter { !it.isBlank() }
         try {
@@ -261,5 +265,18 @@ object DesktopLauncher {
             description = ("Sets whether to use a pixel-perfect viewport. Default value is $DEFAULT_PIXEL_PERFECT")
         )
         var pixelPerfect = DEFAULT_PIXEL_PERFECT
+
+        @Parameter(
+            names = ["--vsync"],
+            description = ("Sets whether to enable VSync.")
+        )
+        var vsync = DEFAULT_VSYNC
+
+        @Parameter(
+            names = ["--diagnostics"],
+            description = ("Enable runtime diagnostics. Writes per-frame timing data to a " +
+                "<epoch>-diagnostics.txt file in the working directory. Default value is $DEFAULT_DIAGNOSTICS")
+        )
+        var diagnostics = DEFAULT_DIAGNOSTICS
     }
 }

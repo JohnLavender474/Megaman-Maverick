@@ -371,7 +371,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             if (phaseTransitionHandler.active) {
                 phaseTransitionHandler.update(delta)
-                game.setDebugText("${phaseTransitionHandler.state}")
                 return@add
             }
 
@@ -421,9 +420,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         currentStateMachine as StateMachine<WilyPhase1State>
 
                     val state = phase1StateMachine.getCurrentElement()
-
-                    val stateTime = phase1Handler.stateTimers[state]?.time
-                    game.setDebugText("$state: $stateTime")
 
                     when (state) {
                         WilyPhase1State.SWOOP -> {

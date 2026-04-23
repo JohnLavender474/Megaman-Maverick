@@ -18,6 +18,7 @@ import com.mega.game.engine.world.collisions.ICollisionHandler
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.contacts.IContactFilter
 import com.mega.game.engine.world.contacts.IContactListener
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.world.container.IWorldContainer
 
 class WorldSystem(
@@ -28,7 +29,8 @@ class WorldSystem(
     private val collisionHandler: ICollisionHandler,
     private val contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
-    var maxIterations: Int = Int.MAX_VALUE // max iters cap does not account for fixed step scalar
+    var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
+    private val diagnostics: RuntimeDiagnostics? = null
 ) : GameSystem(BodyComponent::class) {
 
     companion object {
@@ -79,9 +81,12 @@ class WorldSystem(
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
 
+        diagnostics?.beginEntry("WorldSystem")
+
         accumulator += delta
 
         if (accumulator >= fixedStep) {
+            diagnostics?.beginEntry("buildBodyArray")
             entities.forEach { entity ->
                 try {
                     val component = entity.getComponent(BodyComponent::class)!!
@@ -90,25 +95,33 @@ class WorldSystem(
                     throw Exception("Exception occured while processing world for entity: $entity", e)
                 }
             }
+            diagnostics?.endEntry()
 
             var iterations = 0
             while (accumulator >= fixedStep) {
                 accumulator -= fixedStep / fixedStepScalar
+                iterations++
+                diagnostics?.beginEntry("cycle[$iterations]")
                 cycle(reusableBodyArray, fixedStep)
-                if (++iterations >= maxIterations) {
+                diagnostics?.endEntry()
+                if (iterations >= maxIterations) {
                     accumulator = 0f  // drop leftover time — physics lags, but no spiral
                     break
                 }
             }
 
+            diagnostics?.beginEntry("updateWorldContainer")
             worldContainer.clear()
             reusableBodyArray.forEach { body ->
                 if (body.physics.collisionOn) worldContainer.addBody(body)
                 body.forEachFixture { if (it.isActive()) worldContainer.addFixture(it) }
             }
+            diagnostics?.endEntry()
 
             reusableBodyArray.clear()
         }
+
+        diagnostics?.endEntry()
     }
 
     override fun reset() {
@@ -126,23 +139,35 @@ class WorldSystem(
     internal fun filterContact(fixture1: IFixture, fixture2: IFixture) = contactFilter.filter(fixture1, fixture2)
 
     internal fun cycle(bodies: Array<IBody>, delta: Float) {
+        diagnostics?.beginEntry("preProcess")
         bodies.forEach { body -> body.preProcess() }
+        diagnostics?.endEntry()
 
         worldContainer.clear()
 
+        diagnostics?.beginEntry("bodyProcess")
         bodies.forEach { body ->
             body.process(delta)
             worldContainer.addBody(body)
             body.forEachFixture { worldContainer.addFixture(it) }
         }
+        diagnostics?.endEntry()
 
+        diagnostics?.beginEntry("collectContacts")
         bodies.forEach { body -> collectContacts(body) }
+        diagnostics?.endEntry()
 
+        diagnostics?.beginEntry("processContacts")
         processContacts()
+        diagnostics?.endEntry()
 
+        diagnostics?.beginEntry("resolveCollisions")
         bodies.forEach { body -> resolveCollisions(body) }
+        diagnostics?.endEntry()
 
+        diagnostics?.beginEntry("postProcess")
         bodies.forEach { body -> body.postProcess() }
+        diagnostics?.endEntry()
     }
 
     internal fun processContacts() {

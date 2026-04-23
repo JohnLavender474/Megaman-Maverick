@@ -62,6 +62,8 @@ class AnimatorTest :
                     return this
                 }
 
+                override fun setToEnd() {}
+
                 override fun update(delta: Float) {}
 
                 override fun reset() {}
