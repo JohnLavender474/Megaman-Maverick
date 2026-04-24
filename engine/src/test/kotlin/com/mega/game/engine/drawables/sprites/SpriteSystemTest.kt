@@ -44,7 +44,7 @@ class SpriteSystemTest :
                 entity.addComponent(mockSpritesComponent)
 
                 spritesQueue = TreeSet()
-                spritesSystem = SpritesSystem { spritesQueue.add(it) }
+                spritesSystem = SpritesSystem({ spritesQueue.add(it) })
                 spritesSystem.on = true
 
                 engine = GameEngine()
