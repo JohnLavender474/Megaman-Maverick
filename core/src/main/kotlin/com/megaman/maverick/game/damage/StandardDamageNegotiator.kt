@@ -7,11 +7,7 @@ import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.damage.IDamager
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
-import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.explosions.IceBombExplosion
-import com.megaman.maverick.game.entities.explosions.MagmaExplosion
-import com.megaman.maverick.game.entities.explosions.ReactorExplosion
+import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
@@ -59,7 +55,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(3),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) 10 else 8
+                if (it.big) 15 else 5
             },
             ReactorExplosion::class pairTo dmgNeg(8)
         )
@@ -98,7 +94,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(10),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) 20 else 15
+                if (it.big) 20 else 10
             },
             ReactorExplosion::class pairTo dmgNeg(15)
         )
@@ -137,7 +133,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             GreenPelletBlast::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ReactorManProjectile::class pairTo dmgNeg {
                 it as ReactorManProjectile
-                if (it.big) ConstVals.MAX_HEALTH else 25
+                if (it.big) ConstVals.MAX_HEALTH else 20
             },
             ReactorExplosion::class pairTo dmgNeg(25)
         )

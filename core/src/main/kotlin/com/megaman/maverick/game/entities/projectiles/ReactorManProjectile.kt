@@ -39,6 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.world.body.*
@@ -133,6 +134,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     private var dying = false
 
     private var bounces = 0
+    private var damageInflictions = 0
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -174,6 +176,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         dying = false
 
         bounces = 0
+        damageInflictions = 0
     }
 
     fun setTrajectory(trajectory: Vector2): Vector2 = body.physics.velocity.set(trajectory)
@@ -188,7 +191,12 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
             shatter(body.getBounds())
         }
 
-        explodeAndDie()
+        if (owner != megaman || damageable !is IHealthEntity || !damageable.isHealthDepleted())
+            explodeAndDie()
+        else {
+            damageInflictions++
+            if (damageInflictions > 1) explodeAndDie()
+        }
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {

@@ -263,7 +263,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             blockFixture.drawingColor = if (blockFixture.isActive()) Color.RED else Color.GRAY
         }
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, doUpdate = { true })
     }
 
     override fun getType() = EntityType.BLOCK

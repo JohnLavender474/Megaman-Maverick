@@ -220,7 +220,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, doUpdate = { true })
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
