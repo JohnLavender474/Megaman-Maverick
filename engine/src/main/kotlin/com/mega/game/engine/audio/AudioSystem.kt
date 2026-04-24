@@ -1,6 +1,7 @@
 package com.mega.game.engine.audio
 
 import com.mega.game.engine.common.objects.ImmutableCollection
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
 import java.util.function.Consumer
@@ -13,7 +14,8 @@ class AudioSystem(
     var playSoundsWhenOff: Boolean = false,
     var playMusicWhenOff: Boolean = false,
     var stopSoundsWhenOff: Boolean = true,
-    var stopMusicWhenOff: Boolean = true
+    var stopMusicWhenOff: Boolean = true,
+    private val diagnostics: RuntimeDiagnostics? = null
 ) : GameSystem(AudioComponent::class) {
 
     constructor(
@@ -37,6 +39,8 @@ class AudioSystem(
     )
 
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
+        diagnostics?.beginEntry("AudioSystem")
+
         entities.forEach { entity ->
             try {
                 val audioComponent = entity.getComponent(AudioComponent::class)
@@ -49,5 +53,7 @@ class AudioSystem(
                 throw Exception("Exception occured while processing audio for entity: $entity", e)
             }
         }
+
+        diagnostics?.endEntry()
     }
 }

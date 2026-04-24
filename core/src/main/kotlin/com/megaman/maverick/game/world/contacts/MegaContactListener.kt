@@ -53,7 +53,8 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
 
 class MegaContactListener(
-    private val game: MegamanMaverickGame, private val contactDebugFilter: (Contact) -> Boolean
+    private val game: MegamanMaverickGame,
+    private val contactDebugFilter: (Contact) -> Boolean
 ) : IContactListener {
 
     companion object {

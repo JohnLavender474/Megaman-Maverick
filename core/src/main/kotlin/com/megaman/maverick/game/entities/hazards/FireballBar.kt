@@ -97,7 +97,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
         rotatingLine.update(delta)
 
         for (i in 0 until BALLS) {
-            val child = children.get(i) as Fireball
+            val child = children.get(i)
             val position =
                 rotatingLine.getScaledPosition(i.toFloat() / BALLS.toFloat(), GameObjectPools.fetch(Vector2::class))
             child.body.setCenter(position)

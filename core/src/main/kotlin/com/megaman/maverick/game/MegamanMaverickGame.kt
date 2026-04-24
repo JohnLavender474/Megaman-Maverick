@@ -641,7 +641,7 @@ class MegamanMaverickGame(
         val engine = GameEngine(
             systems = gdxArrayOf(
                 ControllerSystem(controllerPoller),
-                BehaviorsSystem(),
+                BehaviorsSystem(diagnostics),
                 WorldSystem(
                     ppm = ConstVals.PPM,
                     fixedStep = ConstVals.FIXED_TIME_STEP,
@@ -657,8 +657,8 @@ class MegamanMaverickGame(
                     override fun cull(entity: IGameEntity) {
                         (entity as GameEntity).destroy()
                     }
-                }),
-                MotionSystem(),
+                }, diagnostics = diagnostics),
+                MotionSystem(diagnostics),
                 SimplePathfindingSystem(
                     factory = object : IPathfinderFactory {
                         override fun getPathfinder(params: PathfinderParams): IPathfinder {
@@ -697,19 +697,26 @@ class MegamanMaverickGame(
                                 )
                             )
                         }
-                    }
+                    },
+                    diagnostics = diagnostics
                 ),
-                PointsSystem(),
-                UpdatablesSystem(),
+                PointsSystem(diagnostics),
+                UpdatablesSystem(diagnostics),
                 FontsSystem(this::addDrawable),
-                AnimationsSystem(),
-                SpritesSystem(this::addDrawable),
-                DrawableShapesSystem({ shapes.add(it) }, params.debugShapes),
+                AnimationsSystem(diagnostics),
+                SpritesSystem(this::addDrawable, diagnostics),
+                DrawableShapesSystem(
+                    shapesCollector = { shapes.add(it) },
+                    debug = params.debugShapes,
+                    diagnostics = diagnostics
+                ),
                 AudioSystem(
                     { audioMan.playSound(it.source, it.loop) },
                     { audioMan.playMusic(it.source, it.loop) },
                     { audioMan.stopSound(it) },
-                    { audioMan.stopMusic(it) })
+                    { audioMan.stopMusic(it) },
+                    diagnostics = diagnostics
+                )
             ),
             onQueueToSpawn = { (it as MegaGameEntity).dead = false },
             onQueueToDestroy = { (it as MegaGameEntity).dead = true }

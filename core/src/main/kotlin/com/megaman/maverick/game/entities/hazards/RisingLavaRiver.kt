@@ -369,7 +369,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                 tempRect.setY(topY - 2f * ConstVals.PPM)
             }
             body.set(tempRect)
-        } else body.setSize(0f)
+        }
     })
 
     private fun defineBodyComponent(): BodyComponent {

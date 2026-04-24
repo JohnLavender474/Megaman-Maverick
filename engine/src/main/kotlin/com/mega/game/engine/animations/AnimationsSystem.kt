@@ -1,13 +1,18 @@
 package com.mega.game.engine.animations
 
 import com.mega.game.engine.common.objects.ImmutableCollection
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
 
-class AnimationsSystem : GameSystem(AnimationsComponent::class) {
+class AnimationsSystem(
+    private val diagnostics: RuntimeDiagnostics? = null
+) : GameSystem(AnimationsComponent::class) {
 
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
+
+        diagnostics?.beginEntry("AnimationsSystem")
 
         for (entity in entities) {
             try {
@@ -25,5 +30,7 @@ class AnimationsSystem : GameSystem(AnimationsComponent::class) {
                 throw Exception("Exception occured while processing animations for entity: $entity", e)
             }
         }
+
+        diagnostics?.endEntry()
     }
 }

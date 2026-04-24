@@ -1,14 +1,18 @@
 package com.mega.game.engine.points
 
 import com.mega.game.engine.common.objects.ImmutableCollection
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
 
-
-class PointsSystem : GameSystem(PointsComponent::class) {
+class PointsSystem(
+    private val diagnostics: RuntimeDiagnostics? = null
+) : GameSystem(PointsComponent::class) {
 
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
+
+        diagnostics?.beginEntry("PointsSystem")
 
         entities.forEach { entity ->
             try {
@@ -24,5 +28,7 @@ class PointsSystem : GameSystem(PointsComponent::class) {
                 throw Exception("Exception occured while processing points for entity: $entity", e)
             }
         }
+
+        diagnostics?.endEntry()
     }
 }

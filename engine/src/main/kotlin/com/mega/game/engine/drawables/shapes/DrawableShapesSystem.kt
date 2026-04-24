@@ -1,22 +1,20 @@
 package com.mega.game.engine.drawables.shapes
 
 import com.mega.game.engine.common.objects.ImmutableCollection
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
-import java.util.function.Consumer
 
 class DrawableShapesSystem(
     private val shapesCollector: (IDrawableShape) -> Unit,
-    var debug: Boolean = false
+    var debug: Boolean = false,
+    private val diagnostics: RuntimeDiagnostics? = null
 ) : GameSystem(DrawableShapesComponent::class) {
-
-    constructor(
-        shapesCollector: Consumer<IDrawableShape>,
-        debug: Boolean = false
-    ) : this(shapesCollector::accept, debug)
 
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
+
+        diagnostics?.beginEntry("DrawableShapesSystem")
 
         entities.forEach { entity ->
             try {
@@ -34,5 +32,7 @@ class DrawableShapesSystem(
                 throw Exception("Exception occured while processing drawable shapes for entity: $entity", e)
             }
         }
+
+        diagnostics?.endEntry()
     }
 }

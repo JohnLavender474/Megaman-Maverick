@@ -1,13 +1,18 @@
 package com.mega.game.engine.updatables
 
 import com.mega.game.engine.common.objects.ImmutableCollection
+import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
 
-class UpdatablesSystem : GameSystem(UpdatablesComponent::class) {
+class UpdatablesSystem(
+    private val diagnostics: RuntimeDiagnostics? = null
+) : GameSystem(UpdatablesComponent::class) {
 
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
+
+        diagnostics?.beginEntry("UpdatablesSystem")
 
         entities.forEach { entity ->
             try {
@@ -17,5 +22,7 @@ class UpdatablesSystem : GameSystem(UpdatablesComponent::class) {
                 throw Exception("Exception occured while processing updatables for entity: $entity", e)
             }
         }
+
+        diagnostics?.endEntry()
     }
 }

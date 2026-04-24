@@ -173,21 +173,27 @@ class WorldSystem(
     }
 
     internal fun processContacts() {
+        diagnostics?.beginEntry("begin/continue contacts")
         currentContactSet.forEach {
             if (priorContactSet.contains(it)) contactListener.continueContact(it, fixedStep)
             else contactListener.beginContact(it, fixedStep)
         }
+        diagnostics?.endEntry()
 
+        diagnostics?.beginEntry("end contacts")
         priorContactSet.forEach {
             if (!currentContactSet.contains(it)) {
                 contactListener.endContact(it, fixedStep)
                 contactPool.free(it)
             }
         }
+        diagnostics?.endEntry()
 
+        diagnostics?.beginEntry("reset contact sets")
         priorContactSet.clear()
         priorContactSet.addAll(currentContactSet)
         currentContactSet.clear()
+        diagnostics?.endEntry()
     }
 
     internal fun collectContacts(body: IBody) = body.forEachFixture { fixture ->

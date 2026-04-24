@@ -66,8 +66,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         private const val BURST_CULL_DUR = 0.5f
 
-        private const val NORMAL_SIZE = 0.5f
-        private const val BURST_SIZE = 1f
+        private const val NORMAL_SIZE = 0.25f
+        private const val BURST_SIZE = 0.5f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -79,9 +79,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     private var burst = false
 
     private var canDamage = true
-
     private var spawnSmoke = true
-
     private val collisionsToIgnore = ObjectSet<Int>()
 
     override fun init(vararg params: Any) {
@@ -185,6 +183,14 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
+        val overlapsCamera = body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())
+        body.physics.collisionOn = overlapsCamera
+        body.forEachFixture { fixture ->
+            // Damager fixture is set active/inactive in `body.preProcess`
+            if (fixture.getType() != FixtureType.DAMAGER)
+                fixture.setActive(overlapsCamera)
+        }
+
         if (burst) {
             body.physics.velocity.setZero()
             burstCullTimer.update(it)

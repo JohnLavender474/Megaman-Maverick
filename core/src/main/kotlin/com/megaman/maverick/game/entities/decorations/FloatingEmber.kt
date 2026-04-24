@@ -23,31 +23,23 @@ import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.SineWave
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.entities.utils.onMaxSpawnedByTag
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.max
 
-class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
     ICullableEntity {
 
     companion object {
@@ -78,15 +70,14 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private val outOfBoundsTimer = Timer(DEFAULT_CULL_TIME)
 
+    private val position = Vector2()
     private var maxY = 0f
-
     private val out = Vector2()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
-        addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineAnimationsComponent())
@@ -98,7 +89,7 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         super.onSpawn(spawnProps)
 
         val center = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setCenter(center)
+        position.set(center)
 
         val maxY = spawnProps.get(ConstKeys.MAX_Y)
         this.maxY = when (maxY) {
@@ -146,14 +137,14 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         sine.update(delta)
-        sine.getMotionValue(out).swapped().let { body.setCenter(it) }
+        sine.getMotionValue(out).swapped().let { position.set(it) }
 
-        if (!game.getGameCamera().getRotatedBounds().overlaps(body.getBounds())) {
+        if (!game.getGameCamera().getRotatedBounds().contains(position)) {
             outOfBoundsTimer.update(delta)
             if (outOfBoundsTimer.isFinished()) fading = true
         } else if (!fading) outOfBoundsTimer.reset()
 
-        if (!fading && body.getY() > maxY) fading = true
+        if (!fading && position.y > maxY) fading = true
 
         if (fading) {
             fadeTimer.update(delta)
@@ -161,24 +152,13 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         }
     })
 
-    private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.125f * ConstVals.PPM)
-        body.physics.applyFrictionX = false
-        body.physics.applyFrictionY = false
-
-        addComponent(DrawableShapesComponentBuilder().addDebug { body.getBounds() }.build())
-
-        return BodyComponentCreator.create(this, body)
-    }
-
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
             TAG, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 5))
                 .also { sprite -> sprite.setSize(0.25f * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
-            sprite.setCenter(body.getCenter())
+            sprite.setCenter(position)
             sprite.setAlpha(if (fading) max(0f, 1f - fadeTimer.getRatio()) else 1f)
         }
         .build()
