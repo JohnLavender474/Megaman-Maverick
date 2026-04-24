@@ -2,4 +2,5 @@
 
 # Run `./gradlew lwjgl3:build` before running this script
 
-# ./build-game.sh mac Megaman-Maverick-alpha-1.3.0
+VERSION=$(grep "^projectVersion=" gradle.properties | cut -d'=' -f2)
+./build-game.sh mac "Megaman-Maverick-$VERSION"
