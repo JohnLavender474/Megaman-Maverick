@@ -85,7 +85,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         private const val AXE_MAX_IMPULSE_X = 30f
         private const val AXE_IMPULSE_Y = 20f
 
-        private const val SHIELD_OFFSET = 0.5f
+        private const val SHIELD_OFFSET = 0.75f
 
         private const val THROW_SHIELDED_BUT_EXPOSED_INDEX = 1
 
