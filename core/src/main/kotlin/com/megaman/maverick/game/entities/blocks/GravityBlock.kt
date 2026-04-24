@@ -208,7 +208,12 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY))
+        return BodyComponentCreator.create(
+            this,
+            body,
+            BodyFixtureDef.of(FixtureType.BODY),
+            doUpdate = { true }
+        )
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

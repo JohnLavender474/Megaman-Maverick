@@ -353,7 +353,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, doUpdate = { !game.isCameraRotating() })
+        return BodyComponentCreator.create(this, body)
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()

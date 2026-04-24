@@ -153,8 +153,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirect
             entity = this,
             body = body,
             bodyFixtureDefs = BodyFixtureDef.of(FixtureType.PROJECTILE, FixtureType.DAMAGER),
-            debugShapes = debugShapes,
-            doUpdate = { !game.isCameraRotating() }
+            debugShapes = debugShapes
         )
     }
 

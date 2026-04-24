@@ -55,10 +55,7 @@ import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getOpposingPosition
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.*
 
 class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity, IDirectional, IDamager, IHazard {
@@ -96,6 +93,7 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
     private lateinit var spawnRoom: String
 
     override fun init(vararg params: Any) {
+        GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             InfernoOvenState.entries.forEach { state ->
@@ -180,7 +178,9 @@ class InfernoOven(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
         debugShapes.add { explosionFixture }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            damagerFixture.setActive(currentState == InfernoOvenState.HOT)
+            val overlapsCamera = body.overlapsGameCam()
+
+            damagerFixture.setActive(overlapsCamera && currentState == InfernoOvenState.HOT)
             damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.WHITE
 
             explosionFixture.setActive(damagerFixture.isActive())

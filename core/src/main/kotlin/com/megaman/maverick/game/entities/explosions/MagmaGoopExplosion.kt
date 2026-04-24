@@ -131,7 +131,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, doUpdate = { !game.isCameraRotating() })
+        return BodyComponentCreator.create(this, body)
     }
 
     private fun defineSpritesComponent(): SpritesComponent {

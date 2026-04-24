@@ -56,6 +56,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.defaultDoUpdate
 import com.megaman.maverick.game.world.body.getBounds
 
 class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
@@ -392,7 +393,8 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body, doUpdate = {
-            state.equalsAny(RisingLavaRiverState.RISING, RisingLavaRiverState.FALLING)
+            body.defaultDoUpdate() &&
+                state.equalsAny(RisingLavaRiverState.RISING, RisingLavaRiverState.FALLING)
         })
     }
 

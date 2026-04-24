@@ -4620,10 +4620,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="26" name="temp">
+ <objectgroup id="26" name="player">
   <object id="742" name="0" x="11456" y="3536" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="2" name="player">
+ <objectgroup id="2" name="temp">
   <object id="4" name="0" x="304" y="6080" width="32" height="32"/>
   <object id="129" name="1" x="304" y="7264" width="32" height="32"/>
   <object id="327" name="2" x="2304" y="7200" width="32" height="32"/>

@@ -45,7 +45,7 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         val body = Body(BodyType.ABSTRACT)
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         body.addFixture(deathFixture)
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, doUpdate = { true })
     }
 
     override fun getType() = EntityType.SENSOR

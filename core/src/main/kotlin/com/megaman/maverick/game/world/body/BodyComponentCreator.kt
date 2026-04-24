@@ -25,7 +25,7 @@ object BodyComponentCreator {
         body: Body,
         bodyFixtureDefs: Array<BodyFixtureDef> = Array(),
         debugShapes: Array<() -> IDrawableShape?>? = null,
-        doUpdate: (() -> Boolean)? = null
+        doUpdate: (() -> Boolean)? = body::defaultDoUpdate
     ): BodyComponent {
         val component = BodyComponent(body)
         if (doUpdate != null) component.doUpdate = doUpdate

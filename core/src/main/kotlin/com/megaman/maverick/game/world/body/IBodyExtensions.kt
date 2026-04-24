@@ -6,12 +6,27 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.world.body.BodyType
 import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
+
+fun IBody.defaultDoUpdate(): Boolean {
+    val game = getEntity().game
+    if (game.isCameraRotating()) return false
+    return when (type) {
+        BodyType.ABSTRACT -> overlapsGameCam() || !physics.velocity.isZero
+        else -> true
+    }
+}
+
+fun IBody.overlapsGameCam(): Boolean {
+    val game = getEntity().game
+    return getBounds().overlaps(game.getGameCamera().getRotatedBounds())
+}
 
 fun IBody.getBounds(reclaim: Boolean = true) = getBounds(GameObjectPools.fetch(GameRectangle::class, reclaim))
 
