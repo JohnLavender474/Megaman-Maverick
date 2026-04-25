@@ -30,6 +30,14 @@ class WorldSystem(
     private val contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
+    // Compensates for changing fixedStep when physics values (velocities, forces, gravity) were
+    // tuned at a specific baseline step. Set this to (baselineStep / currentFixedStep) so that
+    // the delta received by body.process() and contact listeners remains equal to the baseline,
+    // keeping delta-multiplied physics identical. Per-step constants that are NOT multiplied by
+    // delta (e.g. a plain friction multiplier like `velocity *= 0.9f`) are applied at the new
+    // step frequency and cannot be compensated by this scalar — expect a small residual difference
+    // for those. Default of 1 means no compensation is applied.
+    var physicsScalar: Float = 1f,
     private val diagnostics: RuntimeDiagnostics? = null
 ) : GameSystem(BodyComponent::class) {
 
@@ -39,6 +47,7 @@ class WorldSystem(
 
     init {
         if (fixedStepScalar <= 0f) throw IllegalArgumentException("Value of fixedStepScalar must be greater than 0")
+        if (physicsScalar <= 0f) throw IllegalArgumentException("Value of physicsScalar must be greater than 0")
     }
 
     internal class DummyFixture : IFixture {
@@ -103,7 +112,7 @@ class WorldSystem(
                 iterations++
 
                 diagnostics?.beginEntry("cycle[$iterations]")
-                cycle(reusableBodyArray, fixedStep)
+                cycle(reusableBodyArray, fixedStep * physicsScalar)
                 diagnostics?.endEntry()
 
                 if (iterations >= maxIterations) {
@@ -160,7 +169,7 @@ class WorldSystem(
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("processContacts")
-        processContacts()
+        processContacts(delta)
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("resolveCollisions")
@@ -172,18 +181,18 @@ class WorldSystem(
         diagnostics?.endEntry()
     }
 
-    internal fun processContacts() {
+    internal fun processContacts(delta: Float) {
         diagnostics?.beginEntry("begin/continue contacts")
         currentContactSet.forEach {
-            if (priorContactSet.contains(it)) contactListener.continueContact(it, fixedStep)
-            else contactListener.beginContact(it, fixedStep)
+            if (priorContactSet.contains(it)) contactListener.continueContact(it, delta)
+            else contactListener.beginContact(it, delta)
         }
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("end contacts")
         priorContactSet.forEach {
             if (!currentContactSet.contains(it)) {
-                contactListener.endContact(it, fixedStep)
+                contactListener.endContact(it, delta)
                 contactPool.free(it)
             }
         }

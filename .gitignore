@@ -181,7 +181,7 @@ Thumbs.db
 /assets/assets.txt
 /assets/logs.txt
 /assets/*-diagnostics.txt
-/assets/diagnostics_output/
+/assets/*diagnostics_output/
 
 ## venv
 .venv/

@@ -43,7 +43,7 @@ import com.mega.game.engine.pathfinding.SimplePathfindingSystem
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLoader
 import com.mega.game.engine.world.WorldSystem
-import com.mega.game.engine.world.container.SimpleGridWorldContainer
+import com.mega.game.engine.world.container.LooseQuadtreeWorldContainer
 import com.megaman.maverick.game.ConstFuncs
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -421,7 +421,32 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         if (tiledMapLoadResult == null) throw IllegalStateException("no tiled map load result found in level screen")
         game.setTiledMapLoadResult(tiledMapLoadResult!!)
 
-        val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
+        // val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
+
+        val tmr = tiledMapLoadResult!!
+        val worldWidthPx = (tmr.worldWidth * tmr.tileWidth).toFloat()
+        val worldHeightPx = (tmr.worldHeight * tmr.tileHeight).toFloat()
+
+        // Each quadtree subdivision halves both dimensions simultaneously, so after d levels the
+        // tight node size is (worldWidth / 2^d) x (worldHeight / 2^d) in tiles. We want the
+        // smallest of those two dimensions to be >= 1 tile, which gives:
+        //   min(worldWidth, worldHeight) / 2^maxDepth >= 1
+        //   maxDepth <= log2(min(worldWidth, worldHeight))
+        // We take the floor via the bit trick: floor(log2(n)) = 31 - numberOfLeadingZeros(n).
+        // Example: a 600x150 tile map gives floor(log2(150)) = 7, so leaf tight nodes are
+        // ~4.7 x 1.2 tiles and, with loosenessFactor=2, loose nodes are ~9.4 x 2.3 tiles.
+        val minDimTiles = minOf(tmr.worldWidth, tmr.worldHeight)
+        val maxDepth = 31 - Integer.numberOfLeadingZeros(minDimTiles)
+
+        val worldContainer = LooseQuadtreeWorldContainer(
+            ppm = tmr.tileWidth,
+            worldMinX = 0f,
+            worldMinY = 0f,
+            worldMaxX = worldWidthPx,
+            worldMaxY = worldHeightPx,
+            maxDepth = maxDepth,
+            loosenessFactor = 1.5f
+        )
         game.setWorldContainer(worldContainer)
 
         playerSpawnEventHandler.init()

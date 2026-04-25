@@ -651,7 +651,11 @@ class MegamanMaverickGame(
                     contactFilter = MegaContactFilter(),
                     fixedStepScalar = params.fixedStepScalar,
                     maxIterations = MathUtils.ceil(params.fixedStepScalar / (ConstVals.FIXED_TIME_STEP * params.fps)),
-                    diagnostics = diagnostics
+                    diagnostics = diagnostics,
+                    // Original fixed step was 1/150, applying scalar so that physics values don't have to be updated
+                    // across all entities. If the fixed time step val is set back to 1/150, then the scalar here
+                    // will simply be 1.
+                    physicsScalar = 1f // (1f / 150f) / ConstVals.FIXED_TIME_STEP
                 ),
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {

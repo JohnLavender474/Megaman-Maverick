@@ -14,9 +14,9 @@ object ConstVals {
     const val VIEW_WIDTH = 16f
     const val VIEW_HEIGHT = 14f
     const val PPM = 32
-    const val FIXED_TIME_STEP = 1 / 150f
-    const val STANDARD_RESISTANCE_X = 6f
-    const val STANDARD_RESISTANCE_Y = 4f
+    const val FIXED_TIME_STEP = 1 / 150f // 1 / 90f
+    const val STANDARD_RESISTANCE_X = 6f // * (FIXED_TIME_STEP / (1 / 150f))
+    const val STANDARD_RESISTANCE_Y = 4f // * (FIXED_TIME_STEP / (1 / 150f))
     const val MAX_HEALTH = 30
     const val MIN_HEALTH = 0
     const val MEGAMAN_MAVERICK_FONT = "Megaman10Font.ttf"

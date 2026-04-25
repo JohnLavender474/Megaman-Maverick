@@ -291,7 +291,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             Direction.UP,
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
-                body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_X, ConstVals.STANDARD_RESISTANCE_Y)
+
+                body.physics.defaultFrictionOnSelf.set(
+                    ConstVals.STANDARD_RESISTANCE_X,
+                    ConstVals.STANDARD_RESISTANCE_Y
+                )
+
                 body.physics.velocityClamp.set(MegamanValues.CLAMP_X, MegamanValues.CLAMP_Y)
                     .scl(ConstVals.PPM.toFloat())
 
@@ -310,7 +315,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             }
             else -> {
                 body.physics.gravity.set(gravityValue * ConstVals.PPM, 0f)
-                body.physics.defaultFrictionOnSelf.set(ConstVals.STANDARD_RESISTANCE_Y, ConstVals.STANDARD_RESISTANCE_X)
+
+                body.physics.defaultFrictionOnSelf.set(
+                    ConstVals.STANDARD_RESISTANCE_Y,
+                    ConstVals.STANDARD_RESISTANCE_X
+                )
+
                 body.physics.velocityClamp.set(MegamanValues.CLAMP_Y, MegamanValues.CLAMP_X)
                     .scl(ConstVals.PPM.toFloat())
 

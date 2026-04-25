@@ -404,8 +404,9 @@ def main() -> None:
         sys.exit(1)
 
     # ---- resolve output directory ----
+    stem = os.path.splitext(os.path.basename(diag_file))[0]
     output_dir = args.output_dir or os.path.join(
-        os.path.dirname(os.path.abspath(diag_file)), 'diagnostics_output'
+        os.path.dirname(os.path.abspath(diag_file)), stem + '_output'
     )
     os.makedirs(output_dir, exist_ok=True)
 
