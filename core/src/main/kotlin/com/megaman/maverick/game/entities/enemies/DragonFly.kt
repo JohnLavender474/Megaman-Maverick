@@ -159,7 +159,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         body.addFixture(oobScannerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            behaviorTimer.update(ConstVals.FIXED_TIME_STEP)
+            behaviorTimer.update(game.getPerformance().fixedStep)
 
             if (!behaviorTimer.isFinished() || frozen) {
                 body.physics.velocity.setZero()

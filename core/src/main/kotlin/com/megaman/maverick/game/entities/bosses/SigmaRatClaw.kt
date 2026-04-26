@@ -308,7 +308,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             val velocity = GameObjectPools.fetch(Vector2::class)
                 .set(body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.1f * ConstVals.PPM))
                 .sub(block!!.body.getPositionPoint(Position.TOP_CENTER))
-                .scl(1f / ConstVals.FIXED_TIME_STEP)
+                .scl(1f / game.getPerformance().fixedStep)
             block!!.body.physics.velocity.set(velocity)
 
             val swiping = clawState == SigmaRatClawState.LAUNCH

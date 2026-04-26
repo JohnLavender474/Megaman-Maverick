@@ -165,7 +165,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             body.physics.velocity.set(trajectory)
             if (!stuckToMegaman) {
                 val oldCenter = body.getCenter()
-                val sizeIncrease = SIZE_INCREASE_PER_SECOND * ConstVals.FIXED_TIME_STEP * ConstVals.PPM
+                val sizeIncrease = SIZE_INCREASE_PER_SECOND * game.getPerformance().fixedStep * ConstVals.PPM
                 body.setSize(body.getWidth() + sizeIncrease, body.getHeight() + sizeIncrease)
                 body.setCenter(oldCenter)
             }

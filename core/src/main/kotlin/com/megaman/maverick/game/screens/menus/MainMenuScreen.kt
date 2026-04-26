@@ -53,6 +53,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         EFFECTS_VOLUME("SFX VOLUME"),
         PIXEL_PERFECT("PIXEL PERFECT"),
         VSYNC("VSYNC"),
+        PERFORMANCE("PERFORMANCE"),
         KEYBOARD_SETTINGS("KEYBOARD SETTINGS"),
         CONTROLLER_SETTINGS("CONTROLLER SETTINGS")
     }
@@ -120,6 +121,9 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
                 MainScreenSettingsButton.VSYNC -> {
                     { "${it.text}: ${game.isVsync().toString().uppercase()}" }
+                }
+                MainScreenSettingsButton.PERFORMANCE -> {
+                    { "${it.text}: ${game.getPerformance().name.replace("_", " ")}" }
                 }
                 else -> {
                     { it.text }
@@ -410,9 +414,33 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                     Direction.UP -> MainScreenSettingsButton.PIXEL_PERFECT.text
-                    Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    Direction.DOWN -> MainScreenSettingsButton.PERFORMANCE.text
                     Direction.LEFT, Direction.RIGHT -> {
                         game.setVsync(!game.isVsync())
+                        buttonKey
+                    }
+                }
+            })
+
+        buttons.put(
+            MainScreenSettingsButton.PERFORMANCE.text,
+            object : IMenuButton {
+
+                override fun onSelect(delta: Float) = false
+
+                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                    Direction.UP -> MainScreenSettingsButton.VSYNC.text
+                    Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
+                    Direction.LEFT -> {
+                        val entries = MegamanMaverickGame.Performance.entries
+                        val idx = entries.indexOf(game.getPerformance())
+                        game.setPerformance(if (idx <= 0) entries.last() else entries[idx - 1])
+                        buttonKey
+                    }
+                    Direction.RIGHT -> {
+                        val entries = MegamanMaverickGame.Performance.entries
+                        val idx = entries.indexOf(game.getPerformance())
+                        game.setPerformance(if (idx >= entries.lastIndex) entries.first() else entries[idx + 1])
                         buttonKey
                     }
                 }
@@ -428,7 +456,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 }
 
                 override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.VSYNC.text
+                    Direction.UP -> MainScreenSettingsButton.PERFORMANCE.text
                     Direction.DOWN -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
                     else -> buttonKey
                 }

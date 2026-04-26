@@ -8,6 +8,7 @@ import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
 import com.mega.game.engine.common.GameLogLevel
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.MegamanMaverickGameParams
 import kotlin.system.exitProcess
 
@@ -17,7 +18,7 @@ object DesktopLauncher {
     private const val TITLE = "Megaman Maverick"
     private const val WINDOW_ICON_PATH = "Megaman.png"
 
-    private const val DEFAULT_FPS = 60
+    private val DEFAULT_PERFORMANCE = Performance.MEDIUM.name
     private const val DEFAULT_WIDTH = 1920
     private const val DEFAULT_HEIGHT = 1080
     private const val DEFAULT_RESIZABLE = true
@@ -56,7 +57,7 @@ object DesktopLauncher {
         }
 
         println("Game loaded with arguments:")
-        println("- FPS: " + appArgs.fps)
+        println("- Performance: " + appArgs.performance)
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
         println("- Fullscreen: " + appArgs.fullScreen)
@@ -69,8 +70,11 @@ object DesktopLauncher {
 
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
-        config.setIdleFPS(appArgs.fps)
-        config.setForegroundFPS(appArgs.fps)
+
+        val performance = Performance.valueOf(appArgs.performance.uppercase().trim())
+        config.setIdleFPS(performance.fps)
+        config.setForegroundFPS(performance.fps)
+
         config.setResizable(appArgs.resizable)
         config.setWindowIcon(WINDOW_ICON_PATH)
         config.setPauseWhenMinimized(false)
@@ -82,7 +86,7 @@ object DesktopLauncher {
         }
 
         val params = MegamanMaverickGameParams()
-        params.fps = appArgs.fps
+        params.performance = performance
         params.vsync = appArgs.vsync
         params.debugText = appArgs.debugText
         params.debugWindow = appArgs.debugWindow
@@ -140,10 +144,10 @@ object DesktopLauncher {
 
     class DesktopAppArgs {
         @Parameter(
-            names = ["--fps"],
-            description = "FPS of the game"
+            names = ["--performance"],
+            description = "Performance of the game: low, medium, or high.",
         )
-        var fps = DEFAULT_FPS
+        var performance = DEFAULT_PERFORMANCE
 
         @Parameter(
             names = ["--width"],

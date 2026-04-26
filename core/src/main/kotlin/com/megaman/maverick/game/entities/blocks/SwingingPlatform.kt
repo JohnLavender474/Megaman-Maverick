@@ -110,10 +110,10 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
         }
 
         body.preProcess.put(ConstKeys.TARGET) {
-            target?.let { it ->
+            target?.let {
                 body.physics.velocity.set(it)
                     .sub(body.getPositionPoint(Position.TOP_CENTER))
-                    .scl(1f / ConstVals.FIXED_TIME_STEP)
+                    .scl(1f / game.getPerformance().fixedStep)
             }
         }
 

@@ -328,7 +328,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                 block.body.physics.velocity
                     .set(blockTarget)
                     .sub(block.body.getPositionPoint(BLOCK_POSITION))
-                    .scl(1f / ConstVals.FIXED_TIME_STEP)
+                    .scl(1f / game.getPerformance().fixedStep)
             }
 
             damagerFixture.setActive(state != BigAssMaverickRobotHandState.ROTATE)

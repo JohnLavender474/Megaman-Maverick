@@ -121,7 +121,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
                 child as IBodyEntity
                 val target = childTargets[child as GameEntity] ?: return@forEach
                 val velocity = target.cpy().sub(child.body.getCenter())
-                child.body.physics.velocity.set(velocity.scl(1f / ConstVals.FIXED_TIME_STEP))
+                child.body.physics.velocity.set(velocity.scl(1f / game.getPerformance().fixedStep))
             }
         }
         return BodyComponentCreator.create(this, body)

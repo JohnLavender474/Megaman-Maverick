@@ -97,7 +97,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                 body.physics.velocity.setZero()
             }
 
-            bounceDelayTimer.update(ConstVals.FIXED_TIME_STEP)
+            bounceDelayTimer.update(game.getPerformance().fixedStep)
 
             if (!bounceDelayTimer.isFinished()) body.physics.velocity.setZero()
             else if (bounceDelayTimer.isJustFinished()) {

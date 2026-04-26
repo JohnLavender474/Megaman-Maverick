@@ -86,7 +86,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         act = {
             aButtonTask = AButtonTask.JUMP
 
-            val friction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
+            val friction =
+                MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ((1 / 150f) / game.getPerformance().fixedStep) * ConstVals.PPM
             when {
                 direction.isVertical() -> body.physics.frictionOnSelf.y = friction
                 else -> body.physics.frictionOnSelf.x = friction
@@ -182,8 +183,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
                         MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value *
                             (if (direction == Direction.UP) 1f else -1f)
+
                     else -> body.physics.velocity.x
                 }
+
                 Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
                     hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
@@ -196,6 +199,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
+
                 Direction.LEFT -> when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) ||
                         (body.isSensingAny(
@@ -204,8 +208,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
                         MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * facing.value *
                             (if (direction == Direction.LEFT) 1f else -1f)
+
                     else -> body.physics.velocity.y
                 }
+
                 Direction.RIGHT -> when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) ||
                         (body.isSensingAny(
@@ -213,6 +219,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             BodySense.SIDE_TOUCHING_BLOCK_RIGHT
                         ) && !body.isSensing(BodySense.FEET_ON_GROUND)) ->
                         MegamanValues.WALL_JUMP_HORIZONTAL * ConstVals.PPM * -facing.value
+
                     else -> body.physics.velocity.y
                 }
             }
@@ -357,6 +364,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             when {
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
                     isBehaviorActive(BehaviorType.GROUND_SLIDING) -> timer.reset()
+
                 else -> timer.update(delta)
             }
 
@@ -418,6 +426,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return when {
                 isBehaviorActive(BehaviorType.GROUND_SLIDING) -> !minTimer.isFinished() ||
                     (game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == direction)
+
                 else -> game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
                     game.controllerPoller.isJustPressed(MegaControllerButton.A)
             }
@@ -529,6 +538,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             direction == Direction.DOWN &&
                                 bodyCenter.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
                                 return false
+
                             bodyCenter.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
                                 return false
                         }
@@ -537,15 +547,18 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             direction == Direction.DOWN &&
                                 bodyCenter.y - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxY() ->
                                 return false
+
                             bodyCenter.y + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getY() ->
                                 return false
                         }
                     }
+
                     else -> {
                         if (!body.isSensing(BodySense.HEAD_TOUCHING_LADDER)) when {
                             direction == Direction.LEFT &&
                                 bodyCenter.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
                                 return false
+
                             bodyCenter.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
                                 return false
                         }
@@ -554,6 +567,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                             direction == Direction.LEFT &&
                                 bodyCenter.x + MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM > ladder.body.getMaxX() ->
                                 return false
+
                             bodyCenter.x - MEGAMAN_LADDER_MOVE_OFFSET * ConstVals.PPM < ladder.body.getX() ->
                                 return false
                         }
@@ -592,6 +606,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         body.getY() >= ladder.body.getMaxY() -> body.setMaxY(ladder.body.getMaxY())
                     }
                 }
+
                 Direction.LEFT, Direction.RIGHT -> {
                     body.setCenterY(ladder.body.getCenter().y)
 
@@ -623,23 +638,29 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         0f,
                         MegamanValues.CLIMB_VEL
                     )
+
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL * -1f
                     )
+
                     else -> velocity.setZero()
                 }
+
                 Direction.DOWN -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL
                     )
+
                     game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL * -1f
                     )
+
                     else -> velocity.setZero()
                 }
+
                 Direction.LEFT -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.UP) ->
                         velocity.set(MegamanValues.CLIMB_VEL * -1f, 0f)
@@ -650,15 +671,18 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     else -> velocity.setZero()
 
                 }
+
                 Direction.RIGHT -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
                         MegamanValues.CLIMB_VEL,
                         0f
                     )
+
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         MegamanValues.CLIMB_VEL * -1f,
                         0f
                     )
+
                     else -> velocity.setZero()
                 }
             }.scl(ConstVals.PPM * movementScalar)
@@ -709,14 +733,17 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     if (body.physics.velocity.y < 0f) body.physics.velocity.y = 0f
                     body.physics.velocity.y += impulse
                 }
+
                 Direction.DOWN -> {
                     if (body.physics.velocity.y > 0f) body.physics.velocity.y = 0f
                     body.physics.velocity.y += -impulse
                 }
+
                 Direction.LEFT -> {
                     if (body.physics.velocity.x > 0f) body.physics.velocity.x = 0f
                     body.physics.velocity.x += -impulse
                 }
+
                 Direction.RIGHT -> {
                     if (body.physics.velocity.x < 0f) body.physics.velocity.x = 0f
                     body.physics.velocity.x += impulse

@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
 import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.controllers.MegaControllerButton
 
 object MegamanValues {
@@ -34,7 +33,7 @@ object MegamanValues {
     const val WALL_JUMP_VEL = 35f
     const val WALL_JUMP_HORIZONTAL = 6f
     const val WALL_JUMP_IMPETUS_TIME = 0.1f
-    const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f * ((1/150f) / ConstVals.FIXED_TIME_STEP)
+    const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f
     const val WALL_SLIDE_GRAVITY = -18.75f
 
     const val GROUND_GRAVITY = -0.15f

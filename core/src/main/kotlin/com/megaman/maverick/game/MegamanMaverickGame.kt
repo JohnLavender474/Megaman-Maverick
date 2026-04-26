@@ -71,6 +71,7 @@ import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.container.IWorldContainer
 import com.mega.game.engine.world.pathfinding.WorldPathfinder
+import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -114,7 +115,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
 class MegamanMaverickGameParams {
-    var fps: Int = 60
+    lateinit var performance: Performance
     var writeLogsToFile: Boolean = false
     var debugWindow: Boolean = false
     var debugShapes: Boolean = false
@@ -133,6 +134,14 @@ class MegamanMaverickGameParams {
 class MegamanMaverickGame(
     val params: MegamanMaverickGameParams = MegamanMaverickGameParams()
 ) : Game(), IEventListener, IPropertizable {
+
+    enum class Performance(val fps: Int, val fixedStep: Float) {
+        VERY_LOW(30, 1f / 100f),
+        LOW(45, 1f / 150f),
+        MEDIUM(60, 1f / 200f),
+        HIGH(90, 1f / 300f),
+        VERY_HIGH(120, 1f / 400f)
+    }
 
     companion object {
         const val TAG = "MegamanMaverickGame"
@@ -644,13 +653,15 @@ class MegamanMaverickGame(
                 BehaviorsSystem(diagnostics),
                 WorldSystem(
                     ppm = ConstVals.PPM,
-                    fixedStep = ConstVals.FIXED_TIME_STEP,
+                    fixedStep = getPerformance().fixedStep,
                     worldContainerSupplier = { getWorldContainer() },
                     contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
                     collisionHandler = MegaCollisionHandler(this),
                     contactFilter = MegaContactFilter(),
                     fixedStepScalar = params.fixedStepScalar,
-                    maxIterations = MathUtils.ceil(params.fixedStepScalar / (ConstVals.FIXED_TIME_STEP * params.fps)),
+                    maxIterations = 2 * MathUtils.ceil(
+                        params.fixedStepScalar / (getPerformance().fixedStep * getPerformance().fps)
+                    ),
                     diagnostics = diagnostics
                 ),
                 CullablesSystem(object : GameEntityCuller {
@@ -840,5 +851,14 @@ class MegamanMaverickGame(
         if (vsync == value) return
         vsync = value
         Gdx.graphics.setVSync(value)
+    }
+
+    fun getPerformance() = params.performance
+
+    fun setPerformance(performance: Performance) {
+        if (params.performance == performance) return
+        params.performance = performance
+        Gdx.graphics.setForegroundFPS(performance.fps)
+        getSystem(WorldSystem::class).fixedStep = performance.fixedStep
     }
 }

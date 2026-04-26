@@ -22,15 +22,15 @@ import com.mega.game.engine.world.contacts.IContactListener
 import com.mega.game.engine.world.container.IWorldContainer
 
 class WorldSystem(
-    private val ppm: Int,
-    private val fixedStep: Float,
-    private val worldContainerSupplier: () -> IWorldContainer?,
-    private val contactListener: IContactListener,
-    private val collisionHandler: ICollisionHandler,
-    private val contactFilter: IContactFilter,
+    var ppm: Int,
+    var fixedStep: Float,
+    var worldContainerSupplier: () -> IWorldContainer?,
+    var contactListener: IContactListener,
+    var collisionHandler: ICollisionHandler,
+    var contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
-    private val diagnostics: RuntimeDiagnostics? = null
+    var diagnostics: RuntimeDiagnostics? = null
 ) : GameSystem(BodyComponent::class) {
 
     companion object {
