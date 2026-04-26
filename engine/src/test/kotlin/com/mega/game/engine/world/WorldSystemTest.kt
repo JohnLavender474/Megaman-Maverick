@@ -72,18 +72,25 @@ class WorldSystemTest : DescribeSpec({
         body.physics.gravity.set(-0.5f, -1f)
         worldSystem.update(fixedStep)
 
-        body.getX() shouldBe -0.5f * fixedStep
-        body.getY() shouldBe -1f * fixedStep
+        // gravity is now multiplied by delta before being added to velocity:
+        //   velocity_after = gravity * dt
+        //   position_after = velocity_after * dt = gravity * dt^2
+        body.getX() shouldBe -0.5f * fixedStep * fixedStep
+        body.getY() shouldBe -1f * fixedStep * fixedStep
     }
 
     it("should process physics correctly - 2") {
         body.physics.velocity.set(5f, 10f)
         body.physics.gravity.set(-0.5f, -1f)
+        body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
         worldSystem.update(fixedStep)
 
-        body.getPosition(outVec).epsilonEquals(
-            Vector2((5f - 0.5f) * fixedStep, (10f - 1f) * fixedStep), 0.01f
-        ) shouldBe true
+        // velocity_after = initial_velocity + gravity * dt
+        // position_after = velocity_after * dt
+        val pos = body.getPosition(outVec)
+        pos.x shouldBe (5f + (-0.5f * fixedStep)) * fixedStep
+        pos.y shouldBe (10f + (-1f * fixedStep)) * fixedStep
     }
 
     it("should filter contacts correctly") {
