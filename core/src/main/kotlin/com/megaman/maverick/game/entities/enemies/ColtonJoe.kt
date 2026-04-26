@@ -54,8 +54,8 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
 
     companion object {
         const val TAG = "ColtonJoe"
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
         private const val SHOOT_DUR = 1.5f
         private const val SHOOT_DELAY = 0.25f
         private const val BULLET_SPEED = 8f

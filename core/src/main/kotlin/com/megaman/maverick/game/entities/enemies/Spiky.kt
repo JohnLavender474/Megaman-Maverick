@@ -40,8 +40,8 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL),
         const val TAG = "Spiky"
         private const val X_VEL = 4f
         private const val CULL_TIME = 2.5f
-        private const val GROUND_GRAVITY = -0.01f
-        private const val GRAVITY = -0.15f
+        private const val GROUND_GRAVITY = -1.5f
+        private const val GRAVITY = -22.5f
         private var region: TextureRegion? = null
     }
 

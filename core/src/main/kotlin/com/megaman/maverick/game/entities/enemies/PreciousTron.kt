@@ -75,8 +75,8 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
 
         private const val SHOOT_TIME = 0.25f
 
-        private const val GRAVITY = -0.25f
-        private const val GROUND_GRAV = -0.01f
+        private const val GRAVITY = -37.5f
+        private const val GROUND_GRAV = -1.5f
 
         private const val MAX_RAND_POS_CANDIDATES = 3
 

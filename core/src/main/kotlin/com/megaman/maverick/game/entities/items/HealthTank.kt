@@ -35,7 +35,7 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
         const val TAG = "HealthTank"
         private const val BODY_WIDTH = 1f
         private const val BODY_HEIGHT = 1.25f
-        private const val GRAVITY = 0.15f
+        private const val GRAVITY = 22.5f
         private var region: TextureRegion? = null
     }
 

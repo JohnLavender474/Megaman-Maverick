@@ -43,7 +43,7 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     companion object {
         const val TAG = "ToxicGoopShot"
-        private const val GRAVITY = -0.05f
+        private const val GRAVITY = -7.5f
         private var region: TextureRegion? = null
     }
 

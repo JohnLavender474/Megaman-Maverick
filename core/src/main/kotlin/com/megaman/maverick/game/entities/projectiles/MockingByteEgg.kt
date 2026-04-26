@@ -49,7 +49,7 @@ class MockingByteEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "MockingByteEgg"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private var region: TextureRegion? = null
     }
 
@@ -134,7 +134,7 @@ class MockingByteEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), I
             Vector2(1f, 1f),
             Vector2(2f, 0.5f)
         )
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private val regions = ObjectMap<Int, TextureRegion>()
     }
 

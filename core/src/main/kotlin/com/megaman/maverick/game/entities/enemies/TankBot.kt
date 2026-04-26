@@ -69,7 +69,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
 
         private const val LAUNCH_IMPULSE_X = 8f
         private const val LAUNCH_IMPULSE_Y = 8f
-        private const val LAUNCH_GRAVITY = -0.15f
+        private const val LAUNCH_GRAVITY = -22.5f
 
         private const val TOXIC_GOOP_DMG_DUR = 0.25f
 

@@ -57,8 +57,8 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
     companion object {
         const val TAG = "GreenKoopaShell"
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.001f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -0.15f
 
         private const val SPEED = 8f
 

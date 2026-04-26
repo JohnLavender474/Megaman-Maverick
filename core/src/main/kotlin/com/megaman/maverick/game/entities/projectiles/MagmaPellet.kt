@@ -48,7 +48,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirect
 
     companion object {
         const val TAG = "MagmaPellet"
-        private const val GRAVITY = 0.375f
+        private const val GRAVITY = 56.25f
         private var region: TextureRegion? = null
     }
 

@@ -37,7 +37,7 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         private const val ALPHA = 1f
         private const val CULL_TIME = 2f
-        private const val GRAVITY = 0.25f
+        private const val GRAVITY = 37.5f
         private const val ROTATION_DELAY = 0.1f
         private const val ROTATION_DELTA = 45f
 

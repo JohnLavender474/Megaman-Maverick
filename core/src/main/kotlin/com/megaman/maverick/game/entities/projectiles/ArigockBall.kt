@@ -42,7 +42,7 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     companion object {
         const val TAG = "ArigockBall"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private var region: TextureRegion? = null
     }
 

@@ -33,7 +33,7 @@ class WoodCratePiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     companion object {
         const val TAG = "WoodCratePiece"
         const val MAX_INDEX = 9
-        private const val GRAVITY = 0.25f
+        private const val GRAVITY = 37.5f
         private const val CULL_TIME = 2f
         private const val ROTATE_DELAY = 0.05f
         private var regions = ObjectMap<Int, TextureRegion>()

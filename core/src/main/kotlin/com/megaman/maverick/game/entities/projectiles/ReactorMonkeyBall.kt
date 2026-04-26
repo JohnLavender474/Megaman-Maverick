@@ -47,7 +47,7 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "ReactorMonkeyBall"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val MAX_BOUNCES = 3
         private const val BOUNCE_VEL_SCALAR = 0.75f
         private const val EXPLODING_ALPHA = 0.5f

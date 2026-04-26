@@ -40,7 +40,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
     companion object {
         const val TAG = "Picket"
         private var region: TextureRegion? = null
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
     }
 
     override fun init(vararg params: Any) {

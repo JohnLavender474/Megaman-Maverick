@@ -54,8 +54,8 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     companion object {
         const val TAG = "Goomba"
 
-        private const val GRAVITY = -0.1f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -15.0f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val WALK_SPEED = 5f
         private const val AIR_SPEED = 2.5f

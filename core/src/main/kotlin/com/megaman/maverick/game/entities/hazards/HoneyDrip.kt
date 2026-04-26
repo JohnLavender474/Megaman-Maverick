@@ -51,8 +51,8 @@ class HoneyDrip(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
         private const val DRIP_DELAY = 0.25f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAV = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAV = -1.5f
 
         private val animDefs = orderedMapOf(
             "drip" pairTo AnimationDef(),

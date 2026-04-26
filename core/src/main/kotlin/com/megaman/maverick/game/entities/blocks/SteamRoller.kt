@@ -66,8 +66,8 @@ class SteamRoller(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity
 
         private const val REVERSE_SPEED = 2f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAV = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAV = -1.5f
 
         private const val SMASH_AREA_WIDTH = 2.25f
         private const val SMASH_AREA_HEIGHT = 1f

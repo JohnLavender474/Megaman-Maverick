@@ -70,7 +70,7 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         private const val SNOWBALL_X = 8f
         private const val SNOWBALL_Y = 5f
         private const val LAVA_X = 10f
-        private const val SNOWBALL_GRAV = 0.15f
+        private const val SNOWBALL_GRAV = 22.5f
         private const val JUMP_IMPULSE = 15f
 
         private const val SHIELD_DUR = 1.75f
@@ -79,8 +79,8 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         private const val THROW_SHIELD_DUR = 0.5f
         private const val SHIELD_VEL = 10f
 
-        private const val GROUND_GRAVITY = 0.001f
-        private const val GRAVITY = 0.375f
+        private const val GROUND_GRAVITY = 0.15f
+        private const val GRAVITY = 56.25f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val joeTypes = gdxArrayOf(DEFAULT_TYPE, SNOW_TYPE, LAVA_TYPE)

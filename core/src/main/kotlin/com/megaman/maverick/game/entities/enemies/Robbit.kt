@@ -49,8 +49,8 @@ class Robbit(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.LARGE)
         private const val CROUCH_DUR = 0.25f
         private const val JUMP_DUR = 0.25f
 
-        private const val G_GRAV = -0.001f
-        private const val GRAV = -0.15f
+        private const val G_GRAV = -0.15f
+        private const val GRAV = -22.5f
 
         private const val JUMP_X = 6f
         private const val JUMP_Y = 10f

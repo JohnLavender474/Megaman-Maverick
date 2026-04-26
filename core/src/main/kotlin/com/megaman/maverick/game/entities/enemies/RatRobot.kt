@@ -60,7 +60,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private const val NORMAL_SPEED = 4f
         private const val HARD_SPEED = 6f
 
-        private const val GRAVITY = 0.375f
+        private const val GRAVITY = 56.25f
 
         private val animDefs = orderedMapOf(
             "run" pairTo AnimationDef(3, 1, 0.1f, true),

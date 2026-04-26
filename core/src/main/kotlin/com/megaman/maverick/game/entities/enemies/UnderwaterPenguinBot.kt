@@ -50,7 +50,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size
     companion object {
         const val TAG = "UnderwaterPenguinBot"
         private const val SWIM_SPEED = 8f
-        private const val GRAVITY = -0.1f
+        private const val GRAVITY = -15.0f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

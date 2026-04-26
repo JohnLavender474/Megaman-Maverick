@@ -107,13 +107,13 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         private const val DEFAULT_FRICTION_X = 5f
         private const val DEFAULT_FRICTION_Y = 1f
         private const val SAND_FRICTION_X = 10f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
 
         private const val ARM_HEIGHT = 0.5f
         private const val ARM_OFFSET_Y = -0.25f
         private const val ARM_EXTENSIONS_COUNT = 2
 
-        private const val NEEDLE_GRAV = -0.1f
+        private const val NEEDLE_GRAV = -15.0f
         private const val NEEDLE_IMPULSE = 15f
         private const val NEEDLE_Y_OFFSET = 0.1f
 

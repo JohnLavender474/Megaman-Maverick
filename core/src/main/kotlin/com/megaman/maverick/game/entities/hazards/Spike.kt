@@ -56,8 +56,8 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
 
     companion object {
         const val TAG = "Spike"
-        private const val GRAVITY = 0.15f
-        private const val GROUND_GRAVITY = 0.01f
+        private const val GRAVITY = 22.5f
+        private const val GROUND_GRAVITY = 1.5f
         private var atlas: TextureAtlas? = null
     }
 

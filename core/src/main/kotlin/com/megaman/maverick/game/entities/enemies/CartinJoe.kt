@@ -62,8 +62,8 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
         private const val VEL_X = 5f
         private const val MAX_VEL_Y = 8f
 
-        private const val GROUND_GRAV = -0.001f
-        private const val GRAVITY = -0.25f
+        private const val GROUND_GRAV = -0.15f
+        private const val GRAVITY = -37.5f
 
         private const val WAIT_DUR = 0.75f
         private const val SHOOT_DUR = 0.25f

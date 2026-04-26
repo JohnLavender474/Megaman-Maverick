@@ -74,7 +74,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         private const val FACING_DUR = 1f
 
         private const val NEEDLES = 5
-        private const val NEEDLE_GRAV = -0.1f
+        private const val NEEDLE_GRAV = -15.0f
         private const val NEEDLE_IMPULSE = 10f
         private const val NEEDLE_Y_OFFSET = 0.1f
 

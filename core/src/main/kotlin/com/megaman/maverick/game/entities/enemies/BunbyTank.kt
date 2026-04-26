@@ -64,7 +64,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         private const val SHOOT_TIME = 0.35f
         private const val AFTER_SHOOT_DELAY = 0.75f
 
-        private const val GRAVITY = 0.15f
+        private const val GRAVITY = 22.5f
 
         private const val ROCKET_SPEED = 10f
 

@@ -65,8 +65,8 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         private const val UNFURLED_WIDTH = 0.5f
         private const val UNFURLED_HEIGHT = 2f
 
-        private const val GRAVITY = 0.15f
-        private const val GROUND_GRAVITY = 0.01f
+        private const val GRAVITY = 22.5f
+        private const val GROUND_GRAVITY = 1.5f
 
         private const val SHIELD_SHOW_DUR = 1f
         private const val SHIELD_BLINK_DUR = 0.1f

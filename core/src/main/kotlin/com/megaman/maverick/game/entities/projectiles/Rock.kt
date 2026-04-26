@@ -37,7 +37,7 @@ class Rock(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val BIG_SIZE = 0.5f
         private const val SMALL_SIZE = 0.25f
 
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }

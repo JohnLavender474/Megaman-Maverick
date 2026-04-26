@@ -57,7 +57,7 @@ class FlameHeadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = S
         private const val THROW_DUR = 0.3f
         private const val IMPULSE_Y = 4f
         private const val MAX_THROW_X = 8f
-        private const val FIREBALL_GRAVITY = -0.15f
+        private const val FIREBALL_GRAVITY = -22.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

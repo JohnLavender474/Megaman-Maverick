@@ -50,8 +50,8 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
         private const val STAND_DUR = 0.75f
 
-        private const val G_GRAV = -0.01f
-        private const val GRAV = -0.15f
+        private const val G_GRAV = -1.5f
+        private const val GRAV = -22.5f
 
         private const val JUMP_X = 5f
         private const val JUMP_Y = 8f

@@ -42,7 +42,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         const val TAG = "AngryFlameBall"
         private const val BOUNCE_DELAY = 0.75f
         private const val BOUNCE_IMPULSE = 16f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private var region: TextureRegion? = null
     }
 

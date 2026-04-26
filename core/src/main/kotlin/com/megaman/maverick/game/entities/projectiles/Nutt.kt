@@ -34,7 +34,7 @@ class Nutt(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "Nutt"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private var region: TextureRegion? = null
     }
 

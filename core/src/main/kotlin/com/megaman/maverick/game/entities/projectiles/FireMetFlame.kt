@@ -47,7 +47,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
 
     companion object {
         const val TAG = "FireMetFlame"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 

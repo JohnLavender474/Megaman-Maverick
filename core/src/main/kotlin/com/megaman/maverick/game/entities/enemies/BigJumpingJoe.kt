@@ -64,8 +64,8 @@ class BigJumpingJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         private const val X_VEL = 8f
         private const val Y_VEL = 20f
 
-        private const val GROUND_GRAVITY = -0.001f
-        private const val GRAVITY = -0.5f
+        private const val GROUND_GRAVITY = -0.15f
+        private const val GRAVITY = -75.0f
 
         private const val SHOOT_DURATION = 0.75f
         private const val BULLET_X_VEL = 10f

@@ -49,7 +49,7 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     companion object {
         const val TAG = "FallingIcicle"
         private const val SHAKE_DUR = 0.25f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val SHATTER_DUR = 0.25f
         private const val NORMAL_CLAMP_Y = 10f
         private const val WATER_CLAMP_Y = 3f

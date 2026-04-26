@@ -76,8 +76,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         private const val JUMP_IMPULSE = 15f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val GROUND_FRICTION_X = 5f
         private const val AIR_FRICTION_X = 1f

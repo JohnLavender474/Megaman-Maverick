@@ -55,7 +55,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     companion object {
         const val TAG = "GroundSnow"
         private const val FLUFF_IMPULSE = 2f
-        private const val FLUFF_GRAVITY = -0.15f
+        private const val FLUFF_GRAVITY = -22.5f
         private const val FLUFF_OFFSET = 0.1f
         private const val FLUFF_MOVE_X_THRESHOLD = 0.05f
         private const val FLUFF_DEFAULT_CONTINUE_SPAWN_DELAY = 0.5f

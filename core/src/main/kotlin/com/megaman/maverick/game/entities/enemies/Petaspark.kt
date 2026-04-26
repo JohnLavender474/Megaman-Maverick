@@ -53,7 +53,7 @@ class Petaspark(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         private const val VEL_X = 2.5f
         private const val VEL_Y = 2.5f
-        private const val GRAVITY = -0.1f
+        private const val GRAVITY = -15.0f
 
         private val animDefs = orderedMapOf(
             PetasparkState.MOVE pairTo AnimationDef(2, 2, 0.1f, true),

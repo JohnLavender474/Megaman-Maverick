@@ -41,7 +41,7 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         private const val BOUNCE_VEL_SCALAR = 0.75f
         private const val DEFAULT_MAX_BOUNCES = 2
 
-        private const val GRAVITY = -0.1f
+        private const val GRAVITY = -15.0f
 
         private const val MAX_CULL_TIME = 2f
 

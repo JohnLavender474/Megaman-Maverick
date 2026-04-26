@@ -67,8 +67,8 @@ class RollingBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val SHOOT_DELAY = 0.25f
         private const val BULLETS_TO_SHOOT = 3
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val SHORT_DMG_DUR = 0.25f
 

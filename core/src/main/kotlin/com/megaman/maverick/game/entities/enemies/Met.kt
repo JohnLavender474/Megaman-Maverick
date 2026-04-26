@@ -72,8 +72,8 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
         private const val RUN_SPEED = 8f
 
-        private const val GRAVITY_IN_AIR = 0.25f
-        private const val GRAVITY_ON_GROUND = 0.01f
+        private const val GRAVITY_IN_AIR = 37.5f
+        private const val GRAVITY_ON_GROUND = 1.5f
 
         private const val BULLET_TRAJECTORY_X = 15f
         private const val BULLET_TRAJECTORY_Y = 0.25f

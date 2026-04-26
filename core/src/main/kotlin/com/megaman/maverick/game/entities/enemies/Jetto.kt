@@ -68,7 +68,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
 
         private const val FALL_EXPLODE_DELAY = 0.1f
         private const val FALL_BLINK_DELAY = 0.05f
-        private const val FALL_GRAVITY = -0.375f
+        private const val FALL_GRAVITY = -56.25f
 
         private const val NEXT_POSSIBLE_SPAWN_DELAY = 1f
 

@@ -33,7 +33,7 @@ class CacaFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     companion object {
         const val TAG = "CacaFlame"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val BURST_DUR = 0.5f
         private val regions = ObjectMap<String, TextureRegion>()
     }

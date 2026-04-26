@@ -41,10 +41,10 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
     companion object {
         const val TAG = "AbstractItem"
 
-        private const val GRAVITY = 0.25f
-        private const val GROUND_GRAV = 0.01f
-        private const val MOON_GRAVITY = 0.1f
-        private const val WATER_GRAVITY = 0.1f
+        private const val GRAVITY = 37.5f
+        private const val GROUND_GRAV = 1.5f
+        private const val MOON_GRAVITY = 15.0f
+        private const val WATER_GRAVITY = 15.0f
 
         private const val VEL_CLAMP = 12f
         private const val MOON_VEL_CLAMP = 2.5f

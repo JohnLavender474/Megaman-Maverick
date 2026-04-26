@@ -46,8 +46,8 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         const val STAND_DUR = 0.75f
         const val FLY_DUR = 2f
         const val FLY_VEL = 6f
-        const val GRAV = -0.2f
-        const val G_GRAV = -0.015f
+        const val GRAV = -30.0f
+        const val G_GRAV = -2.25f
     }
 
     override lateinit var facing: Facing

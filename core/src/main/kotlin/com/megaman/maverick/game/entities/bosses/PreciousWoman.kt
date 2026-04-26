@@ -90,8 +90,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private const val VEL_CLAMP_X = 50f
         private const val VEL_CLAMP_Y = 25f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val DEFAULT_FRICTION_X = 1f
         private const val DEFAULT_FRICTION_Y = 1f

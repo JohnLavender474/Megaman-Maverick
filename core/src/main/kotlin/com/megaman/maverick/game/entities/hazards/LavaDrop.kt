@@ -49,7 +49,7 @@ class LavaDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
 
     companion object {
         const val TAG = "LavaDrop"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val DISSIPATE_DUR = 0.125f
         private var fallingRegion: TextureRegion? = null
         private var splatRegion: TextureRegion? = null

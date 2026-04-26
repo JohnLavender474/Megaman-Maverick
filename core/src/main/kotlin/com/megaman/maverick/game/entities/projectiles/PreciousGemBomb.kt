@@ -67,7 +67,7 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
             )
         )
 
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
 
         private const val CULL_TIME = 0.5f
 

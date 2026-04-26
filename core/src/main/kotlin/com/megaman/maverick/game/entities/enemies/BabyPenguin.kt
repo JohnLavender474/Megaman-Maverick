@@ -39,8 +39,8 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     companion object {
         const val TAG = "BabyPenguin"
         private const val X_VEL = 8f
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.0015f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -0.225f
         private var region: TextureRegion? = null
     }
 

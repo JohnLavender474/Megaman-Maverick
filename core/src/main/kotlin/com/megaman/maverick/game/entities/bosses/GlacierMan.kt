@@ -93,8 +93,8 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         private const val JUMP_IMPULSE_X = 25f
         private const val JUMP_IMPULSE_Y = 15f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val SLED_SPEED = 8f
         private const val BRAKE_FRICTION_X = 1.25f

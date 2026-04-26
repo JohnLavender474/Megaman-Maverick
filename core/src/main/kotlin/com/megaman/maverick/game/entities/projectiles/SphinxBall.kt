@@ -39,7 +39,7 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
     companion object {
         const val TAG = "SphinxBall"
         private const val SPIN_DELAY = 0.1f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val SINK_SPEED = 0.75f
         private var region: TextureRegion? = null
     }

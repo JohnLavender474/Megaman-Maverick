@@ -55,8 +55,8 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private const val PUSH_IMPULSE = 10f
         private const val PROJECTILE_IMPULSE = 5f
 
-        private const val GRAVITY = 0.25f
-        private const val GROUND_GRAVITY = 0.01f
+        private const val GRAVITY = 37.5f
+        private const val GROUND_GRAVITY = 1.5f
 
         private const val BODY_WIDTH = 2f
         private const val BODY_HEIGHT = 2f

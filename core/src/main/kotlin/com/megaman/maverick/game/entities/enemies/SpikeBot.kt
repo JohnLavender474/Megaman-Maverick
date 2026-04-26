@@ -72,7 +72,7 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private const val WALK_SPEED = 4f
 
         private const val NEEDLES = 3
-        private const val NEEDLE_GRAV = -0.1f
+        private const val NEEDLE_GRAV = -15.0f
         private const val NEEDLE_IMPULSE = 10f
         private const val NEEDLE_Y_OFFSET = 0.1f
 
@@ -81,8 +81,8 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         private const val LEFT_FOOT = "${ConstKeys.LEFT}_${ConstKeys.FOOT}"
         private const val RIGHT_FOOT = "${ConstKeys.RIGHT}_${ConstKeys.FOOT}"
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val NORMAL_MOVEMENT_SCALAR = 1f
         private const val WATER_MOVEMENT_SCALAR = 0.5f

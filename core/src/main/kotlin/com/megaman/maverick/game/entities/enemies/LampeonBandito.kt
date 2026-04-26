@@ -68,8 +68,8 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezabl
         private const val BULLETS = 5
         private const val BULLET_SPEED = 12f
 
-        private const val GRAVITY = -0.25f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -37.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val SHOOT_DUR = 0.75f
         private const val SHOOT_DELAY = 1f

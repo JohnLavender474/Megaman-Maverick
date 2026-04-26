@@ -61,7 +61,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         private const val VEL_X = 3f
         private const val DROP_Y = -12f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
 
         private const val DROP_TEETH_IMPULSE_Y = -8f
         private const val DROP_TEETH_DELAY = 1f

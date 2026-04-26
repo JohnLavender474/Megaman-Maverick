@@ -119,6 +119,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private var triggered = false
 
     private val blocksToIgnore = ObjectSet<Int>()
+
+    private val reusableRect = GameRectangle()
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
     private var hangAfterDamageInflicted = true
@@ -347,11 +349,20 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             allowDiagonal = { true },
             filter = filter@{ coordinate ->
                 game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
+                val coordBounds = reusableRect.set(
+                    coordinate.x * ConstVals.PPM.toFloat(),
+                    coordinate.y * ConstVals.PPM.toFloat(),
+                    ConstVals.PPM.toFloat(),
+                    ConstVals.PPM.toFloat()
+                )
                 var passable = true
-                for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
-                    passable = false
-                    break
-                }
+                for (otherBody in reusableBodySet)
+                    if (otherBody.getEntity().getType() == EntityType.BLOCK &&
+                        otherBody.getBounds().overlaps(coordBounds)
+                    ) {
+                        passable = false
+                        break
+                    }
                 reusableBodySet.clear()
                 return@filter passable
             },

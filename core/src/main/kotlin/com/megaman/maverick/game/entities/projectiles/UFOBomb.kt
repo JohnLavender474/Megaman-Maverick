@@ -42,7 +42,7 @@ class UFOBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
     companion object {
         const val TAG = "UFOBomb"
         private var region: TextureRegion? = null
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
     }
 
     override var owner: IGameEntity? = null

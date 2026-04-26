@@ -45,7 +45,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
         const val TAG = "SmallGreenMissile"
         const val WAVE_EXPLOSION = "wave_explosion"
         const val DEFAULT_EXPLOSION = "default_explosion"
-        private const val GRAVITY = 0.15f
+        private const val GRAVITY = 22.5f
         private var region: TextureRegion? = null
     }
 

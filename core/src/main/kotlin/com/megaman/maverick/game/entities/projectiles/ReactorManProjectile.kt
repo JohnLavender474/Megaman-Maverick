@@ -49,8 +49,8 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
     companion object {
         const val TAG = "ReactorManProjectile"
 
-        private const val BIG_GRAVITY = -0.05f
-        private const val SMALL_GRAVITY = -0.15f
+        private const val BIG_GRAVITY = -7.5f
+        private const val SMALL_GRAVITY = -22.5f
 
         private const val GROW_DUR = 0.4f
         private const val DIE_DUR = 0.05f

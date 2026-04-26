@@ -52,7 +52,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
         private const val DAMAGE_DUR = 0.1f
 
         private const val BODY_SIZE = 0.5f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
 
         private const val SPRITE_SIZE = 0.5f
         private const val SPRITE_ROTATION = 90f

@@ -72,7 +72,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         private const val SNOWBALL_X = 8f
         private const val SNOWBALL_Y = 5f
-        private const val SNOWBALL_GRAV = 0.15f
+        private const val SNOWBALL_GRAV = 22.5f
 
         private const val FIREBALL_X = 10f
 
@@ -85,8 +85,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         private const val SHOOT_DUR = 2f
         private const val TURN_DUR = 0.5f
 
-        private const val GROUND_GRAVITY = 0.001f
-        private const val GRAVITY = 0.375f
+        private const val GROUND_GRAVITY = 0.15f
+        private const val GRAVITY = 56.25f
 
         private val TIMES_TO_SHOOT = floatArrayOf(0.5f, 1f, 1.5f)
 

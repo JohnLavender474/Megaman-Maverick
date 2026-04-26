@@ -35,7 +35,7 @@ class CaveRock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "CaveRock"
-        private const val STANDARD_GRAVITY = -0.1f
+        private const val STANDARD_GRAVITY = -15.0f
         private var rockRegion: TextureRegion? = null
     }
 

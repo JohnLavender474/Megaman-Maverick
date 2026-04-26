@@ -47,7 +47,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
     companion object {
         const val TAG = "Wanaan"
-        private const val GRAVITY = 0.15f
+        private const val GRAVITY = 22.5f
         private val animDefs =
             orderedMapOf("frozen" pairTo AnimationDef(), "chomp" pairTo AnimationDef(2, 1, 0.1f, true))
         private val regions = ObjectMap<String, TextureRegion>()

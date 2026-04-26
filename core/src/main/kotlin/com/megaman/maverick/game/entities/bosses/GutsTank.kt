@@ -106,7 +106,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         private const val ATTACK_DELAY_MAX_HARD = 0.85f
 
         private const val BULLETS_TO_CHUNK = 4
-        private const val CHUNKED_BULLET_GRAVITY = -0.1f
+        private const val CHUNKED_BULLET_GRAVITY = -15.0f
         private const val CHUNKED_BULLET_VELOCITY_Y = 10f
         private const val BULLET_CHUNK_DELAY = 0.25f
 

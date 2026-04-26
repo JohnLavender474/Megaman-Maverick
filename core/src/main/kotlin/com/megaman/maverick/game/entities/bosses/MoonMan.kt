@@ -92,8 +92,8 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         private const val JUMP_MAX_HORIZONTAL_SCALAR = 0.75f
         private const val JUMP_HORIZONTAL_SCALAR_DENOMINATOR = 8
 
-        private const val GRAVITY = 0.25f
-        private const val GROUND_GRAVITY = 0.01f
+        private const val GRAVITY = 37.5f
+        private const val GROUND_GRAVITY = 1.5f
         private const val DEFAULT_GRAVITY_SCALAR = 0.25f
         private const val DEFAULT_FRICTION_X = 6f
         private const val DEFAULT_FRICTION_Y = 1.015f

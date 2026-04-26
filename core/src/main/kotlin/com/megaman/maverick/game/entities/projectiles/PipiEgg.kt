@@ -41,7 +41,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "PipiEgg"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val BABY_BIRDIE_SPAWN_MAX_OFFSET = 0.25f
         private const val BABY_BIRDIE_MIN_ANGLE = 250f
         private const val BABY_BIRDIE_MAX_ANGLE = 290f

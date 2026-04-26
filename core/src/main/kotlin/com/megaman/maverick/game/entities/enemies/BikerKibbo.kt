@@ -55,8 +55,8 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     companion object {
         const val TAG = "BikerKibbo"
 
-        private const val GRAVITY = -0.375f
-        private const val GROUND_GRAVITY = -0.001f
+        private const val GRAVITY = -56.25f
+        private const val GROUND_GRAVITY = -0.15f
 
         private const val X_VEL = 8f
         private const val X_IMPULSE = 10f

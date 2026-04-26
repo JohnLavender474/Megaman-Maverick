@@ -45,8 +45,8 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
     companion object {
         const val TAG = "SuicideBummer"
-        private const val GRAVITY = -0.375f
-        private const val GROUND_GRAVITY = -0.0015f
+        private const val GRAVITY = -56.25f
+        private const val GROUND_GRAVITY = -0.225f
         private const val GROUND_X_VEL = 4f
         private const val AIR_X_VEL = 2.5f
         private const val JUMP_IMPULSE = 12f

@@ -51,7 +51,7 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         private val SPAWNED_QUEUE = Queue<IceShard>()
 
         private const val FADE_OUT_DUR = 0.25f
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private val SCALARS = ObjectMap<String, Float>()
         private val TRAJECTORIES = gdxArrayOf(
             Vector2(-7f, 5f),

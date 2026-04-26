@@ -57,7 +57,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
         private const val LAUNCH_PENGUINS_DUR = 0.75f
         private const val SHOOT_SNOWBALLS_DUR = 0.5f
         private const val SNOWBALL_IMPULSE_Y = 10f
-        private const val SNOWBALL_GRAVITY = -0.15f
+        private const val SNOWBALL_GRAVITY = -22.5f
         private const val SNOWBALLS_TO_LAUNCH = 3
         private var region: TextureRegion? = null
     }

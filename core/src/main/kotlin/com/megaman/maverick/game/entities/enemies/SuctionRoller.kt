@@ -46,7 +46,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     companion object {
         const val TAG = "SuctionRoller"
 
-        private const val GRAVITY = -0.1f
+        private const val GRAVITY = -15.0f
         private const val VEL_X = 2.5f
         private const val VEL_Y = 2.5f
 

@@ -31,7 +31,7 @@ class DeathBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "DeathBomb"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private var region: TextureRegion? = null
     }
 

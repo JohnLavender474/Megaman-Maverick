@@ -82,8 +82,8 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         private const val SCANNER_WIDTH = 6f
         private const val SCANNER_HEIGHT = 0.75f
 
-        private const val GRAVITY = -0.375f
-        private const val GROUND_GRAV = -0.01f
+        private const val GRAVITY = -56.25f
+        private const val GROUND_GRAV = -1.5f
 
         private val animDefs = orderedMapOf(
             "stand" pairTo AnimationDef(2, 1, gdxArrayOf(0.9f, 0.1f), true),

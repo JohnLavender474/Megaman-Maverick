@@ -50,7 +50,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
         const val TAG = "SpitFireball"
         private const val FIREBALLS_TO_SPAWN = 2
         private const val FIREBALL_IMPULSE = 3f
-        private const val FIREBALL_GRAVITY = -0.15f
+        private const val FIREBALL_GRAVITY = -22.5f
         private const val FIREBALL_CULL_TIME = 0.15f
         private val angles = ObjectMap<Direction, Array<Float>>()
         private var region: TextureRegion? = null

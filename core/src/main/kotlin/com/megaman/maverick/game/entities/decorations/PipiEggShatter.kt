@@ -39,7 +39,7 @@ class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
     companion object {
         const val TAG = "PipiEggShatter"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val FADE_DUR = 1f
         private var region: TextureRegion? = null
     }

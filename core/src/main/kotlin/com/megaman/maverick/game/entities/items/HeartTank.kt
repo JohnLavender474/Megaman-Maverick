@@ -53,7 +53,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
         private const val BODY_SIZE = 1f
 
-        private const val SAND_GRAVITY = -0.1f
+        private const val SAND_GRAVITY = -15.0f
         private const val MIN_SAND_VEL_Y = -4f
 
         private const val LIGHT_RADIUS = 5

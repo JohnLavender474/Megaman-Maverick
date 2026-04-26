@@ -54,8 +54,8 @@ class SpikeTeeth(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     companion object {
         const val TAG = "SpikeTeeth"
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private val PROJECTILES = objectSetOf(ChargedShot.TAG)
 

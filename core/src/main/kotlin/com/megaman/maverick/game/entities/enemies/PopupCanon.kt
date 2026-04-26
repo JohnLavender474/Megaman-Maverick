@@ -68,7 +68,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         private const val SHOOT_OFFSET_X = 0.5f
         private const val SHOOT_OFFSET_Y = 0.25f
 
-        private const val BALL_GRAVITY = 0.15f
+        private const val BALL_GRAVITY = 22.5f
         private const val DEFAULT_BALL_GRAVITY_SCALAR = 1f
 
         private val regions = ObjectMap<String, TextureRegion>()

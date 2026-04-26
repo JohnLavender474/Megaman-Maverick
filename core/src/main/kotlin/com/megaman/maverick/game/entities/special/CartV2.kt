@@ -48,7 +48,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
     companion object {
         const val TAG = "CartV2"
 
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
 
         private const val FRICTION_X = 1.0125f
         private const val FRICTION_Y = 1f

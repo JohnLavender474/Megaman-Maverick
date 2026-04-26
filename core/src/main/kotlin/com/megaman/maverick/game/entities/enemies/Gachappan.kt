@@ -57,7 +57,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         private const val BULLET_SPEED = 7.5f
 
-        private const val BALL_GRAVITY = -0.1f
+        private const val BALL_GRAVITY = -15.0f
         private const val BALL_IMPULSE = 12f
 
         private const val WAIT_DURATION = 0.9f

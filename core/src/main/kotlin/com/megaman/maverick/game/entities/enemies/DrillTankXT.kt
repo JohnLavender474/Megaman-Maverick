@@ -81,8 +81,8 @@ class DrillTankXT(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         private const val MOVE_SPEED = 2f
         private const val MOVE_PAUSE_ON_SWAP_FACING = 0.5f
 
-        private const val GRAVITY = 0.15f
-        private const val GROUND_GRAVITY = 0.01f
+        private const val GRAVITY = 22.5f
+        private const val GROUND_GRAVITY = 1.5f
 
         private val animDefs = orderedMapOf(
             "sleep" pairTo AnimationDef(),

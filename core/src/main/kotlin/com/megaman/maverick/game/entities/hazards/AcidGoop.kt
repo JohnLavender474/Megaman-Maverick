@@ -51,8 +51,8 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IHaz
 
     companion object {
         const val TAG = "AcidGoop"
-        private const val FALL_GRAVITY = -0.15f
-        private const val DISSIPATE_GRAVITY = -0.01f
+        private const val FALL_GRAVITY = -22.5f
+        private const val DISSIPATE_GRAVITY = -1.5f
         private const val DISSIPATE_DUR = 0.15f
         private var fallingRegion: TextureRegion? = null
         private var splatRegion: TextureRegion? = null

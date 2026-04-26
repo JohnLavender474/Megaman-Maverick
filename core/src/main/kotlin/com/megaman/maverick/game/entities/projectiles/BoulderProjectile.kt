@@ -55,7 +55,7 @@ class BoulderProjectile(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         private const val SPAWN_EXPLODE_DELAY = 0.25f
 
-        private const val GRAVITY = -0.25f
+        private const val GRAVITY = -37.5f
 
         private const val LARGE_SIZE = 2f
         private const val MEDIUM_SIZE = 1f

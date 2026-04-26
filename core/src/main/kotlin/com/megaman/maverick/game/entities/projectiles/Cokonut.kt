@@ -37,7 +37,7 @@ class Cokonut(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
     companion object {
         const val TAG = "Cokonut"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val RADIUS = 0.375f
         private var region: TextureRegion? = null
     }

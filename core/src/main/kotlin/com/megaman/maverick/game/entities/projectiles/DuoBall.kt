@@ -41,7 +41,7 @@ class DuoBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
     companion object {
         const val TAG = "DuoBall"
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
         private const val BOUNCE_MAX = 2
         private var region: TextureRegion? = null
     }

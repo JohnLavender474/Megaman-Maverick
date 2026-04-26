@@ -138,8 +138,8 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private const val PROJ_SPEED = 14f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.001f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -0.15f
 
         private val animDefs = orderedMapOf(
             "init" pairTo AnimationDef(3, 1, 0.1f, false),

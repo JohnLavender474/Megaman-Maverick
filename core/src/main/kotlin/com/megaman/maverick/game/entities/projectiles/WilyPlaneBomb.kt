@@ -40,7 +40,7 @@ class WilyPlaneBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "WilyPlaneBomb"
-        private const val GRAVITY = 0.25f
+        private const val GRAVITY = 37.5f
         private const val VEL_Y = 10f
         private const val BLAST_DUR = 1f
         private const val EXPLODE_PERIOD = 0.05f

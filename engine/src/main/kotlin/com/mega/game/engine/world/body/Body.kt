@@ -111,8 +111,7 @@ class Body(
         physics.velocity.y =
             physics.velocity.y.coerceIn(-abs(physics.velocityClamp.y), abs(physics.velocityClamp.y))
 
-        bounds.translate(physics.velocity.x * delta, 0f)
-        bounds.translate(0f, physics.velocity.y * delta)
+        bounds.translate(physics.velocity.x * delta, physics.velocity.y * delta)
     }
 
     override fun postProcess() = postProcess.values().forEach { it.invoke(this) }

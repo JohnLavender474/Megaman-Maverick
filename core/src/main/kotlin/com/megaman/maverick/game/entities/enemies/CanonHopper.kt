@@ -54,8 +54,8 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         private const val STAND_DUR = 1f
         private const val SHOOT_TIME = 0.5f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val BULLET_SPEED = 10f
 

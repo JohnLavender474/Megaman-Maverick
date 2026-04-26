@@ -56,7 +56,7 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
         const val TAG = "QuestionBlock"
 
         private const val COIN_CULL_TIME = 0.25f
-        private const val COIN_GRAVITY = 0.15f
+        private const val COIN_GRAVITY = 22.5f
         private const val COIN_IMPULSE_Y = 5f
 
         private val animDefs = orderedMapOf(

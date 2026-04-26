@@ -125,7 +125,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         private const val HAND_LAUNCH_MIN_SPEED_HARD = 10f
         private const val HAND_LAUNCH_MAX_SPEED_HARD = 15f
 
-        private const val FALL_GRAVITY = 0.1f
+        private const val FALL_GRAVITY = 15.0f
         private const val FALL_IMPULSE = 10f
 
         private const val SHAKE_X = 0f

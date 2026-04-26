@@ -53,8 +53,8 @@ class ReactorMan_OLD(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedE
     companion object {
         const val TAG = "ReactorMan"
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.001f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -0.15f
 
         private const val STAND_MAX_DUR = 1f
         private const val STAND_MIN_DUR = 0.5f

@@ -50,7 +50,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     companion object {
         const val TAG = "Snowhead"
-        private const val GRAVITY = -0.2f
+        private const val GRAVITY = -30.0f
         private val snowballTrajs = gdxArrayOf(
             Vector2(-6f, 6f), Vector2(-3f, 8f), Vector2(3f, 8f), Vector2(6f, 6f),
         )

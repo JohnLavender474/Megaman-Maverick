@@ -53,8 +53,8 @@ class Cart(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
     companion object {
         const val TAG = "Cart"
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val FRICTION_X = 1.5f
         private const val FRICTION_Y = 1.25f

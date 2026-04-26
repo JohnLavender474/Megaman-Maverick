@@ -85,8 +85,8 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         private const val SMASH_ROCKS_MIN_Y_IMPULSE = 2f
         private const val SMASH_ROCKS_MAX_Y_IMPULSE = 6f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAV = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAV = -1.5f
 
         private val animDefs = orderedMapOf(
             "idle" pairTo AnimationDef(2, 1, gdxArrayOf(0.4f, 0.1f), true),

@@ -69,7 +69,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         private const val SPRITE_SIZE = 3f
 
-        private const val GRAVITY = -0.15f
+        private const val GRAVITY = -22.5f
 
         private const val LAUNCH_DELAY = 1f
 

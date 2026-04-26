@@ -67,8 +67,8 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         private const val JUMP_IMPULSE_X = 6f
         private const val JUMP_IMPULSE_Y = 14f
 
-        private const val GRAVITY = -0.15f
-        private const val GROUND_GRAVITY = -0.01f
+        private const val GRAVITY = -22.5f
+        private const val GROUND_GRAVITY = -1.5f
 
         private const val DEFAULT_FRICTION_X = 1.25f
         private const val GROUND_FRICTION_X = 5f
