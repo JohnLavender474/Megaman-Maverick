@@ -30,7 +30,7 @@ object MegamanValues {
     const val SWIM_TIMER = 0.25f
 
     const val JUMP_VEL = 25f
-    const val WALL_JUMP_VEL = 35f
+    const val WALL_JUMP_VEL = 20f
     const val WALL_JUMP_HORIZONTAL = 6f
     const val WALL_JUMP_IMPETUS_TIME = 0.1f
     const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f

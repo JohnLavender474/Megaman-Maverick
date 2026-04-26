@@ -87,7 +87,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             aButtonTask = AButtonTask.JUMP
 
             val friction =
-                MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ((1 / 150f) / game.getPerformance().fixedStep) * ConstVals.PPM
+                MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
             when {
                 direction.isVertical() -> body.physics.frictionOnSelf.y = friction
                 else -> body.physics.frictionOnSelf.x = friction
@@ -173,6 +173,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 (feetOnGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
+            when {
+                direction.isVertical() -> body.physics.frictionOnSelf.y = 1f
+                else -> body.physics.frictionOnSelf.x = 1f
+            }
+
             val v = GameObjectPools.fetch(Vector2::class)
             v.x = when (direction) {
                 Direction.UP, Direction.DOWN -> when {
