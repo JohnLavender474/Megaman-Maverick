@@ -34,14 +34,14 @@ object MegamanValues {
     const val WALL_JUMP_HORIZONTAL = 6f
     const val WALL_JUMP_IMPETUS_TIME = 0.1f
     const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f
-    const val WALL_SLIDE_GRAVITY = -0.125f
+    const val WALL_SLIDE_GRAVITY = -18.75f
 
-    const val GROUND_GRAVITY = -0.001f
-    const val JUMP_GRAVITY = -0.2f
-    const val FALL_GRAVITY = -0.5f
-    const val ICE_GRAVITY = -0.75f
-    const val WATER_GRAVITY = -0.25f
-    const val WATER_ICE_GRAVITY = -0.5f
+    const val GROUND_GRAVITY = -0.15f
+    const val JUMP_GRAVITY = -30f
+    const val FALL_GRAVITY = -75f
+    const val ICE_GRAVITY = -112.5f
+    const val WATER_GRAVITY = -37.5f
+    const val WATER_ICE_GRAVITY = -75f
 
     const val AIR_DASH_MIN_TIME = 0.1f
     const val AIR_DASH_MAX_TIME = 0.25f
@@ -112,7 +112,7 @@ object MegamanValues {
 
     val NEEDLE_ANGLES = gdxArrayOf(90f, 70f, 45f, 15f, 0f, 345f, 315f, 290f, 270f)
     val NEEDLE_X_OFFSETS = gdxArrayOf(-0.2f, -0.15f, -0.1f, -0.05f, 0f, 0.05f, 0.1f, 0.15f, 0.2f)
-    const val NEEDLE_GRAV = -0.1f
+    const val NEEDLE_GRAV = -15f
     const val NEEDLE_IMPULSE = 15f
     const val NEEDLE_Y_OFFSET = 1f
     const val NEEDLE_SPIN_MEGAMAN_IMPULSE_Y = 20f

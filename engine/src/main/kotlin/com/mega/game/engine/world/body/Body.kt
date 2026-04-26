@@ -104,7 +104,7 @@ class Body(
             physics.velocity.y *= exp(-physics.frictionOnSelf.y * delta)
         physics.frictionOnSelf.set(physics.defaultFrictionOnSelf)
 
-        if (physics.gravityOn) physics.velocity.add(physics.gravity)
+        if (physics.gravityOn) physics.velocity.add(physics.gravity.x * delta, physics.gravity.y * delta)
 
         physics.velocity.x =
             physics.velocity.x.coerceIn(-abs(physics.velocityClamp.x), abs(physics.velocityClamp.x))
