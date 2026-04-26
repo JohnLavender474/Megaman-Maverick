@@ -7,10 +7,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.PixmapIO
+import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -30,12 +27,14 @@ import com.mega.game.engine.behaviors.BehaviorsSystem
 import com.mega.game.engine.common.GameLogLevel
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.LogReceiver
+import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.IPropertizable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerSystem
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.controller.buttons.ControllerButtons
@@ -43,6 +42,7 @@ import com.mega.game.engine.controller.polling.IControllerPoller
 import com.mega.game.engine.cullables.CullablesSystem
 import com.mega.game.engine.cullables.GameEntityCuller
 import com.mega.game.engine.diagnostics.RuntimeDiagnostics
+import com.mega.game.engine.drawables.fonts.BitmapFontHandle
 import com.mega.game.engine.drawables.fonts.FontsSystem
 import com.mega.game.engine.drawables.shapes.DrawableShapesSystem
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -129,6 +129,7 @@ class MegamanMaverickGameParams {
     var vsync: Boolean = false
     var diagnostics: Boolean = false
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
+    var autoPerf: Boolean = true
 }
 
 class MegamanMaverickGame(
@@ -150,6 +151,9 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
+        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.75f
+        private const val AUTO_PERF_SUSTAINED_DUR = 5f
+        private const val NOTIFICATION_DUR = 3f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.DEATH)
@@ -198,6 +202,14 @@ class MegamanMaverickGame(
     private lateinit var debugText: MegaFontHandle
     private lateinit var loadingText: MegaFontHandle
     private var finishedLoadingAssets = false
+
+    private lateinit var notificationFont: BitmapFontHandle
+    private var notificationTimer = Timer(NOTIFICATION_DUR)
+    private var notificationText = ""
+    private var showNotification = false
+    private var notificationColor = Color.WHITE
+
+    private var autoPerfTimer = Timer(AUTO_PERF_SUSTAINED_DUR)
 
     private var logFileWriter: AsyncFileWriter? = null
     private var debugWindow: DebugWindow? = null
@@ -290,6 +302,13 @@ class MegamanMaverickGame(
             centerX = false
         )
 
+        notificationFont = BitmapFontHandle(
+            textSupplier = { notificationText },
+            attachment = Position.CENTER_LEFT,
+            positionX = 0f,
+            positionY = (ConstVals.VIEW_HEIGHT - 1f) * ConstVals.PPM
+        )
+
         assMan = AssetManager()
         queueAssets()
 
@@ -371,6 +390,8 @@ class MegamanMaverickGame(
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+        val delta = Gdx.graphics.deltaTime
+
         setDebugText("FPS: ${Gdx.graphics.framesPerSecond}")
 
         while (!runQueue.isEmpty) {
@@ -398,7 +419,26 @@ class MegamanMaverickGame(
         } else {
             diagnostics?.beginFrame()
 
-            val delta = Gdx.graphics.deltaTime
+            val performance = getPerformance()
+            if (performance != Performance.VERY_LOW &&
+                Gdx.graphics.framesPerSecond < performance.fps * AUTO_PERF_FPS_THRESHOLD_SCALAR
+            ) {
+                autoPerfTimer.update(delta)
+
+                if (autoPerfTimer.isFinished()) {
+                    val newPerformance = Performance.entries[performance.ordinal - 1]
+                    setPerformance(newPerformance)
+
+                    autoPerfTimer.reset()
+
+                    showNotification(
+                        "Performance issue detected! Downgraded now to '${
+                            newPerformance.name.replace("_", "").lowercase()
+                        }' performance.",
+                        Color.RED
+                    )
+                }
+            } else autoPerfTimer.reset()
 
             diagnostics?.beginEntry("controllerPoller")
             controllerPoller.run()
@@ -443,11 +483,24 @@ class MegamanMaverickGame(
         }
 
         if (params.debugText) {
-            viewports.get(ConstKeys.GAME).apply()
+            viewports.get(ConstKeys.UI).apply()
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
             debugText.draw(batch)
             batch.end()
+        }
+
+        if (showNotification) {
+            notificationFont.drawingColor = notificationColor
+
+            viewports.get(ConstKeys.UI).apply()
+            batch.projectionMatrix = getUiCamera().combined
+            batch.begin()
+            notificationFont.draw(batch)
+            batch.end()
+
+            notificationTimer.update(delta)
+            if (notificationTimer.isFinished()) showNotification = false
         }
 
         GameObjectPools.performNextReclaim()
@@ -817,6 +870,13 @@ class MegamanMaverickGame(
         properties.put(ConstKeys.TILED_MAP_LOAD_RESULT, tiledMapLoadResult)
 
     fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
+
+    fun showNotification(text: String, color: Color = Color.WHITE) {
+        showNotification = true
+        notificationText = text
+        notificationTimer.reset()
+        notificationColor = color
+    }
 
     fun setDebugText(text: String) = setDebugTextSupplier { text }
 
