@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.9.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -185,6 +185,10 @@
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/d_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/options/exit_selected.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/options/exit_selected_v2.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/options/exit_v2.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/options/gear.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/options/gear_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/axe_swinger.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/axe_swinger_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/weapons/frigid_shot.png</key>
@@ -251,12 +255,6 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties">
-            <key>libgdx::legacy-output</key>
-            <struct type="ExporterProperty">
-                <key>value</key>
-                <string>true</string>
-            </struct>
-        </map>
+        <map type="ExporterProperties"/>
     </struct>
 </data>

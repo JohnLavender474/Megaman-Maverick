@@ -4,21 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.controller.ControllerUtils
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.events.Event
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -27,10 +19,10 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
+import com.megaman.maverick.game.screens.utils.GameSettingsPanel
 import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
@@ -47,47 +39,38 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         EXIT("EXIT")
     }
 
-    private enum class MainScreenSettingsButton(val text: String) {
-        BACK("BACK"),
-        MUSIC_VOLUME("MUSIC VOLUME"),
-        EFFECTS_VOLUME("SFX VOLUME"),
-        PIXEL_PERFECT("PIXEL PERFECT"),
-        VSYNC("VSYNC"),
-        PERFORMANCE("PERFORMANCE"),
-        KEYBOARD_SETTINGS("KEYBOARD SETTINGS"),
-        CONTROLLER_SETTINGS("CONTROLLER SETTINGS")
-    }
-
     companion object {
         const val TAG = "MainMenuScreen"
         private const val DEBUG_SHAPES = false
         private const val MAIN_MENU_TEXT_START_ROW = 6f
-        private const val SETTINGS_TEXT_START_ROW = 11f
-        private const val SETTINGS_TRANS_DUR = 0.5f
-        private val SETTINGS_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
         private val MAIN_MENU_MUSIC = MusicAsset.VINNYZ_MAIN_MENU_MUSIC
     }
 
-    private lateinit var background: GameSprite
+    private lateinit var background: com.mega.game.engine.drawables.sprites.GameSprite
 
-    private var screenSlide = ScreenSlide(
+    private val screenSlide = ScreenSlide(
         game.getUiCamera(),
         getDefaultCameraPosition(false),
-        getDefaultCameraPosition(false).add(SETTINGS_TRAJ),
-        SETTINGS_TRANS_DUR,
+        getDefaultCameraPosition(false).add(GameSettingsPanel.SLIDE_TRAJ),
+        GameSettingsPanel.SLIDE_DUR,
         true
     )
 
     private val fontHandles = Array<MegaFontHandle>()
-    private val settingsArrows = Array<GameSprite>()
-
-    private val settingsArrowBlinkTimer = Timer(ConstVals.UI_ARROW_BLINK_DUR)
     private val blinkArrows = ObjectMap<String, BlinkingArrow>()
 
-    private var settingsArrowBlink = false
     private var doNotPlayPing = false
-
     private var initialized = false
+
+    private val settingsPanel = GameSettingsPanel(
+        game = game,
+        onBack = {
+            screenSlide.init()
+            buttonKey = MainScreenButton.SETTINGS.text
+        },
+        onError = { doNotPlayPing = true },
+        isInLevelScreen = false
+    )
 
     override fun init(vararg params: Any) {
         if (initialized) return
@@ -96,53 +79,21 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         var row = MAIN_MENU_TEXT_START_ROW
 
         MainScreenButton.entries.forEach {
-            val fontHandle = MegaFontHandle(
-                it.text,
-                positionX = 2f * ConstVals.PPM,
-                positionY = row * ConstVals.PPM,
-                centerX = false,
-                centerY = false
+            fontHandles.add(
+                MegaFontHandle(
+                    it.text,
+                    positionX = 2f * ConstVals.PPM,
+                    positionY = row * ConstVals.PPM,
+                    centerX = false,
+                    centerY = false
+                )
             )
-            fontHandles.add(fontHandle)
-
-            val arrowCenter =
-                Vector2(1.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
-            blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
-
-            row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
-        }
-
-        row = SETTINGS_TEXT_START_ROW
-
-        MainScreenSettingsButton.entries.forEach {
-            val textSupplier: () -> String = when (it) {
-                MainScreenSettingsButton.PIXEL_PERFECT -> {
-                    { "${it.text}: ${game.isPixelPerfect().toString().uppercase()}" }
-                }
-                MainScreenSettingsButton.VSYNC -> {
-                    { "${it.text}: ${game.isVsync().toString().uppercase()}" }
-                }
-                MainScreenSettingsButton.PERFORMANCE -> {
-                    { "${it.text}: ${game.getPerformance().name.replace("_", " ")}" }
-                }
-                else -> {
-                    { it.text }
-                }
-            }
-
-            val fontHandle = MegaFontHandle(
-                textSupplier = textSupplier,
-                positionX = 17f * ConstVals.PPM,
-                positionY = row * ConstVals.PPM,
-                centerX = false,
-                centerY = false
+            blinkArrows.put(
+                it.text, BlinkingArrow(
+                    game.assMan,
+                    Vector2(1.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
+                )
             )
-            fontHandles.add(fontHandle)
-
-            val arrowCenter =
-                Vector2(16.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
-            blinkArrows.put(it.text, BlinkingArrow(game.assMan, arrowCenter))
-
             row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
@@ -166,323 +117,99 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             )
         )
 
-        fontHandles.add(
-            MegaFontHandle(
-                { (game.audioMan.musicVolume * 10f).toInt().toString() },
-                positionX = 25.2f * ConstVals.PPM,
-                positionY = 10.45f * ConstVals.PPM,
-            )
-        )
-
-        fontHandles.add(
-            MegaFontHandle(
-                { (game.audioMan.soundVolume * 10f).toInt().toString() },
-                positionX = 25.2f * ConstVals.PPM,
-                positionY = 9.625f * ConstVals.PPM
-            )
-        )
-
-        val arrowRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.ARROW)
-        var y = 9.8f
-        for (i in 0 until 4) {
-            if (i != 0 && i % 2 == 0) y -= 0.85f
-
-            val blinkArrow = GameSprite(arrowRegion)
-            blinkArrow.setBounds(
-                (if (i % 2 == 0) 24f else 26f) * ConstVals.PPM,
-                y * ConstVals.PPM,
-                ConstVals.PPM / 2f,
-                ConstVals.PPM / 2f
-            )
-            blinkArrow.setFlip(i % 2 == 0, false)
-
-            settingsArrows.add(blinkArrow)
-        }
+        settingsPanel.init()
+        settingsPanel.buttons.forEach { buttons.put(it.key, it.value) }
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
-        background = GameSprite(atlas.findRegion("TitleScreenBackgroundv3"))
+        background = com.mega.game.engine.drawables.sprites.GameSprite(atlas.findRegion("TitleScreenBackgroundv3"))
         background.setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
 
-        buttons.put(
-            MainScreenButton.START_NEW_GAME.text,
-            object : IMenuButton {
+        buttons.put(MainScreenButton.START_NEW_GAME.text, object : IMenuButton {
+            override fun onSelect(delta: Float): Boolean {
+                game.state.reset()
+                game.setCurrentScreen(ScreenEnum.SELECT_DIFFICULTY_SCREEN.name)
+                return true
+            }
 
-                override fun onSelect(delta: Float): Boolean {
-                    game.state.reset()
-                    game.setCurrentScreen(ScreenEnum.SELECT_DIFFICULTY_SCREEN.name)
-                    return true
-                }
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> MainScreenButton.EXIT.text
+                Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text
+                else -> buttonKey
+            }
+        })
 
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.EXIT.text
-                    Direction.DOWN -> MainScreenButton.LOAD_SAVE_FILE.text
-                    else -> buttonKey
-                }
-            })
+        buttons.put(MainScreenButton.LOAD_SAVE_FILE.text, object : IMenuButton {
+            override fun onSelect(delta: Float): Boolean {
+                if (game.hasSavedState() && game.loadSavedState()) {
+                    GameLogger.debug(TAG, "Loaded saved state")
+                    when {
+                        game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
+                            game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
 
-        buttons.put(
-            MainScreenButton.LOAD_SAVE_FILE.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    if (game.hasSavedState() && game.loadSavedState()) {
-                        GameLogger.debug(TAG, "Loaded saved state")
-                        when {
-                            game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
-                                game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
-                            else -> {
-                                game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
-                                game.startLevel()
-                            }
+                        else -> {
+                            game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                            game.startLevel()
                         }
-                        game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-
-                        game.removeProperty(ConstKeys.WEAPONS_ATTAINED)
-
-                        return true
-                    } else {
-                        GameLogger.error(TAG, "Failed to load saved state")
-                        game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
-                        doNotPlayPing = true
-                        return false
                     }
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.START_NEW_GAME.text
-                    Direction.DOWN -> MainScreenButton.SETTINGS.text
-                    else -> buttonKey
+                    game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                    game.removeProperty(ConstKeys.WEAPONS_ATTAINED)
+                    return true
+                } else {
+                    GameLogger.error(TAG, "Failed to load saved state")
+                    game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                    doNotPlayPing = true
+                    return false
                 }
             }
-        )
 
-        buttons.put(
-            MainScreenButton.SETTINGS.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    screenSlide.init()
-                    buttonKey = MainScreenSettingsButton.BACK.text
-                    return false
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.LOAD_SAVE_FILE.text
-                    Direction.DOWN -> MainScreenButton.CREDITS.text
-                    else -> buttonKey
-                }
-            })
-
-        buttons.put(
-            MainScreenButton.CREDITS.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.CREDITS_SCREEN.name)
-                    return true
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.SETTINGS.text
-                    Direction.DOWN -> MainScreenButton.EXIT.text
-                    else -> buttonKey
-                }
-            })
-
-        buttons.put(
-            MainScreenButton.EXIT.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    Gdx.app.exit()
-                    return true
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenButton.CREDITS.text
-                    Direction.DOWN -> MainScreenButton.START_NEW_GAME.text
-                    else -> buttonKey
-                }
-            })
-
-        buttons.put(
-            MainScreenSettingsButton.BACK.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    screenSlide.init()
-                    buttonKey = MainScreenButton.SETTINGS.text
-                    return false
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
-                    Direction.DOWN -> MainScreenSettingsButton.MUSIC_VOLUME.text
-                    else -> buttonKey
-                }
-            })
-
-        buttons.put(
-            MainScreenSettingsButton.MUSIC_VOLUME.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float) = false
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.LEFT -> {
-                        var volume = game.audioMan.musicVolume
-                        volume = if (volume <= 0f) 1f else volume - 0.1f
-                        game.audioMan.musicVolume = volume
-                        buttonKey
-                    }
-
-                    Direction.RIGHT -> {
-                        var volume = game.audioMan.musicVolume
-                        volume = if (volume >= 1f) 0f else volume + 0.1f
-                        game.audioMan.musicVolume = volume
-                        buttonKey
-                    }
-
-                    Direction.UP -> MainScreenSettingsButton.BACK.text
-                    Direction.DOWN -> MainScreenSettingsButton.EFFECTS_VOLUME.text
-                }
-            })
-
-        buttons.put(
-            MainScreenSettingsButton.EFFECTS_VOLUME.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float) = false
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.LEFT -> {
-                        var volume = game.audioMan.soundVolume
-                        volume = if (volume <= 0f) 1f else volume - 0.1f
-                        game.audioMan.soundVolume = volume
-                        buttonKey
-                    }
-
-                    Direction.RIGHT -> {
-                        var volume = game.audioMan.soundVolume
-                        volume = if (volume >= 1f) 0f else volume + 0.1f
-                        game.audioMan.soundVolume = volume
-                        buttonKey
-                    }
-
-                    Direction.UP -> MainScreenSettingsButton.MUSIC_VOLUME.text
-                    Direction.DOWN -> MainScreenSettingsButton.PIXEL_PERFECT.text
-                }
-            })
-
-        buttons.put(
-            MainScreenSettingsButton.PIXEL_PERFECT.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    onNavigate(Direction.RIGHT, delta)
-                    return false
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.EFFECTS_VOLUME.text
-                    Direction.DOWN -> MainScreenSettingsButton.VSYNC.text
-                    Direction.LEFT, Direction.RIGHT -> {
-                        val pixelPerfect = game.isPixelPerfect()
-
-                        game.eventsMan.submitEvent(
-                            Event(
-                                EventType.TOGGLE_PIXEL_PERFECT,
-                                props(ConstKeys.VALUE pairTo !pixelPerfect)
-                            )
-                        )
-
-                        buttonKey
-                    }
-                }
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> MainScreenButton.START_NEW_GAME.text
+                Direction.DOWN -> MainScreenButton.SETTINGS.text
+                else -> buttonKey
             }
-        )
+        })
 
-        buttons.put(
-            MainScreenSettingsButton.VSYNC.text,
-            object : IMenuButton {
+        buttons.put(MainScreenButton.SETTINGS.text, object : IMenuButton {
+            override fun onSelect(delta: Float): Boolean {
+                screenSlide.init()
+                settingsPanel.reset()
+                buttonKey = GameSettingsPanel.BACK_KEY
+                return false
+            }
 
-                override fun onSelect(delta: Float): Boolean {
-                    game.setVsync(!game.isVsync())
-                    return false
-                }
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> MainScreenButton.LOAD_SAVE_FILE.text
+                Direction.DOWN -> MainScreenButton.CREDITS.text
+                else -> buttonKey
+            }
+        })
 
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.PIXEL_PERFECT.text
-                    Direction.DOWN -> MainScreenSettingsButton.PERFORMANCE.text
-                    Direction.LEFT, Direction.RIGHT -> {
-                        game.setVsync(!game.isVsync())
-                        buttonKey
-                    }
-                }
-            })
+        buttons.put(MainScreenButton.CREDITS.text, object : IMenuButton {
+            override fun onSelect(delta: Float): Boolean {
+                game.setCurrentScreen(ScreenEnum.CREDITS_SCREEN.name)
+                return true
+            }
 
-        buttons.put(
-            MainScreenSettingsButton.PERFORMANCE.text,
-            object : IMenuButton {
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> MainScreenButton.SETTINGS.text
+                Direction.DOWN -> MainScreenButton.EXIT.text
+                else -> buttonKey
+            }
+        })
 
-                override fun onSelect(delta: Float) = false
+        buttons.put(MainScreenButton.EXIT.text, object : IMenuButton {
+            override fun onSelect(delta: Float): Boolean {
+                Gdx.app.exit()
+                return true
+            }
 
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.VSYNC.text
-                    Direction.DOWN -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
-                    Direction.LEFT -> {
-                        val entries = MegamanMaverickGame.Performance.entries
-                        val idx = entries.indexOf(game.getPerformance())
-                        game.setPerformance(if (idx <= 0) entries.last() else entries[idx - 1])
-                        buttonKey
-                    }
-                    Direction.RIGHT -> {
-                        val entries = MegamanMaverickGame.Performance.entries
-                        val idx = entries.indexOf(game.getPerformance())
-                        game.setPerformance(if (idx >= entries.lastIndex) entries.first() else entries[idx + 1])
-                        buttonKey
-                    }
-                }
-            })
-
-        buttons.put(
-            MainScreenSettingsButton.KEYBOARD_SETTINGS.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    game.setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
-                    return true
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.PERFORMANCE.text
-                    Direction.DOWN -> MainScreenSettingsButton.CONTROLLER_SETTINGS.text
-                    else -> buttonKey
-                }
-            })
-
-        buttons.put(
-            MainScreenSettingsButton.CONTROLLER_SETTINGS.text,
-            object : IMenuButton {
-
-                override fun onSelect(delta: Float): Boolean {
-                    if (!ControllerUtils.isControllerConnected()) {
-                        GameLogger.debug(TAG, "no controller connected")
-                        game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
-                        doNotPlayPing = true
-                        return false
-                    }
-                    game.setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
-                    return true
-                }
-
-                override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                    Direction.UP -> MainScreenSettingsButton.KEYBOARD_SETTINGS.text
-                    Direction.DOWN -> MainScreenSettingsButton.BACK.text
-                    else -> buttonKey
-                }
-            })
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> MainScreenButton.CREDITS.text
+                Direction.DOWN -> MainScreenButton.START_NEW_GAME.text
+                else -> buttonKey
+            }
+        })
     }
 
     override fun show() {
@@ -505,13 +232,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             screenSlide.update(delta)
             if (screenSlide.justFinished) screenSlide.reverse()
 
-            blinkArrows.get(buttonKey).update(delta)
-
-            settingsArrowBlinkTimer.update(delta)
-            if (settingsArrowBlinkTimer.isFinished()) {
-                settingsArrowBlink = !settingsArrowBlink
-                settingsArrowBlinkTimer.reset()
-            }
+            if (GameSettingsPanel.ALL_KEYS.contains(buttonKey)) settingsPanel.update(delta)
+            else blinkArrows.get(buttonKey)?.update(delta)
         }
     }
 
@@ -523,9 +245,9 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         background.draw(drawer)
         fontHandles.forEach { it.draw(drawer) }
-        blinkArrows.get(buttonKey).draw(drawer)
+        blinkArrows.get(buttonKey)?.draw(drawer)
 
-        if (settingsArrowBlink) settingsArrows.forEach { it.draw(drawer) }
+        settingsPanel.draw(drawer)
 
         drawer.end()
     }
@@ -535,12 +257,16 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             val renderer = game.shapeRenderer
             renderer.projectionMatrix = game.getUiCamera().combined
             renderer.begin()
+
             blinkArrows.values().forEach { it.draw(renderer) }
+            settingsPanel.draw(renderer)
+
             renderer.end()
         }
     }
 
-    override fun getNavigationDirection() = if (screenSlide.finished) super.getNavigationDirection() else null
+    override fun getNavigationDirection() =
+        if (screenSlide.finished) super.getNavigationDirection() else null
 
     override fun selectionRequested() = screenSlide.finished && super.selectionRequested()
 

@@ -286,19 +286,9 @@ class MegamanMaverickGame(
         debugText = MegaFontHandle(
             ConstVals.EMPTY_STRING,
             positionX = ConstVals.PPM.toFloat(),
-            positionY = (ConstVals.VIEW_HEIGHT - 2) * ConstVals.PPM,
+            positionY = 0.75f * ConstVals.PPM,
             centerX = false
         )
-        // val fpsTextSupplier: () -> String = { "FPS: ${Gdx.graphics.framesPerSecond}" }
-        /*
-        val megamanPosTextSupplier: () -> String = {
-            val pos = megaman.body.getCenter()
-            val x = pos.x.toInt() / ConstVals.PPM
-            val y = pos.y.toInt() / ConstVals.PPM
-            "MM POS: $x,$y"
-        }
-         */
-        // setDebugTextSupplier(fpsTextSupplier)
 
         assMan = AssetManager()
         queueAssets()
@@ -740,21 +730,17 @@ class MegamanMaverickGame(
         return engine
     }
 
-    fun setCurrentScreen(key: String) {
+    fun setCurrentScreen(key: String, props: Properties = Properties()) {
         GameLogger.log(TAG, "setCurrentScreen(): set to screen with key = $key")
-
         currentScreen?.let {
             it.hide()
             it.reset()
         }
-
         currentScreenKey = key
-
         currentScreen?.let {
-            it.show()
+            it.show(props)
             it.resize(Gdx.graphics.width, Gdx.graphics.height)
         }
-
         if (paused) resume()
     }
 

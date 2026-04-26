@@ -23,6 +23,12 @@ abstract class AbstractMenuScreen(protected var buttons: ObjectMap<String, IMenu
 
     protected open fun onAnySelection() {}
 
+    protected open fun onNavigate(button: IMenuButton, direction: Direction, delta: Float) {
+        val key = button.onNavigate(direction, delta)
+        setCurrentButtonKey(key)
+        onAnyMovement(direction)
+    }
+
     override fun show() {
         super.show()
         selectionMade = false
@@ -38,12 +44,7 @@ abstract class AbstractMenuScreen(protected var buttons: ObjectMap<String, IMenu
 
         val key = getCurrentButtonKey()
         if (isInteractionAllowed() && key != null) buttons[key]?.let { button ->
-            getNavigationDirection()?.let {
-                val key = button.onNavigate(it, delta)
-                setCurrentButtonKey(key)
-                onAnyMovement(it)
-            }
-
+            getNavigationDirection()?.let { onNavigate(button, it, delta) }
             if (selectionRequested()) {
                 selectionMade = button.onSelect(delta)
                 if (selectionMade) onAnySelection()

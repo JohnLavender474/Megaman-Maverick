@@ -10,12 +10,14 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerUtils
 import com.mega.game.engine.controller.ControllerUtils.getController
 import com.mega.game.engine.controller.buttons.ControllerButton
 import com.mega.game.engine.controller.buttons.ControllerButtons
 import com.mega.game.engine.screens.menus.IMenuButton
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -37,7 +39,7 @@ class ControllerSettingsScreen(
 
     companion object {
         const val TAG = "ControllerSettingsScreen"
-        private const val BACK = "BACK TO MAIN MENU"
+        private const val BACK = "BACK"
         private const val LOAD_SAVED_SETTINGS = "LOAD SAVED SETTINGS"
         private const val RESET_TO_DEFAULTS = "RESET TO DEFAULTS"
         private const val SELECT_ACTION = "SELECT ACTION"
@@ -288,6 +290,7 @@ class ControllerSettingsScreen(
                             else -> MegaControllerButton.entries[index].name
                         }
                     }
+
                     Direction.DOWN -> {
                         val index = b.ordinal + 1
                         when {
@@ -295,6 +298,7 @@ class ControllerSettingsScreen(
                             else -> MegaControllerButton.entries[index].name
                         }
                     }
+
                     else -> null
                 }
             })
@@ -328,12 +332,19 @@ class ControllerSettingsScreen(
                     game.selectButtonAction = game.selectButtonAction.previous()
                     SELECT_ACTION
                 }
+
                 Direction.RIGHT -> {
                     game.selectButtonAction = game.selectButtonAction.next()
                     SELECT_ACTION
                 }
             }
         })
+    }
+
+    override fun show(props: Properties) {
+        if (props.containsKey("${ConstKeys.BACK}_${ConstKeys.ACTION}"))
+            backAction = props.get("${ConstKeys.BACK}_${ConstKeys.ACTION}") as () -> Boolean
+        show()
     }
 
     override fun show() {
@@ -397,5 +408,13 @@ class ControllerSettingsScreen(
             }
         }
         game.batch.end()
+    }
+
+    override fun reset() {
+        super.reset()
+        backAction = backAction@{
+            game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+            return@backAction true
+        }
     }
 }

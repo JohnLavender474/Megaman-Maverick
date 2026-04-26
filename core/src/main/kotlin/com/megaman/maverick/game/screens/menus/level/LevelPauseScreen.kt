@@ -38,7 +38,10 @@ import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
+import com.megaman.maverick.game.screens.utils.GameSettingsPanel
+import com.megaman.maverick.game.screens.utils.ScreenSlide
 import com.megaman.maverick.game.state.GameState
+import com.megaman.maverick.game.utils.extensions.getDefaultCameraPosition
 import kotlin.math.min
 
 class LevelPauseScreen(game: MegamanMaverickGame) :
@@ -60,9 +63,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             .row(gdxArrayOf(MegamanWeapon.INFERNAL_BARRAGE, MegamanWeapon.RUSH_JET))
             .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHES, null)) // adapter 1
             .row(gdxArrayOf(MegamanWeapon.PRECIOUS_GUARD, null)) // adapter 2
-            // Both rows of health tanks have the exit button on purpose
-            .row(gdxArrayOf(HEALTH_TANKS[0], HEALTH_TANKS[1], ConstKeys.EXIT))
-            .row(gdxArrayOf(HEALTH_TANKS[2], HEALTH_TANKS[3], ConstKeys.EXIT))
+            // Both rows of health tanks have the exit and settings buttons on purpose
+            .row(gdxArrayOf(HEALTH_TANKS[0], HEALTH_TANKS[1], ConstKeys.EXIT, ConstKeys.SETTINGS))
+            .row(gdxArrayOf(HEALTH_TANKS[2], HEALTH_TANKS[3], ConstKeys.EXIT, ConstKeys.SETTINGS))
             .build()
 
         private const val OPTIONS_PREFIX = "options"
@@ -73,9 +76,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         private const val LIVES_X = 13.15f
         private const val LIVES_Y = 3.75f
-
-        private const val SCREWS_X = 13.15f
-        private const val SCREWS_Y = 2.75f
 
         private const val BACKGROUND_SPRITE_TARGET_POS_Y = 0f
 
@@ -119,6 +119,24 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     private val fillHealthTimer = Timer()
 
+    private val settingsScreenSlide = ScreenSlide(
+        game.getUiCamera(),
+        getDefaultCameraPosition(false),
+        getDefaultCameraPosition(false).add(GameSettingsPanel.SLIDE_TRAJ),
+        GameSettingsPanel.SLIDE_DUR,
+        true
+    )
+    private val settingsPanel = GameSettingsPanel(
+        game = game,
+        onBack = {
+            settingsScreenSlide.init()
+            showingSettings = false
+        },
+        isInLevelScreen = true
+    )
+    private var showingSettings = false
+    private val settingsBkgSprite = GameSprite()
+
     private val fadeout = Fade(FadeType.FADE_OUT, EXIT_DUR)
     private var exiting = false
 
@@ -128,31 +146,67 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         if (initialized) return
         initialized = true
 
-        val blackRegion = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        settingsPanel.init()
+
+        val blackRegion = game.assMan.getTextureRegion(
+            TextureAsset.COLORS.source,
+            ConstKeys.BLACK
+        )
         fadeout.setRegion(blackRegion)
         fadeout.setPosition(0f, 0f)
         fadeout.setWidth(ConstVals.VIEW_WIDTH * ConstVals.PPM)
         fadeout.setHeight(ConstVals.VIEW_HEIGHT * ConstVals.PPM)
 
-        val levelPauseScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_PAUSE_SCREEN_V2.source)
+        settingsBkgSprite.setRegion(blackRegion)
+        settingsBkgSprite.setBounds(
+            GameSettingsPanel.SLIDE_TRAJ.x,
+            GameSettingsPanel.SLIDE_TRAJ.y,
+            ConstVals.VIEW_WIDTH * ConstVals.PPM,
+            ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        )
 
-        val backgroundRegion = levelPauseScreenAtlas.findRegion(/* ConstKeys.BACKGROUND */ "background_no_screws")
-        backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val levelPauseScreenAtlas = game.assMan.getTextureAtlas(
+            TextureAsset.LEVEL_PAUSE_SCREEN_V2.source
+        )
+
+        val backgroundRegion = levelPauseScreenAtlas.findRegion("background_no_screws")
+        backgroundSprite.setBounds(
+            0f,
+            0f,
+            ConstVals.VIEW_WIDTH * ConstVals.PPM,
+            ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        )
         backgroundSprite.setRegion(backgroundRegion)
 
-        buttonRegions.put(ConstKeys.EXIT, levelPauseScreenAtlas.findRegion("$OPTIONS_PREFIX/${ConstKeys.EXIT}"))
         buttonRegions.put(
-            "${ConstKeys.EXIT}$SELECTED_SUFFIX",
-            levelPauseScreenAtlas.findRegion("$OPTIONS_PREFIX/${ConstKeys.EXIT}$SELECTED_SUFFIX")
+            ConstKeys.EXIT,
+            levelPauseScreenAtlas.findRegion("$OPTIONS_PREFIX/${ConstKeys.EXIT}_v2")
+        )
+        buttonRegions.put(
+            "${ConstKeys.EXIT}${SELECTED_SUFFIX}",
+            levelPauseScreenAtlas.findRegion("$OPTIONS_PREFIX/${ConstKeys.EXIT}${SELECTED_SUFFIX}_v2")
+        )
+
+        buttonRegions.put(
+            ConstKeys.SETTINGS,
+            levelPauseScreenAtlas.findRegion("${OPTIONS_PREFIX}/gear")
+        )
+        buttonRegions.put(
+            "${ConstKeys.SETTINGS}${SELECTED_SUFFIX}",
+            levelPauseScreenAtlas.findRegion("$OPTIONS_PREFIX/gear${SELECTED_SUFFIX}")
         )
 
         MegamanWeapon.entries.forEach { weapon ->
             val key = weapon.name.lowercase()
 
             if (levelPauseScreenAtlas.containsRegion("$WEAPONS_PREFIX/$key")) {
-                buttonRegions.put(key, levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key"))
                 buttonRegions.put(
-                    "$key$SELECTED_SUFFIX", levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key$SELECTED_SUFFIX")
+                    key,
+                    levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key")
+                )
+                buttonRegions.put(
+                    "$key$SELECTED_SUFFIX",
+                    levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key$SELECTED_SUFFIX")
                 )
             }
         }
@@ -176,16 +230,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                 positionY = LIVES_Y * ConstVals.PPM,
                 centerX = false,
                 centerY = false
-            ),
-            /*
-            MegaFontHandle(
-                textSupplier = { state.getCurrency().toString().padStart(3, '0') },
-                positionX = SCREWS_X * ConstVals.PPM,
-                positionY = SCREWS_Y * ConstVals.PPM,
-                centerX = false,
-                centerY = false
             )
-             */
         )
 
         GameLogger.debug(TAG, "init(): buttonRegions=$buttonRegions")
@@ -193,8 +238,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     override fun show() {
         if (!initialized) init()
-
         super.show()
+
+        settingsScreenSlide.reset()
+        showingSettings = false
+        settingsPanel.buttons.forEach { buttons.put(it.key, it.value) }
 
         closing = false
         slideTimer.reset()
@@ -225,6 +273,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                                 MegamanWeapon.MEGA_BUSTER -> {
                                     { megaman.getCurrentHealth() }
                                 }
+
                                 else -> {
                                     { megaman.weaponsHandler.getAmmo(element) }
                                 }
@@ -235,6 +284,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                             bitsBars.add(bitsBar)
                         }
                     }
+
                     is MegaHealthTank -> {
                         if (megaman.hasHealthTank(element)) {
                             row.add(element)
@@ -252,6 +302,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                             bitsBars.add(bitsBar)
                         }
                     }
+
                     ConstKeys.EXIT -> {
                         row.add(ConstKeys.EXIT)
 
@@ -271,12 +322,35 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                             override fun onNavigate(direction: Direction, delta: Float): String? {
                                 GameLogger.debug(TAG, "exit button: onNavigate(): direction=$direction")
-                                navigate(direction)
+                                navigatePauseScreen(direction)
                                 return null
                             }
                         }
 
                         buttons.put(ConstKeys.EXIT, button)
+                    }
+
+                    ConstKeys.SETTINGS -> {
+                        row.add(ConstKeys.SETTINGS)
+
+                        val button = object : IMenuButton {
+
+                            override fun onSelect(delta: Float): Boolean {
+                                GameLogger.debug(TAG, "settings button: onSelect()")
+                                settingsScreenSlide.init()
+                                showingSettings = true
+                                settingsPanel.reset()
+                                return false
+                            }
+
+                            override fun onNavigate(direction: Direction, delta: Float): String? {
+                                GameLogger.debug(TAG, "settings button: onNavigate(): direction=$direction")
+                                navigatePauseScreen(direction)
+                                return null
+                            }
+                        }
+
+                        buttons.put(ConstKeys.SETTINGS, button)
                     }
                 }
             }
@@ -293,8 +367,22 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         }
 
         val exitButtonSprite = GameSprite(buttonRegions[ConstKeys.EXIT])
-        exitButtonSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        exitButtonSprite.setBounds(
+            0f,
+            0f,
+            ConstVals.VIEW_WIDTH * ConstVals.PPM,
+            ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        )
         buttonSprites.put(ConstKeys.EXIT, exitButtonSprite)
+
+        val settingsButtonSprite = GameSprite(buttonRegions[ConstKeys.SETTINGS])
+        settingsButtonSprite.setBounds(
+            0f,
+            0f,
+            ConstVals.VIEW_WIDTH * ConstVals.PPM,
+            ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        )
+        buttonSprites.put(ConstKeys.SETTINGS, settingsButtonSprite)
 
         MegamanWeapon.entries.forEach { weapon ->
             if (!megaman.hasWeapon(weapon)) return@forEach
@@ -348,47 +436,52 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         if (exiting) {
             fadeout.update(delta)
-
             if (fadeout.isJustFinished()) game.runQueue.addLast {
                 game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
             }
-
             return
         }
 
-        fillHealthTimer.update(delta)
-        if (fillHealthTimer.isJustFinished()) resetFillHealthTimer()
+        settingsScreenSlide.update(delta)
+        if (settingsScreenSlide.justFinished) settingsScreenSlide.reverse()
 
-        if (!slideTimer.isFinished()) {
-            slideTimer.update(delta)
+        if (showingSettings) settingsPanel.update(delta)
+        else {
+            fillHealthTimer.update(delta)
+            if (fillHealthTimer.isJustFinished()) resetFillHealthTimer()
 
-            val start: Float
-            val target: Float
-            if (closing) {
-                start = BACKGROUND_SPRITE_TARGET_POS_Y * ConstVals.PPM
-                target = (BACKGROUND_SPRITE_TARGET_POS_Y - SLIDE_OFFSET_Y) * ConstVals.PPM
-            } else {
-                start = (BACKGROUND_SPRITE_TARGET_POS_Y - SLIDE_OFFSET_Y) * ConstVals.PPM
-                target = BACKGROUND_SPRITE_TARGET_POS_Y * ConstVals.PPM
-            }
+            if (!slideTimer.isFinished()) {
+                slideTimer.update(delta)
 
-            backgroundSprite.y = UtilMethods.interpolate(start, target, slideTimer.getRatio())
-
-            if (closing && slideTimer.isFinished()) game.runQueue.addLast { game.resume() }
-        }
-
-        buttonSprites.forEach { entry ->
-            val key = entry.key
-            val buttonSprite = entry.value
-
-            val buttonRegion = when {
-                key == getCurrentButtonKey() -> {
-                    val selectedKey = "$key$SELECTED_SUFFIX"
-                    buttonRegions[selectedKey]
+                val start: Float
+                val target: Float
+                if (closing) {
+                    start = BACKGROUND_SPRITE_TARGET_POS_Y * ConstVals.PPM
+                    target = (BACKGROUND_SPRITE_TARGET_POS_Y - SLIDE_OFFSET_Y) * ConstVals.PPM
+                } else {
+                    start = (BACKGROUND_SPRITE_TARGET_POS_Y - SLIDE_OFFSET_Y) * ConstVals.PPM
+                    target = BACKGROUND_SPRITE_TARGET_POS_Y * ConstVals.PPM
                 }
-                else -> buttonRegions[key]
+
+                backgroundSprite.y = UtilMethods.interpolate(start, target, slideTimer.getRatio())
+
+                if (closing && slideTimer.isFinished()) game.runQueue.addLast { game.resume() }
             }
-            buttonSprite.setRegion(buttonRegion)
+
+            buttonSprites.forEach { entry ->
+                val key = entry.key
+                val buttonSprite = entry.value
+
+                val buttonRegion = when {
+                    key == getCurrentButtonKey() -> {
+                        val selectedKey = "$key$SELECTED_SUFFIX"
+                        buttonRegions[selectedKey]
+                    }
+
+                    else -> buttonRegions[key]
+                }
+                buttonSprite.setRegion(buttonRegion)
+            }
         }
     }
 
@@ -397,8 +490,10 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         drawer.projectionMatrix = game.getUiCamera().combined
 
         val drawing = drawer.isDrawing
-
         if (!drawing) drawer.begin()
+
+        if (showingSettings || !settingsScreenSlide.finished) settingsBkgSprite.draw(drawer)
+        settingsPanel.draw(drawer)
 
         backgroundSprite.draw(drawer)
 
@@ -409,34 +504,35 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         }
 
         if (exiting) fadeout.draw(drawer)
-
         if (!drawing) drawer.end()
     }
 
-    override fun getCurrentButtonKey() = node.element.toString().lowercase()
+    override fun getCurrentButtonKey() = when {
+        showingSettings -> settingsPanel.currentKey
+        else -> node.element.toString().lowercase()
+    }
 
     override fun setCurrentButtonKey(key: String?) =
         GameLogger.debug(TAG, "setCurrentButtonKey(): ignore setting button key: $key")
 
     override fun onAnySelection() {
         GameLogger.debug(TAG, "onAnySelection()")
-
-        super.onAnySelection()
-
-        if (!exiting) {
+        if (showingSettings) return
+        if (!exiting && settingsScreenSlide.finished) {
             closing = true
             slideTimer.reset()
         }
     }
 
+    override fun getNavigationDirection() = if (settingsScreenSlide.finished) super.getNavigationDirection() else null
+
+    override fun selectionRequested() = settingsScreenSlide.finished && super.selectionRequested()
+
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
-
         super.reset()
-
         buttons.clear()
         buttonSprites.clear()
-
         bitsBars.clear()
     }
 
@@ -452,7 +548,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         override fun onNavigate(direction: Direction, delta: Float): String? {
             GameLogger.debug(TAG, "createWeaponButton(): onNavigate(): weapon=$weapon, direction=$direction")
-            navigate(direction)
+            navigatePauseScreen(direction)
             return null
         }
     }
@@ -491,12 +587,12 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             GameLogger.debug(
                 TAG, "createHealthTankButton(): onNavigate(): healthTank=$healthTank, direction=$direction"
             )
-            navigate(direction)
+            navigatePauseScreen(direction)
             return null
         }
     }
 
-    private fun navigate(direction: Direction) {
+    private fun navigatePauseScreen(direction: Direction) {
         val oldNode = node
         try {
             node = when (direction) {
@@ -538,6 +634,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                     nextNode
                 }
+
                 Direction.LEFT -> node.previousColumn()
                 Direction.RIGHT -> node.nextColumn()
             }
