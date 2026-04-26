@@ -151,9 +151,9 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.75f
-        private const val AUTO_PERF_SUSTAINED_DUR = 5f
-        private const val NOTIFICATION_DUR = 3f
+        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.9f
+        private const val AUTO_PERF_SUSTAINED_DUR = 3f
+        private const val NOTIFICATION_DUR = 5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.FEET, FixtureType.DEATH)
@@ -431,12 +431,14 @@ class MegamanMaverickGame(
 
                     autoPerfTimer.reset()
 
-                    showNotification(
-                        "Performance issue detected! Downgraded now to '${
-                            newPerformance.name.replace("_", "").lowercase()
-                        }' performance.",
-                        Color.RED
-                    )
+                    val message = "Performance issue detected! Downgraded now to '${
+                        newPerformance.name.replace("_", "").lowercase()
+                    }' performance."
+                    val color = when (currentScreen) {
+                        is MegaLevelScreen if getCurrentLevel() == LevelDefinition.INFERNO_MAN -> Color.WHITE
+                        else -> Color.RED
+                    }
+                    showNotification(message, color)
                 }
             } else autoPerfTimer.reset()
 
