@@ -151,8 +151,8 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.9f
-        private const val AUTO_PERF_SUSTAINED_DUR = 3f
+        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.85f
+        private const val AUTO_PERF_SUSTAINED_DUR = 5f
         private const val NOTIFICATION_DUR = 5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -431,18 +431,9 @@ class MegamanMaverickGame(
 
                     autoPerfTimer.reset()
 
-                    val message = "Performance issue detected! Downgraded now to '${
-                        newPerformance.name.replace("_", " ").lowercase()
-                    }' performance."
-
+                    val message = "Performance issue detected! Downgrading to ${newPerformance.fps} FPS."
                     GameLogger.error(TAG, message)
-
-                    val color = when (currentScreen) {
-                        is MegaLevelScreen if getCurrentLevel() == LevelDefinition.INFERNO_MAN -> Color.WHITE
-                        else -> Color.RED
-                    }
-
-                    showNotification(message, color)
+                    showNotification(message, Color.RED)
                 }
             } else autoPerfTimer.reset()
 
@@ -500,7 +491,21 @@ class MegamanMaverickGame(
             notificationFont.drawingColor = notificationColor
 
             viewports.get(ConstKeys.UI).apply()
-            batch.projectionMatrix = getUiCamera().combined
+
+            val uiCam = getUiCamera()
+
+            shapeRenderer.projectionMatrix = uiCam.combined
+            shapeRenderer.begin(ShapeType.Filled)
+            shapeRenderer.setColor(0f, 0f, 0f, 1f)
+            shapeRenderer.rect(
+                0f,
+                (ConstVals.VIEW_HEIGHT - 1.75f) * ConstVals.PPM,
+                ConstVals.VIEW_WIDTH * ConstVals.PPM.toFloat(),
+                ConstVals.PPM.toFloat()
+            )
+            shapeRenderer.end()
+
+            batch.projectionMatrix = uiCam.combined
             batch.begin()
             notificationFont.draw(batch)
             batch.end()
