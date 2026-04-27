@@ -129,7 +129,7 @@ class MegamanMaverickGameParams {
     var vsync: Boolean = false
     var diagnostics: Boolean = false
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
-    var autoPerf: Boolean = true
+    var worldContainer: String = "quadtree"
 }
 
 class MegamanMaverickGame(

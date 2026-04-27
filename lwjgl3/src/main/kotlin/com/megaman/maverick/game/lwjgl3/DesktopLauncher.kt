@@ -40,6 +40,7 @@ object DesktopLauncher {
     private const val DEFAULT_PIXEL_PERFECT = false
     private const val DEFAULT_VSYNC = false
     private const val DEFAULT_DIAGNOSTICS = false
+    private const val DEFAULT_WORLD_CONTAINER = "quadtree"
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -99,6 +100,7 @@ object DesktopLauncher {
         params.allowScreenshots = appArgs.allowScreenshots
         params.showScreenController = appArgs.showScreenController
         params.diagnostics = appArgs.diagnostics
+        params.worldContainer = appArgs.worldContainer
 
         val logLevels = appArgs.logLevels.replace("\\s+", "").split(",").filter { !it.isBlank() }
         try {
@@ -282,5 +284,11 @@ object DesktopLauncher {
                 "<epoch>-diagnostics.txt file in the working directory. Default value is $DEFAULT_DIAGNOSTICS")
         )
         var diagnostics = DEFAULT_DIAGNOSTICS
+
+        @Parameter(
+            names = ["--worldContainer"],
+            description = "Specify which world container type to use for the world system"
+        )
+        var worldContainer = DEFAULT_WORLD_CONTAINER
     }
 }
