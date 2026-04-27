@@ -89,11 +89,8 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.isPerformanceSubpar()) {
-            fadeTimer.update(delta)
-            if (fadeTimer.isFinished()) destroy()
-            return@UpdatablesComponent
-        } else fadeTimer.reset()
+        fadeTimer.update(delta)
+        if (fadeTimer.isFinished()) destroy()
 
         if (!body.isSensing(BodySense.IN_WATER)) pop("not-in-water")
     })
@@ -145,11 +142,10 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
+
             sprite.setCenter(body.getCenter())
-            val alpha = when {
-                game.isPerformanceSubpar() -> floor(fadeTimer.getRatio() * 10) / 10
-                else -> 1f
-            }
+
+            val alpha = 1f - floor(fadeTimer.getRatio() * 10) / 10
             sprite.setAlpha(alpha)
         }
         return component
