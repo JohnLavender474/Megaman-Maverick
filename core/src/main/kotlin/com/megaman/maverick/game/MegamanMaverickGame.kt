@@ -432,12 +432,16 @@ class MegamanMaverickGame(
                     autoPerfTimer.reset()
 
                     val message = "Performance issue detected! Downgraded now to '${
-                        newPerformance.name.replace("_", "").lowercase()
+                        newPerformance.name.replace("_", " ").lowercase()
                     }' performance."
+
+                    GameLogger.error(TAG, message)
+
                     val color = when (currentScreen) {
                         is MegaLevelScreen if getCurrentLevel() == LevelDefinition.INFERNO_MAN -> Color.WHITE
                         else -> Color.RED
                     }
+
                     showNotification(message, color)
                 }
             } else autoPerfTimer.reset()

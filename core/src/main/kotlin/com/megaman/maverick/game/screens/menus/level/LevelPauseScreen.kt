@@ -517,7 +517,10 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     override fun onAnySelection() {
         GameLogger.debug(TAG, "onAnySelection()")
-        if (showingSettings) return
+        if (showingSettings) {
+            undoSelection()
+            return
+        }
         if (!exiting && settingsScreenSlide.finished) {
             closing = true
             slideTimer.reset()
