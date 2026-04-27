@@ -151,8 +151,9 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.85f
-        private const val AUTO_PERF_SUSTAINED_DUR = 5f
+        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.9f
+        private const val AUTO_PERF_FPS_CRISIS_SCALAR = 0.5f
+        private const val AUTO_PERF_SUSTAINED_DUR = 3f
         private const val NOTIFICATION_DUR = 5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -419,22 +420,25 @@ class MegamanMaverickGame(
         } else {
             diagnostics?.beginFrame()
 
-            val performance = getPerformance()
-            if (performance != Performance.VERY_LOW &&
-                Gdx.graphics.framesPerSecond < performance.fps * AUTO_PERF_FPS_THRESHOLD_SCALAR
-            ) {
-                autoPerfTimer.update(delta)
+            if (currentScreenKey == ScreenEnum.LEVEL_SCREEN.name) {
+                val performance = getPerformance()
+                if (performance != Performance.VERY_LOW &&
+                    Gdx.graphics.framesPerSecond < performance.fps * AUTO_PERF_FPS_THRESHOLD_SCALAR
+                ) {
+                    val crisis = Gdx.graphics.framesPerSecond < performance.fps * AUTO_PERF_FPS_CRISIS_SCALAR
+                    autoPerfTimer.update(delta * if (crisis) 1.5f else 1f)
 
-                if (autoPerfTimer.isFinished()) {
-                    val newPerformance = Performance.entries[performance.ordinal - 1]
-                    setPerformance(newPerformance)
+                    if (autoPerfTimer.isFinished()) {
+                        val newPerformance = Performance.entries[performance.ordinal - 1]
+                        setPerformance(newPerformance)
 
-                    autoPerfTimer.reset()
+                        autoPerfTimer.reset()
 
-                    val message = "Performance issue detected! Downgrading to ${newPerformance.fps} FPS."
-                    GameLogger.error(TAG, message)
-                    showNotification(message, Color.RED)
-                }
+                        val message = "Performance issue detected! Downgrading to ${newPerformance.fps} FPS."
+                        GameLogger.error(TAG, message)
+                        showNotification(message, Color.RED)
+                    }
+                } else autoPerfTimer.reset()
             } else autoPerfTimer.reset()
 
             diagnostics?.beginEntry("controllerPoller")
@@ -918,4 +922,6 @@ class MegamanMaverickGame(
         Gdx.graphics.setForegroundFPS(performance.fps)
         getSystem(WorldSystem::class).fixedStep = performance.fixedStep
     }
+
+    fun isPerformanceSubpar() =  getPerformance().ordinal > Performance.LOW.ordinal
 }

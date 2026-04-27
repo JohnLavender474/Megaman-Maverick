@@ -17,6 +17,7 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameCircle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -42,6 +43,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.floor
 
 class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
     IDirectional {
@@ -50,10 +52,13 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         const val TAG = "UnderWaterBubble"
         private const val SLOW_SPEED = 2.5f
         private const val FAST_SPEED = 8f
+        private const val TIME_TO_FADE = 0.5f
         private var region: TextureRegion? = null
     }
 
     override lateinit var direction: Direction
+
+    private val fadeTimer = Timer(TIME_TO_FADE)
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -79,9 +84,17 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         if (speed != null) body.physics.velocity
             .setToDirection(direction)
             .scl((if (speed == Speed.SLOW) SLOW_SPEED else FAST_SPEED) * ConstVals.PPM)
+
+        fadeTimer.reset()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (game.isPerformanceSubpar()) {
+            fadeTimer.update(delta)
+            if (fadeTimer.isFinished()) destroy()
+            return@UpdatablesComponent
+        } else fadeTimer.reset()
+
         if (!body.isSensing(BodySense.IN_WATER)) pop("not-in-water")
     })
 
@@ -114,26 +127,36 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         waterListenerFixture.putProperty(ConstKeys.SPLASH, false)
         body.addFixture(waterListenerFixture)
 
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val active = !game.isPerformanceSubpar()
+            body.physics.collisionOn = active
+            body.forEachFixture { fixture -> fixture.setActive(active) }
+        }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
-
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
-        sprite.setSize(0.25f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
             sprite.setCenter(body.getCenter())
+            val alpha = when {
+                game.isPerformanceSubpar() -> floor(fadeTimer.getRatio() * 10) / 10
+                else -> 1f
+            }
+            sprite.setAlpha(alpha)
         }
         return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 1, 2, 0.1f, true)
+        val animation = Animation(region!!, 2, 1, 0.1f, true)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }

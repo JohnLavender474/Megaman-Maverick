@@ -15,7 +15,7 @@ import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
-import com.mega.game.engine.drawables.sprites.setBounds
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.SineWave
@@ -64,6 +64,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     private var background = false
     private var fadingOut = false
 
+    private val position = Vector2()
     private val out = Vector2()
 
     override fun init(vararg params: Any) {
@@ -172,10 +173,10 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         }
 
         sine.update(delta)
-        val position = sine.getMotionValue(out).swapped()
-        body.setPosition(position).translate(drift * delta, 0f)
+        position.set(sine.getMotionValue(out).swapped()).add(drift * delta, 0f)
+        body.setCenter(position)
 
-        if (body.getY() < minY) destroy()
+        if (position.y < minY) destroy()
     })
 
     private fun defineBodyComponent(): BodyComponent {
@@ -212,6 +213,10 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             val size = if (background) BACKGROUND_SIZE else PLAYGROUND_SIZE
             body.setSize(size * ConstVals.PPM)
             bodyRect.set(body)
+
+            val active = !game.isPerformanceSubpar()
+            body.physics.collisionOn = active
+            body.forEachFixture { fixture -> fixture.setActive(active) }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
@@ -222,7 +227,8 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!))
         .preProcess { delta, sprite ->
-            sprite.setBounds(body.getBounds())
+            sprite.setSize(body.getWidth(), body.getHeight())
+            sprite.setCenter(position)
 
             val alpha = if (fadingOut) 1f - fadeTimer.getRatio() else 1f
             sprite.setAlpha(alpha)
@@ -230,7 +236,6 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
             sprite.priority.section = if (background) DrawingSection.BACKGROUND else DrawingSection.PLAYGROUND
 
             sprite.setOriginCenter()
-
             if (ROTATION_ENABLED) sprite.rotation += ROTATION_PER_SECOND * 360f * delta
             else sprite.rotation = 0f
         }.build()

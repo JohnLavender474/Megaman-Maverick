@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.hazards
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -160,9 +159,6 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     private fun spawnBubbles() {
-        // Avoid spawning new bubbles if the FPS has hit below 50.
-        if (Gdx.graphics.framesPerSecond < 50) return
-
         val random = UtilMethods.getRandom(MIN_BUBBLES_TO_SPAWN, MAX_BUBBLES_TO_SPAWN)
         (0 until random).forEach { _ ->
             val x = when (direction) {
