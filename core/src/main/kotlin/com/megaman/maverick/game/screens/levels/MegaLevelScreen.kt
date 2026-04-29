@@ -39,6 +39,7 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionSystem
+import com.mega.game.engine.pathfinding.AsyncPathfindingSystem
 import com.mega.game.engine.pathfinding.SimplePathfindingSystem
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLoader
@@ -296,7 +297,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
 
-            game.getSystem(BehaviorsSystem::class).on = false
+            game.getSystem(BehaviorsSystem::class)?.on = false
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
 
             tryToPlayCurrentRoomMusic()
@@ -370,7 +371,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 }
             }
 
-            game.getSystem(BehaviorsSystem::class).on = true
+            game.getSystem(BehaviorsSystem::class)?.on = true
             game.putProperty(ConstKeys.ROOM_TRANSITION, false)
 
             megaman.running = false
@@ -667,9 +668,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     WorldSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
-                    SimplePathfindingSystem::class
+                    AsyncPathfindingSystem::class,
+                    SimplePathfindingSystem::class,
                 )
-                systemsToTurnOff.forEach { game.getSystem(it).on = false }
+                systemsToTurnOff.forEach { game.getSystem(it)?.on = false }
             }
 
             EventType.GATE_INIT_CLOSING -> {
@@ -679,9 +681,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     WorldSystem::class,
                     MotionSystem::class,
                     BehaviorsSystem::class,
-                    SimplePathfindingSystem::class
+                    SimplePathfindingSystem::class,
+                    AsyncPathfindingSystem::class
                 )
-                systemsToTurnOn.forEach { game.getSystem(it).on = true }
+                systemsToTurnOn.forEach { game.getSystem(it)?.on = true }
             }
 
             EventType.ENTER_BOSS_ROOM -> {

@@ -528,7 +528,7 @@ class MegamanMaverickGame(
                     event.getOrDefaultProperty(
                         "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}", true, Boolean::class
                     )
-                if (turnSystemOff) getSystem(ControllerSystem::class).on = false
+                if (turnSystemOff) getSystem(ControllerSystem::class)?.on = false
             }
 
             EventType.TURN_CONTROLLER_ON -> {
@@ -537,7 +537,7 @@ class MegamanMaverickGame(
                     event.getOrDefaultProperty(
                         "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.ON}", true, Boolean::class
                     )
-                if (turnSystemOn) getSystem(ControllerSystem::class).on = true
+                if (turnSystemOn) getSystem(ControllerSystem::class)?.on = true
             }
 
             EventType.TOGGLE_PIXEL_PERFECT -> {
@@ -811,7 +811,11 @@ class MegamanMaverickGame(
     fun getSystems(): ObjectMap<String, GameSystem> =
         properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
 
-    fun <T : GameSystem> getSystem(clazz: KClass<T>) = clazz.cast(getSystems()[clazz.simpleName]!!)
+    fun <T : GameSystem> getSystem(clazz: KClass<T>): T? {
+        val systems = getSystems()
+        if (!systems.containsKey(clazz.simpleName)) return null
+        return clazz.cast(systems[clazz.simpleName]!!)
+    }
 
     fun setRoomsSupplier(supplier: () -> Array<RectangleMapObject>?) =
         properties.put("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}", supplier)
@@ -883,7 +887,7 @@ class MegamanMaverickGame(
         if (params.performance == performance) return
         params.performance = performance
         Gdx.graphics.setForegroundFPS(performance.fps)
-        getSystem(WorldSystem::class).fixedStep = performance.fixedStep
+        getSystem(WorldSystem::class)?.fixedStep = performance.fixedStep
         eventsMan.submitEvent(Event(EventType.CHANGE_PERFORMANCE_MODE, props(ConstKeys.MODE pairTo performance)))
     }
 

@@ -122,9 +122,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     private val blocksToIgnore = ObjectSet<Int>()
 
-    private val reusableRect = GameRectangle()
-    private val reusableBodySet = MutableOrderedSet<IBody>()
-
     private var hangAfterDamageInflicted = true
 
     override fun init(vararg params: Any) {
@@ -365,22 +362,31 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ coordinate ->
-                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
-                val coordBounds = reusableRect.set(
+                val bodySet = MutableOrderedSet<IBody>()
+                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, bodySet)
+
+                val rect1 = GameRectangle()
+                val rect2 = GameRectangle()
+
+                val coordBounds = rect1.set(
                     coordinate.x * ConstVals.PPM.toFloat(),
                     coordinate.y * ConstVals.PPM.toFloat(),
                     ConstVals.PPM.toFloat(),
-                    ConstVals.PPM.toFloat()
+                    ConstVals.PPM.toFloat(),
                 )
+
                 var passable = true
-                for (otherBody in reusableBodySet)
+
+                for (otherBody in bodySet)
                     if (otherBody.getEntity().getType() == EntityType.BLOCK &&
-                        otherBody.getBounds().overlaps(coordBounds)
+                        otherBody.getBounds(rect2).overlaps(coordBounds)
                     ) {
                         passable = false
                         break
                     }
-                reusableBodySet.clear()
+
+                bodySet.clear()
+
                 return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))

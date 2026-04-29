@@ -78,8 +78,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         private const val MAX_SPAWNED = 6
 
-        private const val STANDARD_PATHFINDING_INTERVAL = 0.5f
-        private const val LOW_PERF_PATHFINDING_INTERVAL = 0.75f
+        private const val STANDARD_PATHFINDING_INTERVAL = 0.25f
+        private const val LOW_PERF_PATHFINDING_INTERVAL = 0.5f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = objectMapOf<String, AnimationDef>(
@@ -101,9 +101,6 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private val spawningBlinkTimer = Timer(SPAWN_BLINK)
     private var spawnDelayBlink = false
     private val spawnDelayTimer = Timer()
-
-    private val reusableRect = GameRectangle()
-    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -232,26 +229,35 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
-            startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
+            startCoordinateSupplier = { body.getCenter(Vector2()).toGridCoordinate() },
+            targetCoordinateSupplier = { megaman.body.getCenter(Vector2()).toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ coordinate ->
-                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
-                val coordBounds = reusableRect.set(
+                val bodySet = MutableOrderedSet<IBody>()
+                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, bodySet)
+
+                val rect1 = GameRectangle()
+                val rect2 = GameRectangle()
+
+                val coordBounds = rect1.set(
                     coordinate.x * ConstVals.PPM.toFloat(),
                     coordinate.y * ConstVals.PPM.toFloat(),
                     ConstVals.PPM.toFloat(),
-                    ConstVals.PPM.toFloat()
+                    ConstVals.PPM.toFloat(),
                 )
+
                 var passable = true
-                for (otherBody in reusableBodySet)
+
+                for (otherBody in bodySet)
                     if (otherBody.getEntity().getType() == EntityType.BLOCK &&
-                        otherBody.getBounds().overlaps(coordBounds)
+                        otherBody.getBounds(rect2).overlaps(coordBounds)
                     ) {
                         passable = false
                         break
                     }
-                reusableBodySet.clear()
+
+                bodySet.clear()
+
                 return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
