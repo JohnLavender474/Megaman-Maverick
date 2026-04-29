@@ -206,6 +206,7 @@
             <key type="filename">../frames/Ui2/TitleScreenBackground.png</key>
             <key type="filename">../frames/Ui2/TitleScreenBackgroundv2.png</key>
             <key type="filename">../frames/Ui2/TitleScreenBackgroundv3.png</key>
+            <key type="filename">../frames/Ui2/TitleScreenBackgroundv4.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

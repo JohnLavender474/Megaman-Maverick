@@ -25,22 +25,16 @@ class MegaAudioManager(
 
     private class SoundEntry(
         val id: Long,
-        val ass: SoundAsset,
         var loop: Boolean = false,
         var time: Float = 0f,
-    ) {
-
-        override fun hashCode() = ass.hashCode()
-
-        override fun equals(other: Any?) = other is SoundEntry && other.ass == ass
-    }
+    )
 
     override var soundVolume: Float = DEFAULT_VOLUME
         set(value) {
             field = value.coerceIn(MIN_VOLUME, MAX_VOLUME)
-            for (e in playingSoundEntries) {
-                val s = sounds[e.ass]
-                s.setVolume(e.id, soundVolume)
+            for (mapEntry in playingSoundsMap) {
+                val sound = sounds[mapEntry.key]
+                for (e in mapEntry.value) sound.setVolume(e.id, soundVolume)
             }
         }
 
@@ -51,8 +45,7 @@ class MegaAudioManager(
         }
 
     private val soundQueue = OrderedSet<SoundRequest>()
-    private val playingSoundEntries = Array<SoundEntry>()
-    private val playingSoundsMap = ObjectMap<SoundAsset, Int>()
+    private val playingSoundsMap = ObjectMap<SoundAsset, Array<SoundEntry>>()
 
     private var currentMusic: Music? = null
     private var currentMusicAss: MusicAsset? = null
@@ -67,31 +60,45 @@ class MegaAudioManager(
     override fun update(delta: Float) {
         soundQueue.forEach { request ->
             val source = request.source as SoundAsset
-
-            if (!request.allowOverlap && playingSoundsMap.containsKey(source)) return@forEach
-
             val sound = sounds.get(source)
+
+            val allowOverlap = request.allowOverlap ?: source.defaultAllowOverlap
+            if (!allowOverlap) {
+                playingSoundsMap.get(source)?.forEach { e -> sound.stop(e.id) }
+                playingSoundsMap.remove(source)
+            }
+
             val id = if (request.loop) sound.loop(soundVolume) else sound.play(soundVolume)
 
-            playingSoundEntries.add(SoundEntry(id, source, request.loop))
-
-            val count = playingSoundsMap.get(source, 0)
-            playingSoundsMap.put(source, count + 1)
+            var entries = playingSoundsMap.get(source)
+            if (entries == null) {
+                entries = Array()
+                playingSoundsMap.put(source, entries)
+            }
+            entries.add(SoundEntry(id, request.loop))
         }
         soundQueue.clear()
 
-        val eIter = playingSoundEntries.iterator()
-        while (eIter.hasNext()) {
-            val e = eIter.next()
-            if (e.loop) continue
+        val mapIter = playingSoundsMap.iterator()
+        while (mapIter.hasNext()) {
+            val mapEntry = mapIter.next()
+            val ass = mapEntry.key
+            val sound = sounds[ass]
+            val entries = mapEntry.value
 
-            e.time += delta
-            if (e.time >= e.ass.seconds) {
-                eIter.remove()
+            val entryIter = entries.iterator()
+            while (entryIter.hasNext()) {
+                val e = entryIter.next()
+                if (e.loop) continue
 
-                val count = playingSoundsMap.get(e.ass, 0) - 1
-                if (count <= 0) playingSoundsMap.remove(e.ass) else playingSoundsMap.put(e.ass, count)
+                e.time += delta
+                if (e.time >= ass.seconds) {
+                    sound.stop(e.id)
+                    entryIter.remove()
+                }
             }
+
+            if (entries.size == 0) mapIter.remove()
         }
 
         if (!musicPaused && fadeOutMusicTimer != null) {
@@ -162,17 +169,32 @@ class MegaAudioManager(
 
     fun playSound(soundRequest: SoundRequest) = soundQueue.add(soundRequest)
 
-    override fun stopSound(key: Any?) = sounds.get(key as SoundAsset).stop()
+    override fun stopSound(key: Any?) {
+        val ass = key as SoundAsset
+        val sound = sounds.get(ass)
+        playingSoundsMap.get(ass)?.forEach { e -> sound.stop(e.id) }
+        playingSoundsMap.remove(ass)
+    }
 
     override fun pauseSound(key: Any?) = sounds.get(key as SoundAsset).pause()
 
     fun stopAllLoopingSounds() {
-        playingSoundEntries.filter { it.loop }.forEach {
-            val sound = sounds[it.ass]
-            sound.stop(it.id)
+        val mapIter = playingSoundsMap.iterator()
+        while (mapIter.hasNext()) {
+            val mapEntry = mapIter.next()
+            val sound = sounds[mapEntry.key]
+            val entries = mapEntry.value
 
-            playingSoundEntries.removeValue(it, false)
-            playingSoundsMap.remove(it.ass)
+            val entryIter = entries.iterator()
+            while (entryIter.hasNext()) {
+                val e = entryIter.next()
+                if (e.loop) {
+                    sound.stop(e.id)
+                    entryIter.remove()
+                }
+            }
+
+            if (entries.size == 0) mapIter.remove()
         }
     }
 
@@ -180,7 +202,7 @@ class MegaAudioManager(
 
     fun resumeAllSound() = sounds.values().forEach { it.resume() }
 
-    fun isSoundPlaying(sound: SoundAsset) = playingSoundEntries.any { it.ass == sound }
+    fun isSoundPlaying(sound: SoundAsset) = (playingSoundsMap.get(sound)?.size ?: 0) > 0
 
     fun fadeOutMusic(time: Float, onFinished: (() -> Unit)? = null) {
         fadeOutMusicTimer = Timer(time)

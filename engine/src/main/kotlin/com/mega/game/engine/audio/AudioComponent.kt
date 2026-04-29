@@ -4,7 +4,11 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.components.IGameComponent
 
-data class SoundRequest(val source: Any, val loop: Boolean = false, val allowOverlap: Boolean = true)
+data class SoundRequest(
+    val source: Any,
+    val loop: Boolean = false,
+    val allowOverlap: Boolean? = null
+)
 
 data class MusicRequest(
     val source: Any, val loop: Boolean = true, val onCompletionListener: ((Music) -> Unit)? = null
@@ -24,10 +28,6 @@ class AudioComponent : IGameComponent {
     fun requestToPlayMusic(
         source: Any, loop: Boolean = true, onCompletionListener: ((Music) -> Unit)? = null
     ) = playMusicRequests.add(MusicRequest(source, loop, onCompletionListener))
-
-    fun requestToPlayMusic(
-        source: Any, loop: Boolean = true, onCompletionListener: Runnable? = null
-    ) = playMusicRequests.add(MusicRequest(source, loop) { onCompletionListener?.run() })
 
     override fun reset() {
         playSoundRequests.clear()

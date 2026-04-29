@@ -113,7 +113,7 @@ class ChargedShotExplosion(game: MegamanMaverickGame) : AbstractProjectile(game)
 
         soundTimer.update(it)
         if (soundTimer.isFinished() && overlapsGameCamera()) {
-            requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+            requestToPlaySound(SoundAsset.CHARGED_SHOT_EXPLODE_SOUND, false)
             soundTimer.reset()
         }
     })

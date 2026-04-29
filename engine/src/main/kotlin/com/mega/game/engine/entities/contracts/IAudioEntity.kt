@@ -1,6 +1,5 @@
 package com.mega.game.engine.entities.contracts
 
-import com.badlogic.gdx.audio.Music
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.entities.IGameEntity
 
@@ -14,10 +13,6 @@ interface IAudioEntity : IGameEntity {
 
     fun requestToPlaySound(source: Any, loop: Boolean, allowOverlap: Boolean = true) {
         this.audioComponent.requestToPlaySound(source, loop, allowOverlap)
-    }
-
-    fun requestToPlayMusic(source: Any, loop: Boolean, onCompletionListener: ((Music) -> Unit)?) {
-        this.audioComponent.requestToPlayMusic(source, loop, onCompletionListener)
     }
 
     fun stopSound(source: Any?) {

@@ -34,6 +34,8 @@ import com.mega.game.engine.common.interfaces.IPropertizable
 import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.mega.game.engine.common.objects.Properties
+import com.mega.game.engine.common.objects.pairTo
+import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.controller.ControllerSystem
 import com.mega.game.engine.controller.ControllerUtils
@@ -55,12 +57,8 @@ import com.mega.game.engine.events.Event
 import com.mega.game.engine.events.EventsManager
 import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.motion.MotionSystem
-import com.mega.game.engine.pathfinding.IPathfinder
-import com.mega.game.engine.pathfinding.IPathfinderFactory
-import com.mega.game.engine.pathfinding.PathfinderParams
+import com.mega.game.engine.pathfinding.AsyncPathfindingSystem
 import com.mega.game.engine.pathfinding.SimplePathfindingSystem
-import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
-import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.points.PointsSystem
 import com.mega.game.engine.screens.IScreen
 import com.mega.game.engine.screens.levels.tiledmap.TiledMapLoadResult
@@ -70,7 +68,6 @@ import com.mega.game.engine.updatables.UpdatablesSystem
 import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.container.IWorldContainer
-import com.mega.game.engine.world.pathfinding.WorldPathfinder
 import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
@@ -88,6 +85,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -130,6 +128,7 @@ class MegamanMaverickGameParams {
     var diagnostics: Boolean = false
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
     var worldContainer: String = "quadtree"
+    var pathfinding: String = "async"
 }
 
 class MegamanMaverickGame(
@@ -728,47 +727,11 @@ class MegamanMaverickGame(
                     }
                 }, diagnostics = diagnostics),
                 MotionSystem(diagnostics),
-                SimplePathfindingSystem(
-                    factory = object : IPathfinderFactory {
-                        override fun getPathfinder(params: PathfinderParams): IPathfinder {
-                            val tiledMapResult = getTiledMapLoadResult()
-                            return WorldPathfinder(
-                                start = params.startCoordinateSupplier(),
-                                target = params.targetCoordinateSupplier(),
-                                worldWidth = tiledMapResult.worldWidth,
-                                worldHeight = tiledMapResult.worldHeight,
-                                allowDiagonal = params.allowDiagonal(),
-                                allowOutOfWorldBounds = params.getOrDefaultProperty(
-                                    ConstKeys.ALLOW_OUT_OF_BOUNDS,
-                                    true,
-                                    Boolean::class
-                                ),
-                                filter = params.filter,
-                                heuristic = params.getOrDefaultProperty(
-                                    ConstKeys.HEURISTIC,
-                                    EuclideanHeuristic(),
-                                    IHeuristic::class
-                                ),
-                                maxIterations = params.getOrDefaultProperty(
-                                    ConstKeys.ITERATIONS,
-                                    ConstVals.DEFAULT_PATHFINDING_MAX_ITERATIONS,
-                                    Int::class
-                                ),
-                                maxDistance = params.getOrDefaultProperty(
-                                    ConstKeys.DISTANCE,
-                                    ConstVals.DEFAULT_PATHFINDING_MAX_DISTANCE,
-                                    Int::class
-                                ),
-                                returnBestPathOnFailure = params.getOrDefaultProperty(
-                                    ConstKeys.DEFAULT,
-                                    ConstVals.DEFAULT_RETURN_BEST_PATH,
-                                    Boolean::class
-                                )
-                            )
-                        }
-                    },
-                    diagnostics = diagnostics
-                ),
+                when (params.pathfinding) {
+                    "async" -> AsyncPathfindingSystem(MegaPathfinderFactory(this), diagnostics = diagnostics)
+                    "sync" -> SimplePathfindingSystem(MegaPathfinderFactory(this), diagnostics = diagnostics)
+                    else -> throw IllegalArgumentException("Invalid pathfinding value: ${params.pathfinding}")
+                },
                 PointsSystem(diagnostics),
                 UpdatablesSystem(diagnostics),
                 FontsSystem(this::addDrawable),
@@ -921,7 +884,8 @@ class MegamanMaverickGame(
         params.performance = performance
         Gdx.graphics.setForegroundFPS(performance.fps)
         getSystem(WorldSystem::class).fixedStep = performance.fixedStep
+        eventsMan.submitEvent(Event(EventType.CHANGE_PERFORMANCE_MODE, props(ConstKeys.MODE pairTo performance)))
     }
 
-    fun isPerformanceSubpar() =  getPerformance().ordinal > Performance.LOW.ordinal
+    fun isPerformanceSubpar() = getPerformance().ordinal > Performance.LOW.ordinal
 }

@@ -41,7 +41,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
-import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
+import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
@@ -270,7 +270,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         val pathfindingComponent = PathfindingComponent(
             params = params,
             consumer = {
-                StandardPathfinderResultConsumer.consume(
+                MegaPathfinderResultConsumer.consume(
                     result = it,
                     body = body,
                     start = body.getCenter(),

@@ -41,6 +41,7 @@ object DesktopLauncher {
     private const val DEFAULT_VSYNC = false
     private const val DEFAULT_DIAGNOSTICS = false
     private const val DEFAULT_WORLD_CONTAINER = "quadtree"
+    private const val DEFAULT_PATHFINDING = "async"
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -101,6 +102,7 @@ object DesktopLauncher {
         params.showScreenController = appArgs.showScreenController
         params.diagnostics = appArgs.diagnostics
         params.worldContainer = appArgs.worldContainer
+        params.pathfinding = appArgs.pathfinding
 
         val logLevels = appArgs.logLevels.replace("\\s+", "").split(",").filter { !it.isBlank() }
         try {
@@ -290,5 +292,11 @@ object DesktopLauncher {
             description = "Specify which world container type to use for the world system"
         )
         var worldContainer = DEFAULT_WORLD_CONTAINER
+
+        @Parameter(
+            names = ["--pathfinding"],
+            description = "Specify which pathfiding to use. Default value is $DEFAULT_PATHFINDING"
+        )
+        var pathfinding = DEFAULT_PATHFINDING
     }
 }

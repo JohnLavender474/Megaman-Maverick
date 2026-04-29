@@ -656,12 +656,11 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         handler.cooldown.reset()
-
         handler.preShoot?.invoke()
 
         when (weapon) {
-            MegamanWeapon.AXE_SWINGER -> MegaUtilMethods.delayRun(game, 0.1f) { throwAxe() }
             MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JET -> shootMegaBuster(stat)
+            MegamanWeapon.AXE_SWINGER -> MegaUtilMethods.delayRun(game, 0.1f) { throwAxe() }
             MegamanWeapon.INFERNAL_BARRAGE -> shootInfernalBarrage(stat)
             MegamanWeapon.MOON_SCYTHES -> shootMoonScythes(stat)
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
@@ -672,11 +671,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         handler.postShoot?.invoke()
-
         translateAmmo(weapon, -cost)
 
         GameLogger.debug(TAG, "fireWeapon(): weapon fired: weaponEntry=$handler")
-
         return true
     }
 

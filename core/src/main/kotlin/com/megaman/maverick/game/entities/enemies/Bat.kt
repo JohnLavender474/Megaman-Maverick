@@ -14,10 +14,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.isAny
-import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
@@ -33,6 +30,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -40,6 +39,7 @@ import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
@@ -52,7 +52,8 @@ import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
-import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
+import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -60,7 +61,7 @@ import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 
 class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
-    IDirectional {
+    IDirectional, IEventListener {
 
     companion object {
         const val TAG = "Bat"
@@ -72,7 +73,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
         private const val HARD_MODE_FLY_SCALAR = 1.5f
         private const val DEFAULT_FLY_TO_RETREAT_SPEED = 8f
-        private const val PATHFINDING_UPDATE_INTERVAL = 0.05f
         private const val HANG_AFTER_DAMAGED_INFLICTED = "hang_after_damage_inflicted"
     }
 
@@ -95,6 +95,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         set(value) {
             freezeHandler.setFrozen(value)
         }
+
+    override val eventKeyMask = objectSetOf<Any>(EventType.CHANGE_PERFORMANCE_MODE)
 
     private val freezeHandler = FreezableEntityHandler(
         this,
@@ -139,6 +141,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        game.eventsMan.addListener(this)
 
         hangTimer.reset()
         releasePerchTimer.reset()
@@ -196,6 +200,19 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         super.onDestroy()
         blocksToIgnore.clear()
         frozen = false
+        game.eventsMan.removeListener(this)
+    }
+
+    override fun onEvent(event: Event) {
+        if (event.key == EventType.CHANGE_PERFORMANCE_MODE) {
+            val mode = event.getProperty(ConstKeys.MODE, Performance::class)!!
+            val pc = getComponent(PathfindingComponent::class)!!
+            val dur = when {
+                mode.ordinal < Performance.MEDIUM.ordinal -> ConstVals.STANDARD_PATHFINDING_INTERVAL
+                else -> ConstVals.LOW_PERF_PATHFINDING_INTERVAL
+            }
+            pc.intervalTimer.resetDuration(dur)
+        }
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
@@ -371,19 +388,18 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         val pathfindingComponent = PathfindingComponent(
             params,
             {
-                if (canMove) StandardPathfinderResultConsumer.consume(
+                if (canMove) MegaPathfinderResultConsumer.consume(
                     result = it,
                     body = body,
                     start = body.getCenter(),
                     speed = { flyToAttackSpeed * ConstVals.PPM },
                     stopOnTargetReached = false,
-                    onTargetNull = { directlyChaseMegaman() },
                     stopOnTargetNull = false,
+                    onTargetNull = { directlyChaseMegaman() },
                     shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
                 )
             },
-            { canMove && state == BatState.FLYING_TO_ATTACK },
-            intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
+            { canMove && state == BatState.FLYING_TO_ATTACK }
         )
         return pathfindingComponent
     }

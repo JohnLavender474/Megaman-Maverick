@@ -11,6 +11,8 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.toGdxArray
 import com.mega.game.engine.common.interfaces.Initializable
+import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -46,7 +48,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         private val MAIN_MENU_MUSIC = MusicAsset.VINNYZ_MAIN_MENU_MUSIC
     }
 
-    private lateinit var background: com.mega.game.engine.drawables.sprites.GameSprite
+    private lateinit var background: GameSprite
 
     private val screenSlide = ScreenSlide(
         game.getUiCamera(),
@@ -101,7 +103,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             MegaFontHandle(
                 MegamanMaverickGame.VERSION,
                 positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
-                positionY = 8.5f * ConstVals.PPM,
+                positionY = 9f * ConstVals.PPM,
                 centerX = true,
                 centerY = true
             )
@@ -121,8 +123,9 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         settingsPanel.buttons.forEach { buttons.put(it.key, it.value) }
 
         val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
-        background = com.mega.game.engine.drawables.sprites.GameSprite(atlas.findRegion("TitleScreenBackgroundv3"))
-        background.setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        background = GameSprite(atlas.findRegion("TitleScreenBackgroundv4"))
+        // Permanently setting both width and height to the 'view width' size
+        background.setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM)
         background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
 
         buttons.put(MainScreenButton.START_NEW_GAME.text, object : IMenuButton {

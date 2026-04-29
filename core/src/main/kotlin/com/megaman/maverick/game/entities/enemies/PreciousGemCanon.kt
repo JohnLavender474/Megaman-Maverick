@@ -304,7 +304,7 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreeza
             )
         )
 
-        requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, loop = false, allowOverlap = false)
+        requestToPlaySound(SoundAsset.ENEMY_BULLET_SOUND, loop = false)
     }
 
     private fun launchGemBomb() {
@@ -326,6 +326,6 @@ class PreciousGemCanon(game: MegamanMaverickGame) : AbstractEnemy(game), IFreeza
             )
         )
 
-        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, loop = false, allowOverlap = false)
+        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, loop = false)
     }
 }

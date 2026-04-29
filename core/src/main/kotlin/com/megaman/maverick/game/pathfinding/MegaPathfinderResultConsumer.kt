@@ -13,7 +13,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toWorldCoordinate
 import com.megaman.maverick.game.world.body.getBounds
 
-object StandardPathfinderResultConsumer {
+object MegaPathfinderResultConsumer {
 
     const val TAG = "StandardPathfinderResultConsumer"
 

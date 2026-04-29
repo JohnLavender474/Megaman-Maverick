@@ -1,11 +1,11 @@
 Ui2.png
-size: 1982, 860
+size: 1982, 1122
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 MegamanSubtitle
   rotate: false
-  xy: 788, 0
+  xy: 0, 0
   size: 1078, 270
   orig: 1078, 270
   offset: 0, 0
@@ -19,28 +19,35 @@ MegamanTitle
   index: -1
 TitleScreenBackground
   rotate: false
-  xy: 32, 0
+  xy: 0, 860
   size: 250, 262
   orig: 250, 262
   offset: 0, 0
   index: -1
 TitleScreenBackgroundv2
   rotate: false
-  xy: 282, 0
+  xy: 250, 860
   size: 250, 262
   orig: 250, 262
   offset: 0, 0
   index: -1
 TitleScreenBackgroundv3
   rotate: false
-  xy: 532, 0
+  xy: 500, 860
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
+TitleScreenBackgroundv4
+  rotate: false
+  xy: 756, 860
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 warning
   rotate: false
-  xy: 0, 0
+  xy: 1012, 860
   size: 32, 64
   orig: 32, 64
   offset: 0, 0

@@ -49,9 +49,12 @@ object ConstVals {
     const val SHAKE_Y = 0.005f
     const val SHAKE_DUR = 1f
     const val SHAKE_INTERVAL = 0.1f
+    const val STANDARD_PATHFINDING_INTERVAL = 0.1f
+    const val LOW_PERF_PATHFINDING_INTERVAL = 0.25f
 }
 
 object ConstKeys {
+    const val MODE = "mode"
     const val CONTACT = "contact"
     const val COINS = "coin"
     const val THIS = "this"

@@ -13,6 +13,7 @@ import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
@@ -29,6 +30,8 @@ import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
+import com.mega.game.engine.events.Event
+import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
@@ -39,6 +42,7 @@ import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -50,14 +54,17 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
-import com.megaman.maverick.game.pathfinding.StandardPathfinderResultConsumer
+import com.megaman.maverick.game.entities.utils.hardMode
+import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after each Reactor Monkey is defeated
 class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IBossListener,
-    IAnimatedEntity {
+    IAnimatedEntity, IEventListener {
 
     companion object {
         const val TAG = "FloatingCan"
@@ -70,6 +77,9 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         private const val FLY_SPEED_HARD = 2.25f
 
         private const val MAX_SPAWNED = 6
+
+        private const val STANDARD_PATHFINDING_INTERVAL = 0.5f
+        private const val LOW_PERF_PATHFINDING_INTERVAL = 0.75f
 
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = objectMapOf<String, AnimationDef>(
@@ -84,11 +94,12 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             freezeHandler.setFrozen(value)
         }
 
+    override val eventKeyMask = objectSetOf<Any>(EventType.CHANGE_PERFORMANCE_MODE)
+
     private val freezeHandler = FreezableEntityHandler(this)
 
     private val spawningBlinkTimer = Timer(SPAWN_BLINK)
     private var spawnDelayBlink = false
-
     private val spawnDelayTimer = Timer()
 
     private val reusableRect = GameRectangle()
@@ -114,6 +125,8 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
+        game.eventsMan.addListener(this)
+
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 (spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class))!!.getCenter()
@@ -135,6 +148,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         frozen = false
+        game.eventsMan.removeListener(this)
     }
 
     override fun canDamage(damageable: IDamageable) = spawnDelayTimer.isFinished() && super.canDamage(damageable)
@@ -157,6 +171,18 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     spawningBlinkTimer.reset()
                 }
             }
+        }
+    }
+
+    override fun onEvent(event: Event) {
+        if (event.key == EventType.CHANGE_PERFORMANCE_MODE) {
+            val mode = event.getProperty(ConstKeys.MODE, Performance::class)!!
+            val pc = getComponent(PathfindingComponent::class)!!
+            val dur = when {
+                mode.ordinal < Performance.MEDIUM.ordinal -> STANDARD_PATHFINDING_INTERVAL
+                else -> LOW_PERF_PATHFINDING_INTERVAL
+            }
+            pc.intervalTimer.resetDuration(dur)
         }
     }
 
@@ -233,22 +259,33 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         val pathfindingComponent = PathfindingComponent(params, {
             when {
-                !frozen && spawnDelayTimer.isFinished() -> StandardPathfinderResultConsumer.consume(
+                !frozen && spawnDelayTimer.isFinished() -> MegaPathfinderResultConsumer.consume(
                     result = it,
                     body = body,
                     start = body.getCenter(),
                     speed = speed@{
-                        val speed = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
-                            FLY_SPEED_HARD else FLY_SPEED
+                        val speed = if (game.state.hardMode) FLY_SPEED_HARD else FLY_SPEED
                         return@speed speed * ConstVals.PPM
                     },
                     stopOnTargetReached = false,
-                    stopOnTargetNull = false
+                    stopOnTargetNull = false,
+                    onTargetNull = { directlyChaseMegaman() },
                 )
                 else -> body.physics.velocity.setZero()
             }
         }, { !frozen && spawnDelayTimer.isFinished() })
 
         return pathfindingComponent
+    }
+
+    private fun directlyChaseMegaman() {
+        val speed = if (game.state.hardMode) FLY_SPEED_HARD else FLY_SPEED
+        body.physics.velocity.set(
+            megaman.body
+                .getCenter()
+                .sub(body.getCenter())
+                .nor()
+                .scl(speed * ConstVals.PPM)
+        )
     }
 }
