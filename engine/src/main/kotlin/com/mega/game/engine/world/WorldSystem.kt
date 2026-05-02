@@ -211,13 +211,13 @@ class WorldSystem(
         var qualifyingCount = 0
 
         body.forEachFixture { fixture ->
-            if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
+            if (fixture.isActive()) {
                 fixture.getShape().getBoundingRectangle(reusableGameRect)
 
                 val x1 = MathUtils.floor(reusableGameRect.getX() / ppm)
                 val y1 = MathUtils.floor(reusableGameRect.getY() / ppm)
-                val x2 = MathUtils.floor(reusableGameRect.getMaxX() / ppm)
-                val y2 = MathUtils.floor(reusableGameRect.getMaxY() / ppm)
+                val x2 = MathUtils.ceil(reusableGameRect.getMaxX() / ppm)
+                val y2 = MathUtils.ceil(reusableGameRect.getMaxY() / ppm)
 
                 if (x1 < unionMinX) unionMinX = x1
                 if (y1 < unionMinY) unionMinY = y1
@@ -267,8 +267,8 @@ class WorldSystem(
                 worldContainer.getFixtures(
                     MathUtils.floor(reusableGameRect.getX() / ppm),
                     MathUtils.floor(reusableGameRect.getY() / ppm),
-                    MathUtils.floor(reusableGameRect.getMaxX() / ppm),
-                    MathUtils.floor(reusableGameRect.getMaxY() / ppm),
+                    MathUtils.ceil(reusableGameRect.getMaxX() / ppm),
+                    MathUtils.ceil(reusableGameRect.getMaxY() / ppm),
                     reusableFixtureSet
                 )
 
@@ -293,7 +293,6 @@ class WorldSystem(
 
     internal fun resolveCollisions(body: IBody) {
         val bounds = body.getBounds(out1)
-
         worldContainer.getBodies(
             MathUtils.floor(bounds.getX() / ppm),
             MathUtils.floor(bounds.getY() / ppm),
@@ -301,12 +300,10 @@ class WorldSystem(
             MathUtils.floor(bounds.getMaxY() / ppm),
             reusableBodySet
         )
-
         reusableBodySet.forEach {
             if (it != body && it.getBounds(out2).overlaps(bounds))
                 collisionHandler.handleCollision(body, it)
         }
-
         reusableBodySet.clear()
     }
 }
