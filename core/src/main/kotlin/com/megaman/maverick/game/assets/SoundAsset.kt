@@ -21,7 +21,7 @@ enum class SoundAsset(
     EXPLOSION_1_SOUND("explosion1.ogg", 1.25f),
     EXPLOSION_2_SOUND("explosion2.ogg", 0.5f),
     BEAM_OUT_SOUND("teleport_out.ogg", 1.35f),
-    ENERGY_FILL_SOUND("energy_fill_mm9.mp3", 0.05f),
+    ENERGY_FILL_SOUND("energy_fill_mm9.ogg", 0.05f),
     SELECT_PING_SOUND("select_ping.ogg", 0.65f),
     ENEMY_BULLET_SOUND("enemy_shoot.ogg", 0.25f),
     ENEMY_DAMAGE_SOUND("enemy_damage.ogg", 0.5f),
