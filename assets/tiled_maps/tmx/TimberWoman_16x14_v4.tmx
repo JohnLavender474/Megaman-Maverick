@@ -1162,7 +1162,7 @@
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
-  <object id="189" x="7488" y="1568" width="2400" height="144"/>
+  <object id="189" x="7488" y="1552" width="2400" height="144"/>
   <object id="197" x="7456" y="1344" width="128" height="32"/>
   <object id="201" x="4352" y="1376" width="128" height="64"/>
   <object id="209" x="8224" y="1440" width="96" height="32"/>

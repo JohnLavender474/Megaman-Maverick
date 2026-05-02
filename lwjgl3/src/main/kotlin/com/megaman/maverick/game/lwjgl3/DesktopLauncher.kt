@@ -40,7 +40,7 @@ object DesktopLauncher {
     private const val DEFAULT_PIXEL_PERFECT = false
     private const val DEFAULT_VSYNC = false
     private const val DEFAULT_DIAGNOSTICS = false
-    private const val DEFAULT_WORLD_CONTAINER = "quadtree"
+    private const val DEFAULT_WORLD_CONTAINER = "simple"
     private const val DEFAULT_PATHFINDING = "async"
 
     @JvmStatic

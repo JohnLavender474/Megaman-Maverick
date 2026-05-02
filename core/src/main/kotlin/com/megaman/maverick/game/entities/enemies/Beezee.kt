@@ -140,12 +140,11 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         attackDelay.resetDuration(attackDelayDur)
 
         cullTimer.reset()
-
         facing = UtilMethods.getRandom(Facing.LEFT, Facing.RIGHT)
-
-        owner = spawnProps.get(ConstKeys.OWNER, CannoHoney::class)!!
-
         frozen = false
+
+        val owner = spawnProps.get(ConstKeys.OWNER, CannoHoney::class)
+        if (owner == null || owner.dead) setToAttack() else this.owner = owner
     }
 
     override fun onDestroy() {
@@ -168,6 +167,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             ) cullTimer.update(delta)
             else cullTimer.reset()
 
+            if (owner == null && state != BeezeeState.ATTACK) setToAttack()
             owner?.let { hoverArea.setCenter(it.body.getCenter()) }
 
             frozenHandler.update(delta)
@@ -202,6 +202,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                         resetHoverTimer()
                     }
                 }
+
                 BeezeeState.ATTACK -> {
                     attackDelay.update(delta)
 

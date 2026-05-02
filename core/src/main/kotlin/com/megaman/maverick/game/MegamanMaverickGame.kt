@@ -127,7 +127,7 @@ class MegamanMaverickGameParams {
     var vsync: Boolean = false
     var diagnostics: Boolean = false
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
-    var worldContainer: String = "quadtree"
+    var worldContainer: String = "simple"
     var pathfinding: String = "async"
 }
 

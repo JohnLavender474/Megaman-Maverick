@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
 import com.megaman.maverick.game.utils.AnimationUtils
+import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.getShape
@@ -70,6 +71,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         private const val SQUEEZE_TIME = 0.5f
 
         private const val MAX_BEES = 8
+        private const val BEE_SPAWN_DELAY = 0.2f
         private const val BEE_CYCLE_DELAY_NORMAL = 2f
         private const val BEE_CYCLE_DELAY_HARD = 1.5f
         private const val MIN_BEES_TO_CYCLE = 1
@@ -140,7 +142,11 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
 
         stateLoopHandler.reset()
 
-        (0 until MAX_BEES).forEach { _ -> spawnBeezee() }
+        (0 until MAX_BEES).forEach { i ->
+            MegaUtilMethods.delayRun(game, (i + 1) * BEE_SPAWN_DELAY) {
+                spawnBeezee()
+            }
+        }
 
         putCullable(ConstKeys.CUSTOM_CULL, this)
         cullTimer.reset()
@@ -304,14 +310,16 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
             children.removeValue(beeToCycle, false)
         }
 
-        (0 until numBeesToCycle).forEach { _ -> spawnBeezee() }
-
+        (0 until numBeesToCycle).forEach { i ->
+            MegaUtilMethods.delayRun(game, (i + 1) * BEE_SPAWN_DELAY) {
+                spawnBeezee()
+            }
+        }
         beesToCycle.clear()
     }
 
     private fun spawnBeezee() {
         val spawn = body.getCenter()
-
         val beezee = MegaEntityFactory.fetch(Beezee::class)!!
         beezee.spawn(
             props(
@@ -319,7 +327,6 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
                 ConstKeys.POSITION pairTo spawn
             )
         )
-
         children.add(beezee)
     }
 }
