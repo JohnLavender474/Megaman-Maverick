@@ -6,6 +6,7 @@ import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.pathfinding.PathfinderResult
 import com.mega.game.engine.pathfinding.heuristics.ManhattanHeuristic
+import com.mega.game.engine.world.container.IWorldContainer
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -42,12 +43,13 @@ class WorldPathfinderTest : DescribeSpec({
             }
         }
 
-        val filter: (IntPair) -> Boolean =
-            { coordinate -> !matrix.isOutOfBounds(coordinate.x, coordinate.y) && !nodesToFilter.contains(coordinate) }
+        val filter: (IntPair, IWorldContainer?) -> Boolean =
+            { coordinate, _ -> !matrix.isOutOfBounds(coordinate.x, coordinate.y) && !nodesToFilter.contains(coordinate) }
 
         return WorldPathfinder(
             start = startCoordinate,
             target = targetCoordinate,
+            worldContainer = null,
             worldWidth = matrix.columns,
             worldHeight = matrix.rows,
             allowDiagonal = allowDiagonal,

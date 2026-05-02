@@ -9,14 +9,19 @@ import com.mega.game.engine.world.pathfinding.WorldPathfinder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 
 class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderFactory {
 
     override fun getPathfinder(params: PathfinderParams): IPathfinder {
         val tiledMapResult = game.getTiledMapLoadResult()
+        val worldContainerSnapshot = game.getWorldContainer()?.copy()
+        val heuristic = params.getOrDefaultProperty(ConstKeys.HEURISTIC, EuclideanHeuristic(), IHeuristic::class)
+        if (heuristic is DynamicBodyHeuristic) heuristic.worldContainer = worldContainerSnapshot
         return WorldPathfinder(
             start = params.startCoordinateSupplier(),
             target = params.targetCoordinateSupplier(),
+            worldContainer = worldContainerSnapshot,
             worldWidth = tiledMapResult.worldWidth,
             worldHeight = tiledMapResult.worldHeight,
             allowDiagonal = params.allowDiagonal(),
@@ -26,11 +31,7 @@ class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderF
                 Boolean::class
             ),
             filter = params.filter,
-            heuristic = params.getOrDefaultProperty(
-                ConstKeys.HEURISTIC,
-                EuclideanHeuristic(),
-                IHeuristic::class
-            ),
+            heuristic = heuristic,
             maxIterations = params.getOrDefaultProperty(
                 ConstKeys.ITERATIONS,
                 ConstVals.DEFAULT_PATHFINDING_MAX_ITERATIONS,

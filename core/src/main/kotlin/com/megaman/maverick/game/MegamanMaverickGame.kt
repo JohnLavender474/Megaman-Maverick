@@ -150,9 +150,14 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val SCREENSHOT_KEY = Input.Keys.P
-        private const val AUTO_PERF_FPS_THRESHOLD_SCALAR = 0.9f
-        private const val AUTO_PERF_FPS_CRISIS_SCALAR = 0.5f
         private const val AUTO_PERF_SUSTAINED_DUR = 3f
+        private const val AUTO_PERF_GRACE_DUR = 5f         // suppression window after any perf change
+        private const val AUTO_PERF_NEAR_DEFICIT = 5       // fps below target → ~10s tolerance
+        private const val AUTO_PERF_MODERATE_DEFICIT = 10  // fps below target → ~6s tolerance
+        private const val AUTO_PERF_NEAR_SPEED = 0.3f      // timer multiplier: 3s / ~10s
+        private const val AUTO_PERF_MODERATE_SPEED = 0.5f  // timer multiplier: 3s / ~6s
+        private const val AUTO_PERF_HIGH_SPEED = 1.0f      // timer multiplier: 3s / ~3s
+        private const val AUTO_PERF_CRISIS_SPEED = 2.0f    // timer multiplier: 3s / ~1.5s
         private const val NOTIFICATION_DUR = 5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
@@ -209,7 +214,8 @@ class MegamanMaverickGame(
     private var showNotification = false
     private var notificationColor = Color.WHITE
 
-    private var autoPerfTimer = Timer(AUTO_PERF_SUSTAINED_DUR)
+    private val autoPerfTimer = Timer(AUTO_PERF_SUSTAINED_DUR)
+    private val autoPerfGraceTimer = Timer(AUTO_PERF_GRACE_DUR)
 
     private var logFileWriter: AsyncFileWriter? = null
     private var debugWindow: DebugWindow? = null
@@ -419,13 +425,20 @@ class MegamanMaverickGame(
         } else {
             diagnostics?.beginFrame()
 
-            if (currentScreenKey == ScreenEnum.LEVEL_SCREEN.name) {
+            autoPerfGraceTimer.update(delta)
+            if (autoPerfGraceTimer.isFinished()) {
                 val performance = getPerformance()
-                if (performance != Performance.VERY_LOW &&
-                    Gdx.graphics.framesPerSecond < performance.fps * AUTO_PERF_FPS_THRESHOLD_SCALAR
-                ) {
-                    val crisis = Gdx.graphics.framesPerSecond < performance.fps * AUTO_PERF_FPS_CRISIS_SCALAR
-                    autoPerfTimer.update(delta * if (crisis) 1.5f else 1f)
+                val currentFps = Gdx.graphics.framesPerSecond
+                if (performance != Performance.VERY_LOW && currentFps < performance.fps) {
+                    val deficit = performance.fps - currentFps
+                    val nextLowerFps = Performance.entries[performance.ordinal - 1].fps
+                    val timerMultiplier = when {
+                        deficit <= AUTO_PERF_NEAR_DEFICIT -> AUTO_PERF_NEAR_SPEED
+                        deficit <= AUTO_PERF_MODERATE_DEFICIT -> AUTO_PERF_MODERATE_SPEED
+                        currentFps > nextLowerFps -> AUTO_PERF_HIGH_SPEED
+                        else -> AUTO_PERF_CRISIS_SPEED
+                    }
+                    autoPerfTimer.update(delta * timerMultiplier)
 
                     if (autoPerfTimer.isFinished()) {
                         val newPerformance = Performance.entries[performance.ordinal - 1]
@@ -719,7 +732,8 @@ class MegamanMaverickGame(
                     maxIterations = 2 * MathUtils.ceil(
                         params.fixedStepScalar / (getPerformance().fixedStep * getPerformance().fps)
                     ),
-                    diagnostics = diagnostics
+                    diagnostics = diagnostics,
+                    batchQueryCellAreaThreshold = 25
                 ),
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {
@@ -889,7 +903,11 @@ class MegamanMaverickGame(
         Gdx.graphics.setForegroundFPS(performance.fps)
         getSystem(WorldSystem::class)?.fixedStep = performance.fixedStep
         eventsMan.submitEvent(Event(EventType.CHANGE_PERFORMANCE_MODE, props(ConstKeys.MODE pairTo performance)))
+        autoPerfGraceTimer.reset()
+        autoPerfTimer.reset()
     }
 
     fun isPerformanceSubpar() = getPerformance().ordinal > Performance.LOW.ordinal
+
+    fun resetAutoPerfGracePeriod() = autoPerfGraceTimer.reset()
 }

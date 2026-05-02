@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
@@ -77,8 +78,6 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private var trigger: GameRectangle? = null
     private var triggered = false
-
-    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -250,20 +249,16 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = fitler@{ coordinate ->
-                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
-                var passable = true
-                var blockingBody: IBody? = null
+            filter = filter@{ coordinate, container ->
+                val bodySet = MutableOrderedSet<IBody>()
+                container?.getBodies(coordinate.x, coordinate.y, bodySet)
 
-                for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
+                var passable = true
+                for (otherBody in bodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
-                    blockingBody = otherBody
                     break
                 }
-
-                reusableBodySet.clear()
-
-                return@fitler passable
+                return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )

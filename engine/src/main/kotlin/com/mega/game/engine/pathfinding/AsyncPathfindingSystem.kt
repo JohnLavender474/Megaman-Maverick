@@ -2,6 +2,7 @@ package com.mega.game.engine.pathfinding
 
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
@@ -53,7 +54,7 @@ class AsyncPathfindingSystem(
                         component.currentPath = future.get()
                     } catch (e: Exception) {
                         future.cancel(true)
-                        e.printStackTrace()
+                        GameLogger.error(TAG, "Exception occurred while processing future task: ${e.message}")
                     } finally {
                         submitTimeMap.remove(component)
                         completedComponents.addLast(component)

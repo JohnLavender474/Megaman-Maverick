@@ -40,6 +40,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
+import kotlin.math.floor
 
 class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAnimatedEntity {
 
@@ -53,13 +54,10 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         private const val DEFAULT_MIN_ELAPSE_DURATION = 0.5f
         private const val DEFAULT_MAX_ELAPSE_DURATION = 2f
 
+        private const val MAX_TTL = 3f
         private const val TRANS_DUR = 0.5f
-
         private const val FADE_OUT_TIME = 1f
-
         private const val MIN_Y_OFFSET = 20f
-
-        private const val MAX_SPAWNED_ALLOWED = 20
 
         private var region: TextureRegion? = null
     }
@@ -71,6 +69,8 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     private val currentTrajectory = Vector2()
     private val minTrajectory = Vector2()
     private val maxTrajectory = Vector2()
+
+    private val maxTtlTimer = Timer(MAX_TTL)
 
     private val transTimer = Timer(TRANS_DUR)
     private val elapseTimer = Timer()
@@ -148,7 +148,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
                 "megaman.body.center=${megaman.body.getCenter()}"
         )
 
-        if (setOfAllLeaves.size > MAX_SPAWNED_ALLOWED) {
+        if (setOfAllLeaves.size > maxAllowedSpawned()) {
             val iter = setOfAllLeaves.iterator()
             while (iter.hasNext) {
                 val leaf = iter.next()
@@ -158,7 +158,11 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
                 }
             }
         }
+
+        maxTtlTimer.reset()
     }
+
+    private fun maxAllowedSpawned() = game.getPerformance().fps.floorDiv(3)
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
@@ -182,6 +186,11 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     )
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (!isFadingOut()) {
+            maxTtlTimer.update(delta)
+            if (maxTtlTimer.isJustFinished()) fadeOutToDestroy()
+        }
+
         if (transTimer.isFinished()) {
             currentPosition.add(
                 currentTrajectory.x * delta * ConstVals.PPM,
@@ -225,8 +234,9 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.setCenter(currentPosition)
+            val ratio = floor(fadeTimer.getRatio() * 10) / 10
             val alpha = when {
-                fading -> 1f - fadeTimer.getRatio()
+                fading -> 1f - ratio
                 else -> 1f
             }
             sprite.setAlpha(alpha)

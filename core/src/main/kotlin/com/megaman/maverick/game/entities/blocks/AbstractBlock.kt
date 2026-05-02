@@ -5,9 +5,12 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.world.body.FixtureLabel
+import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.setFilter
 
 open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
 
@@ -29,5 +32,10 @@ open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
         spawnProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+        body.forEachFixture { fixture ->
+            fixture.setFilter { other ->
+                other.getEntity() == megaman
+            }
+        }
     }
 }

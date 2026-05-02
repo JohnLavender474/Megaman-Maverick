@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.math.Vector2
+import com.mega.game.engine.audio.SoundRequest
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Position
 import com.mega.game.engine.common.enums.Size
@@ -27,11 +28,7 @@ import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
-import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.explosions.ExplosionOrb
-import com.megaman.maverick.game.entities.explosions.IceBombExplosion
-import com.megaman.maverick.game.entities.explosions.ReactorExplosion
+import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -244,7 +241,8 @@ abstract class AbstractBoss(
         return pointsComponent
     }
 
-    open fun getEventOnDefeated(): EventType? = if (!mini && end) EventType.VICTORY_EVENT else EventType.INTERMEDIATE_BOSS_DEAD
+    open fun getEventOnDefeated(): EventType? =
+        if (!mini && end) EventType.VICTORY_EVENT else EventType.INTERMEDIATE_BOSS_DEAD
 
     protected open fun playBossMusic() = !mini
 
@@ -314,7 +312,9 @@ abstract class AbstractBoss(
             )
         )
 
-        playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+        game.audioMan.playSound(
+            SoundRequest(SoundAsset.EXPLOSION_2_SOUND, loop = false, allowOverlap = true)
+        )
     }
 
     override fun getType() = EntityType.BOSS

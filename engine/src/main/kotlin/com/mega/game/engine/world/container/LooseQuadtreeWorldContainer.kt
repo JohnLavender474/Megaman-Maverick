@@ -1,5 +1,6 @@
 package com.mega.game.engine.world.container
 
+import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.body.IFixture
@@ -63,8 +64,8 @@ class LooseQuadtreeWorldContainer(
         val tightMidX = centerX
         val tightMidY = centerY
 
-        val bodies = HashSet<IBody>()
-        val fixtures = HashSet<IFixture>()
+        val bodies = MutableOrderedSet<IBody>()
+        val fixtures = MutableOrderedSet<IFixture>()
         var children: Array<Node?>? = null
 
         fun isLeaf() = children == null
@@ -209,8 +210,8 @@ class LooseQuadtreeWorldContainer(
     }
 
     private fun copyNode(src: Node, dst: Node) {
-        dst.bodies.addAll(src.bodies)
-        dst.fixtures.addAll(src.fixtures)
+        dst.bodies.addAll(src.bodies.asIterable())
+        dst.fixtures.addAll(src.fixtures.asIterable())
         val srcChildren = src.children ?: return
         dst.subdivide()
         for (i in 0 until 4) copyNode(srcChildren[i]!!, dst.children!![i]!!)

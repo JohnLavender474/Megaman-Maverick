@@ -30,7 +30,8 @@ class WorldSystem(
     var contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
-    var diagnostics: RuntimeDiagnostics? = null
+    var diagnostics: RuntimeDiagnostics? = null,
+    var batchQueryCellAreaThreshold: Int? = null
 ) : GameSystem(BodyComponent::class) {
 
     companion object {
@@ -196,28 +197,98 @@ class WorldSystem(
         diagnostics?.endEntry()
     }
 
-    internal fun collectContacts(body: IBody) = body.forEachFixture { fixture ->
-        if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
-            fixture.getShape().getBoundingRectangle(reusableGameRect)
+    internal fun collectContacts(body: IBody) =
+        collectContactsUnionFixturesBBox(body) || collectContactsPerFixtureBasis(body)
 
-            worldContainer.getFixtures(
-                MathUtils.floor(reusableGameRect.getX() / ppm),
-                MathUtils.floor(reusableGameRect.getY() / ppm),
-                MathUtils.floor(reusableGameRect.getMaxX() / ppm),
-                MathUtils.floor(reusableGameRect.getMaxY() / ppm),
-                reusableFixtureSet
-            )
+    internal fun collectContactsUnionFixturesBBox(body: IBody): Boolean {
+        val batchThreshold = batchQueryCellAreaThreshold ?: return false
 
-            reusableFixtureSet.forEach {
-                if (it.isActive() && filterContact(fixture, it) && fixture.getShape().overlaps(it.getShape())) {
-                    val contact = contactPool.fetch()
-                    contact.set(fixture, it)
-                    currentContactSet.add(contact)
+        var unionMinX = Int.MAX_VALUE
+        var unionMinY = Int.MAX_VALUE
+        var unionMaxX = Int.MIN_VALUE
+        var unionMaxY = Int.MIN_VALUE
+
+        var qualifyingCount = 0
+
+        body.forEachFixture { fixture ->
+            if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
+                fixture.getShape().getBoundingRectangle(reusableGameRect)
+
+                val x1 = MathUtils.floor(reusableGameRect.getX() / ppm)
+                val y1 = MathUtils.floor(reusableGameRect.getY() / ppm)
+                val x2 = MathUtils.floor(reusableGameRect.getMaxX() / ppm)
+                val y2 = MathUtils.floor(reusableGameRect.getMaxY() / ppm)
+
+                if (x1 < unionMinX) unionMinX = x1
+                if (y1 < unionMinY) unionMinY = y1
+                if (x2 > unionMaxX) unionMaxX = x2
+                if (y2 > unionMaxY) unionMaxY = y2
+
+                qualifyingCount++
+            }
+        }
+
+        if (qualifyingCount == 0) return false
+
+        val unionCellArea = (unionMaxX - unionMinX + 1) * (unionMaxY - unionMinY + 1)
+        if (qualifyingCount > 1 && unionCellArea <= batchThreshold) {
+            diagnostics?.beginEntry("collect contacts via union bounding box")
+
+            worldContainer.getFixtures(unionMinX, unionMinY, unionMaxX, unionMaxY, reusableFixtureSet)
+
+            body.forEachFixture { fixture ->
+                if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
+                    reusableFixtureSet.forEach { candidate ->
+                        if (candidate.isActive() && filterContact(fixture, candidate) &&
+                            fixture.getShape().overlaps(candidate.getShape())
+                        ) {
+                            val contact = contactPool.fetch()
+                            contact.set(fixture, candidate)
+                            currentContactSet.add(contact)
+                        }
+                    }
                 }
             }
 
             reusableFixtureSet.clear()
+
+            diagnostics?.endEntry()
         }
+
+        return true
+    }
+
+    internal fun collectContactsPerFixtureBasis(body: IBody): Boolean {
+        diagnostics?.beginEntry("collect contacts on per-fixture basis")
+
+        body.forEachFixture { fixture ->
+            if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
+                fixture.getShape().getBoundingRectangle(reusableGameRect)
+                worldContainer.getFixtures(
+                    MathUtils.floor(reusableGameRect.getX() / ppm),
+                    MathUtils.floor(reusableGameRect.getY() / ppm),
+                    MathUtils.floor(reusableGameRect.getMaxX() / ppm),
+                    MathUtils.floor(reusableGameRect.getMaxY() / ppm),
+                    reusableFixtureSet
+                )
+
+                reusableFixtureSet.forEach { candidate ->
+                    if (candidate.isActive() && filterContact(fixture, candidate) &&
+                        fixture.getShape().overlaps(candidate.getShape())
+                    ) {
+                        val contact = contactPool.fetch()
+                        contact.set(fixture, candidate)
+                        currentContactSet.add(contact)
+                    }
+                }
+
+                reusableFixtureSet.clear()
+            }
+        }
+
+        diagnostics?.endEntry()
+
+        return true
     }
 
     internal fun resolveCollisions(body: IBody) {

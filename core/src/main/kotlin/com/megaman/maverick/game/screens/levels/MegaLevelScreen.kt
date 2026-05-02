@@ -410,8 +410,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun start(tmxMapSource: String) {
         if (!initialized) throw IllegalStateException("must call init() before start()")
-
         super.start(tmxMapSource)
+
+        game.resetAutoPerfGracePeriod()
 
         eventsMan.addListener(this)
         engine.systems.forEach { it.on = true }

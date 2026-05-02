@@ -2,7 +2,6 @@ package com.mega.game.engine.common.objects
 
 import com.badlogic.gdx.utils.OrderedSet
 
-
 class MutableOrderedSet<T> : OrderedSet<T>(), MutableCollection<T> {
 
     override val size: Int

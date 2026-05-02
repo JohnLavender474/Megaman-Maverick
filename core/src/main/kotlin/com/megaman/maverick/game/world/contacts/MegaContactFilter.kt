@@ -5,6 +5,9 @@ import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.world.body.IFixture
 import com.mega.game.engine.world.contacts.IContactFilter
+import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.sensors.DeathForPlayerOnly
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getFilter
@@ -38,6 +41,7 @@ class MegaContactFilter : IContactFilter {
             FixtureType.SIDE,
             FixtureType.HEAD,
             FixtureType.BODY,
+            FixtureType.PLAYER
         ),
         FixtureType.WATER pairTo objectSetOf(
             FixtureType.WATER_LISTENER
@@ -91,35 +95,45 @@ class MegaContactFilter : IContactFilter {
         filters.containsKey(fixture.getType() as FixtureType) || fixture.getType() == FixtureType.CONSUMER
 
     override fun filter(fixture1: IFixture, fixture2: IFixture): Boolean {
-        if (fixture1 == fixture2 || fixture1.getEntity() == fixture2.getEntity()) return false
+        if (fixture1 == fixture2) return false
 
-        // TODO: The following is very inefficient due to the type checks and casts which
-        //       is being run on every frame. Consider optimizing or reworking this logic
-        //       once frozen blocks are re-enabled.
-        /*
         val entity1 = fixture1.getEntity()
         val entity2 = fixture2.getEntity()
-        if (entity1 is FrozenEntityBlock || entity2 is FrozenEntityBlock) {
-            val frozenBlock: FrozenEntityBlock
-            val otherEntity: IGameEntity
 
-            if (entity1 is FrozenEntityBlock) {
-                frozenBlock = entity1
-                otherEntity = entity2
-            } else {
-                frozenBlock = entity2 as FrozenEntityBlock
-                otherEntity = entity1
-            }
+        if (entity1 == entity2) return false
+        if (entity1.getType() == EntityType.ENEMY && entity2.getType() == EntityType.ENEMY) return false
 
-            if (otherEntity == frozenBlock.owner) return false
+        val type1 = fixture1.getType()
+        val type2 = fixture2.getType()
+
+        if ((type1 == FixtureType.GATE || type2 == FixtureType.GATE) &&
+            entity1.getType() != EntityType.MEGAMAN && entity2.getType() != EntityType.MEGAMAN
+        ) return false
+
+        if ((type1 == FixtureType.CART || type2 == FixtureType.CART) &&
+            entity1.getType() != EntityType.MEGAMAN && entity2.getType() != EntityType.MEGAMAN
+        ) return false
+
+        if ((type1 == FixtureType.DEATH && entity2.getType() == EntityType.PROJECTILE) ||
+            (type2 == FixtureType.DEATH && entity1.getType() == EntityType.PROJECTILE)
+        ) return false
+
+        var deathEntity: MegaGameEntity? = null
+        when {
+            type1 == FixtureType.DEATH -> deathEntity = entity1
+            type2 == FixtureType.DEATH -> deathEntity = entity2
         }
-         */
+        if (deathEntity != null &&
+            entity1.getType() != EntityType.MEGAMAN &&
+            entity2.getType() != EntityType.MEGAMAN &&
+            deathEntity.getTag() == DeathForPlayerOnly.TAG
+        ) return false
 
-        if (fixture1.getType() == FixtureType.CONSUMER || fixture2.getType() == FixtureType.CONSUMER) {
+        if (type1 == FixtureType.CONSUMER || type2 == FixtureType.CONSUMER) {
             val consumer: IFixture
             val other: IFixture
 
-            if (fixture1.getType() == FixtureType.CONSUMER) {
+            if (type1 == FixtureType.CONSUMER) {
                 consumer = fixture1
                 other = fixture2
             } else {
@@ -140,7 +154,7 @@ class MegaContactFilter : IContactFilter {
             (fixture2.hasFilter() && !fixture2.getFilter().invoke(fixture1))
         ) return false
 
-        return (filters.get(fixture1.getType() as FixtureType)?.contains(fixture2.getType()) == true ||
-            filters.get(fixture2.getType() as FixtureType)?.contains(fixture1.getType()) == true)
+        return (filters.get(type1 as FixtureType)?.contains(type2) == true ||
+            filters.get(type2 as FixtureType)?.contains(type1) == true)
     }
 }

@@ -361,13 +361,12 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ coordinate ->
+            filter = filter@{ coordinate, container ->
                 val bodySet = MutableOrderedSet<IBody>()
-                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, bodySet)
+                container?.getBodies(coordinate.x, coordinate.y, bodySet)
 
                 val rect1 = GameRectangle()
                 val rect2 = GameRectangle()
-
                 val coordBounds = rect1.set(
                     coordinate.x * ConstVals.PPM.toFloat(),
                     coordinate.y * ConstVals.PPM.toFloat(),
@@ -376,7 +375,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                 )
 
                 var passable = true
-
                 for (otherBody in bodySet)
                     if (otherBody.getEntity().getType() == EntityType.BLOCK &&
                         otherBody.getBounds(rect2).overlaps(coordBounds)
@@ -384,9 +382,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                         passable = false
                         break
                     }
-
-                bodySet.clear()
-
                 return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))

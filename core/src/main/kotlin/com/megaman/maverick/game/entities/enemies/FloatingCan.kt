@@ -232,13 +232,12 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             startCoordinateSupplier = { body.getCenter(Vector2()).toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getCenter(Vector2()).toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ coordinate ->
+            filter = filter@{ coordinate, container ->
                 val bodySet = MutableOrderedSet<IBody>()
-                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, bodySet)
+                container?.getBodies(coordinate.x, coordinate.y, bodySet)
 
                 val rect1 = GameRectangle()
                 val rect2 = GameRectangle()
-
                 val coordBounds = rect1.set(
                     coordinate.x * ConstVals.PPM.toFloat(),
                     coordinate.y * ConstVals.PPM.toFloat(),
@@ -247,7 +246,6 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                 )
 
                 var passable = true
-
                 for (otherBody in bodySet)
                     if (otherBody.getEntity().getType() == EntityType.BLOCK &&
                         otherBody.getBounds(rect2).overlaps(coordBounds)
@@ -255,9 +253,6 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                         passable = false
                         break
                     }
-
-                bodySet.clear()
-
                 return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))

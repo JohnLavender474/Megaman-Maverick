@@ -80,7 +80,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         private const val BLINK_DELAY = 0.05f
 
-        private val animDefs = orderedMapOf<String, AnimationDef>(
+        private val animDefs = orderedMapOf(
             "still" pairTo AnimationDef(),
             "rocket" pairTo AnimationDef(2, 2, 0.05f, true)
         )

@@ -33,7 +33,7 @@ class AsyncFileWriter(filePath: String, private val deleteIfExists: Boolean = tr
         try {
             executorService.submit { fileHandle.writeString("$text\n", true) }
         } catch (e: Exception) {
-            e.printStackTrace()
+            System.err.println("Exception occurred while writing to file: ${e.message}")
         }
     }
 

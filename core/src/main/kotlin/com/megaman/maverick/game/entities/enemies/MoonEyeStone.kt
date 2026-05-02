@@ -141,7 +141,6 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         get() = !throwTimer.isFinished()
 
     private val reusableAssSet = OrderedSet<Asteroid>()
-    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -170,8 +169,6 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         throwDelay.reset()
         throwTimer.setToEnd()
 
-        reusableBodySet.clear()
-
         FacingUtils.setFacingOf(this)
 
         frozen = false
@@ -180,8 +177,6 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        reusableBodySet.clear()
 
         asteroids.keys().forEach { asteroid ->
             asteroid.owner = null

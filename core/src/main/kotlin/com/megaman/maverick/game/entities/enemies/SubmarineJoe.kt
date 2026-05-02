@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
@@ -165,8 +166,6 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private val canMove: Boolean
         get() = !game.isCameraRotating() && !frozen
 
-    private val reusableBodySet = MutableOrderedSet<IBody>()
-
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -206,7 +205,6 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        reusableBodySet.clear()
         frozen = false
     }
 
@@ -253,18 +251,15 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getPositionPoint(Position.BOTTOM_CENTER).toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ coordinate ->
-                game.getWorldContainer()!!.getBodies(coordinate.x, coordinate.y, reusableBodySet)
+            filter = filter@{ coordinate, container ->
+                val bodySet = MutableOrderedSet<IBody>()
+                container?.getBodies(coordinate.x, coordinate.y, bodySet)
 
                 var passable = true
-
-                for (otherBody in reusableBodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
+                for (otherBody in bodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
                     passable = false
                     break
                 }
-
-                reusableBodySet.clear()
-
                 return@filter passable
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
