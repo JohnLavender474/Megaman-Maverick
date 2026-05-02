@@ -5,6 +5,7 @@ import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.pathfinding.heuristics.ManhattanHeuristic
+import com.mega.game.engine.world.container.IWorldContainer
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -37,8 +38,8 @@ class PathfinderTest : DescribeSpec({
             }
         }
 
-        val filter: (IntPair) -> Boolean =
-            { coordinate -> !matrix.isOutOfBounds(coordinate.x, coordinate.y) && !nodesToFilter.contains(coordinate) }
+        val filter: (IntPair, IWorldContainer?) -> Boolean =
+            { coordinate, _ -> !matrix.isOutOfBounds(coordinate.x, coordinate.y) && !nodesToFilter.contains(coordinate) }
 
         return PathfinderParams(
             startCoordinateSupplier = { startCoordinate },
@@ -100,7 +101,7 @@ class PathfinderTest : DescribeSpec({
             val pathfinder = Pathfinder(
                 params.startCoordinateSupplier(),
                 params.targetCoordinateSupplier(),
-                params.filter,
+                { params.filter(it, null) },
                 params.allowDiagonal(),
                 heuristic
             )
@@ -138,7 +139,7 @@ class PathfinderTest : DescribeSpec({
             val pathfinder = Pathfinder(
                 params.startCoordinateSupplier(),
                 params.targetCoordinateSupplier(),
-                params.filter,
+                { params.filter(it, null) },
                 params.allowDiagonal(),
                 heuristic
             )
@@ -177,7 +178,7 @@ class PathfinderTest : DescribeSpec({
             val pathfinder = Pathfinder(
                 params.startCoordinateSupplier(),
                 params.targetCoordinateSupplier(),
-                params.filter,
+                { params.filter(it, null) },
                 params.allowDiagonal(),
                 heuristic
             )
@@ -219,7 +220,7 @@ class PathfinderTest : DescribeSpec({
             val pathfinder = Pathfinder(
                 params.startCoordinateSupplier(),
                 params.targetCoordinateSupplier(),
-                params.filter,
+                { params.filter(it, null) },
                 params.allowDiagonal(),
                 heuristic
             )
@@ -247,7 +248,7 @@ class PathfinderTest : DescribeSpec({
             val pathfinder = Pathfinder(
                 params.startCoordinateSupplier(),
                 params.targetCoordinateSupplier(),
-                params.filter,
+                { params.filter(it, null) },
                 params.allowDiagonal(),
                 heuristic
             )
@@ -276,7 +277,7 @@ class PathfinderTest : DescribeSpec({
                 val pathfinder = Pathfinder(
                     startCoordinate = params.startCoordinateSupplier(),
                     targetCoordinate = params.targetCoordinateSupplier(),
-                    filter = params.filter,
+                    filter = { params.filter(it, null) },
                     allowDiagonal = params.allowDiagonal(),
                     heuristic = ManhattanHeuristic(),
                     maxIterations = 3,
@@ -305,7 +306,7 @@ class PathfinderTest : DescribeSpec({
                 val pathfinder = Pathfinder(
                     startCoordinate = params.startCoordinateSupplier(),
                     targetCoordinate = params.targetCoordinateSupplier(),
-                    filter = params.filter,
+                    filter = { params.filter(it, null) },
                     allowDiagonal = params.allowDiagonal(),
                     heuristic = ManhattanHeuristic(),
                     maxIterations = 3,
@@ -333,7 +334,7 @@ class PathfinderTest : DescribeSpec({
                 val pathfinder = Pathfinder(
                     startCoordinate = params.startCoordinateSupplier(),
                     targetCoordinate = params.targetCoordinateSupplier(),
-                    filter = params.filter,
+                    filter = { params.filter(it, null) },
                     allowDiagonal = params.allowDiagonal(),
                     heuristic = ManhattanHeuristic(),
                     maxDistance = 2,
@@ -363,7 +364,7 @@ class PathfinderTest : DescribeSpec({
                 val pathfinder = Pathfinder(
                     startCoordinate = params.startCoordinateSupplier(),
                     targetCoordinate = params.targetCoordinateSupplier(),
-                    filter = params.filter,
+                    filter = { params.filter(it, null) },
                     allowDiagonal = params.allowDiagonal(),
                     heuristic = ManhattanHeuristic(),
                     maxDistance = 2,
@@ -391,7 +392,7 @@ class PathfinderTest : DescribeSpec({
                 val pathfinder = Pathfinder(
                     startCoordinate = params.startCoordinateSupplier(),
                     targetCoordinate = params.targetCoordinateSupplier(),
-                    filter = params.filter,
+                    filter = { params.filter(it, null) },
                     allowDiagonal = params.allowDiagonal(),
                     heuristic = ManhattanHeuristic(),
                     maxIterations = 1000,
@@ -421,7 +422,7 @@ class PathfinderTest : DescribeSpec({
                 val pathfinder = Pathfinder(
                     startCoordinate = params.startCoordinateSupplier(),
                     targetCoordinate = params.targetCoordinateSupplier(),
-                    filter = params.filter,
+                    filter = { params.filter(it, null) },
                     allowDiagonal = params.allowDiagonal(),
                     heuristic = ManhattanHeuristic(),
                     maxIterations = 1000,

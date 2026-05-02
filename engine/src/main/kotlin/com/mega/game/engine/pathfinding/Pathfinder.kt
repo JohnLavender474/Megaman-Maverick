@@ -8,7 +8,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import java.util.*
 
-
 class Pathfinder(
     private val startCoordinate: IntPair,
     private val targetCoordinate: IntPair,

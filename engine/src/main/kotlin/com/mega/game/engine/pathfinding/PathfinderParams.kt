@@ -5,7 +5,6 @@ import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.world.container.IWorldContainer
 
-
 class PathfinderParams(
     var startCoordinateSupplier: () -> IntPair,
     var targetCoordinateSupplier: () -> IntPair,
