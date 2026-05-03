@@ -295,13 +295,15 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         }
 
         body.postProcess.put(ConstKeys.DEFAULT) {
-            val (lineStart, lineEnd) = rawLine.getWorldPoints()
+            val (lineStart, _) = rawLine.getWorldPoints()
 
             maxLine.setFirstLocalPoint(lineStart)
             actualLine.setFirstLocalPoint(lineStart)
 
-            val endPoint = if (contacts.isEmpty()) lineEnd else contacts.peek().first
-            maxLine.setSecondLocalPoint(endPoint)
+            if (!contacts.isEmpty()) {
+                val endPoint = contacts.peek().first
+                maxLine.setSecondLocalPoint(endPoint)
+            }
 
             updateDamager()
         }
