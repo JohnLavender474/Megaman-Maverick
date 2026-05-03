@@ -188,6 +188,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Specials1/CapsuleTeleporter/ActiveV2.png</key>
+            <key type="filename">../frames/Specials1/PortalHopperV2/wait.png</key>
+            <key type="filename">../frames/Specials1/RailTrack/platform.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9Paddings</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Specials1/CapsuleTeleporter/Frame.png</key>
             <key type="filename">../frames/Specials1/CapsuleTeleporter/Inactive.png</key>
             <struct type="IndividualSpriteSettings">
@@ -201,6 +218,24 @@
                 <rect>13,26,25,51</rect>
                 <key>scale9Paddings</key>
                 <rect>13,26,25,51</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Specials1/CapsuleTeleporter/FrameV2.png</key>
+            <key type="filename">../frames/Specials1/CapsuleTeleporter/InactiveV2.png</key>
+            <key type="filename">../frames/Specials1/FloorButton/switch.png</key>
+            <key type="filename">../frames/Specials1/PortalHopperV2/launch.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,16,16,32</rect>
+                <key>scale9Paddings</key>
+                <rect>8,16,16,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -277,22 +312,6 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Specials1/FloorButton/switch.png</key>
-            <key type="filename">../frames/Specials1/PortalHopperV2/launch.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,16,16,32</rect>
-                <key>scale9Paddings</key>
-                <rect>8,16,16,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -383,22 +402,6 @@
                 <rect>16,8,32,16</rect>
                 <key>scale9Paddings</key>
                 <rect>16,8,32,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Specials1/PortalHopperV2/wait.png</key>
-            <key type="filename">../frames/Specials1/RailTrack/platform.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,16,32,32</rect>
-                <key>scale9Paddings</key>
-                <rect>16,16,32,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

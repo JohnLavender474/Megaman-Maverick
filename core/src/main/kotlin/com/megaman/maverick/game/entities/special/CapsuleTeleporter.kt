@@ -92,9 +92,9 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            regions.put("frame", atlas.findRegion("$TAG/Frame"))
-            regions.put("inactive", atlas.findRegion("$TAG/Inactive"))
-            regions.put("active", atlas.findRegion("$TAG/Active"))
+            regions.put("frame", atlas.findRegion("$TAG/FrameV2"))
+            regions.put("inactive", atlas.findRegion("$TAG/InactiveV2"))
+            regions.put("active", atlas.findRegion("$TAG/ActiveV2"))
         }
         super.init()
         addComponent(AudioComponent())
@@ -297,7 +297,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val frameSprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 0))
+        val frameSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         frameSprite.setSize(2f * ConstVals.PPM, 4f * ConstVals.PPM)
         frameSprite.setRegion(regions["frame"]!!)
 
