@@ -4,26 +4,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
-import com.mega.game.engine.common.enums.ProcessState
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.swapped
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setCenter
-import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.SineWave
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -33,9 +26,8 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.*
 
-class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "Snow"
@@ -71,9 +63,8 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
-        addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -83,7 +74,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         val spawn =
             if (spawnProps.containsKey(ConstKeys.POSITION)) spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
             else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        body.setCenter(spawn)
+        position.set(spawn)
 
         background = spawnProps.getOrDefault(ConstKeys.BACKGROUND, false, Boolean::class)
 
@@ -148,10 +139,6 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
         fadeTimer.reset()
     }
 
-    private fun handleHit() {
-        if (!background) destroy()
-    }
-
     private fun adjust() {
         sine.amplitude = UtilMethods.getRandom(minAmplitude, maxAmplitude)
     }
@@ -174,66 +161,23 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpri
 
         sine.update(delta)
         position.set(sine.getMotionValue(out).swapped()).add(drift * delta, 0f)
-        body.setCenter(position)
 
         if (position.y < minY) destroy()
     })
 
-    private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
-
-        val bodyRect = GameRectangle()
-        val bodyFixture = Fixture(body, FixtureType.BODY, bodyRect)
-        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
-            GameLogger.debug(TAG, "hitByBlock(): background=$background, mapObjId=${block.id}")
-            handleHit()
-        }
-        bodyFixture.setHitByBodyReceiver receiver@{ entity, processState ->
-            if (processState != ProcessState.BEGIN) return@receiver
-            if ((entity as MegaGameEntity).getTag() == getTag()) return@receiver
-            GameLogger.debug(TAG, "hitByBody(): background=$background, body=${entity.body.getBounds()}")
-            handleHit()
-        }
-        bodyFixture.setHitByProjectileReceiver {
-            GameLogger.debug(TAG, "hitByProjectile(): background=$background, projectile=$it")
-            handleHit()
-        }
-        bodyFixture.setHitByWaterReceiver {
-            GameLogger.debug(TAG, "hitByWater(): background=$background, water=$it")
-            handleHit()
-        }
-        body.addFixture(bodyFixture)
-
-        val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
-        waterListenerFixture.setHitByWaterReceiver { destroy() }
-        waterListenerFixture.putProperty(ConstKeys.SPLASH, false)
-        body.addFixture(waterListenerFixture)
-
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = if (background) BACKGROUND_SIZE else PLAYGROUND_SIZE
-            body.setSize(size * ConstVals.PPM)
-            bodyRect.set(body)
-
-            val active = !game.isPerformanceSubpar()
-            body.physics.collisionOn = active
-            body.forEachFixture { fixture -> fixture.setActive(active) }
-        }
-
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
-
-        return BodyComponentCreator.create(this, body)
-    }
-
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(GameSprite(region!!))
         .preProcess { delta, sprite ->
-            sprite.setSize(body.getWidth(), body.getHeight())
+            val size = if (background) BACKGROUND_SIZE else PLAYGROUND_SIZE
+            sprite.setSize(size * ConstVals.PPM)
             sprite.setCenter(position)
 
-            val alpha = if (fadingOut) 1f - fadeTimer.getRatio() else 1f
+            val ratio = (fadeTimer.getRatio() / 10) * 10
+            val alpha = if (fadingOut) 1f - ratio else 1f
             sprite.setAlpha(alpha)
 
             sprite.priority.section = if (background) DrawingSection.BACKGROUND else DrawingSection.PLAYGROUND
+            sprite.priority.value = if (background) 0 else 15
 
             sprite.setOriginCenter()
             if (ROTATION_ENABLED) sprite.rotation += ROTATION_PER_SECOND * 360f * delta

@@ -37,6 +37,10 @@ import com.mega.game.engine.entities.contracts.*
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstKeys.BEAM
+import com.megaman.maverick.game.ConstKeys.CAN
+import com.megaman.maverick.game.ConstKeys.END
+import com.megaman.maverick.game.ConstKeys.ON
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
@@ -168,6 +172,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         beamTimer.setToEnd()
         spawnExplosionDelay.setToEnd()
+
+        canBeam = spawnProps.getOrDefault("${CAN}_${BEAM}", true, Boolean::class)
+        onEndBeam = spawnProps.get("${ON}_${END}_${BEAM}") as (() -> Unit)?
     }
 
     override fun onDestroy() {
@@ -204,6 +211,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
                         actualLine.setSecondLocalPoint(nextEndPoint)
                     }
+
                     else -> {
                         actualLine.set(maxLine)
 
@@ -224,6 +232,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                     }
                 }
             }
+
             else -> if (canBeam) {
                 beamDelay.update(delta)
                 if (beamDelay.isFinished()) startBeaming()
@@ -321,7 +330,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val beamCount = MAX_LENGTH.div(BEAM_WIDTH).toInt()
         for (i in 0 until beamCount) {
-            val key = "${ConstKeys.BEAM}_$i"
+            val key = "${BEAM}_$i"
 
             val sprite = GameSprite()
             sprite.setSize(BEAM_WIDTH * ConstVals.PPM, BEAM_HEIGHT * ConstVals.PPM)
@@ -351,11 +360,11 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val beamerAnims = objectMapOf<String, IAnimation>(
             ConstKeys.BLACK pairTo Animation(regions[ConstKeys.BLACK]),
             ConstKeys.PRIOR pairTo Animation(gdxArrayOf(regions[ConstKeys.PINK], regions[ConstKeys.WHITE]), 0.1f, true),
-            ConstKeys.BEAM pairTo Animation(gdxArrayOf(regions[ConstKeys.PINK], regions[ConstKeys.WHITE]), 0.05f, true)
+            BEAM pairTo Animation(gdxArrayOf(regions[ConstKeys.PINK], regions[ConstKeys.WHITE]), 0.05f, true)
         )
         val beamerKeySupplier: (String?) -> String? = key@{
             return@key when {
-                beaming -> ConstKeys.BEAM
+                beaming -> BEAM
                 beamDelay.getRatio() >= BEAM_DELAY_FLASH_RATIO -> ConstKeys.PRIOR
                 else -> ConstKeys.BLACK
             }
