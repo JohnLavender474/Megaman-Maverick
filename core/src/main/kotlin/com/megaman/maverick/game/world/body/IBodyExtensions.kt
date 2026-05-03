@@ -12,11 +12,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.GameObjectPools
 
 fun IBody.defaultDoUpdate(): Boolean {
     val game = getEntity().game
-    if (game.isCameraRotating()) return false
+    if (getEntity() !is Megaman && game.isCameraRotating()) return false
     return when (type) {
         BodyType.ABSTRACT -> overlapsGameCam() || !physics.velocity.isZero
         else -> true

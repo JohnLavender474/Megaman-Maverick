@@ -155,7 +155,6 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!shouldCollide || owner == shieldFixture.getEntity()) return
-
         if (shieldFixture.getEntity() is GutsTankFist && owner is GutsTank) return
 
         bounced++
@@ -163,7 +162,6 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
             explodeAndDie()
             return
         }
-
         bounce(shieldFixture.getProperty(ConstKeys.DIRECTION, Direction::class))
     }
 

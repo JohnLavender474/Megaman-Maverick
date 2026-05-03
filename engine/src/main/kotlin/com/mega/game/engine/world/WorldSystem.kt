@@ -152,7 +152,9 @@ class WorldSystem(
         bodies.forEach { body ->
             body.process(delta)
             worldContainer.addBody(body)
-            body.forEachFixture { worldContainer.addFixture(it) }
+            body.forEachFixture { fixture ->
+                if (fixture.isActive()) worldContainer.addFixture(fixture)
+            }
         }
         diagnostics?.endEntry()
 
@@ -231,7 +233,7 @@ class WorldSystem(
         if (qualifyingCount == 0) return false
 
         val unionCellArea = (unionMaxX - unionMinX + 1) * (unionMaxY - unionMinY + 1)
-        if (qualifyingCount > 1 && unionCellArea <= batchThreshold) {
+        if (unionCellArea <= batchThreshold) {
             diagnostics?.beginEntry("collect contacts via union bounding box")
 
             worldContainer.getFixtures(unionMinX, unionMinY, unionMaxX, unionMaxY, reusableFixtureSet)
@@ -253,9 +255,11 @@ class WorldSystem(
             reusableFixtureSet.clear()
 
             diagnostics?.endEntry()
+
+            return true
         }
 
-        return true
+        return false
     }
 
     internal fun collectContactsPerFixtureBasis(body: IBody): Boolean {
@@ -296,8 +300,8 @@ class WorldSystem(
         worldContainer.getBodies(
             MathUtils.floor(bounds.getX() / ppm),
             MathUtils.floor(bounds.getY() / ppm),
-            MathUtils.floor(bounds.getMaxX() / ppm),
-            MathUtils.floor(bounds.getMaxY() / ppm),
+            MathUtils.ceil(bounds.getMaxX() / ppm),
+            MathUtils.ceil(bounds.getMaxY() / ppm),
             reusableBodySet
         )
         reusableBodySet.forEach {

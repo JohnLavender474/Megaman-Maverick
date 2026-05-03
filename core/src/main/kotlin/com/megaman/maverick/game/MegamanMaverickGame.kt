@@ -81,6 +81,7 @@ import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
@@ -104,6 +105,7 @@ import com.megaman.maverick.game.utils.extensions.getSounds
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.MegaContactListener
@@ -159,9 +161,10 @@ class MegamanMaverickGame(
         private const val AUTO_PERF_HIGH_SPEED = 1.0f      // timer multiplier: 3s / ~3s
         private const val AUTO_PERF_CRISIS_SPEED = 2.0f    // timer multiplier: 3s / ~1.5s
         private const val NOTIFICATION_DUR = 5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(UnderWaterBubble.TAG, MegaContactListener.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
-            contact.fixturesMatch(FixtureType.FEET, FixtureType.DEATH)
+            contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER) &&
+                (contact.fixture1.getEntity() is UnderWaterBubble || contact.fixture2.getEntity() is UnderWaterBubble)
         }
     }
 
@@ -733,7 +736,7 @@ class MegamanMaverickGame(
                         params.fixedStepScalar / (getPerformance().fixedStep * getPerformance().fps)
                     ),
                     diagnostics = diagnostics,
-                    batchQueryCellAreaThreshold = 25
+                    batchQueryCellAreaThreshold = null // 25
                 ),
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {

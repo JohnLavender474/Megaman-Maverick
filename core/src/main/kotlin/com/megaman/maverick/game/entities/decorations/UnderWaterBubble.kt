@@ -2,50 +2,35 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Speed
 import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.setToDirection
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
 import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setSize
-import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.world.body.*
 import kotlin.math.floor
 
-class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity,
     IDirectional {
 
     companion object {
@@ -58,17 +43,18 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
 
     override lateinit var direction: Direction
 
+    private val position = Vector2()
+    private val velocity = Vector2()
+
     private val fadeTimer = Timer(TIME_TO_FADE)
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
-        addComponent(defineCullablesComponent())
-        addComponent(defineUpdatablesComponent())
-        addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -76,64 +62,40 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setCenter(spawn)
+        position.set(spawn)
 
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
 
         val speed = spawnProps.get(ConstKeys.SPEED, Speed::class)
-        if (speed != null) body.physics.velocity
-            .setToDirection(direction)
-            .scl((if (speed == Speed.SLOW) SLOW_SPEED else FAST_SPEED) * ConstVals.PPM)
+        if (speed != null)
+            velocity
+                .setToDirection(direction)
+                .scl((if (speed == Speed.SLOW) SLOW_SPEED else FAST_SPEED) * ConstVals.PPM)
 
         fadeTimer.reset()
     }
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        fadeTimer.update(delta)
-        if (fadeTimer.isFinished()) destroy()
-
-        if (!body.isSensing(BodySense.IN_WATER)) pop("not-in-water")
-    })
-
-    private fun pop(reason: String? = null) {
-        GameLogger.debug(TAG, "pop(): reason=$reason")
-        destroy()
+    override fun onDestroy() {
+        GameLogger.debug(TAG, "onDestroy()")
+        super.onDestroy()
+        velocity.setZero()
     }
 
-    private fun defineCullablesComponent() =
-        CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(this)))
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        position.add(velocity.x * delta, velocity.y * delta)
 
-    private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
-        body.setSize(0.25f * ConstVals.PPM)
-        body.physics.applyFrictionX = false
-        body.physics.applyFrictionY = false
-
-        val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { body.getBounds() }
-
-        val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.125f * ConstVals.PPM))
-        bodyFixture.setHitByProjectileReceiver { pop("hit-projectile") }
-        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> pop("hit-block") }
-        body.addFixture(bodyFixture)
-        debugShapes.add { bodyFixture }
-
-        val waterListenerFixture =
-            Fixture(body, FixtureType.WATER_LISTENER, GameCircle().setRadius(0.05f * ConstVals.PPM))
-        waterListenerFixture.offsetFromBodyAttachment.y = 0.125f * ConstVals.PPM
-        waterListenerFixture.putProperty(ConstKeys.SPLASH, false)
-        body.addFixture(waterListenerFixture)
-
-        body.preProcess.put(ConstKeys.DEFAULT) {
-            val active = !game.isPerformanceSubpar()
-            body.physics.collisionOn = active
-            body.forEachFixture { fixture -> fixture.setActive(active) }
+        if (!game.getGameCamera().getRotatedBounds().contains(position)) {
+            GameLogger.debug(TAG, "update(): out of game cam, destroy")
+            destroy()
+            return@UpdatablesComponent
         }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-
-        return BodyComponentCreator.create(this, body)
-    }
+        fadeTimer.update(delta)
+        if (fadeTimer.isFinished()) {
+            GameLogger.debug(TAG, "update(): finish fading, destroy")
+            destroy()
+        }
+    })
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2))
@@ -143,9 +105,9 @@ class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 
-            sprite.setCenter(body.getCenter())
+            sprite.setCenter(position)
 
-            val alpha = 1f - floor(fadeTimer.getRatio() * 10) / 10
+            val alpha = 1f - (floor(fadeTimer.getRatio() * 10) / 10)
             sprite.setAlpha(alpha)
         }
         return component

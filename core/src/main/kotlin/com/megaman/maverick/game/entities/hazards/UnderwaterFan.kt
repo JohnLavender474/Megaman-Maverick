@@ -69,10 +69,10 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         private const val FORCE_FIXTURE_WIDTH = 2f
         private const val FORCE_FIXTURE_HEIGHT = 12f
-        private const val FORCE_MAX_IMPULSE = 20f
+        private const val FORCE_MAX_IMPULSE = 25f
         private const val FORCE_MIN_IMPULSE = 5f
-        private const val FORCE_WANE_START_DIST = 5f
-        private const val MAX_FORCE_TO_APPLY = 12f
+        private const val FORCE_WANE_START_DIST = 8f
+        private const val MAX_FORCE_TO_APPLY = 15f
 
         private const val MIN_BUBBLES_TO_SPAWN = 1
         private const val MAX_BUBBLES_TO_SPAWN = 3
@@ -185,11 +185,14 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        spawnBubblesDelay.update(delta)
-        if (spawnBubblesDelay.isFinished()) {
-            spawnBubbles()
-            val duration = UtilMethods.getRandom(SPAWN_BUBBLES_MIN_DELAY, SPAWN_BUBBLE_MAX_DELAY)
-            spawnBubblesDelay.resetDuration(duration)
+        val gameCamBounds = game.getGameCamera().getRotatedBounds()
+        if (gameCamBounds.overlaps(forceBounds) || gameCamBounds.overlaps(body.getBounds())) {
+            spawnBubblesDelay.update(delta)
+            if (spawnBubblesDelay.isFinished()) {
+                spawnBubbles()
+                val duration = UtilMethods.getRandom(SPAWN_BUBBLES_MIN_DELAY, SPAWN_BUBBLE_MAX_DELAY)
+                spawnBubblesDelay.resetDuration(duration)
+            }
         }
     })
 

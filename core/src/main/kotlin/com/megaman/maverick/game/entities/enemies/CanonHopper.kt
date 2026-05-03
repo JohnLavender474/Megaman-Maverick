@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
 class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable, IFreezableEntity {
@@ -107,6 +108,7 @@ class CanonHopper(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         standTimer.reset()
 
         frozen = false
+        facing = FacingUtils.getPreferredFacingFor(this)
     }
 
     override fun onDestroy() {
