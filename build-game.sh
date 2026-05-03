@@ -101,7 +101,7 @@ fi
 
 # Zip the out-platform folder
 echo "Zipping the $EXECUTABLE_NAME-$PLATFORM folder..."
-zip -r "./game-builds/$EXECUTABLE_NAME-$PLATFORM.zip" "./game-builds/$EXECUTABLE_NAME-$PLATFORM"
+(cd "./game-builds" && zip -r "$EXECUTABLE_NAME-$PLATFORM.zip" "$EXECUTABLE_NAME-$PLATFORM")
 
 if [ $? -eq 0 ]; then
     echo "Zipping completed successfully."
