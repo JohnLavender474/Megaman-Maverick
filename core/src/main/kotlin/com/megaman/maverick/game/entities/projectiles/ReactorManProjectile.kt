@@ -212,15 +212,19 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         velocity.y = 5f * ConstVals.PPM
 
         bounces++
-
         if (owner != megaman) owner = shieldFixture.getEntity()
-
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!active) return
         if (big) shatter(blockFixture.getShape())
+        explodeAndDie()
+    }
+
+    override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (!active || bodyFixture.getEntity() == owner) return
+        if (big) shatter(bodyFixture.getShape())
         explodeAndDie()
     }
 

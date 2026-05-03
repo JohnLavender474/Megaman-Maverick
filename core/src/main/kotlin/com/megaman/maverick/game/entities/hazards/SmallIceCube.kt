@@ -62,10 +62,13 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         private var region2: TextureRegion? = null
 
         private val INSTANT_DEATH_ENTITIES = objectSetOf(
+            Axe::class,
             Bullet::class,
             Megaman::class,
+            SlashWave::class,
+            PreciousGem::class,
             ChargedShot::class,
-            SlashWave::class
+            ReactorManProjectile::class,
         )
         private val SMOKE_PUFF_ENTITIES = objectSetOf(
             MagmaWave::class,
