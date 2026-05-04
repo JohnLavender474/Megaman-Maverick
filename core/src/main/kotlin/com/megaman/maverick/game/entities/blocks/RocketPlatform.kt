@@ -70,9 +70,9 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<Meg
         if (region == null)
             region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "${TAG}${REGION_SUFFIX}")
         super.init()
+        addComponent(MotionComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
-        addComponent(MotionComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -175,7 +175,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<Meg
 
             sprite.setCenter(body.getCenter())
 
-            val offset = 0.4f * ConstVals.PPM
+            val offset = 0.5f * ConstVals.PPM
             when (direction) {
                 Direction.UP -> sprite.translateY(-offset)
                 Direction.DOWN -> sprite.translateY(offset)

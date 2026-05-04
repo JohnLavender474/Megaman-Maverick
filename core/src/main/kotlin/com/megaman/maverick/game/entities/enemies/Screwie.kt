@@ -138,7 +138,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(ConstVals.PPM.toFloat(), 0.75f * ConstVals.PPM)
+        body.setSize(ConstVals.PPM.toFloat(), 0.8f * ConstVals.PPM)
 
         val shapes = Array<() -> IDrawableShape?>()
 
@@ -159,10 +159,10 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             when {
                 down -> {
                     damageableBounds.setHeight(0.5f * ConstVals.PPM)
-                    damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.15f else -0.15f) * ConstVals.PPM
+                    damageableFixture.offsetFromBodyAttachment.y = (if (upsideDown) 0.2f else -0.2f) * ConstVals.PPM
                 }
                 else -> {
-                    damageableBounds.setHeight(0.75f * ConstVals.PPM)
+                    damageableBounds.setHeight(0.8f * ConstVals.PPM)
                     damageableFixture.offsetFromBodyAttachment.y = 0f
                 }
             }

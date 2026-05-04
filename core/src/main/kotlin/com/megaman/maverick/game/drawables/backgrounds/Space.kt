@@ -36,7 +36,7 @@ class Space(game: MegamanMaverickGame, it: RectangleMapObject) : AnimatedBackgro
         private const val ANIM_ROWS = 2
         private const val ANIM_COLS = 1
         private const val ANIM_DUR = 0.25f
-        private const val MODEL_WIDTH = 8f
-        private const val MODEL_HEIGHT = 7f
+        private const val MODEL_WIDTH = 16f
+        private const val MODEL_HEIGHT = 14f
     }
 }
