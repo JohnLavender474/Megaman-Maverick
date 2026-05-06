@@ -127,7 +127,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
 
     override fun render(delta: Float) {
         if (game.controllerPoller.isJustReleased(MegaControllerButton.START)) {
-            game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+            onCompletion()
             return
         }
 
@@ -181,11 +181,13 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
             stateQueue.removeFirst()
 
             when {
-                stateQueue.isEmpty -> game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
+                stateQueue.isEmpty -> onCompletion()
 
                 currentState == LogoScreenState.FADE_IN_LOGO ->
                     game.audioMan.playMusic(MusicAsset.MM6_CAPCOM_LOGO_MUSIC, false)
             }
         }
     }
+
+    private fun onCompletion() = game.setCurrentScreen(ScreenEnum.OPENING_SCREEN.name)
 }

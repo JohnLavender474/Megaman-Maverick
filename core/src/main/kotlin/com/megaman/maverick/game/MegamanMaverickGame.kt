@@ -147,7 +147,7 @@ class MegamanMaverickGame(
 
     companion object {
         const val TAG = "MegamanMaverickGame"
-        const val VERSION = "ALPHA 1.12.1"
+        const val VERSION = "ALPHA 1.12.4"
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
@@ -379,6 +379,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.LEVEL_SCREEN.name, levelScreen)
 
         screens.put(ScreenEnum.LOGO_SCREEN.name, LogoScreen(this))
+        screens.put(ScreenEnum.OPENING_SCREEN.name, OpeningScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
         screens.put(ScreenEnum.GAME_OVER_SCREEN.name, GameOverScreen(this))

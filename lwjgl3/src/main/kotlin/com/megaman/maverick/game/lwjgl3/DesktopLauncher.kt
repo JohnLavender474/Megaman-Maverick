@@ -22,7 +22,7 @@ object DesktopLauncher {
     private const val DEFAULT_WIDTH = 1920
     private const val DEFAULT_HEIGHT = 1080
     private const val DEFAULT_RESIZABLE = true
-    private const val DEFAULT_MAXIMIZED = true
+    private const val DEFAULT_MAXIMIZED = false
     private const val DEFAULT_FULLSCREEN = false
     private const val DEFAULT_WRITE_LOGS_TO_FILE = false
     private const val DEFAULT_PAUSE_ON_MINIMIZED = false
