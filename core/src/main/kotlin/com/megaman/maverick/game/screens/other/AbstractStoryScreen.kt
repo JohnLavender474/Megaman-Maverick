@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.other
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureRegion
@@ -21,14 +22,17 @@ import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : BaseScreen() {
 
+    companion object {
+        const val TAG = "AbstractStoryScreen"
+    }
+
     protected open val fadeInDur = 1f
-    protected open val showDur= 3.5f
     protected open val fadeOutDur = 1.5f
     protected open val doneDur = 1f
     protected open val lineSpacing = 1.5f
 
     protected abstract val music: MusicAsset?
-    protected abstract val slides: Array<Array<String>>
+    protected abstract val slides: OrderedMap<Array<String>, Float>
 
     protected abstract fun onCompletion()
 
@@ -39,13 +43,13 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
     private lateinit var showTimer: Timer
     private lateinit var doneTimer: Timer
 
-    private val slideQueue = Queue<Array<MegaFontHandle>>()
+    private val slideQueue = Queue<Pair<Array<MegaFontHandle>, Float>>()
     private var currentLines = Array<MegaFontHandle>()
     private var slideState = SlideState.FADE_IN
     private var done = false
 
     override fun show() {
-        GameLogger.debug(javaClass.simpleName, "show()")
+        GameLogger.debug(TAG, "show()")
 
         music?.let { game.audioMan.playMusic(it) }
         game.getUiCamera().setToDefaultPosition()
@@ -60,7 +64,6 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
         fadeOut = Fade(Fade.FadeType.FADE_OUT, fadeOutDur).apply {
             setRegion(black); setX(0f); setY(0f); setWidth(w); setHeight(h)
         }
-        showTimer = Timer(showDur)
         doneTimer = Timer(doneDur)
 
         slideQueue.clear()
@@ -68,7 +71,9 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
         done = false
         doneTimer.reset()
 
-        slides.forEach { lines ->
+        slides.forEach { entry ->
+            val lines = entry.key
+            val duration = entry.value
             val n = lines.size
             val spacing = lineSpacing * ConstVals.PPM
             val centerY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
@@ -80,7 +85,7 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
                     positionY = startY - i * spacing
                 )
             }.toGdxArray()
-            slideQueue.addLast(handles)
+            slideQueue.addLast(Pair(handles, duration))
         }
 
         advanceSlide()
@@ -93,11 +98,12 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
             return
         }
 
-        currentLines = slideQueue.removeFirst()
+        val (handles, duration) = slideQueue.removeFirst()
+        currentLines = handles
+        showTimer = Timer(duration)
         slideState = SlideState.FADE_IN
         fadeIn.init()
         fadeOut.init()
-        showTimer.reset()
     }
 
     override fun render(delta: Float) {
