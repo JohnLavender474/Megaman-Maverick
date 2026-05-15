@@ -109,7 +109,8 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
     override fun render(delta: Float) {
         if (!done && game.controllerPoller.isJustReleased(MegaControllerButton.START)) {
             done = true
-            game.audioMan.playMusic(SoundAsset.SELECT_PING_SOUND, false)
+            game.audioMan.fadeOutMusic(doneDur)
+            game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
         }
 
         if (done) {

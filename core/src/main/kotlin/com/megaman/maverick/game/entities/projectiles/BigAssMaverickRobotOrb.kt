@@ -37,11 +37,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.*
 
 class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(game, size = Size.MEDIUM), IAnimatedEntity {
 
@@ -57,7 +53,12 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
+    enum class OrbColor { ORANGE, PURPLE }
+
+    lateinit var color: OrbColor
+
     internal var hit = false
+    internal var hidden = false
 
     private val moveDelay = Timer()
     private val trajectory = Vector2()
@@ -71,7 +72,11 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            animDefs.keys().forEach { key ->
+                OrbColor.entries.map { it.name.lowercase() }.forEach { color ->
+                    regions.put("$color/$key", atlas.findRegion("$TAG/$color/$key"))
+                }
+            }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -81,6 +86,8 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        color = spawnProps.getOrDefault(ConstKeys.COLOR, OrbColor.ORANGE, OrbColor::class)
 
         body.setSize(BALL_SIZE * ConstVals.PPM)
 
@@ -100,6 +107,7 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         body.physics.gravity.set(gravity)
 
         hit = false
+        hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
         active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
         canBeHit = spawnProps.getOrDefault(ConstKeys.CAN_BE_HIT, true, Boolean::class)
 
@@ -200,6 +208,7 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
             val size = if (hit) 4f else 2f
             sprite.setSize(size * ConstVals.PPM)
             sprite.setCenter(body.getCenter())
+            sprite.hidden = hidden
         }
         .build()
 
@@ -207,12 +216,15 @@ class BigAssMaverickRobotOrb(game: MegamanMaverickGame) : AbstractProjectile(gam
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (hit) "hit" else "ball" }
+                .setKeySupplier { color.name.lowercase() + "/" + if (hit) "hit" else "ball" }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val key = entry.key
                         val (rows, columns, durations, loop) = entry.value
-                        animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+                        OrbColor.entries.map { it.name.lowercase() }.forEach { color ->
+                            val fullKey = "$color/$key"
+                            animations.put(fullKey, Animation(regions[fullKey], rows, columns, durations, loop))
+                        }
                     }
                 }
                 .build()

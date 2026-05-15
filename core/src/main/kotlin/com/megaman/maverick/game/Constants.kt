@@ -256,6 +256,7 @@ object ConstKeys {
     const val ATTACK = "attack"
     const val MOVE = "move"
     const val START = "start"
+    const val DEGREES = "degrees"
     const val HIT_BY_PROJECTILE = "hit_by_projectile"
     const val HIT_BY_PLAYER = "hit_by_player"
     const val HIT_BY_FEET = "hit_by_feet"

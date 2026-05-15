@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
+import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Position
@@ -28,6 +29,7 @@ import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
+import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.motion.RotatingLine
@@ -40,6 +42,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
+import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -47,12 +50,13 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb.OrbColor
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 
 class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IDamager,
-    IHazard, IOwnable<BigAssMaverickRobot> {
+    IHazard, IOwnable<BigAssMaverickRobot>, IAudioEntity {
 
     companion object {
         const val TAG = "BigAssMaverickRobot/Hand"
@@ -76,6 +80,9 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         private const val RETURN_DELAY = 1f
         private const val RETURN_SPEED = 4f
 
+        private const val MOVE_TO_ORIGIN_SPEED = 8f
+        private const val ORB_REVEAL_DELAY = 0.15f
+
         private const val ARM_ORBS = 4
 
         private const val BLINK_DELAY = 0.05f
@@ -87,7 +94,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    enum class BigAssMaverickRobotHandState { ROTATE, LAUNCH, RETURN }
+    enum class BigAssMaverickRobotHandState { FOLLOW, MOVE_TO_ORIGIN, REVEAL_ORBS, ROTATE, LAUNCH, RETURN }
 
     override var owner: BigAssMaverickRobot? = null
 
@@ -103,12 +110,17 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
     private lateinit var rotatingLine: RotatingLine
     private lateinit var rotateSpeedSupplier: () -> Float
 
+    private val rotationStartPos = Vector2()
+
     private val launchTarget = Vector2()
     private val launchDelay = Timer(LAUNCH_DELAY)
     private lateinit var launchSpeedSupplier: () -> Float
 
     private val returnDelay = Timer(RETURN_DELAY)
     private val returnTarget = Vector2()
+
+    private val orbRevealTimer = Timer(ORB_REVEAL_DELAY)
+    private var orbsRevealedCount = 0
 
     private val armOrbs = Array<BigAssMaverickRobotOrb>()
     private val armOrigin = Vector2()
@@ -123,10 +135,11 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
-        addComponent(defineUpdatablesComponent())
+        addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -144,9 +157,14 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         val origin = spawnProps.get(ConstKeys.ORIGIN, Vector2::class)!!
         val radius = spawnProps.get(ConstKeys.RADIUS, Float::class)!!
         val speed = rotateSpeedSupplier.invoke()
-        rotatingLine = RotatingLine(origin.cpy(), radius, speed)
+        val startDegrees = spawnProps.getOrDefault("${ConstKeys.START}_${ConstKeys.DEGREES}", 0f, Float::class)
+        rotatingLine = RotatingLine(origin.cpy(), radius, speed, startDegrees)
+        rotationStartPos.set(rotatingLine.getMotionValue()!!)
 
-        state = BigAssMaverickRobotHandState.ROTATE
+        state = BigAssMaverickRobotHandState.FOLLOW
+
+        orbsRevealedCount = 0
+        orbRevealTimer.reset()
 
         launchDelay.reset()
         returnDelay.reset()
@@ -171,7 +189,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         this.block = block
 
         armOrigin.set(spawnProps.get("${ConstKeys.ARM}_${ConstKeys.ORIGIN}", Vector2::class))
-        (0 until ARM_ORBS).forEach { it ->
+        (0 until ARM_ORBS).forEach { _ ->
             val armOrb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!
             armOrb.spawn(
                 props(
@@ -180,7 +198,9 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                     ConstKeys.CAN_BE_HIT pairTo false,
                     ConstKeys.ACTIVE pairTo false,
+                    ConstKeys.HIDDEN pairTo true,
                     ConstKeys.PRIORITY pairTo -1,
+                    ConstKeys.COLOR pairTo OrbColor.PURPLE,
                     ConstKeys.SECTION pairTo DrawingSection.PLAYGROUND
                 )
             )
@@ -208,6 +228,10 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
         block?.destroy()
         block = null
+    }
+
+    internal fun moveToOrigin() {
+        state = BigAssMaverickRobotHandState.MOVE_TO_ORIGIN
     }
 
     internal fun launch() {
@@ -240,11 +264,49 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         }
 
         when (state) {
+            BigAssMaverickRobotHandState.FOLLOW -> {
+                val ownerCenter = owner!!.body.getCenter()
+                body.setCenter(ownerCenter.x, ownerCenter.y)
+                body.physics.velocity.setZero()
+            }
+
+            BigAssMaverickRobotHandState.MOVE_TO_ORIGIN -> {
+                val direction = GameObjectPools.fetch(Vector2::class)
+                    .set(rotationStartPos).sub(body.getCenter()).nor()
+                body.physics.velocity.set(direction).scl(MOVE_TO_ORIGIN_SPEED * ConstVals.PPM)
+
+                if (body.getCenter().epsilonEquals(rotationStartPos, 0.1f * ConstVals.PPM)) {
+                    body.setCenter(rotationStartPos.x, rotationStartPos.y)
+                    body.physics.velocity.setZero()
+                    orbsRevealedCount = 0
+                    orbRevealTimer.reset()
+                    state = BigAssMaverickRobotHandState.REVEAL_ORBS
+                }
+            }
+
+            BigAssMaverickRobotHandState.REVEAL_ORBS -> {
+                body.physics.velocity.setZero()
+
+                orbRevealTimer.update(delta)
+                if (orbRevealTimer.isJustFinished()) {
+                    armOrbs[orbsRevealedCount].hidden = false
+                    orbsRevealedCount++
+
+                    requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+
+                    if (orbsRevealedCount >= armOrbs.size)
+                        state = BigAssMaverickRobotHandState.ROTATE
+                    else orbRevealTimer.reset()
+                }
+            }
+
             BigAssMaverickRobotHandState.ROTATE -> {
-                rotatingLine.speed = rotateSpeedSupplier.invoke()
-                rotatingLine.update(delta)
-                val center = rotatingLine.getMotionValue()!!
-                body.setCenter(center.x, center.y)
+                if (owner?.ready == true && owner?.betweenReadyAndEndBossSpawnEvent == false) {
+                    rotatingLine.speed = rotateSpeedSupplier.invoke()
+                    rotatingLine.update(delta)
+                    val center = rotatingLine.getMotionValue()!!
+                    body.setCenter(center.x, center.y)
+                }
             }
 
             BigAssMaverickRobotHandState.LAUNCH -> {
@@ -254,17 +316,11 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                     return@UpdatablesComponent
                 }
 
-                if (launchDelay.isJustFinished()) block!!.body.let { blockBody ->
-                    blockBody.physics.collisionOn = false
-                    blockBody.forEachFixture { fixture -> fixture.setActive(false) }
-                }
-
                 val launchSpeed = launchSpeedSupplier.invoke()
                 body.physics.velocity.set(launchTarget).sub(body.getCenter()).nor().scl(launchSpeed)
 
                 if (body.getCenter().epsilonEquals(launchTarget, 0.1f * ConstVals.PPM)) {
                     state = BigAssMaverickRobotHandState.RETURN
-
                     returnDelay.reset()
                 }
             }
@@ -278,14 +334,8 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
 
                 body.physics.velocity.set(returnTarget).sub(body.getCenter()).nor().scl(RETURN_SPEED * ConstVals.PPM)
 
-                if (body.getCenter().epsilonEquals(returnTarget, 0.1f * ConstVals.PPM)) {
+                if (body.getCenter().epsilonEquals(returnTarget, 0.1f * ConstVals.PPM))
                     state = BigAssMaverickRobotHandState.ROTATE
-
-                    block!!.body.let { blockBody ->
-                        blockBody.physics.collisionOn = true
-                        blockBody.forEachFixture { fixture -> fixture.setActive(true) }
-                    }
-                }
             }
         }
     })
@@ -331,7 +381,13 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                     .scl(1f / game.getPerformance().fixedStep)
             }
 
-            damagerFixture.setActive(state != BigAssMaverickRobotHandState.ROTATE)
+            val blockActive = !defeated && state == BigAssMaverickRobotHandState.ROTATE
+            block?.body?.let { blockBody ->
+                blockBody.physics.collisionOn = blockActive
+                blockBody.forEachFixture { it.setActive(blockActive) }
+            }
+
+            damagerFixture.setActive(!defeated && state != BigAssMaverickRobotHandState.ROTATE)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
@@ -351,9 +407,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                 else -> block!!.body.getPositionPoint(position)
             }
             sprite.setPosition(point, position)
-
             sprite.translateY(0.25f * ConstVals.PPM)
-
             sprite.hidden = defeated && blink
         }
         .build()
@@ -362,7 +416,13 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (state == BigAssMaverickRobotHandState.ROTATE || defeated) "still" else "rocket" }
+                .setKeySupplier {
+                    if (defeated || state == BigAssMaverickRobotHandState.FOLLOW ||
+                        state == BigAssMaverickRobotHandState.MOVE_TO_ORIGIN ||
+                        state == BigAssMaverickRobotHandState.REVEAL_ORBS ||
+                        state == BigAssMaverickRobotHandState.ROTATE
+                    ) "still" else "rocket"
+                }
                 .applyToAnimations { animations ->
                     animDefs.forEach { entry ->
                         val key = entry.key

@@ -24,16 +24,30 @@ Asteroid/Regular
   orig: 24, 24
   offset: 0, 0
   index: -1
-BigAssMaverickRobotOrb/ball
+BigAssMaverickRobotOrb/orange/ball
   rotate: false
   xy: 432, 196
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
-BigAssMaverickRobotOrb/hit
+BigAssMaverickRobotOrb/orange/hit
   rotate: false
   xy: 0, 852
+  size: 192, 192
+  orig: 192, 192
+  offset: 0, 0
+  index: -1
+BigAssMaverickRobotOrb/purple/ball
+  rotate: false
+  xy: 464, 196
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+BigAssMaverickRobotOrb/purple/hit
+  rotate: false
+  xy: 192, 852
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -152,7 +166,7 @@ ElecBall/hit
   index: -1
 ElecBall/orb
   rotate: false
-  xy: 192, 852
+  xy: 384, 852
   size: 64, 192
   orig: 64, 192
   offset: 0, 0

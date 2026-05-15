@@ -58,6 +58,7 @@ import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb.OrbColor
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.events.EventType
@@ -91,7 +92,6 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         private val HEAD_ANGLES_LEFT = gdxArrayOf(180f, 135f, 90f)
         private val HEAD_ANGLES_RIGHT = gdxArrayOf(180f, 225f, 270f)
 
-        private const val INIT_DUR = 1f
         private const val STUNNED_DUR = 0.5f
 
         private const val SHOOT_ORBS_DELAY = 3f
@@ -165,12 +165,11 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     private val fallTargetReached: Boolean
         get() = body.getBounds().getY() <= fallTargetY
 
-    private val allHands = Array<BigAssMaverickRobotHand>(2)
+    private val allHands = Array<BigAssMaverickRobotHand>()
     private var launchedHand: BigAssMaverickRobotHand? = null
 
     private var bigAssBody: BigAssMaverickRobotBody? = null
 
-    private val initTimer = Timer(INIT_DUR)
     private val shakeTimer = Timer(SHAKE_DUR)
     private val stunnedTimer = Timer(STUNNED_DUR)
     private val stunned: Boolean
@@ -211,13 +210,6 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        gdxArrayOf(
-            ConstKeys.LEFT,
-            ConstKeys.RIGHT,
-            "${ConstKeys.LEFT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}",
-            "${ConstKeys.RIGHT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}"
-        ).forEach { key -> putProperty(key, spawnProps.get(key)) }
-
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
@@ -235,8 +227,9 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         body.physics.gravity.y = -FALL_GRAVITY * ConstVals.PPM
         body.physics.velocity.y = -FALL_IMPULSE * ConstVals.PPM
 
-        initTimer.reset()
         shakeTimer.reset()
+
+        launchedHand = null
 
         val shootOrbsDelayDur = when (game.state.getDifficultyMode()) {
             DifficultyMode.HARD -> SHOOT_ORBS_DELAY_HARD
@@ -280,6 +273,9 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 BreakableBlock.breakApart(center, BlockPieceColor.BROWN)
             }
         }
+
+        spawnHands(spawnProps)
+
         requestToPlaySound(SoundAsset.THUMP_SOUND, false)
         requestToPlaySound(SoundAsset.SHAKE_SOUND, false)
     }
@@ -288,12 +284,11 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         if (fallTargetReached) {
             if (!wasFallTargetReached) {
                 GameLogger.debug(TAG, "preReady(): just reached fall target")
-                spawnHands()
+                allHands.forEach { it.moveToOrigin() }
                 shakeRoom()
             }
 
             shakeTimer.update(delta)
-            if (shakeTimer.isFinished()) initTimer.update(delta)
             if (shakeTimer.isJustFinished()) GameLogger.debug(TAG, "preReady(): shake timer just finished")
 
             body.setY(fallTargetY)
@@ -322,11 +317,11 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
     }
 
-    private fun spawnHands() {
+    private fun spawnHands(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawnHands()")
 
-        val leftHandPosition = removeProperty(ConstKeys.LEFT, RectangleMapObject::class)!!.rectangle.getCenter()
-        val leftArmOrigin = removeProperty(
+        val leftHandPosition = spawnProps.get(ConstKeys.LEFT, RectangleMapObject::class)!!.rectangle.getCenter()
+        val leftArmOrigin = spawnProps.get(
             "${ConstKeys.LEFT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
         )!!.rectangle.getCenter()
         val leftLaunchSpeedSupplier: () -> Float = speed@{
@@ -353,6 +348,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.ORIGIN pairTo leftHandPosition,
                 ConstKeys.RADIUS pairTo HAND_RADIUS * ConstVals.PPM,
+                "${ConstKeys.START}_${ConstKeys.DEGREES}" pairTo 180f,
                 "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo leftArmOrigin,
                 "${ConstKeys.LAUNCH}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo leftLaunchSpeedSupplier,
                 "${ConstKeys.ROTATION}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo leftRotationSpeedSupplier
@@ -360,8 +356,8 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         )
         allHands.add(leftHand)
 
-        val rightHandPosition = removeProperty(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter()
-        val rightArmOrigin = removeProperty(
+        val rightHandPosition = spawnProps.get(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter()
+        val rightArmOrigin = spawnProps.get(
             "${ConstKeys.RIGHT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
         )!!.rectangle.getCenter()
         val rightLaunchSpeedSupplier: () -> Float = speed@{
@@ -396,7 +392,8 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         allHands.add(rightHand)
     }
 
-    override fun isReady(delta: Float) = fallTargetReached && initTimer.isFinished()
+    override fun isReady(delta: Float) =
+        fallTargetReached && !allHands.isEmpty && allHands.all { it.state == BigAssMaverickRobotHandState.ROTATE }
 
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
@@ -461,8 +458,6 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 return@add
             }
 
-            if (!initTimer.isFinished()) return@add
-
             stunnedTimer.update(delta)
             if (!stunnedTimer.isFinished()) return@add
             if (stunnedTimer.isJustFinished()) {
@@ -474,47 +469,45 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
             turnHeadDelay.update(delta)
 
-            shootOrbsTimer.update(delta)
-            if (shootOrbsTimer.isJustFinished()) {
-                GameLogger.debug(TAG, "update(): shoot orbs timer just finished")
-                shootOrbsDelay.reset()
-            } else if (shootOrbsTimer.isFinished()) shootOrbsDelay.update(delta)
+            if (ready && !betweenReadyAndEndBossSpawnEvent) {
+                shootOrbsTimer.update(delta)
+                if (shootOrbsTimer.isJustFinished()) {
+                    GameLogger.debug(TAG, "update(): shoot orbs timer just finished")
+                    shootOrbsDelay.reset()
+                } else if (shootOrbsTimer.isFinished()) shootOrbsDelay.update(delta)
 
-            if (shootOrbsDelay.isJustFinished() && shootOrbsTimer.isFinished()) {
-                GameLogger.debug(TAG, "update(): shoot orbs delay just finished")
-                shootOrbsTimer.reset()
-            }
-
-            if (launchedHand == null) {
-                launchHandDelay.update(delta)
-                if (launchHandDelay.isFinished()) {
-                    val handToLaunch = allHands.filter { !it.isBeingStoodUpon() }.let { hands ->
-                        when {
-                            hands.isEmpty -> throw IllegalStateException(
-                                "Megaman cannot be standing on both hands at the same time when calculating " + "which hand to launch. The hands need to be spaced more apart."
-                            )
-
-                            hands.size == 1 -> hands[0]
-
-                            getRandom(0, 100) <= CLOSEST_HAND_CHANCE -> {
-                                hands.sort { h1, h2 ->
-                                    h1.body.getCenter().dst2(megaman.body.getCenter())
-                                        .compareTo(h2.body.getCenter().dst2(megaman.body.getCenter()))
-                                }
-
-                                hands[0]
-                            }
-
-                            else -> hands.random()
-                        }
-                    }
-
-                    handToLaunch.launch()
-                    launchedHand = handToLaunch
+                if (shootOrbsDelay.isJustFinished() && shootOrbsTimer.isFinished()) {
+                    GameLogger.debug(TAG, "update(): shoot orbs delay just finished")
+                    shootOrbsTimer.reset()
                 }
-            } else if (launchedHand!!.state == BigAssMaverickRobotHandState.ROTATE) {
-                launchedHand = null
-                launchHandDelay.reset()
+
+                if (launchedHand == null) {
+                    launchHandDelay.update(delta)
+                    if (launchHandDelay.isFinished()) {
+                        val handToLaunch = allHands.filter { !it.isBeingStoodUpon() }.let { hands ->
+                            when {
+                                hands.isEmpty -> throw IllegalStateException(
+                                    "Megaman cannot be standing on both hands at the same time when calculating " + "which hand to launch. The hands need to be spaced more apart."
+                                )
+                                hands.size == 1 -> hands[0]
+                                getRandom(0, 100) <= CLOSEST_HAND_CHANCE -> {
+                                    hands.sort { h1, h2 ->
+                                        h1.body.getCenter().dst2(megaman.body.getCenter())
+                                            .compareTo(h2.body.getCenter().dst2(megaman.body.getCenter()))
+                                    }
+                                    hands[0]
+                                }
+                                else -> hands.random()
+                            }
+                        }
+
+                        handToLaunch.launch()
+                        launchedHand = handToLaunch
+                    }
+                } else if (launchedHand!!.state == BigAssMaverickRobotHandState.ROTATE) {
+                    launchedHand = null
+                    launchHandDelay.reset()
+                }
             }
         }
     }
@@ -645,7 +638,8 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.DELAY pairTo delay,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.COLOR pairTo OrbColor.ORANGE
             )
         )
 

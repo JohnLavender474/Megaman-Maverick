@@ -196,14 +196,13 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/BigAssMaverickRobotOrb/ball.png</key>
-            <key type="filename">../frames/Projectiles1/Electric/BigElectric.png</key>
-            <key type="filename">../frames/Projectiles1/Electric/PurpleShockBalls.png</key>
-            <key type="filename">../frames/Projectiles1/Electric/SmallElectric.png</key>
-            <key type="filename">../frames/Projectiles1/Electric/Zap.png</key>
-            <key type="filename">../frames/Projectiles1/HalfChargedShot.png</key>
-            <key type="filename">../frames/Projectiles1/RollingBotShot.png</key>
-            <key type="filename">../frames/Projectiles1/SpiderWeb/BlinkWhite.png</key>
+            <key type="filename">../frames/Projectiles1/BigAssMaverickRobotOrb/orange/ball.png</key>
+            <key type="filename">../frames/Projectiles1/BigAssMaverickRobotOrb/purple/ball.png</key>
+            <key type="filename">../frames/Projectiles1/ChargedShot.png</key>
+            <key type="filename">../frames/Projectiles1/ChargedShot_v2.png</key>
+            <key type="filename">../frames/Projectiles1/Cokonut.png</key>
+            <key type="filename">../frames/Projectiles1/GreenPelletBlast/blast.png</key>
+            <key type="filename">../frames/Projectiles1/HomingMissile/angled.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -212,25 +211,15 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>16,8,32,16</rect>
+                <rect>8,16,16,32</rect>
                 <key>scale9Paddings</key>
-                <rect>16,8,32,16</rect>
+                <rect>8,16,16,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/BigAssMaverickRobotOrb/hit.png</key>
-            <key type="filename">../frames/Projectiles1/Bullet/default.png</key>
-            <key type="filename">../frames/Projectiles1/CannonBall.png</key>
-            <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
-            <key type="filename">../frames/Projectiles1/HomingMissile/straight.png</key>
-            <key type="filename">../frames/Projectiles1/HoneyDrip/drip.png</key>
-            <key type="filename">../frames/Projectiles1/KibboHammer.png</key>
-            <key type="filename">../frames/Projectiles1/Prickly.png</key>
-            <key type="filename">../frames/Projectiles1/ReactorManProjectile/small.png</key>
-            <key type="filename">../frames/Projectiles1/Snowball.png</key>
-            <key type="filename">../frames/Projectiles1/SpiderWeb/Gray.png</key>
-            <key type="filename">../frames/Projectiles1/SpiderWeb/White.png</key>
-            <key type="filename">../frames/Projectiles1/TubeBeam.png</key>
+            <key type="filename">../frames/Projectiles1/BigAssMaverickRobotOrb/orange/hit.png</key>
+            <key type="filename">../frames/Projectiles1/BigAssMaverickRobotOrb/purple/hit.png</key>
+            <key type="filename">../frames/Projectiles1/ElecBall/hit.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -239,9 +228,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
+                <rect>48,48,96,96</rect>
                 <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
+                <rect>48,48,96,96</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -265,6 +254,32 @@
                 <rect>2,2,4,4</rect>
                 <key>scale9Paddings</key>
                 <rect>2,2,4,4</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles1/Bullet/default.png</key>
+            <key type="filename">../frames/Projectiles1/CannonBall.png</key>
+            <key type="filename">../frames/Projectiles1/Fire/Fireball.png</key>
+            <key type="filename">../frames/Projectiles1/HomingMissile/straight.png</key>
+            <key type="filename">../frames/Projectiles1/HoneyDrip/drip.png</key>
+            <key type="filename">../frames/Projectiles1/KibboHammer.png</key>
+            <key type="filename">../frames/Projectiles1/Prickly.png</key>
+            <key type="filename">../frames/Projectiles1/ReactorManProjectile/small.png</key>
+            <key type="filename">../frames/Projectiles1/Snowball.png</key>
+            <key type="filename">../frames/Projectiles1/SpiderWeb/Gray.png</key>
+            <key type="filename">../frames/Projectiles1/SpiderWeb/White.png</key>
+            <key type="filename">../frames/Projectiles1/TubeBeam.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,16,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -356,25 +371,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/ChargedShot.png</key>
-            <key type="filename">../frames/Projectiles1/ChargedShot_v2.png</key>
-            <key type="filename">../frames/Projectiles1/Cokonut.png</key>
-            <key type="filename">../frames/Projectiles1/GreenPelletBlast/blast.png</key>
-            <key type="filename">../frames/Projectiles1/HomingMissile/angled.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,16,16,32</rect>
-                <key>scale9Paddings</key>
-                <rect>8,16,16,32</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Projectiles1/CryoPellet.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -433,21 +429,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/Projectiles1/ElecBall/hit.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>48,48,96,96</rect>
-                <key>scale9Paddings</key>
-                <rect>48,48,96,96</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">../frames/Projectiles1/ElecBall/orb.png</key>
             <key type="filename">../frames/Projectiles1/GreenPelletBlast/burst.png</key>
             <key type="filename">../frames/Projectiles1/HoneyDrip/splash.png</key>
@@ -462,6 +443,27 @@
                 <rect>8,24,16,48</rect>
                 <key>scale9Paddings</key>
                 <rect>8,24,16,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Projectiles1/Electric/BigElectric.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/PurpleShockBalls.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/SmallElectric.png</key>
+            <key type="filename">../frames/Projectiles1/Electric/Zap.png</key>
+            <key type="filename">../frames/Projectiles1/HalfChargedShot.png</key>
+            <key type="filename">../frames/Projectiles1/RollingBotShot.png</key>
+            <key type="filename">../frames/Projectiles1/SpiderWeb/BlinkWhite.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,8,32,16</rect>
+                <key>scale9Paddings</key>
+                <rect>16,8,32,16</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
