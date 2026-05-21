@@ -7,14 +7,15 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimator
+import com.mega.game.engine.animations.IAnimation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
+import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.ShapeUtils
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -22,10 +23,10 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponent
-import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -46,8 +47,8 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
 
-class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    ICullableEntity, IWater {
+class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity, IWater,
+    Updatable {
 
     private data class WaterSpriteDef(
         val animDef: AnimationDef,
@@ -79,8 +80,19 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         )
     }
 
+    private lateinit var animations: OrderedMap<String, IAnimation>
+    // I f***ed up when designing the AnimationSystem. I designed it so that the
+    // sprite-to-animation relationship is always 1:1, but in the case of this
+    // entity, it would be nice if the system supposed a many-to-one relationship
+    // (multiple sprites sharing the same animation). Anyway, this is a hacky
+    // workaround to solve the issue.
+    private lateinit var spriteToAnimMap: OrderedMap<GameSprite, String>
+
     private lateinit var splashType: SplashType
     private var splashSound = true
+
+    private val fullBounds = GameRectangle()
+    private val tempRect = GameRectangle()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -91,6 +103,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
+        addComponent(UpdatablesComponent(this::update))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -98,11 +111,11 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        body.set(bounds)
-
+        fullBounds.set(bounds)
+        body.set(fullBounds)
         body.forEachFixture { fixture ->
             val shape = (fixture as Fixture).rawShape
-            if (shape is GameRectangle) shape.set(bounds)
+            if (shape is GameRectangle) shape.set(fullBounds)
         }
 
         val hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
@@ -127,7 +140,6 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        GameLogger.debug(TAG, "onDestroy()")
     }
 
     override fun shouldSplash(fixture: IFixture): Boolean {
@@ -138,6 +150,17 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun doMakeSplashSound(fixture: IFixture) = splashSound && fixture.getEntity() !is WoodCrate
 
     override fun getSplashType(fixture: IFixture) = SplashType.BLUE
+
+    override fun update(delta: Float) {
+        animations.values().forEach { animation -> animation.update(delta) }
+        spriteToAnimMap.forEach { entry ->
+            val sprite = entry.key
+            val key = entry.value
+            val animation = animations[key]
+            val region = animation.getCurrentRegion()
+            sprite.setRegion(region)
+        }
+    }
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -151,6 +174,21 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val overlap = ShapeUtils.intersectRectangles(
+                fullBounds,
+                game.getGameCamera().getRotatedBounds(),
+                tempRect
+            )
+            if (overlap) {
+                body.set(tempRect)
+                body.forEachFixture { fixture ->
+                    val shape = (fixture as Fixture).rawShape
+                    if (shape is GameRectangle) shape.set(tempRect)
+                }
+            }
+        }
+
         return BodyComponentCreator.create(this, body)
     }
 
@@ -161,7 +199,16 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private fun defineDrawables(bounds: GameRectangle, hasSurface: Boolean) {
         val sprites = OrderedMap<Any, GameSprite>()
-        val animators = OrderedMap<Any, IAnimator>()
+
+        animations = OrderedMap()
+        SPRITE_DEFS.forEach { def ->
+            val key = def.key
+            val (animDef, _, _) = def.value
+            val animation = Animation(regions[key]!!, animDef.rows, animDef.cols, animDef.durations, animDef.loop)
+            animations.put(key, animation)
+        }
+
+        spriteToAnimMap = OrderedMap()
 
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
         val columns = (bounds.getWidth() / ConstVals.PPM).toInt()
@@ -182,7 +229,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             }
 
             keys.forEach { key ->
-                val (animDef, priority, alpha) = SPRITE_DEFS[key]
+                val (_, priority, alpha) = SPRITE_DEFS[key]
 
                 val sprite = GameSprite(priority.copy())
                 sprite.setBounds(pos.x, pos.y, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())
@@ -191,16 +238,13 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                 val id = UUID.randomUUID().toString()
                 sprites.put(id, sprite)
 
-                val animation = Animation(regions[key]!!, animDef.rows, animDef.cols, animDef.durations, animDef.loop)
-                val animator = Animator(animation)
-                animators.put(id, animator)
+                spriteToAnimMap.put(sprite, key)
             }
 
             keys.clear()
         }
 
         addComponent(SpritesComponent(sprites))
-        addComponent(AnimationsComponent(animators, sprites))
     }
 
     override fun getType() = EntityType.SPECIAL
