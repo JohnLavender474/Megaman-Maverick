@@ -55,9 +55,9 @@ class YellowTiggerSquirt(game: MegamanMaverickGame) : AbstractEnemy(game, size =
         const val TAG = "YellowTiggerSquirt"
         private const val CULL_TIME = 3f
         private const val FREQUENCY_X = 0.75f
-        private const val AMPLITUDE_X = 0.05f
+        private const val AMPLITUDE_X = 4.0f
         private const val FREQUENCY_Y = 6f
-        private const val AMPLITUDE_Y = 0.05f
+        private const val AMPLITUDE_Y = 0.5f
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = objectMapOf(
             "swim" pairTo AnimationDef(2, 1, 0.1f, true),
