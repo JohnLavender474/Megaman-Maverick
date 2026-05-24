@@ -60,9 +60,9 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     companion object {
         const val TAG = "CarriCarry"
 
-        private const val SINE_SPEED = 3f
-        private const val SINE_AMPLITUDE = 3f
-        private const val SINE_FREQUENCY = 3f
+        private const val SINE_SPEED = 2f
+        private const val SINE_AMPLITUDE = 2.5f
+        private const val SINE_FREQUENCY = 2.5f
 
         private const val SHAKE_DUR = 1f
 
@@ -83,7 +83,6 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     }
 
     override lateinit var facing: Facing
-
     override var frozen: Boolean
         get() = freezeHandler.isFrozen()
         set(value) {
@@ -94,9 +93,7 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         this,
         onFrozen = { shakeTimer.reset() }
     )
-
     private val shakeTimer = Timer(SHAKE_DUR)
-
     private var centerX = 0f
 
     override fun init(vararg params: Any) {
@@ -119,12 +116,10 @@ class CarriCarry(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         body.setBottomCenterToPoint(spawn)
 
         facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
-
         shakeTimer.setToEnd()
-
         centerX = body.getCenter().x
 
-        val sine = SineWave(Vector2(0f, 1f), SINE_SPEED, SINE_AMPLITUDE, SINE_FREQUENCY)
+        val sine = SineWave(Vector2(0f, 1f), SINE_SPEED, SINE_AMPLITUDE * ConstVals.PPM, SINE_FREQUENCY)
         putMotionDefinition(
             ConstKeys.MOVE, MotionDefinition(
                 motion = sine,
