@@ -75,10 +75,10 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private const val MAX_FORCE_TO_APPLY = 15f
 
         private const val MIN_BUBBLES_TO_SPAWN = 1
-        private const val MAX_BUBBLES_TO_SPAWN = 3
+        private const val MAX_BUBBLES_TO_SPAWN = 1
 
-        private const val SPAWN_BUBBLES_MIN_DELAY = 0.2f
-        private const val SPAWN_BUBBLE_MAX_DELAY = 0.35f
+        private const val SPAWN_BUBBLES_MIN_DELAY = 0.25f
+        private const val SPAWN_BUBBLE_MAX_DELAY = 0.5f
 
         private val ENTITIES_TO_BLOW = objectSetOf<KClass<out IBodyEntity>>(Megaman::class)
 
