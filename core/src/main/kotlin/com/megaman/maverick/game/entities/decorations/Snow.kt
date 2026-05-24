@@ -35,7 +35,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         private const val SWITCH_DELAY = 0.5f
         private const val PLAYGROUND_SIZE = 0.125f
         private const val BACKGROUND_SIZE = 0.0625f
-        private const val MAX_SPAWNED_ALLOWED = 50
+        private const val MAX_SPAWNED_ALLOWED = 25
         private const val ROTATION_PER_SECOND = 1f
         private const val ROTATION_ENABLED = false
         private var region: TextureRegion? = null

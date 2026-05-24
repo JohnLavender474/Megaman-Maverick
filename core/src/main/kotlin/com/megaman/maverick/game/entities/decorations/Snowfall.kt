@@ -29,8 +29,8 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     companion object {
         const val TAG = "Snowfall"
 
-        private const val MIN_SPAWN_DELAY = 0.25f
-        private const val MAX_SPAWN_DELAY = 0.5f
+        private const val MIN_SPAWN_DELAY = 0.5f
+        private const val MAX_SPAWN_DELAY = 0.75f
 
         private const val MIN_FREQUENCY = 0.05f
         private const val MAX_FREQUENCY = 0.15f
