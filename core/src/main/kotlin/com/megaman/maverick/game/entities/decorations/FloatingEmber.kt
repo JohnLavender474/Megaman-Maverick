@@ -54,8 +54,8 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         private const val MIN_FREQUENCY = 0.05f
         private const val MAX_FREQUENCY = 0.15f
 
-        private const val MIN_AMPLITUDE = 0.025f
-        private const val MAX_AMPLITUDE = 0.05f
+        private const val MIN_AMPLITUDE = 0.25f
+        private const val MAX_AMPLITUDE = 0.5f
 
         private const val MIN_RISE_SPEED = 4f
         private const val MAX_RISE_SPEED = 6f
@@ -104,7 +104,8 @@ class FloatingEmber(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         outOfBoundsTimer.reset()
 
         val speed = UtilMethods.getRandom(MIN_RISE_SPEED, MAX_RISE_SPEED) * ConstVals.PPM
-        val amplitude = UtilMethods.getRandom(MIN_AMPLITUDE, MAX_AMPLITUDE) * ConstVals.PPM
+        val flipX = UtilMethods.getRandomBool()
+        val amplitude = UtilMethods.getRandom(MIN_AMPLITUDE, MAX_AMPLITUDE) * ConstVals.PPM * if (flipX) -1 else 1
         val frequency = UtilMethods.getRandom(MIN_FREQUENCY, MAX_FREQUENCY) * ConstVals.PPM
         sine = SineWave(center.cpy().swapped(), speed, amplitude, frequency)
 
