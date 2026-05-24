@@ -58,7 +58,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
         private const val SPEED = 4f
         private const val FREQUENCY = 3f
-        private const val AMPLITUDE = 0.025f
+        private const val AMPLITUDE = 0.25f
 
         private const val RAY_DELAY = 1f
         private const val RAY_DUR = 1f
