@@ -298,9 +298,15 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
             body.setSize(size * ConstVals.PPM)
             body.setCenter(center)
 
-            body.forEachFixture {
+            body.fixtures[FixtureType.DAMAGER].first().let {
                 val shape = (it as Fixture).rawShape as GameRectangle
                 shape.setSize(size * ConstVals.PPM)
+            }
+            // Purposefully make the projectile fixture half the size of the body when big
+            body.fixtures[FixtureType.PROJECTILE].first().let {
+                val shape = (it as Fixture).rawShape as GameRectangle
+                val scalar = if (big) 0.5f else 1f
+                shape.setSize(size * scalar * ConstVals.PPM)
             }
         }
 
