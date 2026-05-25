@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="300" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="501">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="300" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="502">
  <tileset firstgid="1" source="../tsx/Wily2.tsx"/>
  <tileset firstgid="253" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1277" source="../tsx/UnderwaterFanPillar_Gray.tsx"/>
@@ -721,11 +721,6 @@
   <object id="479" x="7744" y="3584" width="200" height="384">
    <properties>
     <property name="block_filters" value="Met,MoonScythe"/>
-    <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
-   </properties>
-  </object>
-  <object id="480" x="9184" y="2976" width="192" height="480">
-   <properties>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision"/>
    </properties>
   </object>
@@ -1545,7 +1540,7 @@
   </object>
  </objectgroup>
  <objectgroup id="10" name="temp">
-  <object id="494" name="0" x="8000" y="3424" width="32" height="32"/>
+  <object id="501" name="0" x="7040" y="3424" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="6" name="player">
   <object id="12" name="0" x="96" y="3904" width="32" height="32"/>
