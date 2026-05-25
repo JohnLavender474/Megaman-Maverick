@@ -408,6 +408,16 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             )
             animQueue.addLast(
                 Animation(
+                    atlas.findRegion("${RodentMan.TAG}/run"), 1, 5, 0.1f, true
+                ) pairTo Timer(2f)
+            )
+            animQueue.addLast(
+                Animation(
+                    atlas.findRegion("${RodentMan.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true
+                ) pairTo Timer(0.5f)
+            )
+            animQueue.addLast(
+                Animation(
                     atlas.findRegion("${RodentMan.TAG}/stand_slash_combo"), 4, 3, 0.05f, false
                 ) pairTo Timer(0.75f)
             )
