@@ -296,6 +296,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             )
 
             MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
+            MegaGameEntities.getOfType(EntityType.PROJECTILE).forEach { it.destroy() }
 
             game.getSystem(BehaviorsSystem::class)?.on = false
             game.putProperty(ConstKeys.ROOM_TRANSITION, true)
