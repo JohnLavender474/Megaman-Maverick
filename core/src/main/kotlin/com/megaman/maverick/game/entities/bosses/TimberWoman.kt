@@ -34,7 +34,6 @@ import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setPosition
-import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.events.Event
@@ -77,7 +76,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
     companion object {
         const val TAG = "TimberWoman"
 
-        const val SPRITE_SIZE = 4f
+        const val SPRITE_WIDTH = 6f
+        const val SPRITE_HEIGHT = 4f
 
         private const val LEAF_SPAWN = "leaf_spawn"
 
@@ -263,7 +263,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
         if (animDefs.isEmpty) animDefs.putAll(
             TimberWomanState.INIT.name.lowercase() pairTo AnimationDef(7, 1, 0.1f, true),
-            TimberWomanState.STAND.name.lowercase() pairTo AnimationDef(7, 1, 0.1f, true),
+            TimberWomanState.STAND.name.lowercase() pairTo AnimationDef(7, 1, 0.1f, false),
             TimberWomanState.STAND_SWING.name.lowercase() pairTo AnimationDef(
                 2, 4, gdxArrayOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.25f, 0.1f, 0.1f), false
             ),
@@ -1003,7 +1003,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         .sprite(
             TAG,
             GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1))
-                .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
@@ -1018,11 +1018,12 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
 
+        /*
         // axe wall slide
         .sprite(
             AXE_WALLSLIDE_REGION,
             GameSprite(regions[AXE_WALLSLIDE_REGION], DrawingPriority(DrawingSection.PLAYGROUND, 2))
-                .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             val show = if (defeated) false else currentState == TimberWomanState.WALLSLIDE
@@ -1038,7 +1039,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         .sprite(
             AXE_SWING_REGION_1,
             GameSprite(regions[AXE_SWING_REGION_1], DrawingPriority(DrawingSection.PLAYGROUND, 2))
-                .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             val show = if (defeated) false else when {
@@ -1063,7 +1064,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         .sprite(
             AXE_SWING_REGION_2,
             GameSprite(regions[AXE_SWING_REGION_2], DrawingPriority(DrawingSection.PLAYGROUND, 2))
-                .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             val show = if (defeated) false else when {
@@ -1088,7 +1089,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         .sprite(
             AXE_POUND_REGION_1,
             GameSprite(regions[AXE_POUND_REGION_1], DrawingPriority(DrawingSection.PLAYGROUND, 10))
-                .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             val show = if (defeated) false else when {
@@ -1113,7 +1114,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         .sprite(
             AXE_POUND_REGION_2,
             GameSprite(regions[AXE_POUND_REGION_2], DrawingPriority(DrawingSection.PLAYGROUND, 10))
-                .also { sprite -> sprite.setSize(SPRITE_SIZE * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             val show = if (defeated) false else when {
@@ -1133,6 +1134,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 sprite.setPosition(anchor, position)
             }
         }
+        */
 
         // build
         .build()

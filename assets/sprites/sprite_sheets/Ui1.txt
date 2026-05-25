@@ -1,7 +1,7 @@
 Ui1.png
-size: 404, 616
+size: 404, 1292
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Nearest,Nearest
 repeat: none
 arrow
   rotate: false
@@ -36,5 +36,19 @@ menu_screen_bkg
   xy: 2, 390
   size: 256, 224
   orig: 256, 224
+  offset: 0, 0
+  index: -1
+stage_start
+  rotate: false
+  xy: 2, 616
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+stage_start_flash
+  rotate: false
+  xy: 2, 842
+  size: 256, 448
+  orig: 256, 448
   offset: 0, 0
   index: -1
