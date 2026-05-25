@@ -184,7 +184,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.WATER_LISTENER))
+        return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.BODY, FixtureType.WATER_LISTENER))
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
