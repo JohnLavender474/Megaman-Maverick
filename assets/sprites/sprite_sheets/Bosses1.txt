@@ -1,11 +1,11 @@
 Bosses1-0.png
-size: 1780, 1436
+size: 1796, 1436
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Nearest,Nearest
 repeat: none
 Bospider/burn
   rotate: false
-  xy: 1000, 214
+  xy: 918, 214
   size: 64, 192
   orig: 64, 192
   offset: 0, 0
@@ -33,42 +33,49 @@ Bospider/frozen
   index: -1
 Bospider/open_eye
   rotate: false
-  xy: 2, 68
+  xy: 1538, 2
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 Bospider/still
   rotate: false
-  xy: 260, 68
+  xy: 2, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 GlacierMan/brake
   rotate: false
-  xy: 1584, 68
+  xy: 1508, 68
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
+GlacierMan/brake_flash
+  rotate: false
+  xy: 102, 68
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
 GlacierMan/brake_shoot
   rotate: false
-  xy: 1650, 68
+  xy: 1574, 68
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/brake_shoot_up
   rotate: false
-  xy: 2, 214
+  xy: 1640, 68
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/defeated
   rotate: false
-  xy: 68, 214
+  xy: 1706, 68
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -96,56 +103,63 @@ GlacierMan/duck_shoot_up
   index: -1
 GlacierMan/fall
   rotate: false
-  xy: 1066, 214
+  xy: 984, 214
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
+GlacierMan/fall_flash
+  rotate: false
+  xy: 168, 68
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
 GlacierMan/fall_shoot_up
   rotate: false
-  xy: 1196, 214
+  xy: 1114, 214
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/fired
   rotate: false
-  xy: 134, 214
+  xy: 2, 214
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
   index: -1
 GlacierMan/ice_blast_attack
   rotate: false
-  xy: 360, 68
+  xy: 234, 68
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 GlacierMan/jump
   rotate: false
-  xy: 1326, 214
+  xy: 1244, 214
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
   index: -1
 GlacierMan/sled
   rotate: false
-  xy: 426, 68
+  xy: 300, 68
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 GlacierMan/sled_shoot
   rotate: false
-  xy: 556, 68
+  xy: 430, 68
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
   index: -1
 GlacierMan/sled_shoot_up
   rotate: false
-  xy: 686, 68
+  xy: 560, 68
   size: 128, 96
   orig: 128, 96
   offset: 0, 0
@@ -173,14 +187,14 @@ GlacierMan/stand_shoot_up
   index: -1
 GlacierMan/stop
   rotate: false
-  xy: 200, 214
+  xy: 68, 214
   size: 192, 144
   orig: 192, 144
   offset: 0, 0
   index: -1
 GutsTank/defeated
   rotate: false
-  xy: 1456, 214
+  xy: 1374, 214
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
@@ -194,56 +208,56 @@ GutsTank/fist
   index: -1
 GutsTank/fist_launched
   rotate: false
-  xy: 816, 68
+  xy: 690, 68
   size: 192, 96
   orig: 192, 96
   offset: 0, 0
   index: -1
 GutsTank/laughing
   rotate: false
-  xy: 810, 408
+  xy: 616, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/laughing_moving
   rotate: false
-  xy: 1004, 408
+  xy: 810, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/mouth_closed
   rotate: false
-  xy: 2, 408
+  xy: 1568, 214
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 GutsTank/mouth_open
   rotate: false
-  xy: 196, 408
+  xy: 2, 408
   size: 192, 192
   orig: 192, 192
   offset: 0, 0
   index: -1
 GutsTank/moving_laughing
   rotate: false
-  xy: 1198, 408
+  xy: 1004, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/moving_mouth_closed
   rotate: false
-  xy: 1392, 408
+  xy: 1198, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
   index: -1
 GutsTank/moving_mouth_open
   rotate: false
-  xy: 1586, 408
+  xy: 1392, 408
   size: 192, 384
   orig: 192, 384
   offset: 0, 0
@@ -257,7 +271,7 @@ MechaDragon/charging
   index: -1
 MechaDragon/defeated
   rotate: false
-  xy: 390, 408
+  xy: 196, 408
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
@@ -285,14 +299,14 @@ MechaDragon/fly
   index: -1
 MechaDragon/frozen
   rotate: false
-  xy: 1258, 68
+  xy: 1182, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 MechaDragon/init
   rotate: false
-  xy: 1388, 68
+  xy: 1312, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -313,7 +327,7 @@ MoonHead/angry
   index: -1
 MoonHead/awaken
   rotate: false
-  xy: 1518, 68
+  xy: 1442, 68
   size: 64, 135
   orig: 64, 135
   offset: 0, 0
@@ -327,7 +341,7 @@ MoonHead/crumble
   index: -1
 MoonHead/damaged
   rotate: false
-  xy: 326, 68
+  xy: 68, 68
   size: 32, 81
   orig: 32, 81
   offset: 0, 0
@@ -348,28 +362,28 @@ MoonHead/shoot
   index: -1
 ReactorMan/defeated
   rotate: false
-  xy: 394, 214
+  xy: 262, 214
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 ReactorMan/giga_rise
   rotate: false
-  xy: 1010, 68
+  xy: 884, 68
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 ReactorMan/giga_stand
   rotate: false
-  xy: 1060, 68
+  xy: 934, 68
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 ReactorMan/init
   rotate: false
-  xy: 444, 214
+  xy: 312, 214
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -383,21 +397,21 @@ ReactorMan/jump
   index: -1
 ReactorMan/jump_throw
   rotate: false
-  xy: 494, 214
+  xy: 362, 214
   size: 96, 144
   orig: 96, 144
   offset: 0, 0
   index: -1
 ReactorMan/jump_throw_two
   rotate: false
-  xy: 592, 214
+  xy: 460, 214
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 ReactorMan/run
   rotate: false
-  xy: 1110, 68
+  xy: 984, 68
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -409,37 +423,51 @@ ReactorMan/stand
   orig: 144, 48
   offset: 0, 0
   index: -1
+ReactorMan/stand_down
+  rotate: false
+  xy: 510, 214
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+ReactorMan/stand_flash
+  rotate: false
+  xy: 1082, 68
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
 ReactorMan/stand_throw
   rotate: false
-  xy: 642, 214
+  xy: 560, 214
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 ReactorMan/stand_throw_two
   rotate: false
-  xy: 788, 214
+  xy: 706, 214
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 ReactorMan/throw
   rotate: false
-  xy: 1208, 68
+  xy: 1132, 68
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 ReactorMonkey/stand
   rotate: false
-  xy: 648, 408
+  xy: 454, 408
   size: 160, 320
   orig: 160, 320
   offset: 0, 0
   index: -1
 ReactorMonkey/stand_damaged
   rotate: false
-  xy: 838, 214
+  xy: 756, 214
   size: 160, 160
   orig: 160, 160
   offset: 0, 0

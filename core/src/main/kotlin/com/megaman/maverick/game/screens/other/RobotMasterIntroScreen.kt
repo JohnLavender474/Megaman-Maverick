@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.other
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Queue
@@ -16,6 +17,7 @@ import com.mega.game.engine.common.objects.GamePair
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.drawables.sprites.GameSprite
+import com.mega.game.engine.drawables.sprites.setCenter
 import com.mega.game.engine.drawables.sprites.setPosition
 import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.screens.BaseScreen
@@ -39,10 +41,20 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         private const val TAG = "RobotMasterIntroScreen"
 
         private const val BAR_REG_KEY = "Bar"
+        private const val ORB_REG_KEY = "ExplosionOrb"
 
         private const val TOTAL_DUR = 7f
-        private const val DROP_DUR = 0.25f
+        private const val DROP_DUR = 0.5f
         private const val LETTER_DELAY = 0.2f
+
+        private const val NUM_ORBS = 8
+        private const val ORB_SIZE = 3f
+        // How many full revolutions each orb completes while spiraling inward
+        private const val ORB_REVOLUTIONS = 0.75f
+
+        private const val SCREEN_WIDTH_PX = ConstVals.VIEW_WIDTH * ConstVals.PPM
+        private const val SCREEN_HEIGHT_PX = ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        private val CENTER_PX = Vector2(SCREEN_WIDTH_PX / 2f, SCREEN_HEIGHT_PX / 2f)
 
         private val STD_START_POS = Vector2(
             ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
@@ -89,6 +101,14 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
     private val letterDelay = Timer(LETTER_DELAY)
     private val lettersQ = LinkedList<Runnable>()
 
+    private val orbSprites = Array<GameSprite>()
+    private val orbStartPositions = Array<Vector2>()
+    private val orbOutPositions = Array<Vector2>()
+    private val orbInitialAngles = FloatArray(NUM_ORBS)
+    private val orbInitialRadii = FloatArray(NUM_ORBS)
+    private lateinit var orbAnimation: IAnimation
+    private val orbSize = ORB_SIZE * ConstVals.PPM
+
     private var initialized = false
 
     override fun init(vararg params: Any) {
@@ -122,13 +142,42 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 -ScrollingStars.ROWS * ScrollingStars.HEIGHT * ConstVals.PPM / 2f
             ),
         )
-        val pos = getDefaultCameraPosition()
-        scrollingStars.set(pos.x, pos.y)
 
         textHandle = MegaFontHandle(
             positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
             positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM / 4f
         )
+
+        // Orb animation: 1 row × 2 cols, matches ExplosionOrb entity
+        val orbRegion = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, ORB_REG_KEY)
+        orbAnimation = Animation(orbRegion, 1, 2, 0.075f, true)
+
+        // Orb start positions (UI pixel space; center = 256, 224 for 16×14 @ PPM=32)
+        // Half orb size offset so they start just off-screen
+        val halfOrb = orbSize / 2f
+        val startPositionData = arrayOf(
+            Vector2(-halfOrb, -halfOrb),
+            Vector2(SCREEN_WIDTH_PX + halfOrb, -halfOrb),
+            Vector2(-halfOrb, SCREEN_HEIGHT_PX + halfOrb),
+            Vector2(SCREEN_WIDTH_PX + halfOrb, SCREEN_HEIGHT_PX + halfOrb),
+            Vector2(CENTER_PX.x, -halfOrb),
+            Vector2(CENTER_PX.x, SCREEN_HEIGHT_PX + halfOrb),
+            Vector2(-halfOrb, CENTER_PX.y),
+            Vector2(SCREEN_WIDTH_PX + halfOrb, CENTER_PX.y)
+        )
+
+        for (i in 0 until NUM_ORBS) {
+            val orb = GameSprite()
+            orb.setSize(orbSize)
+            orbSprites.add(orb)
+
+            val startPos = startPositionData[i].cpy()
+            orbStartPositions.add(startPos)
+            orbOutPositions.add(Vector2())
+
+            orbInitialAngles[i] = MathUtils.atan2(startPos.y - CENTER_PX.y, startPos.x - CENTER_PX.x)
+            orbInitialRadii[i] = startPos.dst(CENTER_PX)
+        }
     }
 
     override fun show() {
@@ -148,16 +197,12 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         this.endPosition.set(endPosition)
 
         textHandle.setText("")
-        for (i in 0 until fullText.length) {
+        for ((i, element) in fullText.withIndex()) {
             lettersQ.addLast {
-                val char = fullText[i]
-
+                val char = element
                 if (Character.isWhitespace(char)) return@addLast
-
                 val text = fullText.subSequence(0, i + 1).toString()
                 textHandle.setText(text)
-
-                // audioMan.playSound(SoundAsset.THUMP_SOUND, false)
             }
         }
 
@@ -201,6 +246,23 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             } else {
                 val position = UtilMethods.interpolate(startPosition, endPosition, dropTimer.getRatio(), outPosition)
                 bossSprite.setPosition(position, Position.BOTTOM_CENTER)
+
+                orbAnimation.update(delta)
+
+                val ratio = dropTimer.getRatio()
+                val currentRegion = orbAnimation.getCurrentRegion()
+                for (i in 0 until NUM_ORBS) {
+                    // Spiral inward: radius shrinks to zero, angle advances by ORB_REVOLUTIONS turns
+                    val currentRadius = orbInitialRadii[i] * (1f - ratio)
+                    val currentAngle = orbInitialAngles[i] + ORB_REVOLUTIONS * ratio * MathUtils.PI2
+                    val outPos = orbOutPositions[i]
+                    outPos.set(
+                        CENTER_PX.x + MathUtils.cos(currentAngle) * currentRadius,
+                        CENTER_PX.y + MathUtils.sin(currentAngle) * currentRadius
+                    )
+                    orbSprites[i].setCenter(outPos)
+                    orbSprites[i].setRegion(currentRegion)
+                }
             }
 
             val (animation, timer) = bossAnimQ.first()
@@ -214,19 +276,20 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
     }
 
     override fun draw(drawer: Batch) {
-        val batch = game.batch
-        batch.begin()
+        drawer.begin()
 
         // scrolling stars uses its own internal viewport, so render it before applying the UI viewport
-        scrollingStars.draw(batch)
+        scrollingStars.draw(drawer)
 
         game.viewports[ConstKeys.UI].apply()
-        batch.projectionMatrix = uiCam.combined
-        bars.forEach { it.draw(batch) }
-        bossSprite.draw(batch)
-        textHandle.draw(batch)
+        drawer.projectionMatrix = uiCam.combined
 
-        batch.end()
+        bars.forEach { it.draw(drawer) }
+        bossSprite.draw(drawer)
+        textHandle.draw(drawer)
+        if (!dropTimer.isFinished()) orbSprites.forEach { it.draw(drawer) }
+
+        drawer.end()
     }
 
     override fun draw(renderer: ShapeRenderer) {
@@ -244,6 +307,9 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
                 Animation(atlas.findRegion("${TimberWoman.TAG}/jump_down"), 2, 1, 0.1f, true) pairTo Timer(DROP_DUR)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${TimberWoman.TAG}/init_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
             )
             animQueue.addLast(
                 Animation(atlas.findRegion("${TimberWoman.TAG}/init"), 7, 1, 0.1f, false) pairTo Timer(0.7f)
@@ -290,6 +356,9 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${MoonMan.TAG}/jump")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
+                Animation(atlas.findRegion("${MoonMan.TAG}/jump_land_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
+            )
+            animQueue.addLast(
                 Animation(atlas.findRegion("${MoonMan.TAG}/jump_land"), 2, 1, 0.1f, false) pairTo Timer(0.2f)
             )
             animQueue.addLast(
@@ -305,7 +374,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${MoonMan.TAG}/shoot", 3), 2, 1, 0.1f, false) pairTo Timer(0.3f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${MoonMan.TAG}/throw")) pairTo Timer(0.2f)
+                Animation(atlas.findRegion("${MoonMan.TAG}/throw")) pairTo Timer(0.25f)
             )
             animQueue.addLast(
                 Animation(atlas.findRegion("${MoonMan.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true) pairTo null
@@ -326,6 +395,11 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
                 Animation(atlas.findRegion("${RodentMan.TAG}/jump_down_look_down")) pairTo Timer(DROP_DUR)
+            )
+            animQueue.addLast(
+                Animation(
+                    atlas.findRegion("${RodentMan.TAG}/stand_flash"), 2, 1, 0.1f, true
+                ) pairTo Timer(0.5f)
             )
             animQueue.addLast(
                 Animation(
@@ -365,6 +439,15 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${DesertMan.TAG}/jump")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
+                Animation(atlas.findRegion("${DesertMan.TAG}/jump_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${DesertMan.TAG}/stand"), 2, 1, gdxArrayOf(1f, 0.15f), true) pairTo Timer(0.5f)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${DesertMan.TAG}/jump")) pairTo Timer(0.1f)
+            )
+            animQueue.addLast(
                 Animation(atlas.findRegion("${DesertMan.TAG}/tornado"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
             )
             animQueue.addLast(
@@ -394,6 +477,9 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${InfernoMan.TAG}/jump_down")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
+                Animation(atlas.findRegion("${InfernoMan.TAG}/stand_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
+            )
+            animQueue.addLast(
                 Animation(atlas.findRegion("${InfernoMan.TAG}/init"), 3, 3, 0.1f, false) pairTo Timer(1.5f)
             )
             animQueue.addLast(
@@ -420,19 +506,22 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${ReactorMan.TAG}/jump")) pairTo Timer(DROP_DUR)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${ReactorMan.TAG}/giga_stand"), 2, 1, 0.1f, true) pairTo Timer(1f)
+                Animation(atlas.findRegion("${ReactorMan.TAG}/stand_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${ReactorMan.TAG}/stand_throw_two"), 3, 1, 0.1f, false) pairTo Timer(0.5f)
+                Animation(atlas.findRegion("${ReactorMan.TAG}/giga_stand"), 2, 1, 0.1f, true) pairTo Timer(1.5f)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${ReactorMan.TAG}/stand_throw_two"), 3, 1, 0.1f, false) pairTo Timer(1f)
             )
             animQueue.addLast(
                 Animation(
-                    atlas.findRegion("${ReactorMan.TAG}/stand"),
-                    1,
+                    atlas.findRegion("${ReactorMan.TAG}/stand_down"),
                     3,
+                    1,
                     gdxArrayOf(0.5f, 0.15f, 0.15f),
                     true
-                ) pairTo null
+                ) pairTo Timer(0.5f)
             )
 
             RobotMasterAnimDef(
@@ -450,6 +539,9 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
                 Animation(atlas.findRegion("${GlacierMan.TAG}/fall"), 4, 2, 0.1f, true) pairTo Timer(DROP_DUR)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${GlacierMan.TAG}/brake_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
             )
             animQueue.addLast(
                 Animation(atlas.findRegion("${GlacierMan.TAG}/brake"), 3, 1, 0.1f, true) pairTo Timer(0.6f)
@@ -482,6 +574,12 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
                 Animation(atlas.findRegion("${PreciousWoman.TAG}/jump")) pairTo Timer(DROP_DUR)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${PreciousWoman.TAG}/stand_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
+            )
+            animQueue.addLast(
+                Animation(atlas.findRegion("${PreciousWoman.TAG}/run"), 2, 2, 0.1f, true) pairTo Timer(1f)
             )
             animQueue.addLast(
                 Animation(

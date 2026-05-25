@@ -170,10 +170,11 @@ class RobotMasterIntroScreenV2(private val game: MegamanMaverickGame) : BaseScre
             val orb = GameSprite()
             orb.setSize(orbSize)
             orbSprites.add(orb)
+
             val startPos = startPositionData[i].cpy()
             orbStartPositions.add(startPos)
             orbOutPositions.add(Vector2())
-            // Pre-compute spiral parameters relative to screen center
+
             orbInitialAngles[i] = MathUtils.atan2(startPos.y - CENTER_PX.y, startPos.x - CENTER_PX.x)
             orbInitialRadii[i] = startPos.dst(CENTER_PX)
         }

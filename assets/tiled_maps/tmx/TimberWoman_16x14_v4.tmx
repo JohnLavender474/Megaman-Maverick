@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="550" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="512">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="550" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="513">
  <tileset firstgid="1" source="../tsx/Anokolisa_Swamp_Tileset.tsx"/>
  <tileset firstgid="71" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1095" source="../tsx/pipe_forest.tsx"/>
@@ -996,7 +996,7 @@
   <object id="228" name="FlipperPlatform" x="9536" y="1344" width="160" height="32"/>
   <object id="229" name="FlipperPlatform" x="9664" y="1280" width="160" height="32"/>
   <object id="244" name="FlipperPlatform" x="8384" y="1472" width="160" height="32"/>
-  <object id="245" name="FlipperPlatform" x="7264" y="1312" width="160" height="32"/>
+  <object id="245" name="FlipperPlatform" x="7200" y="1312" width="160" height="32"/>
   <object id="246" name="FlipperPlatform" x="7776" y="1312" width="160" height="32"/>
   <object id="248" name="FlipperPlatform" x="9184" y="1408" width="160" height="32"/>
   <object id="249" name="FlipperPlatform" x="8736" y="1440" width="160" height="32"/>
@@ -1515,7 +1515,7 @@
   </object>
  </objectgroup>
  <objectgroup id="15" name="temp">
-  <object id="511" name="0" x="15456" y="1472" width="32" height="32"/>
+  <object id="512" name="0" x="6944" y="1472" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="player">
   <object id="2" name="0" x="256" y="2272" width="32" height="32"/>

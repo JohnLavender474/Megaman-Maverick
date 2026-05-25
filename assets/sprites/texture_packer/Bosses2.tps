@@ -288,6 +288,29 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses2/DesertMan/jump_flash.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_down.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_straight.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_up.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/stand_flash.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_straight.png</key>
+            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_up.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/jump_down.png</key>
+            <key type="filename">../frames/Bosses2/TimberWoman/jump_up.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9Paddings</key>
+                <rect>16,32,32,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses2/DesertMan/tornado_punch.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -315,27 +338,6 @@
                 <rect>48,48,96,96</rect>
                 <key>scale9Paddings</key>
                 <rect>48,48,96,96</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_down.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_straight.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/jump_shoot_up.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_straight.png</key>
-            <key type="filename">../frames/Bosses2/InfernoMan/stand_shoot_up.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman/jump_down.png</key>
-            <key type="filename">../frames/Bosses2/TimberWoman/jump_up.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,32,32,64</rect>
-                <key>scale9Paddings</key>
-                <rect>16,32,32,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -414,6 +416,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses2/MoonMan/jump_land.png</key>
+            <key type="filename">../frames/Bosses2/MoonMan/jump_land_flash.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/shoot_3.png</key>
             <key type="filename">../frames/Bosses2/MoonMan/stand.png</key>
             <struct type="IndividualSpriteSettings">
@@ -443,6 +446,21 @@
                 <rect>16,112,32,224</rect>
                 <key>scale9Paddings</key>
                 <rect>16,112,32,224</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Bosses2/TimberWoman/init_flash.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,32,48,64</rect>
+                <key>scale9Paddings</key>
+                <rect>24,32,48,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -147,7 +147,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
         private val animDefs = orderedMapOf(
             "init" pairTo AnimationDef(3, 1, 0.1f, false),
-            "stand" pairTo AnimationDef(1, 3, gdxArrayOf(0.5f, 0.15f, 0.15f), true),
+            "stand_down" pairTo AnimationDef(3, 1, gdxArrayOf(0.5f, 0.15f, 0.15f), true),
             "stand_throw" pairTo AnimationDef(3, 3, 0.1f, false),
             "stand_throw_two" pairTo AnimationDef(3, 1, 0.1f, false),
             "run" pairTo AnimationDef(2, 2, 0.1f, true),
@@ -512,7 +512,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
                     if (currentState.equalsAny(ReactorManState.STAND_THROW, ReactorManState.STAND_THROW_TWO) &&
                         !otherTimers[STAND_THROW_DELAY_KEY].isFinished()
-                    ) return@key "stand"
+                    ) return@key "stand_down"
 
                     if (currentState.equalsAny(ReactorManState.JUMP_THROW, ReactorManState.JUMP_THROW_TWO) &&
                         stateTimers[currentState].isFinished()

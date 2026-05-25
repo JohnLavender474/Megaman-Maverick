@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.9.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -254,6 +254,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../frames/Bosses1/GlacierMan/brake_flash.png</key>
+            <key type="filename">../frames/Bosses1/GlacierMan/fall_flash.png</key>
+            <key type="filename">../frames/Bosses1/GlacierMan/ice_blast_attack.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9Paddings</key>
+                <rect>16,24,32,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../frames/Bosses1/GlacierMan/duck.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/duck_shoot.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/duck_shoot_up.png</key>
@@ -288,21 +305,6 @@
                 <rect>32,48,64,96</rect>
                 <key>scale9Paddings</key>
                 <rect>32,48,64,96</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/Bosses1/GlacierMan/ice_blast_attack.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,24,32,48</rect>
-                <key>scale9Paddings</key>
-                <rect>16,24,32,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -375,6 +377,7 @@
             <key type="filename">../frames/Bosses1/GutsTank/fist_launched.png</key>
             <key type="filename">../frames/Bosses1/ReactorMan/giga_rise.png</key>
             <key type="filename">../frames/Bosses1/ReactorMan/giga_stand.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/stand_flash.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -535,6 +538,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Bosses1/ReactorMan/defeated.png</key>
+            <key type="filename">../frames/Bosses1/ReactorMan/stand_down.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -718,12 +722,6 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties">
-            <key>libgdx::legacy-output</key>
-            <struct type="ExporterProperty">
-                <key>value</key>
-                <string>true</string>
-            </struct>
-        </map>
+        <map type="ExporterProperties"/>
     </struct>
 </data>

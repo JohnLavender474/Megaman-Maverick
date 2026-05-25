@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>6</int>
         <key>texturePackerVersion</key>
-        <string>7.9.0</string>
+        <string>7.6.2</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -425,6 +425,7 @@
             </struct>
             <key type="filename">../frames/Bosses3/PreciousWoman/airpunch2.png</key>
             <key type="filename">../frames/Bosses3/PreciousWoman/stand.png</key>
+            <key type="filename">../frames/Bosses3/PreciousWoman/stand_flash.png</key>
             <key type="filename">../frames/Bosses3/PreciousWoman/stand_laugh1.png</key>
             <key type="filename">../frames/Bosses3/PreciousWoman/stand_laugh2.png</key>
             <struct type="IndividualSpriteSettings">
@@ -495,6 +496,7 @@
             <key type="filename">../frames/Bosses3/RodentMan/jump_slash.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/shielded.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/stand.png</key>
+            <key type="filename">../frames/Bosses3/RodentMan/stand_flash.png</key>
             <key type="filename">../frames/Bosses3/RodentMan/stand_slash_single2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -572,12 +574,6 @@
         <key>normalMapSheetFileName</key>
         <filename></filename>
         <key>exporterProperties</key>
-        <map type="ExporterProperties">
-            <key>libgdx::legacy-output</key>
-            <struct type="ExporterProperty">
-                <key>value</key>
-                <string>true</string>
-            </struct>
-        </map>
+        <map type="ExporterProperties"/>
     </struct>
 </data>

@@ -1,11 +1,11 @@
 Bosses3.png
-size: 940, 1870
+size: 974, 1870
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Nearest,Nearest
 repeat: none
 BigAssMaverickRobot/Body/body
   rotate: false
-  xy: 247, 1291
+  xy: 329, 1291
   size: 128, 192
   orig: 128, 192
   offset: 0, 0
@@ -26,49 +26,49 @@ BigAssMaverickRobot/Hand/still
   index: -1
 BigAssMaverickRobot/Head/defeated
   rotate: false
-  xy: 775, 1129
+  xy: 891, 1129
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/down
   rotate: false
-  xy: 857, 1129
+  xy: 1, 1291
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/stunned
   rotate: false
-  xy: 1, 1291
+  xy: 83, 1291
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/turn
   rotate: false
-  xy: 83, 1291
+  xy: 165, 1291
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 BigAssMaverickRobot/Head/turn_up
   rotate: false
-  xy: 165, 1291
+  xy: 247, 1291
   size: 80, 160
   orig: 80, 160
   offset: 0, 0
   index: -1
 ElecDevil/appear
   rotate: false
-  xy: 377, 1291
+  xy: 459, 1291
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
   index: -1
 ElecDevil/charge
   rotate: false
-  xy: 635, 1291
+  xy: 717, 1291
   size: 256, 192
   orig: 256, 192
   offset: 0, 0
@@ -614,7 +614,7 @@ ElecDevil/turn_to_pieces
   index: -1
 PreciousWoman/airpunch1
   rotate: false
-  xy: 447, 1129
+  xy: 563, 1129
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
@@ -675,16 +675,23 @@ PreciousWoman/stand
   orig: 48, 96
   offset: 0, 0
   index: -1
-PreciousWoman/stand_laugh1
+PreciousWoman/stand_flash
   rotate: false
   xy: 149, 1129
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
-PreciousWoman/stand_laugh2
+PreciousWoman/stand_laugh1
   rotate: false
   xy: 199, 1129
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+PreciousWoman/stand_laugh2
+  rotate: false
+  xy: 249, 1129
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -705,14 +712,14 @@ PreciousWoman/wallslide
   index: -1
 PreciousWoman/wink
   rotate: false
-  xy: 497, 1129
+  xy: 613, 1129
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 RodentMan/defeated
   rotate: false
-  xy: 643, 1129
+  xy: 759, 1129
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -733,7 +740,7 @@ RodentMan/jump_down_look_straight
   index: -1
 RodentMan/jump_slash
   rotate: false
-  xy: 249, 1129
+  xy: 299, 1129
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
@@ -761,14 +768,21 @@ RodentMan/run
   index: -1
 RodentMan/shielded
   rotate: false
-  xy: 315, 1129
+  xy: 365, 1129
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 RodentMan/stand
   rotate: false
-  xy: 381, 1129
+  xy: 431, 1129
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+RodentMan/stand_flash
+  rotate: false
+  xy: 497, 1129
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
@@ -796,7 +810,7 @@ RodentMan/stand_slash_single2
   index: -1
 RodentMan/stunned
   rotate: false
-  xy: 709, 1129
+  xy: 825, 1129
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
