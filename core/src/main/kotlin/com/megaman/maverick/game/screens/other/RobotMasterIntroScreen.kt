@@ -43,7 +43,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         private const val BAR_REG_KEY = "Bar"
         private const val ORB_REG_KEY = "ExplosionOrb"
 
-        private const val TOTAL_DUR = 7f
+        private const val TOTAL_DUR = 8f
         private const val DROP_DUR = 0.5f
         private const val LETTER_DELAY = 0.2f
 
