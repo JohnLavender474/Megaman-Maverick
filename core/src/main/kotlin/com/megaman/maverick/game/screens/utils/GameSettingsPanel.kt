@@ -354,10 +354,10 @@ class GameSettingsPanel(
                         return@backAction true
                     }
                     game.setCurrentScreen(
-                        ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name,
+                        ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name,
                         props("${ConstKeys.BACK}_${ConstKeys.ACTION}" pairTo backAction)
                     )
-                } else game.setCurrentScreen(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name)
+                } else game.setCurrentScreen(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name)
 
                 return true
             }
