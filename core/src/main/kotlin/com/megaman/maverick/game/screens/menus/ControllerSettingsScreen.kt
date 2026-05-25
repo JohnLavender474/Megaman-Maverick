@@ -85,7 +85,11 @@ class ControllerSettingsScreen(
                 button.keyboardCode = keycode
 
                 // save the keyboard codes to preferences
-                ControllerUtils.saveSettingsToPrefs(controllerButtons, true)
+                try {
+                    ControllerUtils.saveSettingsToPrefs(controllerButtons, true)
+                } catch (e: Exception) {
+                    GameLogger.error(TAG, "Failed to save controller preferences.", e)
+                }
 
                 Gdx.input.inputProcessor = oldInputProcessor
                 selectedMegaButton = null
@@ -99,7 +103,10 @@ class ControllerSettingsScreen(
         buttonListener = object : ControllerAdapter() {
 
             override fun buttonDown(controller: Controller, buttonIndex: Int): Boolean {
-                if (selectedMegaButton == null) return true
+                if (selectedMegaButton == null) {
+                    GameLogger.error(TAG, "Selected button is null")
+                    return true
+                }
 
                 val button = controllerButtons.get(selectedMegaButton!!) as ControllerButton
                 GameLogger.debug(
@@ -115,7 +122,11 @@ class ControllerSettingsScreen(
                 button.controllerCode = buttonIndex
 
                 // save the controller codes to preferences
-                ControllerUtils.saveSettingsToPrefs(controllerButtons, false)
+                try {
+                    ControllerUtils.saveSettingsToPrefs(controllerButtons, false)
+                } catch (e: Exception) {
+                    GameLogger.error(TAG, "Failed to save keyboard preferences.", e)
+                }
 
                 controller.removeListener(this)
                 selectedMegaButton = null
@@ -201,11 +212,11 @@ class ControllerSettingsScreen(
                             if (oldCode == null) oldCode = controller!!.mapping.getMapping(it)
                             val newCode = controllerPreferences.getInteger(it.name, oldCode)
 
-                            controllerButton.keyboardCode = newCode
+                            controllerButton.controllerCode = newCode
 
                             GameLogger.debug(
                                 TAG,
-                                "loadSavedSettings(): keyboard: oldCode=$oldCode, newCode=$newCode"
+                                "loadSavedSettings(): controller: oldCode=$oldCode, newCode=$newCode"
                             )
                         }
                     }

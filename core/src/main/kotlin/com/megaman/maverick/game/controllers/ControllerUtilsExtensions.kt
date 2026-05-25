@@ -43,13 +43,14 @@ fun ControllerUtils.saveSettingsToPrefs(buttons: ControllerButtons, isKeyboardSe
         }
         keyboardPrefs.flush()
     } else {
-        val controller = getController() ?: return
+        val controller = getController() ?: throw IllegalStateException("No controller found")
         val controllerPrefs = getControllerPreferences(controller)
         buttons.forEach {
             val button = it.value as ControllerButton
             val code = button.controllerCode ?: controller.mapping.getMapping(it.key as MegaControllerButton)
             controllerPrefs.putInteger((it.key as MegaControllerButton).name, code)
         }
+        controllerPrefs.flush()
     }
 }
 
