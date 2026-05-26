@@ -282,6 +282,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Main Menu
   - Intro Stage 
   - Stage Select
+  - Stage Intro
   - Password Get
   - Weapon Get
   - Wily Stage Select
@@ -301,7 +302,6 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Final Boss Fight - [Our Blood Boils (VRC6)](https://youtu.be/n0oa6aMa-dA)
 - Capcom
   - Logo Intro - [MM6 Capcom Logo](https://downloads.khinsider.com/game-soundtracks/album/megaman-6-original-soundtrack/01%2520Capcom%2520Logo.mp3)
-- TODO: Other music tracks are saved in the `assets` dir but not yet used in the game. These will be added here as they're added to the game.
 
 ### Sounds
 
