@@ -35,8 +35,8 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
         private const val MIN_FREQUENCY = 0.05f
         private const val MAX_FREQUENCY = 0.15f
 
-        private const val MIN_AMPLITUDE = 0.025f
-        private const val MAX_AMPLITUDE = 0.05f
+        private const val MIN_AMPLITUDE = 0.25f
+        private const val MAX_AMPLITUDE = 0.5f
 
         private const val ABS_DRIFT = 0.1f
 

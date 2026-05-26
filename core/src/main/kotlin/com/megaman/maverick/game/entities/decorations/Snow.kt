@@ -32,7 +32,6 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
     companion object {
         const val TAG = "Snow"
         private const val FADE_DUR = 0.5f
-        private const val SWITCH_DELAY = 0.5f
         private const val PLAYGROUND_SIZE = 0.125f
         private const val BACKGROUND_SIZE = 0.0625f
         private const val MAX_SPAWNED_ALLOWED = 25
@@ -43,14 +42,14 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     private lateinit var sine: SineWave
 
-    private val switchTimer = Timer(SWITCH_DELAY)
     private val fadeTimer = Timer(FADE_DUR)
 
-    private var minAmplitude = 0f
-    private var maxAmplitude = 0f
     private var minFrequency = 0f
     private var maxFrequency = 0f
-    private var drift = 0f
+
+    private var driftEachFrame = 0f
+    private var accumulatedDrift = 0f
+
     private var minY = 0f
 
     private var background = false
@@ -81,18 +80,18 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         minFrequency = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.FREQUENCY}", Float::class)!!
         maxFrequency = spawnProps.get("${ConstKeys.MAX}_${ConstKeys.FREQUENCY}", Float::class)!!
 
-        minAmplitude = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.AMPLITUDE}", Float::class)!!
-        maxAmplitude = spawnProps.get("${ConstKeys.MAX}_${ConstKeys.AMPLITUDE}", Float::class)!!
+        val minAmplitude = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.AMPLITUDE}", Float::class)!!
+        val maxAmplitude = spawnProps.get("${ConstKeys.MAX}_${ConstKeys.AMPLITUDE}", Float::class)!!
 
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
         val amplitude = UtilMethods.getRandom(minAmplitude, maxAmplitude)
         val frequency = UtilMethods.getRandom(minFrequency, maxFrequency)
         sine = SineWave(spawn.cpy().swapped(), speed, amplitude, frequency)
 
-        drift = spawnProps.getOrDefault(ConstKeys.DRIFT, 0f, Float::class)
-        minY = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", Float::class)!!
+        driftEachFrame = spawnProps.getOrDefault(ConstKeys.DRIFT, 0f, Float::class)
+        accumulatedDrift = 0f
 
-        switchTimer.reset()
+        minY = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", Float::class)!!
 
         fadingOut = false
         fadeTimer.reset()
@@ -139,10 +138,6 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
         fadeTimer.reset()
     }
 
-    private fun adjust() {
-        sine.amplitude = UtilMethods.getRandom(minAmplitude, maxAmplitude)
-    }
-
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (fadingOut) {
             fadeTimer.update(delta)
@@ -153,14 +148,10 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
             }
         }
 
-        switchTimer.update(delta)
-        if (switchTimer.isFinished()) {
-            adjust()
-            switchTimer.reset()
-        }
-
         sine.update(delta)
-        position.set(sine.getMotionValue(out).swapped()).add(drift * delta, 0f)
+
+        accumulatedDrift += driftEachFrame * delta
+        position.set(sine.getMotionValue(out).swapped()).add(accumulatedDrift, 0f)
 
         if (position.y < minY) destroy()
     })
