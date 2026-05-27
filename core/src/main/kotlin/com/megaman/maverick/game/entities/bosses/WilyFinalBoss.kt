@@ -69,10 +69,7 @@ import com.megaman.maverick.game.entities.hazards.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.hazards.WilyFakeCapsule
 import com.megaman.maverick.game.entities.hazards.WilyPlaneBody
-import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
-import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.HomingMissile
-import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
+import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.special.DrWily
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -800,13 +797,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             WilyFinalBossPhase.PHASE_3 -> {
                 phase3Handler.init(cachedSpawnProps!!)
                 phase3Handler.buildBody(body)
-                /*
-                game.audioMan.fadeOutMusic(0.25f) {
-                    MegaUtilMethods.delayRun(game, 0.1f) {
-                        game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_INTRO_MUSIC)
-                    }
-                }
-                 */
             }
 
             else -> throw IllegalStateException("Should not transition to phase 1 in 'startNextPhase()'")
@@ -2017,6 +2007,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val TENTACLE_IDLE_OFFSET_Y = -2f
 
         const val HOVER_DURATION = 3.25f
+        const val HOVER_DURATOIN_HARD = 2.5f
 
         const val PREPARE_DURATION = 1.5f
         const val PREPARE_DURATION_HARD = 1f
@@ -2064,7 +2055,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private val prepareTimer = Timer()
 
-        private val hoverTimer = Timer(Phase2ConstVals.HOVER_DURATION)
+        private val hoverTimer = Timer()
         private val cannonTimer = Timer(Phase2ConstVals.CANNON_FIRE_INTERVAL)
         private val orbPauseTimer = Timer(Phase2ConstVals.ORB_PAUSE_DURATION)
         private val diveHoldTimer = Timer(Phase2ConstVals.DIVE_HOLD_DURATION)
@@ -2146,13 +2137,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         override fun init(vararg params: Any) {
             GameLogger.debug(TAG, "Phase2Handler: init()")
 
-            hoverTimer.reset()
-
+            hoverTimer.resetDuration(
+                if (game.state.hardMode) Phase2ConstVals.HOVER_DURATOIN_HARD
+                else Phase2ConstVals.HOVER_DURATION
+            )
             cannonTimer.resetDuration(
                 if (game.state.hardMode) Phase2ConstVals.CANNON_FIRE_INTERVAL_HARD
                 else Phase2ConstVals.CANNON_FIRE_INTERVAL
             )
-
             prepareTimer.resetDuration(
                 if (game.state.hardMode) Phase2ConstVals.PREPARE_DURATION_HARD
                 else Phase2ConstVals.PREPARE_DURATION
@@ -2580,11 +2572,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     private object Phase3ConstVals {
         const val FAKE_CAPSULE_COUNT = 1
         const val WAIT_DUR = 1f
-        const val FADE_DUR = 1.75f
-        const val FADE_DUR_HARD = 1.25f
+        const val WAIT_DUR_HARD = 0.75f
+        const val FADE_DUR = 1.5f
+        const val FADE_DUR_HARD = 1f
         const val BLINK_DELAY = 0.1f
         const val ATTACK_DUR = 2f
+        const val ATTACK_DUR_HARD = 1.5f
         const val CANNON_WAIT_DUR = 1f
+        const val CANNON_WAIT_DUR_HARD = 0.75f
         const val CANNON_BOTTOM_OFFSET_Y = 2f
         const val ORB_FLYOUT_BOTTOM_Y = -4f
     }
@@ -2601,9 +2596,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private val fadeTimer = Timer()
 
-        private val waitTimer = Timer(Phase3ConstVals.WAIT_DUR)
-        private val attackTimer = Timer(Phase3ConstVals.ATTACK_DUR)
-        private val cannonTimer = Timer(Phase3ConstVals.CANNON_WAIT_DUR)
+        private val waitTimer = Timer()
+        private val attackTimer = Timer()
+        private val cannonTimer = Timer()
         private val orbPauseTimer = Timer(Phase2ConstVals.ORB_PAUSE_DURATION)
 
         private val blinkTimer = Timer(Phase3ConstVals.BLINK_DELAY)
@@ -2737,6 +2732,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             orbLaunchSpeed =
                 if (game.state.hardMode) Phase2ConstVals.ORB_LAUNCH_SPEED_HARD else Phase2ConstVals.ORB_LAUNCH_SPEED
+
+            waitTimer.resetDuration(if (game.state.hardMode) Phase3ConstVals.WAIT_DUR_HARD else Phase3ConstVals.WAIT_DUR)
+            attackTimer.resetDuration(if (game.state.hardMode) Phase3ConstVals.ATTACK_DUR_HARD else Phase3ConstVals.ATTACK_DUR)
+            cannonTimer.resetDuration(if (game.state.hardMode) Phase3ConstVals.CANNON_WAIT_DUR_HARD else Phase3ConstVals.CANNON_WAIT_DUR)
         }
 
         override fun buildBody(body: Body) {
