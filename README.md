@@ -283,6 +283,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Intro Stage 
   - Stage Select
   - Stage Intro
+  - Stage Victory
   - Password Get
   - Weapon Get
   - Wily Stage Select
