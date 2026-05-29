@@ -92,7 +92,7 @@ enum class SoundAsset(
     SMB3_THWOMP_SOUND("smb3_thwomp.ogg", 0.4f),
     SMB3_PIPE_SOUND("smb3_pipe.ogg", 0.75f),
     SMB3_COIN_SOUND("smb3_coin.ogg", 0.9f),
-    SMB3_BEANSTALK_SOUND("smb3_beanstalk.ogg", 1.10f);
+    SMB3_BEANSTALK_SOUND("smb3_beanstalk.ogg", 1.10f),;
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

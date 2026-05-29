@@ -21,6 +21,7 @@ import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -37,8 +38,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
     companion object {
         const val TAG = "PlayerSpawnEventHandler"
-        private const val START_DELAY_DUR = 3f
-        private const val PRE_BEAM_DUR = 7f
+        private const val START_DELAY_DUR = 2f
+        private const val PRE_BEAM_DUR = 6f
         private const val BEAM_UP_DUR = 0.5f
         private const val BEAM_TRANS_DUR = 0.2f
         private const val BEAM_END_DUR = 0.5f
@@ -112,7 +113,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
                 if (startDelayTimer.isJustFinished()) {
                     GameLogger.debug(TAG, "start delay timer just finished")
                     preBeamTimer.reset()
-                    game.audioMan.playSound(SoundAsset.MM2_VICTORY_SOUND, false)
+                    game.audioMan.playMusic(MusicAsset.VINNYZ_VICTORY_MUSIC, false)
                 }
             }
 
@@ -196,6 +197,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
         if (beamEndTimer.isFinished()) {
             GameLogger.debug(TAG, "beam end timer just finished")
+
+            game.audioMan.stopMusic()
 
             val level = game.getCurrentLevel()
             game.eventsMan.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
