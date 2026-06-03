@@ -93,8 +93,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private const val INIT_DUR = 1f
         private const val STAND_DUR_1 = 1f
         private const val STAND_DUR_2 = 1.75f
-        private const val STAND_DUR_1_NORMAL = 1.5f
-        private const val STAND_DUR_2_NORMAL = 2.25f
+        private const val STAND_DUR_1_NORMAL = 1.25f
+        private const val STAND_DUR_2_NORMAL = 2f
         private const val MAX_RUN_DUR = 2f
         private const val WALL_SLIDE_DUR = 0.75f
         private const val STAND_SWING_DUR = 1f
@@ -127,11 +127,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             Vector2(15f, 10f),
         )
         private val GROUND_PEBBLE_IMPULSES_NORMAL = gdxArrayOf(
-            Vector2(-9f, 18f),
+            Vector2(-12f, 18f),
             Vector2(-3f, 26f),
             Vector2(0f, 30f),
             Vector2(3f, 26f),
-            Vector2(9f, 18f),
+            Vector2(12f, 18f),
         )
         private const val GROUND_PEBBLES_AXE_SWING_OFFSET_X = 2f
         private const val GROUND_PEBBLES_OFFSET_Y = 0.35f
