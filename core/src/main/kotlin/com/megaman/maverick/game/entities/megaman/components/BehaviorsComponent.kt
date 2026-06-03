@@ -240,6 +240,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             canMakeLandSound = true
 
+            postActionMomentumTimer.setToEnd()
+
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "init(): velocity=$v")
         },
         end = {
@@ -331,6 +333,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             lastFacing = facing
 
             body.physics.velocity.set(impulse)
+
+            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
         }
 
         override fun end() {
@@ -357,6 +361,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             if (currentWeapon == MegamanWeapon.RUSH_JET) jetpackHandler.reset()
+
+            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
         }
     }
 
@@ -451,10 +457,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             }
 
             directionOnInit = direction
-
-            // Set the run time to 100 so that when Mega Man finishes ground sliding, it is guaranteed that there
-            // will always be extra momentum pushing him.
-            runTime = 100f
         }
 
         override fun act(delta: Float) {
@@ -487,6 +489,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.LEFT -> body.physics.velocity.y = vel * facing.value
                 Direction.RIGHT -> body.physics.velocity.y = vel * -facing.value
             }
+
+            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
         }
 
         override fun end() {
@@ -499,6 +503,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             maxTimer.reset()
 
             cooldown.reset()
+
+            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
         }
     }
 

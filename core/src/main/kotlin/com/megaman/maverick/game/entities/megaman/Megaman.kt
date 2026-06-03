@@ -58,6 +58,7 @@ import com.megaman.maverick.game.state.IGameStateListener
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
@@ -146,6 +147,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     internal var runTime = 0f
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
+    internal val postActionMomentumTimer = Timer(MegamanValues.POST_ACTION_MOMENTUM_DUR).setToEnd()
     private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
     private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
@@ -463,6 +465,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         roomTransPauseTimer.setToEnd()
 
         wallSlideNotAllowedTimer.resetDuration(0f)
+        postActionMomentumTimer.setToEnd()
 
         putProperty(ConstKeys.ON_TELEPORT_START, { teleporter: ITeleporterEntity ->
             stopCharging()
@@ -745,6 +748,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             shootAnimTimer.update(delta)
             wallJumpTimer.update(delta)
             roomTransPauseTimer.update(delta)
+
+            if (feetOnGround || FacingUtils.isFacingBlock(this))
+                postActionMomentumTimer.update(delta)
 
             if (
                 body.isSensing(BodySense.IN_WATER) &&

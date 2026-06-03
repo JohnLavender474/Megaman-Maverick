@@ -19,6 +19,8 @@ object MegamanValues {
     const val RUN_2_TIME = 0.25f
     const val RUN_3_SCALAR = 1f
 
+    const val POST_ACTION_MOMENTUM_DUR = 0.35f
+
     const val RUN_MAX_SPEED = 6f
     const val RUN_IMPULSE = 40f
     const val ICE_RUN_IMPULSE = 15f
