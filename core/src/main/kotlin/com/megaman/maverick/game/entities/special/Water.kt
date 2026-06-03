@@ -80,19 +80,21 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         )
     }
 
-    private lateinit var animations: OrderedMap<String, IAnimation>
+    private val animations = OrderedMap<String, IAnimation>()
     // I f***ed up when designing the AnimationSystem. I designed it so that the
     // sprite-to-animation relationship is always 1:1, but in the case of this
     // entity, it would be nice if the system supposed a many-to-one relationship
     // (multiple sprites sharing the same animation). Anyway, this is a hacky
     // workaround to solve the issue.
-    private lateinit var spriteToAnimMap: OrderedMap<GameSprite, String>
+    private val spriteToAnimMap = OrderedMap<GameSprite, String>()
 
     private lateinit var splashType: SplashType
     private var splashSound = true
 
     private val fullBounds = GameRectangle()
     private val tempRect = GameRectangle()
+
+    private var hidden = false
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -118,7 +120,7 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             if (shape is GameRectangle) shape.set(fullBounds)
         }
 
-        val hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
+        hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
         if (hidden) {
             removeComponent(SpritesComponent::class)
             removeComponent(AnimationsComponent::class)
@@ -140,6 +142,8 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        animations.clear()
+        spriteToAnimMap.clear()
     }
 
     override fun shouldSplash(fixture: IFixture): Boolean {
@@ -152,6 +156,8 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun getSplashType(fixture: IFixture) = SplashType.BLUE
 
     override fun update(delta: Float) {
+        if (hidden) return
+
         animations.values().forEach { animation -> animation.update(delta) }
         spriteToAnimMap.forEach { entry ->
             val sprite = entry.key
@@ -200,15 +206,12 @@ class Water(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     private fun defineDrawables(bounds: GameRectangle, hasSurface: Boolean) {
         val sprites = OrderedMap<Any, GameSprite>()
 
-        animations = OrderedMap()
         SPRITE_DEFS.forEach { def ->
             val key = def.key
             val (animDef, _, _) = def.value
             val animation = Animation(regions[key]!!, animDef.rows, animDef.cols, animDef.durations, animDef.loop)
             animations.put(key, animation)
         }
-
-        spriteToAnimMap = OrderedMap()
 
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
         val columns = (bounds.getWidth() / ConstVals.PPM).toInt()

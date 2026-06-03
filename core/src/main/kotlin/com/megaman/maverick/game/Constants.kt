@@ -54,6 +54,7 @@ object ConstVals {
 }
 
 object ConstKeys {
+    const val GROUND = "ground"
     const val MODE = "mode"
     const val CONTACT = "contact"
     const val COINS = "coin"

@@ -55,12 +55,14 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.state.IGameStateListener
+import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getContactWater
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
@@ -692,6 +694,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
                 baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR
             )
+
             else -> baseDamage
         }
 
@@ -743,7 +746,15 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             wallJumpTimer.update(delta)
             roomTransPauseTimer.update(delta)
 
-            if (body.isSensing(BodySense.IN_WATER) && !body.isSensing(BodySense.FORCE_APPLIED)) {
+            if (
+                body.isSensing(BodySense.IN_WATER) &&
+                !body.isSensing(BodySense.FORCE_APPLIED) &&
+                body.getContactWater().any { water ->
+                    water.body.getBounds().contains(
+                        this.headFixture.getShape().getCenter()
+                    )
+                }
+            ) {
                 underWaterBubbleTimer.update(delta)
                 if (underWaterBubbleTimer.isFinished()) {
                     spawnBubble()
@@ -797,6 +808,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 }
                 animKey = key
             }
+
             isBehaviorActive(BehaviorType.AIR_DASHING) -> {
                 var key = "airdash"
                 if (shooting) {
@@ -805,6 +817,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 }
                 animKey = key
             }
+
             else -> return false
         }
 
@@ -842,6 +855,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 focus.x -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
                 if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING)) focus.y -= 0.125f * ConstVals.PPM
             }
+
             Direction.RIGHT -> {
                 focus.x += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
                 if (megaman.isAnyBehaviorActive(BehaviorType.CROUCHING)) focus.y -= 0.125f * ConstVals.PPM

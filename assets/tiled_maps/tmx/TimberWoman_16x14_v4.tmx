@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="550" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="513">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="550" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="515">
  <tileset firstgid="1" source="../tsx/Anokolisa_Swamp_Tileset.tsx"/>
  <tileset firstgid="71" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1095" source="../tsx/pipe_forest.tsx"/>
@@ -368,6 +368,7 @@
   <object id="392" name="Scanner" x="14592" y="1120" width="576" height="384"/>
   <object id="414" name="TimberWoman" x="16096" y="1184" width="32" height="32">
    <properties>
+    <property name="ground" type="object" value="514"/>
     <property name="leaf_spawn" type="object" value="415"/>
     <property name="wall_1" type="object" value="397"/>
     <property name="wall_2" type="object" value="399"/>
@@ -1237,7 +1238,7 @@
   <object id="398" x="15712" y="896" width="448" height="256"/>
   <object id="399" x="16160" y="896" width="192" height="608"/>
   <object id="400" x="15136" y="1408" width="64" height="96"/>
-  <object id="403" x="14656" y="1504" width="1696" height="160"/>
+  <object id="403" x="14656" y="1504" width="1024" height="160"/>
   <object id="420" name="WoodCrate" x="13056" y="1376" width="64" height="64"/>
   <object id="423" name="WoodCrate" x="14656" y="1440" width="64" height="64"/>
   <object id="426" name="WoodCrate" x="14528" y="1248" width="64" height="64"/>
@@ -1254,6 +1255,7 @@
   <object id="504" x="9792" y="1440" width="96" height="32"/>
   <object id="508" x="3872" y="416" width="64" height="800"/>
   <object id="510" x="640" y="2384" width="672" height="176"/>
+  <object id="514" x="15680" y="1504" width="672" height="160"/>
  </objectgroup>
  <objectgroup id="5" name="enemies">
   <object id="21" name="ShieldGuardBot" x="992" y="2176" width="32" height="32">
@@ -1515,7 +1517,7 @@
   </object>
  </objectgroup>
  <objectgroup id="15" name="temp">
-  <object id="512" name="0" x="6944" y="1472" width="32" height="32"/>
+  <object id="513" name="0" x="15456" y="1472" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="player">
   <object id="2" name="0" x="256" y="2272" width="32" height="32"/>

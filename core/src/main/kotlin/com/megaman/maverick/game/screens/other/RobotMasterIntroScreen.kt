@@ -312,26 +312,26 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
                 Animation(atlas.findRegion("${TimberWoman.TAG}/init_flash"), 2, 1, 0.1f, true) pairTo Timer(0.5f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${TimberWoman.TAG}/init"), 7, 1, 0.1f, false) pairTo Timer(0.7f)
+                Animation(atlas.findRegion("${TimberWoman.TAG}/init"), 4, 2, 0.1f, false) pairTo Timer(1.25f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${TimberWoman.TAG}/stand_pound"), 3, 2, 0.1f, true) pairTo Timer(0.7f)
+                Animation(atlas.findRegion("${TimberWoman.TAG}/stand_pound"), 3, 2, 0.1f, true) pairTo Timer(1f)
             )
             animQueue.addLast(
                 Animation(
                     atlas.findRegion("${TimberWoman.TAG}/stand_swing"),
                     2,
                     4,
-                    gdxArrayOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.25f, 0.1f, 0.1f),
+                    gdxArrayOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.5f, 0.1f, 0.1f),
                     false
-                ) pairTo Timer(1f)
+                ) pairTo Timer(1.25f)
             )
             animQueue.addLast(
-                Animation(atlas.findRegion("${TimberWoman.TAG}/init"), 7, 1, 0.1f, false) pairTo Timer(0.7f)
+                Animation(atlas.findRegion("${TimberWoman.TAG}/init"), 4, 2, 0.1f, false) pairTo Timer(0.7f)
             )
             animQueue.addLast(
                 Animation(
-                    atlas.findRegion("${TimberWoman.TAG}/stand_still"),
+                    atlas.findRegion("${TimberWoman.TAG}/stand"),
                     2,
                     1,
                     gdxArrayOf(1f, 0.15f),

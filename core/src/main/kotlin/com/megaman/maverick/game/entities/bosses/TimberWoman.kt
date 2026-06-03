@@ -51,7 +51,6 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
@@ -60,6 +59,7 @@ import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -91,7 +91,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private const val VEL_CLAMP_Y = 25f
 
         private const val INIT_DUR = 1f
-        private const val STAND_DUR = 1f
+        private const val STAND_DUR_1 = 1f
+        private const val STAND_DUR_2 = 1.75f
+        private const val STAND_DUR_1_NORMAL = 1.5f
+        private const val STAND_DUR_2_NORMAL = 2.25f
         private const val MAX_RUN_DUR = 2f
         private const val WALL_SLIDE_DUR = 0.75f
         private const val STAND_SWING_DUR = 1f
@@ -100,7 +103,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private const val BURN_DUR = 0.5f
 
         // When Timber Woman transitions to the stand state, she might be sliding on the floor due to
-        // velocity applied in a previous state. When this amount of time has passed in the state state,
+        // velocity applied in a previous state. When this amount of time has passed in the state,
         // her X velocity should be set to zero to prevent further floor sliding.
         private const val STAND_STILL_DELAY = 0.05f
         private const val STAND_STILL_DELAY_KEY = "stand_still_delay"
@@ -114,7 +117,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         private const val STAND_SWING_GROUND_BURST_TIME = 0.35f
         private val STAND_POUND_GROUND_BURST_TIMES = gdxArrayOf(0.35f, 0.95f, 1.55f)
 
-        private val GROUND_PEBBLE_IMPULSES_NORMAL = gdxArrayOf(
+        private val GROUND_PEBBLE_IMPULSES_HARD = gdxArrayOf(
             Vector2(-15f, 10f),
             Vector2(-9f, 18f),
             Vector2(-3f, 26f),
@@ -122,6 +125,13 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             Vector2(3f, 26f),
             Vector2(9f, 18f),
             Vector2(15f, 10f),
+        )
+        private val GROUND_PEBBLE_IMPULSES_NORMAL = gdxArrayOf(
+            Vector2(-9f, 18f),
+            Vector2(-3f, 26f),
+            Vector2(0f, 30f),
+            Vector2(3f, 26f),
+            Vector2(9f, 18f),
         )
         private const val GROUND_PEBBLES_AXE_SWING_OFFSET_X = 2f
         private const val GROUND_PEBBLES_OFFSET_Y = 0.35f
@@ -222,6 +232,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
     // turned to face the opposite direction to prevent the overlap.
     private val walls = Array<GameRectangle>()
 
+    private var standCycle = 0
     private var cyclesSinceLastJump = 0
 
     private val swingAtMegamanScanner = GameRectangle().setSize(
@@ -241,6 +252,12 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
     // Delay for spawning random leaves while in hard mode
     private val hardModeLeafSpawnDelay = Timer(HARD_MODE_LEAF_SPAWN_DELAY)
+
+    // Show the 'init' animation for 0.8 seconds before showing the 'stand' animation
+    // when in the INIT or STAND state.
+    private val initAnimTimer = Timer(0.8f)
+
+    private val ground = GameRectangle()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -262,8 +279,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         }
 
         if (animDefs.isEmpty) animDefs.putAll(
-            TimberWomanState.INIT.name.lowercase() pairTo AnimationDef(7, 1, 0.1f, true),
-            TimberWomanState.STAND.name.lowercase() pairTo AnimationDef(7, 1, 0.1f, false),
+            TimberWomanState.INIT.name.lowercase() pairTo AnimationDef(4, 2, 0.1f, false),
+            TimberWomanState.STAND.name.lowercase() pairTo AnimationDef(2, 1, gdxArrayOf(0.75f, 0.15f), true),
             TimberWomanState.STAND_SWING.name.lowercase() pairTo AnimationDef(
                 2, 4, gdxArrayOf(0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.25f, 0.1f, 0.1f), false
             ),
@@ -279,7 +296,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
         if (stateTimers.isEmpty) stateTimers.putAll(
             TimberWomanState.INIT pairTo Timer(INIT_DUR),
-            TimberWomanState.STAND pairTo Timer(STAND_DUR),
+            TimberWomanState.STAND pairTo Timer(STAND_DUR_1),
             TimberWomanState.RUN pairTo Timer(MAX_RUN_DUR),
             TimberWomanState.WALLSLIDE pairTo Timer(WALL_SLIDE_DUR),
             TimberWomanState.STAND_SWING pairTo Timer(STAND_SWING_DUR)
@@ -328,7 +345,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         }
         otherTimers.values().forEach { it.reset() }
 
-        if (game.state.getDifficultyMode() == DifficultyMode.HARD) hardModeLeafSpawnDelay.reset()
+        if (game.state.hardMode) hardModeLeafSpawnDelay.reset()
 
         spawnProps.forEach { key, value ->
             when {
@@ -336,6 +353,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                     val bounds = (value as RectangleMapObject).rectangle
                     leafSpawnBounds.set(bounds)
                 }
+
                 key.toString().contains(ConstKeys.WALL) -> {
                     val bounds = (value as RectangleMapObject).rectangle.toGameRectangle(false)
                     walls.add(bounds)
@@ -344,10 +362,14 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         }
 
         updateFacing()
-
+        standCycle = 0
         cyclesSinceLastJump = 0
-
         body.physics.gravityOn = true
+
+        initAnimTimer.reset()
+
+        val groundRect = spawnProps.get(ConstKeys.GROUND, RectangleMapObject::class)!!.rectangle
+        ground.set(groundRect)
     }
 
     override fun isReady(delta: Float) = stateTimers[TimberWomanState.INIT].isFinished()
@@ -356,19 +378,16 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
-
         val damaged = super.takeDamageFrom(damager)
-
         if (damaged && damager is IFireEntity) {
             GameLogger.debug(TAG, "takeDamageFrom(): damaged by fireball, start burning, set stand timer to end")
             stateTimers[TimberWomanState.STAND].let { standTimer ->
                 standTimer.reset()
-                val standTime = STAND_DUR * 0.75f
+                val standTime = STAND_DUR_2 * 0.75f
                 standTimer.update(standTime)
             }
             burning = true
         }
-
         return damaged
     }
 
@@ -377,7 +396,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         super.onDestroy()
 
         walls.clear()
-
         projectilesInVicinity.values().forEach { it.clear() }
 
         // Destroy all ground pebbles and deadly leaves when Timber Woman is destroyed
@@ -468,7 +486,16 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             stateTimers.containsKey(current)
         ) {
             GameLogger.debug(TAG, "onChangeState(): reset current timer")
-            stateTimers[current].reset()
+            if (current == TimberWomanState.STAND) {
+                standCycle++
+                val hard = game.state.hardMode
+                val duration = if (standCycle % 2 == 0) {
+                    if (hard) STAND_DUR_1 else STAND_DUR_1_NORMAL
+                } else {
+                    if (hard) STAND_DUR_2 else STAND_DUR_2_NORMAL
+                }
+                stateTimers[current].resetDuration(duration)
+            } else stateTimers[current].reset()
         }
 
         if (current.equalsAny(
@@ -490,18 +517,19 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         when (previous) {
             TimberWomanState.JUMP_DOWN -> {
                 GameLogger.debug(TAG, "onChangeState(): apply friction x when previous=$previous")
-
                 body.physics.applyFrictionX = true
             }
 
             TimberWomanState.BURN -> {
                 GameLogger.debug(TAG, "onChangeState(): reset damage timer")
-
                 damageTimer.reset()
             }
 
             else -> GameLogger.debug(TAG, "onChangeState(): no action when previous=$previous")
         }
+
+        if (current.equalsAny(TimberWomanState.INIT, TimberWomanState.STAND))
+            initAnimTimer.reset()
 
         when (current) {
             TimberWomanState.STAND -> {
@@ -529,20 +557,14 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
             TimberWomanState.JUMP_UP -> {
                 body.physics.applyFrictionX = false
-
                 jump(megaman.body.getCenter())
-
                 if (previous == TimberWomanState.WALLSLIDE) {
                     var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
                     if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
-
                     body.physics.velocity.x = impulseX
-
                     GameLogger.debug(TAG, "onChangeState(): set impulseX=$impulseX for wall jump")
                 }
-
                 cyclesSinceLastJump = 0
-
                 GameLogger.debug(
                     TAG, "onChangeState(): turn off x friction, jump=${body.physics.velocity}, and set cycles since " +
                         "last jump to 0 when current=$current"
@@ -551,7 +573,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
             TimberWomanState.JUMP_SPIN -> {
                 requestToPlaySound(SoundAsset.BRUSH_SOUND, false)
-
                 GameLogger.debug(TAG, "onChangeState(): play brush sound when current=$current")
             }
 
@@ -570,6 +591,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 explodeOnDefeat(delta)
                 return@add
             }
+
+            if (body.isSensing(BodySense.FEET_ON_GROUND) &&
+                currentState.equalsAny(TimberWomanState.INIT, TimberWomanState.STAND)
+            ) initAnimTimer.update(delta)
 
             jumpSpinScannerCircle.setCenter(body.getCenter())
 
@@ -616,7 +641,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                         stateMachine.next()
                         return@add
                     }
-
                     if (body.isSensing(BodySense.FEET_ON_GROUND) && updateTimerFor(currentState, delta))
                         stateMachine.next()
                 }
@@ -626,7 +650,6 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                         stateMachine.next()
                         return@add
                     }
-
                     if (updateTimerFor(currentState, delta)) stateMachine.next()
                 }
 
@@ -635,19 +658,16 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                         stateMachine.next()
                         return@add
                     }
-
                     if (updateTimerFor(currentState, delta)) stateMachine.next()
                 }
 
                 TimberWomanState.JUMP_UP -> {
                     updateFacing()
-
                     if (shouldJumpSpin() || shouldStopJumpingUp()) stateMachine.next()
                 }
 
                 TimberWomanState.JUMP_DOWN -> {
                     updateFacing()
-
                     if (shouldJumpSpin() || shouldStopJumpingDown()) stateMachine.next()
                 }
 
@@ -663,7 +683,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 }
             }
 
-            if (ready && game.state.getDifficultyMode() == DifficultyMode.HARD) {
+            if (ready && game.state.hardMode) {
                 hardModeLeafSpawnDelay.update(delta)
                 if (hardModeLeafSpawnDelay.isFinished()) {
                     val spawn = leafSpawnBounds.getRandomPositionInBounds()
@@ -680,10 +700,8 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameLogger.error(TAG, "updateTimerFor(): no timer for state=$state")
             return false
         }
-
         val timer = stateTimers[state]
         timer.update(delta)
-
         return timer.isFinished()
     }
 
@@ -703,8 +721,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
     private fun shouldStopJumpSpinning() = shouldStopJumpingDown()
 
-    private fun shouldJumpSpin() = !body.isSensing(BodySense.FEET_ON_GROUND) &&
-        !megaman.invincible && jumpSpinScannerCircle.overlaps(megaman.damageableFixture.getShape())
+    private fun shouldJumpSpin() = !megaman.invincible &&
+        !body.isSensing(BodySense.FEET_ON_GROUND) &&
+        jumpSpinScannerCircle.overlaps(megaman.damageableFixture.getShape()) &&
+        (body.physics.velocity.y > 0f || !jumpSpinScannerCircle.overlaps(ground))
 
     private fun shouldStartWallSliding() = !body.isSensing(BodySense.FEET_ON_GROUND) &&
         ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
@@ -759,8 +779,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         if (currentState == TimberWomanState.STAND_SWING)
             spawn.add(GROUND_PEBBLES_AXE_SWING_OFFSET_X * ConstVals.PPM * facing.value, 0f)
 
-        for (i in 0 until GROUND_PEBBLE_IMPULSES_NORMAL.size) {
-            val impulse = GROUND_PEBBLE_IMPULSES_NORMAL[i].cpy().scl(ConstVals.PPM.toFloat())
+        val groundPebbleImpulses = if (game.state.hardMode)
+            GROUND_PEBBLE_IMPULSES_HARD else GROUND_PEBBLE_IMPULSES_NORMAL
+        for (i in 0 until groundPebbleImpulses.size) {
+            val impulse = groundPebbleImpulses[i].cpy().scl(ConstVals.PPM.toFloat())
 
             val pebble = MegaEntityFactory.fetch(GroundPebble::class)!!
             pebble.spawn(
@@ -1018,12 +1040,11 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
         }
 
-        /*
         // axe wall slide
         .sprite(
             AXE_WALLSLIDE_REGION,
             GameSprite(regions[AXE_WALLSLIDE_REGION], DrawingPriority(DrawingSection.PLAYGROUND, 2))
-                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM) }
+                .also { sprite -> sprite.setSize(SPRITE_WIDTH * ConstVals.PPM, SPRITE_HEIGHT * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
             val show = if (defeated) false else currentState == TimberWomanState.WALLSLIDE
@@ -1035,6 +1056,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }
 
+        /*
         // axe swing 1
         .sprite(
             AXE_SWING_REGION_1,
@@ -1148,12 +1170,12 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                         defeated -> ConstKeys.DEFEATED
                         else -> when (currentState) {
                             TimberWomanState.INIT -> when {
-                                body.isSensing(BodySense.FEET_ON_GROUND) -> TimberWomanState.INIT.name.lowercase()
+                                body.isSensing(BodySense.FEET_ON_GROUND) -> if (initAnimTimer.isFinished()) "stand" else "init"
                                 else -> TimberWomanState.JUMP_DOWN.name.lowercase()
                             }
 
                             TimberWomanState.STAND -> when {
-                                body.isSensing(BodySense.FEET_ON_GROUND) -> TimberWomanState.STAND.name.lowercase()
+                                body.isSensing(BodySense.FEET_ON_GROUND) -> if (initAnimTimer.isFinished()) "stand" else "init"
                                 else -> TimberWomanState.JUMP_DOWN.name.lowercase()
                             }
 
