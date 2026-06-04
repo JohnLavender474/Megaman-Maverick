@@ -60,7 +60,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         private const val FLUFF_MOVE_X_THRESHOLD = 0.05f
         private const val FLUFF_DEFAULT_CONTINUE_SPAWN_DELAY = 0.5f
         private const val FLUFF_MEGAMAN_GROUNDSLIDE_SPAWN_DELAY = 0.1f
-        private val TIMER_POOL = Pool<Timer>(supplier = { Timer() }, startAmount = 3)
+        private val TIMER_POOL = Pool(supplier = { Timer() }, startAmount = 3)
         private val FLUFF_OFFSET_SCALARS = gdxArrayOf(-2, -1, 1, 2)
         private val FLUFF_ANGLES = gdxArrayOf(60f, 30f, 330f, 300f)
         private val regions = ObjectMap<String, TextureRegion>()
@@ -99,9 +99,9 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             gdxArrayOf("left", "middle", "right", "back").forEach { regions.put(it, atlas.findRegion("${TAG}/$it")) }
         }
         super.init()
+        addComponent(SpritesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
-        addComponent(SpritesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
