@@ -238,7 +238,8 @@ private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
 }
 
 private fun Megaman.onJustStopRunning() {
-    val preserveMomentum = body.isSensing(BodySense.FEET_ON_ICE) || !postActionMomentumTimer.isFinished()
+    val preserveMomentum = body.isSensing(BodySense.FEET_ON_ICE) ||
+        (!postActionMomentumTimer.isFinished() && !body.isSensing(BodySense.FEET_ON_SNOW))
     if (!preserveMomentum) when (direction) {
         Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
         else -> body.physics.velocity.y = 0f
