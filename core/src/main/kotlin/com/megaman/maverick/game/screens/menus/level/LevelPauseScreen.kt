@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
@@ -245,7 +244,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         settingsPanel.buttons.forEach { buttons.put(it.key, it.value) }
 
         closing = false
-        slideTimer.reset()
+        // slideTimer.reset()
 
         exiting = false
         fadeout.reset()
@@ -426,7 +425,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     override fun isInteractionAllowed() =
         super.isInteractionAllowed() &&
-            slideTimer.isFinished() &&
+            // slideTimer.isFinished() &&
             fillHealthTimer.isFinished() &&
             !closing &&
             !exiting
@@ -450,6 +449,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             fillHealthTimer.update(delta)
             if (fillHealthTimer.isJustFinished()) resetFillHealthTimer()
 
+            /*
             if (!slideTimer.isFinished()) {
                 slideTimer.update(delta)
 
@@ -467,6 +467,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                 if (closing && slideTimer.isFinished()) game.runQueue.addLast { game.resume() }
             }
+            */
 
             buttonSprites.forEach { entry ->
                 val key = entry.key
@@ -497,11 +498,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         backgroundSprite.draw(drawer)
 
-        if (slideTimer.isFinished() && !closing) {
-            buttonSprites.values().forEach { it.draw(drawer) }
-            fontHandles.forEach { it.draw(drawer) }
-            bitsBars.forEach { it.draw(drawer) }
-        }
+        // if (slideTimer.isFinished() && !closing) {
+        buttonSprites.values().forEach { it.draw(drawer) }
+        fontHandles.forEach { it.draw(drawer) }
+        bitsBars.forEach { it.draw(drawer) }
+        // }
 
         if (exiting) fadeout.draw(drawer)
         if (!drawing) drawer.end()
@@ -522,8 +523,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             return
         }
         if (!exiting && settingsScreenSlide.finished) {
-            closing = true
-            slideTimer.reset()
+            // closing = true
+            // slideTimer.reset()
+            game.runQueue.addLast { game.resume() }
         }
     }
 
