@@ -154,7 +154,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         eventQueue.addLast(GetWeaponEvent(GetWeaponEventType.MEGAMAN_MOVE))
         for (i in 0 until weaponsAttained.size) {
             val currentWeapon = weaponsAttained[i]
-            val previousWeapon = if (i == 0) MegamanWeapon.MEGA_BUSTER else weaponsAttained[i - 1]
+            val previousWeapon = if (i == 0) game.megaman.currentWeapon else weaponsAttained[i - 1]
 
             eventQueue.addLast(
                 GetWeaponEvent(
@@ -196,8 +196,9 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                     GameObjectPools.fetch(Vector2::class)
                 )
 
+                val animKey = "${game.megaman.currentWeapon.name.lowercase()}_reversed"
+                val animator = megamanAnimators.get(animKey)
                 // Animator with 0f delta so that the sprite stays at the first animation region
-                val animator = megamanAnimators.get(MegamanWeapon.MEGA_BUSTER.name.lowercase())
                 animator.animate(megamanSprite, 0f)
 
                 megamanSprite.setCenter(position.x * ConstVals.PPM, position.y * ConstVals.PPM)
