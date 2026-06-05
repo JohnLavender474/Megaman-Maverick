@@ -115,8 +115,6 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
 
         private const val SUBSEQUENT_FIRE_ANGLE_DIFF = 10f
 
-        private const val FROZEN_DUR = 0.5f
-
         private val animDefs = orderedMapOf(
             "init" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(3, 2, 0.1f, true),
@@ -676,42 +674,47 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
             GameLogger.debug(TAG, "onChangeState(): chargeChance=$chargeChance, oldChargeChange=$oldChance")
         }
 
-        if (current == MechaDragonState.CHARGE_TO_OTHER_SIDE) {
-            val roomSide = getRoomSideOf(body.getCenter())
-            val target = when (roomSide) {
-                RoomSide.LEFT -> rightSideChargeTargets.superRandom()
-                RoomSide.RIGHT -> leftSideChargeTargets.superRandom()
+        when (current) {
+            MechaDragonState.CHARGE_TO_OTHER_SIDE -> {
+                val roomSide = getRoomSideOf(body.getCenter())
+                val target = when (roomSide) {
+                    RoomSide.LEFT -> rightSideChargeTargets.superRandom()
+                    RoomSide.RIGHT -> leftSideChargeTargets.superRandom()
+                }
+                currentTarget.set(target)
+
+                chargeState = ProcessState.BEGIN
+                chargeChance = 0
+
+                GameLogger.debug(
+                    TAG,
+                    "onChangeState(): target=$target, roomSide=$roomSide, body.getCenter()=${body.getCenter()}"
+                )
             }
-            currentTarget.set(target)
+            MechaDragonState.FLY_TO_TARGET -> {
+                val roomSide = getRoomSideOf(body.getCenter())
+                val candidateTargets = when (roomSide) {
+                    RoomSide.LEFT -> leftSideHoverTargets
+                    RoomSide.RIGHT -> rightSideHoverTargets
+                }
+                reusableHoverTargetsSet.addAll(candidateTargets)
+                reusableHoverTargetsSet.remove(currentTarget)
 
-            chargeState = ProcessState.BEGIN
-            chargeChance = 0
+                val target = reusableHoverTargetsSet.superRandom()
+                currentTarget.set(target)
 
-            GameLogger.debug(
-                TAG,
-                "onChangeState(): target=$target, roomSide=$roomSide, body.getCenter()=${body.getCenter()}"
-            )
-        } else if (current == MechaDragonState.FLY_TO_TARGET) {
-            val roomSide = getRoomSideOf(body.getCenter())
-            val candidateTargets = when (roomSide) {
-                RoomSide.LEFT -> leftSideHoverTargets
-                RoomSide.RIGHT -> rightSideHoverTargets
+                reusableHoverTargetsSet.clear()
+
+                GameLogger.debug(
+                    TAG,
+                    "onChangeState(): target=$target, roomSide=$roomSide, body.getCenter()=${body.getCenter()}"
+                )
             }
-            reusableHoverTargetsSet.addAll(candidateTargets)
-            reusableHoverTargetsSet.remove(currentTarget)
-
-            val target = reusableHoverTargetsSet.superRandom()
-            currentTarget.set(target)
-
-            reusableHoverTargetsSet.clear()
-
-            GameLogger.debug(
-                TAG,
-                "onChangeState(): target=$target, roomSide=$roomSide, body.getCenter()=${body.getCenter()}"
-            )
-        } else if (current == MechaDragonState.HOVER_IN_PLACE) {
-            fireDelay.reset()
-            fireTimer.setToEnd()
+            MechaDragonState.HOVER_IN_PLACE -> {
+                fireDelay.reset()
+                fireTimer.setToEnd(false)
+            }
+            else -> {}
         }
     }
 
