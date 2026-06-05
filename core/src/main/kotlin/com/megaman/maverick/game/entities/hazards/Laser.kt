@@ -244,7 +244,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
         allSprites.clear()
         spriteUpdaters.clear()
-        sprites = OrderedMap<Any, GameSprite>()
+        sprites = OrderedMap()
 
         contacts.clear()
 

@@ -94,8 +94,8 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         get() = !beamTimer.isFinished()
 
     private val rawLine = GameLine()
-    private val maxLine = GameLine()
     private val actualLine = GameLine()
+    private val actualClampEnd = Vector2()
 
     private val contacts = PriorityQueue<GamePair<Vector2, IFixture>> { p1, p2 ->
         val (origin, _) = rawLine.getWorldPoints()
@@ -184,8 +184,8 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         ignoreIds.clear()
 
         rawLine.reset()
-        maxLine.reset()
         actualLine.reset()
+        actualClampEnd.setZero()
     }
 
     override fun isLaserIgnoring(entity: IGameEntity) =
@@ -201,8 +201,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                     return@UpdatablesComponent
                 }
 
+                val targetLen = actualClampEnd.dst(actualLine.getFirstLocalPoint())
                 when {
-                    actualLine.getLength() < maxLine.getLength() -> {
+                    actualLine.getLength() < targetLen -> {
                         val growthRate = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
                             BEAM_GROWTH_RATE_HARD else BEAM_GROWTH_RATE
 
@@ -213,7 +214,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                     }
 
                     else -> {
-                        actualLine.set(maxLine)
+                        actualLine.setSecondLocalPoint(actualClampEnd)
 
                         spawnExplosionDelay.update(delta)
                         if (spawnExplosionDelay.isFinished()) {
@@ -247,7 +248,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         beamTimer.reset()
         spawnExplosionDelay.setToEnd()
 
-        if (game.getGameCamera().overlaps(maxLine.getBoundingRectangle()))
+        if (game.getGameCamera().overlaps(rawLine.getBoundingRectangle()))
             requestToPlaySound(SoundAsset.BURST_SOUND, false)
     }
 
@@ -275,7 +276,6 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val updateDamager = {
             damagerFixture.setActive(beaming)
-
             val damagerBounds = damagerFixture.rawShape as GameRectangle
             when {
                 beaming -> {
@@ -284,7 +284,6 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                     damagerBounds.setCenter(origin)
                     damagerBounds.rotate(direction.rotation + 90f, origin.x, origin.y)
                 }
-
                 else -> damagerBounds.set(-100f * ConstVals.PPM, -100f * ConstVals.PPM, 0f, 0f)
             }
         }
@@ -293,18 +292,10 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             contacts.clear()
             updateDamager()
         }
-
         body.postProcess.put(ConstKeys.DEFAULT) {
-            val (lineStart, _) = rawLine.getWorldPoints()
-
-            maxLine.setFirstLocalPoint(lineStart)
+            val (lineStart, lineEnd) = rawLine.getWorldPoints()
             actualLine.setFirstLocalPoint(lineStart)
-
-            if (!contacts.isEmpty()) {
-                val endPoint = contacts.peek().first
-                maxLine.setSecondLocalPoint(endPoint)
-            }
-
+            actualClampEnd.set(if (!contacts.isEmpty()) contacts.peek().first else lineEnd)
             updateDamager()
         }
 
