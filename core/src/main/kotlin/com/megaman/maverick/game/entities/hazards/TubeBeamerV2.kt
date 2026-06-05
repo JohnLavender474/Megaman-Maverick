@@ -154,6 +154,8 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val endPoint = spawn.add(MAX_LENGTH * ConstVals.PPM, direction)
         rawLine.setSecondLocalPoint(endPoint)
 
+        actualClampEnd.set(rawLine.getSecondLocalPoint())
+
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.IGNORE)) {
                 val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)
@@ -301,7 +303,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        return BodyComponentCreator.create(this, body, doUpdate = { true })
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
