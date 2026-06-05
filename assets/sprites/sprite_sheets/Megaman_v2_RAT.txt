@@ -1,5 +1,5 @@
 Megaman_v2_RAT.png
-size: 100, 1518
+size: 496, 392
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -7,56 +7,60 @@ pma: false
 airdash
   bounds: 1, 1, 48, 48
 airdash_slash1
-  bounds: 1, 643, 48, 144
-climb
-  bounds: 51, 251, 48, 96
-climb_finish
+  bounds: 347, 101, 48, 144
+beam
   bounds: 51, 1, 48, 48
+climb
+  bounds: 1, 101, 48, 96
+climb_finish
+  bounds: 101, 1, 48, 48
 climb_still
-  bounds: 1, 51, 48, 48
+  bounds: 151, 1, 48, 48
 climb_still_slash1
-  bounds: 51, 643, 48, 144
+  bounds: 397, 101, 48, 144
 crouch
-  bounds: 51, 51, 48, 48
+  bounds: 201, 1, 48, 48
 crouch_slash1
-  bounds: 1, 789, 48, 144
+  bounds: 447, 101, 48, 144
 damaged
-  bounds: 51, 789, 48, 144
+  bounds: 1, 247, 48, 144
 frozen
-  bounds: 1, 101, 48, 48
+  bounds: 251, 1, 48, 48
 frozen_push
-  bounds: 1, 349, 96, 96
+  bounds: 51, 101, 96, 96
 groundslide
-  bounds: 51, 101, 48, 48
+  bounds: 301, 1, 48, 48
 groundslide_slash1
-  bounds: 1, 935, 48, 144
+  bounds: 51, 247, 48, 144
 jump
-  bounds: 1, 151, 48, 48
+  bounds: 351, 1, 48, 48
 jump_slash1
-  bounds: 51, 935, 48, 144
+  bounds: 101, 247, 48, 144
 run
-  bounds: 1, 447, 96, 96
+  bounds: 149, 101, 96, 96
 run_trans
-  bounds: 51, 151, 48, 48
+  bounds: 401, 1, 48, 48
 slip
-  bounds: 1, 201, 48, 48
+  bounds: 1, 51, 48, 48
 slip_slash1
-  bounds: 1, 1081, 48, 144
+  bounds: 151, 247, 48, 144
+spawn
+  bounds: 51, 51, 336, 48
 stand
-  bounds: 1, 545, 48, 96
+  bounds: 247, 101, 48, 96
 stand_slash1
-  bounds: 51, 1081, 48, 144
+  bounds: 201, 247, 48, 144
 stand_slash2
-  bounds: 1, 1227, 48, 144
+  bounds: 251, 247, 48, 144
 stand_slash3
-  bounds: 51, 1227, 48, 144
+  bounds: 301, 247, 48, 144
 stunned
-  bounds: 51, 545, 48, 96
+  bounds: 297, 101, 48, 96
 swim
-  bounds: 51, 201, 48, 48
+  bounds: 389, 51, 48, 48
 swim_slash1
-  bounds: 1, 1373, 48, 144
+  bounds: 351, 247, 48, 144
 wallslide
-  bounds: 1, 251, 48, 48
+  bounds: 439, 51, 48, 48
 wallslide_slash1
-  bounds: 51, 1373, 48, 144
+  bounds: 401, 247, 48, 144

@@ -26,6 +26,19 @@ class MegamanAnimations(
     companion object {
         const val TAG = "MegamanAnimations"
 
+        fun getAssetSourceForWeapon(weapon: MegamanWeapon) = when (weapon) {
+            MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
+            MegamanWeapon.FRIGID_SHOT -> TextureAsset.MEGAMAN_ICE_CUBE.source
+            MegamanWeapon.AXE_SWINGER -> TextureAsset.MEGAMAN_AXE_THROW.source
+            MegamanWeapon.RUSH_JET -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
+            MegamanWeapon.NEEDLE_SPIN -> TextureAsset.MEGAMAN_NEEDLE_SPIN.source
+            MegamanWeapon.MOON_SCYTHES -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
+            MegamanWeapon.RODENT_CLAWS -> TextureAsset.MEGAMAN_RATTY_CLAWS.source
+            MegamanWeapon.REACTOR_SHOT -> TextureAsset.MEGAMAN_REACTOR_SHOT.source
+            MegamanWeapon.INFERNAL_BARRAGE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
+            MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
+        }
+
         fun buildFullKey(regionKey: String, weapon: MegamanWeapon) =
             "${regionKey}_${weapon.name.lowercase().replace("_", "")}"
     }
@@ -36,18 +49,7 @@ class MegamanAnimations(
 
     override fun init(vararg params: Any) {
         MegamanWeapon.entries.forEach { weapon ->
-            val assetSource = when (weapon) {
-                MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
-                MegamanWeapon.FRIGID_SHOT -> TextureAsset.MEGAMAN_ICE_CUBE.source
-                MegamanWeapon.AXE_SWINGER -> TextureAsset.MEGAMAN_AXE_THROW.source
-                MegamanWeapon.RUSH_JET -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
-                MegamanWeapon.NEEDLE_SPIN -> TextureAsset.MEGAMAN_NEEDLE_SPIN.source
-                MegamanWeapon.MOON_SCYTHES -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
-                MegamanWeapon.RODENT_CLAWS -> TextureAsset.MEGAMAN_RATTY_CLAWS.source
-                MegamanWeapon.REACTOR_SHOT -> TextureAsset.MEGAMAN_REACTOR_SHOT.source
-                MegamanWeapon.INFERNAL_BARRAGE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
-                MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
-            }
+            val assetSource = getAssetSourceForWeapon(weapon)
             val atlas = game.assMan.getTextureAtlas(assetSource)
 
             MegamanAnimationDefs.getKeys().forEach { defKey ->

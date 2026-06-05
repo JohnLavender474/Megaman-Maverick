@@ -175,6 +175,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/Megaman_v2_RushJet/airdash.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/airdash_shoot.png</key>
+            <key type="filename">../frames/Megaman_v2_RushJet/beam.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/climb_finish.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/climb_still_shoot.png</key>
             <key type="filename">../frames/Megaman_v2_RushJet/crouch.png</key>
@@ -284,6 +285,21 @@
                 <rect>24,24,48,48</rect>
                 <key>scale9Paddings</key>
                 <rect>24,24,48,48</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/Megaman_v2_RushJet/spawn.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>84,12,168,24</rect>
+                <key>scale9Paddings</key>
+                <rect>84,12,168,24</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

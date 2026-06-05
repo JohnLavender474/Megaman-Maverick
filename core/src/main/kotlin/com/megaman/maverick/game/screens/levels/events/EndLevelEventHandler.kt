@@ -2,6 +2,7 @@ package com.megaman.maverick.game.screens.levels.events
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
@@ -23,12 +24,13 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
 import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -43,6 +45,9 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         private const val BEAM_UP_DUR = 0.5f
         private const val BEAM_TRANS_DUR = 0.2f
         private const val BEAM_END_DUR = 0.5f
+
+        private val BEAM_REGIONS = ObjectMap<String, TextureRegion>()
+        private val BEAM_TRANS_ANIMS = ObjectMap<String, Animation>()
     }
 
     val finished: Boolean
@@ -60,9 +65,9 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     private val beamTransitionTimer = Timer(BEAM_TRANS_DUR).setToEnd()
     private val beamEndTimer = Timer(BEAM_END_DUR).setToEnd()
 
-    private lateinit var beamRegion: TextureRegion
     private lateinit var beamSprite: GameSprite
     private lateinit var beamTransAnim: Animation
+    private lateinit var beamRegion: TextureRegion
 
     private val beamCenter = Vector2()
 
@@ -70,19 +75,24 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
     override fun init(vararg params: Any) {
         GameLogger.debug(PlayerSpawnEventHandler.TAG, "init()")
-
         if (!initialized) {
-            initialized = true
+            MegamanWeapon.entries.forEach { weapon ->
+                val atlas = game.assMan.getTextureAtlas(MegamanAnimations.getAssetSourceForWeapon(weapon))
+                val key = weapon.name
+                atlas.findRegion(ConstKeys.BEAM)?.let { BEAM_REGIONS.put(key, it) }
+                atlas.findRegion(ConstKeys.SPAWN)?.let {
+                    BEAM_TRANS_ANIMS.put(key, Animation(it, 1, 7, 0.05f, false).reversed())
+                }
+            }
 
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
-
-            beamRegion = atlas.findRegion(ConstKeys.BEAM)
+            beamRegion = BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)
+            beamTransAnim = BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name)
 
             val priority = DrawingPriority()
             beamSprite = GameSprite(beamRegion, megaman.getSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
-            beamTransAnim = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false).reversed()
+            initialized = true
         }
 
         startDelayTimer.reset()
@@ -95,9 +105,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         megaman.setAllBehaviorsAllowed(false)
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
-
         game.audioMan.stopMusic()
     }
 
@@ -147,6 +155,11 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
             megaman.ready = false
 
+            val weaponKey = megaman.currentWeapon.name
+            beamRegion = BEAM_REGIONS.get(weaponKey) ?: BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)
+            beamTransAnim = (BEAM_TRANS_ANIMS.get(weaponKey) ?: BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name))
+                .also { it.reset() }
+
             beamSprite.setOriginCenter()
             beamSprite.rotation = megaman.direction.rotation
             val position = DirectionPositionMapper.getInvertedPosition(megaman.direction)
@@ -194,15 +207,11 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
     private fun beamEnd(delta: Float) {
         beamEndTimer.update(delta)
-
         if (beamEndTimer.isFinished()) {
             GameLogger.debug(TAG, "beam end timer just finished")
-
             game.audioMan.stopMusic()
-
             val level = game.getCurrentLevel()
             game.eventsMan.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
-
             game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
         }
     }
