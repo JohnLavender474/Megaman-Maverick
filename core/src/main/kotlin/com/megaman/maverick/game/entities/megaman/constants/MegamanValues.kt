@@ -99,7 +99,8 @@ object MegamanValues {
 
     const val SPAWNING_DUR = 0.05f
 
-    const val CROUCH_DELAY = 0.05f
+    const val BUTTON_TO_CROUCH_DELAY = 0.05f
+    const val GROUND_SLIDE_TO_CROUCH_DELAY = 0.15f
     const val CROUCH_MAX_VEL = 1f
 
     const val STUN_DUR = 0.25f

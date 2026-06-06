@@ -60,11 +60,8 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.StunType
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getContactWater
-import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
@@ -148,6 +145,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     internal var runTime = 0f
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
     internal val postActionMomentumTimer = Timer(MegamanValues.POST_ACTION_MOMENTUM_DUR).setToEnd()
+
+    internal val groundSlideToCrouchDelay = Timer(MegamanValues.GROUND_SLIDE_TO_CROUCH_DELAY)
+    internal val buttonToCrouchDelay = Timer(MegamanValues.BUTTON_TO_CROUCH_DELAY)
+
     private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
     private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
@@ -531,17 +532,14 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 if (event.key == EventType.BEGIN_ROOM_TRANS) roomTransPauseTimer.reset()
 
                 val position = event.getProperty(ConstKeys.POSITION, Vector2::class)!!
-
                 if (event.key == EventType.BEGIN_ROOM_TRANS) GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN ROOM TRANS: position=$position"
                 )
 
                 body.setCenter(position)
                 body.physics.gravityOn = false
-
                 if (event.key == EventType.BEGIN_ROOM_TRANS && !body.hasProperty(ConstKeys.VELOCITY))
                     body.putProperty(ConstKeys.VELOCITY, body.physics.velocity.cpy())
-
                 body.physics.velocity.setZero()
 
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
@@ -549,9 +547,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
             EventType.END_ROOM_TRANS -> {
                 val setVel = event.getOrDefaultProperty(ConstKeys.VELOCITY, true, Boolean::class)
-
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "endRoomTrans(): setVel=$setVel")
-
                 when {
                     setVel && !isAnyBehaviorActive(
                         BehaviorType.CLIMBING,
@@ -561,12 +557,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                         val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
                         velocity?.let { body.physics.velocity.set(it) }
                     }
-
                     else -> body.physics.velocity.setZero()
                 }
-
                 body.physics.gravityOn = !isBehaviorActive(BehaviorType.CLIMBING)
-
                 body.removeProperty(ConstKeys.VELOCITY)
             }
 
@@ -574,10 +567,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "GATE_INIT_OPENING")
 
                 body.physics.gravityOn = false
-
                 if (!body.hasProperty(ConstKeys.VELOCITY))
                     body.putProperty(ConstKeys.VELOCITY, body.physics.velocity.cpy())
-
                 body.physics.velocity.setZero()
 
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
@@ -657,19 +648,16 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                         (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
                     body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
                 }
-
                 Direction.DOWN -> {
                     body.physics.velocity.x =
                         (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
                     body.physics.velocity.y = -MegamanValues.DMG_Y * ConstVals.PPM
                 }
-
                 Direction.LEFT -> {
                     body.physics.velocity.x = -MegamanValues.DMG_Y * ConstVals.PPM
                     body.physics.velocity.y =
                         (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
                 }
-
                 Direction.RIGHT -> {
                     body.physics.velocity.x = MegamanValues.DMG_Y * ConstVals.PPM
                     body.physics.velocity.y =
@@ -749,8 +737,10 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             wallJumpTimer.update(delta)
             roomTransPauseTimer.update(delta)
 
-            if (feetOnGround || FacingUtils.isFacingBlock(this))
-                postActionMomentumTimer.update(delta)
+            if (feetOnGround) {
+                if (currentWeapon == MegamanWeapon.RODENT_CLAWS) stopMomentum(!running)
+                else postActionMomentumTimer.update(delta)
+            } else if (FacingUtils.isFacingBlock(this)) stopMomentum(!running)
 
             if (
                 body.isSensing(BodySense.IN_WATER) &&
@@ -970,6 +960,24 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         val shot = weaponsHandler.fireWeapon(currentWeapon, chargeStatus)
         if (shot) shootAnimTimer.reset()
         return shot
+    }
+
+    fun shouldPreserveMomentum(checkTimer: Boolean): Boolean {
+        if (currentWeapon == MegamanWeapon.RODENT_CLAWS) return false
+        if (body.isSensingAny(BodySense.FEET_ON_ICE, BodySense.FEET_ON_SNOW)) return true
+        return !checkTimer || !postActionMomentumTimer.isFinished()
+    }
+
+    fun preserveMomentum() {
+        postActionMomentumTimer.reset()
+    }
+
+    fun stopMomentum(stopMegaman: Boolean) {
+        postActionMomentumTimer.setToEnd()
+        if (stopMegaman) when (direction) {
+            Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
+            else -> body.physics.velocity.y = 0f
+        }
     }
 
     override fun getType() = EntityType.MEGAMAN

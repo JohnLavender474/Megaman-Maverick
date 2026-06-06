@@ -122,15 +122,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         when (processState) {
             ProcessState.BEGIN, ProcessState.CONTINUE -> {
                 val block = fixture.getEntity() as Block
-
                 if (block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) && body.physics.velocity.y > 0f) {
                     feetGravitySet.remove(fixture)
                     return@consumer
                 }
-
                 feetGravitySet.add(fixture)
             }
-
             ProcessState.END -> feetGravitySet.remove(fixture)
         }
     }
@@ -274,7 +271,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
 
+        if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) when (direction) {
+            Direction.UP, Direction.DOWN -> body.physics.velocity.y = 0f
+            else -> body.physics.velocity.x = 0f
+        }
+
         var gravityValue = when {
+            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0f
             body.isSensing(BodySense.IN_WATER) -> when {
                 wallSlidingOnIce || frozen -> waterIceGravity
                 else -> waterGravity

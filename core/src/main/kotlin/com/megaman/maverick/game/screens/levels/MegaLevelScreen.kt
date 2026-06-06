@@ -278,12 +278,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
             val current = cameraManagerForRooms.currentGameRoom!!
-
             if (current.properties.get(ConstKeys.FADE_OUT_MUSIC, Boolean::class.java) == true)
                 audioMan.fadeOutMusic(FADE_OUT_MUSIC_DUR)
-
             val prior = cameraManagerForRooms.priorGameRoom
-
             eventsMan.submitEvent(
                 Event(
                     EventType.BEGIN_ROOM_TRANS, props(

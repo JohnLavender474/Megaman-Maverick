@@ -130,7 +130,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             timer.reset()
 
             val impulse = GameObjectPools.fetch(Vector2::class)
-
             when (direction) {
                 Direction.UP -> impulse.set(0f, swimVel)
                 Direction.DOWN -> impulse.set(0f, -swimVel)
@@ -237,10 +236,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL)
                 requestToPlaySound(SoundAsset.SMB3_JUMP_SOUND, false)
-
             canMakeLandSound = true
 
-            postActionMomentumTimer.setToEnd()
+            stopMomentum(false)
 
             GameLogger.debug(MEGAMAN_JUMP_BEHAVIOR_TAG, "init(): velocity=$v")
         },
@@ -300,9 +298,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             )
 
             body.physics.gravityOn = false
-
             aButtonTask = AButtonTask.JUMP
-
             if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
 
             var impulseValue = ConstVals.PPM * movementScalar *
@@ -315,9 +311,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.LEFT -> impulse.y = impulseValue * facing.value
                 Direction.RIGHT -> impulse.y = impulseValue * -facing.value
             }
-
             lastFacing = facing
-
             putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, direction)
         }
 
@@ -334,7 +328,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             body.physics.velocity.set(impulse)
 
-            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
+            // Always preserve momentum when air dashing
+            preserveMomentum()
         }
 
         override fun end() {
@@ -362,22 +357,28 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             if (currentWeapon == MegamanWeapon.RUSH_JET) jetpackHandler.reset()
 
-            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
+            // Always preserve momentum when air dashing
+            preserveMomentum()
         }
     }
 
     val crouch = object : AbstractBehaviorImpl() {
 
-        private val timer = Timer(MegamanValues.CROUCH_DELAY)
-
         override fun evaluate(delta: Float): Boolean {
-            // always update the timer if Megaman has the crouch ability, even when the `if` below returns false
             when {
-                !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
-                    isBehaviorActive(BehaviorType.GROUND_SLIDING) -> timer.reset()
-
-                else -> timer.update(delta)
+                !game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> buttonToCrouchDelay.reset()
+                currentWeapon == MegamanWeapon.RODENT_CLAWS && isBehaviorActive(BehaviorType.GROUND_SLIDING) ->
+                    buttonToCrouchDelay.setToEnd()
+                else -> buttonToCrouchDelay.update(delta)
             }
+
+            when {
+                isBehaviorActive(BehaviorType.GROUND_SLIDING) -> groundSlideToCrouchDelay.reset()
+                currentWeapon == MegamanWeapon.RODENT_CLAWS -> groundSlideToCrouchDelay.setToEnd()
+                else -> groundSlideToCrouchDelay.update(delta)
+            }
+
+            if (!buttonToCrouchDelay.isFinished() || !groundSlideToCrouchDelay.isFinished()) return false
 
             if (dead || damaged || !ready || !canMove || game.isCameraRotating() ||
                 isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.JETPACKING) ||
@@ -390,12 +391,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 } > MegamanValues.CROUCH_MAX_VEL * ConstVals.PPM
             ) return false
 
-            return timer.isFinished()
+            return true
         }
 
         override fun init(vararg params: Any) {
             if (direction.isVertical()) body.physics.velocity.x = 0f else body.physics.velocity.y = 0f
-
             when (direction) {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
@@ -414,21 +414,37 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         private val minTimer = Timer(MegamanValues.GROUND_SLIDE_MIN_TIME)
         private val maxTimer = Timer(MegamanValues.GROUND_SLIDE_MAX_TIME)
-
         private val cooldown = Timer(MegamanValues.GROUND_SLIDE_COOLDOWN)
 
+        // SPECIAL EDGE CASE: When Mega Man has the Rodent Claws weapon attached, then momentum is not preserved at
+        // the end of a ground slide, and his velocity is immediately stopped. In this case, when Mega Man attempts
+        // to ground slide off of a ledge, then he will stop at the very edge of the ledge without sliding off. In
+        // this case, if Mega Man's 'feet' fixture are no longer on the ground, then do not immediately stop him
+        // while he is ground sliding. Instead, allow the following delay to count down before stopping him.
+        private val rodentClawsFeetNotOnGroundDelay = Timer(0.05f)
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
             cooldown.update(delta)
 
             if (dead || !ready || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
-                isBehaviorActive(BehaviorType.JETPACKING) || !body.isSensing(BodySense.FEET_ON_GROUND) ||
-                !cooldown.isFinished() || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
+                isBehaviorActive(BehaviorType.JETPACKING) || !cooldown.isFinished() ||
+                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false
 
-            if (isBehaviorActive(BehaviorType.GROUND_SLIDING) && body.isSensing(BodySense.HEAD_TOUCHING_BLOCK))
-                return true
+            if (isBehaviorActive(BehaviorType.GROUND_SLIDING) &&
+                body.isSensingAll(BodySense.HEAD_TOUCHING_BLOCK, BodySense.FEET_ON_GROUND)
+            ) return true
+
+            if (currentWeapon == MegamanWeapon.RODENT_CLAWS && !body.isSensing(BodySense.FEET_ON_GROUND)) {
+                rodentClawsFeetNotOnGroundDelay.update(delta)
+                if (rodentClawsFeetNotOnGroundDelay.isFinished()) return false
+            } else {
+                rodentClawsFeetNotOnGroundDelay.reset()
+                // If Mega Man does not have the Rodent Claws equipped and his feet are not on the ground, then
+                // immediately stop ground sliding.
+                if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
+            }
 
             if (damaged || maxTimer.isFinished() ||
                 (minTimer.isFinished() && !game.controllerPoller.isPressed(MegaControllerButton.DOWN))
@@ -437,8 +453,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             return when {
                 isBehaviorActive(BehaviorType.GROUND_SLIDING) -> !minTimer.isFinished() ||
                     (game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == direction)
-
-                else -> game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
+                else -> body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
                     game.controllerPoller.isJustPressed(MegaControllerButton.A)
             }
         }
@@ -448,6 +464,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             minTimer.reset()
             maxTimer.reset()
+            rodentClawsFeetNotOnGroundDelay.reset()
 
             when (direction) {
                 Direction.UP -> {}
@@ -490,7 +507,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.RIGHT -> body.physics.velocity.y = vel * -facing.value
             }
 
-            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
+            if (shouldPreserveMomentum(false)) preserveMomentum() else stopMomentum(false)
         }
 
         override fun end() {
@@ -501,10 +518,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             minTimer.reset()
             maxTimer.reset()
-
             cooldown.reset()
+            rodentClawsFeetNotOnGroundDelay.reset()
 
-            postActionMomentumTimer.resetDuration(MegamanValues.POST_ACTION_MOMENTUM_DUR)
+            if (shouldPreserveMomentum(false)) preserveMomentum() else stopMomentum(true)
         }
     }
 
@@ -772,8 +789,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
     behaviorsComponent.addBehavior(BehaviorType.SWIMMING, swim)
     behaviorsComponent.addBehavior(BehaviorType.JUMPING, jump)
     behaviorsComponent.addBehavior(BehaviorType.AIR_DASHING, airDash)
-    behaviorsComponent.addBehavior(BehaviorType.CROUCHING, crouch)
     behaviorsComponent.addBehavior(BehaviorType.GROUND_SLIDING, groundSlide)
+    behaviorsComponent.addBehavior(BehaviorType.CROUCHING, crouch)
     behaviorsComponent.addBehavior(BehaviorType.CLIMBING, climb)
     behaviorsComponent.addBehavior(BehaviorType.JETPACKING, jetpacking)
 
