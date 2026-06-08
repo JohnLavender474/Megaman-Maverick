@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.items.HeartTank
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.sensors.Gate
@@ -1389,12 +1390,13 @@ class MegaContactListener(
             body.removeFeetBlock(block)
             if (!body.hasAnyFeetBlock()) body.setBodySense(BodySense.FEET_ON_GROUND, false)
 
-            val entity = feetFixture.getEntity()
-            when (entity) {
+            when (val entity = feetFixture.getEntity()) {
                 is Megaman -> {
-                    entity.aButtonTask = when {
-                        entity.body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
-                        else -> AButtonTask.AIR_DASH
+                    if (!entity.bodyOverGround) {
+                        entity.aButtonTask = when {
+                            entity.body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
+                            else -> AButtonTask.AIR_DASH
+                        }
                     }
                     if (!body.hasAnyFeetBlock()) entity.canMakeLandSound = true
                 }

@@ -11,7 +11,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.feetOnGround
+import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.world.body.getBounds
@@ -82,7 +82,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     isBehaviorActive(BehaviorType.SWIMMING) -> amendKey("swim")
 
-    isBehaviorActive(BehaviorType.JUMPING) || !feetOnGround -> amendKey("jump")
+    isBehaviorActive(BehaviorType.JUMPING) || !bodyOverGround -> amendKey("jump")
 
     running -> amendKey("run")
 

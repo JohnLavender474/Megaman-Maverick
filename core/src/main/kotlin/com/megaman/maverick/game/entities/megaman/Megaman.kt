@@ -743,17 +743,17 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             shootAnimTimer.update(delta)
             roomTransPauseTimer.update(delta)
 
-            if (feetOnGround) {
+            if (bodyOverGround) {
                 if (currentWeapon == MegamanWeapon.RODENT_CLAWS) stopMomentum(!running)
                 else postActionMomentumTimer.update(delta)
             } else if (FacingUtils.isFacingBlock(this)) stopMomentum(!running)
 
-            if (feetOnGround &&
+            if (bodyOverGround &&
                 pendingPostActionMomentumKill &&
                 !body.isSensing(BodySense.FEET_ON_ICE)
             ) killPostActionMomentum()
 
-            if (!running && feetOnGround && !postActionMomentumTimer.isFinished() &&
+            if (!running && bodyOverGround && !postActionMomentumTimer.isFinished() &&
                 !isBehaviorActive(BehaviorType.GROUND_SLIDING) &&
                 !body.isSensing(BodySense.FEET_ON_ICE)
             ) {

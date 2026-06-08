@@ -153,7 +153,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 !game.controllerPoller.isPressed(MegaControllerButton.A) ||
-                (feetOnGround && game.controllerPoller.isPressed(MegaControllerButton.DOWN)) ||
+                (bodyOverGround && game.controllerPoller.isPressed(MegaControllerButton.DOWN)) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@FunctionalBehaviorImpl false
 
@@ -169,7 +169,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             return@FunctionalBehaviorImpl aButtonTask == AButtonTask.JUMP &&
                 game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
-                (feetOnGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
+                (bodyOverGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
         },
         init = {
             when {

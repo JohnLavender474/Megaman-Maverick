@@ -67,8 +67,8 @@ val Megaman.bodyFixture: Fixture
 val Megaman.damageableFixture: Fixture
     get() = body.getProperty(ConstKeys.DAMAGEABLE, Fixture::class)!!
 
-val Megaman.feetOnGround: Boolean
-    get() = (body.getProperty(ConstKeys.FEET_ON_GROUND) as () -> Boolean).invoke()
+val Megaman.bodyOverGround: Boolean
+    get() = (body.getProperty(ConstKeys.BODY_OVER_GROUND) as () -> Boolean).invoke()
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
@@ -112,8 +112,14 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,
     // then Megaman's gravity should be adjusted accordingly. Note the differences in size and offset between this feet
     // fixture and the other feet fixture.
-    val feetGravityFixture =
-        Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.9f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+    val feetGravityFixture = Fixture(
+        body,
+        FixtureType.CONSUMER,
+        GameRectangle().setSize(
+            (MEGAMAN_BODY_WIDTH - 0.05f) * ConstVals.PPM,
+            0.1f * ConstVals.PPM
+        )
+    )
     feetGravityFixture.setFilter { it.getType() == FixtureType.BLOCK }
     val feetGravitySet = ObjectSet<IFixture>()
     feetGravityFixture.putProperty(ConstKeys.SET, feetGravitySet)
@@ -130,8 +136,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             ProcessState.END -> feetGravitySet.remove(fixture)
         }
     }
-    val isFeetOnGround: () -> Boolean = { !feetGravitySet.isEmpty }
-    body.putProperty(ConstKeys.FEET_ON_GROUND, isFeetOnGround)
+    val isBodyOverGround: () -> Boolean = { !feetGravitySet.isEmpty }
+    body.putProperty(ConstKeys.BODY_OVER_GROUND, isBodyOverGround)
     body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
     body.addFixture(feetGravityFixture)
 
@@ -254,9 +260,14 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         }
         axeShieldFixture.putProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", axeShieldReflectDir)
 
-        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
+        feetGravityFixture.offsetFromBodyAttachment.x = when {
+            body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) -> 0.025f * ConstVals.PPM
+            body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) -> -0.025f * ConstVals.PPM
+            else -> 0f
+        }
         feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
 
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f

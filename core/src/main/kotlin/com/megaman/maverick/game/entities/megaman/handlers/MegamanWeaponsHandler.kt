@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
-import com.megaman.maverick.game.entities.megaman.components.feetOnGround
+import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -468,7 +468,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     val nextSlashIndex = when {
                         priorSlashIndex >= 3 ||
                             resetTimer.isFinished() ||
-                            !megaman.feetOnGround ||
+                            !megaman.bodyOverGround ||
                             megaman.isAnyBehaviorActive(
                                 BehaviorType.WALL_SLIDING,
                                 BehaviorType.GROUND_SLIDING,
@@ -679,7 +679,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     private fun computeShootingDown(): Boolean {
         // Set Megaman's "shoot_down" property to true/false based on "shootingDown"
-        val shootingDown = (megaman.isBehaviorActive(BehaviorType.JUMPING) || !megaman.feetOnGround) &&
+        val shootingDown = (megaman.isBehaviorActive(BehaviorType.JUMPING) || !megaman.bodyOverGround) &&
             !megaman.isAnyBehaviorActive(BehaviorType.AIR_DASHING, BehaviorType.WALL_SLIDING) &&
             game.controllerPoller.isPressed(MegaControllerButton.DOWN)
 
@@ -1131,7 +1131,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     private fun slashClaws() {
         val slashKey = when {
-            !megaman.feetOnGround ||
+            !megaman.bodyOverGround ||
                 megaman.isAnyBehaviorActive(
                     BehaviorType.WALL_SLIDING,
                     BehaviorType.GROUND_SLIDING,
