@@ -112,11 +112,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // The feet gravity fixture is a consumer that checks for overlap with blocks. If there is a contact with a block,
     // then Megaman's gravity should be adjusted accordingly. Note the differences in size and offset between this feet
     // fixture and the other feet fixture.
-    val feetGravityFixture = Fixture(
-        body,
-        FixtureType.CONSUMER,
-        GameRectangle().setSize((MEGAMAN_BODY_WIDTH - 0.1f) * ConstVals.PPM, 0.1f * ConstVals.PPM)
-    )
+    val feetGravityRect = GameRectangle().setHeight(0.1f * ConstVals.PPM)
+    val feetGravityFixture = Fixture(body, FixtureType.CONSUMER, feetGravityRect)
     feetGravityFixture.setFilter { it.getType() == FixtureType.BLOCK }
     val feetGravitySet = ObjectSet<IFixture>()
     feetGravityFixture.putProperty(ConstKeys.SET, feetGravitySet)
@@ -257,8 +254,13 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         }
         axeShieldFixture.putProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", axeShieldReflectDir)
 
+        val feetGravityWidth = when {
+            isBehaviorActive(BehaviorType.WALL_SLIDING) -> MEGAMAN_BODY_WIDTH - 0.35f
+            else -> MEGAMAN_BODY_WIDTH - 0.1f
+        }
+        feetGravityRect.setWidth(feetGravityWidth * ConstVals.PPM)
         feetGravityFixture.offsetFromBodyAttachment.x = when {
-            isBehaviorActive(BehaviorType.CLIMBING) || body.isSensingAll(
+            isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING) || body.isSensingAll(
                 BodySense.SIDE_TOUCHING_BLOCK_LEFT,
                 BodySense.SIDE_TOUCHING_BLOCK_RIGHT
             ) -> 0f
