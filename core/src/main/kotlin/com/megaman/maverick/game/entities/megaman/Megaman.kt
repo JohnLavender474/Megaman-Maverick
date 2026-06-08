@@ -813,6 +813,17 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             }
 
             wallSlideNotAllowedTimer.update(delta)
+
+            if (!bodyOverGround && aButtonTask == AButtonTask.JUMP &&
+                !isAnyBehaviorActive(
+                    BehaviorType.WALL_SLIDING,
+                    BehaviorType.CLIMBING,
+                    BehaviorType.JUMPING
+                )
+            ) aButtonTask = when {
+                body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
+                else -> AButtonTask.AIR_DASH
+            }
         }
     }
 
