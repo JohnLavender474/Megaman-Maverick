@@ -281,6 +281,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Main Menu
   - Intro Stage 
+  - Intro Boss
   - Stage Select
   - Stage Intro
   - Stage Victory
@@ -289,6 +290,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Wily Stage Select
   - Inferno Man Stage
   - Glacier Man Stage
+  - Credits
 - [Cody O'Quinn](https://www.youtube.com/channel/UC3YB69gazd6mzXMGpPHdyTQ)
   - Desert Man Stage - [8-Bit Music - "Battle Man"](https://youtu.be/zA1SwzvHsZw)
 - [ryanavx](https://ryanavx.itch.io/)
