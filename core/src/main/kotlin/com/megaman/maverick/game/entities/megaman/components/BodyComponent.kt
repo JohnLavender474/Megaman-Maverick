@@ -94,8 +94,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 if (behavior?.isActive() == true) behavior.reset()
             }
         }
-
-        wallSlideNotAllowedTimer.resetDuration(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY_ON_BOUNCE)
+        wallSlideNotAllowedTimer.reset()
     }
 
     val feetFixture =
@@ -341,6 +340,8 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 }
             }
         }
+
+        if (body.isSensing(BodySense.FEET_ON_ICE)) preserveMomentum()
     }
 
     addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

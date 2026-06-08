@@ -20,6 +20,7 @@ object MegamanValues {
     const val RUN_3_SCALAR = 1f
 
     const val POST_ACTION_MOMENTUM_DUR = 0.35f
+    const val POST_ACTION_BURST_RESISTANCE = 16f
 
     const val RUN_MAX_SPEED = 6f
     const val RUN_IMPULSE = 40f
@@ -107,7 +108,7 @@ object MegamanValues {
     const val STUN_IMPULSE_X = 2.5f
     const val STUN_IMPULSE_Y = 2f
 
-    const val WALLSLIDE_NOT_ALLOWED_DELAY_ON_BOUNCE = 0.1f
+    const val WALLSLIDE_NOT_ALLOWED_DELAY = 0.1f
 
     const val HITS_TO_UNFREEZE = 3
     const val FROZEN_PUSH_DUR = 0.2f

@@ -60,8 +60,11 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.StunType
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.getContactWater
+import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
@@ -144,7 +147,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     internal var runTime = 0f
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
+
     internal val postActionMomentumTimer = Timer(MegamanValues.POST_ACTION_MOMENTUM_DUR).setToEnd()
+    internal var pendingPostActionMomentumKill = false
 
     internal val groundSlideToCrouchDelay = Timer(MegamanValues.GROUND_SLIDE_TO_CROUCH_DELAY)
     internal val buttonToCrouchDelay = Timer(MegamanValues.BUTTON_TO_CROUCH_DELAY)
@@ -326,7 +331,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
     internal val spawningTimer = Timer(MegamanValues.SPAWNING_DUR)
 
-    internal val wallSlideNotAllowedTimer = Timer()
+    internal val wallSlideNotAllowedTimer = Timer(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY)
 
     private val damageListeners = OrderedSet<IMegamanDamageListener>()
 
@@ -465,8 +470,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         roomTransPauseTimer.setToEnd()
 
-        wallSlideNotAllowedTimer.resetDuration(0f)
+        wallSlideNotAllowedTimer.reset()
         postActionMomentumTimer.setToEnd()
+        pendingPostActionMomentumKill = false
 
         putProperty(ConstKeys.ON_TELEPORT_START, { teleporter: ITeleporterEntity ->
             stopCharging()
@@ -733,14 +739,32 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             }
             if (damageRecoveryTimer.isJustFinished()) recoveryFlash = false
 
-            shootAnimTimer.update(delta)
             wallJumpTimer.update(delta)
+            shootAnimTimer.update(delta)
             roomTransPauseTimer.update(delta)
 
             if (feetOnGround) {
                 if (currentWeapon == MegamanWeapon.RODENT_CLAWS) stopMomentum(!running)
                 else postActionMomentumTimer.update(delta)
             } else if (FacingUtils.isFacingBlock(this)) stopMomentum(!running)
+
+            if (feetOnGround &&
+                pendingPostActionMomentumKill &&
+                !body.isSensing(BodySense.FEET_ON_ICE)
+            ) killPostActionMomentum()
+
+            if (!running && feetOnGround && !postActionMomentumTimer.isFinished() &&
+                !isBehaviorActive(BehaviorType.GROUND_SLIDING) &&
+                !body.isSensing(BodySense.FEET_ON_ICE)
+            ) {
+                val decay = kotlin.math.exp(
+                    -MegamanValues.POST_ACTION_BURST_RESISTANCE * delta
+                )
+                when (direction) {
+                    Direction.UP, Direction.DOWN -> body.physics.velocity.x *= decay
+                    else -> body.physics.velocity.y *= decay
+                }
+            }
 
             if (
                 body.isSensing(BodySense.IN_WATER) &&
@@ -963,8 +987,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     }
 
     fun shouldPreserveMomentum(checkTimer: Boolean): Boolean {
-        if (currentWeapon == MegamanWeapon.RODENT_CLAWS) return false
-        if (body.isSensingAny(BodySense.FEET_ON_ICE, BodySense.FEET_ON_SNOW)) return true
+        if (body.isSensing(BodySense.FEET_ON_SNOW) ||
+            currentWeapon == MegamanWeapon.RODENT_CLAWS
+        ) return false
+
+        if (body.isSensing(BodySense.FEET_ON_ICE)) return true
+
         return !checkTimer || !postActionMomentumTimer.isFinished()
     }
 
@@ -978,6 +1006,17 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
             else -> body.physics.velocity.y = 0f
         }
+    }
+
+    fun killPostActionMomentum() {
+        val maxRun = getMaxRunSpeed()
+        when (direction) {
+            Direction.UP, Direction.DOWN ->
+                body.physics.velocity.x = body.physics.velocity.x.coerceIn(-maxRun, maxRun)
+            else ->
+                body.physics.velocity.y = body.physics.velocity.y.coerceIn(-maxRun, maxRun)
+        }
+        pendingPostActionMomentumKill = false
     }
 
     override fun getType() = EntityType.MEGAMAN

@@ -359,6 +359,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             // Always preserve momentum when air dashing
             preserveMomentum()
+
+            // Kill excess horizontal momentum on landing after the dash so players
+            // can perform tight platforming without sliding past their target.
+            pendingPostActionMomentumKill = true
         }
     }
 
@@ -522,6 +526,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             rodentClawsFeetNotOnGroundDelay.reset()
 
             if (shouldPreserveMomentum(false)) preserveMomentum() else stopMomentum(true)
+
+            // Clamp horizontal velocity to max run speed and trigger the friction
+            // burst so post-slide overspeed bleeds off quickly on the ground.
+            if (body.isSensing(BodySense.FEET_ON_GROUND)) killPostActionMomentum()
+            else pendingPostActionMomentumKill = true
         }
     }
 
