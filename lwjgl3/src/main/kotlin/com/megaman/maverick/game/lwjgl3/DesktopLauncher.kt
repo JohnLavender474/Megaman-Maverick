@@ -9,6 +9,7 @@ import com.beust.jcommander.ParameterException
 import com.mega.game.engine.common.GameLogLevel
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.MegamanMaverickGame.Performance
+import com.megaman.maverick.game.MegamanMaverickGame.RunType
 import com.megaman.maverick.game.MegamanMaverickGameParams
 import kotlin.system.exitProcess
 
@@ -18,6 +19,7 @@ object DesktopLauncher {
     private const val TITLE = "Megaman Maverick"
     private const val WINDOW_ICON_PATH = "Megaman.png"
 
+    private val DEFAULT_RUN_TYPE = RunType.GAME.name
     private val DEFAULT_PERFORMANCE = Performance.MEDIUM.name
     private const val DEFAULT_WIDTH = 1920
     private const val DEFAULT_HEIGHT = 1080
@@ -59,6 +61,7 @@ object DesktopLauncher {
         }
 
         println("Game loaded with arguments:")
+        println("- Run Type: " + appArgs.runType)
         println("- Performance: " + appArgs.performance)
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
@@ -87,7 +90,10 @@ object DesktopLauncher {
             else -> config.setWindowedMode(appArgs.width, appArgs.height)
         }
 
+        val runType = RunType.valueOf(appArgs.runType.uppercase())
+
         val params = MegamanMaverickGameParams()
+        params.runType = runType
         params.performance = performance
         params.vsync = appArgs.vsync
         params.debugText = appArgs.debugText
@@ -147,6 +153,12 @@ object DesktopLauncher {
     }
 
     class DesktopAppArgs {
+        @Parameter(
+            names = ["--runType"],
+            description = "The type of run to perform ('game' or 'test')"
+        )
+        var runType = DEFAULT_RUN_TYPE
+
         @Parameter(
             names = ["--performance"],
             description = "Performance of the game: low, medium, or high.",

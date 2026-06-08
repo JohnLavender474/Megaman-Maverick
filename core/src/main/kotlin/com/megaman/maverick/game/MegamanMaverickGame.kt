@@ -69,6 +69,7 @@ import com.mega.game.engine.world.WorldSystem
 import com.mega.game.engine.world.contacts.Contact
 import com.mega.game.engine.world.container.IWorldContainer
 import com.megaman.maverick.game.MegamanMaverickGame.Performance
+import com.megaman.maverick.game.MegamanMaverickGame.RunType
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -116,6 +117,7 @@ import kotlin.reflect.cast
 
 class MegamanMaverickGameParams {
     lateinit var performance: Performance
+    var runType: RunType = RunType.GAME
     var writeLogsToFile: Boolean = false
     var debugWindow: Boolean = false
     var debugShapes: Boolean = false
@@ -144,6 +146,8 @@ class MegamanMaverickGame(
         HIGH(90, 1f / 300f),
         VERY_HIGH(120, 1f / 400f)
     }
+
+    enum class RunType { GAME, TEST }
 
     companion object {
         const val TAG = "MegamanMaverickGame"
@@ -394,7 +398,10 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.ENDING_SCREEN.name, EndingScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
 
-        setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+        when (params.runType) {
+            RunType.GAME -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+            RunType.TEST -> startLevel(LevelDefinition.TEST)
+        }
     }
 
     override fun render() {

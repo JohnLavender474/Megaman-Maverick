@@ -115,10 +115,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val feetGravityFixture = Fixture(
         body,
         FixtureType.CONSUMER,
-        GameRectangle().setSize(
-            (MEGAMAN_BODY_WIDTH - 0.05f) * ConstVals.PPM,
-            0.1f * ConstVals.PPM
-        )
+        GameRectangle().setSize((MEGAMAN_BODY_WIDTH - 0.1f) * ConstVals.PPM, 0.1f * ConstVals.PPM)
     )
     feetGravityFixture.setFilter { it.getType() == FixtureType.BLOCK }
     val feetGravitySet = ObjectSet<IFixture>()
@@ -261,8 +258,12 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         axeShieldFixture.putProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", axeShieldReflectDir)
 
         feetGravityFixture.offsetFromBodyAttachment.x = when {
-            body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) -> 0.025f * ConstVals.PPM
-            body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) -> -0.025f * ConstVals.PPM
+            isBehaviorActive(BehaviorType.CLIMBING) || body.isSensingAll(
+                BodySense.SIDE_TOUCHING_BLOCK_LEFT,
+                BodySense.SIDE_TOUCHING_BLOCK_RIGHT
+            ) -> 0f
+            body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) -> 0.1f * ConstVals.PPM
+            body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) -> -0.1f * ConstVals.PPM
             else -> 0f
         }
         feetGravityFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
@@ -292,12 +293,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 wallSlidingOnIce || frozen -> waterIceGravity
                 else -> waterGravity
             }
-            !feetGravitySet.isEmpty -> groundGravity
+            bodyOverGround -> groundGravity
             wallSlidingOnIce || frozen -> iceGravity
             isBehaviorActive(BehaviorType.JUMPING) -> jumpGravity
             else -> fallGravity
         }
-
         gravityValue *= gravityScalar
 
         when (direction) {

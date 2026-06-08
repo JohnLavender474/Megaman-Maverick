@@ -167,9 +167,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 }
             }
 
-            return@FunctionalBehaviorImpl aButtonTask == AButtonTask.JUMP &&
+            return@FunctionalBehaviorImpl (
+                aButtonTask == AButtonTask.JUMP &&
                 game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
                 (bodyOverGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
+            )
         },
         init = {
             when {
@@ -276,7 +278,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.WALL_SLIDING,
                 ) || FacingUtils.isFacingBlock(megaman) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
-                (currentWeapon != MegamanWeapon.RUSH_JET && body.isSensing(BodySense.FEET_ON_GROUND)) ||
+                (currentWeapon != MegamanWeapon.RUSH_JET && bodyOverGround) ||
                 (currentWeapon == MegamanWeapon.RUSH_JET &&
                     (weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) ||
                         game.controllerPoller.isPressed(MegaControllerButton.UP)))
@@ -298,7 +300,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             )
 
             body.physics.gravityOn = false
+
             aButtonTask = AButtonTask.JUMP
+            airDashConsumed = true
+
             if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
 
             var impulseValue = ConstVals.PPM * movementScalar *

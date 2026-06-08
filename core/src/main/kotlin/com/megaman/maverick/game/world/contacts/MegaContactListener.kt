@@ -1390,17 +1390,15 @@ class MegaContactListener(
             body.removeFeetBlock(block)
             if (!body.hasAnyFeetBlock()) body.setBodySense(BodySense.FEET_ON_GROUND, false)
 
-            when (val entity = feetFixture.getEntity()) {
-                is Megaman -> {
-                    if (!entity.bodyOverGround) {
-                        entity.aButtonTask = when {
-                            entity.body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
-                            else -> AButtonTask.AIR_DASH
-                        }
+            val entity = feetFixture.getEntity()
+            if (entity is Megaman) {
+                if (!entity.bodyOverGround) {
+                    entity.aButtonTask = when {
+                        entity.body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
+                        else -> AButtonTask.AIR_DASH
                     }
-                    if (!body.hasAnyFeetBlock()) entity.canMakeLandSound = true
                 }
-                else -> body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                if (!body.hasAnyFeetBlock()) entity.canMakeLandSound = true
             }
 
             block.hitByFeet(ProcessState.END, feetFixture)

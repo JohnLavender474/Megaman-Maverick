@@ -151,6 +151,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     internal val postActionMomentumTimer = Timer(MegamanValues.POST_ACTION_MOMENTUM_DUR).setToEnd()
     internal var pendingPostActionMomentumKill = false
 
+    internal var airDashConsumed = false
+
     internal val groundSlideToCrouchDelay = Timer(MegamanValues.GROUND_SLIDE_TO_CROUCH_DELAY)
     internal val buttonToCrouchDelay = Timer(MegamanValues.BUTTON_TO_CROUCH_DELAY)
 
@@ -473,6 +475,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         wallSlideNotAllowedTimer.reset()
         postActionMomentumTimer.setToEnd()
         pendingPostActionMomentumKill = false
+        airDashConsumed = false
 
         putProperty(ConstKeys.ON_TELEPORT_START, { teleporter: ITeleporterEntity ->
             stopCharging()
@@ -814,6 +817,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
             wallSlideNotAllowedTimer.update(delta)
 
+            if (bodyOverGround) airDashConsumed = false
+
             if (!bodyOverGround && aButtonTask == AButtonTask.JUMP &&
                 !isAnyBehaviorActive(
                     BehaviorType.WALL_SLIDING,
@@ -822,8 +827,14 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 )
             ) aButtonTask = when {
                 body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
-                else -> AButtonTask.AIR_DASH
+                !airDashConsumed -> AButtonTask.AIR_DASH
+                else -> AButtonTask.JUMP
             }
+
+            if (bodyOverGround && aButtonTask == AButtonTask.AIR_DASH &&
+                !body.isSensing(BodySense.IN_WATER) &&
+                !isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.AIR_DASHING)
+            ) aButtonTask = AButtonTask.JUMP
         }
     }
 

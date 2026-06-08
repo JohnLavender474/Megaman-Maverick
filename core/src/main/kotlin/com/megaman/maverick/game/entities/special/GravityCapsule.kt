@@ -47,12 +47,14 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
+import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.getBounds
 
 class GravityCapsule(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity, IDirectional {
@@ -179,7 +181,7 @@ class GravityCapsule(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISp
         megaman.direction = direction
 
         megaman.aButtonTask = when {
-            megaman.body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
+            megaman.bodyOverGround -> AButtonTask.JUMP
             else -> AButtonTask.AIR_DASH
         }
 
