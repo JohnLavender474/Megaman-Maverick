@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="747">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="500" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="29" nextobjectid="748">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/mm9endless.tsx"/>
  <layer id="13" name="fade_tiles_9" width="500" height="250" opacity="0.1">
@@ -3824,6 +3824,7 @@
    <properties>
     <property name="boss_key" value="4"/>
     <property name="end" type="bool" value="false"/>
+    <property name="ground" type="object" value="587"/>
     <property name="leaf_spawn" type="object" value="571"/>
     <property name="wall_1" type="object" value="554"/>
     <property name="wall_2" type="object" value="569"/>
@@ -4621,7 +4622,7 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="temp">
-  <object id="746" name="0" x="11488" y="1664" width="32" height="32"/>
+  <object id="747" name="0" x="10176" y="1664" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="2" name="player">
   <object id="4" name="0" x="304" y="6080" width="32" height="32"/>
