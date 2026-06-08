@@ -72,7 +72,7 @@ class CreditsScreen(
         creditsQueue = CreditsLoader.load()
 
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.VINNYZ_WIP_1_MUSIC, true)
+        game.audioMan.playMusic(MusicAsset.VINNYZ_CREDITS_MUSIC, true)
 
         val blackRegion = game.assMan.getTextureRegion(
             TextureAsset.COLORS.source,

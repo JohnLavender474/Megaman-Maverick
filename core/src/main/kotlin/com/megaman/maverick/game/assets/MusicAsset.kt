@@ -101,7 +101,14 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX3_ZERO_THEME_MUSIC("mmx3_zero_theme.ogg"),
     MM5_INTRO_MUSIC("mm5_intro.ogg"),
     VINNYZ_STAGE_START_MUSIC("stage_start.ogg"),
-    VINNYZ_VICTORY_MUSIC("vinnyz_stage_clear.ogg", loop = false);
+    VINNYZ_VICTORY_MUSIC("vinnyz_stage_clear.ogg", loop = false),
+    VINNYZ_INTRO_BOSS_MUSIC_LOOP("vinnyz_intro_boss_loop.ogg", loop = true),
+    VINNYZ_INTRO_BOSS_MUSIC_INTRO(
+        src = "vinnyz_intro_boss_intro.ogg",
+        loop = false,
+        onCompletion = { it.playMusic(VINNYZ_INTRO_BOSS_MUSIC_LOOP, true) }
+    ),
+    VINNYZ_CREDITS_MUSIC("vinnyz_credits.ogg");
 
     companion object {
         fun valuesAsIAssetArray(): Array<IAsset> {

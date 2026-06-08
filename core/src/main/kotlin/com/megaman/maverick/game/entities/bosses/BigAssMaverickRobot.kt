@@ -206,7 +206,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MUSIC, MusicAsset.MMX7_BOSS_FIGHT_MUSIC.name)
+        spawnProps.put(ConstKeys.MUSIC, MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO.name)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
