@@ -544,41 +544,47 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 if (event.key == EventType.BEGIN_ROOM_TRANS) GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN ROOM TRANS: position=$position"
                 )
-
                 body.setCenter(position)
+
+                if (event.key == EventType.BEGIN_ROOM_TRANS)  when (direction) {
+                    Direction.UP, Direction.DOWN -> {
+                        val velY = body.physics.velocity.y
+                        body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", velY)
+                    }
+                    else -> {
+                        val velX = body.physics.velocity.x
+                        body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", velX)
+                    }
+                }
+
                 body.physics.gravityOn = false
-                if (event.key == EventType.BEGIN_ROOM_TRANS && !body.hasProperty(ConstKeys.VELOCITY))
-                    body.putProperty(ConstKeys.VELOCITY, body.physics.velocity.cpy())
-                body.physics.velocity.setZero()
+
+                stopMomentum(true)
 
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
 
             EventType.END_ROOM_TRANS -> {
-                val setVel = event.getOrDefaultProperty(ConstKeys.VELOCITY, true, Boolean::class)
-                GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "endRoomTrans(): setVel=$setVel")
-                when {
-                    setVel && !isAnyBehaviorActive(
-                        BehaviorType.CLIMBING,
-                        BehaviorType.JETPACKING,
-                        BehaviorType.SWIMMING
-                    ) -> {
-                        val velocity = body.getProperty(ConstKeys.VELOCITY, Vector2::class)
-                        velocity?.let { body.physics.velocity.set(it) }
+                GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "endRoomTrans()")
+
+                if (event.key == EventType.BEGIN_ROOM_TRANS) when (direction) {
+                    Direction.UP, Direction.DOWN -> {
+                        val velY = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", Float::class)!!
+                        body.physics.velocity.y = velY
                     }
-                    else -> body.physics.velocity.setZero()
+                    else -> {
+                        val velX = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", Float::class)!!
+                        body.physics.velocity.x = velX
+                    }
                 }
+
                 body.physics.gravityOn = !isBehaviorActive(BehaviorType.CLIMBING)
-                body.removeProperty(ConstKeys.VELOCITY)
+
+                stopMomentum(true)
             }
 
             EventType.GATE_INIT_OPENING -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "GATE_INIT_OPENING")
-
-                body.physics.gravityOn = false
-                if (!body.hasProperty(ConstKeys.VELOCITY))
-                    body.putProperty(ConstKeys.VELOCITY, body.physics.velocity.cpy())
-                body.physics.velocity.setZero()
 
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
