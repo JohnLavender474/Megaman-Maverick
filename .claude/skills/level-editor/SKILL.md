@@ -1,7 +1,8 @@
 ---
 name: level-editor
-description: Use when reading, editing, or answering questions about levels or Tiled map (.tmx) files — 
-  layers, rooms, spawners, object properties, entity placement, and level structure.
+description: Use when reading, editing, or answering questions about levels, Tiled map (.tmx) files, 
+  or spawning of entities — layers, rooms, spawners, object properties, entity placement and spawns, 
+  and level structure.
 ---
 
 # Level Editor — Megaman Maverick
