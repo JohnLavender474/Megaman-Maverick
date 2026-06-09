@@ -169,9 +169,9 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             return@FunctionalBehaviorImpl (
                 aButtonTask == AButtonTask.JUMP &&
-                game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
-                (bodyOverGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
-            )
+                    game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
+                    (bodyOverGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
+                )
         },
         init = {
             when {
@@ -633,32 +633,33 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         }
 
         override fun init(vararg params: Any) {
-            game.setFocusSnappedAway(true)
-
-            aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
-            body.physics.gravityOn = false
-            canMakeLandSound = false
-
             when (direction) {
                 Direction.UP, Direction.DOWN -> {
                     body.setCenterX(ladder.body.getCenter().x)
-
                     when {
                         body.getMaxY() <= ladder.body.getY() -> body.setY(ladder.body.getY())
                         body.getY() >= ladder.body.getMaxY() -> body.setMaxY(ladder.body.getMaxY())
                     }
                 }
-
                 Direction.LEFT, Direction.RIGHT -> {
                     body.setCenterY(ladder.body.getCenter().y)
-
                     when {
                         body.getMaxX() <= ladder.body.getX() -> body.setX(ladder.body.getX())
                         body.getX() >= ladder.body.getMaxX() -> body.setMaxX(ladder.body.getMaxX())
                     }
                 }
             }
+            body.physics.gravityOn = false
             body.physics.velocity.setZero()
+
+            game.setFocusSnappedAway(true)
+
+            aButtonTask = when {
+                body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
+                else -> AButtonTask.AIR_DASH
+            }
+
+            canMakeLandSound = false
         }
 
         override fun act(delta: Float) {
@@ -666,6 +667,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.UP, Direction.DOWN -> body.setCenterX(ladder.body.getCenter().x)
                 Direction.LEFT, Direction.RIGHT -> body.setCenterY(ladder.body.getCenter().y)
             }
+
+            body.physics.gravityOn = false
 
             if (shooting || game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
                 GameLogger.debug(MEGAMAN_CLIMB_BEHAVIOR_TAG, "shooting or room transition")
@@ -680,51 +683,40 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                         0f,
                         MegamanValues.CLIMB_VEL
                     )
-
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL * -1f
                     )
-
                     else -> velocity.setZero()
                 }
-
                 Direction.DOWN -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL
                     )
-
                     game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
                         0f,
                         MegamanValues.CLIMB_VEL * -1f
                     )
-
                     else -> velocity.setZero()
                 }
-
                 Direction.LEFT -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.UP) ->
                         velocity.set(MegamanValues.CLIMB_VEL * -1f, 0f)
-
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) ->
                         velocity.set(MegamanValues.CLIMB_VEL, 0f)
-
                     else -> velocity.setZero()
 
                 }
-
                 Direction.RIGHT -> when {
                     game.controllerPoller.isPressed(MegaControllerButton.UP) -> velocity.set(
                         MegamanValues.CLIMB_VEL,
                         0f
                     )
-
                     game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> velocity.set(
                         MegamanValues.CLIMB_VEL * -1f,
                         0f
                     )
-
                     else -> velocity.setZero()
                 }
             }.scl(ConstVals.PPM * movementScalar)
@@ -738,7 +730,10 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             body.physics.gravityOn = true
             body.physics.velocity.setZero()
 
-            aButtonTask = if (body.isSensing(BodySense.IN_WATER)) AButtonTask.SWIM else AButtonTask.AIR_DASH
+            aButtonTask = when {
+                body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
+                else -> AButtonTask.AIR_DASH
+            }
         }
     }
 
