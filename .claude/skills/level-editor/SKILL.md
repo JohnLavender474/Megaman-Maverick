@@ -57,6 +57,23 @@ on each object is the entity class name (using `EntityType.getFullyQualifiedName
 For certain layers, unnamed objects have a default entity: for example, in the `blocks` 
 layer, an unnamed object defaults to the `Block` class.
 
+### Entity Properties
+
+The `<properties>` block on a spawner object is passed to the entity's `onSpawn(props)` function as 
+key-value pairs. To know which properties a given entity supports — their expected types, defaults, 
+and effects — **read the entity's `onSpawn` function** (and any helpers it delegates to, such as 
+`super.onSpawn`). Property keys are typically constants defined in `Constants.kt` (`ConstKeys`).
+
+Workflow:
+1. Resolve the entity class from the object's `name` attribute (under `core/.../entities/`).
+2. Open the class file and locate `onSpawn(spawnProps: Properties)`.
+3. Note every `spawnProps.get(...)`, `spawnProps.getOrDefault(...)`, and `containsKey(...)` call — 
+   each one corresponds to a property you can set in the TMX.
+4. Check the parent class's `onSpawn` too (e.g. `AbstractEnemy`, `AbstractProjectile`) for inherited 
+   properties like `cull_out_of_bounds`, `cull_events`, etc.
+
+If a property is missing from `onSpawn`, setting it in the TMX has no effect.
+
 ### Spawn Types
 
 Controlled by the `spawn_type` property on each object:
@@ -71,6 +88,45 @@ Controlled by the `spawn_type` property on each object:
 See `core/.../screens/levels/tiled/layers/SpawnersLayerBuilder` which defines the logic for each rule.
 
 **`respawnable` property** (boolean, default `true`): controls whether the entity re-spawns after being destroyed.
+
+## Room Events (`event` property)
+
+A room object in `game_rooms` may carry an `event` property that fires when the camera finishes 
+transitioning into that room (see `MegaLevelScreen.cameraManagerForRooms.endTransition`):
+
+| `event` value | Effect                                                                                                      |
+|---------------|-------------------------------------------------------------------------------------------------------------|
+| `boss`        | Fires `ENTER_BOSS_ROOM`. Room must also have an `object`-type property pointing to the boss spawner object. |
+| `success`     | Fires `VICTORY_EVENT` → ends the level (no boss required).                                                  |
+
+Additional room-level properties:
+- `fade_out_music` (bool) — fades music on transition into the room (typical for boss rooms)
+- `music` (string, `MusicAsset` name) — music to play while the room is current
+- `megaman_direction` (string, `Direction` name) — flips Megaman's gravity direction on entry
+
+## How a Level Ends
+
+A level ends when `VICTORY_EVENT` is fired. There are exactly **two ways** to trigger it:
+
+1. **Success room** — the player enters a room whose `event` property is `success` (no boss involved). 
+   Useful for "walk to the exit" finales or non-combat conclusions.
+2. **Non-mini boss defeat** — the player defeats a boss whose spawn properties satisfy both:
+   - `mini` is `false` (or absent — default is `false`), and
+   - `end` is `true` (or absent — default is `true`)
+   
+   See `AbstractBoss.getEventOnDefeated()` in `core/.../entities/contracts/AbstractBoss.kt`:
+   ```kotlin
+   if (!mini && end) EventType.VICTORY_EVENT else EventType.INTERMEDIATE_BOSS_DEAD
+   ```
+   A boss with `mini=true` or `end=false` fires `INTERMEDIATE_BOSS_DEAD` instead and the level 
+   continues. This is how mini-bosses work.
+
+**Implications when editing:**
+- Every shippable level needs at least one of these two terminators, or it cannot be completed.
+- If you mark a boss as `mini=true`, make sure there is still a final (non-mini, `end=true`) boss 
+  in a room downstream OR a `success` room downstream.
+- The boss spawner object (referenced from the boss room's `object` property) carries the `mini` 
+  and `end` properties — not the room itself.
 
 ## Object-Type Properties
 
