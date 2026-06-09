@@ -385,7 +385,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
-            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+            TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 12))
                 .also { sprite -> sprite.setSize(2f * ConstVals.PPM) }
         )
         .preProcess { _, sprite ->
