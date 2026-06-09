@@ -546,14 +546,17 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 )
                 body.setCenter(position)
 
-                if (event.key == EventType.BEGIN_ROOM_TRANS)  when (direction) {
-                    Direction.UP, Direction.DOWN -> {
-                        val velY = body.physics.velocity.y
-                        body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", velY)
-                    }
-                    else -> {
-                        val velX = body.physics.velocity.x
-                        body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", velX)
+                if (event.key == EventType.BEGIN_ROOM_TRANS) when {
+                    isBehaviorActive(BehaviorType.CLIMBING) || !bodyOverGround -> body.physics.velocity.setZero()
+                    else -> when (direction) {
+                        Direction.UP, Direction.DOWN -> {
+                            val velY = body.physics.velocity.y
+                            body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", velY)
+                        }
+                        else -> {
+                            val velX = body.physics.velocity.x
+                            body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", velX)
+                        }
                     }
                 }
 
@@ -567,14 +570,17 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             EventType.END_ROOM_TRANS -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "endRoomTrans()")
 
-                if (event.key == EventType.BEGIN_ROOM_TRANS) when (direction) {
-                    Direction.UP, Direction.DOWN -> {
-                        val velY = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", Float::class)!!
-                        body.physics.velocity.y = velY
-                    }
-                    else -> {
-                        val velX = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", Float::class)!!
-                        body.physics.velocity.x = velX
+                when {
+                    isBehaviorActive(BehaviorType.CLIMBING) || !bodyOverGround -> body.physics.velocity.setZero()
+                    else -> when (direction) {
+                        Direction.UP, Direction.DOWN -> {
+                            val velY = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", Float::class)!!
+                            body.physics.velocity.y = velY
+                        }
+                        else -> {
+                            val velX = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", Float::class)!!
+                            body.physics.velocity.x = velX
+                        }
                     }
                 }
 
