@@ -6,7 +6,6 @@
 - **Known properties:**
   - `hard_mode_only` — bool; when `true`, only spawns in hard mode
 
-Ground walker. Patrols back and forth on platforms and floors.
-Use as floor filler in gauntlet rooms.
+Stationary ground enemy that shoots 4 bombs into the air in an interval.
 
 Source: observed in `DesertMan.tmx`.

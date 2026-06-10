@@ -10,6 +10,7 @@
   - `spawn_room` — required when `spawn_type=spawn_room`
 
 Spinning fireball arm that rotates around a fixed pivot. Place the 32×32 anchor at the
-pivot point. Good for open vertical rooms and large chambers.
+pivot point. Good for open vertical rooms and large chambers. Needs to be accompanied
+by a `blocks:FireballBlock` entity which is the block at the pivot.
 
-Source: `FireballBar.kt` `onSpawn`, confirmed in `GlacierMan` family TMX files.
+Source: observed in `InfernoMan_16x24_v2.tmx`.

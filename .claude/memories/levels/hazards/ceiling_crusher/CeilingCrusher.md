@@ -9,5 +9,3 @@
 
 Drops from the ceiling when the player walks beneath it. Retracts after a delay.
 Effective in corridor rooms where the player must move quickly or wait for a safe window.
-
-Source: observed in `GlacierMan_16x14.tmx` and others.
