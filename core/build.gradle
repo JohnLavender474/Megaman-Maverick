@@ -10,8 +10,6 @@ dependencies {
 
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   
-  implementation("org.reflections:reflections:0.10.2")
-
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
