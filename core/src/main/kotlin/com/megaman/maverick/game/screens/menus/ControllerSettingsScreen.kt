@@ -224,6 +224,8 @@ class ControllerSettingsScreen(
                     (game.controllerPoller as? MegaControllerPoller)?.loadPrefsOnConnect = true
                 }
 
+                loadSelectButtonActionFromPrefs(isKeyboardSettings)?.let { game.selectButtonAction = it }
+
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
                 return false
@@ -344,11 +346,13 @@ class ControllerSettingsScreen(
                 Direction.DOWN -> BACK
                 Direction.LEFT -> {
                     game.selectButtonAction = game.selectButtonAction.previous()
+                    saveSelectButtonActionToPrefs(game.selectButtonAction, isKeyboardSettings)
                     SELECT_ACTION
                 }
 
                 Direction.RIGHT -> {
                     game.selectButtonAction = game.selectButtonAction.next()
+                    saveSelectButtonActionToPrefs(game.selectButtonAction, isKeyboardSettings)
                     SELECT_ACTION
                 }
             }

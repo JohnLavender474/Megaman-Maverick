@@ -74,3 +74,27 @@ fun getPreferredControllerCode(controller: Controller, button: MegaControllerBut
         Gdx.app.getPreferences("${PreferenceFiles.MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES} - ${controller.name}")
     return controllerPreferences.getInteger(button.name)
 }
+
+private const val SELECT_BUTTON_ACTION_KEY = "SELECT_BUTTON_ACTION"
+
+private fun selectButtonActionPrefs(isKeyboardSettings: Boolean): Preferences? = when {
+    isKeyboardSettings -> getKeyboardPreferences()
+    else -> ControllerUtils.getController()?.let { getControllerPreferences(it) }
+}
+
+fun saveSelectButtonActionToPrefs(action: SelectButtonAction, isKeyboardSettings: Boolean) {
+    val prefs = selectButtonActionPrefs(isKeyboardSettings) ?: return
+    prefs.putString(SELECT_BUTTON_ACTION_KEY, action.name)
+    prefs.flush()
+}
+
+fun loadSelectButtonActionFromPrefs(isKeyboardSettings: Boolean): SelectButtonAction? {
+    val prefs = selectButtonActionPrefs(isKeyboardSettings) ?: return null
+    if (!prefs.contains(SELECT_BUTTON_ACTION_KEY)) return null
+    val name = prefs.getString(SELECT_BUTTON_ACTION_KEY) ?: return null
+    return try {
+        SelectButtonAction.valueOf(name)
+    } catch (_: IllegalArgumentException) {
+        null
+    }
+}
