@@ -220,6 +220,8 @@ class ControllerSettingsScreen(
                             )
                         }
                     }
+
+                    (game.controllerPoller as? MegaControllerPoller)?.loadPrefsOnConnect = true
                 }
 
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
