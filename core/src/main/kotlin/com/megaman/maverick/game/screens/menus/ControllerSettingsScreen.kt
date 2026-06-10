@@ -34,7 +34,7 @@ class ControllerSettingsScreen(
     var backAction: () -> Boolean = backAction@{
         game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
         return@backAction true
-    }
+    },
 ) : MegaMenuScreen(game, BACK), Initializable {
 
     companion object {
@@ -164,7 +164,7 @@ class ControllerSettingsScreen(
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> SELECT_ACTION
                 Direction.DOWN -> LOAD_SAVED_SETTINGS
-                else -> null
+                else -> BACK
             }
         })
 
@@ -230,7 +230,7 @@ class ControllerSettingsScreen(
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> BACK
                 Direction.DOWN -> RESET_TO_DEFAULTS
-                else -> null
+                else -> LOAD_SAVED_SETTINGS
             }
         })
 
@@ -248,6 +248,7 @@ class ControllerSettingsScreen(
 
             override fun onSelect(delta: Float): Boolean {
                 ControllerUtils.resetSettingsToDefaults(controllerButtons, isKeyboardSettings)
+                game.selectButtonAction = SelectButtonAction.NEXT_WEAPON
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
@@ -255,7 +256,7 @@ class ControllerSettingsScreen(
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> LOAD_SAVED_SETTINGS
                 Direction.DOWN -> MegaControllerButton.entries[0].name
-                else -> null
+                else -> RESET_TO_DEFAULTS
             }
         }
         )
@@ -310,7 +311,7 @@ class ControllerSettingsScreen(
                         }
                     }
 
-                    else -> null
+                    else -> b.name
                 }
             })
         }
