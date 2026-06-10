@@ -185,3 +185,6 @@ Thumbs.db
 
 ## venv
 .venv/
+
+## temp dir
+temp/**

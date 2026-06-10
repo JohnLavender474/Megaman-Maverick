@@ -285,10 +285,7 @@ class Met(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             }.scl(ConstVals.PPM.toFloat())
             body.physics.gravity.set(gravityVec)
 
-            body.fixtures.get(FixtureType.SHIELD).first().let {
-                it.setActive(behavior == MetBehavior.SHIELDING)
-                it.putProperty(ConstKeys.DIRECTION, direction)
-            }
+            body.fixtures.get(FixtureType.SHIELD).first().setActive(behavior == MetBehavior.SHIELDING)
             body.fixtures.get(FixtureType.DAMAGEABLE).first().setActive(behavior != MetBehavior.SHIELDING)
         }
 

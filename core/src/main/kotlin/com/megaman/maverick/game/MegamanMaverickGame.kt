@@ -400,7 +400,7 @@ class MegamanMaverickGame(
 
         when (params.runType) {
             RunType.GAME -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
-            RunType.TEST -> startLevel(LevelDefinition.TEST)
+            RunType.TEST -> startLevel(LevelDefinition.TEST_1)
         }
     }
 

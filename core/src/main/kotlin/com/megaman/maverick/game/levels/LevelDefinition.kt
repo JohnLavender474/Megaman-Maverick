@@ -105,9 +105,15 @@ enum class LevelDefinition(
         music = MusicAsset.MMX6_GATE_STAGE_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
-    TEST(
+    TEST_1(
         type = LevelType.TEST_LEVEL,
         tmxMapSource = "Test8.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+    ),
+    TEST_2(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "QuickRun.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),

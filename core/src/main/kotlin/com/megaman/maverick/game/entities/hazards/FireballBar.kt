@@ -107,12 +107,18 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
-                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                    val cull = room != spawnRoom
+                this, objectSetOf(EventType.END_ROOM_TRANS, EventType.PLAYER_SPAWN), { event ->
+                    val cull = when (event.key) {
+                        EventType.PLAYER_SPAWN -> true
+                        EventType.END_ROOM_TRANS -> {
+                            val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                            room != spawnRoom
+                        }
+                        else -> false
+                    }
                     GameLogger.debug(
                         TAG,
-                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
+                        "defineCullablesComponent(): event=${event.key}, spawnRoom=$spawnRoom, cull=$cull"
                     )
                     cull
                 }

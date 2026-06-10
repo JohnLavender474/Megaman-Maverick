@@ -12,6 +12,8 @@ class MegaControllerPoller(controllerButtons: ControllerButtons) : ControllerPol
         const val TAG = "MegaControllerPoller"
     }
 
+    var loadPrefsOnConnect = false
+
     private var controllerConnected = false
 
     override fun run() {
@@ -22,10 +24,12 @@ class MegaControllerPoller(controllerButtons: ControllerButtons) : ControllerPol
             if (controller != null) {
                 controllerConnected = true
                 controllerButtons.forEach {
+                    val key = it.key as MegaControllerButton
                     val button = it.value as ControllerButton
-                    button.controllerCode = ControllerUtils.getControllerCode(
-                        controller, it.key as MegaControllerButton
-                    )
+                    var code: Int? = null
+                    if (loadPrefsOnConnect) code = getPreferredControllerCode(controller, key)
+                    if (code == null) code = controller.mapping.getMapping(key)
+                    button.controllerCode = code
                 }
             }
         }
