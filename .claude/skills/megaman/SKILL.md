@@ -1,5 +1,5 @@
 ---
-name: megaman-body-controls-behaviors
+name: megaman
 description: Use when reading or modifying Megaman's physical body setup, controller input handling, 
   or behavior logic (jumping, dashing, climbing, wall sliding, etc.) — or when understanding how fixtures,
   sensors, and input actuators connect to behaviors.
