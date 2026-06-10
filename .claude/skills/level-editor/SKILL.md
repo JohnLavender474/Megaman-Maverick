@@ -13,6 +13,54 @@ Available game levels are defined in `core/.../levels/LevelDefinition.kt`.
 The active TMX for each level is the `tmxMapSource` field on its entry.
 TMX files are defined in `assets/tiled_maps/tmx`.
 
+## Before Editing — Required Prompts
+
+At the **start of any editing session** (the first time the user asks for any modification to a TMX
+in this conversation), ask the user **how the edits should be applied**:
+
+> "Should I (a) make the edits in place on `<filename>.tmx`, or (b) make a temp copy
+> (`<filename>_temp<NNN>.tmx`) and edit that instead?"
+
+- If **(a) in place**: edit the file directly. The user is responsible for any version control.
+- If **(b) copy**: duplicate the source TMX to a new file with a `_temp<NNN>` suffix (use a random
+  3-digit number; verify the target path doesn't already exist) in the same directory, then apply
+  all edits to the copy. Confirm the copy path back to the user and use it for the rest of the
+  session unless the user redirects.
+
+Do not ask this question again later in the same session unless the user switches to a different
+source TMX.
+
+If the user gives a clear directive up front ("edit X.tmx directly" or "copy X.tmx first"), skip
+the question and proceed.
+
+## How to Make Edits — Programmatic vs Generative
+
+Match the edit method to the size and shape of the change:
+
+**Prefer programmatic edits** (a one-off shell script — `python`, `sed`, `xmlstarlet`, etc.) when
+the change is **bulk or mechanical**:
+- Shifting many objects by a constant `dx`/`dy` (e.g. moving a whole room and its contents)
+- Renaming a room and updating every `spawn_room` reference
+- Bumping every object id by a constant to merge in another map's objects
+- Resizing or repositioning many objects of the same type
+- Any change that touches more than ~10 objects in a structured way
+
+For programmatic edits:
+1. Describe the script's intent to the user before running it.
+2. Use Python with `xml.etree.ElementTree` (or `lxml`) when the change requires parsing structure;
+   avoid `sed` for anything that depends on XML semantics.
+3. Run the script, then verify by re-reading the affected region of the TMX.
+4. If editing in place (mode (a)) and the change is sizeable, suggest the user commit or stash
+   before you run the script.
+
+**Prefer generative edits** (the `Edit` tool, one object at a time) when:
+- The change is a small, localized tweak (a single property, a single object's coordinates)
+- The change requires judgement per-object (e.g. picking different enemy types per room)
+- Fewer than ~10 objects are affected
+
+When in doubt between the two, ask the user. Generative edits are easier to review; programmatic
+edits are more reliable at scale.
+
 ## File Format
 
 TMX files are XML. Key XML elements:
