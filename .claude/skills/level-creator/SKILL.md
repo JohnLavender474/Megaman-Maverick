@@ -20,7 +20,7 @@ Drafts may be **themed** (e.g. fire level, reactor level) or **free-form / theme
 is common when the user wants a structural template they will later re-skin. Both modes are supported;
 the "Theme Mode" section below explains how the workflow differs.
 
-It does **not** duplicate TMX mechanics. **Load the `level-editor` skill** in the same task for:
+It does **not** duplicate TMX mechanics. **Load the `level-editor` skill** in the same task for things like:
 - Object/layer/property syntax
 - Spawn types (`spawn_now`, `spawn_room`, `spawn_event`)
 - How to look up an entity's spawn properties via its `onSpawn` function
@@ -157,20 +157,161 @@ If a spawner uses `spawn_type=spawn_event`, the event names must match values in
 
 ## Drafting Workflow
 
-1. **Read the four reference TMX files** (see "Reference Levels — REQUIRED READING" above) before
-   doing anything else. This step is non-negotiable for any draft.
+Drafting is split into a short **planning** stage (no TMX yet) followed by a **phased TMX output** stage
+where each phase produces its own file and pauses for user review. See the "Phased Creation Workflow" 
+section below for the file-by-file mechanics.
+
+### Planning (no TMX written yet)
+
+1. **Read the four reference TMX files** before doing anything else.
 2. **Confirm the concept.** Ask the user for: approximate length (short ≈ 8 rooms, medium ≈ 12–15, long ≈ 18+), any must-have mechanics, and **whether the draft is themed or free-form** (see "Theme Mode"). If themed, also ask for the theme/boss name. If the user only says "draft a level", default to free-form and confirm.
-3. **Ask about tile layers.** Before any TMX is written, explicitly prompt the user:
+3. **Ask about tile layers.** Prompt the user:
    *"Do you want me to (a) include tile layers with content matching the block geometry, or (b) omit tile layers entirely so you can paint them manually in Tiled?"*
-   - If (a): fill `tiles1` (and any other tile layers) with non-zero tile ids drawn from a reference level's tile data, matching every block rectangle.
-   - If (b): omit the `<layer>` element(s) entirely from the TMX. Do not write an empty all-zero tile layer as a placeholder — the user will add tile layers themselves in Tiled.
+   - If (a): the tile art is produced as its own later phase (see Phased Creation Workflow), filling `tiles1` (and any other tile layers) with non-zero tile ids drawn from a reference level's tile data, matching every block rectangle.
+   - If (b): omit the `<layer>` element(s) entirely from every phase's TMX. Do not write an empty all-zero tile layer as a placeholder — the user will add tile layers themselves in Tiled.
    - The default if the user gives no answer is **(b) omit**.
 4. **Sketch the room chain** as a graph before touching XML: `intro → corridor → vertical climb → encounter → mini-boss → corridor → alt path? → pre-boss → boss`. Show this to the user and get sign-off. For any alt path, state explicitly **how it rejoins the main route** (shared edge with a downstream room, teleporter back, or ladder back).
-5. **Assign coordinates.** Place rooms head-to-tail in world space; remember rooms should touch (or overlap by 0) at their shared edges so camera transitions work.
-6. **Place the player spawn** in the intro room and **one additional spawn point** near each mini-boss and the boss (these act as checkpoints on death). See the `player` layer in a reference TMX.
-7. **Stub the spawners sparsely** — but with **correct sizes copied from a reference level** (not all 32×32). Place a handful of enemy/hazard markers per room.
-8. **Add baseline block geometry.** Each room must have at least: a floor rectangle along the bottom edge, wall rectangles on the left/right edges, and any platforms the encounter requires. Use unnamed rectangle objects in the `blocks` layer (they become plain `Block` instances). Match the patterns in `Test8.tmx`.
-9. **Hand off to `level-editor`** for the actual TMX writing.
+5. **Assign coordinates.** Place rooms head-to-tail in world space; rooms should touch (or overlap by 0) at their shared edges so camera transitions work.
+
+### TMX output
+
+Once the planning stage is signed off, switch to the **Phased Creation Workflow** below.
+
+Hand off the mechanical TMX writing inside each phase to the `level-editor` skill.
+
+## Phased Creation Workflow
+
+A new level is built up across a sequence of phases, each producing its own TMX file. The user
+reviews after every phase and can ask for changes before the next phase begins.
+
+### File naming
+
+Each phase writes a new file in `assets/tiled_maps/tmx/` named:
+
+```
+draft_<level_name>_<phase_description>_<N>.tmx
+```
+
+- `draft_` — **always present**. Every level file produced by this skill is an unfinished draft and
+  must carry this prefix. The user (not the skill) is responsible for renaming/removing the prefix
+  once the level is finalized. The prefix also tells future cross-file searches to **exclude these
+  files** (see "Cross-File Lookups" below) — drafts often contain placeholder markers that
+  misrepresent how an entity is really configured.
+- `<level_name>` — kebab- or snake-case version of the level concept (e.g. `my_new_level`,
+  `factory_stage`). Pick this once at the start of phase 1 and keep it stable across all phases.
+- `<phase_description>` — short snake_case label for what this phase added (e.g. `scaffold`,
+  `enemy_markers`, `enemies_sized`, `hazards`, `decorations`, `tiles`). Match the phase's purpose;
+  freeform within the spirit of the default phase list.
+- `<N>` — sequential phase number starting at `1`. Always increments; never reused, never skipped.
+
+Examples: `draft_factory_stage_scaffold_1.tmx`, `draft_factory_stage_specials_2.tmx`,
+`draft_factory_stage_enemy_markers_3.tmx`, `draft_factory_stage_enemies_sized_4.tmx`.
+
+It is expected that **many files will accumulate** by the end. They serve as a visible history of the 
+draft and let the user roll back to any prior phase. Do not delete prior phase files when producing a new one.
+
+### Cross-File Lookups
+
+When this skill (or the `level-editor` skill, during a phase handoff) needs to **look up how an
+entity is configured in other TMX files** — to find the right size, the right property set, a
+canonical placement pattern — restrict the search to **non-draft files only**. Skip any TMX whose
+filename begins with `draft_`. Drafts may contain 1×1 placeholder markers (see "Two-Step Entity
+Placement" below) and other unfinished structures that would mislead the lookup.
+
+Concretely, prefer search commands that exclude drafts:
+
+```bash
+grep -l 'name="SniperJoe"' assets/tiled_maps/tmx/*.tmx | grep -v '/draft_'
+# or
+ls assets/tiled_maps/tmx/ | grep -v '^draft_' | xargs -I{} grep -l ...
+```
+
+The reference levels listed in "Reference Levels" above are all non-draft and are the highest-trust
+sources for these lookups.
+
+### How each phase works
+
+For phase `N`:
+
+1. **Identify the source file.** Phase 1 starts from a blank `<map>` skeleton (matching the
+   structure of `Test8.tmx`). Phase 2+ starts from phase `N-1`'s file by copying it.
+2. **Copy, don't edit in place.** Always `cp` the previous phase's TMX to the new phase's filename
+   first; apply all edits to the copy. The previous phase's file must remain untouched.
+3. **Apply only this phase's additions.** Stay scoped — don't sneak content from a later phase in.
+   If you spot something that needs fixing in an earlier phase's scope (e.g. a missing wall), call
+   it out to the user rather than silently patching across phases.
+4. **Announce the new file path and a one-paragraph summary** of what was added. Keep it short —
+   the user is about to open the file in Tiled.
+5. **Stop and wait for review.** Do not begin the next phase until the user signs off (or asks
+   for changes to this phase). If they ask for changes, apply them to the **current phase's
+   file** rather than creating yet another file, unless the change is large enough to warrant
+   its own phase.
+
+### Two-Step Entity Placement Pattern
+
+Any phase that places spawner objects (enemies, hazards, items, specials, decorations) should be
+done as **two phases**: a placement phase followed by a flesh-out phase. The user may also
+explicitly request this split for a single layer or single room.
+
+**Step 1 — placement phase (`*_markers_N.tmx`):**
+- Drop a **1-tile × 1-tile (32×32 px) placeholder rectangle** at every intended spawn location.
+- Name the object after the intended entity class (e.g. `name="SniperJoe"`) so the next phase
+  can find it, but **do not** add the real `width`/`height` for that entity and **do not** add
+  any properties yet.
+- The point of this phase is to lock in **where** things go before getting bogged down in
+  per-entity specifics. The placement should be reviewable on a single look in Tiled.
+
+**Step 2 — flesh-out phase (`*_sized_N.tmx`):**
+- For each placeholder, resolve the real entity:
+  1. Look up the entity's spawn footprint and properties via the `level-editor` skill's workflow
+     — read the entity's `onSpawn` function (and its parent class's) to find every property it
+     reads and the size its sprite/collider expects.
+  2. Cross-reference how the entity is configured in **non-draft TMX files** (see "Cross-File
+     Lookups" above) — copy the size and any common property pattern from a finalized level.
+- Resize the placeholder rectangle to the real footprint and attach the discovered properties
+  (`spawn_room`, `spawn_type`, entity-specific keys like `type=fire`, `target_1`, etc.).
+- Do **not** add new placements in the flesh-out phase. If the placement turns out to need
+  adjustment (e.g. the real size overlaps a wall), call it out and fix in this same phase rather
+  than silently relocating.
+
+The same two-step split applies to hazards (`hazard_markers` → `hazards_sized`), items, and other
+spawner layers. For trivially uniform layers (e.g. a level with only one enemy type at a fixed
+size), the user may choose to fold the two steps into a single phase — only do this when they
+explicitly opt in.
+
+### Default phase sequence
+
+This is the default order. Adapt to the concept — skip phases that don't apply (e.g. no
+`items` phase if the level has no pickups) and merge trivially small phases (e.g. fold one
+ladder into the scaffold phase rather than spinning up a `specials` phase for it). When merging
+or skipping, call it out so the user knows what to expect. Spawner-layer phases (rows 3+) follow
+the two-step placement → flesh-out pattern above by default.
+
+| #  | Phase                | What it adds                                                                                            |
+|----|----------------------|---------------------------------------------------------------------------------------------------------|
+| 1  | `scaffold`           | `game_rooms`, baseline `blocks` geometry (floors/walls/ceilings/platforms), `player` spawn(s)           |
+| 2  | `specials`           | `specials` (ladders, water, teleporters), `sensors` (gates), room `event` properties (`boss`/`success`) |
+| 3a | `hazard_markers`     | 1×1 placeholder rectangles in `hazards` at intended spawn locations                                     |
+| 3b | `hazards_sized`      | Resize each placeholder to the real entity footprint and attach properties                              |
+| 4a | `enemy_markers`      | 1×1 placeholder rectangles in `enemies` at intended spawn locations (incl. mini-boss/boss spots)        |
+| 4b | `enemies_sized`      | Resize each placeholder to the real entity footprint and attach properties                              |
+| 5a | `item_markers`       | 1×1 placeholder rectangles in `items` at intended pickup locations                                      |
+| 5b | `items_sized`        | Resize each placeholder to the real entity footprint and attach properties                              |
+| 6  | `decorations`        | `decorations`, `backgrounds`, `foregrounds`                                                             |
+| 7  | `tiles` *(opt.)*     | Only if the user opted into tile layers in planning step 3                                              |
+
+After phase 1 (scaffold), the level should already be **walkable end to end** — the player can
+traverse from intro to boss room through empty geometry. Each subsequent phase enriches but does
+not break that walkability.
+
+### Phased workflow for expansions
+
+The same file-per-phase pattern applies when **expanding** an existing level (see "Expanding an
+Existing Level"). The first phase copies the existing TMX into a `draft_` file
+(e.g. `draft_InfernoMan_v2_scaffold_1.tmx`) and applies only the new structural geometry; later
+phases add hazards/enemies/etc. for the new section using the same two-step placement →
+flesh-out split. The original (non-`draft_`) level file stays untouched and remains valid as a
+cross-file lookup source.
 
 ## Expanding an Existing Level
 
@@ -264,17 +405,4 @@ After producing a draft, **proactively offer**:
 - **Cohesion gaps** — in themed mode, flag any enemy/hazard that doesn't fit the theme. In free-form mode, flag any entity that would silently lock the draft into a specific theme (e.g. a fire enemy in an otherwise neutral roster).
 - **Theme suggestions (free-form mode only)** — propose 2–3 themes the structural draft would suit well, with a one-line rationale per theme (e.g. "The vertical climb in room5 and the hazard gauntlet would feel natural as a factory/conveyor stage"). Frame these as starting points for the user to choose from.
 
-Keep suggestions concrete (name the room, name the entity, name the change). Vague ideas aren't actionable.
-
-## Common Pitfalls
-
-- **Skipping the reference reads.** This is the #1 source of broken drafts. The four reference TMX files exist precisely so you don't have to guess at block layout, entity sizes, or room connectivity. Read them.
-- **Empty `blocks` layer.** A draft with only spawner points and no block rectangles has no floors, walls, or platforms — the player falls through the world. Every room needs baseline geometry (floor, walls, ceiling, platforms) as unnamed rectangles in `blocks`.
-- **Default 32×32 spawner sizes.** Many entities (`SwitchGate`, `Electrocutie`, `LaserBeamer`, `Lift`, `ConveyorBelt`, etc.) require larger rectangles to match their collider/sprite. Copy sizes from the reference TMX files; if not present, read the entity's `onSpawn`.
-- **Dead-end alt paths.** An alt path that doesn't loop back to the main route strands the player. Every alt path must rejoin via a shared edge with a downstream room, a teleporter, or a return ladder.
-- **Writing a placeholder tile layer.** Don't include an empty all-zero `tiles1` "just in case." If the user opted to omit tile layers (the default), omit the `<layer>` element entirely — the user will add it manually in Tiled. Only include tile layers when the user explicitly opts in, and then fill them with real tile ids.
-- **Over-packing the draft.** Templates should be skeletal; the user fleshes them out. Three enemies per room is usually plenty for a draft.
-- **Drifting into X-style by default.** If you find yourself making most rooms larger than a screen, pull back — the default is classic.
-- **Forgetting room adjacency.** Rooms that the player walks between must share an edge in world coordinates; gaps cause the camera to fail to transition.
-- **Inventing entity names.** Always verify an enemy/hazard/block class exists under `core/.../entities/` before referencing it in a draft.
-- **Skipping the chain sketch.** Going straight to XML produces incoherent levels. The numbered room list in step 2 is the most valuable artifact in this workflow.
+Keep suggestions concrete (name the room, name the entity, name the change).
