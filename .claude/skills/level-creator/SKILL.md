@@ -25,6 +25,13 @@ It does **not** duplicate TMX mechanics. **Load the `level-editor` skill** in th
 - Spawn types (`spawn_now`, `spawn_room`, `spawn_event`)
 - How to look up an entity's spawn properties via its `onSpawn` function
 
+For any **read-side** work this skill does — assessing an existing level, listing rooms and
+counts, looking up canonical entity sizes across non-draft TMXs for the flesh-out phase — **load
+the `tmx-analyzer` skill** as well. It owns the `utils/tmx-analyzer/run.sh` script that returns
+a compact JSON of the level (rooms, per-room entities, `entity_details`, `entity_classes`); the
+"Step 1 — Assess the level", "Cross-File Lookups", and "Two-Step Entity Placement Pattern"
+sections below all rely on it.
+
 ## Reference Levels
 
 **Read all four of these files.** They are exemplary for how a playable level is actually constructed.
