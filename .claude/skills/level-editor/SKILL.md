@@ -219,6 +219,100 @@ grep -A20 'name="game_rooms"' assets/tiled_maps/tmx/LEVEL.tmx | grep '<object'
 grep -B5 'spawn_now' assets/tiled_maps/tmx/LEVEL.tmx | grep 'name='
 ```
 
+## Python Editing Boilerplate
+
+When writing programmatic edits, reuse these patterns rather than re-deriving them.
+
+### Standard script skeleton
+
+```python
+import xml.etree.ElementTree as ET
+
+TMX = "assets/tiled_maps/tmx/LEVEL.tmx"
+ET.register_namespace("", "")          # prevents ET from injecting ns0: prefixes
+tree = ET.parse(TMX)
+root = tree.getroot()
+
+# ... make changes ...
+
+tree.write(TMX, xml_declaration=True, encoding="UTF-8")
+```
+
+Always pass `xml_declaration=True, encoding="UTF-8"` to `tree.write` — omitting either
+produces a file Tiled can't open.
+
+### `make_object` helper
+
+Drop this into any script that adds objects:
+
+```python
+def make_object(oid, name, x, y, w, h, props=None):
+    """
+    props: list of (key, value) or (key, value, type_str) tuples.
+    type_str is only needed for Tiled typed properties (e.g. "object", "bool", "int").
+    """
+    attribs = {"id": str(oid), "x": str(x), "y": str(y),
+               "width": str(w), "height": str(h)}
+    if name:
+        attribs["name"] = name
+    obj = ET.Element("object", attribs)
+    if props:
+        pe = ET.SubElement(obj, "properties")
+        for k, v, *rest in props:
+            typ = rest[0] if rest else None
+            pa = {"name": k, "value": str(v)}
+            if typ:
+                pa["type"] = typ
+            ET.SubElement(pe, "property", pa)
+    return obj
+```
+
+Usage: `make_object(41, "room3", 2112, 1152, 512, 448, props=[("event", "success")])`
+
+### Tile CSV editing
+
+```python
+data_el = root.find('.//layer[@name="tiles1"]/data')
+rows = [row.split(",") for row in data_el.text.strip().split("\n")]
+
+# row index r  →  pixel y = r * 32
+# col index c  →  pixel x = c * 32
+rows[r][c] = "190"   # set a tile
+rows[r][c] = "0"     # clear a tile
+
+data_el.text = "\n" + "\n".join(",".join(row) for row in rows) + "\n"
+```
+
+### Adding a new objectgroup layer
+
+```python
+new_layer = ET.Element("objectgroup", {"id": "9", "name": "enemies"})
+new_layer.append(make_object(...))
+
+# Insert after the last existing objectgroup
+last_og_idx = max(i for i, c in enumerate(root) if c.tag == "objectgroup")
+root.insert(last_og_idx + 1, new_layer)
+```
+
+### Bumping nextobjectid / nextlayerid
+
+Always update these on `<map>` after adding objects or layers, or Tiled will conflict
+on next save:
+
+```python
+root.set("nextobjectid", str(max_new_id + 1))
+root.set("nextlayerid",  str(max_new_layer_id + 1))
+```
+
+### Finding and removing an object by id
+
+```python
+for og in root.iter("objectgroup"):
+    for obj in list(og):
+        if obj.get("id") == "36":
+            og.remove(obj)
+```
+
 ## Common Mistakes
 
 - **Wrong room name casing**: `spawn_room` must match the room object's `name` exactly (case-sensitive). 
