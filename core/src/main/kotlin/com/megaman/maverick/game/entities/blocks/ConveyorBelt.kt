@@ -80,8 +80,8 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
             regions.put("mRight_green", atlas.findRegion("$TAG/MiddlePart-MoveRight-Green"))
         }
         if (animDefs.isEmpty) {
-            animDefs.put(DEFAULT_TYPE, AnimationDef(1, 2, 0.15f))
-            animDefs.put(GREEN_TYPE, AnimationDef(2, 2, 0.15f))
+            animDefs.put(DEFAULT_TYPE, AnimationDef(1, 2, 0.075f))
+            animDefs.put(GREEN_TYPE, AnimationDef(2, 2, 0.075f))
         }
 
         super.init()
