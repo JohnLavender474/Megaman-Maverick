@@ -69,7 +69,10 @@ import com.megaman.maverick.game.entities.hazards.WilyCapsuleTentacle
 import com.megaman.maverick.game.entities.hazards.WilyDeathPlaneLazor
 import com.megaman.maverick.game.entities.hazards.WilyFakeCapsule
 import com.megaman.maverick.game.entities.hazards.WilyPlaneBody
-import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.HomingMissile
+import com.megaman.maverick.game.entities.projectiles.WilyPlaneBomb
 import com.megaman.maverick.game.entities.special.DrWily
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -270,7 +273,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
 
-        if (isHealthDepleted()) {
+        if (!megaman.dead && isHealthDepleted() && currentPhase == WilyFinalBossPhase.PHASE_3) {
             val wily = MegaEntityFactory.fetch(DrWily::class)!!
             val facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
             wily.spawn(
