@@ -727,19 +727,14 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         GameLogger.debug(TAG, "fireMegaBuster(): stat=$stat")
 
         val shootingDown = computeShootingDown()
-        if (shootingDown) {
+        if (shootingDown && stat != MegaChargeStatus.NOT_CHARGED) {
             GameLogger.debug(
                 "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
                 "shootMegaBuster(): shooting down"
             )
-            val speed = when (stat) {
-                MegaChargeStatus.NOT_CHARGED -> 0f
-                MegaChargeStatus.HALF_CHARGED, MegaChargeStatus.FULLY_CHARGED ->
-                    MegamanValues.SHOOT_DOWN_IMPULSE_Y_CHARGED
-            }
             val velocity = GameObjectPools.fetch(Vector2::class)
                 .setToDirection(megaman.direction)
-                .scl(speed * ConstVals.PPM.toFloat())
+                .scl(MegamanValues.SHOOT_DOWN_IMPULSE_Y_CHARGED * ConstVals.PPM.toFloat())
             megaman.body.physics.velocity.set(velocity)
         }
 
