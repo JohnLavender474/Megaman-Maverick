@@ -19,12 +19,12 @@ distribution, and no donations are solicited in exchange for access to it.
 
 ## Licensing Summary
 
-| Component                               | License / Status                                                                            |
-|-----------------------------------------|---------------------------------------------------------------------------------------------|
-| Original source code                    | MIT (see `LICENSE`)                                                                         |
-| Community-contributed assets            | Property of the original creators; included with their permission. See `LICENSE-ASSETS.md`. |
-| Publicly distributed third-party assets | Subject to the original creator's terms of distribution. See `LICENSE-ASSETS.md`.           |
-| Capcom-owned material                   | © Capcom Co., Ltd. — all rights reserved                                                    |
+| Component                               | License / Status                                                                    |
+|-----------------------------------------|-------------------------------------------------------------------------------------|
+| Original source code                    | MIT (see `LICENSE`)                                                                 |
+| Community-contributed assets            | Property of the original creators; included with their permission. See `ASSETS.md`. |
+| Publicly distributed third-party assets | Subject to the original creator's terms of distribution. See `ASSETS.md`.           |
+| Capcom-owned material                   | © Capcom Co., Ltd. — all rights reserved                                            |
 
 The project maintainer authored the source code only and does not claim
 copyright in any asset bundled in this repository.
