@@ -352,10 +352,8 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
                 }
 
                 MechaDragonState.HOVER_IN_PLACE -> {
-                    val roomSide = getRoomSideOf(body.getCenter())
-                    updateFacingByRoomSide(roomSide)
-
                     hoverScalar.update(delta)
+
                     val velX = HOVER_SWAY_X * ConstVals.PPM * hoverScalar.getValue()
                     body.physics.velocity.set(velX, 0f)
 
@@ -711,6 +709,9 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
                 )
             }
             MechaDragonState.HOVER_IN_PLACE -> {
+                val roomSide = getRoomSideOf(body.getCenter())
+                updateFacingByRoomSide(roomSide)
+
                 fireDelay.reset()
                 fireTimer.setToEnd(false)
             }
