@@ -19,20 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-----------------------------------------------------------------------
-
-This license applies ONLY to the original source code in this repository
-authored by the project maintainer(s). It does NOT grant any rights to:
-
-  * The "Mega Man" name, characters, music, sound effects, or any other
-    intellectual property owned by Capcom Co., Ltd.
-  * Any asset bundled in this repository (artwork, music, sound effects,
-    tilesets, fonts, etc.). All such assets are the property of their
-    respective original creators and are included with their permission or
-    under the terms of their original public distribution. The maintainer
-    does not claim copyright in any asset and cannot grant rights to reuse
-    them.
-
-See NOTICE.md and LICENSE-ASSETS.md for details on asset provenance and
-trademark disclaimers.
