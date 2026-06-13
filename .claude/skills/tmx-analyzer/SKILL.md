@@ -46,3 +46,5 @@ utils/tmx-analyzer/run.sh assets/tiled_maps/tmx/LEVEL.tmx --room room4
 
 Prefer `-o /tmp/<name>.json` for any non-trivial level — the JSON for a dense level can be
 thousands of lines, and reading it back via `Read`/`jq` keeps your context tidy.
+
+Search for entities by name via the `name` attribute.

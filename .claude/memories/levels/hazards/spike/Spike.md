@@ -10,6 +10,7 @@
   - `sprite_height` — sprite height override in tiles (e.g. `"2"`)
   - `cull_out_of_bounds` — `determines whether to cull the entity when it's out of the camera
   - `gravity_on` — whether the spikes should have gravity and velocity
+  - `collide_on` — `bool`; whether collision is enabled (e.g. `false` to disable)
 
 Static instant-kill hazard. Place on floors, ceilings, or platforms.
 
