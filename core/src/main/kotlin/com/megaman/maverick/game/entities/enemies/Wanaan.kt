@@ -17,6 +17,7 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.damage.IDamager
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingPriority
@@ -52,8 +53,6 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
             orderedMapOf("frozen" pairTo AnimationDef(), "chomp" pairTo AnimationDef(2, 1, 0.1f, true))
         private val regions = ObjectMap<String, TextureRegion>()
     }
-
-    override var invincible = true // Wanaan cannot be damaged
 
     override var direction: Direction
         get() = body.direction
@@ -115,6 +114,8 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         super.onDestroy()
         frozen = false
     }
+    
+    override fun canBeDamagedBy(damager: IDamager) = false
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
