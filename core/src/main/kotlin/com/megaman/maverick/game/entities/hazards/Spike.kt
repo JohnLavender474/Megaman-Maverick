@@ -213,12 +213,15 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         val body = Body(BodyType.DYNAMIC)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
+        body.physics.receiveFrictionX = false
+        body.physics.receiveFrictionY = false
         body.drawingColor = Color.GRAY
 
         val debugShapes = Array<() -> IDrawableShape?>()
         // debugShapes.add { body.getBounds() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
+        feetFixture.setFilter { it.getEntity() != block }
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
