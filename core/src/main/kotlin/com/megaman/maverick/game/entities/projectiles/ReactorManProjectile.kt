@@ -216,6 +216,12 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
+    override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        if (!active) return
+        if (big) shatter(sandFixture.getShape())
+        explodeAndDie()
+    }
+
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!active) return
         if (big) shatter(blockFixture.getShape())
