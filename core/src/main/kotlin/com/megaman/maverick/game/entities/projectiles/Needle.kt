@@ -56,7 +56,8 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
             ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH,
             SlashWave::class pairTo ConstVals.MAX_HEALTH,
-            MoonScythe::class pairTo ConstVals.MAX_HEALTH
+            MoonScythe::class pairTo ConstVals.MAX_HEALTH,
+            ReactorManProjectile::class pairTo ConstVals.MAX_HEALTH
         )
         private val regions = ObjectMap<String, TextureRegion>()
     }
