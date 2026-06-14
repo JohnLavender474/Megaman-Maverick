@@ -16,8 +16,9 @@ TMX files are defined in `assets/tiled_maps/tmx`.
 For any **read-only** inspection of a TMX (listing rooms, enumerating entities in a room,
 looking up an entity's size or properties, finding canonical entity sizes across files), load the
 `tmx-analyzer` skill — it wraps a script that produces a compact JSON summary far cheaper to read
-than the raw XML. This skill (`level-editor`) covers **edits** and the XML/schema mechanics that
-edits require.
+than the raw XML. For a **spatial** view — an ASCII grid of each room, useful for confirming an
+edit landed where you expect — load the `tmx-visualizer` skill. This skill (`level-editor`)
+covers **edits** and the XML/schema mechanics that edits require.
 
 ## Before Editing — Required Prompts
 

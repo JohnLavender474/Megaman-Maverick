@@ -25,6 +25,10 @@ A single-purpose **read** skill. You should reach for it any time a task asks yo
 It is **not** for edits. Any time you need to write/modify a TMX, fall back to raw XML via the
 `level-editor` skill's edit workflow.
 
+For a **spatial** view of a level — an ASCII grid of each room rather than a JSON summary — use
+the companion `tmx-visualizer` skill. This skill answers "what/where is entity X"; that one
+answers "what does this room look like".
+
 ## The script
 
 The analyzer lives at `utils/tmx-analyzer/run.sh` (auto-managed venv). It is a thin wrapper

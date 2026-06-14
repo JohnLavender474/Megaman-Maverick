@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="130" height="90" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="117">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="130" height="90" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="118">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <objectgroup id="2" name="game_rooms">
   <object id="1" name="room1" x="0" y="2240" width="512" height="448"/>
@@ -49,13 +49,12 @@
   <object id="41" x="1696" y="1696" width="64" height="32"/>
   <object id="42" x="1696" y="1408" width="64" height="32"/>
   <object id="43" x="1952" y="1664" width="64" height="32"/>
-  <object id="44" x="1952" y="1056" width="64" height="32"/>
-  <object id="45" x="1984" y="992" width="32" height="96"/>
   <object id="46" name="LadderTop" x="1568" y="1856" width="32" height="8"/>
   <object id="47" name="LadderTop" x="1888" y="1568" width="32" height="8"/>
   <object id="48" name="LadderTop" x="1568" y="1216" width="32" height="8"/>
   <object id="49" name="LadderTop" x="1888" y="832" width="32" height="8"/>
   <object id="50" x="1600" y="832" width="288" height="64"/>
+  <object id="117" x="1408" y="832" width="192" height="64"/>
   <object id="51" x="1920" y="832" width="640" height="64"/>
   <object id="52" x="1536" y="448" width="768" height="64"/>
   <object id="53" x="2528" y="448" width="32" height="64"/>
@@ -77,7 +76,6 @@
   <object id="69" x="992" y="608" width="128" height="32"/>
   <object id="70" x="704" y="512" width="128" height="32"/>
   <object id="71" x="832" y="1024" width="96" height="32"/>
-  <object id="72" x="1408" y="800" width="32" height="96"/>
   <object id="73" x="608" y="1248" width="96" height="32"/>
   <object id="74" x="1216" y="1248" width="96" height="32"/>
   <object id="75" x="512" y="0" width="32" height="448"/>

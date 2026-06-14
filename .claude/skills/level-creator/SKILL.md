@@ -32,6 +32,11 @@ a compact JSON of the level (rooms, per-room entities, `entity_details`, `entity
 "Step 1 — Assess the level", "Cross-File Lookups", and "Two-Step Entity Placement Pattern"
 sections below all rely on it.
 
+To **visually sanity-check** a draft after a phase — an ASCII grid of each room showing block
+geometry and entity placement — also load the `tmx-visualizer` skill. It's the fastest way to
+confirm a scaffold is walkable or that placement markers aren't floating in the air or buried in
+walls before moving to the next phase.
+
 ## Reference Levels
 
 **Read all four of these files.** They are exemplary for how a playable level is actually constructed.
