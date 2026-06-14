@@ -376,14 +376,11 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun evaluate(delta: Float): Boolean {
             when {
                 !game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> buttonToCrouchDelay.reset()
-                currentWeapon == MegamanWeapon.RODENT_CLAWS && isBehaviorActive(BehaviorType.GROUND_SLIDING) ->
-                    buttonToCrouchDelay.setToEnd()
                 else -> buttonToCrouchDelay.update(delta)
             }
 
             when {
                 isBehaviorActive(BehaviorType.GROUND_SLIDING) -> groundSlideToCrouchDelay.reset()
-                currentWeapon == MegamanWeapon.RODENT_CLAWS -> groundSlideToCrouchDelay.setToEnd()
                 else -> groundSlideToCrouchDelay.update(delta)
             }
 
@@ -425,12 +422,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         private val maxTimer = Timer(MegamanValues.GROUND_SLIDE_MAX_TIME)
         private val cooldown = Timer(MegamanValues.GROUND_SLIDE_COOLDOWN)
 
-        // SPECIAL EDGE CASE: When Mega Man has the Rodent Claws weapon attached, then momentum is not preserved at
-        // the end of a ground slide, and his velocity is immediately stopped. In this case, when Mega Man attempts
-        // to ground slide off of a ledge, then he will stop at the very edge of the ledge without sliding off. In
-        // this case, if Mega Man's 'feet' fixture are no longer on the ground, then do not immediately stop him
-        // while he is ground sliding. Instead, allow the following delay to count down before stopping him.
-        private val rodentClawsFeetNotOnGroundDelay = Timer(0.05f)
         private var directionOnInit: Direction? = null
 
         override fun evaluate(delta: Float): Boolean {
@@ -441,19 +432,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false
 
-            if (isBehaviorActive(BehaviorType.GROUND_SLIDING) &&
-                body.isSensingAll(BodySense.HEAD_TOUCHING_BLOCK, BodySense.FEET_ON_GROUND)
+            if (bodyOverGround &&
+                body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) &&
+                isBehaviorActive(BehaviorType.GROUND_SLIDING)
             ) return true
 
-            if (currentWeapon == MegamanWeapon.RODENT_CLAWS && !body.isSensing(BodySense.FEET_ON_GROUND)) {
-                rodentClawsFeetNotOnGroundDelay.update(delta)
-                if (rodentClawsFeetNotOnGroundDelay.isFinished()) return false
-            } else {
-                rodentClawsFeetNotOnGroundDelay.reset()
-                // If Mega Man does not have the Rodent Claws equipped and his feet are not on the ground, then
-                // immediately stop ground sliding.
-                if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
-            }
+            if (!bodyOverGround) return false
 
             if (damaged || maxTimer.isFinished() ||
                 (minTimer.isFinished() && !game.controllerPoller.isPressed(MegaControllerButton.DOWN))
@@ -473,7 +457,6 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
             minTimer.reset()
             maxTimer.reset()
-            rodentClawsFeetNotOnGroundDelay.reset()
 
             when (direction) {
                 Direction.UP -> {}
@@ -528,14 +511,12 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             minTimer.reset()
             maxTimer.reset()
             cooldown.reset()
-            rodentClawsFeetNotOnGroundDelay.reset()
 
             if (shouldPreserveMomentum(false)) preserveMomentum() else stopMomentum(true)
 
             // Clamp horizontal velocity to max run speed and trigger the friction
             // burst so post-slide overspeed bleeds off quickly on the ground.
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) killPostActionMomentum()
-            else pendingPostActionMomentumKill = true
+            if (bodyOverGround) killPostActionMomentum() else pendingPostActionMomentumKill = true
         }
     }
 
