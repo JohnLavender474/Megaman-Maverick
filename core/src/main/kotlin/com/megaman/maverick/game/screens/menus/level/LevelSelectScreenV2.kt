@@ -81,7 +81,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
             return
         }
 
-        val levelSelectScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN_V2.source)
+        val levelSelectScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN_V3.source)
 
         val staticBkgRegion =
             levelSelectScreenAtlas.findRegion("${ConstKeys.BACKGROUND}_${ConstKeys.STATIC}")
@@ -133,7 +133,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
     }
 
     private fun putCenterMugshot() {
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN_V2.source)
+        val atlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN_V3.source)
 
         val megamanFaces = ObjectMap<Position, TextureRegion>()
 
@@ -191,7 +191,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
 
     private fun putBossMugshot(position: Position, levelDef: LevelDefinition) {
         val mugshotRegion = game.assMan.getTextureRegion(
-            TextureAsset.LEVEL_SELECT_SCREEN_V2.source, "${ConstKeys.FACES}/${levelDef.name.lowercase()}"
+            TextureAsset.LEVEL_SELECT_SCREEN_V3.source, "${ConstKeys.FACES}/${levelDef.name.lowercase()}"
         )
         val faceSupplier: () -> TextureRegion? = {
             when {

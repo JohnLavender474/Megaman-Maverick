@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../sprite_sheets/LevelSelectScreenV2.txt</filename>
+                <filename></filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -173,53 +173,8 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../frames/LevelSelectScreenV2/background_full.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/background_static.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/background_static_wily.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/desert_man.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/glacier_man.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/inferno_man.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/mega_man.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_bottom_center.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_bottom_left.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_bottom_right.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_center.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_center_left.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_center_right.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_top_center.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_top_left.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_top_right.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/moon_man.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/precious_woman.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/reactor_man.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/rodent_man.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/timber_woman.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/wily.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/bottom_center.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/bottom_left.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/bottom_right.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/center.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/center_left.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/center_right.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/top_center.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/top_left.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/selector/top_right.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,56,128,112</rect>
-                <key>scale9Paddings</key>
-                <rect>64,56,128,112</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../frames/LevelSelectScreenV2/background_selected.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/background_selected_wily.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/background_selected.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/background_selected_wily.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -234,15 +189,35 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_bottom_center_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_bottom_left_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_bottom_right_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_center_left_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_center_right_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_center_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_top_center_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_top_left_v2.png</key>
-            <key type="filename">../frames/LevelSelectScreenV2/faces/megaman_top_right_v2.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/background_static.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/background_static_wily.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/desert_man.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/glacier_man.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/inferno_man.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_bottom_center.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_bottom_left.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_bottom_right.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_center.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_center_left.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_center_right.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_top_center.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_top_left.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/megaman_top_right.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/moon_man.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/precious_woman.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/reactor_man.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/rodent_man.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/timber_woman.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/faces/wily.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/bottom_center.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/bottom_left.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/bottom_right.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/center.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/center_left.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/center_right.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/top_center.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/top_left.png</key>
+            <key type="filename">../frames/LevelSelectScreenV3/selector/top_right.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -251,9 +226,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
+                <rect>64,56,128,112</rect>
                 <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
+                <rect>64,56,128,112</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -264,7 +239,7 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../frames/LevelSelectScreenV2</filename>
+                    <filename>../frames/LevelSelectScreenV3</filename>
                 </array>
             </struct>
         </map>
