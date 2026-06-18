@@ -59,7 +59,7 @@ enum class LevelDefinition(
         type = LevelType.ROBOT_MASTER_LEVEL,
         mugshotAtlas = "FACES_1",
         mugshotRegion = "Inferno Man",
-        tmxMapSource = "InfernoMan_16x14_v2.tmx",
+        tmxMapSource = "InfernoMan_16x14_v3.tmx",
         music = MusicAsset.INFERNO_MAN_INTRO_MUSIC,
         screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
     ),
