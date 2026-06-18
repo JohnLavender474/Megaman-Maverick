@@ -68,6 +68,71 @@ For programmatic edits:
 When in doubt between the two, ask the user. Generative edits are easier to review; programmatic
 edits are more reliable at scale.
 
+### Sub-agent handoff
+
+Hand off programmatic edits to a sub-agent. Provide the sub-agent the specification of what to change.
+
+**Prompt template — fill in the bracketed fields and pass to `Agent` with `subagent_type: "claude"`:**
+
+```
+You are implementing a TMX level edit for the Megaman Maverick project.
+Working directory: /home/johnlavender/IdeaProjects/Megaman-Maverick
+
+TARGET FILE: [TMX_PATH]
+
+WHAT TO DO:
+[Describe the operations precisely: which objects to add, which to shift, which rooms to
+create, what properties each object needs. Be specific — object coordinates, layer names,
+entity class names, property keys and values.]
+
+ENTITY PROPERTIES NEEDED:
+[Paste the compact properties table produced by the entity-lookup sub-agent, or list the
+relevant spawn_room, spawn_type, and entity-specific properties for each entity type.]
+
+APPROVED ASCII MOCKUP (reference geometry — the edit must match this):
+[Paste the approved ASCII grid for each affected room.]
+
+INSTRUCTIONS:
+1. Write a Python script at /tmp/tmx_edit.py using the boilerplate in
+   .claude/skills/level-editor/SKILL.md (standard skeleton + make_object helper +
+   XML declaration fixup). For object-only edits, use the raw-text preservation pattern
+   so tile layers are never touched by ET.
+2. Run: python3 /tmp/tmx_edit.py
+3. Verify affected rooms with the visualizer:
+   utils/tmx-visualizer/run.sh [TMX_PATH] --room [ROOM_NAME] -o /tmp/verify
+4. Run the web viewer validate on the result:
+   utils/tmx-webview/run.sh --validate /tmp/verify.viz.txt
+5. Fix any discrepancies between the visualizer output and the approved mockup.
+6. Report back in ≤15 lines: what was added/changed, any issues encountered,
+   final file path. Do not include raw TMX, script code, or visualizer grids.
+```
+
+**After the sub-agent returns:** review its summary. If it reports issues, notify the
+user and ask if the sub-agent process should retry or be killed.
+
+### Sub-agent handoff for post-edit verification
+
+When verifying that a specific room matches an expected layout after any edit, 
+use an `Explore`sub-agent.
+
+**Prompt template — pass to `Agent` with `subagent_type: "Explore"`:**
+
+```
+Verify a TMX room edit in the Megaman Maverick project.
+Working directory: /home/johnlavender/IdeaProjects/Megaman-Maverick
+
+1. Run: utils/tmx-visualizer/run.sh [TMX_PATH] --room [ROOM_NAME] -o /tmp/verify
+2. Read /tmp/verify.viz.txt
+3. Check these specific expectations:
+   [LIST EACH EXPECTATION AS A BULLET, e.g.:
+   - Row 1 (ceiling) has [X] cells at columns 0–1 and cols 58–59 open
+   - B-ICP anchors appear at approximately rows 3, 7, 12 (±1 row acceptable)
+   - N-ID sensor spans the full width of the last 2 rows
+   - No cells appear outside the room boundary]
+4. Report: PASS or FAIL. If FAIL, list each failed check with the row/col where it failed.
+   Keep the entire response under 10 lines.
+```
+
 ## File Format
 
 TMX files are XML. Key XML elements:
@@ -119,6 +184,8 @@ key-value pairs. To know which properties a given entity supports — their expe
 and effects — **read the entity's `onSpawn` function** (and any helpers it delegates to, such as 
 `super.onSpawn`). Property keys are typically constants defined in `Constants.kt` (`ConstKeys`).
 
+**For 1–2 entities:** look up directly in the main context.
+
 Workflow:
 1. Resolve the entity class from the object's `name` attribute (under `core/.../entities/`).
 2. Open the class file and locate `onSpawn(spawnProps: Properties)`.
@@ -128,6 +195,28 @@ Workflow:
    properties like `cull_out_of_bounds`, `cull_events`, etc.
 
 If a property is missing from `onSpawn`, setting it in the TMX has no effect.
+
+**For 3+ entities:** use an `Explore` sub-agent to avoid loading multiple Kotlin files into the main
+context. Pass the following prompt to `Agent` with `subagent_type: "Explore"`:
+
+```
+Look up the TMX spawn properties for these Megaman Maverick entities:
+[LIST_ENTITY_NAMES — e.g. SniperJoe, FireDispensenator, DemonMet]
+
+Working directory: /home/johnlavender/IdeaProjects/Megaman-Maverick
+
+For each entity:
+1. Find its Kotlin file under core/src/main/kotlin/com/megaman/maverick/game/entities/
+2. Read its onSpawn(spawnProps) function
+3. Also read the immediate parent class onSpawn for inherited properties
+   (parent is usually AbstractEnemy, AbstractBoss, AbstractHazard, or AbstractBlock)
+4. Return a compact table with columns:
+   entity | property_key | type | default | notes
+
+Return only the table. No file contents, no code snippets.
+```
+
+Use the returned table directly when writing the TMX objects or Python script.
 
 ### Spawn Types
 

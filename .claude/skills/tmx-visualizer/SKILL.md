@@ -87,3 +87,22 @@ set, and the same key is reused everywhere that combination recurs. Two forms:
 Either way the combo is spelled out under a `-- combined (multi-object) tiles --` section in the
 key file, e.g. `[N-G/X]  combined tile: sensors : Gate + Block (geometry)`. Combo keys are
 per-file (the synthetic `&n` numbering depends on encounter order) — always trust the `.legend.txt`.
+
+## Post-edit verification
+
+After a programmatic edit lands, run the visualizer on the affected rooms to confirm the result
+matches the approved ASCII mockup. **Do not read the viz output in the main context** — for
+anything larger than a single room, hand it to an `Explore` sub-agent:
+
+```
+Explore sub-agent prompt (post-edit verification):
+  Run: utils/tmx-visualizer/run.sh assets/tiled_maps/tmx/<FILE>.tmx --room <roomName> -o /tmp/<roomName>
+  Read /tmp/<roomName>.viz.txt and /tmp/<roomName>.legend.txt.
+  Compare the grid against this approved ASCII mockup:
+  <paste approved mockup here>
+  Report: (1) any cells that differ from the mockup, (2) any codes not in the KEY,
+  (3) a one-sentence overall verdict (matches / has N discrepancies). Reply in ≤20 lines.
+```
+
+Run one sub-agent per room being verified. Each returns a ≤20-line diff report; relay the verdict
+to the user.

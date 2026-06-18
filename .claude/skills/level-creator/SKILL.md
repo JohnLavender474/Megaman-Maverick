@@ -183,7 +183,7 @@ section below for the file-by-file mechanics.
    - If (b): omit the `<layer>` element(s) entirely from every phase's TMX. Do not write an empty all-zero tile layer as a placeholder — the user will add tile layers themselves in Tiled.
    - The default if the user gives no answer is **(b) omit**.
 4. **Sketch the room chain** as a graph before touching XML: `intro → corridor → vertical climb → encounter → mini-boss → corridor → alt path? → pre-boss → boss`. Show this to the user and get sign-off. For any alt path, state explicitly **how it rejoins the main route** (shared edge with a downstream room, teleporter back, or ladder back).
-5. **Generate ASCII mockups** for each room using the exact format produced by `utils/tmx-visualizer/visualize.py` (see the `tmx-visualizer` skill for the full spec). This produces a renderable, human-reviewable grid before any TMX is written. The conventions to follow:
+5. **Generate ASCII mockups** for each room. This produces a renderable, human-reviewable grid before any TMX is written. Use this exact format:
    - **Header:** `=== <roomName>  origin(<X>,<Y>)px  <W>x<H> tiles ===`
    - **Cells:** `[  X  ]` solid Block geometry · `[     ]` empty space · `[  .  ]` continuation of a multi-tile entity · `[PS-1 ]` player spawn
    - **Entity codes:** `E-<tok>` enemies · `H-<tok>` hazards · `B-<tok>` named blocks · `S-<tok>` specials · `N-<tok>` sensors · `I-<tok>` items
@@ -197,7 +197,7 @@ section below for the file-by-file mechanics.
 
 Once the planning stage (including ASCII mockup approval) is signed off, switch to the **Phased Creation Workflow** below. The approved ASCII mockup for each room is the authoritative geometry reference for phase 1 (scaffold) — the block layout in the TMX must match it exactly.
 
-Hand off the mechanical TMX writing inside each phase to the `level-editor` skill.
+Hand off the mechanical TMX writing inside each phase to a `claude` sub-agent using the template in "How each phase works" below.
 
 ## Phased Creation Workflow
 
@@ -249,6 +249,25 @@ ls assets/tiled_maps/tmx/ | grep -v '^draft_' | xargs -I{} grep -l ...
 The reference levels listed in "Reference Levels" above are all non-draft and are the highest-trust
 sources for these lookups.
 
+**When looking up objects in the TMX, use an `Explore` sub-agent** to keep TMX file
+contents out of the main context. Pass this prompt to `Agent` with `subagent_type: "Explore"`:
+
+```
+Find canonical sizes (width × height in pixels) for these Megaman Maverick entities:
+[LIST_ENTITY_NAMES]
+
+Working directory: /home/johnlavender/IdeaProjects/Megaman-Maverick
+
+Search non-draft TMX files only (skip any file whose name starts with 'draft_'):
+  assets/tiled_maps/tmx/
+
+For each entity, find at least one occurrence in an existing level file and record its
+width and height attributes from the <object> element.
+
+Return a compact table: entity_name | width_px | height_px | source_tmx_file
+Return only the table. No XML snippets.
+```
+
 ### How each phase works
 
 For phase `N`:
@@ -267,6 +286,41 @@ For phase `N`:
    file** rather than creating yet another file, unless the change is large enough to warrant
    its own phase.
 
+**Hand off phase implementation to a sub-agent.** Pass this prompt to `Agent` with `subagent_type: "claude"`:
+
+```
+You are implementing a TMX level phase for the Megaman Maverick project.
+Working directory: /home/johnlavender/IdeaProjects/Megaman-Maverick
+
+SOURCE FILE: [PREV_PHASE_TMX or "none — create from scratch"]
+TARGET FILE: [NEW_PHASE_TMX]
+
+WHAT TO DO:
+[Describe operations: rooms to add, objects to place, properties for each. Include
+layer names, entity class names, pixel coordinates, property keys and values.]
+
+ENTITY PROPERTIES:
+[Compact table: entity | property_key | type | default | notes]
+
+APPROVED ASCII MOCKUP:
+[Paste the approved ASCII grid for each affected room.]
+
+INSTRUCTIONS:
+1. If a source file exists, cp it to the target path first.
+2. Write a Python script at /tmp/tmx_edit.py using:
+   - Standard ET skeleton with XML declaration fixup
+   - make_object helper for all new objects
+   - Raw-text preservation pattern for object-only edits
+   Boilerplate: .claude/skills/level-editor/SKILL.md "Python Editing Boilerplate" section.
+3. Run: python3 /tmp/tmx_edit.py
+4. Verify with: utils/tmx-visualizer/run.sh [TARGET_FILE] --room [ROOM] -o /tmp/verify
+5. Validate: utils/tmx-webview/run.sh --validate /tmp/verify.viz.txt
+6. Fix any discrepancies vs the approved mockup.
+7. Report in ≤15 lines: what was added, any issues, final file path. No raw TMX or grids.
+```
+
+Review the summary, relay it to the user as the phase announcement, then wait for sign-off before starting the next phase.
+
 ### Two-Step Entity Placement Pattern
 
 Any phase that places spawner objects (enemies, hazards, items, specials, decorations) should be
@@ -283,11 +337,30 @@ explicitly request this split for a single layer or single room.
 
 **Step 2 — flesh-out phase (`*_sized_N.tmx`):**
 - For each placeholder, resolve the real entity:
-  1. Look up the entity's spawn footprint and properties via the `level-editor` skill's workflow
-     — read the entity's `onSpawn` function (and its parent class's) to find every property it
-     reads and the size its sprite/collider expects.
-  2. Cross-reference how the entity is configured in **non-draft TMX files** (see "Cross-File
-     Lookups" above) — copy the size and any common property pattern from a finalized level.
+  1. **Look up spawn properties.** For 1–2 entity types, read the Kotlin file directly
+     (`core/src/main/kotlin/com/megaman/maverick/game/entities/`). For 3+ entity types, use an
+     `Explore` sub-agent:
+     ```
+     Look up TMX spawn properties for these Megaman Maverick entities: [LIST_ENTITY_NAMES]
+     Working directory: /home/johnlavender/IdeaProjects/Megaman-Maverick
+     For each entity:
+       1. Find its Kotlin file under core/src/main/kotlin/com/megaman/maverick/game/entities/
+       2. Read onSpawn(spawnProps) and the immediate parent class onSpawn
+     Return a compact table: entity | property_key | type | default | notes
+     No file contents or code snippets.
+     ```
+  2. **Cross-reference sizes.** For 1–2 entity types, grep non-draft TMX files directly. For
+     3+ entity types, use an `Explore` sub-agent:
+     ```
+     Find canonical sizes (width × height in pixels) for: [LIST_ENTITY_NAMES]
+     Working directory: /home/johnlavender/IdeaProjects/Megaman-Maverick
+     Search non-draft TMX files only (skip filenames starting with 'draft_'):
+       assets/tiled_maps/tmx/
+     For each entity, find one <object> element and record its width and height attributes.
+     Return a compact table: entity_name | width_px | height_px | source_tmx_file
+     No XML snippets.
+     ```
+     Copy the size and common property pattern from a finalized level.
 - Resize the placeholder rectangle to the real footprint and attach the discovered properties
   (`spawn_room`, `spawn_type`, entity-specific keys like `type=fire`, `target_1`, etc.).
 - Do **not** add new placements in the flesh-out phase. If the placement turns out to need

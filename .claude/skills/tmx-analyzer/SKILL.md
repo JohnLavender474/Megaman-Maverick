@@ -52,3 +52,16 @@ Prefer `-o /tmp/<name>.json` for any non-trivial level — the JSON for a dense 
 thousands of lines, and reading it back via `Read`/`jq` keeps your context tidy.
 
 Search for entities by name via the `name` attribute.
+
+## Sub-agent
+
+For assessments, hand the analysis to an `Explore` sub-agent:
+
+```
+Explore sub-agent prompt (level summary / assessment):
+  Run: `utils/tmx-analyzer/run.sh assets/tiled_maps/tmx/<FILE>.tmx -o /tmp/<name>.json`
+  Read: `/tmp/<name>.json`.
+  Summarize: (1) room chain with pixel dimensions, (2) entity counts per room per layer,
+  (3) any structural observations (gate placement, spawn types, boss room, etc.).
+  Reply a markdown table + bullet notes + relevant information.
+```
