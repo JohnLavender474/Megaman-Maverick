@@ -104,9 +104,10 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
             when (spawnType) {
                 SpawnType.SPAWN_ROOM -> {
-                    val roomName = it.properties.get(SpawnType.SPAWN_ROOM, String::class.java)!!
+                    val roomNames = it.properties.get(SpawnType.SPAWN_ROOM, String::class.java)!!
+                        .split(",").map { s -> s.trim() }.toHashSet()
 
-                    GameLogger.debug(TAG, "build(): adding SPAWN_ROOM spawner: entity=${name}, room=$roomName")
+                    GameLogger.debug(TAG, "build(): adding SPAWN_ROOM spawner: entity=${name}, rooms=$roomNames")
 
                     val spawner = SpawnerFactory.spawnerForOnEvent(
                         predicate = predicate@{ event ->
@@ -121,13 +122,13 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                             if (!eventsToAccept.contains(event.key)) return@predicate false
 
                             val currentRoomName = game.getCurrentRoom()?.name
-                            val shouldSpawn = currentRoomName == roomName
+                            val shouldSpawn = roomNames.contains(currentRoomName)
 
                             GameLogger.debug(
                                 TAG,
                                 "build(): " +
                                     "entity=$name, " +
-                                    "entityRoom=$roomName, " +
+                                    "entityRooms=$roomNames, " +
                                     "shouldSpawn=$shouldSpawn, " +
                                     "currentRoom=$currentRoomName"
                             )
