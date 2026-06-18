@@ -49,7 +49,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     companion object {
         const val TAG = "MagmaMeteor"
-        private const val DEFAULT_CULL_TIME = 0.5f
+        private const val DEFAULT_CULL_TIME = 2f
         private const val METEOR_SPEED = 10f
         private const val SPRITE_ROTATION_OFFSET = 135f
         private var region: TextureRegion? = null
