@@ -237,10 +237,21 @@ root = tree.getroot()
 # ... make changes ...
 
 tree.write(TMX, xml_declaration=True, encoding="UTF-8")
+
+# Python's ET emits single-quoted declaration: <?xml version='1.0' encoding='UTF-8'?>
+# Tiled rejects this — always fix it immediately after writing.
+with open(TMX, "r", encoding="utf-8") as f:
+    _content = f.read()
+_content = _content.replace(
+    "<?xml version='1.0' encoding='UTF-8'?>",
+    '<?xml version="1.0" encoding="UTF-8"?>'
+)
+with open(TMX, "w", encoding="utf-8") as f:
+    f.write(_content)
 ```
 
-Always pass `xml_declaration=True, encoding="UTF-8"` to `tree.write` — omitting either
-produces a file Tiled can't open.
+Always pass `xml_declaration=True, encoding="UTF-8"` to `tree.write`, and always run the
+fixup block above immediately after — omitting either step produces a file Tiled can't open.
 
 ### `make_object` helper
 
@@ -272,16 +283,58 @@ Usage: `make_object(41, "room3", 2112, 1152, 512, 448, props=[("event", "success
 
 ### Tile CSV editing
 
+Tiled's native format ends every row with a **trailing comma** (`0,0,0,`). The patterns below
+preserve this so a round-trip through ET produces a byte-identical tile section.
+
 ```python
 data_el = root.find('.//layer[@name="tiles1"]/data')
-rows = [row.split(",") for row in data_el.text.strip().split("\n")]
+# Strip trailing comma before splitting so len(cells) == layer width exactly.
+rows = [row.rstrip(",").split(",") for row in data_el.text.strip().split("\n") if row.strip()]
 
 # row index r  →  pixel y = r * 32
 # col index c  →  pixel x = c * 32
 rows[r][c] = "190"   # set a tile
 rows[r][c] = "0"     # clear a tile
 
-data_el.text = "\n" + "\n".join(",".join(row) for row in rows) + "\n"
+# Restore the trailing comma on each row when joining.
+data_el.text = "\n" + "\n".join(",".join(row) + "," for row in rows) + "\n"
+```
+
+When extending the map width, pad each row **after** the rstrip:
+
+```python
+for row in rows:
+    while len(row) < new_width:
+        row.append("0")
+```
+
+If you have no reason to touch the tile layers at all (object-only edit), **remove the `<layer>`
+elements before parsing and re-insert the original raw text after writing** to avoid any
+round-trip corruption:
+
+```python
+# Preserve tile layers as raw text; remove from tree so ET never touches them.
+import re
+
+with open(TMX, "r", encoding="utf-8") as f:
+    raw = f.read()
+
+layer_blocks = re.findall(r' <layer\b.*?</layer>\n', raw, re.DOTALL)
+for block in layer_blocks:
+    raw = raw.replace(block, "")
+
+# Parse the stripped file, make object-only edits, write.
+root = ET.fromstring(raw)
+# ... edits ...
+out = ET.tostring(root, encoding="unicode")
+out = '<?xml version="1.0" encoding="UTF-8"?>\n' + out
+
+# Re-insert tile layer blocks just before </map>.
+for block in layer_blocks:
+    out = out.replace("</map>", block + "</map>", 1)
+
+with open(TMX, "w", encoding="utf-8") as f:
+    f.write(out)
 ```
 
 ### Adding a new objectgroup layer
@@ -323,3 +376,63 @@ for og in root.iter("objectgroup"):
                                    omitting it causes a crash.
 - **Object id conflicts**: Each `<object>` id must be unique across the entire map; Tiled manages this automatically 
                            but manual edits can break it.
+- **Touching tile layers unnecessarily**: ET round-tripping a `<layer>` drops trailing commas and emits a
+                                          single-quoted XML declaration, both of which corrupt the file for Tiled.
+                                          If your edit is object-only, use the raw-text preservation pattern above.
+
+## Minimum Viable TMX Reference
+
+`assets/tiled_maps/tmx/Test8.tmx` is the smallest complete, loadable level. Use it as the
+structural template for any new TMX. It demonstrates: a tile layer with real tile data (non-zero
+values), a `game_rooms` layer, a `blocks` layer with unnamed geometry rectangles, a `sensors`
+layer with a `Gate`, a `specials` layer with `Ladder` and `Water`, and a `player` spawn.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="41">
+ <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
+ <layer id="1" name="tiles1" width="100" height="50">
+  <data encoding="csv">
+0,0,...(50 rows × 100 cols, trailing comma on each row)...
+  </data>
+ </layer>
+ <objectgroup id="2" name="game_rooms">
+  <object id="22" name="room1" x="1088" y="1152" width="512" height="448"/>
+  <object id="35" name="room2" x="1600" y="1152" width="512" height="448"/>
+ </objectgroup>
+ <objectgroup id="5" name="blocks">
+  <object id="23" x="1536" y="1312" width="32" height="288"/>
+  <object id="24" x="1152" y="1536" width="384" height="64"/>
+  <object id="25" x="1152" y="1152" width="960" height="64"/>
+  <object id="26" x="1088" y="1152" width="64" height="448"/>
+  <object id="27" x="1184" y="1408" width="96" height="32"/>
+  <object id="28" x="1344" y="1344" width="64" height="192"/>
+  <object id="29" name="LadderTop" x="1152" y="1408" width="32" height="8"/>
+  <object id="36" x="2048" y="1216" width="64" height="320"/>
+  <object id="37" x="1632" y="1536" width="480" height="64"/>
+  <object id="38" x="1568" y="1216" width="64" height="96"/>
+  <object id="39" x="1568" y="1216" width="64" height="384"/>
+ </objectgroup>
+ <objectgroup id="8" name="sensors">
+  <object id="40" name="Gate" x="1568" y="1216" width="64" height="96">
+   <properties>
+    <property name="room" value="room2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="specials">
+  <object id="33" name="Ladder" x="1152" y="1408" width="32" height="128"/>
+  <object id="34" name="Water" x="1408" y="1376" width="128" height="160"/>
+ </objectgroup>
+ <objectgroup id="4" name="player">
+  <object id="32" name="0" x="1216" y="1504" width="32" height="32"/>
+ </objectgroup>
+</map>
+```
+
+Key observations from this file:
+- Layer ordering: `<layer>` (tiles) comes **before** all `<objectgroup>` elements
+- Unnamed `<object>` entries in `blocks` are plain `Block` geometry (no `name` attribute)
+- `Gate` in `sensors` needs a `room` property naming which room it locks
+- The `player` spawn uses `name="0"` (the spawn index, not the entity class)
+- Tile data rows end with a trailing comma — this is Tiled's native format and must be preserved

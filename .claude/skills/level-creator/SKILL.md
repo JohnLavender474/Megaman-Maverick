@@ -183,11 +183,19 @@ section below for the file-by-file mechanics.
    - If (b): omit the `<layer>` element(s) entirely from every phase's TMX. Do not write an empty all-zero tile layer as a placeholder — the user will add tile layers themselves in Tiled.
    - The default if the user gives no answer is **(b) omit**.
 4. **Sketch the room chain** as a graph before touching XML: `intro → corridor → vertical climb → encounter → mini-boss → corridor → alt path? → pre-boss → boss`. Show this to the user and get sign-off. For any alt path, state explicitly **how it rejoins the main route** (shared edge with a downstream room, teleporter back, or ladder back).
-5. **Assign coordinates.** Place rooms head-to-tail in world space; rooms should touch (or overlap by 0) at their shared edges so camera transitions work.
+5. **Generate ASCII mockups** for each room using the exact format produced by `utils/tmx-visualizer/visualize.py` (see the `tmx-visualizer` skill for the full spec). This produces a renderable, human-reviewable grid before any TMX is written. The conventions to follow:
+   - **Header:** `=== <roomName>  origin(<X>,<Y>)px  <W>x<H> tiles ===`
+   - **Cells:** `[  X  ]` solid Block geometry · `[     ]` empty space · `[  .  ]` continuation of a multi-tile entity · `[PS-1 ]` player spawn
+   - **Entity codes:** `E-<tok>` enemies · `H-<tok>` hazards · `B-<tok>` named blocks · `S-<tok>` specials · `N-<tok>` sensors · `I-<tok>` items
+     - `<tok>` = uppercase initials of the entity class name, up to 3 chars, unique within its category (e.g. `SniperJoe` → `SJ`, `InfernoMeteorShower` → `IMS`)
+   - **Legend:** append a `===== KEY =====` block listing every code used and any combo cells (`&n`)
+   - Produce one grid per room. Size the grid correctly in tiles (width = room px / 32, height = room px / 32).
+   - Show all grids to the user and get approval before creating any TMX. If the user requests changes, revise the ASCII mockup until it is approved — do not start the TMX until the mockup is signed off.
+6. **Assign coordinates.** Place rooms head-to-tail in world space; rooms should touch (or overlap by 0) at their shared edges so camera transitions work.
 
 ### TMX output
 
-Once the planning stage is signed off, switch to the **Phased Creation Workflow** below.
+Once the planning stage (including ASCII mockup approval) is signed off, switch to the **Phased Creation Workflow** below. The approved ASCII mockup for each room is the authoritative geometry reference for phase 1 (scaffold) — the block layout in the TMX must match it exactly.
 
 Hand off the mechanical TMX writing inside each phase to the `level-editor` skill.
 
@@ -319,11 +327,12 @@ not break that walkability.
 ### Phased workflow for expansions
 
 The same file-per-phase pattern applies when **expanding** an existing level (see "Expanding an
-Existing Level"). The first phase copies the existing TMX into a `draft_` file
-(e.g. `draft_InfernoMan_v2_scaffold_1.tmx`) and applies only the new structural geometry; later
-phases add hazards/enemies/etc. for the new section using the same two-step placement →
-flesh-out split. The original (non-`draft_`) level file stays untouched and remains valid as a
-cross-file lookup source.
+Existing Level"). Before writing any TMX, generate ASCII mockups for the new rooms using the same
+format as planning step 5 above and get user approval. The first TMX phase then copies the existing
+TMX into a `draft_` file (e.g. `draft_InfernoMan_v2_scaffold_1.tmx`) and applies only the new
+structural geometry (matching the approved mockup); later phases add hazards/enemies/etc. for the
+new section using the same two-step placement → flesh-out split. The original (non-`draft_`) level
+file stays untouched and remains valid as a cross-file lookup source.
 
 ## Expanding an Existing Level
 
