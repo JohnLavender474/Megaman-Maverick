@@ -26,8 +26,9 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
     companion object {
         const val TAG = "SelectDifficultyScreen"
 
-        private const val BACK = "BACK"
+        private const val BGK_REG_KEY = "menu_screen_bkg_v2"
 
+        private const val BACK = "BACK"
         private const val NORMAL = "NORMAL"
         private const val HARD = "HARD"
 
@@ -51,7 +52,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
         GameLogger.debug(TAG, "init()")
 
         val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
-        val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
+        val backgroundRegion = uiAtlas.findRegion(BGK_REG_KEY)
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
 

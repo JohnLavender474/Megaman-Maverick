@@ -234,6 +234,7 @@
                 <false/>
             </struct>
             <key type="filename">../frames/Ui1/menu_screen_bkg.png</key>
+            <key type="filename">../frames/Ui1/menu_screen_bkg_v2.png</key>
             <key type="filename">../frames/Ui1/stage_start.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

@@ -27,6 +27,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         private const val SAVE = "SAVE"
         private const val CONTINUE = "CONTINUE"
         private const val MAIN_MENU = "MAIN MENU"
+        private const val BKG_REG_KEY = "menu_screen_bkg_v2"
         private const val TEXT_ROW_START = 9f
         private const val TEXT_X = 5f
         private const val ARROW_OFFSET_X = -0.5f
@@ -45,7 +46,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         GameLogger.debug(TAG, "init()")
 
         val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
-        val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
+        val backgroundRegion = uiAtlas.findRegion(BKG_REG_KEY)
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
 

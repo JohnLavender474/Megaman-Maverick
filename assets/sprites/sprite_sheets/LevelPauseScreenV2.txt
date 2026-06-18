@@ -1,5 +1,5 @@
 LevelPauseScreenV2.png
-size: 1548, 1356
+size: 1806, 1356
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -17,30 +17,37 @@ background_no_screws
   orig: 256, 224
   offset: 0, 0
   index: -1
-health_tanks/a
+background_no_screws_v2
   rotate: false
   xy: 517, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-health_tanks/a_selected
+health_tanks/a
   rotate: false
   xy: 775, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-health_tanks/b
+health_tanks/a_selected
   rotate: false
   xy: 1033, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
-health_tanks/b_selected
+health_tanks/b
   rotate: false
   xy: 1291, 1
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+health_tanks/b_selected
+  rotate: false
+  xy: 1549, 1
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
@@ -89,168 +96,168 @@ options/exit_selected
   index: -1
 options/exit_selected_v2
   rotate: false
-  xy: 1, 453
+  xy: 1549, 227
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 options/exit_v2
   rotate: false
-  xy: 259, 453
+  xy: 1, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 options/gear
   rotate: false
-  xy: 517, 453
+  xy: 259, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 options/gear_selected
   rotate: false
-  xy: 775, 453
+  xy: 517, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/axe_swinger
   rotate: false
-  xy: 1033, 453
+  xy: 775, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/axe_swinger_selected
   rotate: false
-  xy: 1291, 453
+  xy: 1033, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/frigid_shot
   rotate: false
-  xy: 1, 679
+  xy: 1291, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/frigid_shot_selected
   rotate: false
-  xy: 259, 679
+  xy: 1549, 453
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/infernal_barrage
   rotate: false
-  xy: 517, 679
+  xy: 1, 679
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/infernal_barrage_selected
   rotate: false
-  xy: 775, 679
+  xy: 259, 679
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/mega_buster
   rotate: false
-  xy: 1033, 679
+  xy: 517, 679
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/mega_buster_selected
   rotate: false
-  xy: 1291, 679
+  xy: 775, 679
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/moon_scythes
   rotate: false
-  xy: 1, 905
+  xy: 1033, 679
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/moon_scythes_selected
   rotate: false
-  xy: 259, 905
+  xy: 1291, 679
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/needle_spin
   rotate: false
-  xy: 517, 905
+  xy: 1549, 679
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/needle_spin_selected
   rotate: false
-  xy: 775, 905
+  xy: 1, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/precious_guard
   rotate: false
-  xy: 1033, 905
+  xy: 259, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/precious_guard_selected
   rotate: false
-  xy: 1291, 905
+  xy: 517, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/reactor_shot
   rotate: false
-  xy: 1, 1131
+  xy: 775, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/reactor_shot_selected
   rotate: false
-  xy: 259, 1131
+  xy: 1033, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/rodent_claws
   rotate: false
-  xy: 517, 1131
+  xy: 1291, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/rodent_claws_selected
   rotate: false
-  xy: 775, 1131
+  xy: 1549, 905
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/rush_jet
   rotate: false
-  xy: 1033, 1131
+  xy: 1, 1131
   size: 256, 224
   orig: 256, 224
   offset: 0, 0
   index: -1
 weapons/rush_jet_selected
   rotate: false
-  xy: 1291, 1131
+  xy: 259, 1131
   size: 256, 224
   orig: 256, 224
   offset: 0, 0

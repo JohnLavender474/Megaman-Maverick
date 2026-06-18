@@ -49,6 +49,8 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
     companion object {
         const val TAG = "LevelPauseScreen"
 
+        private const val BKG_REG_KEY = "background_no_screws_v2"
+
         // This array sorts the healths in the order that they're displayed, starting at the top
         // and moving to the right...
         private val HEALTH_TANKS = gdxArrayOf(
@@ -168,7 +170,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             TextureAsset.LEVEL_PAUSE_SCREEN_V2.source
         )
 
-        val backgroundRegion = levelPauseScreenAtlas.findRegion("background_no_screws")
+        val backgroundRegion = levelPauseScreenAtlas.findRegion(BKG_REG_KEY)
         backgroundSprite.setBounds(
             0f,
             0f,

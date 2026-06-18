@@ -175,6 +175,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">../frames/LevelPauseScreenV2/background.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/background_no_screws.png</key>
+            <key type="filename">../frames/LevelPauseScreenV2/background_no_screws_v2.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/a.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/a_selected.png</key>
             <key type="filename">../frames/LevelPauseScreenV2/health_tanks/b.png</key>
