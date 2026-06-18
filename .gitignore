@@ -188,3 +188,6 @@ Thumbs.db
 
 ## temp dir
 temp/**
+
+## Claude superpowers plugin directory
+.superpowers
