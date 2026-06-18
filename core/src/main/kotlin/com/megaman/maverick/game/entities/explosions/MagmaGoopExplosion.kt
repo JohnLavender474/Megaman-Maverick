@@ -135,7 +135,7 @@ class MagmaGoopExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 15))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 15))
         sprite.setSize(1.5f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putPreProcess { _, _ ->

@@ -85,7 +85,7 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private lateinit var spawnRoom: String
+    private lateinit var spawnRooms: HashSet<String>
     private lateinit var type: String
 
     private var left = false
@@ -116,7 +116,8 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
 
-        spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+        spawnRooms = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
+            .split(",").map { it.trim() }.toHashSet()
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
@@ -165,10 +166,10 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this, objectSetOf(EventType.END_ROOM_TRANS), cull@{ event ->
                     val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                    val doCull = room != spawnRoom
+                    val doCull = !spawnRooms.contains(room)
                     GameLogger.debug(
                         TAG,
-                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$doCull"
+                        "defineCullablesComponent(): currentRoom=$room, spawnRooms=$spawnRooms, cull=$doCull"
                     )
                     return@cull doCull
                 }
