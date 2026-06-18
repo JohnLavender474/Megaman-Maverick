@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="500" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="925">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="500" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="931">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -10,7 +10,7 @@
  </layer>
  <layer id="17" name="tiles1" width="500" height="100">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup id="14" name="TODO"/>
@@ -18,7 +18,7 @@
   <object id="1" name="room1" x="64" y="2592" width="4576" height="448"/>
   <object id="123" name="room2" x="4128" y="2144" width="512" height="448"/>
   <object id="148" name="room3" x="3712" y="1696" width="928" height="448"/>
-  <object id="169" name="room4" x="3712" y="1248" width="4512" height="448"/>
+  <object id="169" name="room4" x="3712" y="1248" width="4480" height="448"/>
   <object id="278" name="room6" x="10656" y="384" width="512" height="1312"/>
   <object id="315" name="room7" x="11168" y="384" width="512" height="832"/>
   <object id="345" name="mini_boss_room" x="11680" y="1216" width="512" height="448">
@@ -39,7 +39,7 @@
    </properties>
   </object>
   <object id="644" name="room5" x="10144" y="1248" width="512" height="448"/>
-  <object id="773" name="room4b" x="8224" y="1248" width="1920" height="608"/>
+  <object id="773" name="room4b" x="8192" y="1248" width="1952" height="608"/>
  </objectgroup>
  <objectgroup id="4" name="backgrounds">
   <object id="9" name="InfernoBKG" x="0" y="2752" width="512" height="448">
@@ -84,16 +84,12 @@
   <object id="746" name="Smoke" x="10272" y="1152" width="96" height="672"/>
   <object id="745" name="Smoke" x="10496" y="1152" width="96" height="672"/>
   <object id="906" name="Smoke" x="7616" y="1152" width="96" height="672"/>
-  <object id="907" name="Smoke" x="8032" y="1152" width="96" height="672"/>
   <object id="908" name="Smoke" x="8608" y="1152" width="96" height="832"/>
-  <object id="909" name="Smoke" x="9024" y="1152" width="96" height="832"/>
   <object id="910" name="Smoke" x="9408" y="1152" width="96" height="832"/>
-  <object id="912" name="LavaFall" x="9952" y="1152" width="64" height="832">
-   <polygon points="0,0 64,0 64,832 0,832"/>
+  <object id="912" name="LavaFall" x="8032" y="1152" width="64" height="672">
+   <polygon points="0,0 64,0 64,672 0,672"/>
   </object>
-  <object id="913" name="LavaFall" x="8448" y="1152" width="64" height="832">
-   <polygon points="0,0 64,0 64,832 0,832"/>
-  </object>
+  <object id="928" name="Smoke" x="7392" y="1152" width="96" height="672"/>
  </objectgroup>
  <objectgroup id="12" name="children">
   <object id="62" name="Target" x="2512" y="2768" width="32" height="32"/>
@@ -198,12 +194,11 @@
   <object id="739" name="Scanner" x="1088" y="2720" width="576" height="64"/>
   <object id="741" name="Scanner" x="1536" y="2840" width="448" height="40"/>
   <object id="771" name="Scanner" x="5568" y="1352" width="384" height="64"/>
-  <object id="850" name="Target1" x="7736" y="1424" width="16" height="16"/>
-  <object id="851" name="Target2" x="7800" y="1424" width="16" height="16"/>
+  <object id="850" name="Target1" x="7792" y="1456" width="16" height="16"/>
+  <object id="851" name="Target2" x="7832" y="1456" width="16" height="16"/>
   <object id="864" x="7360" y="1216" width="160" height="64"/>
   <object id="865" x="7552" y="1216" width="160" height="64"/>
-  <object id="868" x="8608" y="1216" width="160" height="64"/>
-  <object id="869" x="8800" y="1216" width="160" height="64"/>
+  <object id="869" x="8864" y="1216" width="160" height="64"/>
   <object id="875" x="7744" y="1216" width="160" height="64"/>
   <object id="876" x="7936" y="1216" width="160" height="64"/>
   <object id="902" x="9248" y="1216" width="160" height="64"/>
@@ -328,21 +323,21 @@
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision,no_body_touchie"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="173" x="4448" y="1472" width="256" height="96">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="175" x="4704" y="1408" width="128" height="448">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -350,7 +345,7 @@
   <object id="186" x="4288" y="1312" width="256" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -358,7 +353,7 @@
   <object id="192" x="4832" y="1568" width="192" height="288">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -386,7 +381,7 @@
   <object id="208" x="5536" y="1504" width="256" height="192">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -427,21 +422,21 @@
   <object id="252" x="6432" y="1472" width="128" height="384">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="253" x="6560" y="1440" width="128" height="416">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="254" x="6688" y="1408" width="240" height="448">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -449,7 +444,7 @@
   <object id="259" x="6496" y="1312" width="96" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -482,7 +477,7 @@
   <object id="327" x="5632" y="1408" width="128" height="96">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -595,7 +590,7 @@
   <object id="665" x="5632" y="1248" width="128" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -671,43 +666,43 @@
   <object id="777" x="8128" y="1376" width="192" height="288"/>
   <object id="781" x="9664" y="1696" width="128" height="32">
    <properties>
-    <property name="cull_out_of_bounds" value="false"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="782" x="8512" y="1152" width="64" height="384">
    <properties>
-    <property name="cull_out_of_bounds" value="false"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="783" x="8576" y="1504" width="320" height="32">
    <properties>
-    <property name="cull_out_of_bounds" value="false"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="784" x="8672" y="1376" width="384" height="32">
    <properties>
-    <property name="cull_out_of_bounds" value="false"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="785" x="9504" y="1632" width="64" height="32">
    <properties>
-    <property name="cull_out_of_bounds" value="false"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="787" x="9056" y="1344" width="96" height="672">
    <properties>
-    <property name="cull_out_of_bounds" value="false"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -769,7 +764,7 @@
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision,no_body_touchie"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -777,7 +772,7 @@
   <object id="879" x="7648" y="1312" width="256" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -785,18 +780,18 @@
   <object id="883" x="8128" y="1696" width="192" height="320"/>
   <object id="884" x="9504" y="1376" width="320" height="32">
    <properties>
-    <property name="cull_out_of_bounds" value="false"/>
-    <property name="spawn_room" value="room_4b"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="885" x="8992" y="1152" width="224" height="128"/>
+  <object id="885" x="9056" y="1152" width="160" height="128"/>
   <object id="900" x="10016" y="1440" width="256" height="576"/>
   <object id="901" x="7328" y="1056" width="896" height="96">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="fixture_labels" value="no_side_touchie,no_projectile_collision,no_body_touchie"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -805,7 +800,7 @@
   <object id="916" x="7936" y="1376" width="64" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
@@ -813,19 +808,20 @@
   <object id="918" x="7488" y="1376" width="32" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="919" x="7392" y="1504" width="32" height="32">
    <properties>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="spawn_room" value="room_4"/>
+    <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="920" x="8768" y="1344" width="32" height="32"/>
   <object id="921" x="8576" y="1472" width="32" height="32"/>
+  <object id="930" x="8576" y="1152" width="128" height="128"/>
  </objectgroup>
  <objectgroup id="10" name="enemies">
   <object id="61" name="Popoheli" x="2512" y="2656" width="32" height="32">
@@ -974,18 +970,15 @@
     <property name="scanner" type="object" value="771"/>
    </properties>
   </object>
-  <object id="852" name="DemonMet" x="7768" y="1376" width="16" height="16">
+  <object id="852" name="DemonMet" x="7816" y="1392" width="16" height="16">
    <properties>
-    <property name="spawn_room" value="room4"/>
-    <property name="spawn_type" value="spawn_room"/>
+    <property name="hard_mode_only" type="bool" value="true"/>
     <property name="target_1" type="object" value="850"/>
     <property name="target_2" type="object" value="851"/>
    </properties>
   </object>
   <object id="861" name="SniperJoe" x="9736" y="1680" width="16" height="16">
    <properties>
-    <property name="spawn_room" value="room4b"/>
-    <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="fire"/>
    </properties>
   </object>
@@ -1406,7 +1399,7 @@
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="mini_boss_room"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1414,7 +1407,7 @@
   <object id="462" name="LavaRiver" x="11808" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="mini_boss_room"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1422,7 +1415,7 @@
   <object id="463" name="LavaRiver" x="12000" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="mini_boss_room"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1431,7 +1424,7 @@
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="mini_boss_room"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1440,7 +1433,7 @@
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="mini_boss_room"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1449,7 +1442,7 @@
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="mini_boss_room"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1458,7 +1451,7 @@
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1467,7 +1460,7 @@
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1476,7 +1469,7 @@
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1484,7 +1477,7 @@
   <object id="478" name="LavaRiver" x="12384" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1492,7 +1485,7 @@
   <object id="479" name="LavaRiver" x="12448" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1500,7 +1493,7 @@
   <object id="480" name="LavaRiver" x="12512" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1508,7 +1501,7 @@
   <object id="481" name="LavaRiver" x="12576" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1516,7 +1509,7 @@
   <object id="482" name="LavaRiver" x="12640" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1542,7 +1535,7 @@
   <object id="497" name="LavaRiver" x="12704" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1550,7 +1543,7 @@
   <object id="498" name="LavaRiver" x="12768" y="1632" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room9"/>
+    <property name="spawn_room" value="mini_boss_room,room9"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1764,7 +1757,7 @@
     <property name="type" value="top"/>
    </properties>
   </object>
-  <object id="813" name="LavaRiver" x="7328" y="1664" width="64" height="32">
+  <object id="813" name="LavaRiver" x="7360" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
     <property name="spawn_room" value="room4"/>
@@ -1772,7 +1765,7 @@
     <property name="type" value="top"/>
    </properties>
   </object>
-  <object id="814" name="LavaRiver" x="7456" y="1664" width="64" height="32">
+  <object id="814" name="LavaRiver" x="7488" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
     <property name="spawn_room" value="room4"/>
@@ -1780,7 +1773,7 @@
     <property name="type" value="top"/>
    </properties>
   </object>
-  <object id="815" name="LavaRiver" x="7520" y="1664" width="64" height="32">
+  <object id="815" name="LavaRiver" x="7552" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
     <property name="spawn_room" value="room4"/>
@@ -1815,7 +1808,7 @@
   <object id="819" name="LavaRiver" x="7872" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1823,7 +1816,7 @@
   <object id="820" name="LavaRiver" x="7936" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1831,7 +1824,7 @@
   <object id="821" name="LavaRiver" x="8000" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1839,7 +1832,7 @@
   <object id="822" name="LavaRiver" x="8064" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1847,7 +1840,7 @@
   <object id="823" name="LavaRiver" x="8128" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1855,7 +1848,7 @@
   <object id="824" name="LavaRiver" x="8192" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1900,20 +1893,11 @@
    <properties>
     <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
-    <property name="spawner2" type="object" value="868"/>
     <property name="spawner3" type="object" value="869"/>
     <property name="spawner_4" type="object" value="902"/>
     <property name="spawner_5" type="object" value="903"/>
     <property name="spawner_6" type="object" value="904"/>
     <property name="spawner_7" type="object" value="905"/>
-   </properties>
-  </object>
-  <object id="874" name="LavaRiver" x="7584" y="1664" width="32" height="32">
-   <properties>
-    <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
-    <property name="spawn_type" value="spawn_room"/>
-    <property name="type" value="fall_start"/>
    </properties>
   </object>
   <object id="878" name="FireballBar" x="7968" y="1376" width="32" height="32">
@@ -1922,7 +1906,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="880" name="LavaRiver" x="7392" y="1664" width="64" height="32">
+  <object id="880" name="LavaRiver" x="7424" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
     <property name="spawn_room" value="room4"/>
@@ -1939,7 +1923,7 @@
   <object id="887" name="LavaRiver" x="8256" y="1664" width="64" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="top"/>
    </properties>
@@ -1947,7 +1931,7 @@
   <object id="888" name="LavaRiver" x="8320" y="1664" width="32" height="32">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="fall_start"/>
    </properties>
@@ -1955,7 +1939,7 @@
   <object id="889" name="LavaRiver" x="8320" y="1696" width="32" height="64">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="fall"/>
    </properties>
@@ -1963,7 +1947,7 @@
   <object id="890" name="LavaRiver" x="8320" y="1760" width="32" height="64">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="fall"/>
    </properties>
@@ -1971,7 +1955,7 @@
   <object id="891" name="LavaRiver" x="8320" y="1824" width="32" height="64">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="fall"/>
    </properties>
@@ -1979,7 +1963,7 @@
   <object id="894" name="LavaRiver" x="8320" y="1888" width="32" height="64">
    <properties>
     <property name="left" type="bool" value="false"/>
-    <property name="spawn_room" value="room4"/>
+    <property name="spawn_room" value="room4,room4b"/>
     <property name="spawn_type" value="spawn_room"/>
     <property name="type" value="fall"/>
    </properties>
@@ -1994,6 +1978,22 @@
    <properties>
     <property name="spawn_room" value="room4b"/>
     <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
+  <object id="925" name="LavaRiver" x="7616" y="1664" width="64" height="32">
+   <properties>
+    <property name="left" type="bool" value="false"/>
+    <property name="spawn_room" value="room4"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="top"/>
+   </properties>
+  </object>
+  <object id="929" name="LavaRiver" x="7328" y="1664" width="32" height="32">
+   <properties>
+    <property name="left" type="bool" value="true"/>
+    <property name="spawn_room" value="room4"/>
+    <property name="spawn_type" value="spawn_room"/>
+    <property name="type" value="fall_start"/>
    </properties>
   </object>
  </objectgroup>
@@ -2157,16 +2157,12 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="player">
-  <object id="923" name="0" x="3840" y="1536" width="32" height="32"/>
+ <objectgroup id="9" name="temp">
+  <object id="923" name="0" x="3872" y="1536" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="8" name="temp">
+ <objectgroup id="8" name="player">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>
-  <object id="236" name="1" x="4496" y="1984" width="32" height="32">
-   <properties>
-    <property name="facing" value="left"/>
-   </properties>
-  </object>
+  <object id="236" name="1" x="3840" y="1536" width="32" height="32"/>
   <object id="325" name="3" x="11232" y="480" width="32" height="32"/>
   <object id="593" name="4" x="11776" y="1120" width="32" height="32"/>
   <object id="594" name="5" x="12256" y="1568" width="32" height="32"/>
