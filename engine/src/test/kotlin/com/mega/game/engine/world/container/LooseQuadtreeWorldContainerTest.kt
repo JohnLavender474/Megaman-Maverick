@@ -279,5 +279,72 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
             tree.getBodies(4, 4, 6, 6, outBodies)
             outBodies shouldNotContain body2
         }
+
+        // ── Filter ────────────────────────────────────────────────────────────────────
+
+        it("filter should exclude bodies that do not pass the predicate") {
+            val dynamicBody = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
+            val staticBody = Body(BodyType.STATIC, 50f, 50f, 10f, 10f)
+            tree.addBody(dynamicBody)
+            tree.addBody(staticBody)
+
+            tree.getBodies(4, 4, 6, 6, outBodies) { it.type == BodyType.DYNAMIC }
+
+            outBodies shouldContain dynamicBody
+            outBodies shouldNotContain staticBody
+        }
+
+        it("filter should exclude bodies in a single-cell query that do not pass the predicate") {
+            val dynamicBody = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
+            val staticBody = Body(BodyType.STATIC, 50f, 50f, 10f, 10f)
+            tree.addBody(dynamicBody)
+            tree.addBody(staticBody)
+
+            tree.getBodies(5, 5, outBodies) { it.type == BodyType.STATIC }
+
+            outBodies shouldContain staticBody
+            outBodies shouldNotContain dynamicBody
+        }
+
+        it("filter should exclude fixtures that do not pass the predicate") {
+            val mockBody = mockk<Body>()
+            val fixture1 = Fixture(mockBody, "TypeA", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(mockBody, "TypeB", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            tree.addFixture(fixture1)
+            tree.addFixture(fixture2)
+
+            tree.getFixtures(4, 4, 6, 6, outFixtures) { it.getType() == "TypeA" }
+
+            outFixtures shouldContain fixture1
+            outFixtures shouldNotContain fixture2
+        }
+
+        it("filter should exclude fixtures in a single-cell query that do not pass the predicate") {
+            val mockBody = mockk<Body>()
+            val fixture1 = Fixture(mockBody, "TypeA", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(mockBody, "TypeB", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            tree.addFixture(fixture1)
+            tree.addFixture(fixture2)
+
+            tree.getFixtures(5, 5, outFixtures) { it.getType() == "TypeB" }
+
+            outFixtures shouldContain fixture2
+            outFixtures shouldNotContain fixture1
+        }
+
+        it("getObjects filter should exclude bodies and fixtures that do not pass the predicate") {
+            val body = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
+            val mockBody = mockk<Body>()
+            val fixture = Fixture(mockBody, "F", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            tree.addBody(body)
+            tree.addFixture(fixture)
+
+            val out = mutableListOf<Any>()
+            // only keep IFixture instances
+            tree.getObjects(4, 4, 6, 6, out) { it is IFixture }
+
+            out shouldContain fixture
+            out shouldNotContain body
+        }
     }
 })

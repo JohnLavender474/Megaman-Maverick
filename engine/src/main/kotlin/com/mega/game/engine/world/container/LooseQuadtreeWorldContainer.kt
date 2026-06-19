@@ -161,39 +161,39 @@ class LooseQuadtreeWorldContainer(
         return true
     }
 
-    override fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>) =
-        getBodies(x, y, x, y, out)
+    override fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>, filter: ((IBody) -> Boolean)?) =
+        getBodies(x, y, x, y, out, filter)
 
-    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>) {
+    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>, filter: ((IBody) -> Boolean)?) {
         queryRegion(
             root,
             cellsToWorldMinX(minX), cellsToWorldMinY(minY),
             cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)
-        ) { node -> out.addAll(node.bodies) }
+        ) { node -> node.bodies.forEach { if (filter == null || filter(it)) out.add(it) } }
     }
 
-    override fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>) =
-        getFixtures(x, y, x, y, out)
+    override fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>, filter: ((IFixture) -> Boolean)?) =
+        getFixtures(x, y, x, y, out, filter)
 
-    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>) {
+    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>, filter: ((IFixture) -> Boolean)?) {
         queryRegion(
             root,
             cellsToWorldMinX(minX), cellsToWorldMinY(minY),
             cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)
-        ) { node -> out.addAll(node.fixtures) }
+        ) { node -> node.fixtures.forEach { if (filter == null || filter(it)) out.add(it) } }
     }
 
-    override fun getObjects(x: Int, y: Int, out: MutableCollection<Any>) =
-        getObjects(x, y, x, y, out)
+    override fun getObjects(x: Int, y: Int, out: MutableCollection<Any>, filter: ((Any) -> Boolean)?) =
+        getObjects(x, y, x, y, out, filter)
 
-    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>) {
+    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>, filter: ((Any) -> Boolean)?) {
         queryRegion(
             root,
             cellsToWorldMinX(minX), cellsToWorldMinY(minY),
             cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)
         ) { node ->
-            out.addAll(node.bodies)
-            out.addAll(node.fixtures)
+            node.bodies.forEach { if (filter == null || filter(it)) out.add(it) }
+            node.fixtures.forEach { if (filter == null || filter(it)) out.add(it) }
         }
     }
 

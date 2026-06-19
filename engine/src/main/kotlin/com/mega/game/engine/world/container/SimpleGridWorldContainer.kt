@@ -76,33 +76,33 @@ class SimpleGridWorldContainer(
         return true
     }
 
-    override fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>) {
-        val set = bodyMap[x pairTo y]
-        set?.let { out.addAll(it) }
+    override fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>, filter: ((IBody) -> Boolean)?) {
+        bodyMap[x pairTo y]?.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
-    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>) {
-        for (column in minX..maxX) for (row in minY..maxY) bodyMap[column pairTo row]?.let { out.addAll(it) }
+    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>, filter: ((IBody) -> Boolean)?) {
+        for (column in minX..maxX) for (row in minY..maxY)
+            bodyMap[column pairTo row]?.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
-    override fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>) {
-        val set = fixtureMap[x pairTo y]
-        set?.let { out.addAll(it) }
+    override fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>, filter: ((IFixture) -> Boolean)?) {
+        fixtureMap[x pairTo y]?.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
-    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>) {
-        for (column in minX..maxX) for (row in minY..maxY) fixtureMap[column pairTo row]?.let { out.addAll(it) }
+    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>, filter: ((IFixture) -> Boolean)?) {
+        for (column in minX..maxX) for (row in minY..maxY)
+            fixtureMap[column pairTo row]?.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
-    override fun getObjects(x: Int, y: Int, out: MutableCollection<Any>) {
-        bodyMap[x pairTo y]?.let { out.addAll(it) }
-        fixtureMap[x pairTo y]?.let { out.addAll(it) }
+    override fun getObjects(x: Int, y: Int, out: MutableCollection<Any>, filter: ((Any) -> Boolean)?) {
+        bodyMap[x pairTo y]?.forEach { if (filter == null || filter(it)) out.add(it) }
+        fixtureMap[x pairTo y]?.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
-    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>) {
+    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>, filter: ((Any) -> Boolean)?) {
         for (column in minX..maxX) for (row in minY..maxY) {
-            bodyMap[column pairTo row]?.let { out.addAll(it) }
-            fixtureMap[column pairTo row]?.let { out.addAll(it) }
+            bodyMap[column pairTo row]?.forEach { if (filter == null || filter(it)) out.add(it) }
+            fixtureMap[column pairTo row]?.forEach { if (filter == null || filter(it)) out.add(it) }
         }
     }
 

@@ -55,14 +55,10 @@ class QuadtreeWorldContainer : IWorldContainer {
         return bounds.set(minX, minY, maxX - minX, maxY - minY)
     }
 
-    override fun getBodies(x: Int, y: Int): HashSet<IBody> {
-        val result = HashSet<IBody>()
-        val point = GameRectangle(x.toFloat(), y.toFloat(), 0.1f, 0.1f)
-        root.retrieveBodies(result, point)
-        return result
-    }
+    override fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>, filter: ((IBody) -> Boolean)?) =
+        getBodies(x, y, x, y, out, filter)
 
-    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int): HashSet<IBody> {
+    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>, filter: ((IBody) -> Boolean)?) {
         val result = HashSet<IBody>()
         root.retrieveBodies(
             result,
@@ -73,17 +69,13 @@ class QuadtreeWorldContainer : IWorldContainer {
                 (maxY - minY).toFloat()
             )
         )
-        return result
+        result.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
-    override fun getFixtures(x: Int, y: Int): HashSet<IFixture> {
-        val result = HashSet<IFixture>()
-        val point = GameRectangle(x.toFloat(), y.toFloat(), 0.1f, 0.1f)
-        root.retrieveFixtures(result, point)
-        return result
-    }
+    override fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>, filter: ((IFixture) -> Boolean)?) =
+        getFixtures(x, y, x, y, out, filter)
 
-    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int): HashSet<IFixture> {
+    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>, filter: ((IFixture) -> Boolean)?) {
         val result = HashSet<IFixture>()
         root.retrieveFixtures(
             result,
@@ -94,17 +86,13 @@ class QuadtreeWorldContainer : IWorldContainer {
                 (maxY - minY).toFloat()
             )
         )
-        return result
+        result.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
-    override fun getObjects(x: Int, y: Int): HashSet<Any> {
-        val result = HashSet<Any>()
-        val point = GameRectangle(x.toFloat(), y.toFloat(), 0.1f, 0.1f)
-        root.retrieveAllObjects(result, point)
-        return result
-    }
+    override fun getObjects(x: Int, y: Int, out: MutableCollection<Any>, filter: ((Any) -> Boolean)?) =
+        getObjects(x, y, x, y, out, filter)
 
-    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int): HashSet<Any> {
+    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>, filter: ((Any) -> Boolean)?) {
         val result = HashSet<Any>()
         root.retrieveAllObjects(
             result,
@@ -115,7 +103,7 @@ class QuadtreeWorldContainer : IWorldContainer {
                 (maxY - minY).toFloat()
             )
         )
-        return result
+        result.forEach { if (filter == null || filter(it)) out.add(it) }
     }
 
     override fun clear() = root.clear()
