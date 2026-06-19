@@ -31,6 +31,7 @@ class WorldSystem(
     var fixedStepScalar: Float = 1f,
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
     var diagnostics: RuntimeDiagnostics? = null,
+    var batchQueryCellAreaThreshold: Int? = null
 ) : GameSystem(BodyComponent::class) {
 
     companion object {
@@ -281,15 +282,11 @@ class WorldSystem(
             MathUtils.ceil(bounds.getMaxX() / ppm),
             MathUtils.ceil(bounds.getMaxY() / ppm),
             reusableBodySet
-        ) { candidate ->
-            candidate != body &&
-                candidate.getBounds(out2).overlaps(bounds)
+        )
+        reusableBodySet.forEach {
+            if (it != body && it.getBounds(out2).overlaps(bounds))
+                collisionHandler.handleCollision(body, it)
         }
-
-        reusableBodySet.forEach { colliding ->
-            collisionHandler.handleCollision(body, colliding)
-        }
-
         reusableBodySet.clear()
     }
 }
