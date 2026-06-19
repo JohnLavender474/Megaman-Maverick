@@ -8,6 +8,7 @@ import com.mega.game.engine.common.enums.Direction
 import com.mega.game.engine.common.enums.Facing
 import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.mega.game.engine.common.extensions.set
 import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -318,8 +319,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)
                     when {
-                        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
+                        isBehaviorActive(BehaviorType.GROUND_SLIDING) ->
                             size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
+                        isBehaviorActive(BehaviorType.CROUCHING) ->
+                            size.set(MEGAMAN_BODY_WIDTH)
                         else -> size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
                     }
                     it.setSize(size.scl(ConstVals.PPM.toFloat()))
@@ -342,8 +345,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)
                     when {
-                        isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ->
+                        isBehaviorActive(BehaviorType.GROUND_SLIDING) ->
                             size.set(MEGAMAN_BODY_WIDTH, MEGAMAN_BODY_HEIGHT)
+                        isBehaviorActive(BehaviorType.CROUCHING) ->
+                            size.set(MEGAMAN_BODY_WIDTH)
                         else -> size.set(MEGAMAN_BODY_HEIGHT, MEGAMAN_BODY_WIDTH)
                     }
                     it.setSize(size.scl(ConstVals.PPM.toFloat()))

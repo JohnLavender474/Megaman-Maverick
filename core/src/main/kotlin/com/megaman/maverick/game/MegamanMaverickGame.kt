@@ -165,7 +165,7 @@ class MegamanMaverickGame(
         private const val AUTO_PERF_HIGH_SPEED = 1.0f      // timer multiplier: 3s / ~3s
         private const val AUTO_PERF_CRISIS_SPEED = 2.0f    // timer multiplier: 3s / ~1.5s
         private const val NOTIFICATION_DUR = 5f
-        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
+        val TAGS_TO_LOG: ObjectSet<String> = objectSetOf(Megaman.TAG)
         val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
             contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER) &&
                 (contact.fixture1.getEntity() is UnderWaterBubble || contact.fixture2.getEntity() is UnderWaterBubble)

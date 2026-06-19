@@ -997,7 +997,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     fun translateAmmo(ammo: Int, weapon: MegamanWeapon = megaman.currentWeapon): Int {
         val remaining = weaponsHandler.translateAmmo(weapon, ammo)
-        GameLogger.debug(TAG, "translateAmmo(): ammo=$ammo, remaining=$remaining")
+        GameLogger.debug(TAG, "translateAmmo(): weapon=$weapon, ammo=$ammo, remaining=$remaining")
         return remaining
     }
 
