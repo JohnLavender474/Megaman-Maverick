@@ -38,7 +38,7 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
         initialized = true
 
         val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
-        val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
+        val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg_v2")
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
 
