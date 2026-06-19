@@ -24,6 +24,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -31,6 +32,7 @@ import com.megaman.maverick.game.levels.LevelUtils
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.world.body.getBounds
 
 class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IDirectional {
 
@@ -141,45 +143,45 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val cooldown = timers["cooldown"]
-
         when {
             coolingDown -> {
                 cooldown.update(delta)
-
                 if (cooldown.isFinished()) {
                     coolingDown = false
-
                     resetTimers()
-
-                    val overlap = spawners.keys().any { it.overlaps(game.getGameCamera().toGameRectangle()) }
-                    if (overlap) shakeRoom()
+                    shakeRoom()
                 }
             }
+
             else -> {
                 val initSpawnDelay = timers["init_spawn_delay"]
                 initSpawnDelay.update(delta)
 
-                if (initSpawnDelay.isFinished()) spawners.forEach { entry ->
-                    val spawner = entry.key
-                    val timer = entry.value
+                if (initSpawnDelay.isFinished()) {
+                    val megamanBounds = megaman.body.getBounds()
+                    val minX = megamanBounds.getX() - 10f * ConstVals.PPM
+                    val maxX = megamanBounds.getMaxX() + 10f * ConstVals.PPM
 
-                    timer.update(delta)
-                    if (timer.isFinished()) {
-                        val x = UtilMethods.getRandom(spawner.getX(), spawner.getMaxX())
-                        val y = spawner.getMaxY()
-                        val spawn = GameObjectPools.fetch(Vector2::class).set(x, y)
+                    spawners.forEach spawner@{ entry ->
+                        val spawner = entry.key
+                        if (spawner.getMaxX() < minX || spawner.getX() > maxX) return@spawner
 
-                        spawnMeteor(spawn)
-
-                        timer.resetDuration(
-                            UtilMethods.getRandom(MIN_CONTINUE_SPAWN_DELAY, MAX_CONTINUE_SPAWN_DELAY)
-                        )
+                        val timer = entry.value
+                        timer.update(delta)
+                        if (timer.isFinished()) {
+                            val x = UtilMethods.getRandom(spawner.getX(), spawner.getMaxX())
+                            val y = spawner.getMaxY()
+                            val spawn = GameObjectPools.fetch(Vector2::class).set(x, y)
+                            spawnMeteor(spawn)
+                            timer.resetDuration(
+                                UtilMethods.getRandom(MIN_CONTINUE_SPAWN_DELAY, MAX_CONTINUE_SPAWN_DELAY)
+                            )
+                        }
                     }
                 }
 
                 val meteorShower = timers["meteor_shower"]
                 meteorShower.update(delta)
-
                 if (meteorShower.isFinished()) {
                     coolingDown = true
                     resetTimers()

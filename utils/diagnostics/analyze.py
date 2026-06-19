@@ -346,6 +346,109 @@ def plot_subprocess_proportions(frames: List[Frame], root_base: str,
 
 
 # ---------------------------------------------------------------------------
+# Text summary
+# ---------------------------------------------------------------------------
+
+def generate_summary(frames: List[Frame], output_dir: str) -> None:
+    if not frames:
+        return
+
+    total_ms   = np.array([f.total_ms for f in frames], dtype=float)
+    frame_mean = float(np.mean(total_ms))
+    p99_total  = float(np.percentile(total_ms, 99))
+
+    root_names   = _root_base_names(frames)
+    root_timings = _root_timings(frames)
+
+    def _stats(ms: np.ndarray) -> dict:
+        return {
+            'mean': float(np.mean(ms)),
+            'p50':  float(np.percentile(ms, 50)),
+            'p95':  float(np.percentile(ms, 95)),
+            'p99':  float(np.percentile(ms, 99)),
+        }
+
+    root_stats  = {n: _stats(root_timings[n][1]) for n in root_names}
+    child_stats = {
+        n: {cn: _stats(cms) for cn, (_, cms) in _child_timings(frames, n).items()}
+        for n in root_names
+    }
+
+    # Column width — widest name across roots and all children.
+    all_names = list(root_names) + [
+        cn for children in child_stats.values() for cn in children
+    ]
+    name_col = max((len(n) for n in all_names), default=10) + 2
+
+    def _stat_line(s: dict, indent: str) -> str:
+        avg_pct = (s['mean'] / frame_mean * 100) if frame_mean > 0 else 0.0
+        return (
+            f'{indent}'
+            f'mean {s["mean"]:7.2f} ms  '
+            f'p50 {s["p50"]:7.2f} ms  '
+            f'p95 {s["p95"]:7.2f} ms  '
+            f'p99 {s["p99"]:7.2f} ms  '
+            f'avg% {avg_pct:5.1f}%'
+        )
+
+    lines: List[str] = []
+
+    # ---- Section 1: Session Overview ----
+    lines.append('=== Session Overview ===')
+    lines.append(f'  Frames analyzed : {len(frames):,}')
+    lines.append(f'  Total session   : {len(frames) / 60.0:.1f} s  (estimated at 60 fps)')
+    lines.append('')
+
+    lines.append('=== Total Frame Time ===')
+    lines.append(f'  min    : {float(np.min(total_ms)):8.2f} ms')
+    lines.append(f'  mean   : {frame_mean:8.2f} ms')
+    lines.append(f'  p50    : {float(np.percentile(total_ms, 50)):8.2f} ms')
+    lines.append(f'  p95    : {float(np.percentile(total_ms, 95)):8.2f} ms')
+    lines.append(f'  p99    : {p99_total:8.2f} ms')
+    lines.append(f'  max    : {float(np.max(total_ms)):8.2f} ms')
+    lines.append('')
+
+    lines.append('=== Root Process Summary ===')
+    for root_name in sorted(root_names, key=lambda n: root_stats[n]['mean'], reverse=True):
+        label = root_name.ljust(name_col)
+        lines.append(_stat_line(root_stats[root_name], f'  {label}'))
+        children = child_stats[root_name]
+        for child_name in sorted(children, key=lambda n: children[n]['mean'], reverse=True):
+            child_label = child_name.ljust(name_col)
+            lines.append(_stat_line(children[child_name], f'    {child_label}'))
+    lines.append('')
+
+    # ---- Section 2: Spike Frames ----
+    spike_frames = sorted(
+        [f for f in frames if f.total_ms > p99_total],
+        key=lambda f: f.total_ms, reverse=True,
+    )
+    pct_session = len(spike_frames) / len(frames) * 100
+    lines.append(f'=== Spike Frames (total > p99 = {p99_total:.2f} ms) ===')
+    lines.append(f'  {len(spike_frames)} spike frames  ({pct_session:.1f}% of session)')
+    lines.append('')
+
+    if spike_frames:
+        lines.append(f'  {"Frame":>6}  {"Total":>9}  Top Contributor')
+        lines.append(f'  {"------":>6}  {"---------":>9}  ' + '-' * 42)
+        for frame in spike_frames[:20]:
+            if frame.roots:
+                top = max(frame.roots, key=lambda e: e.duration_ms)
+                pct = top.duration_ms / frame.total_ms * 100 if frame.total_ms > 0 else 0.0
+                contributor = f'{top.base_name} {top.duration_ms:.2f} ms ({pct:.1f}%)'
+            else:
+                contributor = '(no root data)'
+            lines.append(f'  {frame.number:>6}  {frame.total_ms:>8.2f} ms  {contributor}')
+        if len(spike_frames) > 20:
+            lines.append(f'  (showing top 20 of {len(spike_frames)})')
+
+    path = os.path.join(output_dir, 'summary.txt')
+    with open(path, 'w') as fh:
+        fh.write('\n'.join(lines) + '\n')
+    print(f'  Saved: {path}')
+
+
+# ---------------------------------------------------------------------------
 # Utilities
 # ---------------------------------------------------------------------------
 
@@ -431,6 +534,8 @@ def main() -> None:
         chart_idx += 1
         plot_subprocess_proportions(frames, root_name, chart_idx, output_dir)
         chart_idx += 1
+
+    generate_summary(frames, output_dir)
 
     print(f'\nDone.  Charts written to: {output_dir}')
 
