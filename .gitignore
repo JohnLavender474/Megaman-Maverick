@@ -192,3 +192,6 @@ temp/**
 ## Claude superpowers plugin directory
 .superpowers
 docs/superpowers
+
+## Python
+__pycache__
