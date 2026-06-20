@@ -53,6 +53,9 @@ val BEHAVIORS_TO_END_ON_BOUNCE = gdxArrayOf(
 val Megaman.feetFixture: Fixture
     get() = body.getProperty(ConstKeys.FEET) as Fixture
 
+val Megaman.feetGravityFixture: Fixture
+    get() = body.getProperty("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") as Fixture
+
 val Megaman.leftSideFixture: Fixture
     get() = body.getProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", Fixture::class)!!
 
@@ -135,6 +138,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.putProperty(ConstKeys.BODY_OVER_GROUND, isBodyOverGround)
     body.onReset.put("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") { feetGravitySet.clear() }
     body.addFixture(feetGravityFixture)
+    body.putProperty("${ConstKeys.FEET}_${ConstKeys.GRAVITY}", feetGravityFixture)
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM))

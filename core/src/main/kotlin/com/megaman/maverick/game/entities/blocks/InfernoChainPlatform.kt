@@ -28,6 +28,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.megaman.components.feetGravityFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -110,9 +111,12 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         sprites.clear()
     }
 
-    override fun shouldMoveDown() =
-        (super.shouldMoveDown() || isMegamanWallSlidingOnMe()) &&
-        !body.isSensing(BodySense.FEET_ON_GROUND)
+    override fun shouldMoveDown(): Boolean {
+        if (body.isSensing(BodySense.FEET_ON_GROUND)) return false
+        return super.shouldMoveDown() ||
+            isMegamanWallSlidingOnMe() ||
+            megaman.feetGravityFixture.getShape().overlaps(body.getBounds())
+    }
 
     private fun isMegamanWallSlidingOnMe(): Boolean {
         if (!megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) return false
