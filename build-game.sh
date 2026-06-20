@@ -92,6 +92,12 @@ java -jar ./game-builds/packr-all-4.0.0.jar \
      --output ./game-builds/$EXECUTABLE_NAME-$PLATFORM \
      --verbose
 
+# Set executable bit on Linux builds
+if [ "$PLATFORM" = "linux64" ]; then
+    echo "Setting executable bit on $EXECUTABLE_NAME"
+    chmod +x "./game-builds/$EXECUTABLE_NAME-$PLATFORM/$EXECUTABLE_NAME"
+fi
+
 # Check if the output folder exists
 echo "Checking that game-build output exists for platform=$PLATFORM"
 if [ ! -d "./game-builds/$EXECUTABLE_NAME-$PLATFORM" ]; then
