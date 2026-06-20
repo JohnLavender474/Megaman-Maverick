@@ -21,8 +21,8 @@ object DesktopLauncher {
 
     private val DEFAULT_RUN_TYPE = RunType.GAME.name
     private val DEFAULT_PERFORMANCE = Performance.MEDIUM.name
-    private const val DEFAULT_WIDTH = 1920
-    private const val DEFAULT_HEIGHT = 1080
+    private const val DEFAULT_WIDTH = 640
+    private const val DEFAULT_HEIGHT = 480
     private const val DEFAULT_RESIZABLE = true
     private const val DEFAULT_MAXIMIZED = false
     private const val DEFAULT_FULLSCREEN = false
