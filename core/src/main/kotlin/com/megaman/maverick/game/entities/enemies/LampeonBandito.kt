@@ -41,6 +41,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
@@ -82,8 +83,6 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezabl
 
         private const val LIGHT_RADIUS = 5
         private const val LIGHT_RADIANCE = 1.025f
-
-        private const val FROZEN_DUR = 1f
 
         private val animDefs = orderedMapOf(
             "frozen" pairTo AnimationDef(),
@@ -132,6 +131,7 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezabl
         stateMachine = buildStateMachine()
         addComponent(defineAnimationsComponent())
         addDebugShapeSupplier { standShootScanner }
+        damageOverrides.put(Explosion::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
