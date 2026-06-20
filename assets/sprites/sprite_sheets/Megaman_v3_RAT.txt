@@ -1,0 +1,215 @@
+Megaman_v3_RAT.png
+size: 496, 392
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+airdash
+  rotate: false
+  xy: 1, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+airdash_slash1
+  rotate: false
+  xy: 347, 101
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+beam
+  rotate: false
+  xy: 51, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb
+  rotate: false
+  xy: 1, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+climb_finish
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb_still
+  rotate: false
+  xy: 151, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb_still_slash1
+  rotate: false
+  xy: 397, 101
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+crouch
+  rotate: false
+  xy: 201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+crouch_slash1
+  rotate: false
+  xy: 447, 101
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+damaged
+  rotate: false
+  xy: 1, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+frozen
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+frozen_push
+  rotate: false
+  xy: 51, 101
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+groundslide
+  rotate: false
+  xy: 301, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+groundslide_slash1
+  rotate: false
+  xy: 51, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+jump
+  rotate: false
+  xy: 351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+jump_slash1
+  rotate: false
+  xy: 101, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+run
+  rotate: false
+  xy: 149, 101
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+run_trans
+  rotate: false
+  xy: 401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slip
+  rotate: false
+  xy: 1, 51
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+slip_slash1
+  rotate: false
+  xy: 151, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+spawn
+  rotate: false
+  xy: 51, 51
+  size: 336, 48
+  orig: 336, 48
+  offset: 0, 0
+  index: -1
+stand
+  rotate: false
+  xy: 247, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+stand_slash1
+  rotate: false
+  xy: 201, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+stand_slash2
+  rotate: false
+  xy: 251, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+stand_slash3
+  rotate: false
+  xy: 301, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+stunned
+  rotate: false
+  xy: 297, 101
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+swim
+  rotate: false
+  xy: 389, 51
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+swim_slash1
+  rotate: false
+  xy: 351, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+wallslide
+  rotate: false
+  xy: 439, 51
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide_slash1
+  rotate: false
+  xy: 401, 247
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
