@@ -745,7 +745,6 @@ class MegamanMaverickGame(
                         params.fixedStepScalar / (getPerformance().fixedStep * getPerformance().fps)
                     ),
                     diagnostics = diagnostics,
-                    batchQueryCellAreaThreshold = null // 25
                 ),
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {

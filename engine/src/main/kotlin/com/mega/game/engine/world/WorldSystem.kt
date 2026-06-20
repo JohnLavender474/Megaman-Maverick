@@ -30,8 +30,7 @@ class WorldSystem(
     var contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
-    var diagnostics: RuntimeDiagnostics? = null,
-    var batchQueryCellAreaThreshold: Int? = null
+    var diagnostics: RuntimeDiagnostics? = null
 ) : GameSystem(BodyComponent::class) {
 
     companion object {
@@ -199,70 +198,7 @@ class WorldSystem(
         diagnostics?.endEntry()
     }
 
-    internal fun collectContacts(body: IBody) =
-        collectContactsUnionFixturesBBox(body) || collectContactsPerFixtureBasis(body)
-
-    internal fun collectContactsUnionFixturesBBox(body: IBody): Boolean {
-        val batchThreshold = batchQueryCellAreaThreshold ?: return false
-
-        var unionMinX = Int.MAX_VALUE
-        var unionMinY = Int.MAX_VALUE
-        var unionMaxX = Int.MIN_VALUE
-        var unionMaxY = Int.MIN_VALUE
-
-        var qualifyingCount = 0
-
-        body.forEachFixture { fixture ->
-            if (fixture.isActive()) {
-                fixture.getShape().getBoundingRectangle(reusableGameRect)
-
-                val x1 = MathUtils.floor(reusableGameRect.getX() / ppm)
-                val y1 = MathUtils.floor(reusableGameRect.getY() / ppm)
-                val x2 = MathUtils.ceil(reusableGameRect.getMaxX() / ppm)
-                val y2 = MathUtils.ceil(reusableGameRect.getMaxY() / ppm)
-
-                if (x1 < unionMinX) unionMinX = x1
-                if (y1 < unionMinY) unionMinY = y1
-                if (x2 > unionMaxX) unionMaxX = x2
-                if (y2 > unionMaxY) unionMaxY = y2
-
-                qualifyingCount++
-            }
-        }
-
-        if (qualifyingCount == 0) return false
-
-        val unionCellArea = (unionMaxX - unionMinX + 1) * (unionMaxY - unionMinY + 1)
-        if (unionCellArea <= batchThreshold) {
-            diagnostics?.beginEntry("collect contacts via union bounding box")
-
-            worldContainer.getFixtures(unionMinX, unionMinY, unionMaxX, unionMaxY, reusableFixtureSet)
-
-            body.forEachFixture { fixture ->
-                if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
-                    reusableFixtureSet.forEach { candidate ->
-                        if (candidate.isActive() && filterContact(fixture, candidate) &&
-                            fixture.getShape().overlaps(candidate.getShape())
-                        ) {
-                            val contact = contactPool.fetch()
-                            contact.set(fixture, candidate)
-                            currentContactSet.add(contact)
-                        }
-                    }
-                }
-            }
-
-            reusableFixtureSet.clear()
-
-            diagnostics?.endEntry()
-
-            return true
-        }
-
-        return false
-    }
-
-    internal fun collectContactsPerFixtureBasis(body: IBody): Boolean {
+    internal fun collectContacts(body: IBody) {
         diagnostics?.beginEntry("collect contacts on per-fixture basis")
 
         body.forEachFixture { fixture ->
@@ -282,7 +218,8 @@ class WorldSystem(
                     ) {
                         val contact = contactPool.fetch()
                         contact.set(fixture, candidate)
-                        currentContactSet.add(contact)
+                        if (!currentContactSet.add(contact))
+                            contactPool.free(contact)
                     }
                 }
 
@@ -291,8 +228,6 @@ class WorldSystem(
         }
 
         diagnostics?.endEntry()
-
-        return true
     }
 
     internal fun resolveCollisions(body: IBody) {
