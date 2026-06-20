@@ -2,13 +2,10 @@ package com.megaman.maverick.game.screens.levels.spawns
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.extensions.overlaps
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 
@@ -56,8 +53,8 @@ class PlayerSpawnsManager(
         return null
     }
 
-    private fun shouldPop(spawn: RectangleMapObject) = camera.overlaps(
-        spawn.rectangle.toGameRectangle(), GameObjectPools.fetch(BoundingBox::class)
+    private fun shouldPop(spawn: RectangleMapObject) = camera.toGameRectangle().overlaps(
+        spawn.rectangle.toGameRectangle()
     )
 
     override fun run() {
