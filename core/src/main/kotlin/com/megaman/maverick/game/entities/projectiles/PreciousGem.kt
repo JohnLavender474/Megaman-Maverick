@@ -264,7 +264,6 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun explodeAndDie(vararg params: Any?) {
         val direction = if (params.isNotEmpty()) params[0] as Direction else Direction.UP
-
         SHATTER_IMPULSES.get(direction).forEach { impulse ->
             val shard = MegaEntityFactory.fetch(PreciousShard::class)!!
             shard.spawn(
@@ -290,9 +289,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
                 )
             )
         }
-
         destroy()
-
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 

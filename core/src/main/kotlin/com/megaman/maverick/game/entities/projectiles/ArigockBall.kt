@@ -91,7 +91,6 @@ class ArigockBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(

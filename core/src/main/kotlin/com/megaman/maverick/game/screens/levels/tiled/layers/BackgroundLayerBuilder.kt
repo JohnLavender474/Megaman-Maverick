@@ -78,7 +78,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 key = it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "InfernoBKG"),
+                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "InfernoBKG_v2"),
                 modelWidth = it.rectangle.width,
                 modelHeight = it.rectangle.height,
                 rows = it.properties.get(ConstKeys.ROWS) as Int,

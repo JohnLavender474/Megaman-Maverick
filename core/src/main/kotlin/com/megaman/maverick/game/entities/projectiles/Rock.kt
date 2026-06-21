@@ -98,10 +98,8 @@ class Rock(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        GameLogger.debug(GroundPebble.Companion.TAG, "explodeAndDie()")
-
+        GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
-
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }

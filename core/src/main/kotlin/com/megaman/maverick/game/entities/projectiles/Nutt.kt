@@ -51,7 +51,6 @@ class Nutt(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(
             props(

@@ -67,7 +67,6 @@ class UFOBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(

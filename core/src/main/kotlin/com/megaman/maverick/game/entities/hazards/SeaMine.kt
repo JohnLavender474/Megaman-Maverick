@@ -121,9 +121,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
 
     private fun explodeAndDie() {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(

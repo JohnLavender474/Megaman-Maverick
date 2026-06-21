@@ -62,11 +62,8 @@ FirePellet(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }

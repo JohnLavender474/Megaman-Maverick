@@ -102,12 +102,10 @@ class ReactorMonkeyBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val props = props(
             ConstKeys.BOUNDS pairTo GameRectangle(body),
             ConstKeys.OWNER pairTo this,
-            ConstKeys.END pairTo { if (exploding) destroy() } as () -> Unit
+            ConstKeys.END pairTo { if (exploding) destroy() }
         )
         explosion.spawn(props)
-
         exploding = true
-
         body.physics.gravityOn = false
         body.physics.velocity.setZero()
     }

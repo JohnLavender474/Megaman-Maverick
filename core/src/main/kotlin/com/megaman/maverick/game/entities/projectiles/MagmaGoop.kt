@@ -99,31 +99,33 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
-
         destroy()
+        try {
+            val thisShape = params[0] as IGameShape2D
+            val otherShape = params[1] as IGameShape2D
 
-        val thisShape = params[0] as IGameShape2D
-        val otherShape = params[1] as IGameShape2D
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: megaman.direction
+            val position = DirectionPositionMapper.getPosition(direction)
 
-        val direction = getOverlapPushDirection(thisShape, otherShape) ?: megaman.direction
-        val position = DirectionPositionMapper.getPosition(direction)
+            val overlap = GameObjectPools.fetch(Rectangle::class)
+            val overlapping = Intersector.intersectRectangles(
+                thisShape.toGdxRectangle(),
+                otherShape.toGdxRectangle(),
+                overlap
+            )
 
-        val overlap = GameObjectPools.fetch(Rectangle::class)
-        val overlapping = Intersector.intersectRectangles(
-            thisShape.toGdxRectangle(),
-            otherShape.toGdxRectangle(),
-            overlap
-        )
-        val spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
+            val spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
+            GameLogger.debug(
+                TAG,
+                "explodeAndDie(): spawn=$spawn, overlapping=$overlapping, overlap=$overlap, " +
+                    "direction=$direction, position=$position"
+            )
 
-        GameLogger.debug(
-            TAG,
-            "explodeAndDie(): spawn=$spawn, overlapping=$overlapping, overlap=$overlap, " +
-                "direction=$direction, position=$position"
-        )
-
-        val explosion = MegaEntityFactory.fetch(MagmaGoopExplosion::class)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
+            val explosion = MegaEntityFactory.fetch(MagmaGoopExplosion::class)!!
+            explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
+        } catch (e: Exception) {
+            GameLogger.error(TAG, "Error while exploding magma goop", e)
+        }
     }
 
     override fun defineBodyComponent(): BodyComponent {

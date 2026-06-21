@@ -85,31 +85,33 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirect
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
-
         destroy()
+        try {
+            val thisShape = params[0] as IGameShape2D
+            val otherShape = params[1] as IGameShape2D
 
-        val thisShape = params[0] as IGameShape2D
-        val otherShape = params[1] as IGameShape2D
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
+            val position = DirectionPositionMapper.getPosition(direction)
 
-        val direction = getOverlapPushDirection(thisShape, otherShape) ?: Direction.UP
-        val position = DirectionPositionMapper.getPosition(direction)
+            val overlap = Rectangle()
+            val overlapping = Intersector.intersectRectangles(
+                thisShape.toGdxRectangle(),
+                otherShape.toGdxRectangle(),
+                overlap
+            )
+            val spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
 
-        val overlap = Rectangle()
-        val overlapping = Intersector.intersectRectangles(
-            thisShape.toGdxRectangle(),
-            otherShape.toGdxRectangle(),
-            overlap
-        )
-        val spawn = if (overlapping) overlap.getPositionPoint(position) else thisShape.getCenter()
+            GameLogger.debug(
+                TAG,
+                "explodeAndDie(): spawn=$spawn, overlapping=$overlapping, overlap=$overlap, " +
+                    "direction=$direction, position=$position"
+            )
 
-        GameLogger.debug(
-            TAG,
-            "explodeAndDie(): spawn=$spawn, overlapping=$overlapping, overlap=$overlap, " +
-                "direction=$direction, position=$position"
-        )
-
-        val explosion = MegaEntityFactory.fetch(MagmaFlame::class)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
+            val explosion = MegaEntityFactory.fetch(MagmaFlame::class)!!
+            explosion.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.DIRECTION pairTo direction))
+        } catch (e: Exception) {
+            GameLogger.error(TAG, "Error while exploding magma pellet", e)
+        }
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {

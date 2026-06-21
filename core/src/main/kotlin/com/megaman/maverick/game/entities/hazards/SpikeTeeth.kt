@@ -89,7 +89,6 @@ class SpikeTeeth(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     private fun explodeAndDie() {
         destroy()
-
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo true))
     }

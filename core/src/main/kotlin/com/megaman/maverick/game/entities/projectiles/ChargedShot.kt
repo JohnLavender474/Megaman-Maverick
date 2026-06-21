@@ -229,15 +229,12 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
-
         val props = props(
             ConstKeys.OWNER pairTo owner,
             ConstKeys.BOOLEAN pairTo fullyCharged,
             ConstKeys.POSITION pairTo body.getCenter(),
             ConstKeys.ROTATION pairTo trajectory.angleDeg(),
         )
-
         val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
         explosion.spawn(props)
     }

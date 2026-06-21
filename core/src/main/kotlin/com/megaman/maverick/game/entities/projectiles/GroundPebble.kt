@@ -123,9 +123,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.SOUND pairTo false))
     }

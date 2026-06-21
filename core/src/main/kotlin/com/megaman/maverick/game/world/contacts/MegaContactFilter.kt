@@ -6,8 +6,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.world.body.IFixture
 import com.mega.game.engine.world.contacts.IContactFilter
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.sensors.DeathForPlayerOnly
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getFilter
@@ -113,21 +111,6 @@ class MegaContactFilter : IContactFilter {
 
         if ((type1 == FixtureType.CART || type2 == FixtureType.CART) &&
             entity1.getType() != EntityType.MEGAMAN && entity2.getType() != EntityType.MEGAMAN
-        ) return false
-
-        if ((type1 == FixtureType.DEATH && entity2.getType() == EntityType.PROJECTILE) ||
-            (type2 == FixtureType.DEATH && entity1.getType() == EntityType.PROJECTILE)
-        ) return false
-
-        var deathEntity: MegaGameEntity? = null
-        when {
-            type1 == FixtureType.DEATH -> deathEntity = entity1
-            type2 == FixtureType.DEATH -> deathEntity = entity2
-        }
-        if (deathEntity != null &&
-            entity1.getType() != EntityType.MEGAMAN &&
-            entity2.getType() != EntityType.MEGAMAN &&
-            deathEntity.getTag() == DeathForPlayerOnly.TAG
         ) return false
 
         if (type1 == FixtureType.CONSUMER || type2 == FixtureType.CONSUMER) {

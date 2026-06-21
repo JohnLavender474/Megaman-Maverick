@@ -96,12 +96,10 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         when (explosionType) {
             DEFAULT_EXPLOSION -> {
                 val explosion = MegaEntityFactory.fetch(Explosion::class)!!
                 explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-
                 if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
             }
 
@@ -114,7 +112,6 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
                         ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
                     )
                 )
-
                 if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
             }
         }

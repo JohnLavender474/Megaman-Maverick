@@ -1035,7 +1035,7 @@
     <property name="instant" type="bool" value="false"/>
    </properties>
   </object>
-  <object id="119" name="DeathForPlayerOnly" x="4480" y="1104" width="992" height="112">
+  <object id="119" name="MegamanDeath" x="4480" y="1104" width="992" height="112">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>

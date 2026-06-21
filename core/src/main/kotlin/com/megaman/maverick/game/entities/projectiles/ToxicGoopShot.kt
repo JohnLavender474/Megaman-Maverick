@@ -82,17 +82,19 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
-        val splash = MegaEntityFactory.fetch(ToxicGoopSplash::class)!!
-        splash.spawn(
-            props(
-                ConstKeys.OWNER pairTo this,
-                ConstKeys.DIRECTION pairTo params[0] as Direction?,
-                ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
+        try {
+            val splash = MegaEntityFactory.fetch(ToxicGoopSplash::class)!!
+            splash.spawn(
+                props(
+                    ConstKeys.OWNER pairTo this,
+                    ConstKeys.DIRECTION pairTo params[0] as Direction?,
+                    ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
+                )
             )
-        )
+        } catch (e: Exception) {
+            GameLogger.error(TAG, "Error while exploding toxic goop shot", e)
+        }
     }
 
     override fun defineBodyComponent(): BodyComponent {

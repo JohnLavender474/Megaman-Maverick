@@ -92,9 +92,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
             props(

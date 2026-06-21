@@ -86,7 +86,6 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(
             props(

@@ -121,16 +121,12 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
-
         /*
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-
         if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
          */
     }

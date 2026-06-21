@@ -7,7 +7,7 @@
   `Death` sensors for all environmental killing.
 - **Known properties:**
   - `instant` — `bool`, default `false`. Marks the `DEATH` fixture as instant. Pit/void kill
-    planes set `instant=true`. (A `DeathForPlayerOnly` sibling class exists for player-only death.)
+    planes set `instant=true`.
 - **Behavior:** spawns an abstract body whose single `DEATH` fixture exactly covers the object's
   bounds and kills anything overlapping it. No sprite — it is invisible in game and in the
   `tmx-visualizer` output is only seen where it overlaps a block (the `N-D/X` combo). The body

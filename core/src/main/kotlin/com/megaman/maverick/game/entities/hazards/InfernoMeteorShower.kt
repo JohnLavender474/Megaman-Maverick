@@ -141,6 +141,8 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) return@UpdatablesComponent
+
         val cooldown = timers["cooldown"]
         when {
             coolingDown -> {

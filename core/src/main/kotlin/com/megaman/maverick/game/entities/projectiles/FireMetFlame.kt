@@ -82,7 +82,6 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
         puff.spawn(
             props(
@@ -90,7 +89,6 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
-
         if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 

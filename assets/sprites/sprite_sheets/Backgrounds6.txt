@@ -45,6 +45,13 @@ InfernoBKG
   orig: 256, 448
   offset: 0, 0
   index: -1
+InfernoBKG_v2
+  rotate: false
+  xy: 1204, 242
+  size: 256, 448
+  orig: 256, 448
+  offset: 0, 0
+  index: -1
 PunkCity
   rotate: false
   xy: 1288, 0
@@ -68,7 +75,7 @@ PunkCityAnimated_3frames
   index: -1
 Space
   rotate: false
-  xy: 1204, 242
+  xy: 1462, 242
   size: 256, 448
   orig: 256, 448
   offset: 0, 0

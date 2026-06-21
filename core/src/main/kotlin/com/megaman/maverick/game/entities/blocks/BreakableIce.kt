@@ -114,12 +114,10 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
 
     private fun explodeAndDie() {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         for (i in 0 until 5) {
             val shard = MegaEntityFactory.fetch(IceShard::class)!!
             shard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
         }
-
         destroy()
     }
 

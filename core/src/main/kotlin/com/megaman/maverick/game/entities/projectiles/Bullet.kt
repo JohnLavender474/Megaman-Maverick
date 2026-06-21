@@ -197,7 +197,6 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }

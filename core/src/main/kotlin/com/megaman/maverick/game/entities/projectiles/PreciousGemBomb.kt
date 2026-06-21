@@ -156,9 +156,7 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 )
             )
         }
-
         destroy()
-
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 

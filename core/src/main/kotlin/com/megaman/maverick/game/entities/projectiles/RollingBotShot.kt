@@ -75,9 +75,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
-
         val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
         explosion.spawn(
             props(

@@ -87,7 +87,6 @@ class IceBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IFreezerEnt
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-
         val explosion = MegaEntityFactory.fetch(IceBombExplosion::class)!!
         explosion.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter()))
     }

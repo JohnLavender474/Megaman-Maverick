@@ -120,11 +120,8 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
 
     fun explodeAndDie() {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         breakApart(body.getCenter(), color)
-
         connectedBlockIds.forEach { id ->
             val set = MegaGameEntities.getOfId(id)
             if (set.isEmpty) return@forEach

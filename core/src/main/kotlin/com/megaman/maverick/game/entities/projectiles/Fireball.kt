@@ -140,31 +140,30 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
-
         burst = true
-
         body.physics.gravity.setZero()
+        try {
+            val feetBounds = params[0] as GameRectangle
+            val hitBounds = params[1] as GameRectangle
+            burstDirection = UtilMethods.getOverlapPushDirection(feetBounds, hitBounds) ?: Direction.UP
 
-        val feetBounds = params[0] as GameRectangle
-        val hitBounds = params[1] as GameRectangle
-        burstDirection = UtilMethods.getOverlapPushDirection(feetBounds, hitBounds) ?: Direction.UP
+            val overlap = GameObjectPools.fetch(Rectangle::class)
+            Intersector.intersectRectangles(feetBounds.toGdxRectangle(), hitBounds.toGdxRectangle(), overlap)
 
-        val overlap = GameObjectPools.fetch(Rectangle::class)
-        Intersector.intersectRectangles(feetBounds.toGdxRectangle(), hitBounds.toGdxRectangle(), overlap)
+            val position = DirectionPositionMapper.getInvertedPosition(burstDirection)
+            body.positionOnPoint(overlap.toGameRectangle().getPositionPoint(position), position)
 
-        val position = DirectionPositionMapper.getInvertedPosition(burstDirection)
-        body.positionOnPoint(overlap.toGameRectangle().getPositionPoint(position), position)
-
-        body.type = BodyType.DYNAMIC
-
+            body.type = BodyType.DYNAMIC
+        } catch (e: Exception) {
+            GameLogger.error(TAG, "Error while creating fireball burst", e)
+            destroy()
+        }
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.ATOMIC_FIRE_SOUND, false)
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = shieldFixture.getEntity()
-
         if (collisionsToIgnore.contains(entity.id)) return
-
         if (owner != FireballBar || entity !is ShieldAttacker) {
             body.physics.velocity.x *= -1f
             requestToPlaySound(SoundAsset.DINK_SOUND, false)
@@ -173,12 +172,9 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
-
         val spawn = GameObjectPools.fetch(Vector2::class).set(body.getCenter().x, waterFixture.getShape().getMaxY())
-
         val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
         puff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
-
         playSoundNow(SoundAsset.WHOOSH_SOUND, false)
     }
 
@@ -195,10 +191,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
             body.physics.velocity.setZero()
             burstCullTimer.update(it)
         }
-
         if (burstCullTimer.isFinished()) {
             destroy()
-
             if (spawnSmoke) {
                 val position = when (burstDirection) {
                     Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)

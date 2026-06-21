@@ -218,11 +218,8 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
 
     private fun explodeAndDie() {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         val position = DirectionPositionMapper.getInvertedPosition(direction)
-
         val explosion = MegaEntityFactory.fetch(SpreadExplosion::class)!!
         explosion.spawn(
             props(
@@ -232,7 +229,6 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
                 ConstKeys.POSITION pairTo body.getPositionPoint(position)
             )
         )
-
         if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 

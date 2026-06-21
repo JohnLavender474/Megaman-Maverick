@@ -2,8 +2,6 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Intersector
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
@@ -38,11 +36,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
 
 class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
@@ -52,6 +49,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         private const val DEFAULT_CULL_TIME = 2f
         private const val METEOR_SPEED = 10f
         private const val SPRITE_ROTATION_OFFSET = 135f
+        private const val MAX_METEORS = 10
         private var region: TextureRegion? = null
     }
 
@@ -107,6 +105,17 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             is Array<*> -> rawCollideBounds as Array<IBodyEntity>
             else -> null
         }
+
+        val meteors = MegaGameEntities.getOfTag(TAG)
+        if (meteors.size > MAX_METEORS) {
+            val iter = meteors.iterator()
+            while (iter.hasNext) {
+                val meteor = iter.next() as MagmaMeteor
+                if (meteor.dead) continue
+                meteor.explodeAndDie()
+                break
+            }
+        }
     }
 
     override fun hitBlock(
@@ -115,41 +124,15 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         otherShape: IGameShape2D
     ) {
         GameLogger.debug(TAG, "hitBlock(): blockFixture=$blockFixture, thisShape=$thisShape, otherShape=$otherShape")
-
-        var shouldExplode = true
-        collideBodies?.let { shouldExplode = it.contains(blockFixture.getEntity() as IBodyEntity) }
-        if (shouldExplode) explodeAndDie(thisShape, otherShape)
+        val shouldExplode = collideBodies?.contains(blockFixture.getEntity() as IBodyEntity) ?: true
+        if (shouldExplode) explodeAndDie()
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        GameLogger.debug(TAG, "explodeAndDie(): params=$params")
-
+        GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
-
-        val thisShape = params[0] as IGameShape2D
-        val otherShape = params[1] as IGameShape2D
-        val overlap = GameObjectPools.fetch(Rectangle::class)
-
-        val spawn = when {
-            Intersector.intersectRectangles(
-                thisShape.toGdxRectangle(),
-                otherShape.toGdxRectangle(),
-                overlap
-            ) -> overlap.getCenter()
-
-            else -> thisShape.getCenter()
-        }
-
-        val offset = GameObjectPools.fetch(Vector2::class)
-        when (direction) {
-            Direction.LEFT -> offset.set(-overlap.width / 2f, 0f)
-            Direction.RIGHT -> offset.set(overlap.width / 2f, 0f)
-            else -> offset.setZero()
-        }
-        spawn.add(offset)
-
         val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
-        explosion.spawn(props(ConstKeys.POSITION pairTo spawn))
+        explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({

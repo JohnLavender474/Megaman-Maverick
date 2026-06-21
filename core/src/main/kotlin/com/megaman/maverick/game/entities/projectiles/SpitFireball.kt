@@ -103,45 +103,47 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie(): params=$params")
-
         destroy()
-
-        val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
-        explosion.spawn(
-            props(
-                ConstKeys.OWNER pairTo this,
-                ConstKeys.POSITION pairTo body.getCenter(),
-                ConstKeys.ACTIVE pairTo if (params.size >= 3) params[2] as Boolean else true,
-            )
-        )
-
-        val thisShape = params[0] as IGameShape2D
-        val otherShape = params[1] as IGameShape2D
-        val direction = getOverlapPushDirection(thisShape, otherShape) ?: getSingleMostDirectionFromStartToTarget(
-            thisShape.getCenter(),
-            otherShape.getCenter()
-        )
-
-        for (i in 0 until FIREBALLS_TO_SPAWN) {
-            val angle = angles[direction]!![i]
-
-            val trajectory = GameObjectPools.fetch(Vector2::class)
-                .set(0f, FIREBALL_IMPULSE * ConstVals.PPM)
-                .rotateDeg(angle)
-
-            val gravity = GameObjectPools.fetch(Vector2::class)
-                .set(0f, FIREBALL_GRAVITY * ConstVals.PPM)
-
-            val fireball = MegaEntityFactory.fetch(Fireball::class)!!
-            fireball.spawn(
+        try {
+            val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
+            explosion.spawn(
                 props(
-                    ConstKeys.OWNER pairTo owner,
-                    ConstKeys.GRAVITY pairTo gravity,
-                    ConstKeys.TRAJECTORY pairTo trajectory,
+                    ConstKeys.OWNER pairTo this,
                     ConstKeys.POSITION pairTo body.getCenter(),
-                    ConstKeys.CULL_TIME pairTo FIREBALL_CULL_TIME
+                    ConstKeys.ACTIVE pairTo if (params.size >= 3) params[2] as Boolean else true,
                 )
             )
+
+            val thisShape = params[0] as IGameShape2D
+            val otherShape = params[1] as IGameShape2D
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: getSingleMostDirectionFromStartToTarget(
+                thisShape.getCenter(),
+                otherShape.getCenter()
+            )
+
+            for (i in 0 until FIREBALLS_TO_SPAWN) {
+                val angle = angles[direction]!![i]
+
+                val trajectory = GameObjectPools.fetch(Vector2::class)
+                    .set(0f, FIREBALL_IMPULSE * ConstVals.PPM)
+                    .rotateDeg(angle)
+
+                val gravity = GameObjectPools.fetch(Vector2::class)
+                    .set(0f, FIREBALL_GRAVITY * ConstVals.PPM)
+
+                val fireball = MegaEntityFactory.fetch(Fireball::class)!!
+                fireball.spawn(
+                    props(
+                        ConstKeys.OWNER pairTo owner,
+                        ConstKeys.GRAVITY pairTo gravity,
+                        ConstKeys.TRAJECTORY pairTo trajectory,
+                        ConstKeys.POSITION pairTo body.getCenter(),
+                        ConstKeys.CULL_TIME pairTo FIREBALL_CULL_TIME
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            GameLogger.error(TAG, "Error while exploding spit fireball", e)
         }
     }
 

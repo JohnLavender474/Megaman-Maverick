@@ -147,9 +147,7 @@ class PreciousShard(game: MegamanMaverickGame) : AbstractProjectile(game), IDire
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
-
         destroy()
-
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
