@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Rectangle
@@ -17,6 +18,7 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.shapes.IDrawableShape
@@ -29,10 +31,7 @@ import com.mega.game.engine.drawables.sprites.setSize
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.IFixture
+import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -165,8 +164,17 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
-
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+        val feetFixture = Fixture(
+            body,
+            FixtureType.FEET,
+            GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
+        )
+        feetFixture.offsetFromBodyAttachment.y = - body.getHeight() / 2f
+        body.addFixture(feetFixture)
+        feetFixture.drawingColor = Color.GREEN
+        debugShapes.add { feetFixture }
 
         return BodyComponentCreator.create(
             this,
