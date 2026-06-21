@@ -1,10 +1,8 @@
 package com.megaman.maverick.game.entities.hazards
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponentBuilder
@@ -18,21 +16,14 @@ import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.drawables.shapes.IDrawableShape
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sprites.GameSprite
 import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.mega.game.engine.drawables.sprites.setBounds
 import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -49,12 +40,8 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
 
-class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity {
+class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "LavaRiver"
@@ -88,10 +75,10 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private lateinit var spawnRooms: HashSet<String>
     private lateinit var type: String
 
+    private val bounds = GameRectangle()
+
     private var left = false
-    private var active = true
     private var frozen = false
-    private var hidden = false
 
     private val emberDelay = Timer()
 
@@ -102,7 +89,6 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
-        addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
@@ -114,15 +100,13 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        body.set(bounds)
+        this.bounds.set(bounds)
 
         spawnRooms = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
             .split(",").map { it.trim() }.toHashSet()
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
-        active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
-        hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
         frozen = spawnProps.getOrDefault(
             ConstKeys.FROZEN, LevelUtils.isInfernoManLevelFrozen(game.state), Boolean::class
         )
@@ -141,8 +125,8 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
                 emberDelay.update(delta)
                 if (emberDelay.isFinished()) {
                     val position = GameObjectPools.fetch(Vector2::class)
-                        .setX(body.getBounds().getRandomPositionInBounds().x)
-                        .setY(body.getBounds().getMaxY())
+                        .setX(bounds.getRandomPositionInBounds().x)
+                        .setY(bounds.getMaxY())
 
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
                         .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
@@ -152,7 +136,6 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
                     if (canSpawnBounds.contains(position)) {
                         val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!
                         ember.spawn(props(ConstKeys.POSITION pairTo position))
-
                         resetEmberDelay()
                     }
                 }
@@ -180,12 +163,8 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(TAG, GameSprite())
         .preProcess { _, sprite ->
-            sprite.hidden = hidden
-
             sprite.setFlip(left, false)
-
-            sprite.setBounds(body.getBounds())
-
+            sprite.setBounds(bounds)
             sprite.priority.value = 0
             sprite.priority.section = if (frozen) DrawingSection.PLAYGROUND else DrawingSection.FOREGROUND
         }
@@ -210,30 +189,6 @@ class LavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
                 .build()
         )
         .build()
-
-    private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
-        body.physics.applyFrictionX = false
-        body.physics.applyFrictionY = false
-        body.drawingColor = Color.BLUE
-
-        val debugShapes = Array<() -> IDrawableShape?>()
-        debugShapes.add { if (body.physics.collisionOn) body.getBounds() else null }
-
-        val deathBounds = GameRectangle()
-        val deathFixture = Fixture(body, FixtureType.DEATH, deathBounds)
-        deathFixture.putProperty(ConstKeys.INSTANT, true)
-        body.addFixture(deathFixture)
-
-        body.preProcess.put(ConstKeys.DEATH) {
-            deathFixture.setActive(active && !frozen)
-            deathBounds.set(body)
-        }
-
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-
-        return BodyComponentCreator.create(this, body)
-    }
 
     private fun resetEmberDelay() {
         val duration = UtilMethods.getRandom(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
