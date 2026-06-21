@@ -12,6 +12,7 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -31,12 +32,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -45,7 +44,8 @@ import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.setCenterX
 
-class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+    Updatable {
 
     companion object {
         const val TAG = "FlipperPlatform"
@@ -87,11 +87,11 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
             flipToRightRegion = atlas.findRegion("$TAG/FlipToRight")
             flipToLeftRegion = atlas.findRegion("$TAG/FlipToLeft")
         }
-        addComponent(defineUpdatablesComponent())
-        addComponent(defineCullablesComponent())
-        addComponent(defineSpritesComponent())
-        addComponent(defineAnimationsComponent())
         addComponent(AudioComponent())
+        addComponent(defineSpritesComponent())
+        addComponent(defineCullablesComponent())
+        addComponent(defineAnimationsComponent())
+        addComponent(UpdatablesComponent({ delta -> update(delta) }))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -104,7 +104,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
         flipperPlatformState = FlipperPlatformState.LEFT
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
 
-        block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
+        block = MegaEntityFactory.fetch(Block::class)!!
         block!!.spawn(
             props(
                 ConstKeys.BOUNDS pairTo GameRectangle()
@@ -125,20 +125,16 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
         block?.destroy()
         block = null
     }
 
-    private fun blockFilter(entity1: MegaGameEntity, entity2: MegaGameEntity): Boolean {
-        GameLogger.debug(TAG, "blockFilter(): entity1=$entity1, entity2=$entity2")
-        return entity1 is Megaman &&
-                (entity1.body.physics.velocity.y > 0f ||
-                    !(entity2 as Block).body.getBounds().overlaps(entity1.feetFixture.getShape()))
-    }
-
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+    override fun update(delta: Float) {
         block!!.body.setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
+
+        val active = game.getGameCamera().getRotatedBounds().overlaps(bounds)
+        block?.body!!.physics.collisionOn = active
+        block?.body!!.forEachFixture { fixture -> fixture.setActive(active) }
 
         switchDelay.update(delta)
         if (switchDelay.isJustFinished()) {
@@ -160,6 +156,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                     switchTimer.reset()
                 }
             }
+
             FlipperPlatformState.FLIP_TO_LEFT -> {
                 block!!.body.setCenterX(-100f * ConstVals.PPM)
 
@@ -169,6 +166,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                     switchTimer.reset()
                 }
             }
+
             FlipperPlatformState.LEFT -> {
                 val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopRightToPoint(position)
@@ -182,6 +180,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
                 }
             }
+
             FlipperPlatformState.RIGHT -> {
                 val position = bounds.getPositionPoint(Position.TOP_CENTER)
                 block!!.body.setTopLeftToPoint(position)
@@ -196,7 +195,14 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 }
             }
         }
-    })
+    }
+
+    private fun blockFilter(entity1: MegaGameEntity, entity2: MegaGameEntity): Boolean {
+        GameLogger.debug(TAG, "blockFilter(): entity1=$entity1, entity2=$entity2")
+        return entity1 == megaman &&
+            (megaman.body.physics.velocity.y > 0f ||
+                !(entity2 as Block).body.getBounds().overlaps(megaman.feetFixture.getShape()))
+    }
 
     private fun defineCullablesComponent(): CullablesComponent {
         val gameCamera = game.getGameCamera()

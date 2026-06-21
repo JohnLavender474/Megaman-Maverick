@@ -56,6 +56,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
@@ -238,6 +239,12 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(1.25f * ConstVals.PPM))
         shieldFixture.putProperty(ConstKeys.DIRECTION, Direction.UP)
         body.addFixture(shieldFixture)
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val active = game.getGameCamera().getRotatedBounds().overlaps(body.getBounds())
+            body.physics.collisionOn = active
+            body.forEachFixture { fixture -> fixture.setActive(active) }
+        }
 
         return BodyComponentCreator.create(this, body)
     }
