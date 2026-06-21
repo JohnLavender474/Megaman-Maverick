@@ -1,29 +1,32 @@
 package com.megaman.maverick.game.entities.sensors
 
 import com.mega.game.engine.common.GameLogger
+import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.world.body.getBounds
 
-open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
+// Unlike `Death`, the `MegamanDeath` entity is NOT added to the world system and applies ONLY to Mega Man.
+// Use this entity if it is guaranteed that ONLY Mega Man will ever make contact with this entity.
+open class MegamanDeath(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, Updatable {
 
     companion object {
-        const val TAG = "Death"
+        const val TAG = "MegamanDeath"
     }
+
+    private val bounds = GameRectangle()
+    private var instant = false
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        addComponent(defineBodyComponent())
+        addComponent(UpdatablesComponent({ delta -> update(delta) }))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -31,21 +34,16 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         super.onSpawn(spawnProps)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
-        body.set(bounds)
+        this.bounds.set(bounds)
 
-        val instant = spawnProps.getOrDefault(ConstKeys.INSTANT, false, Boolean::class)
-        body.forEachFixture { fixture ->
-            fixture as Fixture
-            (fixture.rawShape as GameRectangle).set(bounds)
-            if (fixture.getType() == FixtureType.DEATH) fixture.putProperty(ConstKeys.INSTANT, instant)
-        }
+        instant = spawnProps.getOrDefault(ConstKeys.INSTANT, false, Boolean::class)
     }
 
-    private fun defineBodyComponent(): BodyComponent {
-        val body = Body(BodyType.ABSTRACT)
-        val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
-        body.addFixture(deathFixture)
-        return BodyComponentCreator.create(this, body, doUpdate = { true })
+    override fun update(delta: Float) {
+        if (megaman.dead) return
+        if (!bounds.overlaps(megaman.body.getBounds())) return
+        if (!instant && megaman.invincible) return
+        megaman.depleteHealth()
     }
 
     override fun getType() = EntityType.SENSOR
