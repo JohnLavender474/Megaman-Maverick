@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="563">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="565">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <layer id="1" name="tiles1" width="600" height="125">
   <data encoding="csv">
@@ -1294,7 +1294,7 @@
   <object id="557" x="9632" y="3328" width="32" height="128"/>
   <object id="558" x="9664" y="3392" width="288" height="352"/>
   <object id="559" x="9440" y="3488" width="224" height="256"/>
-  <object id="560" x="9280" y="3008" width="160" height="736"/>
+  <object id="560" x="9280" y="2848" width="160" height="896"/>
   <object id="561" x="9440" y="2848" width="832" height="288"/>
   <object id="562" x="10664" y="2848" width="88" height="608"/>
  </objectgroup>
@@ -1566,112 +1566,42 @@
   </object>
  </objectgroup>
  <objectgroup id="11" name="hazards">
-  <object id="127" name="AsteroidsSpawner" x="3680" y="2416" width="320" height="32">
+  <object id="127" x="3680" y="2416" width="320" height="272"/>
+  <object id="128" x="4032" y="2416" width="320" height="272"/>
+  <object id="129" x="4384" y="2416" width="320" height="272"/>
+  <object id="130" x="4736" y="2416" width="320" height="272"/>
+  <object id="131" x="5088" y="2416" width="320" height="272"/>
+  <object id="132" x="5440" y="2416" width="320" height="272"/>
+  <object id="563" name="AsteroidsSpawner" x="3680" y="2416" width="2080" height="272">
    <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
     <property name="min_y" type="object" value="294"/>
     <property name="spawn_room" value="room4"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="spawner_1" type="object" value="127"/>
+    <property name="spawner_2" type="object" value="128"/>
+    <property name="spawner_3" type="object" value="129"/>
+    <property name="spawner_4" type="object" value="130"/>
+    <property name="spawner_5" type="object" value="131"/>
+    <property name="spawner_6" type="object" value="132"/>
    </properties>
   </object>
-  <object id="128" name="AsteroidsSpawner" x="4032" y="2416" width="320" height="32">
+  <object id="283" x="10208" y="1680" width="320" height="336"/>
+  <object id="357" x="10560" y="1680" width="320" height="336"/>
+  <object id="358" x="10912" y="1680" width="320" height="336"/>
+  <object id="359" x="11264" y="1680" width="320" height="336"/>
+  <object id="360" x="11616" y="1680" width="320" height="336"/>
+  <object id="361" x="11968" y="1680" width="320" height="336"/>
+  <object id="564" name="AsteroidsSpawner" x="10208" y="1680" width="2080" height="336">
    <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="294"/>
-    <property name="spawn_room" value="room4"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="129" name="AsteroidsSpawner" x="4384" y="2416" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="294"/>
-    <property name="spawn_room" value="room4"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="130" name="AsteroidsSpawner" x="4736" y="2416" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="294"/>
-    <property name="spawn_room" value="room4"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="131" name="AsteroidsSpawner" x="5088" y="2416" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="294"/>
-    <property name="spawn_room" value="room4"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="132" name="AsteroidsSpawner" x="5440" y="2416" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="294"/>
-    <property name="spawn_room" value="room4"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="283" name="AsteroidsSpawner" x="10208" y="1680" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
     <property name="min_y" type="object" value="464"/>
     <property name="spawn_room" value="room10"/>
     <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="357" name="AsteroidsSpawner" x="10560" y="1680" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="464"/>
-    <property name="spawn_room" value="room10"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="358" name="AsteroidsSpawner" x="10912" y="1680" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="464"/>
-    <property name="spawn_room" value="room10"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="359" name="AsteroidsSpawner" x="11264" y="1680" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="464"/>
-    <property name="spawn_room" value="room10"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="360" name="AsteroidsSpawner" x="11616" y="1680" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="464"/>
-    <property name="spawn_room" value="room10"/>
-    <property name="spawn_type" value="spawn_room"/>
-   </properties>
-  </object>
-  <object id="361" name="AsteroidsSpawner" x="11968" y="1680" width="320" height="32">
-   <properties>
-    <property name="cull_out_of_bounds" type="bool" value="false"/>
-    <property name="cull_out_of_bounds_children" type="bool" value="false"/>
-    <property name="min_y" type="object" value="464"/>
-    <property name="spawn_room" value="room10"/>
-    <property name="spawn_type" value="spawn_room"/>
+    <property name="spawner_1" type="object" value="283"/>
+    <property name="spawner_2" type="object" value="357"/>
+    <property name="spawner_3" type="object" value="358"/>
+    <property name="spawner_4" type="object" value="359"/>
+    <property name="spawner_5" type="object" value="360"/>
+    <property name="spawner_6" type="object" value="361"/>
    </properties>
   </object>
  </objectgroup>
@@ -2085,7 +2015,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="player">
+ <objectgroup id="13" name="temp">
   <object id="547" name="0" x="8800" y="2688" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
@@ -2094,7 +2024,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="2" name="temp">
+ <objectgroup id="2" name="player">
   <object id="47" name="0" x="128" y="3744" width="32" height="32">
    <properties>
     <property name="apply_scalar_to_children" type="bool" value="true"/>
