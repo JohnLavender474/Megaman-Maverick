@@ -141,10 +141,10 @@ class MegamanMaverickGame(
 ) : Game(), IEventListener, IPropertizable {
 
     enum class Performance(val fps: Int, val fixedStep: Float) {
-        VERY_LOW(30, 1f / 100f),
-        LOW(45, 1f / 150f),
-        MEDIUM(60, 1f / 200f),
-        HIGH(90, 1f / 300f)
+        VERY_LOW(30, 1f / 75f),
+        LOW(45, 1f / 112.5f),
+        MEDIUM(60, 1f / 150f),
+        HIGH(90, 1f / 225f)
     }
 
     enum class RunType { GAME, TEST }
