@@ -15,6 +15,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
+// This entity adds a DEATH fixture to the world system. This entity should be used if other entities
+// besides Mega Man can make contact with this entity. If it is guaranteed that ONLY Mega Man will make
+// contact, then it is recommended to use the `MegamanDeath` entity instead as an optimization trick.
 open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     companion object {
@@ -41,7 +44,7 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         }
     }
 
-    private fun defineBodyComponent(): BodyComponent {
+    open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         body.addFixture(deathFixture)
