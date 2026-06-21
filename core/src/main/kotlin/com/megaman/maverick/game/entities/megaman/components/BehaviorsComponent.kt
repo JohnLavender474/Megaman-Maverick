@@ -405,8 +405,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             when (direction) {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, 0.75f * ConstVals.PPM)
-                Direction.LEFT -> body.translate(0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM)
-                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM)
+                Direction.LEFT -> body.translate(0.5f * ConstVals.PPM, 0.3f * ConstVals.PPM)
+                Direction.RIGHT -> body.translate(-0.5f * ConstVals.PPM, 0.3f * ConstVals.PPM)
             }
         }
 
@@ -461,8 +461,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             when (direction) {
                 Direction.UP -> {}
                 Direction.DOWN -> body.translate(0f, 0.6f * ConstVals.PPM)
-                Direction.LEFT -> body.translate(0.6f * ConstVals.PPM, 0.3f * ConstVals.PPM * facing.value)
-                Direction.RIGHT -> body.translate(-0.6f * ConstVals.PPM, -0.3f * ConstVals.PPM * facing.value)
+                Direction.LEFT -> body.translate(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM * facing.value)
+                Direction.RIGHT -> body.translate(-0.5f * ConstVals.PPM, -0.1f * ConstVals.PPM * facing.value)
             }
 
             directionOnInit = direction
@@ -505,8 +505,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
         override fun end() {
             GameLogger.debug(MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG, "end()")
 
-            if (!isBehaviorActive(BehaviorType.CROUCHING) && direction.isHorizontal())
-                body.translate(0f, -0.3f * ConstVals.PPM)
+            if (direction.isHorizontal()) body.translate(0f, -0.35f * ConstVals.PPM)
 
             minTimer.reset()
             maxTimer.reset()
