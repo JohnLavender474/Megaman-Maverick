@@ -199,23 +199,6 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
             outFixtures shouldNotContain fixture
         }
 
-        // ── getObjects ────────────────────────────────────────────────────────────────
-
-        it("should return both bodies and fixtures via getObjects") {
-            val body = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
-            val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, "F", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
-
-            tree.addBody(body)
-            tree.addFixture(fixture)
-
-            val out = mutableListOf<Any>()
-            tree.getObjects(4, 4, 6, 6, out)
-
-            out shouldContain body
-            out shouldContain fixture
-        }
-
         // ── Clear ─────────────────────────────────────────────────────────────────────
 
         it("should remove all bodies and fixtures after clear") {
@@ -278,6 +261,77 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
             // original should not contain body2
             tree.getBodies(4, 4, 6, 6, outBodies)
             outBodies shouldNotContain body2
+        }
+
+        // ── forEach* ──────────────────────────────────────────────────────────────────
+
+        it("forEachBody single-cell should invoke action for a nearby body") {
+            val body = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
+            tree.addBody(body)
+
+            val visited = mutableListOf<IBody>()
+            tree.forEachBody(5, 5, { b, _ -> visited.add(b) })
+
+            visited shouldContain body
+        }
+
+        it("forEachBody range should exclude a far-away body") {
+            val body = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
+            tree.addBody(body)
+
+            val visited = mutableListOf<IBody>()
+            tree.forEachBody(50, 50, 60, 60, { b, _ -> visited.add(b) })
+
+            visited shouldNotContain body
+        }
+
+        it("forEachBody action can filter inline") {
+            val body1 = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
+            val body2 = Body(BodyType.STATIC, 50f, 50f, 10f, 10f)
+            tree.addBody(body1)
+            tree.addBody(body2)
+
+            val visited = mutableListOf<IBody>()
+            tree.forEachBody(4, 4, 6, 6) { b, _ -> if (b.type == BodyType.DYNAMIC) visited.add(b) }
+
+            visited shouldContain body1
+            visited shouldNotContain body2
+        }
+
+        it("forEachFixture single-cell should invoke action for a nearby fixture") {
+            val mockBody = mockk<Body>()
+            val fixture = Fixture(mockBody, "F", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            tree.addFixture(fixture)
+
+            val visited = mutableListOf<IFixture>()
+            tree.forEachFixture(3, 3, { f, _ -> visited.add(f) })
+
+            visited shouldContain fixture
+        }
+
+        it("forEachFixture range should exclude a far-away fixture") {
+            val mockBody = mockk<Body>()
+            val fixture = Fixture(mockBody, "F", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            tree.addFixture(fixture)
+
+            val visited = mutableListOf<IFixture>()
+            tree.forEachFixture(50, 50, 60, 60, { f, _ -> visited.add(f) })
+
+            visited shouldNotContain fixture
+        }
+
+        it("forEachFixture action can filter inline") {
+            val mockBody = mockk<Body>()
+            val fixture1 = Fixture(mockBody, "keep", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(mockBody, "skip", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            tree.addFixture(fixture1)
+            tree.addFixture(fixture2)
+
+            val visited = mutableListOf<IFixture>()
+            tree.forEachFixture(4, 4, 6, 6) { f, _ -> if (f.getType() == "keep") visited.add(f) }
+
+            visited shouldContain fixture1
+            visited shouldNotContain fixture2
         }
     }
 })

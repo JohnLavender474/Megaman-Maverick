@@ -1,14 +1,35 @@
 package com.mega.game.engine.world.contacts
 
 import com.mega.game.engine.common.objects.GamePair
+import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.world.WorldSystem
+import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyType
 import com.mega.game.engine.world.body.Fixture
 import com.mega.game.engine.world.body.IFixture
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+
+private class DummyFixture : IFixture {
+    override fun getShape() =
+        throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+
+    override fun setShape(shape: IGameShape2D) =
+        throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
+
+    override fun setActive(active: Boolean) =
+        throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
+
+    override fun isActive() =
+        throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+
+    override fun getType() =
+        throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+
+    override val properties: Properties
+        get() = throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+}
 
 class ContactDescribeSpec :
     DescribeSpec({
@@ -18,7 +39,7 @@ class ContactDescribeSpec :
             val fixture2 = Fixture(body, "type2", GameRectangle())
             val contact = Contact(fixture1, fixture2)
 
-            val out = GamePair<IFixture, IFixture>(WorldSystem.DummyFixture(), WorldSystem.DummyFixture())
+            val out = GamePair<IFixture, IFixture>(DummyFixture(), DummyFixture())
 
             it("should have the correct initial properties") {
                 contact.fixture1 shouldBe fixture1

@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.objects.ImmutableCollection
-import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Pool
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -41,40 +40,50 @@ class WorldSystem(
         if (fixedStepScalar <= 0f) throw IllegalArgumentException("Value of fixedStepScalar must be greater than 0")
     }
 
-    internal class DummyFixture : IFixture {
-        override fun getShape() =
-            throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+    private class ContactPool {
 
-        override fun setShape(shape: IGameShape2D) =
-            throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
+        private class DummyFixture : IFixture {
+            override fun getShape() =
+                throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
 
-        override fun setActive(active: Boolean) =
-            throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
+            override fun setShape(shape: IGameShape2D) =
+                throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
 
-        override fun isActive() =
-            throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+            override fun setActive(active: Boolean) =
+                throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
 
-        override fun getType() =
-            throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+            override fun isActive() =
+                throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
 
-        override val properties: Properties
-            get() = throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+            override fun getType() =
+                throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+
+            override val properties: Properties
+                get() = throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
+        }
+
+        private val dummyFixture1 = DummyFixture()
+        private val dummyFixture2 = DummyFixture()
+
+        private val pool = Pool(
+            supplier = { Contact(dummyFixture1, dummyFixture2) }
+        )
+
+        fun fetch() = pool.fetch()
+
+        fun free(contact: Contact) {
+            contact.set(dummyFixture1, dummyFixture2)
+            pool.free(contact)
+        }
     }
 
-    private val worldContainer: IWorldContainer
-        get() = worldContainerSupplier()
-            ?: throw IllegalStateException("World container supplier must supply a non-null value for WorldSystem")
-
-    private val contactPool = Pool(supplier = { Contact(DummyFixture(), DummyFixture()) })
+    private val contactPool = ContactPool()
     private var priorContactSet = OrderedSet<Contact>()
     private var currentContactSet = OrderedSet<Contact>()
 
     private var accumulator = 0f
 
-    private val reusableBodyArray = Array<IBody>()
-    private val reusableGameRect = GameRectangle()
-    private val reusableBodySet = MutableOrderedSet<IBody>()
-    private val reusableFixtureSet = MutableOrderedSet<IFixture>()
+    private val bodyArray = Array<IBody>()
     private val out1 = GameRectangle()
     private val out2 = GameRectangle()
 
@@ -86,24 +95,27 @@ class WorldSystem(
         accumulator += delta
 
         if (accumulator >= fixedStep) {
+            val worldContainer = worldContainerSupplier()!!
+
             diagnostics?.beginEntry("buildBodyArray")
             entities.forEach { entity ->
                 try {
                     val component = entity.getComponent(BodyComponent::class)!!
-                    if (component.doUpdate()) reusableBodyArray.add(component.body)
+                    if (component.doUpdate()) bodyArray.add(component.body)
                 } catch (e: Exception) {
-                    throw Exception("Exception occured while processing world for entity: $entity", e)
+                    throw Exception("Exception occurred while processing world for entity: $entity", e)
                 }
             }
             diagnostics?.endEntry()
 
+            val fixedStepScaled = fixedStep / fixedStepScalar
             var iterations = 0
             while (accumulator >= fixedStep) {
-                accumulator -= fixedStep / fixedStepScalar
+                accumulator -= fixedStepScaled
                 iterations++
 
                 diagnostics?.beginEntry("cycle[$iterations]")
-                cycle(reusableBodyArray, fixedStep)
+                cycle(bodyArray, fixedStep, worldContainer)
                 diagnostics?.endEntry()
 
                 if (iterations >= maxIterations) {
@@ -114,13 +126,13 @@ class WorldSystem(
 
             diagnostics?.beginEntry("updateWorldContainer")
             worldContainer.clear()
-            reusableBodyArray.forEach { body ->
+            bodyArray.forEach { body ->
                 if (body.physics.collisionOn) worldContainer.addBody(body)
                 body.forEachFixture { if (it.isActive()) worldContainer.addFixture(it) }
             }
             diagnostics?.endEntry()
 
-            reusableBodyArray.clear()
+            bodyArray.clear()
         }
 
         diagnostics?.endEntry()
@@ -140,7 +152,7 @@ class WorldSystem(
 
     internal fun filterContact(fixture1: IFixture, fixture2: IFixture) = contactFilter.filter(fixture1, fixture2)
 
-    internal fun cycle(bodies: Array<IBody>, delta: Float) {
+    internal fun cycle(bodies: Array<IBody>, delta: Float, worldContainer: IWorldContainer) {
         diagnostics?.beginEntry("preProcess")
         bodies.forEach { body -> body.preProcess() }
         diagnostics?.endEntry()
@@ -158,7 +170,7 @@ class WorldSystem(
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("collectContacts")
-        bodies.forEach { body -> collectContacts(body) }
+        bodies.forEach { body -> collectContacts(body, worldContainer) }
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("processContacts")
@@ -166,7 +178,7 @@ class WorldSystem(
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("resolveCollisions")
-        bodies.forEach { body -> resolveCollisions(body) }
+        bodies.forEach { body -> resolveCollisions(body, worldContainer) }
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("postProcess")
@@ -184,10 +196,8 @@ class WorldSystem(
 
         diagnostics?.beginEntry("end contacts")
         priorContactSet.forEach {
-            if (!currentContactSet.contains(it)) {
-                contactListener.endContact(it, delta)
-                contactPool.free(it)
-            }
+            if (!currentContactSet.contains(it)) contactListener.endContact(it, delta)
+            contactPool.free(it)
         }
         diagnostics?.endEntry()
 
@@ -198,51 +208,40 @@ class WorldSystem(
         diagnostics?.endEntry()
     }
 
-    internal fun collectContacts(body: IBody) {
-        diagnostics?.beginEntry("collect contacts on per-fixture basis")
+    internal fun collectContacts(body: IBody, worldContainer: IWorldContainer) = body.forEachFixture { fixture ->
+        if (!fixture.isActive() || !contactFilter.shouldProceedFiltering(fixture)) return@forEachFixture
 
-        body.forEachFixture { fixture ->
-            if (fixture.isActive() && contactFilter.shouldProceedFiltering(fixture)) {
-                fixture.getShape().getBoundingRectangle(reusableGameRect)
-                worldContainer.getFixtures(
-                    MathUtils.floor(reusableGameRect.getX() / ppm),
-                    MathUtils.floor(reusableGameRect.getY() / ppm),
-                    MathUtils.ceil(reusableGameRect.getMaxX() / ppm),
-                    MathUtils.ceil(reusableGameRect.getMaxY() / ppm),
-                    reusableFixtureSet
-                )
-
-                reusableFixtureSet.forEach { candidate ->
-                    if (candidate.isActive() && filterContact(fixture, candidate) &&
-                        fixture.getShape().overlaps(candidate.getShape())
-                    ) {
-                        val contact = contactPool.fetch()
-                        contact.set(fixture, candidate)
-                        if (!currentContactSet.add(contact))
-                            contactPool.free(contact)
-                    }
-                }
-
-                reusableFixtureSet.clear()
-            }
-        }
-
-        diagnostics?.endEntry()
-    }
-
-    internal fun resolveCollisions(body: IBody) {
-        val bounds = body.getBounds(out1)
-        worldContainer.getBodies(
+        val bounds = fixture.getShape().getBoundingRectangle(out1)
+        worldContainer.forEachFixture(
             MathUtils.floor(bounds.getX() / ppm),
             MathUtils.floor(bounds.getY() / ppm),
             MathUtils.ceil(bounds.getMaxX() / ppm),
-            MathUtils.ceil(bounds.getMaxY() / ppm),
-            reusableBodySet
-        )
-        reusableBodySet.forEach {
-            if (it != body && it.getBounds(out2).overlaps(bounds))
-                collisionHandler.handleCollision(body, it)
+            MathUtils.ceil(bounds.getMaxY() / ppm)
+        ) { candidate, _ ->
+            if (candidate.isActive() &&
+                filterContact(fixture, candidate) &&
+                fixture.getShape().overlaps(candidate.getShape())
+            ) {
+                val contact = contactPool.fetch()
+                contact.set(fixture, candidate)
+                if (!currentContactSet.add(contact))
+                    contactPool.free(contact)
+            }
         }
-        reusableBodySet.clear()
+    }
+
+    internal fun resolveCollisions(body: IBody, worldContainer: IWorldContainer) {
+        val bodyBounds = body.getBounds(out1)
+        worldContainer.forEachBody(
+            MathUtils.floor(bodyBounds.getX() / ppm),
+            MathUtils.floor(bodyBounds.getY() / ppm),
+            MathUtils.ceil(bodyBounds.getMaxX() / ppm),
+            MathUtils.ceil(bodyBounds.getMaxY() / ppm),
+        ) { candidate, _ ->
+            if (candidate == body) return@forEachBody
+            val candidateBounds = candidate.getBounds(out2)
+            if (candidateBounds.overlaps(bodyBounds))
+                collisionHandler.handleCollision(body, candidate)
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.mega.game.engine.world.container
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.objects.IntPair
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -21,6 +22,9 @@ class SimpleGridWorldContainer(
 
     private val reusableGameRect = GameRectangle()
     private val reusableMnMs = MinsAndMaxes()
+
+    private val tempBodySet = ObjectSet<IBody>()
+    private val tempFixtureSet = ObjectSet<IFixture>()
 
     private constructor(
         ppm: Int,
@@ -76,34 +80,32 @@ class SimpleGridWorldContainer(
         return true
     }
 
-    override fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>) {
-        val set = bodyMap[x pairTo y]
-        set?.let { out.addAll(it) }
+    override fun forEachBody(x: Int, y: Int, action: (IBody, IWorldContainer) -> Unit) {
+        bodyMap[x pairTo y]?.forEach { action(it, this) }
     }
 
-    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>) {
-        for (column in minX..maxX) for (row in minY..maxY) bodyMap[column pairTo row]?.let { out.addAll(it) }
+    override fun forEachBody(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IBody, IWorldContainer) -> Unit) {
+        tempBodySet.clear()
+        for (column in minX..maxX) for (row in minY..maxY)
+            bodyMap[column pairTo row]?.forEach { body ->
+                if (tempBodySet.contains(body)) return@forEach
+                tempBodySet.add(body)
+                action(body, this)
+            }
     }
 
-    override fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>) {
-        val set = fixtureMap[x pairTo y]
-        set?.let { out.addAll(it) }
+    override fun forEachFixture(x: Int, y: Int, action: (IFixture, IWorldContainer) -> Unit) {
+        fixtureMap[x pairTo y]?.forEach { action(it, this) }
     }
 
-    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>) {
-        for (column in minX..maxX) for (row in minY..maxY) fixtureMap[column pairTo row]?.let { out.addAll(it) }
-    }
-
-    override fun getObjects(x: Int, y: Int, out: MutableCollection<Any>) {
-        bodyMap[x pairTo y]?.let { out.addAll(it) }
-        fixtureMap[x pairTo y]?.let { out.addAll(it) }
-    }
-
-    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>) {
-        for (column in minX..maxX) for (row in minY..maxY) {
-            bodyMap[column pairTo row]?.let { out.addAll(it) }
-            fixtureMap[column pairTo row]?.let { out.addAll(it) }
-        }
+    override fun forEachFixture(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IFixture, IWorldContainer) -> Unit) {
+        tempFixtureSet.clear()
+        for (column in minX..maxX) for (row in minY..maxY)
+            fixtureMap[column pairTo row]?.forEach { fixture ->
+                if (tempFixtureSet.contains(fixture)) return@forEach
+                tempFixtureSet.add(fixture)
+                action(fixture, this)
+            }
     }
 
     override fun clear() {
@@ -119,9 +121,9 @@ class SimpleGridWorldContainer(
         val nonEmptyFixtures = fixtureMap.filter { it.value.isNotEmpty() }.map { "${it.key}=${it.value.size} fixtures" }
         // Construct the final string with filtered entries
         return "SimpleGridWorldContainer{\n" +
-                "\tppm=$ppm,\n" +
-                "\tbodies=[${nonEmptyBodies.joinToString(separator = ", ")}],\n" +
-                "\tfixtures=[${nonEmptyFixtures.joinToString(separator = ", ")}]\n" +
+            "\tppm=$ppm,\n" +
+            "\tbodies=[${nonEmptyBodies.joinToString(separator = ", ")}],\n" +
+            "\tfixtures=[${nonEmptyFixtures.joinToString(separator = ", ")}]\n" +
             "}"
     }
 }

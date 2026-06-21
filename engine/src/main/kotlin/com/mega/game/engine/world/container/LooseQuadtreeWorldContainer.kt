@@ -161,39 +161,21 @@ class LooseQuadtreeWorldContainer(
         return true
     }
 
-    override fun getBodies(x: Int, y: Int, out: MutableCollection<IBody>) =
-        getBodies(x, y, x, y, out)
+    override fun forEachBody(x: Int, y: Int, action: (IBody, IWorldContainer) -> Unit) =
+        forEachBody(x, y, x, y, action)
 
-    override fun getBodies(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IBody>) {
-        queryRegion(
-            root,
-            cellsToWorldMinX(minX), cellsToWorldMinY(minY),
-            cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)
-        ) { node -> out.addAll(node.bodies) }
+    override fun forEachBody(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IBody, IWorldContainer) -> Unit) {
+        queryRegion(root, cellsToWorldMinX(minX), cellsToWorldMinY(minY), cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)) { node ->
+            node.bodies.forEach { action(it, this) }
+        }
     }
 
-    override fun getFixtures(x: Int, y: Int, out: MutableCollection<IFixture>) =
-        getFixtures(x, y, x, y, out)
+    override fun forEachFixture(x: Int, y: Int, action: (IFixture, IWorldContainer) -> Unit) =
+        forEachFixture(x, y, x, y, action)
 
-    override fun getFixtures(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<IFixture>) {
-        queryRegion(
-            root,
-            cellsToWorldMinX(minX), cellsToWorldMinY(minY),
-            cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)
-        ) { node -> out.addAll(node.fixtures) }
-    }
-
-    override fun getObjects(x: Int, y: Int, out: MutableCollection<Any>) =
-        getObjects(x, y, x, y, out)
-
-    override fun getObjects(minX: Int, minY: Int, maxX: Int, maxY: Int, out: MutableCollection<Any>) {
-        queryRegion(
-            root,
-            cellsToWorldMinX(minX), cellsToWorldMinY(minY),
-            cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)
-        ) { node ->
-            out.addAll(node.bodies)
-            out.addAll(node.fixtures)
+    override fun forEachFixture(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IFixture, IWorldContainer) -> Unit) {
+        queryRegion(root, cellsToWorldMinX(minX), cellsToWorldMinY(minY), cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)) { node ->
+            node.fixtures.forEach { action(it, this) }
         }
     }
 

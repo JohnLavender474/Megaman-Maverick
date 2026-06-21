@@ -354,5 +354,110 @@ class SimpleGridWorldContainerTest : DescribeSpec({
                 outBodies1.count() shouldBe 0
             }
         }
+
+        it("forEachBody single-cell should invoke action for matching bodies") {
+            // Given
+            val body1 = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            val body2 = Body(BodyType.DYNAMIC, 30f, 30f, 10f, 10f)
+            grid.addBody(body1)
+            grid.addBody(body2)
+
+            val visited = mutableListOf<IBody>()
+
+            // When
+            grid.forEachBody(1, 1, { body, _ -> visited.add(body) })
+
+            // Then
+            visited shouldContain body1
+            visited shouldNotContain body2
+        }
+
+        it("forEachBody range should invoke action for all bodies in range") {
+            // Given
+            val body1 = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            val body2 = Body(BodyType.DYNAMIC, 30f, 30f, 10f, 10f)
+            grid.addBody(body1)
+            grid.addBody(body2)
+
+            val visited = mutableListOf<IBody>()
+
+            // When
+            grid.forEachBody(1, 1, 3, 3, { body, _ -> visited.add(body) })
+
+            // Then
+            visited shouldContain body1
+            visited shouldContain body2
+        }
+
+        it("forEachBody action can filter inline") {
+            // Given
+            val body1 = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            val body2 = Body(BodyType.STATIC, 10f, 10f, 10f, 10f)
+            grid.addBody(body1)
+            grid.addBody(body2)
+
+            val visited = mutableListOf<IBody>()
+
+            // When - action itself skips non-DYNAMIC bodies
+            grid.forEachBody(1, 1) { body, _ -> if (body.type == BodyType.DYNAMIC) visited.add(body) }
+
+            // Then
+            visited shouldContain body1
+            visited shouldNotContain body2
+        }
+
+        it("forEachFixture single-cell should invoke action for matching fixtures") {
+            // Given
+            val body = mockk<Body>()
+            val fixture1 = Fixture(body, "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(body, "F2", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            grid.addFixture(fixture1)
+            grid.addFixture(fixture2)
+
+            val visited = mutableListOf<IFixture>()
+
+            // When
+            grid.forEachFixture(1, 1, { fixture, _ -> visited.add(fixture) })
+
+            // Then
+            visited shouldContain fixture1
+            visited shouldNotContain fixture2
+        }
+
+        it("forEachFixture range should invoke action for all fixtures in range") {
+            // Given
+            val body = mockk<Body>()
+            val fixture1 = Fixture(body, "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(body, "F2", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            grid.addFixture(fixture1)
+            grid.addFixture(fixture2)
+
+            val visited = mutableListOf<IFixture>()
+
+            // When
+            grid.forEachFixture(1, 1, 3, 3, { fixture, _ -> visited.add(fixture) })
+
+            // Then
+            visited shouldContain fixture1
+            visited shouldContain fixture2
+        }
+
+        it("forEachFixture action can filter inline") {
+            // Given
+            val body = mockk<Body>()
+            val fixture1 = Fixture(body, "keep", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(body, "skip", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            grid.addFixture(fixture1)
+            grid.addFixture(fixture2)
+
+            val visited = mutableListOf<IFixture>()
+
+            // When
+            grid.forEachFixture(1, 1) { fixture, _ -> if (fixture.getType() == "keep") visited.add(fixture) }
+
+            // Then
+            visited shouldContain fixture1
+            visited shouldNotContain fixture2
+        }
     }
 })
