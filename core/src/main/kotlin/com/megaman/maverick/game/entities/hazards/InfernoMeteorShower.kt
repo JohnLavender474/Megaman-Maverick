@@ -110,7 +110,6 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     private fun spawnMeteor(spawn: Vector2) {
         GameLogger.debug(TAG, "spawnMeteor(): spawn=$spawn")
-
         val meteor = MegaEntityFactory.fetch(MagmaMeteor::class)!!
         meteor.spawn(
             props(
@@ -123,7 +122,6 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     private fun shakeRoom() {
         GameLogger.debug(TAG, "shakeRoom()")
-
         game.eventsMan.submitEvent(
             Event(
                 EventType.SHAKE_CAM, props(
@@ -137,6 +135,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     }
 
     private fun resetTimers() {
+        GameLogger.debug(TAG, "resetTimers()")
         timers.values().forEach { it.reset() }
         spawners.values().forEach { it.reset() }
     }
@@ -152,7 +151,6 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
                     shakeRoom()
                 }
             }
-
             else -> {
                 val initSpawnDelay = timers["init_spawn_delay"]
                 initSpawnDelay.update(delta)
@@ -193,14 +191,20 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS), event@{ event ->
-                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                    val cull = room != spawnRoom
+                this, objectSetOf(EventType.END_ROOM_TRANS, EventType.PLAYER_SPAWN), { event ->
+                    val cull = when (event.key) {
+                        EventType.PLAYER_SPAWN -> true
+                        EventType.END_ROOM_TRANS -> {
+                            val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                            room != spawnRoom
+                        }
+                        else -> false
+                    }
                     GameLogger.debug(
                         TAG,
-                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
+                        "defineCullablesComponent(): event=${event.key}, spawnRoom=$spawnRoom, cull=$cull"
                     )
-                    return@event cull
+                    cull
                 }
             )
         )

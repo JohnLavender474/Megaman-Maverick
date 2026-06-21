@@ -15,6 +15,7 @@ import com.megaman.maverick.game.world.body.hasFilter
 
 class MegaContactFilter : IContactFilter {
 
+    // Always prefer to put the "smaller" fixture as the key
     private val filters = objectMapOf(
         FixtureType.PLAYER pairTo objectSetOf(
             FixtureType.BODY,
@@ -43,10 +44,6 @@ class MegaContactFilter : IContactFilter {
             FixtureType.BODY,
             FixtureType.PLAYER
         ),
-        // The listener type is purposefully set as the key here. In WorldSystem, the key
-        // type is used to determine the bounds in which to search for the fixtures to
-        // contact with. Since listener fixtures are almost always smaller than water
-        // fixtures, having the listener type as the key is an optimization trick.
         FixtureType.WATER_LISTENER pairTo objectSetOf(
             FixtureType.WATER
         ),
