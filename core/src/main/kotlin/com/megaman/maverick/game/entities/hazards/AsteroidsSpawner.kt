@@ -2,25 +2,20 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.UtilMethods
 import com.mega.game.engine.common.UtilMethods.getRandom
-import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.extensions.random
-import com.mega.game.engine.common.interfaces.IActivatable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.entities.contracts.ICullableEntity
-import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
-import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -31,49 +26,36 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.MoonEyeStone
 import com.megaman.maverick.game.entities.projectiles.Asteroid
-import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 
-class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity<Asteroid>, ICullableEntity,
-    IDrawableShapesEntity, IActivatable {
+class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
 
     companion object {
         const val TAG = "AsteroidsSpawner"
 
-        const val MIN_SPEED = 2f
-        const val MAX_SPEED = 3f
+        const val MIN_SPEED = 3f
+        const val MAX_SPEED = 4f
 
-        private const val MIN_SPAWN_DELAY = 1.5f
-        private const val MAX_SPAWN_DELAY = 3f
+        private const val MIN_SPAWN_DELAY = 1.25f
+        private const val MAX_SPAWN_DELAY = 2.5f
 
         private const val MIN_ANGLE = 240f
         private const val MAX_ANGLE = 300f
 
-        private const val MAX_CHILDREN = 3
-
         private const val DEFAULT_MIN_Y = -10f * ConstVals.PPM
 
-        private const val CAMERA_MAX_DIST_X = 8f
+        private const val CAMERA_MAX_DIST_X = 10f
     }
 
-    override var children = Array<Asteroid>()
-    override var on = true
-        set(value) {
-            field = value
-            if (value) resetSpawnTimer()
-        }
+    private val spawners = OrderedMap<GameRectangle, Timer>()
 
-    private val bounds = GameRectangle()
-
-    private val spawnTimer = Timer()
     private var spawnRoom: String? = null
     var onSpawnListener: ((Asteroid) -> Unit)? = null
-
-    private var destroyChildren = false
 
     private var minY = DEFAULT_MIN_Y
 
@@ -82,28 +64,21 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         super.init()
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ bounds }), debug = true))
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
+        spawnProps.forEach { key, value ->
+            if (key.toString().contains(ConstKeys.SPAWNER)) {
+                val spawner = (value as RectangleMapObject).rectangle.toGameRectangle(false)
+                spawners.put(spawner, Timer(getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)))
+            }
+        }
 
-        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
-        if (cullOutOfBounds) putCullable(
-            ConstKeys.CULL_OUT_OF_BOUNDS,
-            getGameCameraCullingLogic(getGameCamera(), { bounds })
-        ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
-
-        on = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
-
-        resetSpawnTimer()
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)
         onSpawnListener = spawnProps.get(ConstKeys.LISTENER) as ((Asteroid) -> Unit)?
-
-        destroyChildren = spawnProps.getOrDefault("${ConstKeys.DESTROY}_${ConstKeys.CHILDREN}", false, Boolean::class)
 
         val minYObj = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", RectangleMapObject::class)
         minY = if (minYObj != null) minYObj.rectangle.y else DEFAULT_MIN_Y
@@ -112,16 +87,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        if (destroyChildren) children.forEach { it.destroy() }
-        children.clear()
-    }
-
-    private fun resetSpawnTimer() {
-        GameLogger.debug(TAG, "resetSpawnTimer()")
-
-        val newDuration = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
-        spawnTimer.resetDuration(newDuration)
+        spawners.clear()
     }
 
     private fun shouldAimAtMoonEyeStone() = UtilMethods.getRandomBool() &&
@@ -129,14 +95,12 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
 
     private fun getRandomMoonEyeStone() = MegaGameEntities.getOfTag(MoonEyeStone.TAG).random() as MoonEyeStone
 
-    private fun spawnAsteroid() {
+    private fun spawnAsteroid(spawner: GameRectangle) {
         val spawn = GameObjectPools.fetch(Vector2::class).set(
-            getRandom(bounds.getX(), bounds.getMaxX()), bounds.getMaxY()
+            getRandom(spawner.getX(), spawner.getMaxX()), spawner.getMaxY()
         )
 
         val angle = when {
-            // When targeting a random MoonEyeStone, it is possible that the asteroid may not actually target it since
-            // the angle is coerced between MIN_ANGLE and MAX_ANGLE. This is on purpose.
             shouldAimAtMoonEyeStone() -> getRandomMoonEyeStone()
                 .body
                 .getCenter()
@@ -159,29 +123,26 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
                 "${ConstKeys.MINI}_${ConstKeys.Y}" pairTo minY
             )
         )
-        children.add(asteroid)
-
-        GameLogger.debug(TAG, "Spawned asteroid. Size of children: ${children.size}")
+        onSpawnListener?.invoke(asteroid)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
-        children.removeAll { it.dead }
+        if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) return@update
 
         val camBounds = game.getGameCamera().getRotatedBounds()
-        if (!on ||
-            children.size >= MAX_CHILDREN ||
-            game.isProperty(ConstKeys.ROOM_TRANSITION, true) ||
-            bounds.getX() > camBounds.getMaxX() + CAMERA_MAX_DIST_X * ConstVals.PPM ||
-            bounds.getMaxX() < camBounds.getX() - CAMERA_MAX_DIST_X * ConstVals.PPM
-        ) {
-            spawnTimer.setToEnd()
-            return@update
-        }
 
-        spawnTimer.update(delta)
-        if (spawnTimer.isFinished()) {
-            spawnAsteroid()
-            resetSpawnTimer()
+        spawners.forEach spawner@{ entry ->
+            val spawner = entry.key
+            if (spawner.getX() > camBounds.getMaxX() + CAMERA_MAX_DIST_X * ConstVals.PPM ||
+                spawner.getMaxX() < camBounds.getX() - CAMERA_MAX_DIST_X * ConstVals.PPM
+            ) return@spawner
+
+            val timer = entry.value
+            timer.update(delta)
+            if (timer.isFinished()) {
+                spawnAsteroid(spawner)
+                timer.resetDuration(getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY))
+            }
         }
     })
 
@@ -189,10 +150,21 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this,
-                objectSetOf(EventType.BEGIN_ROOM_TRANS),
-                cull@{ event ->
-                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
-                    return@cull room != spawnRoom
+                objectSetOf(EventType.END_ROOM_TRANS, EventType.PLAYER_SPAWN),
+                { event ->
+                    val cull = when (event.key) {
+                        EventType.PLAYER_SPAWN -> true
+                        EventType.END_ROOM_TRANS -> {
+                            val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                            room != spawnRoom
+                        }
+                        else -> false
+                    }
+                    GameLogger.debug(
+                        TAG,
+                        "defineCullablesComponent(): event=${event.key}, spawnRoom=$spawnRoom, cull=$cull"
+                    )
+                    cull
                 }
             )
         )
