@@ -56,6 +56,8 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         private const val MAX_CHILDREN = 3
 
         private const val DEFAULT_MIN_Y = -10f * ConstVals.PPM
+
+        private const val CAMERA_MAX_DIST_X = 8f
     }
 
     override var children = Array<Asteroid>()
@@ -71,7 +73,6 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     private var spawnRoom: String? = null
     var onSpawnListener: ((Asteroid) -> Unit)? = null
 
-    private var cullOOBChildren = true
     private var destroyChildren = false
 
     private var minY = DEFAULT_MIN_Y
@@ -103,9 +104,6 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         onSpawnListener = spawnProps.get(ConstKeys.LISTENER) as ((Asteroid) -> Unit)?
 
         destroyChildren = spawnProps.getOrDefault("${ConstKeys.DESTROY}_${ConstKeys.CHILDREN}", false, Boolean::class)
-        cullOOBChildren = spawnProps.getOrDefault(
-            "${ConstKeys.CULL_OUT_OF_BOUNDS}_${ConstKeys.CHILDREN}", true, Boolean::class
-        )
 
         val minYObj = spawnProps.get("${ConstKeys.MIN}_${ConstKeys.Y}", RectangleMapObject::class)
         minY = if (minYObj != null) minYObj.rectangle.y else DEFAULT_MIN_Y
@@ -115,7 +113,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        if (destroyChildren) children.forEach { (it as MegaGameEntity).destroy() }
+        if (destroyChildren) children.forEach { it.destroy() }
         children.clear()
     }
 
@@ -145,6 +143,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
                 .sub(spawn)
                 .angleDeg()
                 .coerceIn(MIN_ANGLE, MAX_ANGLE)
+
             else -> getRandom(MIN_ANGLE, MAX_ANGLE)
         }
 
@@ -157,8 +156,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
-                "${ConstKeys.MINI}_${ConstKeys.Y}" pairTo minY,
-                ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOOBChildren
+                "${ConstKeys.MINI}_${ConstKeys.Y}" pairTo minY
             )
         )
         children.add(asteroid)
@@ -167,9 +165,15 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParen
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
-        children.removeAll { (it as MegaGameEntity).dead }
+        children.removeAll { it.dead }
 
-        if (!on || children.size >= MAX_CHILDREN || game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
+        val camBounds = game.getGameCamera().getRotatedBounds()
+        if (!on ||
+            children.size >= MAX_CHILDREN ||
+            game.isProperty(ConstKeys.ROOM_TRANSITION, true) ||
+            bounds.getX() > camBounds.getMaxX() + CAMERA_MAX_DIST_X * ConstVals.PPM ||
+            bounds.getMaxX() < camBounds.getX() - CAMERA_MAX_DIST_X * ConstVals.PPM
+        ) {
             spawnTimer.setToEnd()
             return@update
         }
