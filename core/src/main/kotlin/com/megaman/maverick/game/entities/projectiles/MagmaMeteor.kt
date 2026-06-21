@@ -18,6 +18,7 @@ import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
+import com.mega.game.engine.common.shapes.GameCircle
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
@@ -166,12 +167,17 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         debugShapes.add { body.getBounds() }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
+        val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.5f * ConstVals.PPM))
+        body.addFixture(shieldFixture)
+        shieldFixture.drawingColor = Color.BLUE
+        debugShapes.add { shieldFixture }
+
         val feetFixture = Fixture(
             body,
             FixtureType.FEET,
             GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         )
-        feetFixture.offsetFromBodyAttachment.y = - body.getHeight() / 2f
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
