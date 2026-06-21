@@ -66,14 +66,14 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         private const val BURST_CULL_DUR = 0.5f
 
-        private const val NORMAL_SIZE = 0.25f
+        private const val NORMAL_SIZE = 0.35f
         private const val BURST_SIZE = 0.5f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private lateinit var burstCullTimer: Timer
-    private lateinit var burstDirection: Direction
+    private val burstCullTimer = Timer()
+    private var burstDirection: Direction? = null
 
     private var burstOnHitBlock = true
     private var burst = false
@@ -107,7 +107,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.physics.velocity.set(trajectory)
 
         val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, BURST_CULL_DUR, Float::class)
-        burstCullTimer = Timer(cullTime)
+        burstCullTimer.resetDuration(cullTime)
 
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class)
         body.physics.gravity.set(gravity)
@@ -115,7 +115,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         burstOnHitBlock = spawnProps.getOrDefault(BURST_ON_HIT_BLOCK, true, Boolean::class)
 
         burst = false
-        burstDirection = Direction.UP
+        burstDirection = null
 
         canDamage = spawnProps.getOrDefault(ConstKeys.DAMAGER, true, Boolean::class)
 
@@ -150,7 +150,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
             val overlap = GameObjectPools.fetch(Rectangle::class)
             Intersector.intersectRectangles(feetBounds.toGdxRectangle(), hitBounds.toGdxRectangle(), overlap)
 
-            val position = DirectionPositionMapper.getInvertedPosition(burstDirection)
+            val position = DirectionPositionMapper.getInvertedPosition(burstDirection ?: Direction.UP)
             body.positionOnPoint(overlap.toGameRectangle().getPositionPoint(position), position)
 
             body.type = BodyType.DYNAMIC
@@ -194,7 +194,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         if (burstCullTimer.isFinished()) {
             destroy()
             if (spawnSmoke) {
-                val position = when (burstDirection) {
+                val position = when (burstDirection ?: Direction.UP) {
                     Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
                     Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
                     Direction.LEFT -> body.getPositionPoint(Position.CENTER_RIGHT)
@@ -217,18 +217,21 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val body = Body(BodyType.DYNAMIC)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        body.setSize(0.25f * ConstVals.PPM)
+        body.setSize(0.35f * ConstVals.PPM)
 
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
         val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
+            Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.35f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
             if (block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || collisionsToIgnore.contains(block.id))
                 return@setHitByBlockReceiver
 
-            if (burstOnHitBlock) explodeAndDie(feetFixture.getShape().getBoundingRectangle(), block.body.getBounds())
+            if (burstOnHitBlock) explodeAndDie(
+                feetFixture.getShape().getBoundingRectangle(),
+                block.body.getBounds()
+            )
         }
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
@@ -239,6 +242,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, damagerBounds)
         damagerFixture.attachedToBody = false
         body.addFixture(damagerFixture)
+        damagerBounds.drawingColor = Color.RED
         debugShapes.add { damagerFixture }
 
         val projectileBounds = GameRectangle()
@@ -252,8 +256,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
             projectileBounds.setSize(size * ConstVals.PPM)
 
             val position = when {
-                burst -> DirectionPositionMapper.getInvertedPosition(burstDirection)
-                else -> Position.BOTTOM_CENTER
+                burst -> DirectionPositionMapper.getInvertedPosition(burstDirection ?: Direction.UP)
+                else -> Position.CENTER
             }
             val bodyPoint = body.getPositionPoint(position)
             damagerBounds.positionOnPoint(bodyPoint, position)
@@ -275,12 +279,15 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
             val size = if (burst) 1f else 2f
             sprite.setSize(size * ConstVals.PPM)
 
-            val position = if (burst) DirectionPositionMapper.getInvertedPosition(burstDirection) else Position.CENTER
+            val position = when {
+                burst -> DirectionPositionMapper.getInvertedPosition(burstDirection ?: Direction.UP)
+                else -> Position.CENTER
+            }
             val bodyPosition = body.getPositionPoint(position)
             sprite.setPosition(bodyPosition, position)
 
             sprite.setOriginCenter()
-            sprite.rotation = burstDirection.rotation
+            sprite.rotation = burstDirection?.rotation ?: 0f
         }
         return component
     }

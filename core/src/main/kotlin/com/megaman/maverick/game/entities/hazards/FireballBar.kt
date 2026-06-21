@@ -16,6 +16,7 @@ import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.motion.RotatingLine
 import com.mega.game.engine.updatables.UpdatablesComponent
+import com.mega.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -67,7 +68,6 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
 
         (0 until BALLS).forEach { i ->
             val canDamage = i != 0
-
             val fireball = MegaEntityFactory.fetch(Fireball::class)!!
             fireball.spawn(
                 props(
@@ -75,7 +75,8 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
                     ConstKeys.DAMAGER pairTo canDamage,
                     ConstKeys.CULL_EVENTS pairTo false,
                     Fireball.BURST_ON_HIT_BLOCK pairTo false,
-                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
+                    ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                    ConstKeys.BODY_TYPE pairTo BodyType.ABSTRACT,
                 )
             )
             children.add(fireball)
@@ -86,9 +87,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
-
         super.onDestroy()
-
         children.forEach { (it as GameEntity).destroy() }
         children.clear()
     }
