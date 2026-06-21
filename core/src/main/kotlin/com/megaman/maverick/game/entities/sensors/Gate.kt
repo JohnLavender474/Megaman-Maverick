@@ -12,10 +12,7 @@ import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.audio.AudioComponent
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.equalsAny
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
+import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
 import com.mega.game.engine.common.interfaces.Resettable
 import com.mega.game.engine.common.objects.Properties
@@ -49,6 +46,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -64,6 +62,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     companion object {
         const val TAG = "Gate"
         private const val DURATION = 0.5f
+        private const val MAX_MEGA_MAN_DIST = 10f
         private val animDefs = objectMapOf(
             GateState.OPENABLE pairTo AnimationDef(),
             GateState.OPENING pairTo AnimationDef(1, 5, 0.1f, false),
@@ -118,9 +117,9 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         super.init()
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
-        addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineUpdatablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -187,7 +186,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
             }
 
             EventType.INTERMEDIATE_BOSS_DEAD -> {
-                thisBossKey?.let { it ->
+                thisBossKey?.let {
                     val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
 
                     if (it == boss.bossKey) {
@@ -314,6 +313,15 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
             val position = DirectionPositionMapper.getPosition(direction)
             gate.positionOnPoint(body.getPositionPoint(position), position)
+
+            // If the distance between Mega Man and the Gate is too far, then
+            // set the Gate's body and fixtures to inactive as an optimization.
+            // This assumes that ONLY Mega Man can ever make contact with a Gate.
+            val active = body.getBounds().getCenter()
+                .dst(megaman.body.getBounds().getCenter())
+                .lessThan(MAX_MEGA_MAN_DIST * ConstVals.PPM)
+            body.physics.collisionOn = active
+            body.forEachFixture { fixture -> fixture.setActive(active) }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
