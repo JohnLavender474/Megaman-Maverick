@@ -146,13 +146,10 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
         firstSpawn = true
 
         if (spawnProps.containsKey(AsteroidsSpawner.TAG)) {
-            val asteroidsSpawnerBounds =
-                spawnProps.get(AsteroidsSpawner.TAG, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-
             asteroidsSpawner = MegaEntityFactory.fetch(AsteroidsSpawner::class)!!
             asteroidsSpawner!!.spawn(
                 props(
-                    ConstKeys.BOUNDS pairTo asteroidsSpawnerBounds,
+                    ConstKeys.SPAWNER pairTo spawnProps.get(AsteroidsSpawner.TAG, RectangleMapObject::class)!!,
                     "${ConstKeys.DESTROY}_${ConstKeys.CHILDREN}" pairTo true,
                 )
             )
