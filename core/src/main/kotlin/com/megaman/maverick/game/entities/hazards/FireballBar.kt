@@ -11,7 +11,6 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.entities.GameEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IParentEntity
 import com.mega.game.engine.motion.RotatingLine
@@ -88,7 +87,7 @@ class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEnti
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
