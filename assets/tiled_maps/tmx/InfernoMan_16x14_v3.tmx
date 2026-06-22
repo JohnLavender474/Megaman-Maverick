@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="500" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="939">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="500" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="941">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -2039,7 +2039,11 @@
    </properties>
   </object>
   <object id="108" name="InfernoDeath" x="3328" y="3008" width="608" height="192"/>
-  <object id="160" name="MegamanDeath" x="4192" y="1984" width="96" height="32"/>
+  <object id="160" name="Death" x="4192" y="1984" width="96" height="32">
+   <properties>
+    <property name="rooms" value="room3"/>
+   </properties>
+  </object>
   <object id="221" name="MegamanDeath" x="5440" y="1744" width="96" height="112">
    <properties>
     <property name="instant" type="bool" value="true"/>
@@ -2062,7 +2066,11 @@
     <property name="room" value="room9"/>
    </properties>
   </object>
-  <object id="465" name="MegamanDeath" x="3968" y="1984" width="64" height="32"/>
+  <object id="465" name="Death" x="3968" y="1984" width="64" height="32">
+   <properties>
+    <property name="rooms" value="room3"/>
+   </properties>
+  </object>
   <object id="504" name="InfernoDeath" x="12320" y="1632" width="512" height="160">
    <properties>
     <property name="instant" type="bool" value="true"/>
@@ -2083,9 +2091,21 @@
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="540" name="MegamanDeath" x="13632" y="704" width="160" height="32"/>
-  <object id="541" name="MegamanDeath" x="13600" y="608" width="32" height="128"/>
-  <object id="542" name="MegamanDeath" x="13504" y="608" width="32" height="128"/>
+  <object id="540" name="Death" x="13632" y="704" width="160" height="32">
+   <properties>
+    <property name="rooms" value="room10"/>
+   </properties>
+  </object>
+  <object id="541" name="Death" x="13600" y="608" width="32" height="128">
+   <properties>
+    <property name="rooms" value="room10"/>
+   </properties>
+  </object>
+  <object id="542" name="Death" x="13504" y="608" width="32" height="128">
+   <properties>
+    <property name="rooms" value="room10"/>
+   </properties>
+  </object>
   <object id="545" name="Gate" x="14144" y="544" width="64" height="96">
    <properties>
     <property name="room" value="room11"/>
@@ -2101,8 +2121,12 @@
     <property name="room" value="boss_room"/>
    </properties>
   </object>
-  <object id="585" name="MegamanDeath" x="13120" y="1216" width="672" height="32"/>
-  <object id="586" name="MegamanDeath" x="13088" y="1152" width="32" height="96"/>
+  <object id="585" name="Death" x="13120" y="1216" width="672" height="32">
+   <properties>
+    <property name="rooms" value="room10"/>
+   </properties>
+  </object>
+  <object id="586" name="Death" x="13088" y="1152" width="32" height="96"/>
   <object id="647" name="MegamanDeath" x="10464" y="1744" width="128" height="112">
    <properties>
     <property name="instant" type="bool" value="true"/>
@@ -2151,7 +2175,7 @@
   </object>
  </objectgroup>
  <objectgroup id="9" name="temp">
-  <object id="923" name="0" x="3872" y="1536" width="32" height="32"/>
+  <object id="940" name="0" x="12896" y="1344" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="player">
   <object id="10" name="0" x="128" y="2912" width="32" height="32"/>

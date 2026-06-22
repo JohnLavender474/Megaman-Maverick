@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.sensors
 
+import com.badlogic.gdx.utils.ObjectSet
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.shapes.GameRectangle
@@ -24,6 +25,8 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
         const val TAG = "Death"
     }
 
+    private var rooms: ObjectSet<String>? = null
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         addComponent(defineBodyComponent())
@@ -42,14 +45,33 @@ open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity 
             (fixture.rawShape as GameRectangle).set(bounds)
             if (fixture.getType() == FixtureType.DEATH) fixture.putProperty(ConstKeys.INSTANT, instant)
         }
+
+        val roomsStr = spawnProps.get(ConstKeys.ROOMS, String::class)
+        if (roomsStr != null) {
+            rooms = ObjectSet()
+            roomsStr.split(",").forEach { rooms!!.add(it) }
+        } else rooms = null
     }
 
     open fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
+
         val deathFixture = Fixture(body, FixtureType.DEATH, GameRectangle())
         body.addFixture(deathFixture)
+
+        body.preProcess.put(ConstKeys.DEFAULT) {
+            val active = isActive()
+            body.physics.collisionOn = active
+            deathFixture.setActive(active)
+        }
+
         return BodyComponentCreator.create(this, body, doUpdate = { true })
     }
+
+    protected open fun isActive() = rooms?.let compute@{
+        val currentRoom = game.getCurrentRoom()?.name
+        return@compute currentRoom == null || it.contains(currentRoom)
+    } ?: true
 
     override fun getType() = EntityType.SENSOR
 
