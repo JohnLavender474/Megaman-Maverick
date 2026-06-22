@@ -14,7 +14,6 @@ import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureAtlas
 import com.mega.game.engine.common.extensions.objectMapOf
 import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -38,7 +37,6 @@ import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.Body
 import com.mega.game.engine.world.body.BodyComponent
 import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -127,6 +125,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
                 (spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class))!!.getCenter()
+
             else -> spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         }
         body.setCenter(spawn)
@@ -233,9 +232,6 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             targetCoordinateSupplier = { megaman.body.getCenter(Vector2()).toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ coordinate, container ->
-                val bodySet = MutableOrderedSet<IBody>()
-                container?.getBodies(coordinate.x, coordinate.y, bodySet)
-
                 val rect1 = GameRectangle()
                 val rect2 = GameRectangle()
                 val coordBounds = rect1.set(
@@ -244,16 +240,11 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     ConstVals.PPM.toFloat(),
                     ConstVals.PPM.toFloat(),
                 )
-
-                var passable = true
-                for (otherBody in bodySet)
-                    if (otherBody.getEntity().getType() == EntityType.BLOCK &&
-                        otherBody.getBounds(rect2).overlaps(coordBounds)
-                    ) {
-                        passable = false
-                        break
-                    }
-                return@filter passable
+                // returns false if stopped early (blocking body found) → not passable
+                return@filter container?.forEachBody(coordinate.x, coordinate.y) { otherBody, _ ->
+                    !(otherBody.getEntity().getType() == EntityType.BLOCK &&
+                        otherBody.getBounds(rect2).overlaps(coordBounds))
+                } ?: true
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )
@@ -272,6 +263,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     stopOnTargetNull = false,
                     onTargetNull = { directlyChaseMegaman() },
                 )
+
                 else -> body.physics.velocity.setZero()
             }
         }, { !frozen && spawnDelayTimer.isFinished() })

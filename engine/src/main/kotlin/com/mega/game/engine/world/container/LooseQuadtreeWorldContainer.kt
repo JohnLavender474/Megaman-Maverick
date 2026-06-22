@@ -134,13 +134,15 @@ class LooseQuadtreeWorldContainer(
         minY: Float,
         maxX: Float,
         maxY: Float,
-        action: (Node) -> Unit
-    ) {
-        if (!node.looseOverlaps(minX, minY, maxX, maxY)) return
-        action(node)
-        node.children?.forEach { child ->
-            if (child != null) queryRegion(child, minX, minY, maxX, maxY, action)
+        action: (Node) -> Boolean
+    ): Boolean {
+        if (!node.looseOverlaps(minX, minY, maxX, maxY)) return true
+        if (!action(node)) return false
+        val children = node.children ?: return true
+        for (child in children) {
+            if (child != null && !queryRegion(child, minX, minY, maxX, maxY, action)) return false
         }
+        return true
     }
 
     // Grid cell (x, y) covers world [x*ppm, y*ppm] to [(x+1)*ppm, (y+1)*ppm]
@@ -161,21 +163,51 @@ class LooseQuadtreeWorldContainer(
         return true
     }
 
-    override fun forEachBody(x: Int, y: Int, action: (IBody, IWorldContainer) -> Unit) =
+    override fun forEachBody(x: Int, y: Int, action: (IBody, IWorldContainer) -> Boolean) =
         forEachBody(x, y, x, y, action)
 
-    override fun forEachBody(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IBody, IWorldContainer) -> Unit) {
-        queryRegion(root, cellsToWorldMinX(minX), cellsToWorldMinY(minY), cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)) { node ->
-            node.bodies.forEach { action(it, this) }
+    override fun forEachBody(
+        minX: Int,
+        minY: Int,
+        maxX: Int,
+        maxY: Int,
+        action: (IBody, IWorldContainer) -> Boolean
+    ): Boolean {
+        return queryRegion(
+            root,
+            cellsToWorldMinX(minX),
+            cellsToWorldMinY(minY),
+            cellsToWorldMaxX(maxX),
+            cellsToWorldMaxY(maxY)
+        ) { node ->
+            for (body in node.bodies) {
+                if (!action(body, this)) return@queryRegion false
+            }
+            true
         }
     }
 
-    override fun forEachFixture(x: Int, y: Int, action: (IFixture, IWorldContainer) -> Unit) =
+    override fun forEachFixture(x: Int, y: Int, action: (IFixture, IWorldContainer) -> Boolean) =
         forEachFixture(x, y, x, y, action)
 
-    override fun forEachFixture(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IFixture, IWorldContainer) -> Unit) {
-        queryRegion(root, cellsToWorldMinX(minX), cellsToWorldMinY(minY), cellsToWorldMaxX(maxX), cellsToWorldMaxY(maxY)) { node ->
-            node.fixtures.forEach { action(it, this) }
+    override fun forEachFixture(
+        minX: Int,
+        minY: Int,
+        maxX: Int,
+        maxY: Int,
+        action: (IFixture, IWorldContainer) -> Boolean
+    ): Boolean {
+        return queryRegion(
+            root,
+            cellsToWorldMinX(minX),
+            cellsToWorldMinY(minY),
+            cellsToWorldMaxX(maxX),
+            cellsToWorldMaxY(maxY)
+        ) { node ->
+            for (fixture in node.fixtures) {
+                if (!action(fixture, this)) return@queryRegion false
+            }
+            true
         }
     }
 

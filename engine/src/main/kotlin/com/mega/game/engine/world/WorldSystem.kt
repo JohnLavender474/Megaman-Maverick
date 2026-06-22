@@ -227,6 +227,7 @@ class WorldSystem(
                 if (!currentContactSet.add(contact))
                     contactPool.free(contact)
             }
+            return@forEachFixture true
         }
     }
 
@@ -238,10 +239,11 @@ class WorldSystem(
             MathUtils.ceil(bodyBounds.getMaxX() / ppm),
             MathUtils.ceil(bodyBounds.getMaxY() / ppm),
         ) { candidate, _ ->
-            if (candidate == body) return@forEachBody
+            if (candidate == body) return@forEachBody true
             val candidateBounds = candidate.getBounds(out2)
             if (candidateBounds.overlaps(bodyBounds))
                 collisionHandler.handleCollision(body, candidate)
+            return@forEachBody true
         }
     }
 }

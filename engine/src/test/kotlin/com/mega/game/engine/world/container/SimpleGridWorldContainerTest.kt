@@ -399,11 +399,29 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             val visited = mutableListOf<IBody>()
 
             // When - action itself skips non-DYNAMIC bodies
-            grid.forEachBody(1, 1) { body, _ -> if (body.type == BodyType.DYNAMIC) visited.add(body) }
+            grid.forEachBody(1, 1) { body, _ -> if (body.type == BodyType.DYNAMIC) visited.add(body); true }
 
             // Then
             visited shouldContain body1
             visited shouldNotContain body2
+        }
+
+        it("forEachBody stops early when action returns false") {
+            // Given
+            val bodies = (1..5).map { Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f) }
+            bodies.forEach { grid.addBody(it) }
+
+            val visited = mutableListOf<IBody>()
+
+            // When - stop after first body
+            val result = grid.forEachBody(1, 1) { body, _ ->
+                visited.add(body)
+                false
+            }
+
+            // Then
+            result shouldBe false
+            visited.size shouldBe 1
         }
 
         it("forEachFixture single-cell should invoke action for matching fixtures") {
@@ -453,11 +471,30 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             val visited = mutableListOf<IFixture>()
 
             // When
-            grid.forEachFixture(1, 1) { fixture, _ -> if (fixture.getType() == "keep") visited.add(fixture) }
+            grid.forEachFixture(1, 1) { fixture, _ -> if (fixture.getType() == "keep") visited.add(fixture); true }
 
             // Then
             visited shouldContain fixture1
             visited shouldNotContain fixture2
+        }
+
+        it("forEachFixture stops early when action returns false") {
+            // Given
+            val body = mockk<Body>()
+            val fixtures = (1..5).map { Fixture(body, "F$it", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false) }
+            fixtures.forEach { grid.addFixture(it) }
+
+            val visited = mutableListOf<IFixture>()
+
+            // When - stop after first fixture
+            val result = grid.forEachFixture(1, 1) { fixture, _ ->
+                visited.add(fixture)
+                false
+            }
+
+            // Then
+            result shouldBe false
+            visited.size shouldBe 1
         }
     }
 })

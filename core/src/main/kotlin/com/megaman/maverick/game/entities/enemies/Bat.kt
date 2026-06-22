@@ -16,7 +16,6 @@ import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.*
 import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.objects.MutableOrderedSet
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -35,7 +34,10 @@ import com.mega.game.engine.events.IEventListener
 import com.mega.game.engine.pathfinding.PathfinderParams
 import com.mega.game.engine.pathfinding.PathfindingComponent
 import com.mega.game.engine.updatables.UpdatablesComponent
-import com.mega.game.engine.world.body.*
+import com.mega.game.engine.world.body.Body
+import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
+import com.mega.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -260,6 +262,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                         releasePerchTimer.reset()
                     }
                 }
+
                 BatState.OPEN_EYES, BatState.OPEN_WINGS -> {
                     releasePerchTimer.update(delta)
                     if (releasePerchTimer.isFinished()) {
@@ -267,6 +270,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                         releasePerchTimer.reset()
                     }
                 }
+
                 else -> {}
             }
         }
@@ -317,6 +321,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     }.scl(ConstVals.PPM.toFloat())
                     body.physics.velocity.set(velocity)
                 }
+
                 state != BatState.FLYING_TO_ATTACK -> body.physics.velocity.setZero()
             }
         }
@@ -362,9 +367,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ coordinate, container ->
-                val bodySet = MutableOrderedSet<IBody>()
-                container?.getBodies(coordinate.x, coordinate.y, bodySet)
-
                 val rect1 = GameRectangle()
                 val rect2 = GameRectangle()
                 val coordBounds = rect1.set(
@@ -373,16 +375,11 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     ConstVals.PPM.toFloat(),
                     ConstVals.PPM.toFloat(),
                 )
-
-                var passable = true
-                for (otherBody in bodySet)
-                    if (otherBody.getEntity().getType() == EntityType.BLOCK &&
-                        otherBody.getBounds(rect2).overlaps(coordBounds)
-                    ) {
-                        passable = false
-                        break
-                    }
-                return@filter passable
+                // returns false if stopped early (blocking body found) → not passable
+                return@filter container?.forEachBody(coordinate.x, coordinate.y) { otherBody, _ ->
+                    !(otherBody.getEntity().getType() == EntityType.BLOCK &&
+                        otherBody.getBounds(rect2).overlaps(coordBounds))
+                } ?: true
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
         )

@@ -11,25 +11,33 @@ interface IWorldContainer : IClearable, ICopyable<IWorldContainer> {
 
     fun addFixture(fixture: IFixture): Boolean
 
-    fun forEachBody(x: Int, y: Int, action: (body: IBody, container: IWorldContainer) -> Unit)
+    fun forEachBody(
+        x: Int,
+        y: Int,
+        action: (body: IBody, container: IWorldContainer) -> Boolean
+    ): Boolean
 
     fun forEachBody(
         minX: Int,
         minY: Int,
         maxX: Int,
         maxY: Int,
-        action: (body: IBody, container: IWorldContainer) -> Unit
-    )
+        action: (body: IBody, container: IWorldContainer) -> Boolean
+    ): Boolean
 
-    fun forEachFixture(x: Int, y: Int, action: (fixture: IFixture, container: IWorldContainer) -> Unit)
+    fun forEachFixture(
+        x: Int,
+        y: Int,
+        action: (fixture: IFixture, container: IWorldContainer) -> Boolean
+    ): Boolean
 
     fun forEachFixture(
         minX: Int,
         minY: Int,
         maxX: Int,
         maxY: Int,
-        action: (fixture: IFixture, container: IWorldContainer) -> Unit
-    )
+        action: (fixture: IFixture, container: IWorldContainer) -> Boolean
+    ): Boolean
 
     fun getBodies(
         x: Int,
@@ -38,6 +46,7 @@ interface IWorldContainer : IClearable, ICopyable<IWorldContainer> {
         filter: ((body: IBody, container: IWorldContainer) -> Boolean)? = null
     ) = forEachBody(x, y) { body, container ->
         if (filter == null || filter(body, container)) out.add(body)
+        return@forEachBody true
     }
 
     fun getBodies(
@@ -49,6 +58,7 @@ interface IWorldContainer : IClearable, ICopyable<IWorldContainer> {
         filter: ((body: IBody, container: IWorldContainer) -> Boolean)? = null
     ) = forEachBody(minX, minY, maxX, maxY) { body, container ->
         if (filter == null || filter(body, container)) out.add(body)
+        return@forEachBody true
     }
 
     fun getFixtures(
@@ -58,6 +68,7 @@ interface IWorldContainer : IClearable, ICopyable<IWorldContainer> {
         filter: ((fixture: IFixture, container: IWorldContainer) -> Boolean)? = null
     ) = forEachFixture(x, y) { fixture, container ->
         if (filter == null || filter(fixture, container)) out.add(fixture)
+        return@forEachFixture true
     }
 
     fun getFixtures(
@@ -69,5 +80,6 @@ interface IWorldContainer : IClearable, ICopyable<IWorldContainer> {
         filter: ((fixture: IFixture, container: IWorldContainer) -> Boolean)? = null
     ) = forEachFixture(minX, minY, maxX, maxY) { fixture, container ->
         if (filter == null || filter(fixture, container)) out.add(fixture)
+        return@forEachFixture true
     }
 }

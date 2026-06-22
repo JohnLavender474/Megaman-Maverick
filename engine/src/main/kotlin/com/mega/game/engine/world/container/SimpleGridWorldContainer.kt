@@ -80,32 +80,54 @@ class SimpleGridWorldContainer(
         return true
     }
 
-    override fun forEachBody(x: Int, y: Int, action: (IBody, IWorldContainer) -> Unit) {
-        bodyMap[x pairTo y]?.forEach { action(it, this) }
+    override fun forEachBody(x: Int, y: Int, action: (IBody, IWorldContainer) -> Boolean): Boolean {
+        val bodies = bodyMap[x pairTo y] ?: return true
+        for (body in bodies) if (!action(body, this)) return false
+        return true
     }
 
-    override fun forEachBody(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IBody, IWorldContainer) -> Unit) {
+    override fun forEachBody(
+        minX: Int,
+        minY: Int,
+        maxX: Int,
+        maxY: Int,
+        action: (IBody, IWorldContainer) -> Boolean
+    ): Boolean {
         tempBodySet.clear()
-        for (column in minX..maxX) for (row in minY..maxY)
-            bodyMap[column pairTo row]?.forEach { body ->
-                if (tempBodySet.contains(body)) return@forEach
+        for (column in minX..maxX) for (row in minY..maxY) {
+            val bodies = bodyMap[column pairTo row] ?: continue
+            for (body in bodies) {
+                if (tempBodySet.contains(body)) continue
+                if (!action(body, this)) return false
                 tempBodySet.add(body)
-                action(body, this)
             }
+        }
+        return true
     }
 
-    override fun forEachFixture(x: Int, y: Int, action: (IFixture, IWorldContainer) -> Unit) {
-        fixtureMap[x pairTo y]?.forEach { action(it, this) }
+    override fun forEachFixture(x: Int, y: Int, action: (IFixture, IWorldContainer) -> Boolean): Boolean {
+        val fixtures = fixtureMap[x pairTo y] ?: return true
+        for (fixture in fixtures) if (!action(fixture, this)) return false
+        return true
     }
 
-    override fun forEachFixture(minX: Int, minY: Int, maxX: Int, maxY: Int, action: (IFixture, IWorldContainer) -> Unit) {
+    override fun forEachFixture(
+        minX: Int,
+        minY: Int,
+        maxX: Int,
+        maxY: Int,
+        action: (IFixture, IWorldContainer) -> Boolean
+    ): Boolean {
         tempFixtureSet.clear()
-        for (column in minX..maxX) for (row in minY..maxY)
-            fixtureMap[column pairTo row]?.forEach { fixture ->
-                if (tempFixtureSet.contains(fixture)) return@forEach
+        for (column in minX..maxX) for (row in minY..maxY) {
+            val fixtures = fixtureMap[column pairTo row] ?: continue
+            for (fixture in fixtures) {
+                if (tempFixtureSet.contains(fixture)) continue
+                if (!action(fixture, this)) return false
                 tempFixtureSet.add(fixture)
-                action(fixture, this)
             }
+        }
+        return true
     }
 
     override fun clear() {
