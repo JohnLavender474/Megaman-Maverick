@@ -130,7 +130,6 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), ICulla
         if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) return@update
 
         val camBounds = game.getGameCamera().getRotatedBounds()
-
         spawners.forEach spawner@{ entry ->
             val spawner = entry.key
             if (spawner.getX() > camBounds.getMaxX() + CAMERA_MAX_DIST_X * ConstVals.PPM ||

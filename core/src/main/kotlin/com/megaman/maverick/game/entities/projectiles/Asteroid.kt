@@ -53,7 +53,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         const val BLUE = "Blue"
 
         private const val BLINK_DUR = 0.01f
-        private const val CULL_TIME = 3f
+        private const val CULL_TIME = 5f
         private const val DEFAULT_MIN_Y = -10f * ConstVals.PPM
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
@@ -68,15 +68,17 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
             BunbyRedRocket::class
         )
 
-        private const val MAX_ASTEROIDS = 8
+        private const val MAX_ASTEROIDS = 15
 
-        private fun cullExcessAsteroids(game: MegamanMaverickGame) {
+        private fun cullExcessAsteroids() {
             val set = MegaGameEntities.getOfTag(TAG)
             val iter = set.iterator()
             while (iter.hasNext) {
                 val asteroid = iter.next() as Asteroid
-                if (!game.getGameCamera().getRotatedBounds().overlaps(asteroid.body.getBounds()))
-                    asteroid.destroy()
+                if (!asteroid.dead) {
+                    asteroid.explodeAndDie()
+                    break
+                }
             }
         }
 
@@ -137,10 +139,9 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         body.forEachFixture { it.setActive(delayTimer == null) }
 
         hard = spawnProps.getOrDefault(ConstKeys.HARD, false, Boolean::class)
-
         minY = spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.Y}", DEFAULT_MIN_Y, Float::class)
 
-        if (MegaGameEntities.getOfTag(TAG).size > MAX_ASTEROIDS) cullExcessAsteroids(game)
+        if (MegaGameEntities.getOfTag(TAG).size > MAX_ASTEROIDS) cullExcessAsteroids()
     }
 
     override fun onDestroy() {
