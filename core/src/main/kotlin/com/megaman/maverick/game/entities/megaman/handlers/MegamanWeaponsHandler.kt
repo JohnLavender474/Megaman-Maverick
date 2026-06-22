@@ -336,14 +336,14 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 }
                 postShoot = postShoot@{
                     val allMoonScythes = getAllSpawned(outArray)
-                    if (allMoonScythes.size <= 6) return@postShoot
+                    if (allMoonScythes.size <= 4) return@postShoot
 
                     allMoonScythes.sort { o1, o2 -> o1.timeSpawned.compareTo(o2.timeSpawned) }
 
                     var aliveCount = allMoonScythes.size
 
                     val iter = allMoonScythes.iterator()
-                    while (iter.hasNext() && aliveCount > 6) {
+                    while (iter.hasNext() && aliveCount > 4) {
                         val moonScythe = iter.next() as MoonScythe
 
                         if (!moonScythe.fading && !moonScythe.dead) {
