@@ -131,7 +131,14 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 
     override fun explodeAndDie(vararg params: Any?) {
-        val direction = params[0] as Direction
+        var direction: Direction
+        try {
+            direction = params[0] as Direction
+        } catch (e: Exception) {
+            GameLogger.error(TAG, "Failed to parse direction", e)
+            direction = Direction.UP
+        }
+
         SHATTER_IMPULSES.get(direction).forEach { impulse ->
             val shard = MegaEntityFactory.fetch(PreciousShard::class)!!
             shard.spawn(
@@ -156,7 +163,9 @@ class PreciousGemBomb(game: MegamanMaverickGame) : AbstractProjectile(game) {
                 )
             )
         }
+
         destroy()
+
         if (overlapsGameCamera()) requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 
