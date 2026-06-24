@@ -3,7 +3,7 @@ name: level-designer
 description: Use when asked to design, draft, or scaffold a new or existing level.
 ---
 
-# Level Creator
+# Level Designer
 
 ## Overview
 
@@ -33,7 +33,8 @@ See the following examples:
   - An exit at the bottom-right of the room
 - Room 2:
   - Player enters from bottom-left of the room, consistent with the bottom-right exit from room 1
-  - Room has two openings: one at the top-right and another at the bottom-right, meaning this room forks off into 2 separate paths
+  - Room has two openings: one at the top-right and another at the bottom-right, meaning this room 
+    forks off into 2 separate paths
 
 ```
 === Room 1 (16×14) ===
@@ -139,10 +140,17 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ## Rules
 
-1. **Standard room size is 16 columns × 14 rows** (matches VIEW_WIDTH=16, VIEW_HEIGHT=14). Non-standard sizes must be noted in the label (e.g. `32×14`).
-2. **Spawn placement**: `0` is the start-of-level spawn; use `1`, `2`, `3`… in the order the player reaches each new room for the first time.
-3. **One `.` per notable object**: Don't try to name specific enemies in the grid — the grid captures placement and density, not entity type. Add a notes block after the room to describe what each `.` is.
-4. **Vertical transitions** require matching row gaps; **horizontal transitions** require matching column gaps.
+1. **Keep designs minimal** — prefer fewer elements placed with intention over dense layouts. 
+   Leave room for the user to add detail in Tiled. When in doubt, do less.
+2. **Standard room size is 16 columns × 14 rows** (matches VIEW_WIDTH=16, VIEW_HEIGHT=14). 
+   Non-standard sizes must be noted in the label (e.g. `32×14`).
+3. **Spawn placement**: `0` is the start-of-level spawn; use `1`, `2`, `3`… in the order the 
+   player reaches each new room for the first time.
+4. **One `.` per notable object**: Don't try to name specific enemies in the grid — the grid 
+   captures placement and density, not entity type. Add a notes block after the room to describe 
+   what each `.` is.
+5. **Vertical transitions** require matching row gaps; **horizontal transitions** require matching 
+   column gaps.
 
 ## Notes Block Format
 
@@ -162,28 +170,40 @@ Notes — Room 2:
 
 Ask the user for:
 
-**Level name** — ask the user to provide a name; present using `temp_<unique_id>` 
-for when the user does not want to provide a name.
+**Scaffold or fill in?** — Ask whether each room should be a bare scaffold (outer border only, 
+no interior content) or a filled draft (platforms, enemies, and spawn points placed). A scaffold 
+is useful when the user wants to place content themselves in Tiled; a filled draft is useful when 
+the user wants a starting point to iterate from.
 
-**Theme** — Ice, fire, factory, desert, cave, underwater, or free-form (no theme).
-Suggest a theme based on the user's input for level name.
+**Level name** — ask the user to provide a name; present using `temp_<unique_id>`for when the user 
+does not want to provide a name.
 
-**Number of rooms** — Ask the user how many rooms should be generated. The level 
-may be expanded with more rooms in later sessions.
+**Theme** — Ice, fire, factory, desert, cave, underwater, or free-form (no theme). Suggest a theme 
+based on the user's input for level name.
+
+**Number of rooms** — Ask the user how many rooms should be generated. The level may be expanded 
+with more rooms in later sessions.
 
 **Level-design philosophy:**
 Ask the user whether to apply philosophy rules on a room-by-room basis or if Claude should
-generate rooms of various philosophies at will (with minimal guidance from the user).
+generate rooms of various philosophies at will (with minimal guidance from the user). A room
+can have one or more philosophies applied, or none - none meaning either no edits made to the
+room or no content in the room besides the entrance(s)/exit(s) and borders of the room.
 
-| Philosophy         | Description                                                  |
-|--------------------|--------------------------------------------------------------|
-| Linear             | Single horizontal or vertical path                           |
-| Branching          | Diverging paths, some optional or rejoining                  |
-| Gauntlet           | Dense enemy patterns, minimal platforming                    |
-| Z-pattern          | Platforms arranged so Mega Man traverses the room in a Z     |
-| Hill climb/descend | Room focused on ascending or descending                      |
-| Empty              | No enemies or objects; used as a checkpoint or breather room |
-| Hybrid             | Combines multiple philosophies                               |
+| Philosophy            | Description                                                        |
+|-----------------------|--------------------------------------------------------------------|
+| Linear                | Single horizontal or vertical path                                 |
+| Branching             | Diverging paths, some optional or rejoining                        |
+| Gauntlet              | Dense enemy patterns, minimal platforming                          |
+| Z-pattern             | Platforms arranged so Mega Man traverses the room in a Z           |
+| Hill climb/descend    | Room focused on ascending or descending                            |
+| Empty                 | No enemies or objects; used as a checkpoint or breather room       |
+| Spike corridor        | Narrow passage lined with spikes; tests precise movement           |
+| Disappearing blocks   | Platforms appear/vanish in sequence; tests memorization and timing |
+| Moving platforms      | Platforms moving over instakill pits; tests jump timing            |
+| Obstacle course       | Hazard-focused (spikes, cannons, crushers); few or no enemies      |
+| Precision pit         | Tight jumps over instant-death gaps; minimal enemies               |
+| Hybrid                | Combines multiple philosophies                                     |
 
 ### Step 2 — Draft room grids
 
