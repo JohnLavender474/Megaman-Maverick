@@ -431,7 +431,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         MegamanWeapon.AXE_SWINGER -> MegaWeaponHandler(
             cooldown = Timer(0.5f),
-            normalCost = { 2 },
+            normalCost = { 1 },
             chargeable = { false },
             canFireWeapon = { _, _ -> true }
         )
