@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.mega.game.engine.common.GameLogger
@@ -106,7 +105,8 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
+        val currentRoom = game.getCurrentRoom()?.name
+        GameLogger.debug(TAG, "onSpawn(): currentRoom=$currentRoom, spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
@@ -144,14 +144,14 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.END_ROOM_TRANS), { event ->
-                    val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
+                this, objectSetOf(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS), cull@{ event ->
+                    val room = game.getCurrentRoom()?.name
                     val cull = room != spawnRoom
                     GameLogger.debug(
                         TAG,
-                        "defineCullablesComponent(): currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
+                        "defineCullablesComponent(): event=$event, currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
                     )
-                    cull
+                    return@cull cull
                 }
             )
         )
