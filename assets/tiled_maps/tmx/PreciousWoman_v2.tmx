@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="225" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="898">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="225" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="898">
  <tileset firstgid="1" source="../tsx/precious_woman_foreground_tileset.tsx"/>
  <tileset firstgid="23" source="../tsx/precious_woman_background_tileset.tsx"/>
  <tileset firstgid="38" source="../tsx/precious_woman_platforms_tileset.tsx"/>

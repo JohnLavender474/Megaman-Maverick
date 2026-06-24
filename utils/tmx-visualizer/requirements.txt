@@ -1,3 +1,0 @@
-# visualize.py uses only the Python standard library (argparse, os, xml.etree).
-# This file exists so run.sh (shared with utils/tmx-analyzer) can be reused
-# unchanged. Add packages here if the visualizer grows new deps.
