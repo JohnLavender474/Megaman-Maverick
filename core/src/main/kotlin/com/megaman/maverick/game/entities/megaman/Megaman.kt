@@ -500,6 +500,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         game.setFocusSnappedAway(false)
 
         removeProperty(ConstKeys.TELEPORTER)
+
+        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
     }
 
     override fun onDestroy() {

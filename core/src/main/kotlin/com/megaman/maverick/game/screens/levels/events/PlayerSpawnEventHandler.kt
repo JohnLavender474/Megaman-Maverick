@@ -110,7 +110,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         megaman.body.physics.gravityOn = false
         megaman.setAllBehaviorsAllowed(false)
 
-        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
+        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN_INIT))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)

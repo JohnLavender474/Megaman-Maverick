@@ -113,7 +113,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EventType.GAME_PAUSE,
         EventType.GAME_RESUME,
 
-        EventType.PLAYER_SPAWN,
+        EventType.PLAYER_SPAWN_INIT,
         EventType.PLAYER_READY,
         EventType.PLAYER_JUST_DIED,
         EventType.PLAYER_DONE_DYIN,
@@ -542,7 +542,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 game.resume()
             }
 
-            EventType.PLAYER_SPAWN -> {
+            EventType.PLAYER_SPAWN_INIT -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                     "onEvent(): player spawn --> reset camera manager for rooms and spawn megaman"
