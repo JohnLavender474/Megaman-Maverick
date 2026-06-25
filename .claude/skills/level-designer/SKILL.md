@@ -12,29 +12,24 @@ design documents — they capture structure and intent before building/editing i
 
 ## Character Legend
 
-| Char | Meaning                                                                               |
-|------|---------------------------------------------------------------------------------------|
-| `\`  | Gate or opening from one room to the next                                             |                                                                                     |                                                                                     | Opening or gate between rooms                                                         | 
-| `X`  | Block / platform (maps to `blocks` layer)                                             |
-| `.`  | Notable object — enemy, hazard, item, or special (maps to `enemies`, `hazards`, etc.) |
-| ` `  | Empty space / air                                                                     |
-| `0`  | Player spawn at stage start (only one per level)                                      |
-| `n`  | Player re-spawn point (n ≥ 1; each subsequent room transition gets the next number)   |
+| Char            | Meaning                                                            |
+|-----------------|--------------------------------------------------------------------|
+| `\`             | Gate or opening from one room to the next                          |
+| `>` `<` `^` `v` | Player enter/exit direction: inward for entrance, outward for exit |
+| `X`             | Block / platform (maps to `blocks` layer)                          |
+| `E`             | Enemy (maps to `enemies` layer)                                    |
+| `I`             | Item (maps to `items` layer)                                       |
+| `D`             | Death hazard — spikes, lava, or anything that kills on contact     |
+| `L`             | Ladder (for the player to climb up/down)                           |
+| ` `             | Empty space / air                                                  |
+| `0`             | Player spawn at stage start (only one per level)                   |
+| `n`             | Player re-spawn point (n ≥ 1)                                      |
 
 ## Room Grid Format
 
 Each room is a rectangular grid of the characters above, wrapped in a labeled fence.
 
-See the following examples:
-- Room 1:
-  - Player spawns on a platform at the top-left of the room
-  - Dots indicate enemy positions, in this case flying/floating enemies
-  - Two platforms in the center of the room for the player to land on
-  - An exit at the bottom-right of the room
-- Room 2:
-  - Player enters from bottom-left of the room, consistent with the bottom-right exit from room 1
-  - Room has two openings: one at the top-right and another at the bottom-right, meaning this room 
-    forks off into 2 separate paths
+## Example
 
 ```
 === Room 1 (16×14) ===
@@ -42,72 +37,83 @@ XXXXXXXXXXXXXXXX
 X              X
 X 0            X
 XXXX           X
-X     .        X
 X              X
-X    XXX       X
 X              X
-X  .           X
-X       XXX    X
+XXXXXXXX       X
+X              X
+X        E     X
+X    XXXXXXXXXXX
 X              \
-X              \
-X              \
+X             >\
+X        E     \
 XXXXXXXXXXXXXXXX
+
+- Player spawns at top-left of the room on a platform ledge hanging off the wall
+- Player descends and moves along platforms in a Z, facing 2 enemies along the way
+- Player exits the room rightward via an opening at the bottom-right of the screen
 
 === Room 2 (16×14) → right of Room 1 ===
 XXXXXXXXXXXXXXXX
 X              \
-X              \
-X              \
-X           XXXX
-XXXX           X
+X             >\
+X      E       \
+X          XXXXX
+XXXXX          X
+X    E      E  X
+X   XXX   XXXXXX
 X              X
-X   XXX        X
-X              X
-X          .   X
-\    XXX       X
-\              X
-\              X
+X       XX     X
+\    XXXXX     X
+\>             X
+\        E   v X
 XXXXXXXXXXXX\\\X
+
+- Player enters the room from the bottom-left of the screen and immediately faces an enemy stationed on the ground
+- Player has two routes to choose from: ascend up along platforms, or descend at bottom-right
 
 === Room 3 Path 1 (16×14) → right of Room 2 ===
 XXXXXXXXXXXXXXXX
 \              X
-\     .        X
+\>    E        X
 \              X
-X     XXXXXXX  X
+XXXXX   XXXXX  X
+X   XDDDX      X
+X   XXXXX      X
 X              X
-X         .    X
-X    XXX       X
+X   XXXXXXXXXXXX
+X         E    X
+XXXXXXXXXXXXX  X
 X              X
-X         .    X
-X    XXXXX     X
-X              X
-X   .          X
+X v     E      X
 X\\\XXXXXXXXXXXX
+
+- Player enters from top-left of the screen and immediately faces a floating enemy and a small pit of spikes
+- Player descends the room in a Z pattern, encountering 2 enemies along the way
+- Player exits the room downward at the bottom-left of the room
 
 === Room 3 Path 2 (16x14) → below Room 2 ===
 XXXXXXXXXXXX\\\X
-X              X
+X            v X
 X              X
 X           XXXX
 X              X
-X        .     X
+X        E     X
 X       XXX    X
 X              X
-X    .         X
+X    E         X
 X   XXX        X
 X              \
-X              \
+X             >\
 X              \
 XXXXXXXXXXXXXXXX
 
-# Note: Room 4 is positioned where both paths converge. Its top aligns with the
-# bottom exit of Room 3 Path 1 (cols 14-16) and its left aligns with the right
-# exit of Room 3 Path 2 (rows 9-11). Verify exact pixel placement in Tiled.
+- Player descends into room from top-right of the screen and lands on a platform protruding from the wall
+- Player descends down the room, encountering two enemies each stationed on floating platforms
+- Player exits the room rightward at the bottom-right corner of the room
 
 === Room 4 (16×14) → beneath Room 3 Path 1, right of Room 3 Path 2 ===
 X\\\XXXXXXXXXXXX
-X              X
+X v            X
 X              X
 X              X
 X              X
@@ -117,40 +123,49 @@ X              X
 X              X
 X              X
 \              \
-\              \
+\>            >\
 \      1       \
 XXXXXXXXXXXXXXXX
+
+- Player enters either via bottom-left or top-left depending on which path he chose in room 2
+- Player checkpoint located at the bottom-middle of the room
+- Player exists the room rightward via a gate at the bottom-right of the room
 
 === Room 5 (32×14) → right of Room 4 ===
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X                              \
-X    .          .    .         \
-X         XXX                  \
-X                    XXXX    XXX
-X    XXXXX      .              X
-X                              X
-X    .                 .       X
-X         XXXXX                X
-X                    XXX       X
-\              .               X
-\                              X
-\         .        XXXXX       X
+X      E                      >\
+X      X   XXX         E       \
+X      XDDDXXXXXXX   XXXXX  XXXX
+XLXXXXXXXXXX                   X
+XL             E               X
+XL   E        XXX      E       X
+XL        XXXXXXXXXXXXXXXXXXXXLX
+XXXXXXXXXXX                   LX
+\                    E        LX
+\>   XXX    XXX    XXXXX     XXX
+\    XXXDDDDXXXDDDDXXXXXDDDDDXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+- Player enters the room from the bottom-left of the room and must jump over spikes.
+- Room features a gauntlet of many enemies, platforms, and ladders the player must ascend.
+- Player exits the room rightward via a gate at the top-right of the screen.
 ```
 
 ## Rules
 
-1. **Keep designs minimal** — prefer fewer elements placed with intention over dense layouts. 
-   Leave room for the user to add detail in Tiled. When in doubt, do less.
-2. **Standard room size is 16 columns × 14 rows** (matches VIEW_WIDTH=16, VIEW_HEIGHT=14). 
+1. **Standard room size is 16 columns × 14 rows** (matches VIEW_WIDTH=16, VIEW_HEIGHT=14). 
    Non-standard sizes must be noted in the label (e.g. `32×14`).
-3. **Spawn placement**: `0` is the start-of-level spawn; use `1`, `2`, `3`… in the order the 
+2. **Spawn placement**: `0` is the start-of-level spawn; use `1`, `2`, `3`… in the order the 
    player reaches each new room for the first time.
-4. **One `.` per notable object**: Don't try to name specific enemies in the grid — the grid 
-   captures placement and density, not entity type. Add a notes block after the room to describe 
-   what each `.` is.
-5. **Vertical transitions** require matching row gaps; **horizontal transitions** require matching 
-   column gaps.
+3. **One character per object**: Add a notes block after the room to describe each object in
+   more detail if needed, e.g., what kind of enemy is intended for a particular `E`.
+4. **Vertical transitions** require matching row gaps; **horizontal transitions** require 
+   matching column gaps.
+5. **Entry/exit arrows**: Mark every room transition opening/gate with a direction arrow 
+   (`>` `<` `^` `v`) in the cell immediately next to the opening, pointing into the room for
+   a room entrance and pointing out of the room for a room exit. Whether an opening is considered
+   an entrance or an exit depends on the flow of the level. 
 
 ## Notes Block Format
 
@@ -159,8 +174,8 @@ After each room grid, add a brief notes block describing room and any special pr
 Example:
 ```
 Notes — Room 2:
-  • (col 5, row 4)  Sniper Joe, facing left
-  • (col 10, row 4) Bat, ceiling-mounted
+  • E (col 5, row 4)  Sniper Joe, facing left
+  • E (col 10, row 4) Bat, ceiling-mounted
   • Room property: normal scroll (left→right)
 ```
 
