@@ -312,8 +312,6 @@ List of creators and the stages in which their artwork is used. Some stages cont
 
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
 
-TODO: add credits and links here for where the sounds were downloaded from
-
 #### Proof of Permissions for Fan Community Assets
 
 For some of the fan artwork used in this game, the artist did not state in the work's description or elsewhere that the work was
