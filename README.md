@@ -113,7 +113,7 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Megaman
 
-- Megaman Redesigned - [SamuelX4](https://www.deviantart.com/samuelx4) 
+- Megaman spritesheet - [SamuelX4](https://www.deviantart.com/samuelx4) and [oldlavygenes](https://www.deviantart.com/oldlavygenes474)
 
 #### Title Screen
 
@@ -128,11 +128,12 @@ comprehensive listing of the credits for the artwork used in this game.
 
 #### Robot Masters
 
-- Timber Woman spritesheet- [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
 - Rodent Man 
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/Rodent-Man-Megaman-Maverick-1087797101)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137571452)
-- Precious Woman - [mrgranade](https://www.fiverr.com/mrgranade)
+- Precious Woman
+  - Original by [mrgranade](https://www.fiverr.com/mrgranade)
+  - Updated by [SamuelX4](https://www.deviantart.com/samuelx4)
 - Timber Woman:
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/Timber-Woman-Mugshot-1137568070)
