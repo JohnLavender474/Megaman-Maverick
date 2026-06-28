@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename></filename>
+                <filename>../sprite_sheets/LevelSelectScreenV3.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
