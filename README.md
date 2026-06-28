@@ -111,16 +111,16 @@ comprehensive listing of the credits for the artwork used in this game.
 
 ### Pixel Art
 
-#### Megaman
-
-- Megaman spritesheet - [SamuelX4](https://www.deviantart.com/samuelx4) and [oldlavygenes](https://www.deviantart.com/oldlavygenes474)
-
 #### Title Screen
 
 - Megaman Title Card - [SamuelX4](https://www.deviantart.com/samuelx4)
-- Megaman Pose Sprite 
-  - Original by [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
-  - Updated by [SamuelX4](https://www.deviantart.com/samuelx4)
+- Megaman Pose Sprite
+    - Original by [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
+    - Updated by [SamuelX4](https://www.deviantart.com/samuelx4)
+
+#### Megaman
+
+- Megaman spritesheet - [SamuelX4](https://www.deviantart.com/samuelx4) and [oldlavygenes](https://www.deviantart.com/oldlavygenes474)
 
 #### Robot Masters
 
