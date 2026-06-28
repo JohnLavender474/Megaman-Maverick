@@ -130,10 +130,10 @@ comprehensive listing of the credits for the artwork used in this game.
 - Precious Woman
   - Original by [mrgranade](https://www.fiverr.com/mrgranade)
   - Updated by [SamuelX4](https://www.deviantart.com/samuelx4)
-- Timber Woman:
+- Timber Woman
   - Original by [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/TimberWoman-Megaman-Maverick-1087794591)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/Timber-Woman-Mugshot-1137568070)
-- Moon Man spritesheet:
+- Moon Man
   - Original by [boberatu](https://www.deviantart.com/boberatu/art/MPN-006-Moon-Man-625679636)
   - Updated by [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1136876962)
 - Inferno Man 
