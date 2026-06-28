@@ -180,11 +180,12 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         val overlapsCamera = body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())
-        body.physics.collisionOn = overlapsCamera
+        val active = overlapsCamera && owner !is FireballBar
+        body.physics.collisionOn = active
         body.forEachFixture { fixture ->
             // Damager fixture is set active/inactive in `body.preProcess`
             if (fixture.getType() != FixtureType.DAMAGER)
-                fixture.setActive(overlapsCamera)
+                fixture.setActive(active)
         }
 
         if (burst) {
