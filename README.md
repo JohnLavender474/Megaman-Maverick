@@ -122,10 +122,6 @@ comprehensive listing of the credits for the artwork used in this game.
   - Original by [PixelBoy127](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/166239/)
   - Updated by [SamuelX4](https://www.deviantart.com/samuelx4)
 
-#### Megaman
-
-- Megaman complete spritesheet - [SamuelX4](https://www.deviantart.com/oldlavygenes474/art/1137567721)
-
 #### Robot Masters
 
 - Rodent Man 
