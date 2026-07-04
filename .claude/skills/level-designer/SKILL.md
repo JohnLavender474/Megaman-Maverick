@@ -223,7 +223,7 @@ room or no content in the room besides the entrance(s)/exit(s) and borders of th
 ### Step 2 — Draft room grids
 
 Output an `overview.txt` file which highlights the overall level including themes, 
-philosophies, etc. Ouput a draft of each room grid in order from spawn to the end. 
+philosophies, etc. Output a draft of each room grid in order from spawn to the end. 
 Save each room as a file in a folder structure in the project `temp` folder, i.e.:
 ```
 - Megaman-Maverick
@@ -239,3 +239,10 @@ Save each room as a file in a folder structure in the project `temp` folder, i.e
 ### Step 3 — Revise
 
 Prompt for user feedback and revise grids as needed. Repeat until approved.
+
+### Step 4 — Determine Next Step
+
+Prompt the user to answer which step should be taken next.
+- Create a new TMX file with the designs
+- Edit an existing TMX file with the designs
+- Something else (or nothing)...

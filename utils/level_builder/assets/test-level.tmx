@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="32" height="14" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="1">
+ <objectgroup id="1" name="game_rooms"/>
+ <objectgroup id="2" name="blocks"/>
+ <objectgroup id="3" name="player"/>
+ <objectgroup id="4" name="enemies"/>
+ <objectgroup id="5" name="hazards"/>
+ <objectgroup id="6" name="TODO"/>
+</map>

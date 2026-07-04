@@ -12,7 +12,7 @@ Output charts:
   ...
 
 Usage:
-  python analyze.py [FILE] [--output-dir DIR] [--smooth N]
+  python level_analyzer.py [FILE] [--output-dir DIR] [--smooth N]
 
   FILE       Path to a diagnostics file.  Defaults to the newest
              *-diagnostics.txt found in assets/ relative to the repo root.

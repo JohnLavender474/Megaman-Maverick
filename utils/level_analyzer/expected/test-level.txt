@@ -1,0 +1,31 @@
+=== room1 ===
+X              \
+X              \
+X              \
+X              \
+X              \
+X              \
+X              \
+X              \
+X              \
+X              \
+X              \
+X0        D    \
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+
+=== room2 ===
+\               
+\               
+\               
+\               
+\               
+\               
+\               
+\     E         
+\   XXXX        
+\               
+\               
+\               
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX

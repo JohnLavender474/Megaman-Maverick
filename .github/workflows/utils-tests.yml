@@ -1,0 +1,31 @@
+name: utils-tests
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r utils/level_analyzer/requirements-test.txt
+          pip install -r utils/level_builder/requirements-test.txt
+
+      - name: Run level-analyzer tests
+        run: python -m pytest
+        working-directory: utils/level_analyzer
+
+      - name: Run level-builder tests
+        run: python -m pytest
+        working-directory: utils/level_builder
