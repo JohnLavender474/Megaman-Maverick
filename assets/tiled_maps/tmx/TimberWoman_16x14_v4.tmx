@@ -1499,11 +1499,6 @@
     <property name="hard_mode_only" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="498" name="LumberJoe" x="14960" y="1280" width="32" height="32">
-   <properties>
-    <property name="hard_mode_only" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="499" name="LumberJoe" x="13520" y="1312" width="32" height="32">
    <properties>
     <property name="hard_mode_only" type="bool" value="true"/>
