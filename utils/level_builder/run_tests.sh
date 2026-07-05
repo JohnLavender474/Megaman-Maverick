@@ -4,6 +4,7 @@
 # Usage:
 #   ./run_tests.sh                # run all tests
 #   ./run_tests.sh -k scenario    # pass through pytest args
+#   ./run_tests.sh --interactive  # pause for input before/after each build step
 #
 # The venv is created on first run and reused. Re-run after editing
 # requirements-test.txt to pick up new packages.

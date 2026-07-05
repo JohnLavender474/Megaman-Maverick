@@ -13,13 +13,14 @@ BLOCK_LAYERS = ('blocks', 'specials')
 # Priority: higher number wins when two objects land on the same cell
 PRIORITY = {
     ' ': 0,
-    'X': 1,
-    'L': 2,
-    'D': 3,
-    '\\': 4,
-    'I': 5,
-    'E': 6,
-    '0': 7,
+    'W': 1,
+    'X': 2,
+    'L': 3,
+    'D': 4,
+    '\\': 5,
+    'I': 6,
+    'E': 7,
+    '0': 8,
 }
 
 # Spawn markers always win their cell against any other object
@@ -110,7 +111,12 @@ def populate_rooms(root, rooms: list[Room]):
                 if obj_name == 'LadderTop':
                     continue
                 px, py, pw, ph = _bbox(obj)
-                char = 'L' if obj_name == 'Ladder' else 'X'
+                if obj_name == 'Ladder':
+                    char = 'L'
+                elif obj_name == 'Water':
+                    char = 'W'
+                else:
+                    char = 'X'
                 prio = PRIORITY[char]
                 for room in rooms_overlapping(rooms, px, py, pw, ph):
                     room.set_rect(px, py, pw, ph, char, prio)

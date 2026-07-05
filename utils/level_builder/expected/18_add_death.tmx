@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="48" height="19" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="13">
+ <objectgroup id="1" name="game_rooms">
+  <object id="1" name="room1" x="0" y="0" width="1024" height="448"/>
+  <object id="2" name="room2" x="1024" y="0" width="512" height="448"/>
+ </objectgroup>
+ <objectgroup id="2" name="blocks">
+  <object id="3" x="0" y="288" width="512" height="320"/>
+  <object id="4" x="0" y="0" width="64" height="608"/>
+  <object id="7" x="1024" y="288" width="512" height="320"/>
+  <object id="8" x="64" y="192" width="128" height="32"/>
+ </objectgroup>
+ <objectgroup id="3" name="player">
+  <object id="9" name="0" x="128" y="160" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="4" name="enemies">
+  <object id="10" name="?" x="1152" y="256" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="5" name="hazards"/>
+ <objectgroup id="6" name="TODO"/>
+ <objectgroup id="7" name="specials">
+  <object id="11" name="Water" x="512" y="352" width="512" height="256"/>
+ </objectgroup>
+ <objectgroup id="8" name="sensors">
+  <object id="12" name="Death" x="0" y="480" width="1536" height="128"/>
+ </objectgroup>
+</map>

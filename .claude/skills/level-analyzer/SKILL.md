@@ -29,6 +29,7 @@ TMX files live under `assets/tiled_maps/tmx/`.
 |------|--------------------------------------------------------------------------|
 | `X`  | Block / platform (`blocks` layer, non-Ladder objects)                    |
 | `L`  | Ladder (`blocks` or `specials` layer, objects named `Ladder`)            |
+| `W`  | Water (`specials` layer, objects named `Water`)                          |
 | `E`  | Enemy (`enemies` layer)                                                  |
 | `D`  | Death hazard (`hazards` layer or `sensors` layer objects named `Death`)  |
 | `I`  | Item (`items` layer)                                                     |
@@ -43,7 +44,7 @@ TMX files live under `assets/tiled_maps/tmx/`.
 |--------------|---------------------------------------------------------------------------|
 | `game_rooms` | Room bounding boxes (defines the grid size for each room)                 |
 | `blocks`     | `X` (rectangles); `L` (objects named `Ladder`); `LadderTop` skipped       |
-| `specials`   | `L` for objects named `Ladder`                                            |
+| `specials`   | `L` for objects named `Ladder`; `W` for objects named `Water`; else `X`   |
 | `hazards`    | `D` (point-mapped to the tile at the object's center)                     |
 | `sensors`    | `D` for objects named `Death` (rect); `\` for objects named `Gate` (rect) |
 | `enemies`    | `E` (center tile)                                                         |
