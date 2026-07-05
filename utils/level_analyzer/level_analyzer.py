@@ -1,14 +1,62 @@
 #!/usr/bin/env python3
+import json
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 USAGE = 'Usage: level_analyzer.py <path/to/level.tmx> [output.txt]'
 
+HELP = """\
+level_analyzer.py — analyze a Tiled TMX level into plain text and/or JSON.
+
+USAGE
+  level_analyzer.py <level.tmx>              Print the plain-text room grid to stdout.
+  level_analyzer.py <level.tmx> <out.txt>    Write <out.txt> AND a sibling <out.json>.
+  level_analyzer.py -h | --help              Show this help.
+
+TMX files live under assets/tiled_maps/tmx/. Stdlib-only, no venv needed.
+
+OUTPUTS
+  Plain text  One ASCII grid per room (one tile = one char). Rooms are labelled
+              "=== <name> ===", with "(cols×rows)" appended for non-standard
+              sizes (standard room = 16×14 = 512×448 px).
+  JSON        Written only when an output path is given, as <out>.json beside it.
+              Shape: {"data": {"map": {"layers": {...}}}} where layers holds:
+                game_rooms  dict keyed by room name -> {x, y, width, height,
+                            entities}. entities maps a layer name -> [object ids]
+                            present in that room (populated layers only).
+                entity layers (blocks, specials, hazards, sensors, enemies,
+                            items, player) -> list of objects, each:
+                            {id, name, x, y, width, height, game_rooms,
+                             properties}. Coords are raw TMX pixels; game_rooms
+                             is the list of room names the object's bounding box
+                             OVERLAPS (so one object can belong to several rooms);
+                             properties is [{name, value, type}] (raw TMX values,
+                             type defaults to "string").
+
+LAYERS ANALYZED
+  Only game_rooms, blocks, specials, hazards, sensors, enemies, items, player.
+  All other object groups (children, backgrounds, decorations, ...) are ignored
+  by both outputs.
+
+PLAIN-TEXT CHARACTER LEGEND
+  X  block/platform      L  ladder           W  water        E  enemy
+  D  death hazard        I  item             \\  gate/opening  0  player start
+  1..9  respawn point    (space)  air
+
+  Gates (\\) are also auto-detected: any tile on a shared edge between two rooms
+  that is not blocked by X on both sides is marked \\. Direction arrows from the
+  level-designer format are NOT emitted; infer room flow by hand.
+"""
+
 TILE_SIZE = 32
 
 # Layers whose Ladder-named objects become L; everything else becomes X
 BLOCK_LAYERS = ('blocks', 'specials')
+
+# Entity layers included in the JSON output, in emission order. Same set the
+# plain-text visualization is concerned with (minus game_rooms, handled apart).
+ENTITY_LAYERS = ('blocks', 'specials', 'hazards', 'sensors', 'enemies', 'items', 'player')
 
 # Priority: higher number wins when two objects land on the same cell
 PRIORITY = {
@@ -209,6 +257,111 @@ def detect_gates(rooms: list[Room]):
                         rb.set_cell(rb.rows - 1, col_b, '\\', GATE_PRIO)
 
 
+def _num(v: float):
+    """Return an int when the value is integral, else a float (clean JSON)."""
+    return int(v) if float(v).is_integer() else v
+
+
+def _effective_bbox(obj):
+    """Bounding box for overlap tests, expanding shape-only objects.
+
+    Rectangles use their width/height. A polygon/polyline object (no width or
+    height) uses the bounding box of its points, offset by the object origin.
+    A zero-size object stays a point.
+    """
+    x, y, w, h = _bbox(obj)
+    if w == 0 and h == 0:
+        shape = obj.find('polygon')
+        if shape is None:
+            shape = obj.find('polyline')
+        if shape is not None and shape.get('points'):
+            pts = [p.split(',') for p in shape.get('points').split()]
+            xs = [float(a) for a, b in pts]
+            ys = [float(b) for a, b in pts]
+            return x + min(xs), y + min(ys), max(xs) - min(xs), max(ys) - min(ys)
+    return x, y, w, h
+
+
+def _properties(obj) -> list:
+    """Extract an object's Tiled properties as {name, value, type} entries.
+
+    Values are kept as their raw TMX string; Tiled's default (string) type is
+    made explicit when the type attribute is omitted.
+    """
+    props = []
+    node = obj.find('properties')
+    if node is None:
+        return props
+    for p in node.findall('property'):
+        props.append({
+            'name': p.get('name', ''),
+            'value': p.get('value', ''),
+            'type': p.get('type', 'string'),
+        })
+    return props
+
+
+def _unique_room_names(rooms: list[Room]) -> list[str]:
+    """Room names for JSON keys, suffixing duplicates (_2, _3, ...)."""
+    seen = {}
+    names = []
+    for room in rooms:
+        base = room.name
+        seen[base] = seen.get(base, 0) + 1
+        names.append(base if seen[base] == 1 else f'{base}_{seen[base]}')
+    return names
+
+
+def build_json(root, rooms: list[Room]) -> dict:
+    room_names = _unique_room_names(rooms)
+
+    # room name -> {layer -> [ids]}, only populated layers appear
+    room_entities = {name: {} for name in room_names}
+    layers = {}
+
+    for og in root.findall('objectgroup'):
+        layer = og.get('name', '')
+        if layer not in ENTITY_LAYERS:
+            continue
+
+        entries = []
+        for obj in og.findall('object'):
+            oid = int(obj.get('id'))
+            bx, by, bw, bh = _effective_bbox(obj)
+            member_names = []
+            for room, name in zip(rooms, room_names):
+                if _overlaps(bx, by, bw, bh, room.x, room.y, room.w, room.h):
+                    member_names.append(name)
+                    room_entities[name].setdefault(layer, []).append(oid)
+
+            x, y, w, h = _bbox(obj)
+            entries.append({
+                'id': oid,
+                'name': obj.get('name', ''),
+                'x': _num(x), 'y': _num(y),
+                'width': _num(w), 'height': _num(h),
+                'game_rooms': member_names,
+                'properties': _properties(obj),
+            })
+        layers[layer] = entries
+
+    game_rooms = {}
+    for room, name in zip(rooms, room_names):
+        game_rooms[name] = {
+            'x': room.x, 'y': room.y,
+            'width': room.w, 'height': room.h,
+            'entities': room_entities[name],
+        }
+
+    # game_rooms first, then entity layers in ENTITY_LAYERS order
+    ordered = {'game_rooms': game_rooms}
+    for layer in ENTITY_LAYERS:
+        if layer in layers:
+            ordered[layer] = layers[layer]
+
+    return {'data': {'map': {'layers': ordered}}}
+
+
 def format_output(rooms: list[Room]) -> str:
     parts = []
     for room in rooms:
@@ -233,16 +386,31 @@ def analyze(tmx_path) -> str:
     return format_output(rooms)
 
 
+def analyze_json(tmx_path) -> dict:
+    tree = ET.parse(tmx_path)
+    root = tree.getroot()
+
+    rooms = parse_rooms(root)
+    if not rooms:
+        raise ValueError('No game_rooms layer found in TMX.')
+
+    return build_json(root, rooms)
+
+
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] in ('-h', '--help'):
-        print(USAGE)
-        sys.exit(0 if len(sys.argv) >= 2 else 1)
+    if len(sys.argv) >= 2 and sys.argv[1] in ('-h', '--help'):
+        print(HELP)
+        sys.exit(0)
+    if len(sys.argv) < 2:
+        print(USAGE, file=sys.stderr)
+        sys.exit(1)
 
     tmx_path = Path(sys.argv[1])
     output_path = Path(sys.argv[2]) if len(sys.argv) > 2 else None
 
     try:
         output = analyze(tmx_path)
+        json_data = analyze_json(tmx_path) if output_path else None
     except ValueError as e:
         print(str(e), file=sys.stderr)
         sys.exit(1)
@@ -250,6 +418,9 @@ def main():
     if output_path:
         output_path.write_text(output)
         print(f'Written to {output_path}')
+        json_path = output_path.with_suffix('.json')
+        json_path.write_text(json.dumps(json_data, indent=2) + '\n')
+        print(f'Written to {json_path}')
     else:
         print(output)
 
