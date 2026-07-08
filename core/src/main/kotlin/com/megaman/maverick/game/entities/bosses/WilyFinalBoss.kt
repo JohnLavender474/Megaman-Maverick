@@ -222,7 +222,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         super.init()
         buildStateMachines()
         addComponent(defineAnimationsComponent())
-        damageOverrides.put(Bullet::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -589,7 +588,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyFinalBossPhase.PHASE_2 -> {
                     sprite.priority.section = DrawingSection.PLAYGROUND
-                    sprite.priority.value = -1
+                    sprite.priority.value = 3
 
                     sprite.setFlip(false, false)
 
@@ -599,7 +598,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyFinalBossPhase.PHASE_3 -> {
                     sprite.priority.section = DrawingSection.PLAYGROUND
-                    sprite.priority.value = -1
+                    sprite.priority.value = 3
 
                     sprite.setFlip(false, false)
 
@@ -2963,14 +2962,23 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             body.addFixture(topBodyFixture)
             debugShapes.add { topBodyFixture }
 
-            val topDamagerFixture = Fixture(
+            val topDamagerFixture1 = Fixture(
                 body,
                 FixtureType.DAMAGER,
                 GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
             )
-            topDamagerFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
-            body.addFixture(topDamagerFixture)
-            debugShapes.add { topDamagerFixture }
+            topDamagerFixture1.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
+            body.addFixture(topDamagerFixture1)
+            debugShapes.add { topDamagerFixture1 }
+
+            val topDamagerFixture2 = Fixture(
+                body,
+                FixtureType.DAMAGER,
+                GameRectangle().setSize(4f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            )
+            topDamagerFixture2.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
+            body.addFixture(topDamagerFixture2)
+            debugShapes.add { topDamagerFixture2 }
 
             val leftCannonDamager = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(1f * ConstVals.PPM))
             leftCannonDamager.offsetFromBodyAttachment.set(-2f, 0.5f).scl(ConstVals.PPM.toFloat())

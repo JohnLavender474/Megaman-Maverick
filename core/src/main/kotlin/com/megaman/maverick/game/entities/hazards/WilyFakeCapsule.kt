@@ -51,11 +51,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
-import com.megaman.maverick.game.world.body.BodyComponentCreator
-import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.setHitByProjectileReceiver
+import com.megaman.maverick.game.world.body.*
 
 class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IOwnable<WilyFinalBoss>, IDamager, IHazard, IActivatable, Updatable {
@@ -208,14 +204,23 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
         body.addFixture(damagerFixture)
 
-        val topDamagerFixture = Fixture(
+        val topDamagerFixture1 = Fixture(
             body,
             FixtureType.DAMAGER,
             GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
         )
-        topDamagerFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
-        body.addFixture(topDamagerFixture)
-        debugShapes.add { topDamagerFixture }
+        topDamagerFixture1.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
+        body.addFixture(topDamagerFixture1)
+        debugShapes.add { topDamagerFixture1 }
+
+        val topDamagerFixture2 = Fixture(
+            body,
+            FixtureType.DAMAGER,
+            GameRectangle().setSize(4f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+        )
+        topDamagerFixture2.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
+        body.addFixture(topDamagerFixture2)
+        debugShapes.add { topDamagerFixture2 }
 
         val topBodyFixture = Fixture(
             body,
