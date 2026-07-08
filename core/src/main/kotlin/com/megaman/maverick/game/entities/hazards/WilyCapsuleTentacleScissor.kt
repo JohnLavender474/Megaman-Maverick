@@ -167,7 +167,8 @@ class WilyCapsuleTentacleScissor(game: MegamanMaverickGame) : MegaGameEntity(gam
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val state = owner?.getTentacleState()
-            val closed = state == TentacleState.IDLE || state == TentacleState.RETURNING || state == null
+            val closed = (state == TentacleState.IDLE || state == TentacleState.RETURNING || state == null) &&
+                owner?.chomping != true
 
             val bladeW: Float
             val bladeH: Float
@@ -213,8 +214,9 @@ class WilyCapsuleTentacleScissor(game: MegamanMaverickGame) : MegaGameEntity(gam
         val animator = AnimatorBuilder()
             .setKeySupplier supplier@{
                 val state = owner?.getTentacleState()
-                return@supplier when (state) {
-                    TentacleState.IDLE, TentacleState.RETURNING -> CLOSED_KEY
+                return@supplier when {
+                    owner?.chomping == true -> CHOP_KEY
+                    state == TentacleState.IDLE || state == TentacleState.RETURNING -> CLOSED_KEY
                     else -> CHOP_KEY
                 }
             }

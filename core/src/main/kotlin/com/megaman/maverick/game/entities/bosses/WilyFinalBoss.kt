@@ -54,7 +54,6 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
@@ -2057,7 +2056,6 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val CHARGE_RETURN_SPEED = 8f
         const val CHARGE_HOLD_DURATION = 0.5f
         const val CHARGE_TARGET_ROOM_BUFFER = 2f
-        const val CHARGE_TENTACLE_REACH = 2.5f
 
         const val LOW_SWAY_CHANCE = 0.15f
         const val LOW_SWAY_DURATION = 2f
@@ -2187,12 +2185,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     chargeTarget.set(megaman.body.getCenter())
                     clampChargeTarget(chargeTarget)
 
-                    val dir = GameObjectPools.fetch(Vector2::class).set(chargeTarget).sub(swayAnchor!!)
-                    if (dir.len2() > 0.0001f)
-                        dir.nor().scl(Phase2ConstVals.CHARGE_TENTACLE_REACH * ConstVals.PPM)
-                    else dir.set(0f, -Phase2ConstVals.CHARGE_TENTACLE_REACH * ConstVals.PPM)
-                    leftTentacle?.setIdleOffset(dir)
-                    rightTentacle?.setIdleOffset(dir)
+                    // Tentacles keep their normal idle hang, but chomp while charging.
+                    leftTentacle?.chomping = true
+                    rightTentacle?.chomping = true
                 }
 
                 WilyPhase2State.LOW_SWAY -> {
@@ -2503,11 +2498,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                         ChargePhase.RETURN -> {
                             if (stepAnchorToward(returnAnchor, Phase2ConstVals.CHARGE_RETURN_SPEED, delta)) {
-                                val idle = GameObjectPools.fetch(Vector2::class)
-                                    .set(Phase2ConstVals.TENTACLE_IDLE_OFFSET_X, Phase2ConstVals.TENTACLE_IDLE_OFFSET_Y)
-                                    .scl(ConstVals.PPM.toFloat())
-                                leftTentacle?.setIdleOffset(idle)
-                                rightTentacle?.setIdleOffset(idle)
+                                leftTentacle?.chomping = false
+                                rightTentacle?.chomping = false
                                 phase2StateMachine.next()
                             }
                         }

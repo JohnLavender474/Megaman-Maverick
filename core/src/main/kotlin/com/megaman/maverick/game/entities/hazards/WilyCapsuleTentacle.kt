@@ -86,6 +86,9 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
 
     override var on = true
 
+    // When true, the scissor tip chomps even though the tentacle stays idle (used during the boss CHARGE).
+    var chomping = false
+
     // --- Child tentacle ---
 
     private var tentacle: WavyTentacleOfJoints? = null
@@ -164,6 +167,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
         super.onSpawn(spawnProps)
 
         on = spawnProps.getOrDefault(ConstKeys.ON, true, Boolean::class)
+        chomping = false
 
         time = 0f
         logTimer = 0f
@@ -231,10 +235,6 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
     // --- Public API ---
 
     fun setAnchor(v: Vector2): Vector2 = anchor.set(v)
-
-    fun setIdleOffset(v: Vector2) {
-        idleOffset.set(v)
-    }
 
     fun getAnchor(out: Vector2) = tentacle?.getAnchor(out)
 
