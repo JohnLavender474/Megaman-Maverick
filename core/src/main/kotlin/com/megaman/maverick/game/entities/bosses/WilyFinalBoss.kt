@@ -150,7 +150,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         SWOOP, HOVER, FLY_IN, FLY_BY, FLY_OUT, FIRE_LAZORS, SHOOT_MISSILES, DROP_BOMB
     }
 
-    private enum class WilyPhase2State { HOVER, PREPARE, LUNGE, DIVE, PIN }
+    private enum class WilyPhase2State { HOVER, PREPARE, LUNGE, DIVE, PIN, CHARGE, LOW_SWAY }
 
     private enum class WilyPhase3State { WAIT, APPEAR, ATTACK, VANISH }
 
@@ -198,6 +198,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     private val wilyUpperTarget = Vector2()
     private val wilyLowerTarget = Vector2()
+
+    private var lowSwayTargetY = 0f
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -268,6 +270,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 .get("wily_lower_target", RectangleMapObject::class)!!
                 .rectangle.getCenter()
         )
+
+        lowSwayTargetY = spawnProps
+            .get("low_sway_target_y", RectangleMapObject::class)!!
+            .rectangle.getCenter().y
     }
 
     override fun onDestroy() {
@@ -2043,11 +2049,28 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val ORB_PAUSE_DURATION = 0.75f
         const val ORB_LAUNCH_SPEED = 10f
         const val ORB_LAUNCH_SPEED_HARD = 12f
+
+        const val CHARGE_CHANCE = 0.15f
+        const val CHARGE_SPEED = 10f
+        const val CHARGE_RETURN_SPEED = 8f
+        const val CHARGE_HOLD_DURATION = 0.5f
+        const val CHARGE_TARGET_ROOM_BUFFER = 2f
+        const val CHARGE_TENTACLE_REACH = 2.5f
+
+        const val LOW_SWAY_CHANCE = 0.15f
+        const val LOW_SWAY_DURATION = 2f
+        const val LOW_SWAY_SPEED_MULT = 2f
+        const val LOW_SWAY_DESCEND_SPEED =10f
+        const val LOW_SWAY_ASCEND_SPEED = 8f
     }
 
     private enum class CannonOrbPhase { IDLE, FLYING_OUT, PAUSING }
 
     private enum class DivePhase { DESCEND, HOLD, ASCEND }
+
+    private enum class ChargePhase { APPROACH, HOLD, RETURN }
+
+    private enum class LowSwayPhase { DESCEND, SWEEP, ASCEND }
 
     private inner class Phase2Handler : PhaseHandler, Updatable {
 
@@ -2087,16 +2110,31 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         private var swayTheta = 0f
         private var swayAnchor: Vector2? = null
 
+        // Charge state
+        private var chargePhase = ChargePhase.APPROACH
+        private val chargeTarget = Vector2()
+        private val returnAnchor = Vector2()
+        private val chargeHoldTimer = Timer(Phase2ConstVals.CHARGE_HOLD_DURATION)
+
+        // Low-sway state
+        private var lowSwayPhase = LowSwayPhase.DESCEND
+        private var lowSwayReturnY = 0f
+        private val lowSwaySweepTimer = Timer(Phase2ConstVals.LOW_SWAY_DURATION)
+
         fun buildStateMachine() = EnumStateMachineBuilder
             .create<WilyPhase2State>()
             .initialState(WilyPhase2State.HOVER)
             .transition(WilyPhase2State.HOVER, WilyPhase2State.PREPARE) { true }
+            .transition(WilyPhase2State.PREPARE, WilyPhase2State.CHARGE) { shouldCharge() }
+            .transition(WilyPhase2State.PREPARE, WilyPhase2State.LOW_SWAY) { shouldLowSway() }
             .transition(WilyPhase2State.PREPARE, WilyPhase2State.DIVE) { shouldDive() }
             .transition(WilyPhase2State.PREPARE, WilyPhase2State.PIN) { shouldPin() }
             .transition(WilyPhase2State.PREPARE, WilyPhase2State.LUNGE) { true }
             .transition(WilyPhase2State.LUNGE, WilyPhase2State.HOVER) { true }
             .transition(WilyPhase2State.DIVE, WilyPhase2State.HOVER) { true }
             .transition(WilyPhase2State.PIN, WilyPhase2State.HOVER) { true }
+            .transition(WilyPhase2State.CHARGE, WilyPhase2State.HOVER) { true }
+            .transition(WilyPhase2State.LOW_SWAY, WilyPhase2State.HOVER) { true }
             .onChangeState(this::onChangeState)
             .build()
 
@@ -2110,6 +2148,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         private fun shouldPin() = attackCount % Phase2ConstVals.ATTACKS_PER_SPECIAL == 0
+
+        private fun shouldCharge() = MathUtils.random() < Phase2ConstVals.CHARGE_CHANCE
+
+        private fun shouldLowSway() = MathUtils.random() < Phase2ConstVals.LOW_SWAY_CHANCE
 
         private fun onChangeState(current: WilyPhase2State, previous: WilyPhase2State) {
             GameLogger.debug(TAG, "Phase2Handler: current=$current, previous=$previous")
@@ -2133,6 +2175,26 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyPhase2State.PIN -> {
                     pinLaunched = false
                     pinLeft = !pinLeft
+                }
+
+                WilyPhase2State.CHARGE -> {
+                    chargePhase = ChargePhase.APPROACH
+                    returnAnchor.set(swayAnchor!!)
+
+                    chargeTarget.set(megaman.body.getCenter())
+                    clampChargeTarget(chargeTarget)
+
+                    val dir = GameObjectPools.fetch(Vector2::class).set(chargeTarget).sub(swayAnchor!!)
+                    if (dir.len2() > 0.0001f)
+                        dir.nor().scl(Phase2ConstVals.CHARGE_TENTACLE_REACH * ConstVals.PPM)
+                    else dir.set(0f, -Phase2ConstVals.CHARGE_TENTACLE_REACH * ConstVals.PPM)
+                    leftTentacle?.setIdleOffset(dir)
+                    rightTentacle?.setIdleOffset(dir)
+                }
+
+                WilyPhase2State.LOW_SWAY -> {
+                    lowSwayPhase = LowSwayPhase.DESCEND
+                    lowSwayReturnY = swayAnchor!!.y
                 }
             }
         }
@@ -2165,6 +2227,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             diveReturnY = 0f
             diveTargetY = 0f
             diveLaunchedTentacles = false
+
+            chargePhase = ChargePhase.APPROACH
+            chargeTarget.setZero()
+            returnAnchor.setZero()
+            chargeHoldTimer.reset()
+
+            lowSwayPhase = LowSwayPhase.DESCEND
+            lowSwayReturnY = 0f
+            lowSwaySweepTimer.reset()
 
             pinLeft = false
             pinLaunched = false
@@ -2298,9 +2369,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 stateMachines.get(WilyFinalBossPhase.PHASE_2) as StateMachine<WilyPhase2State>
             val currentState = phase2StateMachine.getCurrentElement()
 
-            // Only advance sway during HOVER; freeze during PREPARE and DIVE
-            if (currentState != WilyPhase2State.PREPARE && currentState != WilyPhase2State.DIVE)
-                swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED * delta
+            // Freeze sway during PREPARE/DIVE/CHARGE; boost it during LOW_SWAY's sweep; else normal
+            when (currentState) {
+                WilyPhase2State.PREPARE, WilyPhase2State.DIVE, WilyPhase2State.CHARGE -> {}
+                WilyPhase2State.LOW_SWAY -> swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED *
+                    (if (lowSwayPhase == LowSwayPhase.SWEEP) Phase2ConstVals.LOW_SWAY_SPEED_MULT else 1f) * delta
+
+                else -> swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED * delta
+            }
 
             val swayX = swayAnchor!!.x +
                 Phase2ConstVals.SWAY_AMPLITUDE * ConstVals.PPM * MathUtils.sin(swayTheta)
@@ -2389,7 +2465,82 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                         pinLaunched = true
                     } else if (pinner?.isIdle() == true) phase2StateMachine.next()
                 }
+
+                WilyPhase2State.CHARGE -> {
+                    when (chargePhase) {
+                        ChargePhase.APPROACH -> {
+                            if (stepAnchorToward(chargeTarget, Phase2ConstVals.CHARGE_SPEED, delta)) {
+                                chargePhase = ChargePhase.HOLD
+                                chargeHoldTimer.reset()
+                            }
+                        }
+
+                        ChargePhase.HOLD -> {
+                            chargeHoldTimer.update(delta)
+                            if (chargeHoldTimer.isFinished()) chargePhase = ChargePhase.RETURN
+                        }
+
+                        ChargePhase.RETURN -> {
+                            if (stepAnchorToward(returnAnchor, Phase2ConstVals.CHARGE_RETURN_SPEED, delta)) {
+                                val idle = GameObjectPools.fetch(Vector2::class)
+                                    .set(Phase2ConstVals.TENTACLE_IDLE_OFFSET_X, Phase2ConstVals.TENTACLE_IDLE_OFFSET_Y)
+                                    .scl(ConstVals.PPM.toFloat())
+                                leftTentacle?.setIdleOffset(idle)
+                                rightTentacle?.setIdleOffset(idle)
+                                phase2StateMachine.next()
+                            }
+                        }
+                    }
+                }
+
+                WilyPhase2State.LOW_SWAY -> {
+                    when (lowSwayPhase) {
+                        LowSwayPhase.DESCEND -> {
+                            val step = Phase2ConstVals.LOW_SWAY_DESCEND_SPEED * ConstVals.PPM * delta
+                            if (swayAnchor!!.y - step <= lowSwayTargetY) {
+                                swayAnchor!!.y = lowSwayTargetY
+                                lowSwayPhase = LowSwayPhase.SWEEP
+                                lowSwaySweepTimer.reset()
+                            } else swayAnchor!!.y -= step
+                        }
+
+                        LowSwayPhase.SWEEP -> {
+                            lowSwaySweepTimer.update(delta)
+                            if (lowSwaySweepTimer.isFinished()) lowSwayPhase = LowSwayPhase.ASCEND
+                        }
+
+                        LowSwayPhase.ASCEND -> {
+                            val step = Phase2ConstVals.LOW_SWAY_ASCEND_SPEED * ConstVals.PPM * delta
+                            if (swayAnchor!!.y + step >= lowSwayReturnY) {
+                                swayAnchor!!.y = lowSwayReturnY
+                                phase2StateMachine.next()
+                            } else swayAnchor!!.y += step
+                        }
+                    }
+                }
             }
+        }
+
+        private fun clampChargeTarget(out: Vector2): Vector2 {
+            val buffer = Phase2ConstVals.CHARGE_TARGET_ROOM_BUFFER * ConstVals.PPM
+            out.x = out.x.coerceIn(room.getX() + buffer, room.getMaxX() - buffer)
+            out.y = out.y.coerceIn(room.getY() + buffer, room.getMaxY() - buffer)
+            return out
+        }
+
+        private fun stepAnchorToward(target: Vector2, speed: Float, delta: Float): Boolean {
+            val anchor = swayAnchor!!
+            val dx = target.x - anchor.x
+            val dy = target.y - anchor.y
+            val dist = kotlin.math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+            val step = speed * ConstVals.PPM * delta
+            if (dist <= step) {
+                anchor.set(target)
+                return true
+            }
+            anchor.x += dx / dist * step
+            anchor.y += dy / dist * step
+            return false
         }
 
         private fun updateCannonOrbs(delta: Float) {
@@ -2557,6 +2708,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             diveTargetY = 0f
             diveLaunchedTentacles = false
             diveHoldTimer.reset()
+
+            chargePhase = ChargePhase.APPROACH
+            chargeTarget.setZero()
+            returnAnchor.setZero()
+            chargeHoldTimer.reset()
+
+            lowSwayPhase = LowSwayPhase.DESCEND
+            lowSwayReturnY = 0f
+            lowSwaySweepTimer.reset()
 
             leftTentacle?.explodeAndDestroy()
             leftTentacle = null

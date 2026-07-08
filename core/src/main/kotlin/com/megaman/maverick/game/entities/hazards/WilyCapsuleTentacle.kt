@@ -232,6 +232,10 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
 
     fun setAnchor(v: Vector2): Vector2 = anchor.set(v)
 
+    fun setIdleOffset(v: Vector2) {
+        idleOffset.set(v)
+    }
+
     fun getAnchor(out: Vector2) = tentacle?.getAnchor(out)
 
     fun getTarget(out: Vector2) = tentacle?.getTarget(out)
