@@ -2051,7 +2051,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         const val ORB_LAUNCH_SPEED_HARD = 12f
 
         const val CHARGE_CHANCE = 0.15f
-        const val CHARGE_SPEED = 10f
+        const val CHARGE_SPEED = 6f
+        const val CHARGE_SPEED_HARD = 8f
         const val CHARGE_RETURN_SPEED = 8f
         const val CHARGE_HOLD_DURATION = 0.5f
         const val CHARGE_TARGET_ROOM_BUFFER = 2f
@@ -2059,7 +2060,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         const val LOW_SWAY_CHANCE = 0.15f
         const val LOW_SWAY_DURATION = 2f
-        const val LOW_SWAY_SPEED_MULT = 2f
+        const val LOW_SWAY_SPEED_MULT = 1.25f
+        const val LOW_SWAY_SPEED_MULT_HARD = 1.75f
         const val LOW_SWAY_DESCEND_SPEED =10f
         const val LOW_SWAY_ASCEND_SPEED = 8f
     }
@@ -2372,9 +2374,14 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             // Freeze sway during PREPARE/DIVE/CHARGE; boost it during LOW_SWAY's sweep; else normal
             when (currentState) {
                 WilyPhase2State.PREPARE, WilyPhase2State.DIVE, WilyPhase2State.CHARGE -> {}
-                WilyPhase2State.LOW_SWAY -> swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED *
-                    (if (lowSwayPhase == LowSwayPhase.SWEEP) Phase2ConstVals.LOW_SWAY_SPEED_MULT else 1f) * delta
-
+                WilyPhase2State.LOW_SWAY -> {
+                    val multiplier = when {
+                        game.state.hardMode -> Phase2ConstVals.LOW_SWAY_SPEED_MULT_HARD
+                        else -> Phase2ConstVals.LOW_SWAY_SPEED_MULT
+                    } 
+                    swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED *
+                        (if (lowSwayPhase == LowSwayPhase.SWEEP) multiplier else 1f) * delta
+                }
                 else -> swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED * delta
             }
 
@@ -2469,7 +2476,11 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyPhase2State.CHARGE -> {
                     when (chargePhase) {
                         ChargePhase.APPROACH -> {
-                            if (stepAnchorToward(chargeTarget, Phase2ConstVals.CHARGE_SPEED, delta)) {
+                            val speed = when {
+                                game.state.hardMode -> Phase2ConstVals.CHARGE_SPEED_HARD
+                                else -> Phase2ConstVals.CHARGE_SPEED
+                            }
+                            if (stepAnchorToward(chargeTarget, speed, delta)) {
                                 chargePhase = ChargePhase.HOLD
                                 chargeHoldTimer.reset()
                             }
