@@ -54,6 +54,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.FLY_IN_SLOW_DOWN_DISTANCE
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.MAX_FLY_BYS
@@ -221,6 +222,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         super.init()
         buildStateMachines()
         addComponent(defineAnimationsComponent())
+        damageOverrides.put(Bullet::class, dmgNeg(ConstVals.MAX_HEALTH))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -2313,14 +2315,23 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val damager = Fixture(body, FixtureType.DAMAGER, GameRectangle(body))
             body.addFixture(damager)
 
-            val topDamagerFixture = Fixture(
+            val topDamagerFixture1 = Fixture(
                 body,
                 FixtureType.DAMAGER,
                 GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
             )
-            topDamagerFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
-            body.addFixture(topDamagerFixture)
-            debugShapes.add { topDamagerFixture }
+            topDamagerFixture1.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
+            body.addFixture(topDamagerFixture1)
+            debugShapes.add { topDamagerFixture1 }
+
+            val topDamagerFixture2 = Fixture(
+                body,
+                FixtureType.DAMAGER,
+                GameRectangle().setSize(4f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            )
+            topDamagerFixture2.offsetFromBodyAttachment.y = 3f * ConstVals.PPM
+            body.addFixture(topDamagerFixture2)
+            debugShapes.add { topDamagerFixture2 }
 
             val topBodyFixture = Fixture(
                 body,
@@ -2378,7 +2389,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     val multiplier = when {
                         game.state.hardMode -> Phase2ConstVals.LOW_SWAY_SPEED_MULT_HARD
                         else -> Phase2ConstVals.LOW_SWAY_SPEED_MULT
-                    } 
+                    }
                     swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED *
                         (if (lowSwayPhase == LowSwayPhase.SWEEP) multiplier else 1f) * delta
                 }
