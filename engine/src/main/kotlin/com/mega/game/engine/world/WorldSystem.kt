@@ -35,6 +35,12 @@ class WorldSystem(
 
     companion object {
         const val TAG = "WorldSystem"
+
+        // pre-built so that diagnostics entry names cost no string interpolation per cycle
+        private val CYCLE_NAMES = Array(50) { "cycle[$it]" }
+
+        private fun cycleName(iteration: Int) =
+            if (iteration < CYCLE_NAMES.size) CYCLE_NAMES[iteration] else "cycle[$iteration]"
     }
 
     init {
@@ -115,7 +121,7 @@ class WorldSystem(
                 accumulator -= fixedStepScaled
                 iterations++
 
-                diagnostics?.beginEntry("cycle[$iterations]")
+                diagnostics?.beginEntry(cycleName(iterations))
                 cycle(bodyArray, fixedStep, worldContainer)
                 diagnostics?.endEntry()
 
