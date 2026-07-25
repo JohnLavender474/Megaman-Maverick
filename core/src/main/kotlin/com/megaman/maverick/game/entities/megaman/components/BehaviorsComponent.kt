@@ -771,7 +771,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
         override fun end() {
             jetpackHandler.reset()
-            body.physics.gravityOn = true
+            if (!game.isCameraRotating()) body.physics.gravityOn = true
         }
     }
 

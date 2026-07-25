@@ -226,10 +226,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
                     canMove = false
 
+                    // the jetpacking behavior must be reset before the physics values are set below since
+                    // ending that behavior turns gravity back on
+                    resetBehavior(BehaviorType.JETPACKING)
+
                     body.physics.gravityOn = false
                     body.physics.velocity.setZero()
-
-                    resetBehavior(BehaviorType.JETPACKING)
                 }
             } else GameLogger.debug(TAG, "direction-set(): value same as field")
 
