@@ -13,11 +13,16 @@ import com.megaman.maverick.game.world.body.hasFilter
 
 class MegaContactFilter : IContactFilter {
 
-    // Always prefer to put the "smaller" fixture as the key
+    // Always prefer to put the "smaller" fixture as the key: only key fixture types trigger `shouldProceedFiltering`,
+    // i.e. only they initiate a broad-phase grid query (over their own bounds) in the world system. A large fixture as
+    // a key sweeps many cells every cycle. That is why DEATH (e.g. the camera-spanning rising-lava death fixture) is a
+    // VALUE of the small fixtures it contacts (FEET/SIDE/HEAD/BODY/PLAYER) rather than a key -- detection is identical
+    // because `filter()` checks membership symmetrically, but the small fixtures do the cheap queries instead.
     private val filters = objectMapOf(
         FixtureType.PLAYER pairTo objectSetOf(
             FixtureType.BODY,
-            FixtureType.ITEM
+            FixtureType.ITEM,
+            FixtureType.DEATH
         ),
         FixtureType.DAMAGEABLE pairTo objectSetOf(
             FixtureType.DAMAGER
@@ -29,18 +34,12 @@ class MegaContactFilter : IContactFilter {
             FixtureType.BLOCK,
             FixtureType.FORCE,
             FixtureType.BOUNCER,
-            FixtureType.GRAVITY_CHANGE
+            FixtureType.GRAVITY_CHANGE,
+            FixtureType.DEATH
         ),
         FixtureType.EXPLOSION pairTo objectSetOf(
             FixtureType.BLOCK,
             FixtureType.BODY
-        ),
-        FixtureType.DEATH pairTo objectSetOf(
-            FixtureType.FEET,
-            FixtureType.SIDE,
-            FixtureType.HEAD,
-            FixtureType.BODY,
-            FixtureType.PLAYER
         ),
         FixtureType.WATER_LISTENER pairTo objectSetOf(
             FixtureType.WATER
@@ -54,7 +53,8 @@ class MegaContactFilter : IContactFilter {
             FixtureType.ICE,
             FixtureType.GATE,
             FixtureType.BLOCK,
-            FixtureType.BOUNCER
+            FixtureType.BOUNCER,
+            FixtureType.DEATH
         ),
         FixtureType.FEET pairTo objectSetOf(
             FixtureType.ICE,
@@ -63,13 +63,15 @@ class MegaContactFilter : IContactFilter {
             FixtureType.SAND,
             FixtureType.SNOW,
             FixtureType.CART,
-            FixtureType.GATE
+            FixtureType.GATE,
+            FixtureType.DEATH
         ),
         FixtureType.HEAD pairTo objectSetOf(
             FixtureType.BLOCK,
             FixtureType.BOUNCER,
             FixtureType.FEET,
-            FixtureType.GATE
+            FixtureType.GATE,
+            FixtureType.DEATH
         ),
         FixtureType.PROJECTILE pairTo objectSetOf(
             FixtureType.BODY,
