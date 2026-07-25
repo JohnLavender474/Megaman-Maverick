@@ -20,14 +20,13 @@ import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.IDrawableShapesEntity
 import com.mega.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardBodyDoUpdatePredicate
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
-import com.megaman.maverick.game.entities.utils.getUpdateWhenNearCameraPredicate
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
@@ -62,7 +61,6 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-
         GameLogger.debug(
             TAG,
             "onSpawn(): mapObjectId=$id, " +
@@ -81,7 +79,6 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         when {
             cullRoom -> {
                 val room = spawnProps.get(ConstKeys.CULL_ROOM, String::class)!!
-
                 val cullable = getStandardEventCullingLogic(
                     this,
                     objectSetOf(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS),
@@ -90,34 +87,19 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                         return@predicate nextRoom != room
                     }
                 )
-
                 game.eventsMan.addListener(cullable)
-
                 runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) {
                     game.eventsMan.removeListener(cullable)
-
                     runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
                 }
-
                 putCullable(ConstKeys.CULL_ROOM, cullable)
             }
-
             else -> removeCullable(ConstKeys.CULL_ROOM)
         }
 
-        // The "update_distance" (in tiles) prop gates physics processing on proximity to the game camera: the block is
-        // only fed to the world system while its body overlaps the camera grown by that buffer. This lets a room pack
-        // in many non-culled blocks without every one of them dragging the world system every frame. Absent -> always
-        // updated (default; unchanged for all other blocks). CAVEAT: a gated-out block is absent from the collision
-        // grid entirely, so the buffer must be large enough that no active dynamic body can be touching a gated-out
-        // block. For example, when these blocks are floors for `GravityBlocks`, set this buffer to be greater than or
-        // equal to `GravityBlock.UPDATE_DISTANCE + gravity block height` so a falling gravity block can never reach an
-        // inactive floor -> currently 6 in room 5 (gravity buffer 3 + 2, plus margin).
-        val updateDistance = spawnProps.get("${ConstKeys.UPDATE}_${ConstKeys.DISTANCE}", Float::class)
-        val bodyComponent = getComponent(BodyComponent::class)!!
         bodyComponent.doUpdate = when {
-            updateDistance != null -> getUpdateWhenNearCameraPredicate(this, updateDistance * ConstVals.PPM)
-            else -> ConstVals.ALWAYS_UPDATE
+            spawnProps.containsKey(ConstKeys.DO_UPDATE) -> spawnProps.get(ConstKeys.DO_UPDATE) as () -> Boolean
+            else -> getStandardBodyDoUpdatePredicate(this, spawnProps)
         }
 
         body.physics.frictionToApply.x =

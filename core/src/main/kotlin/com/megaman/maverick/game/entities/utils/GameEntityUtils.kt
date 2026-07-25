@@ -20,6 +20,7 @@ import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
 import com.mega.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -58,24 +59,40 @@ fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
     CullableOnUncontained({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
 
-/**
- * Returns a predicate suitable for [com.mega.game.engine.world.body.BodyComponent.doUpdate] that is true only while the
- * entity's body overlaps the game camera's rotated bounds expanded by [buffer] on every side.
- *
- * IMPORTANT: when this returns false the body and its fixtures are entirely absent from the world container for that
- * frame (the [com.mega.game.engine.world.WorldSystem] rebuilds the container solely from bodies it processes), so a
- * deactivated block will NOT collide with anything. [buffer] must therefore be large enough that no active dynamic body
- * can be touching a deactivated block. Bodies that must freeze/thaw together (e.g. a rider and its support) should share
- * the same [buffer].
- */
 fun getUpdateWhenNearCameraPredicate(entity: IBodyEntity, buffer: Float): () -> Boolean {
     val camera = (entity as MegaGameEntity).getGameCamera()
-    return pred@{
+    return predicate@{
         val window = GameObjectPools.fetch(GameRectangle::class)
             .set(camera.getRotatedBounds())
             .translate(-buffer, -buffer)
             .translateSize(2f * buffer, 2f * buffer)
-        return@pred window.overlaps(entity.body.getBounds())
+        return@predicate window.overlaps(entity.body.getBounds())
+    }
+}
+
+fun getUpdateWhenGroupNearCameraPredicate(entity: IBodyEntity, group: String, buffer: Float): () -> Boolean {
+    val camera = (entity as MegaGameEntity).getGameCamera()
+    return predicate@{
+        val window = GameObjectPools.fetch(GameRectangle::class)
+            .set(camera.getRotatedBounds())
+            .translate(-buffer, -buffer)
+            .translateSize(2f * buffer, 2f * buffer)
+        val members = MegaGameEntities.getOfGroup(group)
+        for (member in members)
+            if (member is IBodyEntity && window.overlaps(member.body.getBounds()))
+                return@predicate true
+        return@predicate false
+    }
+}
+
+fun getStandardBodyDoUpdatePredicate(entity: IBodyEntity, spawnProps: Properties): () -> Boolean {
+    val updateDistance = spawnProps.get("${ConstKeys.UPDATE}_${ConstKeys.DISTANCE}", Float::class)
+        ?: return ConstVals.ALWAYS_UPDATE
+    val buffer = updateDistance * ConstVals.PPM
+    val group = (entity as MegaGameEntity).group
+    return when {
+        group != null -> getUpdateWhenGroupNearCameraPredicate(entity, group, buffer)
+        else -> getUpdateWhenNearCameraPredicate(entity, buffer)
     }
 }
 

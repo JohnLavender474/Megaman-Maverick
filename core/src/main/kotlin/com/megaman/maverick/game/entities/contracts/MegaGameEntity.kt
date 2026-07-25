@@ -15,10 +15,8 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     companion object {
         const val TAG = "MegaGameEntity"
 
-        // If an entity is not assigned an ID via spawn props, then it will be assigned
-        // a negative id.
         private var CURRENT_NEW_ID = -1
-        private val RANDOM_ID_POOL = Pool<Int>(
+        private val RANDOM_ID_POOL = Pool(
             supplier = { CURRENT_NEW_ID },
             onSupplyNew = { --CURRENT_NEW_ID }
         )
@@ -29,6 +27,8 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     var dead = true
     var id = 0
+        private set
+    var group: String? = null
         private set
     var timeSpawned = 0L
         private set
@@ -47,6 +47,7 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     override fun onSpawn(spawnProps: Properties) {
         id = spawnProps.getOrDefault(ConstKeys.ID, RANDOM_ID_POOL.fetch(), Int::class)
+        group = spawnProps.get(ConstKeys.GROUP, String::class)
         timeSpawned = System.currentTimeMillis()
         MegaGameEntities.add(this)
         runnablesOnSpawn.values().forEach { it.invoke() }
@@ -57,6 +58,7 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         MegaGameEntities.remove(this)
         runnablesOnDestroy.values().forEach { it.invoke() }
         if (id < 0) RANDOM_ID_POOL.free(id)
+        group = null
         GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
     }
 
