@@ -1,7 +1,7 @@
 package com.mega.game.engine.common.objects
 
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.IntSet
 import com.mega.game.engine.common.interfaces.Initializable
 
 open class Pool<T>(
@@ -17,9 +17,8 @@ open class Pool<T>(
     }
 
     protected open var initialized = false
-
     protected open val queue = Array<T>()
-    protected open val hashCodeSet = ObjectSet<Int>()
+    protected open val hashCodeSet = IntSet()
 
     override fun init(vararg params: Any) {
         (0 until startAmount).forEach { _ -> free(supplyNew()) }

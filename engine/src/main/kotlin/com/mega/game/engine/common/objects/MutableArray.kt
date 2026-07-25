@@ -2,19 +2,20 @@ package com.mega.game.engine.common.objects
 
 import com.badlogic.gdx.utils.Array
 
-
 fun <T> mutableArrayOf(vararg values: T): MutableArray<T> {
     val array = MutableArray<T>()
     values.forEach { array.add(it) }
     return array
 }
 
-
 class MutableArray<T> : MutableCollection<T> {
 
     private val array = Array<T>()
 
-    override val size = array.size
+    // must be a computed property -- as a plain initializer this captured the size at construction
+    // time (always 0) instead of tracking the backing array
+    override val size: Int
+        get() = array.size
 
     fun sort() = array.sort()
 
@@ -26,7 +27,7 @@ class MutableArray<T> : MutableCollection<T> {
 
     fun truncate(newSize: Int) = array.truncate(newSize)
 
-    fun random() = array.random()
+    fun random(): T? = array.random()
 
     fun removeIndex(index: Int) = array.removeIndex(index)
 

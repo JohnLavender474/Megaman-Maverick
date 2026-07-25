@@ -46,6 +46,11 @@ open class GameCircle(x: Float, y: Float, radius: Float) : IGameShape2D {
         return out
     }
 
+    override fun setTo(other: IGameShape2D): GameCircle {
+        set(other as GameCircle)
+        return this
+    }
+
     override fun setWithProps(props: Properties): GameCircle {
         libgdxCircle.x = props.getOrDefault("x", libgdxCircle.x, Float::class)
         libgdxCircle.y = props.getOrDefault("y", libgdxCircle.y, Float::class)

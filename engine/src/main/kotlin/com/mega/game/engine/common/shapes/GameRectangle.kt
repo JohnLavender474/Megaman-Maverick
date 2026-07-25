@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -79,6 +80,8 @@ open class GameRectangle() : IGameShape2D, IRectangle, IRotatableShape {
         return out
     }
 
+    override fun setTo(other: IGameShape2D): GameRectangle = set(other as GameRectangle)
+
     override fun setWithProps(props: Properties): IGameShape2D {
         setX(props.getOrDefault("x", getX(), Float::class))
         setY(props.getOrDefault("y", getY(), Float::class))
@@ -120,6 +123,8 @@ open class GameRectangle() : IGameShape2D, IRectangle, IRotatableShape {
     }
 
     override fun rotate(rotation: Float, originX: Float, originY: Float) {
+        if (MathUtils.isZero(rotation)) return
+
         val line1 = linesPool.fetch()
         line1.reset()
 

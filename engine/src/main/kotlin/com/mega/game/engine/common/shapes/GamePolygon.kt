@@ -73,7 +73,7 @@ open class GamePolygon() : IGameShape2D, IRotatable, IRotatableShape, Resettable
     }
 
     constructor(polygon: Polygon) : this() {
-        setLocalVertices(polygon.vertices.clone())
+        setLocalVertices(polygon.vertices)
         setX(polygon.x)
         setY(polygon.y)
         scaleX = polygon.scaleX
@@ -96,6 +96,8 @@ open class GamePolygon() : IGameShape2D, IRotatable, IRotatableShape, Resettable
         )
         return out
     }
+
+    override fun setTo(other: IGameShape2D): GamePolygon = set(other as GamePolygon)
 
     override fun setWithProps(props: Properties): GamePolygon {
         if (props.containsKey("local_vertices")) setLocalVertices(props.get("local_vertices", FloatArray::class)!!)
@@ -127,7 +129,9 @@ open class GamePolygon() : IGameShape2D, IRotatable, IRotatableShape, Resettable
     fun setLocalVertices(vertices: FloatArray) = setLocalVertices(vertices.toArray())
 
     fun setLocalVertices(vertices: kotlin.FloatArray) {
-        libgdxPolygon.vertices = vertices
+        val current = libgdxPolygon.vertices
+        if (current.size == vertices.size) System.arraycopy(vertices, 0, current, 0, vertices.size)
+        else libgdxPolygon.vertices = vertices.clone()
         setDirty()
     }
 

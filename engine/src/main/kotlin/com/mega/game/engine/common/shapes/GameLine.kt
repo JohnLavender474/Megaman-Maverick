@@ -108,6 +108,17 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         return out
     }
 
+    override fun setTo(other: IGameShape2D): GameLine {
+        val line = other as GameLine
+        set(line)
+        // `set` covers geometry only; the props round-trip this replaces also carried the drawing fields
+        drawingColor = line.drawingColor
+        drawingThickness = line.drawingThickness
+        drawingShapeType = line.drawingShapeType
+        drawingRenderType = line.drawingRenderType
+        return this
+    }
+
     override fun setWithProps(props: Properties): IGameShape2D {
         position.x = props.getOrDefault("x", 0f, Float::class)
         position.y = props.getOrDefault("y", 0f, Float::class)

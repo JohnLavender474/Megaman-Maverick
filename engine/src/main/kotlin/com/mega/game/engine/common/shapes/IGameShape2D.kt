@@ -12,6 +12,8 @@ interface IGameShape2D : Shape2D, IGameShapeOverlappable, IDrawableShape, ICopya
 
     fun setWithProps(props: Properties): IGameShape2D
 
+    fun setTo(other: IGameShape2D): IGameShape2D
+
     fun getBoundingRectangle(out: GameRectangle): GameRectangle
 
     fun getMaxX(): Float

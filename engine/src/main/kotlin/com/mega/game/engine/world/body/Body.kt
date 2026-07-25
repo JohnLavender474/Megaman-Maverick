@@ -3,6 +3,7 @@ package com.mega.game.engine.world.body
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -47,8 +48,10 @@ class Body(
     override fun getBounds(out: GameRectangle): GameRectangle {
         out.set(bounds)
 
-        val center = bounds.getCenter(tempVec1)
-        out.rotate(direction.rotation, center.x, center.y)
+        if (!MathUtils.isZero(direction.rotation)) {
+            val center = bounds.getCenter(tempVec1)
+            out.rotate(direction.rotation, center.x, center.y)
+        }
 
         out.drawingColor = drawingColor
         out.drawingShapeType = drawingShapeType
@@ -66,7 +69,7 @@ class Body(
     override fun hasFixture(fixture: IFixture): Boolean {
         val type = fixture.getType()
         val set = fixtures[type] ?: return false
-        return set.contains(type)
+        return set.contains(fixture)
     }
 
     override fun removeFixture(fixture: IFixture): Boolean {

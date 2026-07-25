@@ -167,13 +167,23 @@ class WorldSystem(
         worldContainer.clear()
 
         diagnostics?.beginEntry("bodyProcess")
+
+        diagnostics?.beginEntry("process")
+        bodies.forEach { body -> body.process(delta) }
+        diagnostics?.endEntry()
+
+        diagnostics?.beginEntry("addBody")
+        bodies.forEach { body -> worldContainer.addBody(body) }
+        diagnostics?.endEntry()
+
+        diagnostics?.beginEntry("addFixtures")
         bodies.forEach { body ->
-            body.process(delta)
-            worldContainer.addBody(body)
             body.forEachFixture { fixture ->
                 if (fixture.isActive()) worldContainer.addFixture(fixture)
             }
         }
+        diagnostics?.endEntry()
+
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("collectContacts")
@@ -218,7 +228,9 @@ class WorldSystem(
     internal fun collectContacts(body: IBody, worldContainer: IWorldContainer) = body.forEachFixture { fixture ->
         if (!fixture.isActive() || !contactFilter.shouldProceedFiltering(fixture)) return@forEachFixture
 
-        val bounds = fixture.getShape().getBoundingRectangle(out1)
+        val shape = fixture.getShape()
+
+        val bounds = shape.getBoundingRectangle(out1)
         worldContainer.forEachFixture(
             MathUtils.floor(bounds.getX() / ppm),
             MathUtils.floor(bounds.getY() / ppm),
@@ -227,7 +239,7 @@ class WorldSystem(
         ) { candidate, _ ->
             if (candidate.isActive() &&
                 filterContact(fixture, candidate) &&
-                fixture.getShape().overlaps(candidate.getShape())
+                shape.overlaps(candidate.getShape())
             ) {
                 val contact = contactPool.fetch()
                 contact.set(fixture, candidate)

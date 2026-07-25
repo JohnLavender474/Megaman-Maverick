@@ -478,6 +478,88 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             visited shouldNotContain fixture2
         }
 
+        it("copy should be independent of the original once the original is cleared and rebuilt") {
+            // given
+            val body = mockk<Body>()
+            val original = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            val originalFixture = Fixture(body, "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            grid.addBody(original)
+            grid.addFixture(originalFixture)
+
+            // when - snapshot, then clear and repopulate the original with different contents
+            val snapshot = grid.copy()
+
+            grid.clear()
+
+            val replacement = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            val replacementFixture = Fixture(body, "F2", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            grid.addBody(replacement)
+            grid.addFixture(replacementFixture)
+
+            // then - the snapshot still holds what it held when it was taken
+            snapshot.getBodies(1, 1, outBodies1)
+            outBodies1.size shouldBe 1
+            outBodies1 shouldContain original
+            outBodies1 shouldNotContain replacement
+
+            snapshot.getFixtures(1, 1, outFixtures)
+            outFixtures.size shouldBe 1
+            outFixtures shouldContain originalFixture
+            outFixtures shouldNotContain replacementFixture
+
+            // and the original holds only the replacements
+            outBodies2.clear()
+            grid.getBodies(1, 1, outBodies2)
+            outBodies2.size shouldBe 1
+            outBodies2 shouldContain replacement
+        }
+
+        it("clear should empty reused cells rather than leaving stale contents behind") {
+            // given - a cell that will be reused across rebuilds, as the world system does each cycle
+            val stale = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            grid.addBody(stale)
+
+            // when - clear, then repopulate the same cell with a *different* body. using a different
+            // body matters: re-adding the same one would be collapsed by the cell's dedup and so would
+            // pass even if `clear` had done nothing
+            grid.clear()
+
+            val fresh = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            grid.addBody(fresh)
+
+            // then
+            grid.getBodies(1, 1, outBodies1)
+            outBodies1.size shouldBe 1
+            outBodies1 shouldContain fresh
+            outBodies1 shouldNotContain stale
+
+            val visited = mutableListOf<IBody>()
+            grid.forEachBody(1, 1) { b, _ -> visited.add(b); true }
+            visited.size shouldBe 1
+            visited shouldContain fresh
+        }
+
+        it("cells should collapse duplicate adds") {
+            // given
+            val body = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
+            val fixture = Fixture(mockk<Body>(), "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+
+            // when - added repeatedly without an intervening clear
+            repeat(3) {
+                grid.addBody(body)
+                grid.addFixture(fixture)
+            }
+
+            // then - visited once, not once per add
+            val visitedBodies = mutableListOf<IBody>()
+            grid.forEachBody(1, 1) { b, _ -> visitedBodies.add(b); true }
+            visitedBodies.size shouldBe 1
+
+            val visitedFixtures = mutableListOf<IFixture>()
+            grid.forEachFixture(1, 1) { f, _ -> visitedFixtures.add(f); true }
+            visitedFixtures.size shouldBe 1
+        }
+
         it("forEachFixture stops early when action returns false") {
             // Given
             val body = mockk<Body>()

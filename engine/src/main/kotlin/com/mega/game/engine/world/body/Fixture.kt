@@ -40,7 +40,6 @@ class Fixture(
     private var adjustedShape: IGameShape2D? = null
     private var isActive = active
 
-    private val reusableShapeProps = Properties()
     private val reusableGameRect = GameRectangle()
     private val out1 = Vector2()
 
@@ -53,9 +52,7 @@ class Fixture(
         if (adjustedShape == null) adjustedShape = rawShape.copy()
 
         val copy = adjustedShape!!
-        reusableShapeProps.clear()
-        val props = rawShape.getProps(reusableShapeProps)
-        copy.setWithProps(props)
+        copy.setTo(rawShape)
 
         if (!attachedToBody) return adjustedShape!!
 

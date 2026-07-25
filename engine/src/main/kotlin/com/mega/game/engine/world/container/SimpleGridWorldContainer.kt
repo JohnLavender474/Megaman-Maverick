@@ -1,15 +1,28 @@
 package com.mega.game.engine.world.container
 
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.LongMap
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.objects.IntPair
-import com.mega.game.engine.common.objects.pairTo
+import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.MinsAndMaxes
 import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.body.IFixture
 
+/**
+ * A uniform grid broad-phase container.
+ *
+ * The grid is rebuilt from scratch every physics cycle, so the hot path here is [addBody] /
+ * [addFixture] followed by [clear]. Both are allocation-free in steady state: cells are keyed by a
+ * packed `Long` rather than an object, and [clear] empties each cell in place rather than dropping
+ * it, so a cell's backing array is allocated once and then reused for the lifetime of the container.
+ *
+ * Cells hold [OrderedSet], so a duplicate add collapses. Queries walk the set's backing
+ * `orderedItems()` array by index rather than taking an iterator: that allocates nothing, and it is
+ * safe to nest, which iterating the set directly is not (libGDX reuses cached iterators and fails
+ * once nesting passes two levels deep). Range queries additionally de-duplicate across cells via
+ * [tempBodySet] / [tempFixtureSet], since one body can occupy several cells.
+ */
 class SimpleGridWorldContainer(
     var ppm: Int,
     var bufferOffset: Int = 0,
@@ -17,8 +30,8 @@ class SimpleGridWorldContainer(
     var floatRoundingError: Float = MathUtils.FLOAT_ROUNDING_ERROR
 ) : IWorldContainer {
 
-    private val bodyMap = ObjectMap<IntPair, HashSet<IBody>>()
-    private val fixtureMap = ObjectMap<IntPair, HashSet<IFixture>>()
+    private val bodyMap = LongMap<OrderedSet<IBody>>()
+    private val fixtureMap = LongMap<OrderedSet<IFixture>>()
 
     private val reusableGameRect = GameRectangle()
     private val reusableMnMs = MinsAndMaxes()
@@ -29,14 +42,21 @@ class SimpleGridWorldContainer(
     private constructor(
         ppm: Int,
         bufferOffset: Int,
-        bodyMap: ObjectMap<IntPair, HashSet<IBody>>,
-        fixtureMap: ObjectMap<IntPair, HashSet<IFixture>>,
+        bodyMap: LongMap<OrderedSet<IBody>>,
+        fixtureMap: LongMap<OrderedSet<IFixture>>,
         adjustForExactGridMatch: Boolean,
         floatRoundingError: Float
     ) : this(ppm, bufferOffset, adjustForExactGridMatch, floatRoundingError) {
-        this.bodyMap.putAll(bodyMap)
-        this.fixtureMap.putAll(fixtureMap)
+        // deep copy: the source reuses and empties its cells every cycle, so sharing them would let it
+        // mutate this snapshot out from under whoever holds it -- including the pathfinder threads,
+        // which read a `copy()` while the render thread keeps rebuilding the original
+        bodyMap.forEach { this.bodyMap.put(it.key, OrderedSet(it.value)) }
+        fixtureMap.forEach { this.fixtureMap.put(it.key, OrderedSet(it.value)) }
     }
+
+    // cells are addressed by signed coordinates that can go negative, so both halves of the key must
+    // survive round-tripping; a `Long` covers the full `Int` range on each axis with no offset games
+    private fun packKey(column: Int, row: Int) = (column.toLong() shl 32) or (row.toLong() and 0xFFFFFFFFL)
 
     private fun adjustCoordinateIfNeeded(value: Float, isMinValue: Boolean) =
         if (adjustForExactGridMatch && MathUtils.isEqual(value % 1f, 0f, floatRoundingError)) {
@@ -62,9 +82,13 @@ class SimpleGridWorldContainer(
         val bounds = body.getBounds(reusableGameRect)
         val (minX, minY, maxX, maxY) = getMinsAndMaxes(bounds, reusableMnMs)
         for (column in minX..maxX) for (row in minY..maxY) {
-            val set = bodyMap[column pairTo row] ?: HashSet()
-            set.add(body)
-            bodyMap.put(column pairTo row, set)
+            val key = packKey(column, row)
+            var cell = bodyMap.get(key)
+            if (cell == null) {
+                cell = OrderedSet()
+                bodyMap.put(key, cell)
+            }
+            cell.add(body)
         }
         return true
     }
@@ -73,16 +97,20 @@ class SimpleGridWorldContainer(
         val bounds = fixture.getShape().getBoundingRectangle(reusableGameRect)
         val (minX, minY, maxX, maxY) = getMinsAndMaxes(bounds, reusableMnMs)
         for (column in minX..maxX) for (row in minY..maxY) {
-            val set = fixtureMap[column pairTo row] ?: HashSet()
-            set.add(fixture)
-            fixtureMap.put(column pairTo row, set)
+            val key = packKey(column, row)
+            var cell = fixtureMap.get(key)
+            if (cell == null) {
+                cell = OrderedSet()
+                fixtureMap.put(key, cell)
+            }
+            cell.add(fixture)
         }
         return true
     }
 
     override fun forEachBody(x: Int, y: Int, action: (IBody, IWorldContainer) -> Boolean): Boolean {
-        val bodies = bodyMap[x pairTo y] ?: return true
-        for (body in bodies) if (!action(body, this)) return false
+        val bodies = bodyMap.get(packKey(x, y))?.orderedItems() ?: return true
+        for (i in 0 until bodies.size) if (!action(bodies[i], this)) return false
         return true
     }
 
@@ -95,8 +123,9 @@ class SimpleGridWorldContainer(
     ): Boolean {
         tempBodySet.clear()
         for (column in minX..maxX) for (row in minY..maxY) {
-            val bodies = bodyMap[column pairTo row] ?: continue
-            for (body in bodies) {
+            val bodies = bodyMap.get(packKey(column, row))?.orderedItems() ?: continue
+            for (i in 0 until bodies.size) {
+                val body = bodies[i]
                 if (tempBodySet.contains(body)) continue
                 if (!action(body, this)) return false
                 tempBodySet.add(body)
@@ -106,8 +135,8 @@ class SimpleGridWorldContainer(
     }
 
     override fun forEachFixture(x: Int, y: Int, action: (IFixture, IWorldContainer) -> Boolean): Boolean {
-        val fixtures = fixtureMap[x pairTo y] ?: return true
-        for (fixture in fixtures) if (!action(fixture, this)) return false
+        val fixtures = fixtureMap.get(packKey(x, y))?.orderedItems() ?: return true
+        for (i in 0 until fixtures.size) if (!action(fixtures[i], this)) return false
         return true
     }
 
@@ -120,8 +149,9 @@ class SimpleGridWorldContainer(
     ): Boolean {
         tempFixtureSet.clear()
         for (column in minX..maxX) for (row in minY..maxY) {
-            val fixtures = fixtureMap[column pairTo row] ?: continue
-            for (fixture in fixtures) {
+            val fixtures = fixtureMap.get(packKey(column, row))?.orderedItems() ?: continue
+            for (i in 0 until fixtures.size) {
+                val fixture = fixtures[i]
                 if (tempFixtureSet.contains(fixture)) continue
                 if (!action(fixture, this)) return false
                 tempFixtureSet.add(fixture)
@@ -131,21 +161,38 @@ class SimpleGridWorldContainer(
     }
 
     override fun clear() {
-        bodyMap.clear()
-        fixtureMap.clear()
+        // empty the cells rather than dropping them, so their backing arrays survive to be refilled
+        // next cycle instead of being reallocated
+        bodyMap.forEach { it.value.clear() }
+        fixtureMap.forEach { it.value.clear() }
     }
 
     override fun copy() =
         SimpleGridWorldContainer(ppm, bufferOffset, bodyMap, fixtureMap, adjustForExactGridMatch, floatRoundingError)
 
     override fun toString(): String {
-        val nonEmptyBodies = bodyMap.filter { it.value.isNotEmpty() }.map { "${it.key}=${it.value.size} bodies" }
-        val nonEmptyFixtures = fixtureMap.filter { it.value.isNotEmpty() }.map { "${it.key}=${it.value.size} fixtures" }
-        // Construct the final string with filtered entries
+        // built in a single pass rather than via `filter`/`map`: libGDX map iterators hand back the same
+        // `Entry` instance on every step, so collecting entries into a list yields N copies of the last one
+        val bodies = StringBuilder()
+        bodyMap.forEach {
+            if (it.value.size == 0) return@forEach
+            if (bodies.isNotEmpty()) bodies.append(", ")
+            bodies.append(cellToString(it.key)).append('=').append(it.value.size).append(" bodies")
+        }
+
+        val fixtures = StringBuilder()
+        fixtureMap.forEach {
+            if (it.value.size == 0) return@forEach
+            if (fixtures.isNotEmpty()) fixtures.append(", ")
+            fixtures.append(cellToString(it.key)).append('=').append(it.value.size).append(" fixtures")
+        }
+
         return "SimpleGridWorldContainer{\n" +
             "\tppm=$ppm,\n" +
-            "\tbodies=[${nonEmptyBodies.joinToString(separator = ", ")}],\n" +
-            "\tfixtures=[${nonEmptyFixtures.joinToString(separator = ", ")}]\n" +
+            "\tbodies=[$bodies],\n" +
+            "\tfixtures=[$fixtures]\n" +
             "}"
     }
+
+    private fun cellToString(key: Long) = "(${(key shr 32).toInt()},${key.toInt()})"
 }
