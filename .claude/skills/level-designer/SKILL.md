@@ -1,6 +1,6 @@
 ---
 name: level-designer
-description: Use when asked to design, draft, scaffold, create, or edit a new or existing level.
+description: Use when you need to design, draft, scaffold, create, or edit a new or existing level.
 ---
 
 # Level Designer

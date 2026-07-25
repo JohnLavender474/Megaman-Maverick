@@ -1,6 +1,6 @@
 ---
 name: level-builder
-description: Use when asked to build, scaffold, or structurally edit a level's TMX file 
+description: Use when you need to build, scaffold, or structurally edit a level's TMX file 
   (rooms, blocks, player spawns, enemy/hazard markers, or inserting/shifting sections). 
   Prefer to use this skill instead of generating code to edit layers. It is expected 
   that the builds/edits will be rough, and the user will need to do manual edits.

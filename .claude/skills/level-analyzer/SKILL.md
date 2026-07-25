@@ -1,6 +1,6 @@
 ---
 name: level-analyzer
-description: Use when asked to read, parse, display, or analyse an existing level from its Tiled TMX file.
+description: Use when you need to read, parse, display, or analyse an existing level from its Tiled TMX file.
 ---
 
 # Level Analyzer
