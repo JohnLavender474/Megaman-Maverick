@@ -1,0 +1,6 @@
+Fixture for find_latest_diagnostics(). Contents are never read — that function
+only globs filenames and takes the lexicographic max, so only the name matters.
+
+This is the EXPECTED WINNER: the highest epoch among the files that match
+*-diagnostics.txt. It is deliberately neither the first nor the last name in the
+directory listing, so the test proves the max is really being taken.

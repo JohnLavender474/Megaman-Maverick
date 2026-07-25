@@ -1,0 +1,4 @@
+Fixture for find_latest_diagnostics(). Contents are never read.
+
+A non-matching file sharing the directory with the capture fixtures. It exists to
+prove the glob selects *-diagnostics.txt rather than sweeping up everything.

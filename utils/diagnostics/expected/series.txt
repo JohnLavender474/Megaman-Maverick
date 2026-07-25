@@ -1,0 +1,32 @@
+screen.render
+  frames    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  durations = ['12.000', '12.000', '12.000', '12.000', '12.000', '12.000', '12.000', '12.000', '12.000', '36.000']
+  points    = 10
+screen.render > AnimationsSystem
+  frames    = [0, 1, 2, 4, 5, 6, 7, 8, 9]
+  durations = ['1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '1.000']
+  points    = 9
+screen.render > WorldSystem
+  frames    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  durations = ['4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '28.000']
+  points    = 10
+screen.render > WorldSystem > cycle
+  frames    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  durations = ['4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '4.000', '28.000']
+  points    = 10
+screen.render > WorldSystem > cycle > preProcess
+  frames    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  durations = ['1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '1.000']
+  points    = 10
+screen.render > WorldSystem > cycle > preProcess > begin/continue contacts
+  frames    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  durations = ['0.250', '0.250', '0.250', '0.250', '0.250', '0.250', '0.250', '0.250', '0.250', '0.250']
+  points    = 10
+screen.render > WorldSystem > cycle > postProcess
+  frames    = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  durations = ['0.100', '0.100', '0.100', '0.100', '0.100', '0.100', '0.100', '0.100', '0.100', '0.100']
+  points    = 10
+audioMan
+  frames    = [0, 1, 2, 3, 4, 9]
+  durations = ['0.200', '0.200', '0.200', '0.200', '0.200', '0.200']
+  points    = 6

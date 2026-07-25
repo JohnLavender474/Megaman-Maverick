@@ -1,0 +1,105 @@
+frame 0 total=16.000 roots=2
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+  audioMan [depth=1] 0.200
+frame 1 total=16.000 roots=2
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+  audioMan [depth=1] 0.200
+frame 2 total=16.000 roots=2
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+  audioMan [depth=1] 0.200
+frame 3 total=16.000 roots=2
+  screen.render [depth=1] 12.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+  audioMan [depth=1] 0.200
+frame 4 total=16.000 roots=2
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+  audioMan [depth=1] 0.200
+frame 5 total=16.000 roots=1
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+frame 6 total=16.000 roots=1
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+frame 7 total=16.000 roots=1
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+frame 8 total=20.000 roots=1
+  screen.render [depth=1] 12.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 4.000
+      cycle[1] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 2.000
+        preProcess [depth=4] 0.500
+frame 9 total=40.000 roots=2
+  screen.render [depth=1] 36.000
+    AnimationsSystem [depth=2] 1.000
+    WorldSystem [depth=2] 28.000
+      cycle[1] [depth=3] 14.000
+        preProcess [depth=4] 0.500
+          begin/continue contacts [depth=5] 0.250
+        postProcess [depth=4] 0.100
+      cycle[2] [depth=3] 14.000
+        preProcess [depth=4] 0.500
+  audioMan [depth=1] 0.200

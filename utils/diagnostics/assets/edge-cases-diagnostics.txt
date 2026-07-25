@@ -1,0 +1,14 @@
+some junk emitted before capture started
+  orphan.entry: 1.000ms
+=== Frame #0 (10.000ms) ===
+  alpha: 5.000ms
+
+  beta: 2.500ms
+this line is not an entry at all
+  gamma: not-a-number ms
+	tabIndented: 1.000ms
+=== Frame #7 (12.000ms) ===
+  alpha: 6.000ms
+    child: 3.000ms
+=== Frame #8 (50.000ms) ===
+=== Dropped 3 frames (writer could not keep up) ===

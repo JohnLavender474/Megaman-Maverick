@@ -1,0 +1,12 @@
+empty                      top=    1.0000 applied=False clipped=   0 total=    0 max=0.0000
+all zeros                  top=    1.0000 applied=False clipped=   0 total=   50 max=0.0000
+all equal                  top=    5.2500 applied=False clipped=   0 total=  100 max=5.0000
+single point               top=    7.3500 applied=False clipped=   0 total=    1 max=7.0000
+19 points (below min)      top=    2.0318 applied=False clipped=   0 total=   19 max=1.9351
+20 points, no outlier      top=    2.1000 applied=False clipped=   0 total=   20 max=2.0000
+1000 points, 100x spike    top=    1.1500 applied=True  clipped=   1 total= 1000 max=100.0000
+same, percentile 0         top=  105.0000 applied=False clipped=   0 total= 1000 max=100.0000
+same, percentile 50        top=    1.1500 applied=True  clipped=   1 total= 1000 max=100.0000
+with nan and inf           top=    2.1000 applied=False clipped=   0 total=   31 max=2.0000
+99.9% zeros                top=    5.2500 applied=False clipped=   0 total= 1000 max=5.0000
+two arrays                 top=   52.5000 applied=False clipped=   0 total=   30 max=50.0000

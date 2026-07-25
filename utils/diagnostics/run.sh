@@ -6,6 +6,9 @@
 #   ./run.sh path/to/file.txt         # explicit file
 #   ./run.sh --smooth 60              # wider smoothing window
 #   ./run.sh --output-dir /tmp/out    # custom output directory
+#   ./run.sh --frames 1150:1350       # zoom the x-axis into a frame window
+#   ./run.sh --no-clip                # let outlier spikes set the y-axis
+#   ./run.sh --clip-percentile 99.9   # tune the outlier clip (default 99.5)
 #   ./run.sh --help                   # show all options
 #
 # The venv is created on first run and reused on subsequent runs.

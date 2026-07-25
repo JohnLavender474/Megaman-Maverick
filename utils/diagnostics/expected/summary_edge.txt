@@ -1,0 +1,24 @@
+=== Session Overview ===
+  Frames analyzed : 3
+  Total session   : 0.1 s  (estimated at 60 fps)
+
+=== Total Frame Time ===
+  min    :    10.00 ms
+  mean   :    24.00 ms
+  p50    :    12.00 ms
+  p95    :    46.20 ms
+  p99    :    49.24 ms
+  max    :    50.00 ms
+
+=== Process Summary ===
+  alpha        mean    5.50 ms  p50    5.50 ms  p95    5.95 ms  p99    5.99 ms  avg%  22.9%
+    child      mean    3.00 ms  p50    3.00 ms  p95    3.00 ms  p99    3.00 ms  avg%  12.5%
+  beta         mean    2.50 ms  p50    2.50 ms  p95    2.50 ms  p99    2.50 ms  avg%  10.4%
+  tabIndented  mean    1.00 ms  p50    1.00 ms  p95    1.00 ms  p99    1.00 ms  avg%   4.2%
+
+=== Spike Frames (total > p99 = 49.24 ms) ===
+  1 spike frames  (33.3% of session)
+
+   Frame      Total  Top Contributor
+  ------  ---------  ------------------------------------------
+       8     50.00 ms  (no root data)

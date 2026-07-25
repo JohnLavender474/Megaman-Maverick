@@ -1,0 +1,16 @@
+alpha
+  frames    = [0, 7]
+  durations = ['5.000', '6.000']
+  points    = 2
+beta
+  frames    = [0]
+  durations = ['2.500']
+  points    = 1
+tabIndented
+  frames    = [0]
+  durations = ['1.000']
+  points    = 1
+alpha > child
+  frames    = [7]
+  durations = ['3.000']
+  points    = 1

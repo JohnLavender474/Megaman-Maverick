@@ -1,0 +1,5 @@
+Fixture for find_latest_diagnostics(). Contents are never read — that function
+only globs filenames and takes the lexicographic max, so only the name matters.
+
+This one is an older epoch than 1700000001000-diagnostics.txt, which is the file
+the test expects to win.

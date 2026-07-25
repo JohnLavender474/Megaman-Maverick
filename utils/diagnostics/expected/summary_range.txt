@@ -1,0 +1,26 @@
+=== Session Overview ===
+  Frames analyzed : 4
+  Total session   : 0.1 s  (estimated at 60 fps)
+  Frame range     : 2–5  (restricted by --frames)
+
+=== Total Frame Time ===
+  min    :    16.00 ms
+  mean   :    16.00 ms
+  p50    :    16.00 ms
+  p95    :    16.00 ms
+  p99    :    16.00 ms
+  max    :    16.00 ms
+
+=== Process Summary ===
+  screen.render                    mean   12.00 ms  p50   12.00 ms  p95   12.00 ms  p99   12.00 ms  avg%  75.0%
+    WorldSystem                    mean    4.00 ms  p50    4.00 ms  p95    4.00 ms  p99    4.00 ms  avg%  25.0%
+      cycle                        mean    4.00 ms  p50    4.00 ms  p95    4.00 ms  p99    4.00 ms  avg%  25.0%
+        preProcess                 mean    1.00 ms  p50    1.00 ms  p95    1.00 ms  p99    1.00 ms  avg%   6.2%
+          begin/continue contacts  mean    0.25 ms  p50    0.25 ms  p95    0.25 ms  p99    0.25 ms  avg%   1.6%
+        postProcess                mean    0.10 ms  p50    0.10 ms  p95    0.10 ms  p99    0.10 ms  avg%   0.6%
+    AnimationsSystem               mean    1.00 ms  p50    1.00 ms  p95    1.00 ms  p99    1.00 ms  avg%   6.2%
+  audioMan                         mean    0.20 ms  p50    0.20 ms  p95    0.20 ms  p99    0.20 ms  avg%   1.3%
+
+=== Spike Frames (total > p99 = 16.00 ms) ===
+  0 spike frames  (0.0% of session)
+

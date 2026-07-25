@@ -1,0 +1,105 @@
+=== Frame #0 (16.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+  audioMan: 0.200ms
+=== Frame #1 (16.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+  audioMan: 0.200ms
+=== Frame #2 (16.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+  audioMan: 0.200ms
+=== Frame #3 (16.000ms) ===
+  screen.render: 12.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+  audioMan: 0.200ms
+=== Frame #4 (16.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+  audioMan: 0.200ms
+=== Frame #5 (16.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+=== Frame #6 (16.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+=== Frame #7 (16.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+=== Frame #8 (20.000ms) ===
+  screen.render: 12.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 4.000ms
+      cycle[1]: 2.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 2.000ms
+        preProcess: 0.500ms
+=== Frame #9 (40.000ms) ===
+  screen.render: 36.000ms
+    AnimationsSystem: 1.000ms
+    WorldSystem: 28.000ms
+      cycle[1]: 14.000ms
+        preProcess: 0.500ms
+          begin/continue contacts: 0.250ms
+        postProcess: 0.100ms
+      cycle[2]: 14.000ms
+        preProcess: 0.500ms
+  audioMan: 0.200ms

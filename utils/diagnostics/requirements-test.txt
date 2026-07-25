@@ -1,0 +1,9 @@
+# The tool's own dependencies — single source of truth, so the test venv and the
+# run.sh venv (they are the same .venv) never drift apart.
+-r requirements.txt
+
+pytest>=8
+
+# Note: the summary goldens embed percentile values produced by numpy's default
+# ('linear') interpolation. Versions are intentionally left unpinned; if a future
+# numpy changes that default, expected/summary*.txt is what will fail.
