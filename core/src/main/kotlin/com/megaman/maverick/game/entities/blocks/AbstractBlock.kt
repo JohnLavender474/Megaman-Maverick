@@ -38,4 +38,6 @@ open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
             }
         }
     }
+
+    override fun getTag() = TAG
 }

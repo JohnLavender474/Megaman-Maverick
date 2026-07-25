@@ -24,4 +24,6 @@ class LadderTop(game: MegamanMaverickGame) : Block(game) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
     }
+
+    override fun getTag() = TAG
 }

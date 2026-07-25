@@ -10,6 +10,7 @@ import com.mega.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.extensions.isAny
+import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
@@ -47,7 +48,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         private const val FADE_DUR = 0.25f
         private const val MAX_BOUNCES = 4
         private const val SPAWN_TRAIL_DELAY = 0.1f
-        private val BLOCK_FILTERS = gdxArrayOf(AbstractBlock::class, LadderTop::class)
+        private val BLOCK_FILTERS = objectSetOf(AbstractBlock.TAG, LadderTop.TAG)
         private var region: TextureRegion? = null
     }
 
@@ -129,7 +130,6 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         rotation += ROTATIONS_PER_SEC * 360f * delta * movementScalar
-
         when {
             fading -> {
                 fadeTimer.update(delta)
@@ -139,9 +139,7 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
                 spawnTrailDelay.update(delta)
                 if (spawnTrailDelay.isFinished()) {
                     val position = body.getCenter()
-
                     val trajectory = GameObjectPools.fetch(Vector2::class).setZero()
-
                     val scythe = MegaEntityFactory.fetch(MoonScythe::class)!!
                     scythe.spawn(
                         props(
@@ -152,7 +150,6 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
                             ConstKeys.TRAJECTORY pairTo trajectory,
                         )
                     )
-
                     spawnTrailDelay.reset()
                 }
             }
@@ -169,8 +166,14 @@ class MoonScythe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
                 canMove && !fading -> body.physics.velocity.set(trajectory).scl(movementScalar)
                 else -> body.physics.velocity.setZero()
             }
+            val active = !fading
+            body.physics.collisionOn = active
+            body.forEachFixture { fixture -> fixture.setActive(active) }
         }
-        body.addBlockFilter filter@{ block, _ -> return@filter BLOCK_FILTERS.contains(block::class) }
+        body.addBlockFilter filter@{ block, _ ->
+            val tag = block.getTag()
+            return@filter BLOCK_FILTERS.contains(tag)
+        }
 
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>()
 
