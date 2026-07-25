@@ -3,6 +3,7 @@ package com.mega.game.engine.diagnostics
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotContain
 import java.io.File
 
@@ -274,6 +275,51 @@ class RuntimeDiagnosticsTest : DescribeSpec({
             // then — unclosed entry was never promoted to frameRoots, so it is absent
             val output = flush()
             output shouldNotContain "Unclosed"
+        }
+    }
+
+    // The analyzer at utils/diagnostics/analyze.py parses this file with these exact patterns,
+    // so a change to the formatting of a duration silently breaks every downstream chart.
+    describe("output format") {
+
+        it("formats durations with exactly three decimal places and a dot separator") {
+            // when
+            diagnostics.beginFrame()
+            diagnostics.beginEntry("WorldSystem"); diagnostics.endEntry()
+            diagnostics.endFrame()
+
+            // then
+            val output = flush()
+            val entryLine = output.lines().first { it.trim().startsWith("WorldSystem:") }
+            entryLine shouldMatch Regex("^ {2}WorldSystem: \\d+\\.\\d{3}ms$")
+        }
+
+        it("writes a frame header the analyzer's frame pattern matches") {
+            // when
+            diagnostics.beginFrame()
+            diagnostics.endFrame()
+
+            // then
+            val output = flush()
+            val header = output.lines().first { it.startsWith("===") }
+            header shouldMatch Regex("^=== Frame #\\d+ \\(\\d+\\.\\d{3}ms\\) ===$")
+        }
+
+        it("indents each nesting level by exactly two spaces") {
+            // when
+            diagnostics.beginFrame()
+            diagnostics.beginEntry("WorldSystem")
+            diagnostics.beginEntry("cycle[1]")
+            diagnostics.beginEntry("preProcess"); diagnostics.endEntry()
+            diagnostics.endEntry()
+            diagnostics.endEntry()
+            diagnostics.endFrame()
+
+            // then — the analyzer derives depth from leading spaces / 2
+            val output = flush()
+            output shouldContain "\n  WorldSystem: "
+            output shouldContain "\n    cycle[1]: "
+            output shouldContain "\n      preProcess: "
         }
     }
 
