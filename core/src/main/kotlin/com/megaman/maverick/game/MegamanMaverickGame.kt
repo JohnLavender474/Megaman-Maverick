@@ -404,25 +404,38 @@ class MegamanMaverickGame(
     }
 
     override fun render() {
+        diagnostics?.beginFrame()
+
+        diagnostics?.beginEntry("clearScreen")
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        diagnostics?.endEntry()
 
         val delta = Gdx.graphics.deltaTime
 
         setDebugText("FPS: ${Gdx.graphics.framesPerSecond}")
 
+        diagnostics?.beginEntry("runQueue")
         while (!runQueue.isEmpty) {
             val runnable = runQueue.removeLast()
             runnable.invoke()
         }
+        diagnostics?.endEntry()
 
         if (!finishedLoadingAssets) {
+            diagnostics?.beginEntry("assMan.update")
             val finished = assMan.update(ASSET_MILLIS)
+            diagnostics?.endEntry()
 
             if (finished) {
                 finishedLoadingAssets = true
+
+                diagnostics?.beginEntry("postCreate")
                 postCreate()
+                diagnostics?.endEntry()
             } else {
+                diagnostics?.beginEntry("loadingText")
+
                 val progress = (assMan.progress * 100).toInt()
                 loadingText.setText("${LOADING}: $progress%")
 
@@ -432,9 +445,11 @@ class MegamanMaverickGame(
                 batch.begin()
                 loadingText.draw(batch)
                 batch.end()
+
+                diagnostics?.endEntry()
             }
         } else {
-            diagnostics?.beginFrame()
+            diagnostics?.beginEntry("autoPerf")
 
             autoPerfGraceTimer.update(delta)
             if (autoPerfGraceTimer.isFinished()) {
@@ -464,32 +479,50 @@ class MegamanMaverickGame(
                 } else autoPerfTimer.reset()
             } else autoPerfTimer.reset()
 
+            diagnostics?.endEntry()
+
             diagnostics?.beginEntry("controllerPoller")
             controllerPoller.run()
             diagnostics?.endEntry()
 
+            diagnostics?.beginEntry("screenController")
             screenController?.update(delta)
+            diagnostics?.endEntry()
 
             val screen = currentScreen
             if (screen != null) {
+                // the game engine — and so every instrumented system — runs inside screen.render(),
+                // which is why the systems appear one level below this entry
+                diagnostics?.beginEntry("screen.render")
                 screen.render(delta)
+                diagnostics?.endEntry()
+
+                diagnostics?.beginEntry("screen.draw")
                 screen.draw(batch)
+                diagnostics?.endEntry()
+
                 if (screen is IShapeDebuggable) {
+                    diagnostics?.beginEntry("screen.drawShapes")
                     shapeRenderer.begin(ShapeType.Line)
                     screen.draw(shapeRenderer)
                     shapeRenderer.end()
+                    diagnostics?.endEntry()
                 }
             }
 
             if (params.allowScreenshots) {
                 val takeScreenshot = Gdx.input.isKeyJustPressed(SCREENSHOT_KEY)
                 if (takeScreenshot) {
+                    diagnostics?.beginEntry("screenshot")
+
                     val currentTime = LocalDateTime.now().toString()
                     val filename = "screenshot_${currentTime}.png"
 
                     val pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.width, Gdx.graphics.height)
                     PixmapIO.writePNG(Gdx.files.external(filename), pixmap, Deflater.DEFAULT_COMPRESSION, true)
                     pixmap.dispose()
+
+                    diagnostics?.endEntry()
                 }
             }
 
@@ -501,20 +534,26 @@ class MegamanMaverickGame(
             audioMan.update(delta)
             diagnostics?.endEntry()
 
+            diagnostics?.beginEntry("updatables")
             updatables.values().forEach { it.update(delta) }
-
-            diagnostics?.endFrame()
+            diagnostics?.endEntry()
         }
 
         if (params.debugText) {
+            diagnostics?.beginEntry("debugText")
+
             viewports.get(ConstKeys.UI).apply()
             batch.projectionMatrix = getUiCamera().combined
             batch.begin()
             debugText.draw(batch)
             batch.end()
+
+            diagnostics?.endEntry()
         }
 
         if (showNotification) {
+            diagnostics?.beginEntry("notification")
+
             notificationFont.drawingColor = notificationColor
 
             viewports.get(ConstKeys.UI).apply()
@@ -539,9 +578,15 @@ class MegamanMaverickGame(
 
             notificationTimer.update(delta)
             if (notificationTimer.isFinished()) showNotification = false
+
+            diagnostics?.endEntry()
         }
 
+        diagnostics?.beginEntry("reclaimPools")
         GameObjectPools.performNextReclaim()
+        diagnostics?.endEntry()
+
+        diagnostics?.endFrame()
     }
 
     override fun onEvent(event: Event) {
