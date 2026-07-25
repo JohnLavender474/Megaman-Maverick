@@ -51,6 +51,7 @@ object ConstVals {
     const val SHAKE_INTERVAL = 0.1f
     const val STANDARD_PATHFINDING_INTERVAL = 0.25f
     const val LOW_PERF_PATHFINDING_INTERVAL = 0.5f
+    val ALWAYS_UPDATE: () -> Boolean = { true }
 }
 
 object ConstKeys {
@@ -209,6 +210,7 @@ object ConstKeys {
     const val SELECTED = "selected"
     const val NONE = "none"
     const val DISTANCE = "distance"
+    const val UPDATE = "update"
     const val ITERATIONS = "iterations"
     const val HEURISTIC = "heuristic"
     const val DRAW = "draw"

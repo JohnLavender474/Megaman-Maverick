@@ -83,9 +83,8 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
             spawnProps.containsKey(ConstKeys.DIRECTION) -> {
                 var direction = spawnProps.get(ConstKeys.DIRECTION)
                 if (direction is String) direction = Direction.valueOf(direction.uppercase())
-                direction = direction as Direction
+                this.direction = direction as Direction
             }
-
             else -> direction = Direction.UP
         }
 
@@ -93,7 +92,9 @@ class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity,
         val motionDefinition = MotionComponent.MotionDefinition(
             motion = trajectory,
             function = { value, _ -> body.physics.velocity.set(value) },
-            onReset = { body.set(bounds) })
+            onReset = { body.set(bounds) },
+            doUpdate = bodyComponent.doUpdate
+        )
         putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
 
         hidden = false

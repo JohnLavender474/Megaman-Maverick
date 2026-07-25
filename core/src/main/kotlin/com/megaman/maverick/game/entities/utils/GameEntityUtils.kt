@@ -58,6 +58,27 @@ fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
     CullableOnUncontained({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
 
+/**
+ * Returns a predicate suitable for [com.mega.game.engine.world.body.BodyComponent.doUpdate] that is true only while the
+ * entity's body overlaps the game camera's rotated bounds expanded by [buffer] on every side.
+ *
+ * IMPORTANT: when this returns false the body and its fixtures are entirely absent from the world container for that
+ * frame (the [com.mega.game.engine.world.WorldSystem] rebuilds the container solely from bodies it processes), so a
+ * deactivated block will NOT collide with anything. [buffer] must therefore be large enough that no active dynamic body
+ * can be touching a deactivated block. Bodies that must freeze/thaw together (e.g. a rider and its support) should share
+ * the same [buffer].
+ */
+fun getUpdateWhenNearCameraPredicate(entity: IBodyEntity, buffer: Float): () -> Boolean {
+    val camera = (entity as MegaGameEntity).getGameCamera()
+    return pred@{
+        val window = GameObjectPools.fetch(GameRectangle::class)
+            .set(camera.getRotatedBounds())
+            .translate(-buffer, -buffer)
+            .translateSize(2f * buffer, 2f * buffer)
+        return@pred window.overlaps(entity.body.getBounds())
+    }
+}
+
 fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() -> MegaGameEntity, Properties>> {
     val childEntitySuppliers = Array<GamePair<() -> MegaGameEntity, Properties>>()
 

@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.entities.utils.getUpdateWhenNearCameraPredicate
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -77,6 +78,16 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private lateinit var spawnRoom: String
     private lateinit var regionKey: String
 
+    // Only process this block (and its inner block) in the world system while within this many tiles of the game
+    // camera. The outer body, the inner block, and any static blocks it rests on must share the same buffer so
+    // they freeze/thaw together; static room blocks should use a buffer >= this value.
+    //
+    // If the static floors that a gravity block can land on is using its own version of the "max update distance"
+    // mechanism, then it must use `buffer >= update distance + gravity block height`. This is to avoid the case
+    // where an activated gravity block is overlapping a deactivated static block, thereby letting the former slip
+    // through the latter without proper collision.
+    private var maxUpdateDistance: Float? = null
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -102,6 +113,14 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 .setCenter(center)
         body.set(bounds)
 
+        maxUpdateDistance = spawnProps.get("${ConstKeys.UPDATE}_${ConstKeys.DISTANCE}", Float::class)
+
+        val bodyComponent = getComponent(BodyComponent::class)!!
+        bodyComponent.doUpdate = when {
+            maxUpdateDistance != null -> getUpdateWhenNearCameraPredicate(this, maxUpdateDistance!! * ConstVals.PPM)
+            else -> ConstVals.ALWAYS_UPDATE
+        }
+
         innerBlock = MegaEntityFactory.fetch(Block::class)!!
         innerBlock!!.spawn(
             props(
@@ -109,6 +128,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 ConstKeys.DRAW pairTo false,
                 ConstKeys.BOUNDS pairTo bounds,
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                "${ConstKeys.UPDATE}_${ConstKeys.DISTANCE}" pairTo maxUpdateDistance,
                 ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
                     blockFilter(entity, block)
                 }
@@ -211,8 +231,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         return BodyComponentCreator.create(
             this,
             body,
-            BodyFixtureDef.of(FixtureType.BODY),
-            doUpdate = { true }
+            BodyFixtureDef.of(FixtureType.BODY)
         )
     }
 
