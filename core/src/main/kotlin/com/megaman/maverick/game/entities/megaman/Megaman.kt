@@ -66,6 +66,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getContactWater
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
+import kotlin.math.min
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
     IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
@@ -948,44 +949,26 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     fun addToHealthTanks(health: Int): Boolean {
         check(health >= 0) { "Cannot add negative amount of health" }
 
+        // fill the tanks that are closest to being full first so that health is topped off into a partially
+        // filled tank instead of being spread across tanks that are empty; ties are broken by enum order
+        val tanks = MegaHealthTank.entries
+            .filter { game.state.containsHealthTank(it) && game.state.getHealthTankValue(it) < ConstVals.MAX_HEALTH }
+            .sortedWith(compareByDescending<MegaHealthTank> { game.state.getHealthTankValue(it) }.thenBy { it.ordinal })
+
         var temp = health
-        MegaHealthTank.entries.any { healthTank ->
-            if (!game.state.containsHealthTank(healthTank)) return@any false
+        for (healthTank in tanks) {
+            if (temp <= 0) break
 
             val tankAmountToFill = ConstVals.MAX_HEALTH - game.state.getHealthTankValue(healthTank)
-            when {
-                // health tank is full so continue
-                tankAmountToFill <= 0 -> {
-                    GameLogger.debug(
-                        TAG, "addToHealthTanks(): healthTank=$healthTank: " +
-                            "tankAmountToFill=$tankAmountToFill is not greater than 0: " +
-                            "keep checking next health tanks"
-                    )
-                    return@any false
-                }
-                // health is less than amount needed to fill the health tank
-                tankAmountToFill >= temp -> {
-                    GameLogger.debug(
-                        TAG, "addToHealthTanks(): healthTank=$healthTank: " +
-                            "tankAmountToFill=$tankAmountToFill is greater than temp=$temp: " +
-                            "add to tank and exit loop for checking next health tanks"
-                    )
-                    game.state.addHealthToHealthTank(healthTank, temp)
-                    temp = 0
-                    return@any true
-                }
-                // health is greater than amount needed to fill the health tank
-                else -> {
-                    GameLogger.debug(
-                        TAG, "addToHealthTanks(): healthTank=$healthTank: " +
-                            "tankAmountToFill=$tankAmountToFill is less than temp=$temp: " +
-                            "subtract from temp and keep checking next health tanks"
-                    )
-                    temp -= tankAmountToFill
-                    game.state.addHealthToHealthTank(healthTank, tankAmountToFill)
-                    return@any false
-                }
-            }
+            val amountToAdd = min(tankAmountToFill, temp)
+
+            GameLogger.debug(
+                TAG, "addToHealthTanks(): healthTank=$healthTank: " +
+                    "tankAmountToFill=$tankAmountToFill, temp=$temp: add amountToAdd=$amountToAdd"
+            )
+
+            game.state.addHealthToHealthTank(healthTank, amountToAdd)
+            temp -= amountToAdd
         }
 
         // if any tanks were filled, then the temp health value should not be equal to the original health value
