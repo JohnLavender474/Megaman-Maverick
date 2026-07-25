@@ -723,7 +723,8 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
             if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JET ||
                 !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP)) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
-                weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET)
+                weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) ||
+                game.isCameraRotating()
             ) return false
 
             return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(
