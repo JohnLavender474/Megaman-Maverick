@@ -89,6 +89,11 @@ Then the charts:
 - `NN_<root>_stacked.png` — the same children stacked, for proportions at a
   glance.
 
+Check the raw capture for a trailing `=== Dropped N frames ===` line. The writer
+uses a bounded queue and drops frames rather than stalling the render thread or
+growing without limit, so a non-zero count means the capture has gaps (visible as
+jumps in frame numbering) — the timings that *were* recorded are still accurate.
+
 Two parsing details matter when interpreting: iteration suffixes are collapsed
 (`cycle[1]`, `cycle[2]`, … sum into one `cycle` series, so a rising `cycle` line
 can mean *more* fixed-step iterations rather than slower ones), and the charts
