@@ -12,6 +12,7 @@ import com.mega.game.engine.diagnostics.RuntimeDiagnostics
 import com.mega.game.engine.entities.IGameEntity
 import com.mega.game.engine.systems.GameSystem
 import com.mega.game.engine.world.body.BodyComponent
+import com.mega.game.engine.world.body.BodyType
 import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.body.IFixture
 import com.mega.game.engine.world.collisions.ICollisionHandler
@@ -232,6 +233,12 @@ class WorldSystem(
     }
 
     internal fun resolveCollisions(body: IBody, worldContainer: IWorldContainer) {
+        // Static bodies never move, so they never need to be resolved OUT of anything. Any static-vs-dynamic overlap is
+        // already handled from the dynamic body's side (dynamic bodies query the container, which includes static
+        // bodies), and static-vs-static is meaningless. Skipping statics here removes a broad-phase grid query per
+        // active static body every cycle -- a large saving in block-dense rooms.
+        if (body.type == BodyType.STATIC) return
+
         val bodyBounds = body.getBounds(out1)
         worldContainer.forEachBody(
             MathUtils.floor(bodyBounds.getX() / ppm),
