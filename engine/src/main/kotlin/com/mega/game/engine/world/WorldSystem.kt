@@ -84,6 +84,9 @@ class WorldSystem(
         }
     }
 
+    var iteration = 0
+        private set
+
     private val contactPool = ContactPool()
     private var priorContactSet = OrderedSet<Contact>()
     private var currentContactSet = OrderedSet<Contact>()
@@ -99,8 +102,8 @@ class WorldSystem(
 
         diagnostics?.beginEntry("WorldSystem")
 
+        iteration = 0
         accumulator += delta
-
         if (accumulator >= fixedStep) {
             val worldContainer = worldContainerSupplier()!!
 
@@ -116,16 +119,15 @@ class WorldSystem(
             diagnostics?.endEntry()
 
             val fixedStepScaled = fixedStep / fixedStepScalar
-            var iterations = 0
             while (accumulator >= fixedStep) {
                 accumulator -= fixedStepScaled
-                iterations++
+                iteration++
 
-                diagnostics?.beginEntry(cycleName(iterations))
+                diagnostics?.beginEntry(cycleName(iteration))
                 cycle(bodyArray, fixedStep, worldContainer)
                 diagnostics?.endEntry()
 
-                if (iterations >= maxIterations) {
+                if (iteration >= maxIterations) {
                     accumulator = 0f  // drop leftover time — physics lags, but no spiral
                     break
                 }

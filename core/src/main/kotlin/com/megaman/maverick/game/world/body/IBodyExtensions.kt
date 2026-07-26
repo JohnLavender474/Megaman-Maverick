@@ -19,6 +19,11 @@ fun IBody.defaultDoUpdate(): Boolean {
     val game = getEntity().game
     if (getEntity() !is Megaman && game.isCameraRotating()) return false
     return when (type) {
+        // NOTE: an ABSTRACT body that can be spawned OUTSIDE the camera must have its velocity set in
+        // `onSpawn`, not only in `body.preProcess`. The `preProcess` function runs only for bodies the
+        // world system actually processes, which is exactly what this predicate decides, so a body that
+        // starts off-camera at zero velocity can never assign itself one: it stays frozen at its spawn
+        // point until it is culled. See `Asteroid.onSpawn` for the fix pattern.
         BodyType.ABSTRACT -> overlapsGameCam() || !physics.velocity.isZero
         else -> true
     }

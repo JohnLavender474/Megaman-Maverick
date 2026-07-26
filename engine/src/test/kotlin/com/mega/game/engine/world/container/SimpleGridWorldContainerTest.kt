@@ -539,6 +539,46 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             visited shouldContain fresh
         }
 
+        it("clear should drop cells rather than retain them, so occupancy tracks live contents") {
+            // given - a body far from the origin, as the world system sees once the camera has moved on
+            grid.addBody(Body(BodyType.DYNAMIC, 1000f, 1000f, 10f, 10f))
+            grid.getOccupiedBodyCellCount() shouldBe 4
+
+            // when - cleared and rebuilt somewhere else entirely, cycle after cycle
+            repeat(20) { i ->
+                grid.clear()
+                grid.addBody(Body(BodyType.DYNAMIC, i * 100f, i * 100f, 10f, 10f))
+            }
+
+            // then - occupancy reflects only what is currently in the grid. retaining emptied entries
+            // instead would let this grow without bound as the player travels, which is what made
+            // `clear` and `copy` get slower the further into a level you were
+            grid.getOccupiedBodyCellCount() shouldBe 4
+        }
+
+        it("clear should recycle cells so rebuilding does not reallocate them") {
+            // given - a populated grid whose cells are about to be released
+            grid.addBody(Body(BodyType.DYNAMIC, 0f, 0f, 10f, 10f))
+            grid.addFixture(Fixture(mockk<Body>(), "F1", GameRectangle(0f, 0f, 10f, 10f), attachedToBody = false))
+
+            val bodyCells = grid.getOccupiedBodyCellCount()
+            val fixtureCells = grid.getOccupiedFixtureCellCount()
+            grid.getPooledBodyCellCount() shouldBe 0
+            grid.getPooledFixtureCellCount() shouldBe 0
+
+            // when
+            grid.clear()
+
+            // then - every cell is parked for reuse rather than left to be collected
+            grid.getPooledBodyCellCount() shouldBe bodyCells
+            grid.getPooledFixtureCellCount() shouldBe fixtureCells
+
+            // and - refilling draws them back out of the pool instead of allocating
+            grid.addBody(Body(BodyType.DYNAMIC, 0f, 0f, 10f, 10f))
+            grid.getPooledBodyCellCount() shouldBe 0
+            grid.getOccupiedBodyCellCount() shouldBe bodyCells
+        }
+
         it("cells should collapse duplicate adds") {
             // given
             val body = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)

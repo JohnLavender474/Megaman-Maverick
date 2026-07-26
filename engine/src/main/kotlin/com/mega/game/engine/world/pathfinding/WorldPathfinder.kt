@@ -18,23 +18,22 @@ class WorldPathfinder(
     private val worldHeight: Int,
     private val allowDiagonal: Boolean,
     private val allowOutOfWorldBounds: Boolean,
-    private val filter: ((IntPair, IWorldContainer?) -> Boolean)?,
+    private val filter: ((Int, Int, IWorldContainer?) -> Boolean)?,
     private val heuristic: IHeuristic,
     private val maxIterations: Int = DEFAULT_MAX_ITERATIONS,
     private val maxDistance: Int = DEFAULT_MAX_DISTANCE,
     private val returnBestPathOnFailure: Boolean = DEFAULT_RETURN_BEST_PATH_ON_FAILURE
 ) : IPathfinder {
 
-    private fun outOfWorldBounds(coordinate: IntPair) =
-        coordinate.x < 0 || coordinate.y < 0 || coordinate.x >= worldWidth || coordinate.y >= worldHeight
+    private fun outOfWorldBounds(x: Int, y: Int) = x < 0 || y < 0 || x >= worldWidth || y >= worldHeight
 
     override fun call(): PathfinderResult {
         val pathfinder = Pathfinder(
             start,
             target,
-            {
-                if (!allowOutOfWorldBounds && outOfWorldBounds(it)) false
-                else if (filter?.invoke(it, worldContainer) == false) false
+            { x, y ->
+                if (!allowOutOfWorldBounds && outOfWorldBounds(x, y)) false
+                else if (filter?.invoke(x, y, worldContainer) == false) false
                 else true
             },
             allowDiagonal,

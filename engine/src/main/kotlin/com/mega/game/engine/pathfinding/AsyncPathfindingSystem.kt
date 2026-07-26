@@ -33,6 +33,8 @@ class AsyncPathfindingSystem(
     private val timeoutMillis
         get() = timeoutParams.timeoutUnit.toMillis(timeoutParams.timeout)
 
+    override fun shouldPerformPathfinding(component: PathfindingComponent) = !futureMap.containsKey(component)
+
     override fun handleEntries(entries: OrderedMap<PathfindingComponent, IPathfinder>) {
         diagnostics?.beginEntry("AsyncPathfindingSystem.handleEntries")
 

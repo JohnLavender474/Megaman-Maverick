@@ -231,22 +231,22 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             startCoordinateSupplier = { body.getCenter(Vector2()).toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getCenter(Vector2()).toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ coordinate, container ->
+            filter = filter@{ x, y, container ->
                 val rect1 = GameRectangle()
                 val rect2 = GameRectangle()
                 val coordBounds = rect1.set(
-                    coordinate.x * ConstVals.PPM.toFloat(),
-                    coordinate.y * ConstVals.PPM.toFloat(),
+                    x * ConstVals.PPM.toFloat(),
+                    y * ConstVals.PPM.toFloat(),
                     ConstVals.PPM.toFloat(),
                     ConstVals.PPM.toFloat(),
                 )
                 // returns false if stopped early (blocking body found) → not passable
-                return@filter container?.forEachBody(coordinate.x, coordinate.y) { otherBody, _ ->
+                return@filter container?.forEachBody(x, y) { otherBody, _ ->
                     !(otherBody.getEntity().getType() == EntityType.BLOCK &&
                         otherBody.getBounds(rect2).overlaps(coordBounds))
                 } ?: true
             },
-            properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
+            properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic())
         )
 
         val pathfindingComponent = PathfindingComponent(params, {

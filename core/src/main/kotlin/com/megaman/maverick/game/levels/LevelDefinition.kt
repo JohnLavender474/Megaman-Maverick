@@ -107,7 +107,7 @@ enum class LevelDefinition(
     ),
     TEST_1(
         type = LevelType.TEST_LEVEL,
-        tmxMapSource = "Test8.tmx",
+        tmxMapSource = "Test1.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),

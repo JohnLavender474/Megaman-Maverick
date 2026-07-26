@@ -2,16 +2,15 @@ package com.mega.game.engine.pathfinding
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.badlogic.gdx.utils.LongMap
 import com.mega.game.engine.common.objects.IntPair
-import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import java.util.*
 
 class Pathfinder(
     private val startCoordinate: IntPair,
     private val targetCoordinate: IntPair,
-    private val filter: (IntPair) -> Boolean,
+    private val filter: (Int, Int) -> Boolean,
     private val allowDiagonal: Boolean,
     private val heuristic: IHeuristic,
     private val maxIterations: Int = DEFAULT_MAX_ITERATIONS,
@@ -21,31 +20,23 @@ class Pathfinder(
 
     companion object {
         const val TAG = "Pathfinder"
+
         const val DEFAULT_MAX_ITERATIONS = 1000
         const val DEFAULT_MAX_DISTANCE = Integer.MAX_VALUE
         const val DEFAULT_RETURN_BEST_PATH_ON_FAILURE = false
+
+        private val NEIGHBOR_DX = intArrayOf(-1, 1, 0, 0, -1, 1, -1, 1)
+        private val NEIGHBOR_DY = intArrayOf(0, 0, -1, 1, -1, 1, 1, -1)
+        private const val ORTHOGONAL_NEIGHBORS = 4
     }
 
-    internal class Node(val coordinate: IntPair) : Comparable<Node> {
+    internal class Node(val x: Int, val y: Int) : Comparable<Node> {
 
-        val x: Int
-            get() = coordinate.x
-        val y: Int
-            get() = coordinate.y
         var distance = 0
         var previous: Node? = null
         var discovered = false
 
         override fun compareTo(other: Node) = distance.compareTo(other.distance)
-
-        override fun hashCode(): Int {
-            var hash = 49
-            hash = hash * 31 + coordinate.x
-            hash = hash * 31 + coordinate.y
-            return hash
-        }
-
-        override fun equals(other: Any?) = other is Node && other.coordinate == coordinate
 
         override fun toString() =
             "Node{x=$x,y=$y,distance=$distance,discovered=$discovered,previous={${previous?.let { "${it.x},${it.y}" }}}"
@@ -54,65 +45,70 @@ class Pathfinder(
     private val out1 = Vector2()
     private val out2 = Vector2()
 
+    private fun key(x: Int, y: Int) = (x.toLong() shl 32) or (y.toLong() and 0xFFFFFFFFL)
+
     override fun call(): PathfinderResult {
-        val map = HashMap<IntPair, Node>()
+        val map = LongMap<Node>()
 
         if (startCoordinate == targetCoordinate ||
             (!returnBestPathOnFailure && startCoordinate.toVector2(out1)
                 .dst(targetCoordinate.toVector2(out2)) > maxDistance)
         ) return PathfinderResult(null, true)
 
-        val startNode = Node(startCoordinate)
-        map[startCoordinate] = startNode
+        val startNode = Node(startCoordinate.x, startCoordinate.y)
+        map.put(key(startNode.x, startNode.y), startNode)
 
         val open = PriorityQueue<Node>()
         open.add(startNode)
 
         var iterations = 0
+
         var bestNode: Node? = null
+        var bestNodeCost = 0
+
+        val neighborCount = if (allowDiagonal) NEIGHBOR_DX.size else ORTHOGONAL_NEIGHBORS
 
         while (open.isNotEmpty()) {
+            val currentNode = open.poll()
+            if (currentNode.discovered) continue
+
             if (iterations >= maxIterations) break
             iterations++
 
-            val currentNode = open.poll()
             currentNode.discovered = true
-
             if (currentNode.distance > maxDistance) break
 
-            if (bestNode == null || heuristic.calculate(
-                    currentNode.x,
-                    currentNode.y,
-                    targetCoordinate.x,
-                    targetCoordinate.y
-                ) < heuristic.calculate(bestNode.x, bestNode.y, targetCoordinate.x, targetCoordinate.y)
-            ) bestNode = currentNode
+            val currentCost = heuristic.calculate(currentNode.x, currentNode.y, targetCoordinate.x, targetCoordinate.y)
+            if (bestNode == null || currentCost < bestNodeCost) {
+                bestNode = currentNode
+                bestNodeCost = currentCost
+            }
 
-            if (currentNode.coordinate == targetCoordinate) {
+            if (currentNode.x == targetCoordinate.x && currentNode.y == targetCoordinate.y) {
                 val path = buildPath(currentNode)
                 return PathfinderResult(path, false)
             }
 
-            val neighborCoordinates = getNeighborCoordinates(currentNode.coordinate)
-            neighborCoordinates.forEach { neighborCoordinate ->
-                if (!filter.invoke(neighborCoordinate)) return@forEach
+            for (i in 0 until neighborCount) {
+                val neighborX = currentNode.x + NEIGHBOR_DX[i]
+                val neighborY = currentNode.y + NEIGHBOR_DY[i]
 
-                var neighbor = map[neighborCoordinate]
-                if (neighbor?.discovered == true) return@forEach
+                if (!filter.invoke(neighborX, neighborY)) continue
+
+                val neighborKey = key(neighborX, neighborY)
+                var neighbor = map.get(neighborKey)
+                if (neighbor?.discovered == true) continue
 
                 val totalDistance = currentNode.distance + heuristic.calculate(
                     currentNode.x,
                     currentNode.y,
-                    neighborCoordinate.x,
-                    neighborCoordinate.y
+                    neighborX,
+                    neighborY
                 )
 
-                // If the adjacent node has not been discovered or the total distance from the start node to the
-                // adjacent node is less than the adjacent node's distance from the start node, update the adjacent
-                // node's distance from the start node and previous node accordingly
                 if (neighbor == null) {
-                    neighbor = Node(neighborCoordinate)
-                    map[neighborCoordinate] = neighbor
+                    neighbor = Node(neighborX, neighborY)
+                    map.put(neighborKey, neighbor)
 
                     neighbor.distance = totalDistance
                     neighbor.previous = currentNode
@@ -122,7 +118,6 @@ class Pathfinder(
                     neighbor.distance = totalDistance
                     neighbor.previous = currentNode
 
-                    open.remove(neighbor)
                     open.add(neighbor)
                 }
             }
@@ -138,30 +133,10 @@ class Pathfinder(
         val path = Array<IntPair>()
         var currentNode: Node? = node
         while (currentNode != null) {
-            path.add(currentNode.coordinate)
+            path.add(IntPair(currentNode.x, currentNode.y))
             currentNode = currentNode.previous
         }
         path.reverse()
         return path
-    }
-
-    private fun getNeighborCoordinates(coordinate: IntPair): Array<IntPair> {
-        val (x, y) = coordinate
-        return if (allowDiagonal) {
-            gdxArrayOf(
-                x - 1 pairTo y,
-                x + 1 pairTo y,
-                x pairTo y - 1,
-                x pairTo y + 1,
-                x - 1 pairTo y - 1,
-                x + 1 pairTo y + 1,
-                x - 1 pairTo y + 1,
-                x + 1 pairTo y - 1
-            )
-        } else {
-            gdxArrayOf(
-                x - 1 pairTo y, x + 1 pairTo y, x pairTo y - 1, x pairTo y + 1
-            )
-        }
     }
 }

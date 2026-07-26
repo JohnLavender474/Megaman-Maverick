@@ -5,11 +5,10 @@ import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
 import com.mega.game.engine.pathfinding.heuristics.IHeuristic
 import com.mega.game.engine.world.body.IBody
 import com.mega.game.engine.world.container.IWorldContainer
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.world.body.getEntity
 
-class DynamicBodyHeuristic(private val game: MegamanMaverickGame) : IHeuristic {
+class DynamicBodyHeuristic : IHeuristic {
 
     companion object {
         private const val CONTAINS_BLOCK_SCALAR = 5
@@ -21,15 +20,17 @@ class DynamicBodyHeuristic(private val game: MegamanMaverickGame) : IHeuristic {
     private val reusableBodySet = MutableOrderedSet<IBody>()
 
     private fun containsBlock(x: Int, y: Int): Boolean {
-        worldContainer!!.getBodies(x, y, reusableBodySet)
+        val container = worldContainer ?: return false
+        container.getBodies(x, y, reusableBodySet)
 
+        var containsBlock = false
         for (body in reusableBodySet) if (body.getEntity().getType() == EntityType.BLOCK) {
-            reusableBodySet.clear()
-            return true
+            containsBlock = true
+            break
         }
         reusableBodySet.clear()
 
-        return false
+        return containsBlock
     }
 
     override fun calculate(x1: Int, y1: Int, x2: Int, y2: Int): Int {

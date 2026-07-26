@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.animations.AnimationsComponentBuilder
 import com.mega.game.engine.animations.AnimatorBuilder
 import com.mega.game.engine.common.GameLogger
@@ -251,9 +250,9 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { megaman.body.getPositionPoint(Position.BOTTOM_CENTER).toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ coordinate, container ->
+            filter = filter@{ x, y, container ->
                 val bodySet = MutableOrderedSet<IBody>()
-                container?.getBodies(coordinate.x, coordinate.y, bodySet)
+                container?.getBodies(x, y, bodySet)
 
                 var passable = true
                 for (otherBody in bodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
@@ -262,7 +261,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 }
                 return@filter passable
             },
-            properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic(game))
+            properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic())
         )
         val pathfindingComponent = PathfindingComponent(
             params,

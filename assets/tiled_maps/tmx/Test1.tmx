@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="2000" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="620">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="2000" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="640">
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1025" source="../tsx/Gravity Man Stage.tsx"/>
  <tileset firstgid="4609" source="../tsx/MM3Wily1.tsx"/>
@@ -98,6 +98,7 @@
   <object id="572" name="room32" x="47040" y="64" width="800" height="448"/>
   <object id="590" name="room33" x="47872" y="64" width="832" height="512"/>
   <object id="608" name="room34" x="48768" y="64" width="832" height="512"/>
+  <object id="621" name="room35" x="49696" y="64" width="832" height="512"/>
  </objectgroup>
  <objectgroup id="2" name="blocks">
   <object id="1" x="0" y="64" width="32" height="416"/>
@@ -515,6 +516,18 @@
   <object id="615" name="WoodCrate" x="49024" y="256" width="64" height="64"/>
   <object id="616" name="WoodCrate" x="48960" y="256" width="64" height="64"/>
   <object id="618" name="WoodCrate" x="49216" y="320" width="64" height="64"/>
+  <object id="622" x="49696" y="64" width="64" height="512"/>
+  <object id="623" x="49760" y="416" width="160" height="160"/>
+  <object id="624" x="49920" y="480" width="544" height="96"/>
+  <object id="625" x="50464" y="64" width="64" height="512"/>
+  <object id="626" x="49760" y="64" width="704" height="32"/>
+  <object id="627" x="49856" y="288" width="128" height="32"/>
+  <object id="628" x="50048" y="320" width="64" height="96"/>
+  <object id="629" x="50112" y="352" width="96" height="32"/>
+  <object id="630" x="50144" y="192" width="256" height="32"/>
+  <object id="633" x="50304" y="288" width="96" height="192"/>
+  <object id="634" x="49760" y="96" width="192" height="96"/>
+  <object id="635" x="50048" y="96" width="32" height="128"/>
  </objectgroup>
  <objectgroup id="10" name="children">
   <object id="97" name="GravityChange" x="11936" y="96" width="384" height="320">
@@ -1164,8 +1177,12 @@
   <object id="602" name="DarkSerket" x="48544" y="288" width="32" height="32"/>
   <object id="605" name="Cokeyro" x="47376" y="288" width="32" height="32"/>
   <object id="606" name="Cokeyro" x="47616" y="416" width="32" height="32"/>
+  <object id="636" name="FloatingCanHole" x="50400" y="128" width="32" height="32"/>
+  <object id="637" name="FloatingCanHole" x="50192" y="272" width="32" height="32"/>
+  <object id="638" name="Bat" x="50240" y="96" width="32" height="32"/>
+  <object id="639" name="Bat" x="50048" y="224" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="player">
-  <object id="619" name="0" x="48912" y="288" width="32" height="32"/>
+  <object id="620" name="0" x="49792" y="384" width="32" height="32"/>
  </objectgroup>
 </map>
