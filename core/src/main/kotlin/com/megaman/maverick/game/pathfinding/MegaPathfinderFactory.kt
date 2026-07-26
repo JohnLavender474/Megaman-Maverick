@@ -24,16 +24,12 @@ class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderF
     private fun getWorldContainerSnapshot(): IWorldContainer? {
         val frameId = Gdx.graphics.frameId
         val source = game.getWorldContainer()
-
         if (frameId != snapshotFrameId || source !== snapshotSource) {
             val container = game.getWorldContainer()
-
-            snapshot = game.getWorldContainer()?.copy()
+            snapshot = container?.copy()
             snapshotSource = container
-
             snapshotFrameId = frameId
         }
-
         return snapshot
     }
 
