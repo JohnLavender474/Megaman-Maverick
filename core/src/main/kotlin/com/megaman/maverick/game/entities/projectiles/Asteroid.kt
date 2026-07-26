@@ -53,7 +53,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         const val BLUE = "Blue"
 
         private const val BLINK_DUR = 0.01f
-        private const val CULL_TIME = 5f
+        private const val CULL_TIME = 2.5f
         private const val DEFAULT_MIN_Y = -10f * ConstVals.PPM
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
@@ -71,15 +71,25 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         private const val MAX_ASTEROIDS = 15
 
         private fun cullExcessAsteroids() {
+            var oldestLive: Asteroid? = null
+
             val set = MegaGameEntities.getOfTag(TAG)
             val iter = set.iterator()
             while (iter.hasNext) {
                 val asteroid = iter.next() as Asteroid
-                if (!asteroid.dead) {
-                    asteroid.explodeAndDie()
-                    break
+                if (asteroid.dead) continue
+
+                // nobody can see this one, so take it out silently: no explosion entity, no pop
+                if (!asteroid.body.overlapsGameCam()) {
+                    asteroid.destroy()
+                    return
                 }
+
+                if (oldestLive == null) oldestLive = asteroid
             }
+
+            // every live asteroid is on screen, so fall back to the oldest and let it explode
+            oldestLive?.explodeAndDie()
         }
 
         private val regions = ObjectMap<String, TextureRegion>()
@@ -124,6 +134,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
 
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
         this.impulse.set(impulse)
+        body.physics.velocity.set(impulse)
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, REGULAR, String::class)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
