@@ -21,6 +21,7 @@ import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameLine
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.shapes.ShapeUtils
 import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamager
@@ -56,6 +57,7 @@ import com.megaman.maverick.game.entities.explosions.TubeBeamExplosion
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -97,7 +99,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private val actualLine = GameLine()
     private val actualClampEnd = Vector2()
 
-    private val contacts = PriorityQueue<GamePair<Vector2, IFixture>> { p1, p2 ->
+    private val contacts = PriorityQueue<GamePair<Vector2, IFixture?>> { p1, p2 ->
         val (origin, _) = rawLine.getWorldPoints()
         val d1 = p1.first.dst2(origin)
         val d2 = p2.first.dst2(origin)
@@ -105,6 +107,12 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private val ignoreIds = ObjectSet<Int>()
+
+    // Blocks the beam must stop at, supplied via OBSTACLE-prefixed spawn props. This mirrors the
+    // manual obstacle handling in the Laser class and acts as a reliable fallback when physics
+    // contact detection intermittently fails to clamp the beam.
+    private val obstacles = Array<GameRectangle>()
+    private val tempVec2Set = ObjectSet<Vector2>()
 
     private var spawnRoom: String? = null
 
@@ -160,6 +168,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             if (key.toString().contains(ConstKeys.IGNORE)) {
                 val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)
                 ignoreIds.add(id)
+            } else if (key.toString().contains(ConstKeys.OBSTACLE)) {
+                val obstacle = (value as RectangleMapObject).getShape() as GameRectangle
+                obstacles.add(obstacle)
             }
         }
 
@@ -184,6 +195,9 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         super.onDestroy()
 
         ignoreIds.clear()
+
+        obstacles.forEach { GameObjectPools.free(it) }
+        obstacles.clear()
 
         rawLine.reset()
         actualLine.reset()
@@ -297,6 +311,13 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         body.postProcess.put(ConstKeys.DEFAULT) {
             val (lineStart, lineEnd) = rawLine.getWorldPoints()
             actualLine.setFirstLocalPoint(lineStart)
+
+            obstacles.forEach { obstacle ->
+                if (ShapeUtils.intersectRectangleAndLine(obstacle, rawLine, tempVec2Set))
+                    tempVec2Set.forEach { contacts.add(it pairTo null) }
+                tempVec2Set.clear()
+            }
+
             actualClampEnd.set(if (!contacts.isEmpty()) contacts.peek().first else lineEnd)
             updateDamager()
         }

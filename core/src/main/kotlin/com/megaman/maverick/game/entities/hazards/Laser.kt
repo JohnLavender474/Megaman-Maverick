@@ -571,9 +571,10 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             // that aren't laser-colliding physics blocks; they only reach the first laser (from the
             // beamer's spawn props), so without copying them forward a reflected laser would pass
             // straight through them. Owned copies are used so each laser frees its own rectangles in
-            // onDestroy without double-freeing shared references.
+            // `onDestroy` without double-freeing shared references.
             obstacles.forEach { obstacle ->
-                reflectingLaser!!.obstacles.add(GameObjectPools.fetch(GameRectangle::class, false).set(obstacle))
+                val obstacle = GameObjectPools.fetch(GameRectangle::class, false).set(obstacle)
+                reflectingLaser!!.obstacles.add(obstacle)
             }
         }
 
