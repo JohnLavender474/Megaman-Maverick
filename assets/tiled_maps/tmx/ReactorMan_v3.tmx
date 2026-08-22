@@ -949,6 +949,7 @@
     <property name="ignore" type="object" value="235"/>
     <property name="spawn_room" value="room8"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="251"/>
    </properties>
   </object>
   <object id="239" name="TubeBeamerV2" x="6496" y="3712" width="32" height="32">
@@ -957,6 +958,7 @@
     <property name="ignore" type="object" value="236"/>
     <property name="spawn_room" value="room8"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="237"/>
    </properties>
   </object>
   <object id="264" name="AcidGoopSupplier" x="6680" y="3032" width="16" height="8"/>
@@ -967,6 +969,7 @@
     <property name="ignore" type="object" value="258"/>
     <property name="spawn_room" value="room9"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="257"/>
    </properties>
   </object>
   <object id="304" name="TubeBeamerV2" x="6496" y="3136" width="32" height="32">
@@ -975,6 +978,7 @@
     <property name="ignore" type="object" value="260"/>
     <property name="spawn_room" value="room9"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="245"/>
    </properties>
   </object>
   <object id="318" name="TubeBeamerV2" x="7712" y="2880" width="32" height="32">
@@ -983,6 +987,7 @@
     <property name="ignore" type="object" value="287"/>
     <property name="spawn_room" value="room10"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="289"/>
    </properties>
   </object>
   <object id="320" name="TubeBeamerV2" x="7392" y="2720" width="32" height="32">
@@ -991,6 +996,7 @@
     <property name="ignore" type="object" value="282"/>
     <property name="spawn_room" value="room10"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="270"/>
    </properties>
   </object>
   <object id="321" name="TubeBeamerV2" x="7904" y="2880" width="32" height="32">
@@ -999,6 +1005,7 @@
     <property name="ignore" type="object" value="289"/>
     <property name="spawn_room" value="room10"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="287"/>
    </properties>
   </object>
   <object id="322" name="TubeBeamerV2" x="8032" y="2752" width="32" height="32">
@@ -1007,6 +1014,7 @@
     <property name="ignore" type="object" value="292"/>
     <property name="spawn_room" value="room10"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="313"/>
    </properties>
   </object>
   <object id="336" name="DrippingToxicGoop" x="6656" y="3224" width="96" height="40"/>
@@ -1017,6 +1025,7 @@
     <property name="ignore" type="object" value="284"/>
     <property name="spawn_room" value="room10"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="287"/>
    </properties>
   </object>
   <object id="538" name="AcidGoopSupplier" x="9208" y="3512" width="16" height="8"/>
@@ -1031,6 +1040,7 @@
     <property name="ignore" type="object" value="511"/>
     <property name="spawn_room" value="room11"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="500"/>
    </properties>
   </object>
   <object id="546" name="TubeBeamerV2" x="8192" y="3328" width="32" height="32">
@@ -1039,6 +1049,7 @@
     <property name="ignore" type="object" value="509"/>
     <property name="spawn_room" value="room11"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="501"/>
    </properties>
   </object>
   <object id="547" name="TubeBeamerV2" x="8032" y="3488" width="32" height="32">
@@ -1047,6 +1058,7 @@
     <property name="ignore" type="object" value="503"/>
     <property name="spawn_room" value="room11"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="502"/>
    </properties>
   </object>
   <object id="548" name="TubeBeamerV2" x="8064" y="3552" width="32" height="32">
@@ -1055,6 +1067,7 @@
     <property name="ignore" type="object" value="505"/>
     <property name="spawn_room" value="room11"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="497"/>
    </properties>
   </object>
   <object id="549" name="TubeBeamerV2" x="8160" y="3648" width="32" height="32">
@@ -1063,6 +1076,7 @@
     <property name="ignore" type="object" value="508"/>
     <property name="spawn_room" value="room11"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="506"/>
    </properties>
   </object>
   <object id="552" name="TubeBeamerV2" x="8864" y="3520" width="32" height="32">
@@ -1071,6 +1085,7 @@
     <property name="ignore" type="object" value="524"/>
     <property name="spawn_room" value="room12"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="518"/>
    </properties>
   </object>
   <object id="553" name="TubeBeamerV2" x="8672" y="3488" width="32" height="32">
@@ -1079,6 +1094,7 @@
     <property name="ignore" type="object" value="512"/>
     <property name="spawn_room" value="room12"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="516"/>
    </properties>
   </object>
   <object id="554" name="TubeBeamerV2" x="8640" y="3488" width="32" height="32">
@@ -1087,6 +1103,7 @@
     <property name="ignore" type="object" value="512"/>
     <property name="spawn_room" value="room12"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="516"/>
    </properties>
   </object>
   <object id="555" name="TubeBeamerV2" x="8960" y="3648" width="32" height="32">
@@ -1095,6 +1112,7 @@
     <property name="ignore" type="object" value="519"/>
     <property name="spawn_room" value="room12"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="517"/>
    </properties>
   </object>
   <object id="590" name="TubeBeamerV2" x="10848" y="3136" width="32" height="32">
@@ -1103,6 +1121,7 @@
     <property name="ignore" type="object" value="588"/>
     <property name="spawn_room" value="room13"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="602"/>
    </properties>
   </object>
   <object id="669" name="TubeBeamerV2" x="10624" y="2912" width="32" height="32">
@@ -1111,6 +1130,7 @@
     <property name="ignore" type="object" value="662"/>
     <property name="spawn_room" value="room13"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="563"/>
    </properties>
   </object>
   <object id="671" name="TubeBeamerV2" x="10848" y="2656" width="32" height="32">
@@ -1119,6 +1139,7 @@
     <property name="ignore" type="object" value="664"/>
     <property name="spawn_room" value="room13"/>
     <property name="spawn_type" value="spawn_room"/>
+    <property name="obstacle1" type="object" value="575"/>
    </properties>
   </object>
   <object id="702" name="AcidGoopSupplier" x="6296" y="4696" width="16" height="8"/>
