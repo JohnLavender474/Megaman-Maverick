@@ -731,12 +731,26 @@
   <object id="234" x="6432" y="3632" width="32" height="240"/>
   <object id="235" x="6464" y="3840" width="96" height="32"/>
   <object id="236" x="6464" y="3712" width="64" height="32"/>
-  <object id="237" x="6624" y="3712" width="256" height="32"/>
+  <object id="237" x="6624" y="3712" width="256" height="32">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="cull_room" value="room8"/>
+    <property name="spawn_room" value="room8"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
   <object id="244" x="6528" y="3584" width="256" height="32"/>
   <object id="245" x="6368" y="3296" width="448" height="128"/>
   <object id="248" x="6432" y="3424" width="96" height="64"/>
   <object id="249" x="6784" y="3520" width="96" height="192"/>
-  <object id="251" x="6688" y="3840" width="96" height="64"/>
+  <object id="251" x="6688" y="3840" width="96" height="64">
+   <properties>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="cull_room" value="room8"/>
+    <property name="spawn_room" value="room8"/>
+    <property name="spawn_type" value="spawn_room"/>
+   </properties>
+  </object>
   <object id="253" x="6848" y="2976" width="96" height="96"/>
   <object id="254" x="6816" y="3264" width="32" height="160"/>
   <object id="255" x="6752" y="3168" width="64" height="128"/>
