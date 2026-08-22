@@ -566,9 +566,19 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
                     "${ConstKeys.LIGHT}_${ConstKeys.KEYS}" pairTo lightSourceKeyString
                 )
             )
+
+            // Propagate obstacles to the reflected laser. Obstacles are blocks the beam must stop at
+            // that aren't laser-colliding physics blocks; they only reach the first laser (from the
+            // beamer's spawn props), so without copying them forward a reflected laser would pass
+            // straight through them. Owned copies are used so each laser frees its own rectangles in
+            // onDestroy without double-freeing shared references.
+            obstacles.forEach { obstacle ->
+                reflectingLaser!!.obstacles.add(GameObjectPools.fetch(GameRectangle::class, false).set(obstacle))
+            }
         }
 
         reflectingLaser!!.ignoring.clear()
+        reflectingLaser!!.ignoring.addAll(ignoring)
         reflectingLaser!!.ignoring.add(reflector.id)
 
         reflectingLaser!!.on = true
