@@ -34,8 +34,6 @@ internal class DarknessGrid {
 
     private class BlackTile(var currentAlpha: Float = MAX_ALPHA) {
 
-        var stamp = -1
-
         fun update(delta: Float, darken: Boolean) {
             currentAlpha += (if (darken) abs(DARKEN_STEP_SCALAR) else -abs(LIGHTEN_STEP_SCALAR)) * delta
             currentAlpha = currentAlpha.coerceIn(MIN_ALPHA, MAX_ALPHA)
@@ -53,12 +51,14 @@ internal class DarknessGrid {
 
     private var dividedPPM = 0f
 
-    // frame generation counter for BlackTile.stamp; incremented only when the tile walk actually runs
-    private var frame = 0
-
-    // whether the previous tick skipped the walk. While skipped nothing is drawn and the walk does not run, so
-    // `frame` and every tile's stamp stand still.
-    private var skipped = true
+    // The window the previous [step] visited. This is the entire history the fade/snap rule needs: because the walk
+    // only ever visits a rectangle, "was this tile on screen last step" is just "is this cell inside that rectangle",
+    // so four ints stand in for what would otherwise be a per-tile flag. Empty (maxX < minX) means there was no
+    // previous step, which is what makes a freshly reset grid snap rather than fade.
+    private var prevMinX = 0
+    private var prevMaxX = -1
+    private var prevMinY = 0
+    private var prevMaxY = -1
 
     /** The tile window visited by the most recent [step], for the sprite to draw. Empty until the first [step]. */
     var minX = 0
@@ -85,8 +85,10 @@ internal class DarknessGrid {
         val columns = (bounds.getWidth() / dividedPPM).toInt()
         tiles = Matrix(rows, columns)
 
-        frame = 0
-        skipped = true
+        prevMinX = 0
+        prevMaxX = -1
+        prevMinY = 0
+        prevMaxY = -1
 
         minX = 0
         maxX = -1
@@ -99,11 +101,6 @@ internal class DarknessGrid {
     val rows get() = tiles.rows
 
     val columns get() = tiles.columns
-
-    /** Records that the caller skipped this tick's [step] entirely, so nothing was drawn. */
-    fun markSkipped() {
-        skipped = true
-    }
 
     /** The alpha at a cell, or [MIN_ALPHA] for a cell no light or walk has ever touched. */
     fun alphaAt(column: Int, row: Int) = tiles[column, row]?.currentAlpha ?: MIN_ALPHA
@@ -181,37 +178,28 @@ internal class DarknessGrid {
      * and returns whether any of them is now above [MIN_ALPHA] - i.e. whether there is anything to draw at all.
      */
     fun step(camBounds: GameRectangle, darkMode: Boolean, delta: Float): Boolean {
-        val resumed = skipped
-        skipped = false
-
         val (minX, minY, maxX, maxY) = windowFor(camBounds)
 
-        this.minX = minX
-        this.maxX = maxX
-        this.minY = minY
-        this.maxY = maxY
-
-        frame++
         var anyLit = false
 
         for (x in minX..maxX) for (y in minY..maxY) {
             val tile = getTile(x, y)
 
-            when {
-                resumed -> {
-                    tile.currentAlpha = MIN_ALPHA
-                    tile.update(delta, darkMode)
-                }
-
-                tile.stamp != frame - 1 -> tile.reset(darkMode)
-
-                else -> tile.update(delta, darkMode)
-            }
-
-            tile.stamp = frame
+            val onScreenLastStep = x in prevMinX..prevMaxX && y in prevMinY..prevMaxY
+            if (onScreenLastStep) tile.update(delta, darkMode) else tile.reset(darkMode)
 
             if (tile.currentAlpha > MIN_ALPHA) anyLit = true
         }
+
+        prevMinX = minX
+        prevMaxX = maxX
+        prevMinY = minY
+        prevMaxY = maxY
+
+        this.minX = minX
+        this.maxX = maxX
+        this.minY = minY
+        this.maxY = maxY
 
         return anyLit
     }

@@ -326,70 +326,76 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         camBounds.translate(-CAM_BOUNDS_BUFFER * ConstVals.PPM, -CAM_BOUNDS_BUFFER * ConstVals.PPM)
         camBounds.translateSize(2f * CAM_BOUNDS_BUFFER * ConstVals.PPM, 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM)
 
-        // nothing to draw: either the camera isn't even looking at this darkness's bounds, or the room is lit and
-        // every tile that was on screen last frame has already decayed to MIN_ALPHA. Either way, skip the entity
-        // sweep, light collection, and tile walk entirely - but still drain and free whatever light source events
-        // arrived via onEvent this frame (from entities unrelated to darkMode, e.g. ambient energy items), so the
-        // queue and the pool it draws from can't grow unboundedly while skipped.
-        if (!camBounds.overlaps(bounds) || (!darkMode && !anyTileLit)) {
-            drainLightSourceQueue()
-            sprite.hidden = true
-            grid.markSkipped()
-            return@UpdatablesComponent
-        }
+        // Collecting and rasterizing light sources is skippable while the region is lit and every tile that was on
+        // screen last step has already reached MIN_ALPHA, because a light can only ever *lower* a tile's alpha and
+        // MIN_ALPHA is the floor: tiles on screen are already there, tiles a light reaches off screen are not drawn
+        // and will snap when they next come into view, and tiles entering the window snap to MIN_ALPHA this very
+        // step regardless. So the skipped work provably cannot change a drawn pixel.
+        //
+        // The tile walk itself is NOT skippable, and the light-source queue must still be drained either way:
+        // onEvent keeps enqueuing regardless of darkMode (ambient energy items, for one), so leaving the queue
+        // alone would grow it and starve its pool without bound.
+        if (darkMode || anyTileLit) {
+            val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
+            entities.forEach { entity -> tryToLightUp(entity) }
+            entities.clear()
 
-        val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
-        entities.forEach { entity -> tryToLightUp(entity) }
-        entities.clear()
-
-        if (megaman.ready && megaman.body.getBounds().overlaps(bounds)) {
-            val lightSourceDef = lightSourcePool.fetch()
-            lightSourceDef.center.set(megaman.body.getCenter())
-
-            if (megaman.charging) {
-                val fullCharged = megaman.fullyCharged
-                lightSourceDef.radius =
-                    (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
-                lightSourceDef.radiance =
-                    if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
-            } else if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) {
-                lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
-                lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
-            } else {
-                lightSourceDef.radius = STANDARD_LIGHT_SOURCE.first * ConstVals.PPM
-                lightSourceDef.radiance = STANDARD_LIGHT_SOURCE.second
-            }
-
-            lightSourceQueue.add(lightSourceDef)
-        }
-
-        val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
-        if (beaming) {
-            val beamCenter = game.getProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", Vector2::class)
-
-            if (beamCenter != null) {
+            if (megaman.ready && megaman.body.getBounds().overlaps(bounds)) {
                 val lightSourceDef = lightSourcePool.fetch()
+                lightSourceDef.center.set(megaman.body.getCenter())
 
-                lightSourceDef.center.set(beamCenter)
-                lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
-                lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
+                if (megaman.charging) {
+                    val fullCharged = megaman.fullyCharged
+                    lightSourceDef.radius =
+                        (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS
+                        else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
+                    lightSourceDef.radiance =
+                        if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
+                } else if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) {
+                    lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
+                    lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
+                } else {
+                    lightSourceDef.radius = STANDARD_LIGHT_SOURCE.first * ConstVals.PPM
+                    lightSourceDef.radiance = STANDARD_LIGHT_SOURCE.second
+                }
 
                 lightSourceQueue.add(lightSourceDef)
             }
+
+            val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+            if (beaming) {
+                val beamCenter =
+                    game.getProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", Vector2::class)
+
+                if (beamCenter != null) {
+                    val lightSourceDef = lightSourcePool.fetch()
+
+                    lightSourceDef.center.set(beamCenter)
+                    lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
+                    lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
+
+                    lightSourceQueue.add(lightSourceDef)
+                }
+            }
+
+            for (i in 0 until lightSourceQueue.size) {
+                val lightSourceDef = lightSourceQueue[i]
+
+                val startTime = System.currentTimeMillis()
+                grid.applyLight(lightSourceDef.center, lightSourceDef.radius, lightSourceDef.radiance)
+                debugTime(startTime) {
+                    "update(): updating light source took too long: time=$it, light=$lightSourceDef"
+                }
+            }
         }
 
-        for (i in 0 until lightSourceQueue.size) {
-            val lightSourceDef = lightSourceQueue[i]
-
-            val startTime = System.currentTimeMillis()
-            grid.applyLight(lightSourceDef.center, lightSourceDef.radius, lightSourceDef.radiance)
-            debugTime(startTime) { "update(): updating light source took too long: time=$it, light=$lightSourceDef" }
-        }
         drainLightSourceQueue()
 
         anyTileLit = grid.step(camBounds, darkMode, delta)
 
-        sprite.hidden = false
+        // a fully transparent quad draws nothing, so skipping the draw outright when the whole window is clear is
+        // the same picture for less work
+        sprite.hidden = !anyTileLit
     })
 
     override fun overlaps(shape: IGameShape2D) = this.bounds.overlaps(shape)
