@@ -3,6 +3,7 @@ package com.mega.game.engine.common.objects
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.IntSet
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 
 /**
  * Iterates the non-null elements of a [Matrix] in row-major order, skipping empty cells.
@@ -78,6 +79,9 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
     private var count = 0
 
     internal val elementToIndexMap = ObjectMap<T, IntSet>()
+
+    // scratch set reused by retainAll so that it does not allocate per call; retainAll is consequently not reentrant
+    private val toRemove = ObjectSet<T>()
 
     /**
      * Re-dimensioning discards the contents: the flat index of a cell depends on [columns], so existing entries would
@@ -165,16 +169,19 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
         return oldValue
     }
 
-    fun isRowOutOfBounds(rowIndex: Int) = rowIndex < 0 || rowIndex >= rows
+    fun isRowOutOfBounds(rowIndex: Int) = rowIndex !in 0..<rows
 
-    fun isColumnOutOfBounds(columnIndex: Int) = columnIndex < 0 || columnIndex >= columns
+    fun isColumnOutOfBounds(columnIndex: Int) = columnIndex !in 0..<columns
 
     fun isOutOfBounds(columnIndex: Int, rowIndex: Int) =
         isRowOutOfBounds(rowIndex) || isColumnOutOfBounds(columnIndex)
 
-    fun getIndexes(element: T?): Set<IntPair> {
-        val out = HashSet<IntPair>()
-
+    /**
+     * Collects into [out] the index of every cell holding [element], or of every empty cell if [element] is null.
+     *
+     * [out] is added to rather than replaced, matching [flatten]; clear it beforehand if that is not what you want.
+     */
+    fun getIndexes(element: T?, out: ObjectSet<IntPair>): ObjectSet<IntPair> {
         if (element == null) {
             for (x in 0 until columns) for (y in 0 until rows) if (this[x, y] == null) out.add(x pairTo y)
             return out
@@ -230,7 +237,7 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
 
     override fun retainAll(elements: Collection<T>): Boolean {
         var removed = false
-        val toRemove = HashSet<T>()
+        toRemove.clear()
 
         for (index in 0 until rows * columns) {
             val e = this.elements[index] ?: continue
@@ -242,6 +249,7 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
         }
 
         toRemove.forEach { remove(it) }
+        toRemove.clear()
 
         return removed
     }

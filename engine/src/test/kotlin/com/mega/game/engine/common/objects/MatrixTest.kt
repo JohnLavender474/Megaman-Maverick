@@ -1,5 +1,6 @@
 package com.mega.game.engine.common.objects
 
+import com.badlogic.gdx.utils.ObjectSet
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
@@ -226,13 +227,49 @@ class MatrixTest :
                 matrix[1, 1] = 2
                 matrix[2, 2] = 3
 
-                val indexes1 = matrix.getIndexes(1)
-                val indexes2 = matrix.getIndexes(2)
-                val indexes3 = matrix.getIndexes(3)
+                val indexes1 = matrix.getIndexes(1, ObjectSet())
+                val indexes2 = matrix.getIndexes(2, ObjectSet())
+                val indexes3 = matrix.getIndexes(3, ObjectSet())
 
                 indexes1 shouldContainAll setOf(0 pairTo 0, 1 pairTo 0)
                 indexes2 shouldContainAll setOf(1 pairTo 1)
                 indexes3 shouldContainAll emptySet()
+            }
+
+            it("should add to the provided out set rather than replacing it") {
+                matrix[0, 0] = 1
+
+                val out = ObjectSet<IntPair>()
+                out.add(9 pairTo 9)
+
+                val returned = matrix.getIndexes(1, out)
+
+                (returned === out) shouldBe true
+                out shouldContainAll setOf(9 pairTo 9, 0 pairTo 0)
+            }
+
+            it("should collect the indexes of empty cells when given null") {
+                val small = Matrix<Int>(1, 2)
+                small[0, 0] = 1
+
+                val out = small.getIndexes(null, ObjectSet())
+
+                out shouldContainAll setOf(1 pairTo 0)
+                out.size shouldBe 1
+            }
+
+            it("should not leak state between retainAll calls") {
+                matrix[0, 0] = 1
+                matrix[1, 0] = 2
+
+                matrix.retainAll(listOf(1)) shouldBe true
+                matrix.size shouldBe 1
+                matrix.contains(1) shouldBe true
+
+                // the scratch set is reused, so a second call must not re-remove the first call's elements
+                matrix.retainAll(listOf(1)) shouldBe false
+                matrix.size shouldBe 1
+                matrix.contains(1) shouldBe true
             }
 
             it("should check if an element exists correctly") {
@@ -463,7 +500,7 @@ class MatrixTest :
                     matrix[1, 0] = 1
 
                     matrix.size shouldBe 2
-                    matrix.getIndexes(1) shouldContainAll setOf(0 pairTo 0, 1 pairTo 0)
+                    matrix.getIndexes(1, ObjectSet()) shouldContainAll setOf(0 pairTo 0, 1 pairTo 0)
 
                     matrix.remove(1) shouldBe true
                     matrix.size shouldBe 0
