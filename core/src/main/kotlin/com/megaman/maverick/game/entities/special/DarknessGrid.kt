@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.mega.game.engine.common.objects.Matrix
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.MinsAndMaxes
+import com.megaman.maverick.game.entities.special.DarknessGrid.Companion.MIN_ALPHA
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.min
@@ -20,7 +21,7 @@ import kotlin.math.sqrt
  * The rule the whole thing turns on is one line in [step]: **a tile animates if and only if it was inside the camera
  * window on the immediately preceding tick, and otherwise snaps** to whichever terminal value `darkMode` names. That
  * single rule is what makes a room the player walks into fade in, while a room the player spawns into is simply black
- * from the first frame - the difference being only whether there was a previous window to have been inside of.
+ * from the first frame - the difference being only whether there was a previous window to have been inside.
  */
 internal class DarknessGrid {
 
