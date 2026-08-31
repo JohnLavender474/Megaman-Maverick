@@ -1,10 +1,10 @@
 package com.mega.game.engine.common.objects
 
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.IntSet
+import com.badlogic.gdx.utils.IdentityMap
 import com.mega.game.engine.common.interfaces.Initializable
 
-open class Pool<T>(
+open class Pool<T : Any>(
     var supplier: () -> T,
     private var startAmount: Int = 10,
     var onSupplyNew: ((T) -> Unit)? = null,
@@ -18,7 +18,11 @@ open class Pool<T>(
 
     protected open var initialized = false
     protected open val queue = Array<T>()
-    protected open val hashCodeSet = IntSet()
+
+    // Tracks which elements are currently sitting in the queue, so that free() can reject a double-free. Membership
+    // must be by *identity*: value-based equality would reject two distinct-but-equal elements, and would also break
+    // for mutable elements whose hash changes while they are pooled.
+    protected open val freeSet = IdentityMap<T, Boolean>()
 
     override fun init(vararg params: Any) {
         (0 until startAmount).forEach { _ -> free(supplyNew()) }
@@ -29,18 +33,21 @@ open class Pool<T>(
         if (!initialized) init()
 
         val element = if (queue.isEmpty) supplyNew() else queue.pop()
-        onFetch?.invoke(element)
 
-        hashCodeSet.remove(element.hashCode())
+        // must be removed before onFetch is invoked: onFetch typically resets the element, and removal by identity
+        // stays correct either way, but keeping this first preserves the invariant "not in queue => not in freeSet"
+        freeSet.remove(element)
+
+        onFetch?.invoke(element)
 
         return element
     }
 
     open fun free(element: T): Boolean {
-        if (hashCodeSet.contains(element.hashCode())) return false
+        if (freeSet.containsKey(element)) return false
 
         queue.add(element)
-        hashCodeSet.add(element.hashCode())
+        freeSet.put(element, true)
 
         onFree?.invoke(element)
 
@@ -49,7 +56,7 @@ open class Pool<T>(
 
     open fun clear() {
         queue.clear()
-        hashCodeSet.clear()
+        freeSet.clear()
     }
 
     protected open fun supplyNew(): T {

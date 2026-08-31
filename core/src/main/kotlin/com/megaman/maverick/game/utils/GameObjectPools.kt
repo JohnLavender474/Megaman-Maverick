@@ -22,7 +22,7 @@ object GameObjectPools {
 
     const val TAG = "GameObjectPools"
 
-    class GameObjectPool<T>(
+    class GameObjectPool<T : Any>(
         supplier: () -> T,
         onFetch: ((T) -> Unit)? = null,
         onFree: ((T) -> Unit)? = null,
