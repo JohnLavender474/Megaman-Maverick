@@ -72,8 +72,9 @@ class MatrixIterator<T>(private val matrix: Matrix<T>) : MutableIterator<T> {
  */
 open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
 
-    // declared before `rows` and `columns` so that it is initialized before their setters can run
-    private var elements: kotlin.Array<Any?> = arrayOfNulls(rows * columns)
+    // declared before `rows` and `columns` so that it is initialized before their setters can run. Held at a fixed
+    // size of `rows * columns` so that every cell is addressable; the backing store only grows.
+    private val elements = Array<T?>(rows * columns).apply { setSize(rows * columns) }
     private var count = 0
 
     internal val elementToIndexMap = ObjectMap<T, IntSet>()
@@ -111,8 +112,8 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
     }
 
     private fun resize() {
-        val needed = rows * columns
-        if (needed > elements.size) elements = arrayOfNulls(needed) else elements.fill(null)
+        elements.clear()
+        elements.setSize(rows * columns)
 
         count = 0
         elementToIndexMap.clear()
@@ -123,8 +124,7 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
         if (isColumnOutOfBounds(column)) throw IndexOutOfBoundsException("Column index $column is out of bounds")
         if (isRowOutOfBounds(row)) throw IndexOutOfBoundsException("Row index $row is out of bounds")
 
-        @Suppress("UNCHECKED_CAST")
-        return elements[row * columns + column] as T?
+        return elements[row * columns + column]
     }
 
     operator fun set(column: Int, row: Int, element: T?): T? {
@@ -135,8 +135,7 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
 
         val index = row * columns + column
 
-        @Suppress("UNCHECKED_CAST")
-        val oldValue = elements[index] as T?
+        val oldValue = elements[index]
 
         // Remove the old value from the elementToIndexMap if it exists
         // This is done so that the elementToIndexMap does not contain any stale values
@@ -193,10 +192,7 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
     }
 
     fun forEach(action: ((Int, Int, T?) -> Unit)) {
-        for (x in 0 until columns) for (y in 0 until rows) {
-            @Suppress("UNCHECKED_CAST")
-            action(x, y, elements[y * columns + x] as T?)
-        }
+        for (x in 0 until columns) for (y in 0 until rows) action(x, y, elements[y * columns + x])
     }
 
     fun flatten(out: Array<T>): Array<T> {
@@ -209,7 +205,10 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
     override fun containsAll(elements: Collection<T>) = elements.all { contains(it) }
 
     override fun clear() {
-        elements.fill(null)
+        val extent = rows * columns
+        elements.clear()
+        elements.setSize(extent)
+
         count = 0
         elementToIndexMap.clear()
     }
@@ -234,8 +233,7 @@ open class Matrix<T>(rows: Int = 0, columns: Int = 0) : MutableCollection<T> {
         val toRemove = HashSet<T>()
 
         for (index in 0 until rows * columns) {
-            @Suppress("UNCHECKED_CAST")
-            val e = this.elements[index] as T? ?: continue
+            val e = this.elements[index] ?: continue
 
             if (!elements.contains(e)) {
                 toRemove.add(e)
