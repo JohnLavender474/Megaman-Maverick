@@ -224,6 +224,11 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
     // frame generation counter for BlackTile.stamp; incremented only when the tile walk actually runs
     private var frame = 0
 
+    // whether the previous tick took the "nothing to draw" early-out. While skipped the grid is hidden and the tile
+    // walk does not run, so `frame` and every tile's stamp stand still - which would otherwise leave the stamps
+    // stale by however many ticks were skipped. See the tile walk for what that would do on the tick work resumes.
+    private var skipped = true
+
     private val reusableCircle = GameCircle()
 
     private val reusableEntitiesSet = ObjectSet<MegaGameEntity>()
@@ -267,6 +272,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         darkMode = false
         anyTileLit = false
         frame = 0
+        skipped = true
 
         grid.hidden = true
     }
@@ -465,8 +471,12 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         if (!camBounds.overlaps(bounds) || (!darkMode && !anyTileLit)) {
             drainLightSourceQueue()
             grid.hidden = true
+            skipped = true
             return@UpdatablesComponent
         }
+
+        val resumed = skipped
+        skipped = false
 
         val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
         entities.forEach { entity -> tryToLightUp(entity) }
@@ -519,7 +529,23 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         for (x in minX..maxX) for (y in minY..maxY) {
             val tile = getTile(x, y)
 
-            if (tile.stamp != frame - 1) tile.reset(darkMode) else tile.update(delta, darkMode)
+            when {
+                // Nothing was drawn on the previous tick - the grid was hidden - so the screen showed no darkness
+                // at all. Start every tile from fully transparent and animate from there, which is what the screen
+                // was already showing. Without this the stale stamps would send tiles down the reset() path
+                // instead, snapping the room to black rather than fading it in; and on a re-entry the few tiles
+                // that happened to still carry `frame - 1` from whenever the walk last ran would fade while every
+                // other tile snapped, tearing the window into a half-instant, half-fading mess.
+                resumed -> {
+                    tile.currentAlpha = MIN_ALPHA
+                    tile.update(delta, darkMode)
+                }
+
+                tile.stamp != frame - 1 -> tile.reset(darkMode)
+
+                else -> tile.update(delta, darkMode)
+            }
+
             tile.stamp = frame
 
             if (tile.currentAlpha > MIN_ALPHA) anyLit = true
