@@ -65,6 +65,6 @@ class SpriteMatrix(
     override fun draw(drawer: Batch) = forEach { it.draw(drawer) }
 
     override fun toString(): String {
-        return "SpriteMatrix(modelWidth=$modelWidth, modelHeight=$modelHeight, rows=$rows, columns=$columns, matrix=$matrixMap)"
+        return "SpriteMatrix(modelWidth=$modelWidth, modelHeight=$modelHeight, rows=$rows, columns=$columns, matrix=${super.toString()})"
     }
 }

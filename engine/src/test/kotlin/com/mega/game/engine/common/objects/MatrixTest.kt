@@ -2,7 +2,6 @@ package com.mega.game.engine.common.objects
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -139,7 +138,8 @@ class MatrixTest :
                 elementToIndexMap[2] shouldNotBe null
                 set1 shouldBe null
                 set2 shouldNotBe null
-                set2?.shouldContain(0 pairTo 0)
+                // the reverse index stores packed `row * columns + column` indexes, so [0, 0] is 0
+                set2?.contains(0) shouldBe true
             }
 
             it("should set elements correctly - test 3") {
@@ -315,6 +315,102 @@ class MatrixTest :
                 matrix2[2, 2] = 3
 
                 matrix1 shouldBe matrix2
+            }
+
+            describe("re-dimensioning") {
+                // the split helpers (GameRectangle.splitIntoCells, GamePolygon.splitIntoGameRectanglesBasedOnCenter)
+                // hold one reusable Matrix and re-dimension it on every call, two of them every frame
+
+                it("should keep its dimensions when cleared") {
+                    matrix[0, 0] = 1
+                    matrix.clear()
+
+                    matrix.rows shouldBe 3
+                    matrix.columns shouldBe 4
+                    matrix.size shouldBe 0
+                }
+
+                it("should support the clear-then-re-dimension pattern used by the split helpers") {
+                    matrix[0, 0] = 1
+
+                    matrix.clear()
+                    matrix.rows = 2
+                    matrix.columns = 2
+
+                    matrix.rows shouldBe 2
+                    matrix.columns shouldBe 2
+                    matrix.size shouldBe 0
+
+                    for (row in 0 until 2) for (column in 0 until 2) matrix[column, row] = column + row * 2
+
+                    matrix.size shouldBe 4
+                    matrix[0, 0] shouldBe 0
+                    matrix[1, 0] shouldBe 1
+                    matrix[0, 1] shouldBe 2
+                    matrix[1, 1] shouldBe 3
+                }
+
+                it("should grow when re-dimensioned larger than its current capacity") {
+                    val grown = Matrix<Int>(1, 1)
+
+                    grown.clear()
+                    grown.rows = 6
+                    grown.columns = 7
+
+                    grown[6, 5] = 42
+                    grown[6, 5] shouldBe 42
+                    grown.size shouldBe 1
+                }
+
+                it("should discard contents when re-dimensioned") {
+                    matrix[0, 0] = 1
+                    matrix[1, 1] = 2
+
+                    matrix.rows = 2
+
+                    matrix.size shouldBe 0
+                    matrix.contains(1) shouldBe false
+                    matrix.contains(2) shouldBe false
+                }
+
+                it("should shrink and reject out-of-bounds access afterwards") {
+                    matrix.clear()
+                    matrix.rows = 1
+                    matrix.columns = 1
+
+                    shouldThrow<IndexOutOfBoundsException> { matrix[1, 0] }
+                    shouldThrow<IndexOutOfBoundsException> { matrix[0, 1] }
+                }
+            }
+
+            describe("size accounting") {
+                it("should not double-count when overwriting a cell") {
+                    matrix[0, 0] = 1
+                    matrix.size shouldBe 1
+
+                    matrix[0, 0] = 2
+                    matrix.size shouldBe 1
+                }
+
+                it("should decrement when a cell is nulled") {
+                    matrix[0, 0] = 1
+                    matrix[1, 0] = 2
+                    matrix.size shouldBe 2
+
+                    matrix[0, 0] = null
+                    matrix.size shouldBe 1
+                }
+
+                it("should count each cell holding the same element") {
+                    matrix[0, 0] = 1
+                    matrix[1, 0] = 1
+
+                    matrix.size shouldBe 2
+                    matrix.getIndexes(1) shouldContainAll setOf(0 pairTo 0, 1 pairTo 0)
+
+                    matrix.remove(1) shouldBe true
+                    matrix.size shouldBe 0
+                }
             }
 
             it("should convert to string correctly") {
