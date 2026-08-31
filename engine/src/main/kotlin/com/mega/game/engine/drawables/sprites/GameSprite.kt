@@ -8,7 +8,7 @@ import com.mega.game.engine.drawables.sorting.DrawingPriority
 import com.mega.game.engine.drawables.sorting.DrawingSection
 import com.mega.game.engine.drawables.sorting.IComparableDrawable
 
-class GameSprite(
+open class GameSprite(
     override val priority: DrawingPriority = DrawingPriority(DrawingSection.PLAYGROUND, 0),
     var hidden: Boolean = false
 ) : Sprite(), IComparableDrawable<Batch> {

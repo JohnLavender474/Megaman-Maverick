@@ -139,7 +139,8 @@ object GameObjectPools {
             return false
         }
 
-        GameLogger.debug(TAG, "free(): key=${obj::class.simpleName}, obj=$obj")
+        if (GameLogger.tagsToLog.contains(TAG))
+            GameLogger.debug(TAG, "free(): key=${obj::class.simpleName}, obj=$obj")
 
         val pool = pools[obj::class] as GameObjectPool<T>
         pool.free(obj)
