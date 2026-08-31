@@ -59,6 +59,63 @@ class MatrixTest :
             }
         }
 
+        describe("MatrixIterator over multiple rows") {
+            // none of the cases above populate a row other than row 0, so these pin the behaviour that the previous
+            // implementation got wrong: it skipped column 0 of every row above row 0, and stopped at the first null
+
+            it("should yield column 0 of every row") {
+                val matrix = Matrix<Int?>(3, 3)
+                for (row in 0 until 3) for (column in 0 until 3) matrix[column, row] = column + row * 3
+
+                val elements = mutableListOf<Int?>()
+                for (element in matrix) elements.add(element)
+
+                elements.size shouldBe 9
+                elements shouldContainAll (0 until 9).toList()
+            }
+
+            it("should skip null cells and keep going") {
+                val matrix = Matrix<Int?>(3, 3)
+                matrix[0, 0] = 1
+                matrix[2, 1] = 2
+                matrix[0, 2] = 3
+
+                val elements = mutableListOf<Int?>()
+                for (element in matrix) elements.add(element)
+
+                elements shouldBe listOf(1, 2, 3)
+            }
+
+            it("should report hasNext consistently without advancing") {
+                val matrix = Matrix<Int?>(2, 2)
+                matrix[1, 1] = 7
+
+                val iterator = MatrixIterator(matrix)
+
+                iterator.hasNext() shouldBe true
+                iterator.hasNext() shouldBe true
+                iterator.next() shouldBe 7
+                iterator.hasNext() shouldBe false
+            }
+
+            it("should throw NoSuchElementException when exhausted") {
+                val matrix = Matrix<Int?>(2, 2)
+                matrix[0, 0] = 1
+
+                val iterator = MatrixIterator(matrix)
+                iterator.next() shouldBe 1
+
+                shouldThrow<NoSuchElementException> { iterator.next() }
+            }
+
+            it("should be empty for a matrix with no elements") {
+                val matrix = Matrix<Int?>(3, 3)
+                val iterator = MatrixIterator(matrix)
+
+                iterator.hasNext() shouldBe false
+            }
+        }
+
         describe("Matrix") {
             lateinit var matrix: Matrix<Int>
 

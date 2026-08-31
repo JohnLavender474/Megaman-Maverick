@@ -4,6 +4,12 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.IntSet
 import com.badlogic.gdx.utils.ObjectMap
 
+/**
+ * Iterates the non-null elements of a [Matrix] in row-major order, skipping empty cells.
+ *
+ * [rowIndex] and [columnIndex] address the element most recently returned by [next], which is the cell [remove]
+ * clears.
+ */
 class MatrixIterator<T>(private val matrix: Matrix<T>) : MutableIterator<T> {
 
     var rowIndex = 0
@@ -11,30 +17,42 @@ class MatrixIterator<T>(private val matrix: Matrix<T>) : MutableIterator<T> {
     var columnIndex = -1
         private set
 
-    override fun hasNext(): Boolean {
-        if (rowIndex >= matrix.rows) return false
+    // cursor parked on the next candidate cell; findNext() leaves it on the next non-null cell, so it is idempotent
+    // and hasNext() may be called any number of times without advancing the iteration
+    private var nextRowIndex = 0
+    private var nextColumnIndex = 0
 
-        if (columnIndex + 1 >= matrix.columns) {
-            rowIndex++
-            columnIndex = 0
-            return hasNext()
+    private fun findNext(): Boolean {
+        while (nextRowIndex < matrix.rows) {
+            while (nextColumnIndex < matrix.columns) {
+                if (matrix[nextColumnIndex, nextRowIndex] != null) return true
+                nextColumnIndex++
+            }
+
+            nextColumnIndex = 0
+            nextRowIndex++
         }
 
-        return try {
-            matrix[columnIndex + 1, rowIndex] != null
-        } catch (_: Exception) {
-            false
-        }
+        return false
     }
 
-    override fun next(): T =
-        try {
-            columnIndex++
-            val element = matrix[columnIndex, rowIndex]
-            element!!
-        } catch (e: Exception) {
-            throw Exception("Could not get next element at row $rowIndex and column $columnIndex", e)
-        }
+    override fun hasNext() = findNext()
+
+    override fun next(): T {
+        if (!findNext()) throw NoSuchElementException(
+            "No more elements: rows=${matrix.rows}, columns=${matrix.columns}"
+        )
+
+        rowIndex = nextRowIndex
+        columnIndex = nextColumnIndex
+
+        val element = matrix[columnIndex, rowIndex]!!
+
+        // step past the element being returned so that the next findNext() does not yield it again
+        nextColumnIndex++
+
+        return element
+    }
 
     override fun remove() {
         matrix[columnIndex, rowIndex] = null
