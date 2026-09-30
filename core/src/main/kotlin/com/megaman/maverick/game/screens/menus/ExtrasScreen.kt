@@ -24,9 +24,9 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
         const val TAG = "ExtrasScreen"
         private const val BACK = "BACK"
         private const val BKG_REG_KEY = "menu_screen_bkg_v2"
-        private const val TEXT_ROW_START = 10f
+        private const val TEXT_ROW_START = 9f
         private const val TEXT_X = 3f
-        private const val MAX_VISIBLE_ROWS = 10
+        private const val MAX_VISIBLE_ROWS = 6
         private const val WRAP = true
     }
 
