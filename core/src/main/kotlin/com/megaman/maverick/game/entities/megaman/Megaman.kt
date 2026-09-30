@@ -942,6 +942,18 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     fun hasWeapon(weapon: MegamanWeapon) = weaponsHandler.hasWeapon(weapon)
 
+    fun putWeapon(weapon: MegamanWeapon) {
+        if (!weaponsHandler.hasWeapon(weapon)) weaponsHandler.putWeapon(weapon)
+    }
+
+    fun clearWeapons() {
+        MegamanWeapon.entries.forEach { weapon ->
+            if (weapon != MegamanWeapon.MEGA_BUSTER && weaponsHandler.hasWeapon(weapon))
+                weaponsHandler.removeWeapon(weapon)
+        }
+        currentWeapon = MegamanWeapon.MEGA_BUSTER
+    }
+
     fun hasHeartTank(heartTank: MegaHeartTank) = game.state.containsHeartTank(heartTank)
 
     fun hasHealthTank(healthTank: MegaHealthTank) = game.state.containsHealthTank(healthTank)

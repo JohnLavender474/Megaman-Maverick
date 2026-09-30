@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.screens.menus
 
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Direction
@@ -26,6 +25,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         const val TAG = "SaveScreen"
         private const val SAVE = "SAVE"
         private const val CONTINUE = "CONTINUE"
+        private const val EXTRAS_MENU = "EXTRAS MENU"
         private const val MAIN_MENU = "MAIN MENU"
         private const val BKG_REG_KEY = "menu_screen_bkg_v2"
         private const val TEXT_ROW_START = 9f
@@ -36,6 +36,10 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
     private val fontHandles = OrderedMap<String, MegaFontHandle>()
     private val arrows = OrderedMap<String, BlinkingArrow>()
     private val backgroundSprite = GameSprite()
+
+    private val mainlineKeys = gdxArrayOf(SAVE, CONTINUE, MAIN_MENU)
+    private val extrasKeys = gdxArrayOf(CONTINUE, EXTRAS_MENU, MAIN_MENU)
+    private var activeKeys = mainlineKeys
 
     private var initialized = false
 
@@ -50,33 +54,22 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
 
-        var row = TEXT_ROW_START
-        gdxArrayOf(SAVE, CONTINUE, MAIN_MENU).forEach { text ->
+        // the rows are assigned in show() because the active keys change with the level type
+        gdxArrayOf(SAVE, CONTINUE, EXTRAS_MENU, MAIN_MENU).forEach { text ->
             val fontHandle = MegaFontHandle(
                 text = text,
                 positionX = TEXT_X * ConstVals.PPM,
-                positionY = row * ConstVals.PPM,
+                positionY = 0f,
                 centerX = false,
                 centerY = false,
             )
             fontHandles.put(text, fontHandle)
-
-            val arrowCenter = Vector2(
-                TEXT_X + ARROW_OFFSET_X,
-                row - ConstVals.ARROW_CENTER_ROW_DECREMENT
-            ).scl(ConstVals.PPM.toFloat())
-            arrows.put(text, BlinkingArrow(game.assMan, arrowCenter))
-
-            row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
+            arrows.put(text, BlinkingArrow(game.assMan))
         }
 
         buttons.put(SAVE, object : IMenuButton {
 
-            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP -> MAIN_MENU
-                Direction.DOWN -> CONTINUE
-                else -> getCurrentButtonKey()
-            }
+            override fun onNavigate(direction: Direction, delta: Float) = navigate(SAVE, direction)
 
             override fun onSelect(delta: Float): Boolean {
                 game.saveState()
@@ -87,14 +80,11 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
         buttons.put(CONTINUE, object : IMenuButton {
 
-            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP -> SAVE
-                Direction.DOWN -> MAIN_MENU
-                else -> getCurrentButtonKey()
-            }
+            override fun onNavigate(direction: Direction, delta: Float) = navigate(CONTINUE, direction)
 
             override fun onSelect(delta: Float): Boolean {
                 when {
+                    game.isInExtraLevel() -> game.startExtraLevel(game.getCurrentLevel())
                     game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
                         game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                     else -> {
@@ -107,24 +97,55 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             }
         })
 
-        buttons.put(MAIN_MENU, object : IMenuButton {
+        buttons.put(EXTRAS_MENU, object : IMenuButton {
 
-            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP -> CONTINUE
-                Direction.DOWN -> SAVE
-                else -> getCurrentButtonKey()
-            }
+            override fun onNavigate(direction: Direction, delta: Float) = navigate(EXTRAS_MENU, direction)
 
             override fun onSelect(delta: Float): Boolean {
+                game.setCurrentScreen(ScreenEnum.EXTRAS_SCREEN.name)
+                return true
+            }
+        })
+
+        buttons.put(MAIN_MENU, object : IMenuButton {
+
+            override fun onNavigate(direction: Direction, delta: Float) = navigate(MAIN_MENU, direction)
+
+            override fun onSelect(delta: Float): Boolean {
+                if (game.isInExtraLevel()) game.resetPlayerProgress()
                 game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
                 return true
             }
         })
     }
 
+    private fun navigate(key: String, direction: Direction): String? {
+        val index = activeKeys.indexOf(key, false)
+        return when (direction) {
+            Direction.UP -> activeKeys[(index - 1 + activeKeys.size) % activeKeys.size]
+            Direction.DOWN -> activeKeys[(index + 1) % activeKeys.size]
+            else -> getCurrentButtonKey()
+        }
+    }
+
     override fun show() {
         if (!initialized) init()
         GameLogger.debug(TAG, "show()")
+
+        activeKeys = if (game.isInExtraLevel()) extrasKeys else mainlineKeys
+        firstButtonKey = activeKeys.first()
+
+        var row = TEXT_ROW_START
+        activeKeys.forEach { key ->
+            fontHandles[key].positionY = row * ConstVals.PPM
+
+            val arrow = arrows[key]
+            arrow.centerX = (TEXT_X + ARROW_OFFSET_X) * ConstVals.PPM
+            arrow.centerY = (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM
+
+            row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
+        }
+
         super.show()
         game.getUiCamera().setToDefaultPosition()
         game.audioMan.playMusic(MusicAsset.VINNYZ_PASSWORD_MUSIC)
@@ -141,7 +162,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         batch.begin()
 
         backgroundSprite.draw(batch)
-        fontHandles.values().forEach { it.draw(batch) }
+        activeKeys.forEach { fontHandles[it].draw(batch) }
         arrow.draw(batch)
 
         batch.end()

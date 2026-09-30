@@ -36,6 +36,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     private enum class MainScreenButton(val text: String) {
         START_NEW_GAME("START NEW GAME"),
         LOAD_SAVE_FILE("LOAD SAVE FILE"),
+        EXTRAS("EXTRAS"),
         SETTINGS("SETTINGS"),
         CREDITS("CREDITS"),
         EXIT("EXIT")
@@ -168,6 +169,19 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.UP -> MainScreenButton.START_NEW_GAME.text
+                Direction.DOWN -> MainScreenButton.EXTRAS.text
+                else -> buttonKey
+            }
+        })
+
+        buttons.put(MainScreenButton.EXTRAS.text, object : IMenuButton {
+            override fun onSelect(delta: Float): Boolean {
+                game.setCurrentScreen(ScreenEnum.EXTRAS_SCREEN.name)
+                return true
+            }
+
+            override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
+                Direction.UP -> MainScreenButton.LOAD_SAVE_FILE.text
                 Direction.DOWN -> MainScreenButton.SETTINGS.text
                 else -> buttonKey
             }
@@ -182,7 +196,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             }
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP -> MainScreenButton.LOAD_SAVE_FILE.text
+                Direction.UP -> MainScreenButton.EXTRAS.text
                 Direction.DOWN -> MainScreenButton.CREDITS.text
                 else -> buttonKey
             }

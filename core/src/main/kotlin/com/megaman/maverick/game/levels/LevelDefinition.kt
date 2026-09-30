@@ -15,7 +15,8 @@ enum class LevelDefinition(
     val screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum,
     val music: MusicAsset? = null,
     val mugshotAtlas: String? = null,
-    val mugshotRegion: String? = null
+    val mugshotRegion: String? = null,
+    val loadoutOverride: LoadoutOverride? = null
 ) : IAsset {
     INTRO_STAGE(
         type = LevelType.INTRO_LEVEL,
@@ -121,6 +122,13 @@ enum class LevelDefinition(
         type = LevelType.MARIO_LEVEL,
         tmxMapSource = "SMB3_1.tmx",
         screenOnCompletion = { ScreenEnum.LEVEL_SCREEN }
+    ),
+    YAMMARK_STAGE(
+        type = LevelType.EXTRA_LEVEL,
+        tmxMapSource = "X6_CommanderYammark_Remake_v1.tmx",
+        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
+        // TODO: set the heart tanks, health tanks, enhancements, and weapons for this level
+        loadoutOverride = LoadoutOverride()
     );
 
     companion object {

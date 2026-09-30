@@ -87,12 +87,15 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelType
+import com.megaman.maverick.game.levels.LoadoutOverride
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
+import com.megaman.maverick.game.screens.menus.ExtrasScreen
 import com.megaman.maverick.game.screens.menus.MainMenuScreen
 import com.megaman.maverick.game.screens.menus.SaveGameScreen
 import com.megaman.maverick.game.screens.menus.SelectDifficultyScreen
@@ -396,6 +399,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name, SimpleInitGameScreen(this))
         screens.put(ScreenEnum.ENDING_SCREEN.name, EndingScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
+        screens.put(ScreenEnum.EXTRAS_SCREEN.name, ExtrasScreen(this))
 
         when (params.runType) {
             RunType.GAME -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
@@ -708,6 +712,42 @@ class MegamanMaverickGame(
     fun setCurrentLevel(levelDef: LevelDefinition) = putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)
 
     fun getCurrentLevel() = getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)!!
+
+    fun isInExtraLevel() = getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)
+        ?.type == LevelType.EXTRA_LEVEL
+
+    /**
+     * Removes all of the player's progress from memory: the game state, the weapons, and the weapons-attained
+     * property. The save file does not change.
+     */
+    fun resetPlayerProgress() {
+        GameLogger.debug(TAG, "resetPlayerProgress()")
+        state.reset()
+        megaman.clearWeapons()
+        removeProperty(ConstKeys.WEAPONS_ATTAINED)
+    }
+
+    /**
+     * Replaces the player's progress in memory with the items in [loadout]. The save file does not change.
+     */
+    fun applyLoadoutOverride(loadout: LoadoutOverride) {
+        GameLogger.debug(TAG, "applyLoadoutOverride(): loadout=$loadout")
+        resetPlayerProgress()
+        loadout.heartTanks.forEach { state.addHeartTank(it) }
+        loadout.healthTanks.forEach { (tank, value) -> state.putHealthTank(tank, value) }
+        loadout.enhancements.forEach { state.addEnhancement(it) }
+        loadout.weapons.forEach { megaman.putWeapon(it) }
+    }
+
+    fun startExtraLevel(level: LevelDefinition) {
+        GameLogger.debug(TAG, "startExtraLevel(): level=$level")
+        // TODO: the loadout override is only applied for EXTRA_LEVEL levels. Apply it for other level types when
+        //  needed.
+        val loadout = level.loadoutOverride
+        if (loadout != null) applyLoadoutOverride(loadout) else resetPlayerProgress()
+        megaman.resetLives()
+        startLevel(level)
+    }
 
     fun saveState() {
         val state = this.state.toString()
