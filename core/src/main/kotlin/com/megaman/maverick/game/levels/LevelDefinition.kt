@@ -126,6 +126,7 @@ enum class LevelDefinition(
     YAMMARK_STAGE(
         type = LevelType.EXTRA_LEVEL,
         tmxMapSource = "X6_CommanderYammark_Remake_v1.tmx",
+        music = MusicAsset.MMX6_YAMMARK_MUSIC,
         screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
         // TODO: set the heart tanks, health tanks, enhancements, and weapons for this level
         loadoutOverride = LoadoutOverride()
