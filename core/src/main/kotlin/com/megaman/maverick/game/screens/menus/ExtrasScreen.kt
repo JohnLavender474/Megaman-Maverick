@@ -28,6 +28,9 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
         private const val TEXT_X = 3f
         private const val MAX_VISIBLE_ROWS = 10
         private const val WRAP = true
+
+        // TODO: remove the dummy items after the scroll pane is tested
+        private const val DUMMY_ITEM_COUNT = 15
     }
 
     private val backgroundSprite = GameSprite()
@@ -61,6 +64,8 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
             scrollPane.addItem(key)
             levels.put(key, level)
         }
+        // TODO: remove the dummy items after the scroll pane is tested
+        for (i in 1..DUMMY_ITEM_COUNT) scrollPane.addItem("DUMMY $i")
 
         scrollPane.keys.forEach { key ->
             buttons.put(key, object : IMenuButton {
@@ -68,6 +73,12 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
                 override fun onNavigate(direction: Direction, delta: Float) = scrollPane.navigate(key, direction)
 
                 override fun onSelect(delta: Float): Boolean {
+                    // TODO: remove this check with the dummy items
+                    if (key != BACK && !levels.containsKey(key)) {
+                        game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                        return false
+                    }
+
                     game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
                     if (key == BACK) {
