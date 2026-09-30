@@ -100,6 +100,7 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MM2_END_THEME_MUSIC("mm2_end_theme.ogg"),
     MMX3_ZERO_THEME_MUSIC("mmx3_zero_theme.ogg"),
     MM5_INTRO_MUSIC("mm5_intro.ogg"),
+    MMX6_YAMMARK_MUSIC("MMX6_Yammark.ogg"),
     VINNYZ_STAGE_START_MUSIC("stage_start.ogg"),
     VINNYZ_VICTORY_MUSIC("vinnyz_stage_clear.ogg", loop = false),
     VINNYZ_INTRO_BOSS_MUSIC_LOOP("vinnyz_intro_boss_loop.ogg", loop = true),
