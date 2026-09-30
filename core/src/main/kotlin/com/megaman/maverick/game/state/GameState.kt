@@ -255,6 +255,9 @@ class GameState : Resettable {
             }
         }
 
+        val currencyToRemove = getCurrency() - currency.min
+        if (currencyToRemove > 0) removeCurrency(currencyToRemove)
+
         difficultyMode = DifficultyMode.NORMAL
     }
 
