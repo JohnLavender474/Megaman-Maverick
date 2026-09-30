@@ -717,13 +717,14 @@ class MegamanMaverickGame(
         ?.type == LevelType.EXTRA_LEVEL
 
     /**
-     * Removes all of the player's progress from memory: the game state, the weapons, and the weapons-attained
-     * property. The save file does not change.
+     * Removes all of the player's progress from memory: the game state, the weapons, the lives, and the
+     * weapons-attained property. The save file does not change.
      */
     fun resetPlayerProgress() {
         GameLogger.debug(TAG, "resetPlayerProgress()")
         state.reset()
         megaman.clearWeapons()
+        megaman.resetLives()
         removeProperty(ConstKeys.WEAPONS_ATTAINED)
     }
 
@@ -745,7 +746,6 @@ class MegamanMaverickGame(
         //  needed.
         val loadout = level.loadoutOverride
         if (loadout != null) applyLoadoutOverride(loadout) else resetPlayerProgress()
-        megaman.resetLives()
         startLevel(level)
     }
 
@@ -778,6 +778,7 @@ class MegamanMaverickGame(
 
                 this.state.reset()
                 this.state.fromString(state)
+                megaman.resetLives()
 
                 return true
             }
