@@ -829,7 +829,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
                 val level = game.getCurrentLevel()
-                game.state.addLevelDefeated(level)
+                if (level.type != LevelType.EXTRA_LEVEL) game.state.addLevelDefeated(level)
 
                 val nextScreen = screenOnCompletion.invoke(game)
                 game.setCurrentScreen(nextScreen.name)

@@ -293,7 +293,8 @@ class GameState : Resettable {
         if (lines.size >= 1 && !lines[0].isEmpty()) lines[0].forEach {
             try {
                 val level = LevelDefinition.valueOf(it.uppercase())
-                addLevelDefeated(level)
+                if (level.type != LevelType.EXTRA_LEVEL) addLevelDefeated(level)
+                else GameLogger.log(TAG, "fromString(): do not record extra level as defeated: $it")
             } catch (e: Exception) {
                 GameLogger.error(TAG, "fromString(): failed to add level: $it", e)
             }
