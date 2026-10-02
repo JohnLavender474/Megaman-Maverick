@@ -1,277 +1,281 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="96">
- <tileset firstgid="1" source="../tsx/Tileset1.tsx" />
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="96">
+ <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
+ <layer id="11" name="tiles1" width="100" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1VEOhSAMRFH2vyRX57+hMkPBlHhPQvLS51QMCq0BAAAAAIAqrk2jBb93DuU+o2ve/t/xHE+9mirqSV7PKzWnH/lcXqk5/cjn8krN6Uc+l1dqTr+Keefs7J3TUf/obJ/1l/U4Ka/UnH5v71d0/cr36/S8Uuvdc/S9z85ntN+oc1Pn4uxjzn43Y/X3gRzWoxbWoxZnr2R8M1iPWgMAAAB73KvOMqw=
+  </data>
+ </layer>
  <objectgroup id="1" name="game_rooms">
-  <object id="1" name="room1" x="64" y="320" width="512" height="448" />
-  <object id="8" name="room2" x="576" y="320" width="512" height="448" />
-  <object id="17" name="room3" x="1088" y="320" width="512" height="448" />
-  <object id="24" name="room4" x="1600" y="320" width="512" height="448" />
-  <object id="34" name="room5" x="2112" y="320" width="512" height="448" />
+  <object id="1" name="room1" x="64" y="320" width="512" height="448"/>
+  <object id="8" name="room2" x="576" y="320" width="512" height="448"/>
+  <object id="17" name="room3" x="1088" y="320" width="512" height="448"/>
+  <object id="24" name="room4" x="1600" y="320" width="512" height="448"/>
+  <object id="34" name="room5" x="2112" y="320" width="512" height="448"/>
   <object id="49" name="room6" x="2624" y="320" width="512" height="448">
    <properties>
-    <property name="event" value="success" />
-    <property name="fade_out_music" type="bool" value="true" />
+    <property name="event" value="success"/>
+    <property name="fade_out_music" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="2" name="blocks">
-  <object id="2" x="64" y="320" width="512" height="32" />
-  <object id="3" x="64" y="704" width="512" height="64" />
-  <object id="4" x="64" y="352" width="32" height="352" />
-  <object id="5" x="544" y="352" width="32" height="256" />
-  <object id="6" x="320" y="576" width="96" height="32" />
-  <object id="9" x="576" y="320" width="192" height="32" />
-  <object id="10" x="800" y="320" width="64" height="32" />
-  <object id="11" x="896" y="320" width="192" height="32" />
-  <object id="12" x="576" y="352" width="32" height="256" />
-  <object id="13" x="1056" y="352" width="32" height="256" />
-  <object id="14" x="640" y="544" width="96" height="32" />
-  <object id="15" x="928" y="544" width="96" height="32" />
-  <object id="16" x="576" y="704" width="512" height="64" />
-  <object id="18" x="1088" y="320" width="512" height="32" />
-  <object id="19" x="1088" y="704" width="512" height="64" />
-  <object id="20" x="1088" y="352" width="32" height="256" />
-  <object id="21" x="1568" y="352" width="32" height="256" />
-  <object id="22" x="1248" y="576" width="96" height="32" />
-  <object id="25" x="1600" y="320" width="96" height="32" />
-  <object id="26" x="1728" y="320" width="256" height="32" />
-  <object id="27" x="2016" y="320" width="96" height="32" />
-  <object id="28" x="1600" y="352" width="32" height="224" />
-  <object id="29" x="2080" y="352" width="32" height="224" />
-  <object id="30" x="1760" y="480" width="192" height="32" />
-  <object id="31" x="1600" y="576" width="128" height="32" />
-  <object id="32" x="1984" y="576" width="128" height="32" />
-  <object id="33" x="1600" y="704" width="512" height="64" />
-  <object id="35" x="2112" y="320" width="128" height="32" />
-  <object id="36" x="2272" y="320" width="192" height="32" />
-  <object id="37" x="2272" y="576" width="192" height="32" />
-  <object id="38" x="2496" y="320" width="128" height="32" />
-  <object id="39" x="2112" y="352" width="32" height="256" />
-  <object id="40" x="2592" y="352" width="32" height="256" />
-  <object id="41" x="2176" y="480" width="96" height="32" />
-  <object id="42" x="2336" y="480" width="64" height="32" />
-  <object id="43" x="2464" y="480" width="96" height="32" />
-  <object id="44" x="2112" y="704" width="192" height="32" />
-  <object id="45" x="2432" y="704" width="192" height="32" />
-  <object id="46" x="2112" y="736" width="512" height="32" />
-  <object id="50" x="2624" y="320" width="512" height="32" />
-  <object id="51" x="2624" y="704" width="512" height="64" />
-  <object id="52" x="2624" y="352" width="32" height="256" />
-  <object id="53" x="3104" y="352" width="32" height="352" />
+  <object id="2" x="64" y="320" width="512" height="32"/>
+  <object id="3" x="64" y="704" width="512" height="64"/>
+  <object id="4" x="64" y="352" width="32" height="352"/>
+  <object id="5" x="544" y="352" width="32" height="256"/>
+  <object id="6" x="320" y="576" width="96" height="32"/>
+  <object id="9" x="576" y="320" width="192" height="32"/>
+  <object id="10" x="800" y="320" width="64" height="32"/>
+  <object id="11" x="896" y="320" width="192" height="32"/>
+  <object id="12" x="576" y="352" width="32" height="256"/>
+  <object id="13" x="1056" y="352" width="32" height="256"/>
+  <object id="14" x="640" y="544" width="96" height="32"/>
+  <object id="15" x="928" y="544" width="96" height="32"/>
+  <object id="16" x="576" y="704" width="512" height="64"/>
+  <object id="18" x="1088" y="320" width="512" height="32"/>
+  <object id="19" x="1088" y="704" width="512" height="64"/>
+  <object id="20" x="1088" y="352" width="32" height="256"/>
+  <object id="21" x="1568" y="352" width="32" height="256"/>
+  <object id="22" x="1248" y="576" width="96" height="32"/>
+  <object id="25" x="1600" y="320" width="96" height="32"/>
+  <object id="26" x="1728" y="320" width="256" height="32"/>
+  <object id="27" x="2016" y="320" width="96" height="32"/>
+  <object id="28" x="1600" y="352" width="32" height="224"/>
+  <object id="29" x="2080" y="352" width="32" height="224"/>
+  <object id="30" x="1760" y="480" width="192" height="32"/>
+  <object id="31" x="1600" y="576" width="128" height="32"/>
+  <object id="32" x="1984" y="576" width="128" height="32"/>
+  <object id="33" x="1600" y="704" width="512" height="64"/>
+  <object id="35" x="2112" y="320" width="128" height="32"/>
+  <object id="36" x="2272" y="320" width="192" height="32"/>
+  <object id="37" x="2272" y="576" width="192" height="32"/>
+  <object id="38" x="2496" y="320" width="128" height="32"/>
+  <object id="39" x="2112" y="352" width="32" height="256"/>
+  <object id="40" x="2592" y="352" width="32" height="256"/>
+  <object id="41" x="2176" y="480" width="96" height="32"/>
+  <object id="42" x="2336" y="480" width="64" height="32"/>
+  <object id="43" x="2464" y="480" width="96" height="32"/>
+  <object id="44" x="2112" y="704" width="192" height="32"/>
+  <object id="45" x="2432" y="704" width="192" height="32"/>
+  <object id="46" x="2112" y="736" width="512" height="32"/>
+  <object id="50" x="2624" y="320" width="512" height="32"/>
+  <object id="51" x="2624" y="704" width="512" height="64"/>
+  <object id="52" x="2624" y="352" width="32" height="256"/>
+  <object id="53" x="3104" y="352" width="32" height="352"/>
   <object id="63" name="AbstractBlock" x="768" y="320" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met" />
-    <property name="cull_out_of_bounds" value="false" type="bool" />
-    <property name="spawn_type" value="spawn_now" />
+    <property name="block_filters" value="Met"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="66" name="AbstractBlock" x="864" y="320" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe" />
-    <property name="cull_out_of_bounds" value="false" type="bool" />
-    <property name="spawn_type" value="spawn_now" />
+    <property name="block_filters" value="Met,SniperJoe"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="75" name="AbstractBlock" x="1696" y="320" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,Ratton" />
-    <property name="cull_out_of_bounds" value="false" type="bool" />
-    <property name="spawn_type" value="spawn_now" />
+    <property name="block_filters" value="Met,Ratton"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="78" name="AbstractBlock" x="1984" y="320" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,Ratton" />
-    <property name="cull_out_of_bounds" value="false" type="bool" />
-    <property name="spawn_type" value="spawn_now" />
+    <property name="block_filters" value="Met,Ratton"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="88" name="AbstractBlock" x="2240" y="320" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe" />
-    <property name="cull_out_of_bounds" value="false" type="bool" />
-    <property name="spawn_type" value="spawn_now" />
+    <property name="block_filters" value="Met,SniperJoe"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="91" name="AbstractBlock" x="2464" y="320" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe" />
-    <property name="cull_out_of_bounds" value="false" type="bool" />
-    <property name="spawn_type" value="spawn_now" />
+    <property name="block_filters" value="Met,SniperJoe"/>
+    <property name="cull_out_of_bounds" type="bool" value="false"/>
+    <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="3" name="player">
-  <object id="7" name="0" x="128" y="640" width="32" height="32" />
-  <object id="23" name="1" x="1216" y="640" width="32" height="32" />
-  <object id="48" name="2" x="2208" y="640" width="32" height="32" />
- </objectgroup>
- <objectgroup id="4" name="enemies" />
- <objectgroup id="5" name="hazards" />
- <objectgroup id="6" name="TODO" />
+ <objectgroup id="5" name="hazards"/>
  <objectgroup id="7" name="sensors">
-  <object id="47" name="Death" x="2304" y="704" width="128" height="32" />
+  <object id="47" name="Death" x="2304" y="704" width="128" height="32"/>
   <object id="54" name="Gate" x="544" y="608" width="64" height="96">
    <properties>
-    <property name="room" value="room2" />
+    <property name="room" value="room2"/>
    </properties>
   </object>
   <object id="55" name="Gate" x="1056" y="608" width="64" height="96">
    <properties>
-    <property name="room" value="room3" />
-    <property name="gauntlet_key" value="g1" />
+    <property name="gauntlet_key" value="g1"/>
+    <property name="room" value="room3"/>
    </properties>
   </object>
   <object id="56" name="Gate" x="1568" y="608" width="64" height="96">
    <properties>
-    <property name="room" value="room4" />
+    <property name="room" value="room4"/>
    </properties>
   </object>
   <object id="57" name="Gate" x="2080" y="608" width="64" height="96">
    <properties>
-    <property name="room" value="room5" />
-    <property name="gauntlet_key" value="g2" />
+    <property name="gauntlet_key" value="g2"/>
+    <property name="room" value="room5"/>
    </properties>
   </object>
   <object id="58" name="Gate" x="2592" y="608" width="64" height="96">
    <properties>
-    <property name="room" value="room6" />
-    <property name="gauntlet_key" value="g3" />
+    <property name="gauntlet_key" value="g3"/>
+    <property name="room" value="room6"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="8" name="specials">
   <object id="69" name="GauntletMaster" x="832" y="384" width="32" height="32">
    <properties>
-    <property name="spawn_type" value="spawn_now" />
-    <property name="room" value="room2" />
-    <property name="key" value="g1" />
-    <property name="wave_1_1" value="64" type="object" />
-    <property name="wave_1_2" value="67" type="object" />
-    <property name="wave_2_1" value="59" type="object" />
-    <property name="wave_2_2" value="60" type="object" />
-    <property name="wave_2_3" value="65" type="object" />
-    <property name="wave_3_1" value="61" type="object" />
-    <property name="wave_3_2" value="62" type="object" />
-    <property name="wave_3_3" value="68" type="object" />
+    <property name="key" value="g1"/>
+    <property name="room" value="room2"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="wave_1_1" type="object" value="64"/>
+    <property name="wave_1_2" type="object" value="67"/>
+    <property name="wave_2_1" type="object" value="59"/>
+    <property name="wave_2_2" type="object" value="60"/>
+    <property name="wave_2_3" type="object" value="65"/>
+    <property name="wave_3_1" type="object" value="61"/>
+    <property name="wave_3_2" type="object" value="62"/>
+    <property name="wave_3_3" type="object" value="68"/>
    </properties>
   </object>
   <object id="81" name="GauntletMaster" x="1824" y="352" width="32" height="32">
    <properties>
-    <property name="spawn_type" value="spawn_now" />
-    <property name="room" value="room4" />
-    <property name="key" value="g2" />
-    <property name="wave_1_1" value="76" type="object" />
-    <property name="wave_1_2" value="79" type="object" />
-    <property name="wave_2_1" value="70" type="object" />
-    <property name="wave_2_2" value="71" type="object" />
-    <property name="wave_2_3" value="72" type="object" />
-    <property name="wave_3_1" value="73" type="object" />
-    <property name="wave_3_2" value="74" type="object" />
-    <property name="wave_3_3" value="77" type="object" />
-    <property name="wave_3_4" value="80" type="object" />
+    <property name="key" value="g2"/>
+    <property name="room" value="room4"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="wave_1_1" type="object" value="76"/>
+    <property name="wave_1_2" type="object" value="79"/>
+    <property name="wave_2_1" type="object" value="70"/>
+    <property name="wave_2_2" type="object" value="71"/>
+    <property name="wave_2_3" type="object" value="72"/>
+    <property name="wave_3_1" type="object" value="73"/>
+    <property name="wave_3_2" type="object" value="74"/>
+    <property name="wave_3_3" type="object" value="77"/>
+    <property name="wave_3_4" type="object" value="80"/>
    </properties>
   </object>
   <object id="94" name="GauntletMaster" x="2336" y="352" width="32" height="32">
    <properties>
-    <property name="spawn_type" value="spawn_now" />
-    <property name="room" value="room5" />
-    <property name="key" value="g3" />
-    <property name="wave_1_1" value="82" type="object" />
-    <property name="wave_1_2" value="83" type="object" />
-    <property name="wave_2_1" value="84" type="object" />
-    <property name="wave_2_2" value="85" type="object" />
-    <property name="wave_3_1" value="89" type="object" />
-    <property name="wave_3_2" value="92" type="object" />
-    <property name="wave_4_1" value="86" type="object" />
-    <property name="wave_4_2" value="87" type="object" />
-    <property name="wave_4_3" value="90" type="object" />
-    <property name="wave_4_4" value="93" type="object" />
+    <property name="key" value="g3"/>
+    <property name="room" value="room5"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="wave_1_1" type="object" value="82"/>
+    <property name="wave_1_2" type="object" value="83"/>
+    <property name="wave_2_1" type="object" value="84"/>
+    <property name="wave_2_2" type="object" value="85"/>
+    <property name="wave_3_1" type="object" value="89"/>
+    <property name="wave_3_2" type="object" value="92"/>
+    <property name="wave_4_1" type="object" value="86"/>
+    <property name="wave_4_2" type="object" value="87"/>
+    <property name="wave_4_3" type="object" value="90"/>
+    <property name="wave_4_4" type="object" value="93"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="9" name="children">
   <object id="59" name="SniperJoe" x="680" y="528" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="60" name="SniperJoe" x="968" y="528" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="61" name="FloatingCan" x="704" y="416" width="32" height="32" />
-  <object id="62" name="FloatingCan" x="960" y="416" width="32" height="32" />
-  <object id="64" name="Met" x="768" y="320" width="32" height="32" />
-  <object id="65" name="Met" x="768" y="320" width="32" height="32" />
-  <object id="67" name="Met" x="864" y="320" width="32" height="32" />
-  <object id="68" name="SniperJoe" x="872" y="336" width="16" height="16" />
+  <object id="61" name="FloatingCan" x="704" y="416" width="32" height="32"/>
+  <object id="62" name="FloatingCan" x="960" y="416" width="32" height="32"/>
+  <object id="64" name="Met" x="768" y="320" width="32" height="32"/>
+  <object id="65" name="Met" x="768" y="320" width="32" height="32"/>
+  <object id="67" name="Met" x="864" y="320" width="32" height="32"/>
+  <object id="68" name="SniperJoe" x="872" y="336" width="16" height="16"/>
   <object id="70" name="SniperJoe" x="1832" y="464" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="71" name="SniperJoe" x="1768" y="656" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="72" name="SniperJoe" x="1928" y="656" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="73" name="JetMet" x="1736" y="432" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="74" name="JetMet" x="1960" y="432" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="76" name="Met" x="1696" y="320" width="32" height="32" />
-  <object id="77" name="Ratton" x="1704" y="336" width="16" height="16" />
-  <object id="79" name="Met" x="1984" y="320" width="32" height="32" />
-  <object id="80" name="Ratton" x="1992" y="336" width="16" height="16" />
+  <object id="76" name="Met" x="1696" y="320" width="32" height="32"/>
+  <object id="77" name="Ratton" x="1704" y="336" width="16" height="16"/>
+  <object id="79" name="Met" x="1984" y="320" width="32" height="32"/>
+  <object id="80" name="Ratton" x="1992" y="336" width="16" height="16"/>
   <object id="82" name="SniperJoe" x="2280" y="656" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="83" name="SniperJoe" x="2504" y="656" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="84" name="PicketJoe" x="2312" y="560" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="85" name="PicketJoe" x="2408" y="560" width="16" height="16">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="86" name="PetitDevil" x="2240" y="384" width="32" height="32">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
   <object id="87" name="PetitDevil" x="2464" y="384" width="32" height="32">
    <properties>
-    <property name="spawn_blink" value="1.0" type="float" />
+    <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="89" name="Met" x="2240" y="320" width="32" height="32" />
-  <object id="90" name="SniperJoe" x="2248" y="336" width="16" height="16" />
-  <object id="92" name="Met" x="2464" y="320" width="32" height="32" />
-  <object id="93" name="SniperJoe" x="2472" y="336" width="16" height="16" />
+  <object id="89" name="Met" x="2240" y="320" width="32" height="32"/>
+  <object id="90" name="SniperJoe" x="2248" y="336" width="16" height="16"/>
+  <object id="92" name="Met" x="2464" y="320" width="32" height="32"/>
+  <object id="93" name="SniperJoe" x="2472" y="336" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="10" name="items">
-  <object id="95" name="HealthBulb" x="1280" y="544" width="32" height="32" />
+  <object id="95" name="HealthBulb" x="1280" y="544" width="32" height="32"/>
  </objectgroup>
+ <objectgroup id="4" name="enemies"/>
+ <objectgroup id="3" name="player">
+  <object id="7" name="0" x="128" y="672" width="32" height="32"/>
+  <object id="23" name="1" x="1280" y="672" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="6" name="TODO"/>
 </map>
