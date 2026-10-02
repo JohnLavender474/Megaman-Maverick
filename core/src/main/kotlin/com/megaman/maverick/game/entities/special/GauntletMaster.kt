@@ -24,7 +24,6 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.convertToProps
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
@@ -173,7 +172,7 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
                 val roomObject = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!
                 if (roomObject.name == room && state == GauntletState.INACTIVE) {
                     GameLogger.debug(TAG, "onEvent(): key=$key, entered room $room: start gauntlet")
-                    roomBounds.set(roomObject.rectangle.toGameRectangle(false))
+                    roomBounds.set(roomObject.rectangle)
                     startTimer.reset()
                     state = GauntletState.STARTING
                 }
@@ -214,12 +213,18 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
                 )
             )
 
+            // A refused spawn (e.g. "hard_mode_only" or an enemy-count limit) must not be tracked, because it never
+            // dies and the gauntlet would never be cleared
+            if (!enemy.spawn(enemyProps)) {
+                GameLogger.error(TAG, "spawnWave(): key=$key, spawn refused: ${mapObject.name}")
+                MegaEntityFactory.free(enemy)
+                return@forEach
+            }
+
             enemy.runnablesOnDestroy.put(childRunnableKey) {
                 if (children.removeValue(enemy, true)) deadChildren.add(enemy)
             }
-
             children.add(enemy)
-            enemy.spawn(enemyProps)
         }
 
         state = GauntletState.WAVE_ACTIVE

@@ -418,6 +418,7 @@ object ConstKeys {
     const val BODY_SENSES = "body_senses"
     const val SPAWNS = "spawns"
     const val SPAWN = "spawn"
+    const val SPAWN_BLINK = "spawn_blink"
     const val SPAWNER = "spawner"
     const val ATLAS = "atlas"
     const val REGION = "region"

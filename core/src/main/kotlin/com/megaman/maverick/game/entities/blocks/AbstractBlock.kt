@@ -28,7 +28,14 @@ open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
         spawnProps.put(ConstKeys.FRICTION_X, 0f)
         spawnProps.put(ConstKeys.FRICTION_Y, 0f)
         spawnProps.put(ConstKeys.FIXTURE_LABELS, FIXTURE_LABELS)
-        spawnProps.put(ConstKeys.BLOCK_FILTERS, objectSetOf(MoonScythe.TAG, SmallIceCube.TAG))
+        // Tags from the TMX "block_filters" prop (e.g. "Met,SniperJoe") are added to the default filters
+        val blockFilters = objectSetOf(MoonScythe.TAG, SmallIceCube.TAG)
+        (spawnProps.get(ConstKeys.BLOCK_FILTERS) as? String)
+            ?.split(",")
+            ?.map { it.trim() }
+            ?.filter { it.isNotEmpty() }
+            ?.forEach { blockFilters.add(it) }
+        spawnProps.put(ConstKeys.BLOCK_FILTERS, blockFilters)
         spawnProps.put("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
