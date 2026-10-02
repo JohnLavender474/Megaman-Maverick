@@ -13,15 +13,14 @@ import com.mega.game.engine.common.extensions.gdxArrayOf
 import com.mega.game.engine.common.extensions.objectSetOf
 import com.mega.game.engine.common.interfaces.ISizable
 import com.mega.game.engine.common.objects.GamePair
-import com.mega.game.engine.common.interfaces.Updatable
 import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.shapes.ShapeUtils
+import com.mega.game.engine.common.time.Timer
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
@@ -89,7 +88,7 @@ abstract class AbstractEnemy(
 
         const val LARGE_ITEM_CHANCE = 25
 
-        private const val SPAWN_BLINK_INTERVAL = 0.1f
+        private const val SPAWN_BLINK_INTERVAL = 0.05f
 
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
             Life::class pairTo {
@@ -116,11 +115,9 @@ abstract class AbstractEnemy(
     protected var dropItemOnDeath = true
     protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
 
-    // While the spawn blink is active, this enemy blinks, is invincible, cannot inflict damage, and its updatables
-    // are paused
     private val spawnBlinkTimer = Timer(0f)
     private val spawnBlinkIntervalTimer = Timer(SPAWN_BLINK_INTERVAL)
-    private var updatablesGated = false
+    private var spawnBlinkHidden = false
 
     override fun init(vararg params: Any) {
         super.init()
@@ -166,35 +163,26 @@ abstract class AbstractEnemy(
 
     fun isSpawnBlinking() = !spawnBlinkTimer.isFinished()
 
-    // Done the first time a spawn blink is requested, when the updatables component is complete. Enemies that never
-    // use the spawn blink are not changed.
-    private fun gateUpdatablesForSpawnBlink() {
-        if (updatablesGated) return
-        updatablesGated = true
-
-        val updatablesComponent = getComponent(UpdatablesComponent::class)!!
-        val updatables = updatablesComponent.updatables
-
-        updatables.keys().toArray().forEach { key ->
-            val updatable = updatables[key]
-            updatables.put(key, Updatable { delta -> if (!isSpawnBlinking()) updatable.update(delta) })
-        }
-
-        updatablesComponent.put(ConstKeys.SPAWN_BLINK, Updatable { delta ->
-            if (!isSpawnBlinking()) return@Updatable
+    override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
+        super.defineUpdatablesComponent(updatablesComponent)
+        updatablesComponent.add { delta ->
+            if (!isSpawnBlinking()) return@add
 
             spawnBlinkTimer.update(delta)
             if (spawnBlinkTimer.isFinished()) {
+                spawnBlinkHidden = false
                 damageBlink = false
-                return@Updatable
+                return@add
             }
 
             spawnBlinkIntervalTimer.update(delta)
             if (spawnBlinkIntervalTimer.isFinished()) {
-                damageBlink = !damageBlink
+                spawnBlinkHidden = !spawnBlinkHidden
                 spawnBlinkIntervalTimer.reset()
             }
-        })
+
+            damageBlink = spawnBlinkHidden
+        }
     }
 
     protected open fun canSpawnItemOnHealthDepleted() = lastDamager != CartV2
@@ -204,10 +192,10 @@ abstract class AbstractEnemy(
 
         val spawnBlink = spawnProps.getOrDefault(ConstKeys.SPAWN_BLINK, 0f, Float::class)
         if (spawnBlink > 0f) {
-            gateUpdatablesForSpawnBlink()
             spawnBlinkTimer.resetDuration(spawnBlink)
             spawnBlinkIntervalTimer.reset()
         } else spawnBlinkTimer.setToEnd()
+        spawnBlinkHidden = false
 
         onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
         dropItemOnDeath = spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, true, Boolean::class)
