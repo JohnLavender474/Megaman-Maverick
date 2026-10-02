@@ -204,7 +204,6 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
                 "Entity of type ${EntityType.ENEMY} not found: ${mapObject.name}"
             )
 
-            // Fresh props for each spawn so that the stored map object is never changed
             val enemyProps = mapObject.convertToProps()
             enemyProps.putAll(
                 props(
@@ -213,8 +212,6 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
                 )
             )
 
-            // A refused spawn (e.g. "hard_mode_only" or an enemy-count limit) must not be tracked, because it never
-            // dies and the gauntlet would never be cleared
             if (!enemy.spawn(enemyProps)) {
                 GameLogger.error(TAG, "spawnWave(): key=$key, spawn refused: ${mapObject.name}")
                 MegaEntityFactory.free(enemy)
