@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <layer id="11" name="tiles1" width="100" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1VEOhSAMRFH2vyRX57+hMkPBlHhPQvLS51QMCq0BAAAAAIAqrk2jBb93DuU+o2ve/t/xHE+9mirqSV7PKzWnH/lcXqk5/cjn8krN6Uc+l1dqTr+Keefs7J3TUf/obJ/1l/U4Ka/UnH5v71d0/cr36/S8Uuvdc/S9z85ntN+oc1Pn4uxjzn43Y/X3gRzWoxbWoxZnr2R8M1iPWgMAAAB73KvOMqw=
+   eJzt1VEKhDAMhOHe/0g9ne9i60zTSIr/B4E17mRZIrU1AAAAAABQRU+qNvicWcrvvH1ndj/jf9w99VSjmeT1vNJz5pGP5ZWeM498LK/0nHnkY3ml58yrmHfenX3jtesv+zgpr/Scec7zkvF8nZ5Xes68CvnZmbSSWT3vXLv3gRj2UQv7qMU5K6lvin3UKgAAAOS4AE+jK2g=
   </data>
  </layer>
  <objectgroup id="1" name="game_rooms">
@@ -23,45 +23,38 @@
   <object id="2" x="64" y="320" width="512" height="32"/>
   <object id="3" x="64" y="704" width="512" height="64"/>
   <object id="4" x="64" y="352" width="32" height="352"/>
-  <object id="5" x="544" y="352" width="32" height="256"/>
-  <object id="6" x="320" y="576" width="96" height="32"/>
   <object id="9" x="576" y="320" width="192" height="32"/>
   <object id="10" x="800" y="320" width="64" height="32"/>
   <object id="11" x="896" y="320" width="192" height="32"/>
-  <object id="12" x="576" y="352" width="32" height="256"/>
-  <object id="13" x="1056" y="352" width="32" height="256"/>
-  <object id="14" x="640" y="544" width="96" height="32"/>
-  <object id="15" x="928" y="544" width="96" height="32"/>
+  <object id="12" x="544" y="352" width="64" height="352"/>
+  <object id="13" x="1056" y="352" width="64" height="352"/>
+  <object id="14" x="672" y="544" width="64" height="32"/>
+  <object id="15" x="928" y="544" width="64" height="32"/>
   <object id="16" x="576" y="704" width="512" height="64"/>
   <object id="18" x="1088" y="320" width="512" height="32"/>
   <object id="19" x="1088" y="704" width="512" height="64"/>
-  <object id="20" x="1088" y="352" width="32" height="256"/>
-  <object id="21" x="1568" y="352" width="32" height="256"/>
-  <object id="22" x="1248" y="576" width="96" height="32"/>
   <object id="25" x="1600" y="320" width="96" height="32"/>
   <object id="26" x="1728" y="320" width="256" height="32"/>
   <object id="27" x="2016" y="320" width="96" height="32"/>
-  <object id="28" x="1600" y="352" width="32" height="224"/>
-  <object id="29" x="2080" y="352" width="32" height="224"/>
+  <object id="28" x="1568" y="352" width="64" height="352"/>
   <object id="30" x="1760" y="480" width="192" height="32"/>
-  <object id="31" x="1600" y="576" width="128" height="32"/>
-  <object id="32" x="1984" y="576" width="128" height="32"/>
+  <object id="31" x="1632" y="576" width="96" height="32"/>
+  <object id="32" x="1984" y="576" width="96" height="32"/>
   <object id="33" x="1600" y="704" width="512" height="64"/>
   <object id="35" x="2112" y="320" width="128" height="32"/>
   <object id="36" x="2272" y="320" width="192" height="32"/>
   <object id="37" x="2272" y="576" width="192" height="32"/>
   <object id="38" x="2496" y="320" width="128" height="32"/>
-  <object id="39" x="2112" y="352" width="32" height="256"/>
-  <object id="40" x="2592" y="352" width="32" height="256"/>
-  <object id="41" x="2176" y="480" width="96" height="32"/>
+  <object id="39" x="2080" y="352" width="64" height="352"/>
+  <object id="41" x="2208" y="480" width="64" height="32"/>
   <object id="42" x="2336" y="480" width="64" height="32"/>
-  <object id="43" x="2464" y="480" width="96" height="32"/>
+  <object id="43" x="2464" y="480" width="64" height="32"/>
   <object id="44" x="2112" y="704" width="192" height="32"/>
   <object id="45" x="2432" y="704" width="192" height="32"/>
   <object id="46" x="2112" y="736" width="512" height="32"/>
   <object id="50" x="2624" y="320" width="512" height="32"/>
   <object id="51" x="2624" y="704" width="512" height="64"/>
-  <object id="52" x="2624" y="352" width="32" height="256"/>
+  <object id="52" x="2592" y="352" width="64" height="352"/>
   <object id="53" x="3104" y="352" width="32" height="352"/>
   <object id="63" name="AbstractBlock" x="768" y="320" width="32" height="32">
    <properties>
@@ -189,12 +182,12 @@
   </object>
  </objectgroup>
  <objectgroup id="9" name="children">
-  <object id="59" name="SniperJoe" x="680" y="528" width="16" height="16">
+  <object id="59" name="SniperJoe" x="696" y="528" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="60" name="SniperJoe" x="968" y="528" width="16" height="16">
+  <object id="60" name="SniperJoe" x="952" y="528" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -271,13 +264,11 @@
   <object id="92" name="Met" x="2464" y="320" width="32" height="32"/>
   <object id="93" name="SniperJoe" x="2472" y="336" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="10" name="items">
-  <object id="95" name="HealthBulb" x="1280" y="544" width="32" height="32"/>
- </objectgroup>
+ <objectgroup id="10" name="items"/>
  <objectgroup id="4" name="enemies"/>
  <objectgroup id="3" name="player">
   <object id="7" name="0" x="128" y="672" width="32" height="32"/>
-  <object id="23" name="1" x="1280" y="672" width="32" height="32"/>
+  <object id="23" name="1" x="1328" y="672" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="6" name="TODO"/>
 </map>
