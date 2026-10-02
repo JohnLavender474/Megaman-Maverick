@@ -45,6 +45,9 @@ object MegaEntityFactory : ArgsInitializable<MegamanMaverickGame>, Resettable {
         }
     }
 
+    fun getEntityClass(entityType: EntityType, name: String): KClass<out MegaGameEntity> =
+        Class.forName(entityType.getFullyQualifiedName(name)).kotlin as KClass<out MegaGameEntity>
+
     fun <K : MegaGameEntity> fetch(key: String, castClass: KClass<K>): K? {
         val clazz = Class.forName(key).kotlin as KClass<MegaGameEntity>
         return castClass.cast(fetch(clazz))

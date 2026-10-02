@@ -130,6 +130,15 @@ enum class LevelDefinition(
         screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
         // TODO: set the heart tanks, health tanks, enhancements, and weapons for this level
         loadoutOverride = LoadoutOverride()
+    ),
+    GAUNTLET_1(
+        type = LevelType.EXTRA_LEVEL,
+        tmxMapSource = "Gauntlet1.tmx",
+        // TODO: pick the music for this level
+        music = MusicAsset.MMX6_GATE_STAGE_MUSIC,
+        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
+        // TODO: set the heart tanks, health tanks, enhancements, and weapons for this level
+        loadoutOverride = LoadoutOverride()
     );
 
     companion object {

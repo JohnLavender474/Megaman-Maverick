@@ -38,6 +38,8 @@ enum class EventType {
     BOSS_DEAD,
     // called when the boss that just died is NOT the end-level boss
     INTERMEDIATE_BOSS_DEAD,
+    // called when a gauntlet master's waves are all defeated
+    GAUNTLET_CLEARED,
     VICTORY_EVENT,
     END_LEVEL,
 

@@ -73,7 +73,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
             val clazz: KClass<out MegaGameEntity>
             try {
-                clazz = Class.forName(entityType.getFullyQualifiedName(name)).kotlin as KClass<out MegaGameEntity>
+                clazz = MegaEntityFactory.getEntityClass(entityType, name)
             } catch (e: Exception) {
                 GameLogger.error(
                     TAG, "Failed to create spawner for entity: name=${name}, layer.name=${layer.name}", e
