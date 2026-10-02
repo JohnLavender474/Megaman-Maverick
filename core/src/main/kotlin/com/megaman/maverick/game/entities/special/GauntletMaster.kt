@@ -60,7 +60,7 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
     private data class WaveEntry(val clazz: KClass<out MegaGameEntity>, val mapObject: RectangleMapObject)
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.PLAYER_SPAWN,
+        EventType.PLAYER_JUST_DIED,
         EventType.BEGIN_ROOM_TRANS,
         EventType.END_ROOM_TRANS,
         EventType.SET_TO_ROOM_NO_TRANS
@@ -158,8 +158,8 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.PLAYER_SPAWN -> {
-                GameLogger.debug(TAG, "onEvent(): key=$key, PLAYER_SPAWN")
+            EventType.PLAYER_JUST_DIED -> {
+                GameLogger.debug(TAG, "onEvent(): key=$key, PLAYER_JUST_DIED")
                 resetGauntlet()
             }
 
