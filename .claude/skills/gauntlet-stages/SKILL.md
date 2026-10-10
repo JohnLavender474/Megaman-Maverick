@@ -73,8 +73,12 @@ Reference stage: `assets/tiled_maps/tmx/Gauntlet1_v2.tmx` (design notes in
   spawns its orbiting children only after the delay.
 - **Ceiling hole**: leave a gap in the ceiling and cover it with an `AbstractBlock`
   (`block_filters` = the enemy tags that drop through, `spawn_type=spawn_now`,
-  `cull_out_of_bounds=false`). Put the enemy object in the hole cell, bottom-aligned, with no
-  `spawn_blink`.
+  `cull_out_of_bounds=false`). Put the enemy object in the hole cell, bottom-aligned, with
+  `spawn_blink=1` too: a falling enemy can hurt Mega Man at once, so it must not drop onto him
+  without warning.
+- **Every wave enemy that can hurt Mega Man on contact gets `spawn_blink=1`**, whatever its
+  entrance. The only exception is an enemy with its own harmless entrance (for example the
+  shielded HeliMet fly-in).
 - **Fly-in (HeliMet)**: place it 1 tile outside the side wall with a `target_1` object ref to a
   `Target` object in `children`. One target per HeliMet.
 - A child more than 2 tiles outside the room is destroyed and counts as killed.
