@@ -109,7 +109,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        type = spawnProps.getOrDefault(ConstKeys.TYPE, ConstKeys.RED, String::class)
+        type = spawnProps.getOrDefault(ConstKeys.TYPE, ConstKeys.BLUE, String::class)
         upsideDown = spawnProps.getOrDefault(ConstKeys.DOWN, false, Boolean::class)
 
         downTimer.reset()
