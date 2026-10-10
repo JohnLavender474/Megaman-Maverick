@@ -18,6 +18,7 @@ import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.pairTo
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.common.shapes.GameRectangle
+import com.mega.game.engine.common.time.Timer
 import com.mega.game.engine.cullables.ICullable
 import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
 import com.mega.game.engine.drawables.sprites.GameSprite
@@ -65,6 +66,9 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     private lateinit var type: String
 
+    private val startDelay = Timer()
+    private var started = false
+
     override fun init(vararg params: Any) {
         if (orangeRegion == null || greenRegion == null) {
             val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -88,15 +92,6 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, ConstKeys.GREEN, String::class)
 
-        CHILDREN.forEach { angle ->
-            val child = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.PETIT_DEVIL_CHILD)!!
-            child.spawn(
-                props(
-                    ConstKeys.PARENT pairTo this, ConstKeys.ANGLE pairTo angle, ConstKeys.TYPE pairTo type
-                )
-            )
-        }
-
         facing = when (megaman.direction) {
             Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             Direction.DOWN -> if (megaman.body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
@@ -104,9 +99,11 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             Direction.RIGHT -> if (megaman.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
-        val trajectory = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter()).sub(body.getCenter()).nor()
-            .scl(SPEED * ConstVals.PPM)
-        body.physics.velocity.set(trajectory)
+        val delay = spawnProps.getOrDefault(ConstKeys.DELAY, 0f, Float::class)
+        startDelay.resetDuration(delay)
+        started = false
+        body.physics.velocity.setZero()
+        if (delay <= 0f) start()
 
         putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
 
@@ -148,9 +145,31 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         children.clear()
     }
 
+    private fun start() {
+        started = true
+
+        CHILDREN.forEach { angle ->
+            val child = EntityFactories.fetch(EntityType.ENEMY, EnemiesFactory.PETIT_DEVIL_CHILD)!!
+            child.spawn(
+                props(
+                    ConstKeys.PARENT pairTo this, ConstKeys.ANGLE pairTo angle, ConstKeys.TYPE pairTo type
+                )
+            )
+        }
+
+        val trajectory = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter()).sub(body.getCenter()).nor()
+            .scl(SPEED * ConstVals.PPM)
+        body.physics.velocity.set(trajectory)
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
-        updatablesComponent.add {
+        updatablesComponent.add { delta ->
+            if (!started) {
+                startDelay.update(delta)
+                if (startDelay.isFinished()) start()
+            }
+
             val iter = children.iterator()
             while (iter.hasNext()) {
                 val child = iter.next() as MegaGameEntity
