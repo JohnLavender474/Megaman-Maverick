@@ -133,7 +133,7 @@ enum class LevelDefinition(
     ),
     GAUNTLET_1(
         type = LevelType.EXTRA_LEVEL,
-        tmxMapSource = "Gauntlet1.tmx",
+        tmxMapSource = "Gauntlet1_v2.tmx",
         // TODO: pick the music for this level
         music = MusicAsset.MMX6_GATE_STAGE_MUSIC,
         screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
