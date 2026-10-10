@@ -166,6 +166,45 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
    (`>` `<` `^` `v`) in the cell immediately next to the opening, pointing into the room for
    a room entrance and pointing out of the room for a room exit. Whether an opening is considered
    an entrance or an exit depends on the flow of the level. 
+6. **Bottomless pits**: the player must die only after leaving the camera bounds. Put the pit's
+   `Death` sensor (`instant=true`) off-screen: its top edge exactly 1.5 tiles below the bottom edge
+   of the room, 0.5 tile (16 px) tall, and as wide as the pit. Never put a pit `Death` inside the room.
+7. **Spikes are recessed**: there is at least one row of blocks between the spikes and the floor
+   around them, i.e. the top of the spikes is at least one row below the top of the adjacent floor.
+   Mega Man must never be able to walk straight onto spikes from a floor.
+8. **Special floors float**: conveyor belts (and similar special platforms) are separate floating
+   platforms. Never make them part of the floor line.
+9. **Player spawns** (`0`, `1`, `2`…) stand only on plain solid blocks, never on conveyors, ice,
+   crumbling blocks or other special floors.
+10. **Enemy placement accounts for size and behaviour**: read the enemy's body size and movement
+    before you place it.
+    - Jumpers need clear headroom (jump rise + body height) and a clear runway in their jump
+      direction. Examples: BigJumpingJoe needs about 6 tiles of headroom and jumps about 4 tiles
+      sideways; Robbit needs about 4.5 tiles of headroom and jumps about 5.5 tiles sideways.
+    - Chargers and walkers (BikerKibbo, DrillTankXT, running Mets) need flat floor with no pit.
+    - Never place a big or jumping enemy between low platforms.
+    - Keep enemies away from the places where Mega Man enters a room (gate, doorway, ladder top,
+      drop). After the gate walk-in he must not run straight into an enemy; leave at least 4 tiles
+      between the entrance and a ground enemy.
+    - Keep enemies out of the reach of hazards (saw swing or rotation radius, spikes, crushers).
+      A hazard can destroy the enemy, so the enemy is wasted.
+11. **Outer blocks extend off-screen**: floors, ceilings and outer walls continue past the room
+    edges (for example, floors down to the bottom of the map), so no gap shows at the camera edge.
+12. **Gauntlet stages** (rooms with a `GauntletMaster`): follow the `gauntlet-stages` skill. In
+    short: every room with enemies is a single-screen gauntlet room with a locked horizontal exit;
+    hazard-only rooms have no enemies and can be larger than 16×14.
+13. **Hazards are attached to blocks and placed on the player's route.** A hazard in a part of the
+    room that the player does not need to cross has no effect.
+    - **Swinging and rotating saws**: put a 32×32 block on the same rectangle as the `Saw` object
+      (the anchor), or put the anchor inside a ceiling or wall block. Never leave a saw hanging
+      from empty air. The default pendulum `length` is 3 tiles.
+    - **InfernoOven** (`spawn_room` required, one room name only; `direction` up or down): the
+      object is a 64×64 marker; the flame is a column 0.5 tile wide and 3 tiles long that starts
+      1 tile beyond the marker's facing edge. Either build a post (a 64×64 block on the same
+      rectangle plus a 32×32 nozzle block centered on the facing side), or bury the marker 1 tile
+      under the terrain so that the flame comes out flush with the surface (a vent). All ovens in
+      a room fire together: 1 s cold, 1 s warning, 1 s hot. Do not paint tiles on the post blocks;
+      the oven sprite draws them. Reference: `InfernoMan_16x14_v3.tmx`.
 
 ## Notes Block Format
 

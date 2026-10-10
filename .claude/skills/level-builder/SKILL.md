@@ -70,9 +70,15 @@ the room topology with the user before adding any content.
 Add floors, walls, ceilings, and platforms with `add-block`. Blocks may span across
 room boundaries. Confirm before moving on.
 
+Follow the design rules in the `level-designer` skill (Rules 6–13). In particular, for a
+bottomless pit, the `Death` rectangle is off-screen: `y` = room bottom + 48 px, height
+16 px, `instant=true`. `add-death` takes whole tiles only, so set this `y` and height on
+the object after you add it. Extend floors, ceilings and outer walls past the room edges.
+
 ### Iteration 3 — Player spawns
 Add the stage-start spawn `0` and any respawn points `1..n` with `add-spawn`, each a
-single tile placed directly above a block. Confirm.
+single tile placed directly above a plain block (never a conveyor or other special
+floor). Confirm.
 
 ### Iteration 4 — Enemy & hazard markers
 Drop single-tile placeholder markers with `add-marker` (enemies/hazards), plus any
