@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
  <layer id="11" name="tiles1" width="212" height="40">
   <data encoding="base64" compression="zlib">
-   eJzt2lFuxCAMRdHsf0mzuvkdRYHYxvDMcI8UqY36SAC7yqS9LgAAAAAAAAAAAAAAgDN8ih5X4+vZ1+xdy7Jmb3n1urbmpKLczxnrN7Kmo3tCPie/ez+NZNV5yznPeOT1efpJl7ec84xHXp+nn3R5yznPeOT1efpJl7ec84xnzT/tYYX1aOUtdfc2H+/3XjPqYbXM+ff2a1b9Wc55xiO/d15NPf9/7qe38Sr+ft89r6ae/w79ZH0+n7Ue1s8Kkc8T0XF7Pxd1Wj/d19K7d0/jVOon7K3C3le4hyj6Cb8q7H2Fe4iin/Crwt5XuIcoz7M+x9hRYZ2frn8/p9a7d/Ue7rLPJxwV1vnp+vdzar17V+9hZJ+xN28NtrIzay2apZ6x2khNjdZkdt47Fv2EbJX6QZEHMqnrWZ0HMqnreXV+5PkQeGN919DLjl47K+9950A/IVuFfrC807NkItcHMlXoJ2UeyOR5Rsr+G87KfOtvU0CmajXVqvMZ9V9t7tjfyTV18twxx8k1dfLcMYfn3XLG/8NZx1l1AJnoJwAA0PIFgFcBnA==
+   eJzt2lFuxCAMRdHsf0mzuvkdRYHYxvDMcI8UqUV9JAG7Sqa9LgAAAAAAAAAAAAAAgDN8ih5X4+vZ5+ydy7Jmb3n1urbuSUW5nzPWb2RNR/eEfE5+934ayarzljHPfOT1efpJl7eMeeYjr8/TT7q8ZcwzH3l9nn7S5S1jnvms+ac9rLAerbyl7t7ux/u914x6WC3z/nv7Nav+LGOe+cjvnVdT3/8/99PbfBV/v++eV1Pf/w79ZH0+n7Ue1neFyPtEdN7ez0Wd1k/3tfTu3dM8lfoJe6uw9xWuIYp+wq8Ke1/hGqLoJ/yqsPcVriHK86zPMXZUWOen89/H1HrXrt7DXfb5hKPCOj+d/z6m1rt29R5G9hl789ZgKzuz1qJZ6hmrjdTUaE1m571z0U/IVqkfFHkgk7qe1Xkgk7qeV+dHng+BN71387d6rdZP3s8c6Cdkq9APls/0LJnI+YFMFfpJmQcyeZ6Rsv+GszLf+tsUkKlaTUXf5aLnAjKdXFMn3zvmOLmmTr53zOH5bDnj/+Gs86w6gEz0EwAAaPkCTOEAKA==
   </data>
  </layer>
  <objectgroup id="1" name="game_rooms">
@@ -127,7 +127,7 @@
   <object id="299" x="3776" y="768" width="256" height="32"/>
   <object id="300" x="4128" y="768" width="64" height="384"/>
   <object id="301" x="3648" y="800" width="32" height="352"/>
-  <object id="302" x="3840" y="928" width="128" height="32"/>
+  <object id="302" x="3872" y="928" width="64" height="32"/>
   <object id="303" x="3680" y="1024" width="160" height="32"/>
   <object id="304" x="4000" y="1024" width="128" height="32"/>
   <object id="306" x="3648" y="1152" width="128" height="128"/>
@@ -578,14 +578,26 @@
   </object>
   <object id="61" name="FloatingCan" x="1216" y="416" width="32" height="32"/>
   <object id="62" name="FloatingCan" x="1472" y="416" width="32" height="32"/>
-  <object id="64" name="Met" x="1280" y="320" width="32" height="32"/>
+  <object id="64" name="Met" x="1280" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="65" name="BikerKibbo" x="1352" y="688" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="67" name="Met" x="1376" y="320" width="32" height="32"/>
-  <object id="68" name="SniperJoe" x="1384" y="336" width="16" height="16"/>
+  <object id="67" name="Met" x="1376" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="68" name="SniperJoe" x="1384" y="336" width="16" height="16">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="70" name="DuoBallCanon" x="2360" y="464" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
@@ -613,13 +625,21 @@
   </object>
   <object id="96" name="Target1" x="2240" y="416" width="32" height="32"/>
   <object id="97" name="Target2" x="2464" y="416" width="32" height="32"/>
-  <object id="76" name="Met" x="2224" y="320" width="32" height="32"/>
+  <object id="76" name="Met" x="2224" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="77" name="DuoBallCanon" x="2184" y="560" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="79" name="Met" x="2480" y="320" width="32" height="32"/>
+  <object id="79" name="Met" x="2480" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="80" name="DuoBallCanon" x="2536" y="560" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
@@ -657,18 +677,42 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="89" name="Met" x="2752" y="320" width="32" height="32"/>
-  <object id="90" name="SniperJoe" x="2760" y="336" width="16" height="16"/>
-  <object id="92" name="Met" x="2976" y="320" width="32" height="32"/>
-  <object id="93" name="SniperJoe" x="2984" y="336" width="16" height="16"/>
+  <object id="89" name="Met" x="2752" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="90" name="SniperJoe" x="2760" y="336" width="16" height="16">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="92" name="Met" x="2976" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="93" name="SniperJoe" x="2976" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="383" name="Start" x="4448" y="1184" width="32" height="32"/>
   <object id="384" name="Target" x="4448" y="896" width="32" height="32"/>
   <object id="385" name="Target" x="3744" y="832" width="32" height="32"/>
   <object id="386" name="Target" x="4032" y="832" width="32" height="32"/>
   <object id="387" name="Target" x="5760" y="512" width="32" height="32"/>
   <object id="388" name="Target" x="6112" y="512" width="32" height="32"/>
-  <object id="420" name="Met" x="3744" y="768" width="32" height="32"/>
-  <object id="421" name="Met" x="4064" y="768" width="32" height="32"/>
+  <object id="420" name="Met" x="3744" y="768" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="421" name="Met" x="4064" y="768" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="422" name="LampeonBandito" x="3712" y="1120" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
@@ -684,7 +728,11 @@
     <property name="target_1" type="object" value="386"/>
    </properties>
   </object>
-  <object id="425" name="SniperJoe" x="4032" y="1120" width="32" height="32"/>
+  <object id="425" name="SniperJoe" x="4032" y="1120" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="426" name="ShieldAttacker" x="3696" y="848" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
@@ -717,7 +765,11 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="432" name="Met" x="4064" y="768" width="32" height="32"/>
+  <object id="432" name="Met" x="4064" y="768" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="434" name="TurnBlaster" x="4704" y="864" width="32" height="32">
    <properties>
     <property name="direction" value="right"/>
@@ -730,8 +782,16 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="436" name="Met" x="4896" y="768" width="32" height="32"/>
-  <object id="437" name="Met" x="4928" y="768" width="32" height="32"/>
+  <object id="436" name="Met" x="4896" y="768" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="437" name="Met" x="4928" y="768" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="438" name="LampeonBandito" x="4744" y="944" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
@@ -772,15 +832,31 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="446" name="SniperJoe" x="4904" y="784" width="16" height="16"/>
-  <object id="447" name="SniperJoe" x="4936" y="784" width="16" height="16"/>
+  <object id="446" name="SniperJoe" x="4904" y="784" width="16" height="16">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="447" name="SniperJoe" x="4936" y="784" width="16" height="16">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="448" name="SuctionRoller" x="5064" y="1136" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="450" name="Met" x="5920" y="320" width="32" height="32"/>
-  <object id="451" name="Met" x="5952" y="320" width="32" height="32"/>
+  <object id="450" name="Met" x="5920" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="451" name="Met" x="5952" y="320" width="32" height="32">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="452" name="YellowTiggerSquirt" x="5768" y="424" width="16" height="16">
    <properties>
     <property name="left" type="bool" value="false"/>
@@ -850,8 +926,16 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="465" name="SniperJoe" x="5928" y="336" width="16" height="16"/>
-  <object id="466" name="SniperJoe" x="5960" y="336" width="16" height="16"/>
+  <object id="465" name="SniperJoe" x="5928" y="336" width="16" height="16">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="466" name="SniperJoe" x="5960" y="336" width="16" height="16">
+   <properties>
+    <property name="spawn_blink" type="float" value="1"/>
+   </properties>
+  </object>
   <object id="467" name="HeliMet" x="5648" y="512" width="32" height="32">
    <properties>
     <property name="target_1" type="object" value="387"/>
