@@ -19,9 +19,4 @@ abstract class StandardMenuScreen(
         super.show()
         setCurrentButtonKey(firstButtonKey)
     }
-
-    override fun reset() {
-        super.reset()
-        setCurrentButtonKey(firstButtonKey)
-    }
 }
