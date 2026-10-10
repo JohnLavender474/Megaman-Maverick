@@ -76,7 +76,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         private const val FIREBALL_X = 10f
 
-        private const val JUMP_DELAY = 0.5f
+        private const val JUMP_COOLDOWN = 2f
         private const val JUMP_IMPULSE = 15f
 
         private const val SHIELD_OFFSET = 0.675f
@@ -168,7 +168,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     private val shielded: Boolean
         get() = currentState != SniperJoeState.SHOOT
 
-    private val jumpDelay = Timer(JUMP_DELAY)
+    private val jumpCooldown = Timer(JUMP_COOLDOWN)
     private var canJump = true
 
     override fun init(vararg params: Any) {
@@ -219,7 +219,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
 
         FacingUtils.setFacingOf(this)
 
-        jumpDelay.setToEnd()
+        jumpCooldown.setToEnd()
         canJump = spawnProps.getOrDefault(ConstKeys.JUMP, true, Boolean::class)
     }
 
@@ -252,7 +252,8 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 stateMachine.next()
             }
 
-            jumpDelay.update(delta)
+            if (body.isSensing(BodySense.FEET_ON_GROUND))
+                jumpCooldown.update(delta)
 
             if (!currentState.equalsAny(SniperJoeState.JUMP, SniperJoeState.TURN, SniperJoeState.FROZEN)) when {
                 shouldStartTurning() -> {
@@ -426,7 +427,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
                 IceShard.spawn5(body.getCenter())
                 damageTimer.reset()
             }
-            SniperJoeState.JUMP -> jumpDelay.reset()
+            SniperJoeState.JUMP -> jumpCooldown.reset()
             else -> {}
         }
 
@@ -441,7 +442,7 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
         currentState == SniperJoeState.IDLE && facing != FacingUtils.getPreferredFacingFor(this)
 
     private fun shouldStartJumping() =
-        canJump && jumpDelay.isFinished() &&
+        canJump && jumpCooldown.isFinished() &&
             body.physics.velocity.y <= 0f &&
             body.isSensing(BodySense.FEET_ON_GROUND) &&
             when (direction) {
