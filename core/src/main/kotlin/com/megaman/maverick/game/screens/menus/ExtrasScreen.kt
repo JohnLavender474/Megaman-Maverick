@@ -108,7 +108,6 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
     override fun onNavigate(button: IMenuButton, direction: Direction, delta: Float) {
         val oldKey = buttonKey
         super.onNavigate(button, direction, delta)
-        // when wrap is off, the selection does not move at the two ends of the list, so no sound plays
         if (buttonKey != oldKey) game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }
 }
