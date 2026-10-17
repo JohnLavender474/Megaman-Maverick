@@ -29,3 +29,18 @@ jobs:
       - name: Run level-builder tests
         run: python -m pytest
         working-directory: utils/level_builder
+
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run tiled-extensions tests
+        run: ./run_tests.sh
+        working-directory: utils/tiled_extensions
