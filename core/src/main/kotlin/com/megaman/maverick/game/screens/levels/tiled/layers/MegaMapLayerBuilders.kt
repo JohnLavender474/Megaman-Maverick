@@ -2,19 +2,32 @@ package com.megaman.maverick.game.screens.levels.tiled.layers
 
 import com.badlogic.gdx.maps.MapLayers
 import com.badlogic.gdx.utils.OrderedMap
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.interfaces.Initializable
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
-import com.mega.game.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
+import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilders
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.spawns.SpawnsManager
 
 data class MegaMapLayerBuildersParams(val game: MegamanMaverickGame, val spawnsManager: SpawnsManager)
 
-class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParams) : TiledMapLayerBuilders(), Initializable {
+class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParams) :
+    ITiledMapLayerBuilders, Initializable {
 
-    override val layerBuilders = OrderedMap<String, ITiledMapLayerBuilder>()
+    companion object {
+        const val TAG = "MegaMapLayerBuilders"
+
+        /**
+         * Returns true for the "blocks" layer and for any layer prefixed with "blocks_", e.g. the
+         * "blocks_<timestamp>_<source>" layers created by the Tiled "Generate Blocks" extension.
+         */
+        fun isBlocksLayer(name: String?) =
+            name != null && (name == ConstKeys.BLOCKS || name.startsWith("${ConstKeys.BLOCKS}_"))
+    }
+
+    private val layerBuilders = OrderedMap<String, ITiledMapLayerBuilder>()
 
     private var initialized = false
 
@@ -38,6 +51,26 @@ class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParam
 
     override fun build(layers: MapLayers, returnProps: Properties) {
         if (!initialized) init()
-        super.build(layers, returnProps)
+
+        // Each builder runs on the visible layer with the same name as its key. The blocks builder is different: it
+        // runs on every visible layer whose name is "blocks" or starts with "blocks_", in map order.
+        val layersMap = layers.associateBy { it.name }
+        layerBuilders.forEach { entry ->
+            val key = entry.key
+            val builder = entry.value
+
+            if (key == ConstKeys.BLOCKS) {
+                layers
+                    .filter { it.isVisible && isBlocksLayer(it.name) }
+                    .forEach { layer ->
+                        GameLogger.debug(TAG, "build(): building blocks layer: ${layer.name}")
+                        builder.build(layer, returnProps)
+                    }
+                return@forEach
+            }
+
+            val layer = layersMap[key]
+            if (layer != null && layer.isVisible) builder.build(layer, returnProps)
+        }
     }
 }

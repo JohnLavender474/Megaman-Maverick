@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.mega.game.engine.common.objects.Properties
 import com.mega.game.engine.common.objects.props
 import com.mega.game.engine.screens.BaseScreen
-import com.mega.game.engine.screens.levels.tiledmap.builders.TiledMapLayerBuilders
+import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilders
 
 abstract class TiledMapLevelScreen(val batch: Batch, var mapLoader: ITiledMapLoader, props: Properties = props()) :
     BaseScreen(props) {
@@ -14,7 +14,7 @@ abstract class TiledMapLevelScreen(val batch: Batch, var mapLoader: ITiledMapLoa
     protected var tiledMapLevelRenderer: TiledMapLevelRenderer? = null
         private set
 
-    protected abstract fun getLayerBuilders(): TiledMapLayerBuilders
+    protected abstract fun getLayerBuilders(): ITiledMapLayerBuilders
 
     protected abstract fun buildLevel(result: Properties)
 

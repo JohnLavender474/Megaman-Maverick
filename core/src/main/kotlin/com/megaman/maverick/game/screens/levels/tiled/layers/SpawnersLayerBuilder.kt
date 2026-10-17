@@ -44,7 +44,9 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         if (!returnProps.containsKey(ConstKeys.SPAWNERS)) returnProps.put(ConstKeys.SPAWNERS, Array<ISpawner>())
         val spawners = returnProps.get(ConstKeys.SPAWNERS) as Array<ISpawner>
 
-        val entityType = when (layer.name) {
+        val layerKey = if (MegaMapLayerBuilders.isBlocksLayer(layer.name)) ConstKeys.BLOCKS else layer.name
+
+        val entityType = when (layerKey) {
             ConstKeys.DECORATIONS -> EntityType.DECORATION
             ConstKeys.ENEMIES -> EntityType.ENEMY
             ConstKeys.ITEMS -> EntityType.ITEM

@@ -1,22 +1,13 @@
 package com.mega.game.engine.screens.levels.tiledmap.builders
 
 import com.badlogic.gdx.maps.MapLayers
-import com.badlogic.gdx.utils.OrderedMap
 import com.mega.game.engine.common.objects.Properties
 
-abstract class TiledMapLayerBuilders {
+/**
+ * Builds the level from the layers of a Tiled map. The implementation decides which layers to build and which
+ * [ITiledMapLayerBuilder] builds each one.
+ */
+fun interface ITiledMapLayerBuilders {
 
-    companion object {
-        const val TAG = "TiledMapLayerBuilders"
-    }
-
-    abstract val layerBuilders: OrderedMap<String, ITiledMapLayerBuilder>
-
-    open fun build(layers: MapLayers, returnProps: Properties) {
-        val layersMap = layers.associateBy { it.name }
-        layerBuilders.forEach {
-            val layer = layersMap[it.key]
-            if (layer != null && layer.isVisible) it.value.build(layer, returnProps)
-        }
-    }
+    fun build(layers: MapLayers, returnProps: Properties)
 }
