@@ -197,3 +197,6 @@ docs/superpowers
 
 ## Python
 __pycache__
+
+## Tiled
+*.tiled-session

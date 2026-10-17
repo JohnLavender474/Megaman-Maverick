@@ -1,0 +1,9 @@
+{
+    "automappingRulesFile": "",
+    "commands": [],
+    "extensionsPath": "utils/tiled_extensions",
+    "folders": [
+        "assets/tiled_maps"
+    ],
+    "propertyTypes": []
+}
