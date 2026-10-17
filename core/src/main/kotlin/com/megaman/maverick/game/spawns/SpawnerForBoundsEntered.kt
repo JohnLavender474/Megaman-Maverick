@@ -18,15 +18,11 @@ class SpawnerForBoundsEntered(
 
     private var isEntered = false
 
-    override fun test(delta: Float): Boolean {
-        if (!super.test(delta)) return false
-
+    override fun trySpawn(delta: Float): Spawn? {
         val wasEntered = isEntered
         isEntered = thisBounds().overlaps(otherBounds())
         val shouldSpawn = !wasEntered && isEntered
-        if (shouldSpawn) spawn = spawnSupplier()
-
-        return spawned
+        return if (shouldSpawn) spawnSupplier() else null
     }
 
     override fun reset() {

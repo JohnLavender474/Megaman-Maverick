@@ -31,6 +31,7 @@ class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
 
             if (spawner.shouldTest(delta) && spawner.test(delta)) {
                 val spawn = spawner.get()
+                spawn?.onRejected = spawner::onSpawnRejected
                 spawns.add(spawn)
 
                 if (!spawner.respawnable) {

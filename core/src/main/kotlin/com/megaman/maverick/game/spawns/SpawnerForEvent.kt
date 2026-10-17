@@ -17,16 +17,10 @@ class SpawnerForEvent(
 
     private val events = Array<Event>()
 
-    override fun test(delta: Float): Boolean {
-        if (!super.test(delta)) return false
-
-        for (event in events) if (predicate(event)) {
-            spawn = spawnSupplier()
-            break
-        }
+    override fun trySpawn(delta: Float): Spawn? {
+        val spawn = if (events.any { predicate(it) }) spawnSupplier() else null
         events.clear()
-
-        return spawned
+        return spawn
     }
 
     override fun onEvent(event: Event) {

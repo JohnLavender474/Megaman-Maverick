@@ -899,7 +899,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             val spawnsIter = spawns.iterator()
             while (spawnsIter.hasNext()) {
                 val spawn = spawnsIter.next()
-                engine.spawn(spawn.entity, spawn.properties)
+                if (!engine.spawn(spawn.entity, spawn.properties)) spawn.onRejected?.invoke()
                 spawnsIter.remove()
             }
 
@@ -926,7 +926,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             val spawnsIter = spawns.iterator()
             while (spawnsIter.hasNext()) {
                 val spawn = spawnsIter.next()
-                engine.spawn(spawn.entity, spawn.properties)
+                if (!engine.spawn(spawn.entity, spawn.properties)) spawn.onRejected?.invoke()
                 spawnsIter.remove()
             }
 

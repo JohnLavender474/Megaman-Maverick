@@ -12,5 +12,11 @@ interface ISpawner : Supplier<Spawn?>, UpdatePredicate, ICullable {
 
     override fun shouldBeCulled(delta: Float) = false
 
+    /**
+     * Called when the engine rejects the spawn that this spawner supplied. The entity can already be back in its pool,
+     * so the spawner must not keep a reference to it.
+     */
+    fun onSpawnRejected() {}
+
     override fun reset() {}
 }
