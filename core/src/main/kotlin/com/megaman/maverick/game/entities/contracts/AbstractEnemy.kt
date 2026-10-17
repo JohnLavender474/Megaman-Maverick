@@ -20,7 +20,6 @@ import com.mega.game.engine.common.shapes.GameRectangle
 import com.mega.game.engine.common.shapes.IGameShape2D
 import com.mega.game.engine.common.shapes.ShapeUtils
 import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.cullables.CullableOnEvent
 import com.mega.game.engine.cullables.CullablesComponent
 import com.mega.game.engine.damage.IDamageable
@@ -30,6 +29,7 @@ import com.mega.game.engine.entities.contracts.IAudioEntity
 import com.mega.game.engine.entities.contracts.IBodyEntity
 import com.mega.game.engine.entities.contracts.ICullableEntity
 import com.mega.game.engine.entities.contracts.ISpritesEntity
+import com.mega.game.engine.updatables.UpdatablesComponent
 import com.mega.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -136,15 +136,12 @@ abstract class AbstractEnemy(
 
                 if (dropItemOnDeath && !body.isSensing(BodySense.BODY_TOUCHING_BLOCK)) {
                     DROP_ENTITIES.shuffle()
-
                     DROP_ENTITIES.any { (type, chanceFunction) ->
                         val random = getRandom(0, 100)
                         val chance = chanceFunction.invoke(this)
                         if (random <= chance.toInt()) {
                             val position = body.getCenter()
-
                             val large = getRandom(0, 100) <= LARGE_ITEM_CHANCE
-
                             val entity = MegaEntityFactory.fetch(type)!!
                             return@any entity.spawn(
                                 props(ConstKeys.LARGE pairTo large, ConstKeys.POSITION pairTo position)

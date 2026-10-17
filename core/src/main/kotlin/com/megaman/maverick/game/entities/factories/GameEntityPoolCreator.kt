@@ -11,7 +11,7 @@ object GameEntityPoolCreator {
     fun create(supplier: () -> MegaGameEntity) = create(supplier, DEFAULT_START_AMOUNT)
 
     fun create(supplier: () -> MegaGameEntity, startAmount: Int): Pool<MegaGameEntity> {
-        val pool = Pool<MegaGameEntity>(supplier = supplier, startAmount = startAmount)
+        val pool = Pool(supplier = supplier, startAmount = startAmount)
         pool.onSupplyNew = { e -> e.runnablesOnDestroy.put(ConstKeys.POOL) { pool.free(e) } }
         return pool
     }
