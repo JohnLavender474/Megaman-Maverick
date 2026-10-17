@@ -30,6 +30,10 @@ jobs:
         run: python -m pytest
         working-directory: utils/level_builder
 
+      - name: Run diagnostics tests
+        run: ./run_tests.sh
+        working-directory: utils/diagnostics
+
   node:
     runs-on: ubuntu-latest
     steps:
