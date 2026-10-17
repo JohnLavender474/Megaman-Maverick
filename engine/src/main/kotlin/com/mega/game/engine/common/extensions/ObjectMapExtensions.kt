@@ -37,3 +37,5 @@ fun <K, V> OrderedMap<K, V>.forEachIndexed(consumer: (key: K, value: V, index: I
         index++
     }
 }
+
+fun <K, V> OrderedMap<K, V>.indexOfKey(key: K): Int = orderedKeys().indexOf(key, false)
