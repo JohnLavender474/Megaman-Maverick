@@ -4463,7 +4463,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="8" name="sensors" visible="0">
+ <objectgroup id="8" name="sensors">
   <object id="16" name="Death" x="928" y="7408" width="288" height="144">
    <properties>
     <property name="instant" type="bool" value="true"/>

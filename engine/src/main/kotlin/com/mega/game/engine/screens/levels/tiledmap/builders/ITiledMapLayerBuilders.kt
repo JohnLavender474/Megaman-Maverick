@@ -16,7 +16,7 @@ abstract class TiledMapLayerBuilders {
         val layersMap = layers.associateBy { it.name }
         layerBuilders.forEach {
             val layer = layersMap[it.key]
-            if (layer != null) it.value.build(layer, returnProps)
+            if (layer != null && layer.isVisible) it.value.build(layer, returnProps)
         }
     }
 }

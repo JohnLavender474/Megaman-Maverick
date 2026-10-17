@@ -224,7 +224,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="game_rooms" visible="0">
+ <objectgroup id="5" name="game_rooms">
   <object id="2" name="room1" x="32" y="2592" width="3328" height="448"/>
   <object id="65" name="room2" x="3360" y="2144" width="1856" height="896"/>
   <object id="90" name="room3" x="5216" y="2144" width="1824" height="448"/>
