@@ -153,7 +153,7 @@
    </properties>
   </object>
   <object id="311" x="4192" y="704" width="480" height="96"/>
-  <object id="313" x="4640" y="800" width="32" height="256"/>
+  <object id="313" x="4640" y="800" width="64" height="352"/>
   <object id="314" x="4160" y="1152" width="128" height="128"/>
   <object id="317" x="4544" y="1152" width="128" height="128"/>
   <object id="318" x="4288" y="1184" width="256" height="96"/>
@@ -171,13 +171,9 @@
   </object>
   <object id="326" x="4672" y="704" width="224" height="96"/>
   <object id="327" x="4960" y="704" width="224" height="96"/>
-  <object id="328" x="4672" y="800" width="32" height="160"/>
-  <object id="329" x="5152" y="800" width="32" height="160"/>
-  <object id="330" x="4672" y="960" width="128" height="32"/>
+  <object id="330" x="4704" y="960" width="96" height="32"/>
   <object id="331" x="4864" y="960" width="128" height="32"/>
-  <object id="332" x="5056" y="960" width="128" height="32"/>
-  <object id="333" x="4672" y="992" width="32" height="64"/>
-  <object id="334" x="5152" y="992" width="32" height="64"/>
+  <object id="332" x="5056" y="960" width="96" height="32"/>
   <object id="335" x="4800" y="1056" width="64" height="32"/>
   <object id="336" x="4992" y="1056" width="64" height="32"/>
   <object id="337" x="4672" y="1152" width="512" height="128"/>
@@ -190,7 +186,7 @@
   </object>
   <object id="340" x="5184" y="768" width="192" height="32"/>
   <object id="341" x="5408" y="768" width="288" height="32"/>
-  <object id="342" x="5184" y="800" width="32" height="256"/>
+  <object id="342" x="5152" y="800" width="64" height="352"/>
   <object id="343" x="5664" y="800" width="96" height="224"/>
   <object id="344" x="5280" y="928" width="192" height="32"/>
   <object id="345" x="5504" y="1024" width="96" height="32"/>
@@ -199,18 +195,16 @@
   <object id="348" x="5184" y="1152" width="576" height="128"/>
   <object id="350" x="5152" y="288" width="544" height="64"/>
   <object id="351" x="5152" y="352" width="64" height="352"/>
-  <object id="352" x="5664" y="352" width="32" height="256"/>
   <object id="353" x="5536" y="576" width="64" height="32"/>
   <object id="354" x="5184" y="704" width="192" height="64"/>
   <object id="355" x="5408" y="704" width="288" height="64"/>
   <object id="357" x="5696" y="288" width="224" height="64"/>
   <object id="358" x="5984" y="288" width="224" height="64"/>
-  <object id="359" x="5696" y="352" width="32" height="224"/>
-  <object id="360" x="6176" y="352" width="32" height="224"/>
+  <object id="359" x="5664" y="352" width="64" height="352"/>
   <object id="361" x="5792" y="480" width="96" height="32"/>
   <object id="362" x="6016" y="480" width="96" height="32"/>
-  <object id="363" x="5696" y="576" width="96" height="32"/>
-  <object id="364" x="6112" y="576" width="96" height="32"/>
+  <object id="363" x="5728" y="576" width="64" height="32"/>
+  <object id="364" x="6112" y="576" width="64" height="32"/>
   <object id="366" x="5696" y="704" width="512" height="96"/>
   <object id="367" name="AbstractBlock" x="5920" y="320" width="64" height="32">
    <properties>
@@ -220,7 +214,7 @@
    </properties>
   </object>
   <object id="369" x="6208" y="288" width="576" height="64"/>
-  <object id="370" x="6208" y="352" width="32" height="256"/>
+  <object id="370" x="6176" y="352" width="64" height="352"/>
   <object id="371" x="6688" y="352" width="96" height="352"/>
   <object id="372" x="6208" y="704" width="576" height="96"/>
   <object id="374" name="LadderTop" x="5600" y="1024" width="32" height="8"/>
@@ -555,11 +549,9 @@
     <property name="wave_1_6" type="object" value="549"/>
     <property name="wave_2_1" type="object" value="439"/>
     <property name="wave_2_2" type="object" value="440"/>
-    <property name="wave_2_3" type="object" value="442"/>
-    <property name="wave_2_4" type="object" value="443"/>
-    <property name="wave_2_5" type="object" value="437"/>
-    <property name="wave_2_6" type="object" value="550"/>
-    <property name="wave_2_7" type="object" value="551"/>
+    <property name="wave_2_3" type="object" value="437"/>
+    <property name="wave_2_4" type="object" value="550"/>
+    <property name="wave_2_5" type="object" value="551"/>
     <property name="wave_3_1" type="object" value="441"/>
     <property name="wave_3_2" type="object" value="448"/>
     <property name="wave_3_3" type="object" value="446"/>
@@ -599,10 +591,8 @@
     <property name="wave_3_2" type="object" value="462"/>
     <property name="wave_3_3" type="object" value="450"/>
     <property name="wave_3_4" type="object" value="451"/>
-    <property name="wave_3_5" type="object" value="508"/>
-    <property name="wave_3_6" type="object" value="509"/>
-    <property name="wave_3_7" type="object" value="561"/>
-    <property name="wave_3_8" type="object" value="562"/>
+    <property name="wave_3_5" type="object" value="561"/>
+    <property name="wave_3_6" type="object" value="562"/>
     <property name="wave_4_1" type="object" value="463"/>
     <property name="wave_4_2" type="object" value="464"/>
     <property name="wave_4_3" type="object" value="465"/>
@@ -611,7 +601,6 @@
     <property name="wave_4_6" type="object" value="468"/>
     <property name="wave_4_7" type="object" value="510"/>
     <property name="wave_4_8" type="object" value="563"/>
-    <property name="wave_4_9" type="object" value="564"/>
     <property name="wave_delay" type="float" value="1.5"/>
    </properties>
   </object>
@@ -645,13 +634,11 @@
     <property name="wave_2_3" type="object" value="543"/>
     <property name="wave_2_4" type="object" value="544"/>
     <property name="wave_3_1" type="object" value="500"/>
-    <property name="wave_3_2" type="object" value="501"/>
-    <property name="wave_3_3" type="object" value="502"/>
-    <property name="wave_3_4" type="object" value="503"/>
-    <property name="wave_3_5" type="object" value="481"/>
-    <property name="wave_3_6" type="object" value="545"/>
-    <property name="wave_3_7" type="object" value="546"/>
-    <property name="wave_3_8" type="object" value="547"/>
+    <property name="wave_3_2" type="object" value="503"/>
+    <property name="wave_3_3" type="object" value="481"/>
+    <property name="wave_3_4" type="object" value="545"/>
+    <property name="wave_3_5" type="object" value="546"/>
+    <property name="wave_3_6" type="object" value="547"/>
    </properties>
   </object>
  </objectgroup>
@@ -895,16 +882,6 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="442" name="Elecn" x="4800" y="864" width="32" height="32">
-   <properties>
-    <property name="spawn_blink" type="float" value="1"/>
-   </properties>
-  </object>
-  <object id="443" name="Elecn" x="5024" y="864" width="32" height="32">
-   <properties>
-    <property name="spawn_blink" type="float" value="1"/>
-   </properties>
-  </object>
   <object id="444" name="GreenUziJoe" x="4744" y="944" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
@@ -1092,16 +1069,6 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="501" name="Elecn" x="4288" y="864" width="32" height="32">
-   <properties>
-    <property name="spawn_blink" type="float" value="1"/>
-   </properties>
-  </object>
-  <object id="502" name="Elecn" x="4512" y="864" width="32" height="32">
-   <properties>
-    <property name="spawn_blink" type="float" value="1"/>
-   </properties>
-  </object>
   <object id="503" name="SpikeCopter" x="4424" y="840" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
@@ -1124,16 +1091,6 @@
    </properties>
   </object>
   <object id="507" name="DuoBallCanon" x="4968" y="944" width="16" height="16">
-   <properties>
-    <property name="spawn_blink" type="float" value="1"/>
-   </properties>
-  </object>
-  <object id="508" name="Elecn" x="5824" y="400" width="32" height="32">
-   <properties>
-    <property name="spawn_blink" type="float" value="1"/>
-   </properties>
-  </object>
-  <object id="509" name="Elecn" x="6048" y="400" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1388,11 +1345,6 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="564" name="Elecn" x="5824" y="400" width="32" height="32">
-   <properties>
-    <property name="spawn_blink" type="float" value="1"/>
-   </properties>
-  </object>
  </objectgroup>
  <objectgroup id="10" name="items">
   <object id="409" name="HealthBulb" x="1888" y="544" width="32" height="32">
@@ -1403,12 +1355,6 @@
   </object>
   <object id="410" name="HealthBulb" x="3376" y="672" width="32" height="32">
    <properties>
-    <property name="timed" type="bool" value="false"/>
-   </properties>
-  </object>
-  <object id="413" name="HealthBulb" x="4512" y="928" width="32" height="32">
-   <properties>
-    <property name="large" type="bool" value="false"/>
     <property name="timed" type="bool" value="false"/>
    </properties>
   </object>
