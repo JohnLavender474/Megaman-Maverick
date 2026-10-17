@@ -19,10 +19,6 @@ class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParam
     companion object {
         const val TAG = "MegaMapLayerBuilders"
 
-        /**
-         * Returns true for the "blocks" layer and for any layer prefixed with "blocks_", e.g. the
-         * "blocks_<timestamp>_<source>" layers created by the Tiled "Generate Blocks" extension.
-         */
         fun isBlocksLayer(name: String?) =
             name != null && (name == ConstKeys.BLOCKS || name.startsWith("${ConstKeys.BLOCKS}_"))
     }
@@ -52,8 +48,6 @@ class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParam
     override fun build(layers: MapLayers, returnProps: Properties) {
         if (!initialized) init()
 
-        // Each builder runs on the visible layer with the same name as its key. The blocks builder is different: it
-        // runs on every visible layer whose name is "blocks" or starts with "blocks_", in map order.
         val layersMap = layers.associateBy { it.name }
         layerBuilders.forEach { entry ->
             val key = entry.key
