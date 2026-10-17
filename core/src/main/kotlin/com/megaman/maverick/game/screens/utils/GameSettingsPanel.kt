@@ -50,7 +50,7 @@ class GameSettingsPanel(
             VSYNC_KEY, PERFORMANCE_KEY, KEYBOARD_SETTINGS_KEY, CONTROLLER_SETTINGS_KEY
         )
 
-        val SLIDE_TRAJ = Vector3(15f * ConstVals.PPM, 0f, 0f)
+        val SLIDE_TRAJ = Vector3(16f * ConstVals.PPM, 0f, 0f)
         const val SLIDE_DUR = 0.5f
 
         private const val START_ROW = 11f

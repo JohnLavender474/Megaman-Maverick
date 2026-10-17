@@ -87,7 +87,7 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
         super.show()
         scrollPane.reset()
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.VINNYZ_MAIN_MENU_MUSIC, false)
+        game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC, true)
     }
 
     override fun render(delta: Float) {
