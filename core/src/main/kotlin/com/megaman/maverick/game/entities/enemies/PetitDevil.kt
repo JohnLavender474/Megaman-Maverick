@@ -47,7 +47,10 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.world.body.BodyComponentCreator
+import com.megaman.maverick.game.world.body.BodyFixtureDef
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.getBounds
 
 class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
     IParentEntity<PetitDevilChild>, IDrawableShapesEntity, IFaceable {
@@ -198,7 +201,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.25f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
@@ -326,7 +329,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(ConstVals.PPM.toFloat())
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
