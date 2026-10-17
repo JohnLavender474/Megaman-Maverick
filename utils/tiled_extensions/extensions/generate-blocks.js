@@ -250,5 +250,15 @@ if (typeof tiled !== "undefined") {
 }
 
 if (typeof module !== "undefined") {
-    module.exports = { greedyMesh: greedyMesh };
+    module.exports = {
+        greedyMesh: greedyMesh,
+        timestamp: timestamp,
+        isCollisionTilesLayer: isCollisionTilesLayer,
+        allLayers: allLayers,
+        topLevelAncestor: topLevelAncestor,
+        totalOffset: totalOffset,
+        layerBounds: layerBounds,
+        generateBlocksForLayer: generateBlocksForLayer,
+        generateBlocks: generateBlocks
+    };
 }

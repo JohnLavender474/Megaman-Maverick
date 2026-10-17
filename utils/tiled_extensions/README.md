@@ -23,3 +23,5 @@ If you do not use the project, copy or symlink `extensions/generate-blocks.js` i
 - Linux (Flatpak): `~/.var/app/org.mapeditor.Tiled/config/tiled/extensions/`
 - macOS: `~/Library/Preferences/Tiled/extensions/`
 - Windows: `%LOCALAPPDATA%/Tiled/extensions/`
+
+**Tests**: run `./run_tests.sh` in this folder. It needs Node 18 or later and no packages. The tests are outside `extensions/` because Tiled runs every script in that folder.
