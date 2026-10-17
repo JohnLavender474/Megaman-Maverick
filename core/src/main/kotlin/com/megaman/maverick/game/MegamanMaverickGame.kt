@@ -862,7 +862,14 @@ class MegamanMaverickGame(
                 )
             ),
             onQueueToSpawn = { (it as MegaGameEntity).dead = false },
-            onQueueToDestroy = { (it as MegaGameEntity).dead = true }
+            onQueueToDestroy = { (it as MegaGameEntity).dead = true },
+            onSpawnRejected = {
+                // return a rejected pooled entity to its pool; never free an entity that is spawned or queued to
+                // spawn, and do nothing for an entity that is not pooled (it has no pool runnable)
+                val entity = it as MegaGameEntity
+                if (!entity.spawned && !entity.engine.contains(entity, containedIfQueuedToSpawn = true))
+                    entity.runnablesOnDestroy[ConstKeys.POOL]?.invoke()
+            }
         )
 
         val systems = ObjectMap<String, GameSystem>()

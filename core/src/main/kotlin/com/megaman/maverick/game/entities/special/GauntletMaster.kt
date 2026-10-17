@@ -220,7 +220,6 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
 
             if (!enemy.spawn(enemyProps)) {
                 GameLogger.error(TAG, "spawnWave(): key=$key, spawn refused: ${mapObject.name}")
-                MegaEntityFactory.free(enemy)
                 return@forEach
             }
 

@@ -13,7 +13,8 @@ import com.mega.game.engine.systems.GameSystem
 class GameEngine(
     var systems: Array<GameSystem> = Array(),
     var onQueueToSpawn: ((IGameEntity) -> Unit)? = null,
-    var onQueueToDestroy: ((IGameEntity) -> Unit)? = null
+    var onQueueToDestroy: ((IGameEntity) -> Unit)? = null,
+    var onSpawnRejected: ((IGameEntity) -> Unit)? = null
 ) : Updatable, Resettable, Disposable {
 
     internal class EntitiesToSpawn {
@@ -63,7 +64,10 @@ class GameEngine(
         val queued = entitiesToSpawn.add(entity, spawnProps)
         if (queued) onQueueToSpawn?.invoke(entity)
         queued
-    } else false
+    } else {
+        onSpawnRejected?.invoke(entity)
+        false
+    }
 
     private fun spawnNow(entity: IGameEntity, spawnProps: Properties) {
         entities.add(entity)
