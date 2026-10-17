@@ -87,18 +87,14 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelType
-import com.megaman.maverick.game.levels.LoadoutOverride
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
-import com.megaman.maverick.game.screens.menus.ControllerSettingsScreen
-import com.megaman.maverick.game.screens.menus.ExtrasScreen
-import com.megaman.maverick.game.screens.menus.MainMenuScreen
-import com.megaman.maverick.game.screens.menus.SaveGameScreen
-import com.megaman.maverick.game.screens.menus.SelectDifficultyScreen
+import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreenV2
 import com.megaman.maverick.game.screens.other.*
 import com.megaman.maverick.game.state.GameState
@@ -717,7 +713,7 @@ class MegamanMaverickGame(
         ?.type == LevelType.EXTRA_LEVEL
 
     /**
-     * Removes all of the player's progress from memory: the game state, the weapons, the lives, and the
+     * Removes all the player's progress from memory: the game state, the weapons, the lives, and the
      * weapons-attained property. The save file does not change.
      */
     fun resetPlayerProgress() {
@@ -729,23 +725,28 @@ class MegamanMaverickGame(
     }
 
     /**
-     * Replaces the player's progress in memory with the items in [loadout]. The save file does not change.
+     * Replaces the player's progress in memory with the items and the difficulty mode in [override]. The save file
+     * does not change.
      */
-    fun applyLoadoutOverride(loadout: LoadoutOverride) {
-        GameLogger.debug(TAG, "applyLoadoutOverride(): loadout=$loadout")
+    fun applyLevelOverride(override: LevelOverride) {
+        GameLogger.debug(TAG, "applyLevelOverride(): override=$override")
         resetPlayerProgress()
+        val loadout = override.loadout
         loadout.heartTanks.forEach { state.addHeartTank(it) }
         loadout.healthTanks.forEach { (tank, value) -> state.putHealthTank(tank, value) }
         loadout.enhancements.forEach { state.addEnhancement(it) }
         loadout.weapons.forEach { megaman.putWeapon(it) }
+        override.difficultyMode?.let { state.setDifficultyMode(it) }
+        override.lives?.let { megaman.lives.set(it) }
     }
 
     fun startExtraLevel(level: LevelDefinition) {
         GameLogger.debug(TAG, "startExtraLevel(): level=$level")
-        // TODO: the loadout override is only applied for EXTRA_LEVEL levels. Apply it for other level types when
-        //  needed.
-        val loadout = level.loadoutOverride
-        if (loadout != null) applyLoadoutOverride(loadout) else resetPlayerProgress()
+        // TODO: the level override is only applied for EXTRA_LEVEL levels. Apply it for other level types when
+        //  needed. Note that [LevelOverride.canSpawn] is already used for every level type (see
+        //  [MegaGameEntity.canSpawn]), so a level override on a non-extra level is only partly applied.
+        val override = level.levelOverride
+        if (override != null) applyLevelOverride(override) else resetPlayerProgress()
         startLevel(level)
     }
 

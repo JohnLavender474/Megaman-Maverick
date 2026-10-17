@@ -4,9 +4,15 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.mega.game.engine.common.extensions.putIfAbsentAndGet
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
+import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.items.Life
+import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
+import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
+import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class LevelDefinition(
@@ -16,7 +22,7 @@ enum class LevelDefinition(
     val music: MusicAsset? = null,
     val mugshotAtlas: String? = null,
     val mugshotRegion: String? = null,
-    val loadoutOverride: LoadoutOverride? = null
+    val levelOverride: LevelOverride? = null
 ) : IAsset {
     INTRO_STAGE(
         type = LevelType.INTRO_LEVEL,
@@ -123,22 +129,22 @@ enum class LevelDefinition(
         tmxMapSource = "SMB3_1.tmx",
         screenOnCompletion = { ScreenEnum.LEVEL_SCREEN }
     ),
-    YAMMARK_STAGE(
-        type = LevelType.EXTRA_LEVEL,
-        tmxMapSource = "X6_CommanderYammark_Remake_v1.tmx",
-        music = MusicAsset.MMX6_YAMMARK_MUSIC,
-        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
-        // TODO: set the heart tanks, health tanks, enhancements, and weapons for this level
-        loadoutOverride = LoadoutOverride()
-    ),
     GAUNTLET_1(
         type = LevelType.EXTRA_LEVEL,
         tmxMapSource = "Gauntlet1_v2.tmx",
-        // TODO: pick the music for this level
-        music = MusicAsset.MMX6_GATE_STAGE_MUSIC,
+        music = MusicAsset.MMX5_VOLT_KRAKEN_MUSIC,
         screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
-        // TODO: set the heart tanks, health tanks, enhancements, and weapons for this level
-        loadoutOverride = LoadoutOverride()
+        levelOverride = LevelOverride(
+            loadout = LoadoutOverride(
+                heartTanks = MegaHeartTank.entries.toSet(),
+                healthTanks = MegaHealthTank.entries.associateWith { ConstVals.MAX_HEALTH }
+            ),
+            difficultyMode = DifficultyMode.HARD,
+            canSpawn = {
+                val tag = it.getTag()
+                tag != Life.TAG && tag != WeaponEnergyBulb.TAG
+            }
+        ),
     );
 
     companion object {
