@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.audio.AudioComponent
@@ -129,9 +130,14 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
         spawnProps.forEach { propKey, value ->
             val match = WAVE_KEY_REGEX.matchEntire(propKey.toString()) ?: return@forEach
 
-            if (value !is RectangleMapObject) throw IllegalStateException(
-                "Gauntlet $key: prop $propKey must be an object ref to a rectangle object"
-            )
+            if (value !is RectangleMapObject) {
+                val childId = if (value is MapObject) value.properties.get(ConstKeys.ID) else value
+                throw IllegalStateException(
+                    "Gauntlet $key (map object id=$id): prop $propKey must be an object ref to a rectangle " +
+                        "object, but the ref is to child id=$childId (type=${value?.javaClass?.simpleName}). " +
+                        "Check that the child object exists and is a rectangle."
+                )
+            }
 
             val clazz = MegaEntityFactory.getEntityClass(EntityType.ENEMY, value.name)
 
