@@ -15,9 +15,9 @@ The script never edits or deletes existing layers. Re-running it creates another
 
 In-game, any layer named `blocks` or prefixed with `blocks_` is loaded like the regular `blocks` layer (see `MegaMapLayerBuilders`). The generated objects are unnamed rectangles, so they spawn as a plain `Block`. You can edit them freely afterwards, e.g. add `cull_room` or resize them.
 
-**Install**: open `megaman-maverick.tiled-project` (at the repo root) in Tiled with **File → Open File or Project**. The project loads the extensions in this folder, and its **Project** view lists `assets/tiled_maps`. Open maps while the project is open, or the script is not available. Tiled reopens the last project at start.
+**Install**: open `megaman-maverick.tiled-project` (at the repo root) in Tiled with **File → Open File or Project**. The project loads the scripts in `extensions/`, and its **Project** view lists `assets/tiled_maps`. Open maps while the project is open, or the script is not available. Tiled reopens the last project at start.
 
-If you do not use the project, copy or symlink `generate-blocks.js` into your Tiled extensions folder instead:
+If you do not use the project, copy or symlink `extensions/generate-blocks.js` into your Tiled extensions folder instead:
 
 - Linux: `~/.config/tiled/extensions/`
 - Linux (Flatpak): `~/.var/app/org.mapeditor.Tiled/config/tiled/extensions/`
