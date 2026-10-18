@@ -5,7 +5,9 @@ import com.badlogic.gdx.utils.Array
 import com.mega.game.engine.animations.Animation
 import com.mega.game.engine.animations.AnimationsComponent
 import com.mega.game.engine.animations.Animator
+import com.mega.game.engine.common.GameLogger
 import com.mega.game.engine.common.enums.Facing
+import com.mega.game.engine.common.enums.ProcessState
 import com.mega.game.engine.common.enums.Size
 import com.mega.game.engine.common.extensions.getTextureRegion
 import com.mega.game.engine.common.interfaces.IFaceable
@@ -27,13 +29,17 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
+import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.exp
+import kotlin.math.max
 
 class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
 
@@ -48,6 +54,9 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         private const val PULL_FORCE_X = 6f
         private const val PULL_FORCE_Y = 68f
 
+        private const val CARRY_VEL_Y = 3f
+        private const val MEGAMAN_MOVEMENT_X_SCALAR = 0.5f
+
         private var region: TextureRegion? = null
     }
 
@@ -58,12 +67,14 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private lateinit var forceFixture: Fixture
 
     override fun init(vararg params: Any) {
+        GameLogger.debug(TAG, "init()")
         super.init()
         if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         addComponent(defineAnimationsComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
@@ -103,15 +114,40 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         )
         forceFixture.offsetFromBodyAttachment.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-        forceFixture.setVelocityAlteration { fixture, delta, _ ->
+        forceFixture.setVelocityAlteration { fixture, delta, processState ->
             val entity = fixture.getEntity()
 
-            if (entity is AbstractEnemy || (entity is Megaman && entity.damaged))
-                return@setVelocityAlteration VelocityAlteration.addNone()
+            if (entity is AbstractEnemy ||
+                (entity is Megaman && (entity.damaged || entity.isBehaviorActive(BehaviorType.CLIMBING)))
+            ) return@setVelocityAlteration VelocityAlteration.addNone()
 
             if (entity is AbstractProjectile) entity.owner = null
 
-            val x = PULL_FORCE_X * ConstVals.PPM * facing.value
+            if (entity is Megaman) {
+                if (processState == ProcessState.END) return@setVelocityAlteration VelocityAlteration.addNone()
+
+                val physics = entity.body.physics
+
+                val ownMovementX = physics.velocity.x * delta
+                val carryX = body.getPositionDelta().x - (1f - MEGAMAN_MOVEMENT_X_SCALAR) * ownMovementX
+
+                val minVelY = getCarryVelocity(
+                    CARRY_VEL_Y * ConstVals.PPM,
+                    physics.gravity.y,
+                    if (physics.applyFrictionY) physics.defaultFrictionOnSelf.y else 0f,
+                    delta
+                )
+
+                return@setVelocityAlteration VelocityAlteration(
+                    carryX,
+                    max(0f, minVelY - physics.velocity.y),
+                    VelocityAlterationType.TRANSLATE,
+                    VelocityAlterationType.ADD
+                )
+            }
+
+            // TODO: multiplying by delta makes this pull about 60 times weaker than before; check if PULL_FORCE_X needs to increase
+            val x = PULL_FORCE_X * ConstVals.PPM * delta * facing.value
             val y = PULL_FORCE_Y * ConstVals.PPM * delta
 
             return@setVelocityAlteration VelocityAlteration.add(x, y)
@@ -134,7 +170,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     override fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(1.5f * ConstVals.PPM)
+        sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
@@ -174,6 +210,9 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
+
+    private fun getCarryVelocity(target: Float, gravity: Float, friction: Float, delta: Float) =
+        (target - gravity * delta) / exp(-friction * delta)
 
     private fun facingAndMMDirMatch() =
         (game.megaman.body.getX() > body.getX() && facing == Facing.RIGHT) ||
