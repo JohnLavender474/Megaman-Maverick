@@ -146,6 +146,23 @@ enum class LevelDefinition(
             }
         ),
     ),
+    GAUNTLET_2(
+        type = LevelType.EXTRA_LEVEL,
+        tmxMapSource = "Gauntlet2.tmx",
+        music = MusicAsset.MMX5_VOLT_KRAKEN_MUSIC,
+        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
+        levelOverride = LevelOverride(
+            loadout = LoadoutOverride(
+                heartTanks = MegaHeartTank.entries.toSet(),
+                healthTanks = MegaHealthTank.entries.associateWith { ConstVals.MAX_HEALTH }
+            ),
+            difficultyMode = DifficultyMode.HARD,
+            canSpawn = {
+                val tag = it.getTag()
+                tag != Life.TAG && tag != WeaponEnergyBulb.TAG
+            }
+        ),
+    ),
     RUMBLECADE_FACTORY(
         type = LevelType.EXTRA_LEVEL,
         tmxMapSource = "RumblecadeFactory.tmx",
