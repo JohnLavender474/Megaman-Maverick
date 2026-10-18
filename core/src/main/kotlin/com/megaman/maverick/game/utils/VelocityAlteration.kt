@@ -6,7 +6,8 @@ import com.mega.game.engine.world.body.IBody
 
 enum class VelocityAlterationType {
     SET,
-    ADD
+    ADD,
+    TRANSLATE
 }
 
 data class VelocityAlteration(
@@ -36,18 +37,28 @@ data class VelocityAlteration(
 
 object VelocityAlterator {
 
-    fun alterate(body: IBody, alteration: VelocityAlteration) = alterate(body.physics.velocity, alteration)
+    fun alterate(body: IBody, alteration: VelocityAlteration) {
+        alterate(body.physics.velocity, alteration)
+
+        val translateX =
+            if (alteration.actionX == VelocityAlterationType.TRANSLATE) alteration.forceX else 0f
+        val translateY =
+            if (alteration.actionY == VelocityAlterationType.TRANSLATE) alteration.forceY else 0f
+        if (translateX != 0f || translateY != 0f) body.translate(translateX, translateY)
+    }
 
     fun alterate(velocity: Vector2, alteration: VelocityAlteration) {
         velocity.x =
             when (alteration.actionX) {
                 VelocityAlterationType.SET -> alteration.forceX
                 VelocityAlterationType.ADD -> velocity.x + alteration.forceX
+                VelocityAlterationType.TRANSLATE -> velocity.x
             }
         velocity.y =
             when (alteration.actionY) {
                 VelocityAlterationType.SET -> alteration.forceY
                 VelocityAlterationType.ADD -> velocity.y + alteration.forceY
+                VelocityAlterationType.TRANSLATE -> velocity.y
             }
     }
 }
