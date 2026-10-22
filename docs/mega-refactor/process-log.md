@@ -11,7 +11,7 @@ newest entry at the bottom.
 
 - Summary: what changed and why.
 - Contract check: which checks in the branch `docs/CONTRACT.md` were done, and the result.
-- Follow-up: items moved to `BACKLOG.md` or open issues.
+- Follow-up: new items added to `ITEMS.md`, bugs filed, or open questions.
 ```
 
 ## Entries
@@ -64,3 +64,18 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the user answers the open questions in the branch `docs/SCOPE.md` and approves the
   scope.
+
+## 2026-10-22 — master (docs)
+
+- Summary: changed the docs to one folder per item. `BACKLOG.md` and `ROADMAP.md` are replaced
+  by `ITEMS.md`, an index of every item and branch with status, start and finish dates, and the
+  open decisions. Items have 3-digit IDs; branches are `mega-refactor-<id><letter>-<slug>`.
+  Created 56 item folders (`000`–`055`) from the old backlog and the review of 46 candidates.
+  Each `ITEM.md` has the goal, the proposed scope, the owner's answers (verbatim) and the open
+  questions; each `NOTES.md` has the review text. `000` lists the bugs until a bug tracker is
+  chosen. The Maverick Engine docs moved to `items/001-maverick-engine/`, split into branch
+  folders `001a` (package rename) and `001b` (host contract). Branch folders may now be created
+  on `master` ahead of time. Templates moved to `_templates/item/` and `_templates/branch/`.
+- Contract check: not needed (docs only).
+- Follow-up: the user answers the open decisions in `ITEMS.md` (A–O), and the `idea` items are
+  discussed.

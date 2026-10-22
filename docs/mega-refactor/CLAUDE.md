@@ -6,7 +6,7 @@ Read this file before you do any work on the mega refactor.
 
 Refactor `engine/` and `core/` so that the game is easier to change, configure and extend.
 The current gameplay is the contract. A branch merges into `master` only if the game still
-plays the same. Each branch writes its own contract in `branches/<branch>/docs/CONTRACT.md`.
+plays the same. Each branch writes its own contract in its `docs/CONTRACT.md`.
 
 ## Inspiration: the X6 decomp
 
@@ -23,35 +23,95 @@ Rules:
 - Use these sources for ideas and facts only. Do not copy code from
   `~/IdeaProjects/mmx-reference/`, and do not commit any game data from `~/mmx-data/` to this
   repo.
-- When a branch uses an idea from X6, name the source (file and section) in the branch
-  `docs/NOTES.md`.
+- When a branch uses an idea from X6, name the source (file and section) in the item `NOTES.md`
+  or the branch `docs/NOTES.md`.
 
 ## Files
 
-| File | Purpose | Who changes it |
+| Path | Purpose | Who changes it |
 |------|---------|----------------|
 | `CLAUDE.md` | This file. Rules for the effort. | `master` only |
-| `ROADMAP.md` | Each branch, its goal and its coarse status. | `master` only |
-| `BACKLOG.md` | Ideas that are not yet assigned to a branch. | `master` only |
-| `process-log.md` | One entry for each branch that merged into `master`. | `master` only |
-| `branches/_template/` | The folder to copy when a branch starts. | `master` only |
-| `branches/<branch>/` | The docs of one branch. | That branch only |
+| `ITEMS.md` | The index: every item and every branch, with status and dates, and the open decisions. | `master` only |
+| `process-log.md` | One entry for each merged or dropped branch, and for each docs change to the setup. | `master` only |
+| `_templates/item/` | The files to copy for a new item. | `master` only |
+| `_templates/branch/` | The files to copy for a new branch folder. | `master` only |
+| `items/<id>-<slug>/ITEM.md` | The item: goal, proposed scope, owner's input, open questions. | `master` only |
+| `items/<id>-<slug>/NOTES.md` | Research for the item. | `master` only |
+| `items/<id>-<slug>/branches/<branch>/` | The docs of one branch. | `master` before the branch exists, then that branch only |
+
+## Items and IDs
+
+- An item is one feature or change. It can need more than one branch.
+- Each item has a 3-digit ID (`001`, `002`, ...) and a short kebab-case slug. The folder is
+  `items/<id>-<slug>/`, for example `items/016-narrow-services/`.
+- Give a new item the next free ID. Never reuse an ID. A dropped item keeps its ID and folder.
+- `000` is reserved for the bug list (see "Bugs").
+- When an item is too big or too vague, split it into new items and set the old item to
+  `dropped` with a pointer to the new IDs.
+- In docs and commit messages, refer to an item by its ID, for example "after `016`".
 
 ## Branch names
 
-- Each branch uses the prefix `mega-refactor-`, for example `mega-refactor-player-registry`.
-- The branch folder has the same name as the branch: `branches/mega-refactor-player-registry/`.
+- Each branch belongs to one item. Its ID is the item ID plus a letter: `001a`, `001b`, ...
+- The branch name is `mega-refactor-<id><letter>-<slug>`, for example
+  `mega-refactor-001a-package-rename`.
+- The branch folder has the same name as the branch:
+  `items/001-maverick-engine/branches/mega-refactor-001a-package-rename/`.
+
+## Statuses
+
+Item statuses:
+
+| Status | Meaning |
+|--------|---------|
+| `idea` | Under discussion. Not agreed yet. |
+| `planned` | Agreed, but no branch exists yet. |
+| `active` | At least one branch of the item exists. |
+| `done` | All branches that the item needs merged. |
+| `dropped` | Abandoned. `ITEM.md` gives the reason. |
+
+Branch statuses:
+
+| Status | Meaning |
+|--------|---------|
+| `planned` | Agreed, but the branch does not exist yet. |
+| `blocked` | It waits for other items or branches. `process-log.md` names them. |
+| `active` | The branch exists and work is in progress. |
+| `merged` | The branch merged into `master`. |
+| `dropped` | The branch was abandoned. |
 
 ## Rules
+
+### New item
+
+Do these steps in a docs-only commit directly on `master`:
+
+1. Copy `_templates/item/` to `items/<id>-<slug>/` and fill in `ITEM.md`.
+2. Add a row to the items table in `ITEMS.md`.
+
+### Prepare a branch folder ahead of time
+
+It is good to create a branch folder on `master` before the branch exists, for example to hold
+research, a draft `SCOPE.md` or the split of an item into branches. Do it in a docs-only commit
+on `master`:
+
+1. Copy `_templates/branch/` to `items/<id>-<slug>/branches/<branch>/`. Replace `<branch>` in the
+   files.
+2. Set the status block in the branch `process-log.md` to `planned` or `blocked`, and add an
+   entry that says no branch exists yet.
+3. Add a row to the branches table in `ITEMS.md` with the status `planned` or `blocked`.
+
+A draft `SCOPE.md` written ahead of time still needs the user's approval (see "Planning").
 
 ### Branch start
 
 Do these steps in a docs-only commit directly on `master`:
 
-1. Add a row to `ROADMAP.md` with the status `active`.
-2. Copy `branches/_template/` to `branches/<branch>/`.
-3. If the branch takes items from `BACKLOG.md`, move them out of `BACKLOG.md` and into the
-   branch `docs/SCOPE.md`.
+1. If the branch folder does not exist yet, create it as in "Prepare a branch folder ahead of
+   time".
+2. In `ITEMS.md`, set the branch row to `active` and fill in its start date. If this is the
+   item's first branch, set the item to `active` and fill in its start date.
+3. In `ITEM.md`, list the branch under "Branches".
 
 Then create the branch from `master`.
 
@@ -61,8 +121,8 @@ Do these steps in this order, before you change code. Do not start a step until 
 approves the step before it.
 
 1. **Scan.** Read the code that the branch will touch. Find the classes, call sites, events and
-   data involved, how they connect, and their problems. Read the folders of the other active
-   branches for overlap.
+   data involved, how they connect, and their problems. Read the item `NOTES.md`. Read the
+   folders of the other active branches for overlap.
 2. **`docs/SCOPE.md`.** Write what the scan found and what the branch will and will not change.
    The user approves it.
 3. **`docs/CONTRACT.md`.** Write the gameplay that the branch must not change and how to check
@@ -81,29 +141,44 @@ alone does not need a new approval, but write the reason in the process log.
 
 ### During the branch
 
-- Write docs only inside `branches/<branch>/`. Do not edit the top-level files on the branch.
-  Then two active branches cannot conflict in the docs.
-- Keep the status block at the top of `branches/<branch>/process-log.md` up to date.
-- Add a dated entry to `branches/<branch>/process-log.md` for each work session.
-- Put other docs (design notes, decisions, TODO lists) in `branches/<branch>/docs/`.
-- If you find a new idea that is out of scope for the branch, write it in the branch
-  `docs/TODO.md` under "Backlog candidates". Move it to `BACKLOG.md` when the branch merges.
+- On the branch, write docs only inside the branch folder. Do not edit `ITEMS.md`, `ITEM.md`,
+  the item `NOTES.md` or other top-level files on the branch. Then two active branches cannot
+  conflict in the docs.
+- Keep the status block at the top of the branch `process-log.md` up to date.
+- Add a dated entry to the branch `process-log.md` for each work session.
+- Put other docs (design notes, decisions, TODO lists) in the branch `docs/`.
+- If you find a new idea that is out of scope, write it in the branch `docs/TODO.md` under
+  "Backlog candidates". If you find a bug, write it under "Bug candidates".
 
 ### Branch merge
 
 1. Do the checks in the branch `docs/CONTRACT.md`. Write the result in the branch process log.
 2. Merge the branch into `master`.
-3. On `master`, add an entry to `docs/mega-refactor/process-log.md`. Use the entry format in
-   that file.
-4. On `master`, set the row in `ROADMAP.md` to `merged` and fill in the merge date.
-5. Move the "Backlog candidates" from the branch `docs/TODO.md` to `BACKLOG.md`.
+3. On `master`, add an entry to `process-log.md`. Use the entry format in that file.
+4. On `master`, in `ITEMS.md`, set the branch row to `merged` and fill in its finish date. If
+   the item needs no more branches, set the item to `done` and fill in its finish date.
+5. Make each "Backlog candidate" from the branch `docs/TODO.md` a new item (see "New item").
+   File each "Bug candidate" (see "Bugs").
 
 Do not delete the branch folder after the merge. It stays on `master` as history.
 
-### Dropped branch
+### Dropped branch or item
 
-If a branch is abandoned, set its row in `ROADMAP.md` to `dropped`, give the reason, and add a
-short entry to `process-log.md`. Move its unfinished items back to `BACKLOG.md`.
+- Branch: in `ITEMS.md`, set its row to `dropped` and fill in the finish date. Give the reason in
+  the branch `process-log.md`. Add a short entry to `process-log.md`. Move its unfinished work
+  back into the item `ITEM.md`.
+- Item: set it to `dropped` in `ITEMS.md`, fill in the finish date, and give the reason in
+  `ITEM.md`.
+
+## Bugs
+
+Bugs are not refactors. A bug fix changes gameplay on purpose, so it does not belong in a branch
+whose contract is "plays the same as `master`".
+
+- Until the user picks a bug tracker (decision A in `ITEMS.md`), list bugs in
+  `items/000-bugs/ITEM.md`.
+- If a refactor branch must change buggy behavior, its `CONTRACT.md` names the bug under
+  "Intended changes".
 
 ## Parallel branches
 
@@ -111,12 +186,3 @@ short entry to `process-log.md`. Move its unfinished items back to `BACKLOG.md`.
 - Before a branch starts and before it merges, read the folders of the other active branches
   (through their worktrees). Look for overlap, for example two branches that change the same
   classes or that plan the same feature. Write each overlap in your branch `docs/NOTES.md`.
-
-## Statuses
-
-| Status | Meaning |
-|--------|---------|
-| `planned` | Agreed, but no branch exists yet. |
-| `active` | The branch exists and work is in progress. |
-| `merged` | The branch merged into `master`. |
-| `dropped` | The branch was abandoned. |

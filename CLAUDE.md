@@ -7,7 +7,8 @@ Megaman Maverick is a non-commercial Mega Man fan game. It uses Kotlin and LibGD
 A multi-branch refactor of `engine/` and `core/` is in progress. The goal is to remove deep inheritance, global state (for example `game.megaman`), and fragile event ordering, and to make the game easier to configure and extend. The current gameplay is the contract: a change merges into `master` only if the game still plays the same.
 
 - All docs for this effort are in `docs/mega-refactor/`. Read `docs/mega-refactor/CLAUDE.md` before you do refactor work.
-- Refactor branches use the prefix `mega-refactor-`.
+- `docs/mega-refactor/ITEMS.md` lists every item and branch with its status. Each item has a folder `docs/mega-refactor/items/<id>-<slug>/`.
+- Refactor branches are named `mega-refactor-<id><letter>-<slug>`, for example `mega-refactor-001a-package-rename`.
 - Worktrees for parallel branches go in `.worktrees/` (git-ignored).
 
 ## Modules
