@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `010`, `013`, `038`, `041`, `045`
-- Branches: `mega-refactor-019a-remove-second-spawn-pass` (active, started 2026-10-22)
+- Branches: `mega-refactor-019a-remove-second-spawn-pass` (merged 2026-10-22, squash `21df34661`), `mega-refactor-019b-destroy-notification` (planned)
 
 ## Goal
 

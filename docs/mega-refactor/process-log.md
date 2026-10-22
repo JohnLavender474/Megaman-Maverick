@@ -162,3 +162,15 @@ newest entry at the bottom.
   the `TODO` in `PlayerSpawnsManager.startAt()` must be revisited in `036`. Later `008` branches
   are listed in `items/008-dev-launch-options/ITEM.md`.
 
+## 2026-10-22 — mega-refactor-019a-remove-second-spawn-pass
+
+- Summary: removed the second `spawnsMan.update(delta / 2f)` after `engine.update`; the remaining
+  pass gets the full `delta`. Research (decision K) showed the second pass never gave a
+  same-frame spawn and no live entity needed it. A `TODO` names the two accepted rare cases.
+  Squash commit `21df34661`.
+- Contract check: clean build; 427 engine and 77 core tests pass; 133 compiler warnings as
+  before; the owner's play test passed (Desert Man `room13`/`room14`, `room10`; Wily Stage 1
+  `room8`, `room3`/`room4`).
+- Follow-up: `019b` (destroy notification) is a `planned` branch. The owner's play test showed the
+  old misplaced-object errors, filed as `docs/issues/2026-10-22-misplaced-tmx-objects.md`.
+
