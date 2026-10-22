@@ -1,6 +1,8 @@
 # TODO: <branch>
 
-## In scope
+## Tasks
+
+Loose tasks that are not steps in `PLAN.md`.
 
 ## Backlog candidates
 

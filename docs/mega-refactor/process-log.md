@@ -45,3 +45,12 @@ newest entry at the bottom.
   for camera zones and `AutoScroll`, and the research questions to answer before the design.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-22 — master (docs)
+
+- Summary: added a planning phase for each branch: scan, then `SCOPE.md`, `CONTRACT.md` and
+  `PLAN.md`, each approved by the user before the next. Added `SCOPE.md` and `PLAN.md` to the
+  branch template. Removed the "In scope" section from the template `TODO.md`. Branch specs and
+  plans go in the branch folder, not in `docs/superpowers/`.
+- Contract check: not needed (docs only).
+- Follow-up: none.
