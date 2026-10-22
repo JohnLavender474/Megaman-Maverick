@@ -1173,3 +1173,70 @@ table branch deletes them.
 - It does not depend on the typed-receiver branch. They touch different files: this branch changes
   the `Fixture` constructor, `Body` and the tests; the receivers change `IFixtureExtensions.kt`. So
   they can run in parallel.
+
+### Follow-up: fixture types that are not enums (2026-10-22)
+
+The owner asked: how is `IFixtureType` usable without an enum, and what happens when two instances
+share an ordinal but have different names, or the reverse?
+
+**Without an enum,** a game writes objects or instances of a class:
+
+```kotlin
+object Feet : IFixtureType { override val ordinal = 0; override val name = "FEET" }
+class NamedFixtureType(override val name: String, override val ordinal: Int) : IFixtureType
+```
+
+Nothing checks that the ordinals are unique, dense (`0..n-1`) or match the names. An enum gives
+this by construction. A hand-written set does not.
+
+**What a collision does, by place:**
+
+| Place | Lookup | Same ordinal, different name | Same name, different ordinal |
+|---|---|---|---|
+| `Body.fixtures`, `MegaContactFilter` maps, `equalsAny`, `==` | `equals`/`hashCode` (identity for a plain class or object) | No overwrite: two distinct keys. A `data class` or a hand-written `equals` on the ordinal would merge them | No overwrite |
+| `014c` rule table | `ordinal` as the slot index | **Shares a slot.** If both types get rules, the builder's duplicate check throws. If only one gets a rule, **the other type silently runs it**. This is the real danger | No overwrite. Two slots |
+| Logs and the contact trace | `name` | Distinct names, correct | **Ambiguous** output |
+| Data paths (`valueOf` from Tiled strings) | `name` | Correct | **Ambiguous**: one of them wins |
+| An ordinal `>= n` or `< 0` | slot index | `ArrayIndexOutOfBoundsException` at dispatch | — |
+
+**Fix: one engine-owned type set** that the table, the world and data lookups are built from:
+
+```kotlin
+class FixtureTypeSet private constructor(private val types: Array<IFixtureType>) {
+
+    val size get() = types.size
+
+    operator fun get(ordinal: Int) = types[ordinal]
+
+    fun valueOf(name: String): IFixtureType = ...
+
+    fun owns(type: IFixtureType) = type.ordinal in types.indices && types[type.ordinal] === type
+
+    companion object {
+        fun <E> of(entries: List<E>) where E : Enum<E>, E : IFixtureType = validated(entries)
+
+        fun named(vararg names: String): FixtureTypeSet = ...
+
+        fun validated(types: List<IFixtureType>): FixtureTypeSet {
+            types.forEachIndexed { i, t -> check(t.ordinal == i) { "Fixture type ${t.name} has ordinal ${t.ordinal}, expected $i" } }
+            check(types.map { it.name }.toSet().size == types.size) { "Fixture type names must be unique" }
+            return FixtureTypeSet(types.toTypedArray())
+        }
+    }
+}
+```
+
+- `named(...)` creates the instances and assigns the ordinals itself, so a game without enums cannot
+  make a collision.
+- `of(entries)` and `validated(list)` check a hand-written set: ordinals dense and in order, names
+  unique.
+- `ContactRuleTable` takes the `FixtureTypeSet`, not a raw list.
+- A stray instance with a colliding ordinal is caught by `owns(type)`, which is one array read and
+  one reference compare. Options for where to call it:
+  - in the builder only (free, but misses strays created after the build);
+  - in `Fixture`'s constructor, when a set is given (cheap; the check runs once per fixture);
+  - in dispatch (one check per contact; probably not needed if the constructor checks).
+- Rule: a fixture type is a singleton. Do not give it value equality (no `data class`).
+
+With this, the interface stays usable without enums, and an enum still needs no code. This belongs
+in `014a`.
