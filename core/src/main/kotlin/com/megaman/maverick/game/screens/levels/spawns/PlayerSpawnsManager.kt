@@ -31,6 +31,19 @@ class PlayerSpawnsManager(
         current = popFirstSpawn()
     }
 
+    fun startAt(spawn: RectangleMapObject) {
+        // TODO: every spawn whose name sorts before the start spawn counts as passed. This uses the
+        //  string order of the names ("10" sorts before "2"), not the checkpoint ranks planned in item
+        //  036, and it drops forked checkpoints that share a rank with the start spawn. Replace it with
+        //  the rank rule when item 036 changes how checkpoints activate.
+        val iter = spawns.iterator()
+        while (iter.hasNext()) {
+            val other = iter.next()
+            if (other == spawn || other.name < spawn.name) iter.remove()
+        }
+        current = spawn
+    }
+
     private fun popFirstSpawn(): RectangleMapObject {
         reusableArray.clear()
         reusableArray.addAll(spawns)

@@ -132,6 +132,7 @@ class MegamanMaverickGameParams {
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
     var worldContainer: String = "simple"
     var pathfinding: String = "async"
+    var launchOptions: LaunchOptions = LaunchOptions()
 }
 
 class MegamanMaverickGame(
@@ -231,7 +232,22 @@ class MegamanMaverickGame(
     var diagnostics: RuntimeDiagnostics? = null
         private set
 
+    private lateinit var launch: ResolvedLaunch
+    private var launchRoom: String? = null
+    private var launchRoomLevel: LevelDefinition? = null
+
     override fun create() {
+        val launchResult = resolveLaunchOptions(params.launchOptions)
+        if (!launchResult.isValid)
+            throw IllegalArgumentException("Invalid launch options: ${launchResult.errors.joinToString("; ")}")
+        launch = launchResult.resolved!!
+        launchRoom = launch.room
+        launchRoomLevel = when (val start = launch.start) {
+            is LaunchStart.StartLevel -> start.level
+            is LaunchStart.OpenScreen -> start.stagedLevel
+            LaunchStart.Default -> null
+        }
+
         params.logLevels.forEach { GameLogger.setLogLevel(it, true) }
 
         // only print errors to terminal; all other log levels should only be displayed in the logger window
@@ -250,7 +266,8 @@ class MegamanMaverickGame(
         })
 
         GameLogger.tagsToLog.addAll(TAGS_TO_LOG)
-        GameLogger.filterByTag = true
+        launch.logTags.forEach { GameLogger.tagsToLog.add(it) }
+        GameLogger.filterByTag = !launch.logAllTags
 
         GameLogger.log(TAG, "create(): appType=${Gdx.app.type}")
 
@@ -397,9 +414,20 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
         screens.put(ScreenEnum.EXTRAS_SCREEN.name, ExtrasScreen(this))
 
-        when (params.runType) {
-            RunType.GAME -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
-            RunType.TEST -> startLevel(LevelDefinition.TEST_1)
+        when (val start = launch.start) {
+            LaunchStart.Default -> when (params.runType) {
+                RunType.GAME -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
+                RunType.TEST -> startLevel(LevelDefinition.TEST_1)
+            }
+
+            is LaunchStart.StartLevel -> startLevel(start.level)
+
+            is LaunchStart.OpenScreen -> {
+                if (!screens.containsKey(start.screen.name))
+                    throw IllegalStateException("Launch option --screen: screen ${start.screen.name} is not registered")
+                start.stagedLevel?.let { setCurrentLevel(it) }
+                setCurrentScreen(start.screen.name)
+            }
         }
     }
 
@@ -451,8 +479,8 @@ class MegamanMaverickGame(
         } else {
             diagnostics?.beginEntry("autoPerf")
 
-            autoPerfGraceTimer.update(delta)
-            if (autoPerfGraceTimer.isFinished()) {
+            if (launch.autoPerf) autoPerfGraceTimer.update(delta)
+            if (launch.autoPerf && autoPerfGraceTimer.isFinished()) {
                 val performance = getPerformance()
                 val currentFps = Gdx.graphics.framesPerSecond
                 if (performance != Performance.VERY_LOW && currentFps < performance.fps) {
@@ -703,6 +731,15 @@ class MegamanMaverickGame(
                 GameLogger.error(TAG, "dispose(): Exception while running dispose action", e)
             }
         }
+    }
+
+    fun consumeLaunchRoom(): String? {
+        val room = launchRoom
+        val level = launchRoomLevel
+        launchRoom = null
+        launchRoomLevel = null
+        if (room == null || level != getCurrentLevel()) return null
+        return room
     }
 
     fun setCurrentLevel(levelDef: LevelDefinition) = putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)

@@ -7,10 +7,14 @@ import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
 import com.maverick.game.engine.common.GameLogLevel
+import com.megaman.maverick.game.LaunchOptions
+import com.megaman.maverick.game.parseEnumOption
+import com.megaman.maverick.game.resolveLaunchOptions
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.MegamanMaverickGame.RunType
 import com.megaman.maverick.game.MegamanMaverickGameParams
+import com.megaman.maverick.game.levels.LevelDefinition
 import kotlin.system.exitProcess
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
@@ -44,6 +48,8 @@ object DesktopLauncher {
     private const val DEFAULT_DIAGNOSTICS = false
     private const val DEFAULT_WORLD_CONTAINER = "simple"
     private const val DEFAULT_PATHFINDING = "async"
+    private const val DEFAULT_AUTO_PERF = true
+    private const val EXIT_CODE_BAD_ARGS = 2
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -60,8 +66,35 @@ object DesktopLauncher {
             exitProcess(1)
         }
 
+        val errors = ArrayList<String>()
+
+        val runType = parseEnumOption<RunType>("--runType", appArgs.runType, errors)
+        val performance = parseEnumOption<Performance>("--performance", appArgs.performance, errors)
+
+        val level =
+            if (runType == RunType.TEST && appArgs.level.isNullOrBlank()) LevelDefinition.TEST_1.name else appArgs.level
+        val launchOptions = LaunchOptions(
+            screen = appArgs.screen,
+            level = level,
+            room = appArgs.room,
+            logTags = appArgs.logTags,
+            autoPerf = appArgs.autoPerf
+        )
+        errors.addAll(resolveLaunchOptions(launchOptions).errors)
+
+        if (errors.isNotEmpty() || runType == null || performance == null) {
+            errors.forEach { System.err.println("[Application] $it") }
+            jCommander.usage()
+            exitProcess(EXIT_CODE_BAD_ARGS)
+        }
+
         println("Game loaded with arguments:")
         println("- Run Type: " + appArgs.runType)
+        println("- Screen: " + appArgs.screen)
+        println("- Level: " + launchOptions.level)
+        println("- Room: " + appArgs.room)
+        println("- Log Tags: " + appArgs.logTags)
+        println("- Auto Perf: " + appArgs.autoPerf)
         println("- Performance: " + appArgs.performance)
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
@@ -76,7 +109,6 @@ object DesktopLauncher {
         val config = Lwjgl3ApplicationConfiguration()
         config.setTitle(TITLE)
 
-        val performance = Performance.valueOf(appArgs.performance.uppercase().trim())
         config.setIdleFPS(performance.fps)
         config.setForegroundFPS(performance.fps)
 
@@ -89,8 +121,6 @@ object DesktopLauncher {
             appArgs.maximized -> config.setMaximized(true)
             else -> config.setWindowedMode(appArgs.width, appArgs.height)
         }
-
-        val runType = RunType.valueOf(appArgs.runType.uppercase())
 
         val params = MegamanMaverickGameParams()
         params.runType = runType
@@ -109,8 +139,9 @@ object DesktopLauncher {
         params.diagnostics = appArgs.diagnostics
         params.worldContainer = appArgs.worldContainer
         params.pathfinding = appArgs.pathfinding
+        params.launchOptions = launchOptions
 
-        val logLevels = appArgs.logLevels.replace("\\s+", "").split(",").filter { !it.isBlank() }
+        val logLevels = appArgs.logLevels.replace(Regex("\\s+"), "").split(",").filter { !it.isBlank() }
         try {
             logLevels.forEach {
                 val logLevel = GameLogLevel.valueOf(it.uppercase())
@@ -155,7 +186,7 @@ object DesktopLauncher {
     class DesktopAppArgs {
         @Parameter(
             names = ["--runType"],
-            description = "The type of run to perform ('game' or 'test')"
+            description = "Deprecated: use --level TEST_1 instead of 'test'. The type of run to perform ('game' or 'test')"
         )
         var runType = DEFAULT_RUN_TYPE
 
@@ -310,5 +341,37 @@ object DesktopLauncher {
             description = "Specify which pathfiding to use. Default value is $DEFAULT_PATHFINDING"
         )
         var pathfinding = DEFAULT_PATHFINDING
+
+        @Parameter(
+            names = ["--screen"],
+            description = "The screen to open at start, for example MAIN_MENU_SCREEN. With --level and a screen " +
+                "that is not LEVEL_SCREEN, the level is staged: the next level start with no level choice loads it."
+        )
+        var screen: String? = null
+
+        @Parameter(
+            names = ["--level"],
+            description = "The level to start (or to stage, with --screen), for example MOON_MAN."
+        )
+        var level: String? = null
+
+        @Parameter(
+            names = ["--room"],
+            description = "Needs --level. On the first level start, start at the first player spawn in this room."
+        )
+        var room: String? = null
+
+        @Parameter(
+            names = ["--logTags"],
+            description = "Comma-separated log tags to print, or 'all' to print every tag."
+        )
+        var logTags: String? = null
+
+        @Parameter(
+            names = ["--autoPerf"],
+            arity = 1,
+            description = "Whether the game may change the performance tier at runtime. Default value is $DEFAULT_AUTO_PERF"
+        )
+        var autoPerf = DEFAULT_AUTO_PERF
     }
 }

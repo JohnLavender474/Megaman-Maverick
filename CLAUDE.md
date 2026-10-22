@@ -28,14 +28,14 @@ Versions are in `gradle.properties` (`projectVersion`, `kotlinVersion`, `gdxVers
 
 - Debug run: `./run-game-debug.sh`. It adds `--debugText`, `--debugWindow`, `--diagnostics` and a 1920x1080 window.
 - Alpha run: `./run-game-alpha.sh`. Normal play settings with `--pixelPerfect` and `--writeLogsToFile`.
-- Test run: `./run-game-test.sh`. It uses `--runType test`, which starts `LevelDefinition.TEST_1` directly.
+- Test run: `./run-game-test.sh`. It uses `--runType test`, which starts `LevelDefinition.TEST_1` directly (same as `--level TEST_1`).
 - Build JAR: `./gradlew lwjgl3:jar` (or `./gradlew lwjgl3:dist`). Output name is `Megaman-Maverick-<projectVersion>.jar`.
 - Platform bundles: `./build-game-linux.sh`, `./build-game-mac.sh`, `./build-game-windows.sh`. They call `build-game.sh`, which bundles a JRE from `game-builds/jdk/`.
 - Engine tests: `./gradlew engine:test` (Kotest + MockK, in `engine/src/test/`).
 - Game tests: `./gradlew core:test` (only a few tests in `core/src/test/`; `MegamanHealthTankTest` shows how to build an entity with a relaxed MockK `MegamanMaverickGame`). Most gameplay has no tests. To verify a gameplay change, run the game.
 - CI: `.github/workflows/` runs the engine, game and `utils/` tests on push to `master`.
 
-Launcher flags are in `DesktopLauncher.DesktopAppArgs`. Examples: `--runType game|test`, `--performance low|medium|high`, `--pathfinding async|sync`, `--worldContainer`, `--logLevels debug,log,error`, `--debugShapes`, `--fixedStepScalar`.
+Launcher flags are in `DesktopLauncher.DesktopAppArgs`. Examples: `--performance low|medium|high`, `--pathfinding async|sync`, `--worldContainer`, `--logLevels debug,log,error`, `--debugShapes`, `--fixedStepScalar`. Dev start options (checked by `LaunchOptions`; a bad value exits with code 2): `--level <LevelDefinition>` starts a level; `--screen <ScreenEnum>` opens a screen, and with `--level` it stages that level for the next level start; `--room <name>` (needs `--level`) starts at the first player spawn in that room; `--logTags a,b` or `--logTags all`; `--autoPerf false`. `--runType test` is a deprecated alias for `--level TEST_1`.
 
 Python tools in `utils/` (`level_analyzer`, `level_builder`, `diagnostics`) each have a `run.sh` and a `run_tests.sh`. `utils/tiled_extensions/` holds Tiled editor extensions.
 

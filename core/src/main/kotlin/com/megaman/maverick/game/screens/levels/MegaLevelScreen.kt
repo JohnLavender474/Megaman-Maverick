@@ -513,13 +513,40 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>? ?: Array()
         playerSpawnsMan.set(playerSpawns)
 
-        cameraManagerForRooms.gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
+        val gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
+        cameraManagerForRooms.gameRooms = gameRooms
+
+        game.consumeLaunchRoom()?.let { startAtLaunchRoom(it, playerSpawns, gameRooms) }
 
         val spawners = result.get(ConstKeys.SPAWNERS) as Array<ISpawner>? ?: Array()
         spawnsMan.setSpawners(spawners)
 
         val disposables = result.get(ConstKeys.DISPOSABLES) as Array<Disposable>? ?: Array()
         this.disposables.addAll(disposables)
+    }
+
+    private fun startAtLaunchRoom(
+        roomName: String,
+        playerSpawns: Array<RectangleMapObject>,
+        gameRooms: Array<RectangleMapObject>
+    ) {
+        val center = Vector2()
+        fun spawnsIn(room: RectangleMapObject) = playerSpawns
+            .filter { room.rectangle.contains(it.rectangle.getCenter(center)) }
+            .sortedWith { o1, o2 -> o1.name.compareTo(o2.name) }
+
+        val room = gameRooms.firstOrNull { it.name == roomName }
+        val spawn = room?.let { spawnsIn(it).firstOrNull() }
+        if (spawn == null) {
+            val roomsWithSpawns = gameRooms.filter { spawnsIn(it).isNotEmpty() }.map { it.name }
+            throw IllegalStateException(
+                "Launch option --room: no player spawn in room '$roomName'. " +
+                    "Rooms with player spawns: ${roomsWithSpawns.joinToString(", ")}"
+            )
+        }
+
+        GameLogger.log(TAG, "startAtLaunchRoom(): room=$roomName, spawn=${spawn.name}")
+        playerSpawnsMan.startAt(spawn)
     }
 
     override fun onEvent(event: Event) {
