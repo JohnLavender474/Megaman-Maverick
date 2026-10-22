@@ -89,3 +89,12 @@ newest entry at the bottom.
   P. The root `CLAUDE.md` now describes the engine as an engine for Mega Man-like games.
 - Contract check: not needed (docs only).
 - Follow-up: decisions C, D, F, L, N and P; the open question in the `019a` draft scope.
+
+## 2026-10-22 — master (docs)
+
+- Summary: recorded decisions P (one repo, keep the module split, no copyrighted assets in the
+  engine), L (no publishing) and N (keep `GameEngine`). Folded the layer-agnostic spawning steps
+  into `021`, `022` and `048`. Moved the bug list to `docs/issues/` (25 files and a README with
+  the rules and an index) and set `000` to `done`.
+- Contract check: not needed (docs only).
+- Follow-up: start branch `001a` as the first practice round of the branch process.

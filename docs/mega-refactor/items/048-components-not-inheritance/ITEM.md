@@ -14,6 +14,10 @@ Replace the `AbstractHealthEntity` / `AbstractEnemy` / `AbstractBoss` layers and
 
 From the first request (summary): entities get health by extending `AbstractHealthEntity`; enemies must extend `AbstractEnemy` and bosses `AbstractBoss`; logic does type checks on these classes. Replace the layers with components and remove the type checks.
 
+## Decisions
+
+- (2026-10-22) Entity roles come from components, not from base classes or layers. An entity that is both an enemy and a block has both parts (a solid block fixture, health and damage), with no child entity, extra interface or flag swapping. Code that checks `EntityType` or `is AbstractEnemy` checks a capability instead.
+
 ## Open questions
 
 None yet. The scan for the first branch will find them.

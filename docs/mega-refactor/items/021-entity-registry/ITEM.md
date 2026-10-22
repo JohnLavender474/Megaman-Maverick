@@ -26,6 +26,10 @@ Answer to review item 20 (2026-10-22, verbatim):
 
 > yes, this would mirror how it's done in X6. One issue though is that when building levels in TMX, it's easier when objects have human-readable names rather than ids. Think about the human-readability aspect, too
 
+## Decisions
+
+- (2026-10-22) The layer stops being a namespace. The object name resolves to an entity ID across the whole game, so layer names become free text. The old allowed-layer list stays only as a validator warning. Structural layers (`game_rooms`, `player`, tile layers, backgrounds) are recognized by their Tiled layer class, not by their name.
+
 ## Open questions
 
 - Must the ID stay equal to the atlas region prefix?

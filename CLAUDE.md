@@ -10,6 +10,7 @@ A multi-branch refactor of `engine/` and `core/` is in progress. The goal is to 
 - `docs/mega-refactor/ITEMS.md` lists every item and branch with its status. Each item has a folder `docs/mega-refactor/items/<id>-<slug>/`.
 - Refactor branches are named `mega-refactor-<id><letter>-<slug>`, for example `mega-refactor-001a-package-rename`.
 - Worktrees for parallel branches go in `.worktrees/` (git-ignored).
+- Bugs and behavior questions go in `docs/issues/`, one file each. Read `docs/issues/README.md` first.
 
 ## Modules
 

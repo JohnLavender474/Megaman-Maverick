@@ -60,16 +60,14 @@ or an abstract class, as part of the engine, named `MaverickEngine`. Consider us
 - M (2026-10-22): the host types are `IMaverickGame` and `MaverickGame` (Game, not App).
 - O (2026-10-22): the engine base class owns the game loop and the orchestration of systems and entities, so that client games do not set this up.
 - (2026-10-22) The Maverick Engine is meant for Mega Man and Mega Man-like games. The name sets it apart from other Mega Man engines (for example Mega Man Maker).
-- L, N (2026-10-22): on hold. The owner is thinking about keeping engine and game in one project (open decision P in `ITEMS.md`), which changes the rename.
+- P (2026-10-22): one repo and one project, but keep the `engine` / `core` Gradle module split, so that engine code cannot import game code. The engine ships no copyrighted assets (for example Mega's sprite sheet). It ships asset contracts (naming, `AnimationDef`, schemas, level format), and later a small starter sample with placeholder art.
+- L (2026-10-22): the engine is not published. It stays in this repo.
+- N (2026-10-22): `GameEngine` keeps its name.
+- (2026-10-22) Do the package rename now, as branch `001a`, a practice round for the branch process.
 
 ## Open questions
 
-1. Publishing: do you plan to publish the engine (JitPack or Maven Central) or move it to its
-   own repo? This decides the root package (`com.maverick.engine` or
-   `io.github.johnlavender474.maverick`). Decide before `001a`, so that the package changes only
-   once.
-2. `GameEngine`: keep the name, or rename it (for example `EntityEngine`) in the `001a` commit,
-   so that all mass renames happen at one time?
+None open. The exact root package is settled in the `001a` scope.
 
 ## Sources
 

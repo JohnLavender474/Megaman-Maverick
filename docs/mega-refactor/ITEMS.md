@@ -19,7 +19,7 @@ Decisions that block or shape many items. The letters are the names from the rev
 |----------|----------|--------|-------|
 | A | Bugs in GitHub Issues or in `docs/issues/`? | `docs/issues/` | `000` |
 | B | A separate `smokeTest` Gradle suite, or Kotest tags in `src/test`? | `smokeTest` suite | `004`, `005`, `006` |
-| C | Where do level validation rules live: engine, game or a `tools` subproject? | Open (depends on P) | `003` |
+| C | Where do level validation rules live: engine, game or a `tools` subproject? | Open. Proposed: rules in `engine`, content in `core`, a thin runner in `tools` | `003` |
 | D | Fixed tick: 60 Hz? Accept a physics retune? Slow down or skip time on slow PCs? | Open | `010` |
 | E | Is `DarkSerketClaw` `SMALL` on purpose? Do Mega's explosions hurt enemies? | Claw: yes, keep its damage as it is. Explosions: open | `005`, `023`, `030` |
 | F | How is the render order defined per level? | Partly: map property `legacy`, `default` or `custom`. Rest open | `026` |
@@ -28,17 +28,17 @@ Decisions that block or shape many items. The letters are the names from the rev
 | I | Number of save slots? | Config value, default 10, no hard limit | `007` |
 | J | Commit to the 16×14 view? | Yes for now, with no coupling to that size | `035`, `054` |
 | K | Which entity needed the second spawn pass? | None found. Remove it first, in `019a` | `019` |
-| L | Publish the engine? (Sets the root package.) | On hold (depends on P) | `001` |
+| L | Publish the engine? (Sets the root package.) | No. It stays in this repo | `001` |
 | M | Host name: Game or App? | `IMaverickGame` / `MaverickGame` | `001` |
-| N | Rename `GameEngine`? | On hold (depends on P) | `001` |
+| N | Rename `GameEngine`? | No | `001` |
 | O | Does the engine base class own the game loop? | Yes | `001` |
-| P | One project for engine and game, or a separate engine? Which assets, if any, come with the engine? | Open | `001`, `003` |
+| P | One project for engine and game, or a separate engine? Which assets, if any, come with the engine? | One repo, keep the `engine` / `core` module split; no copyrighted assets in the engine; asset contracts and a later starter sample | `001`, `003` |
 
 ## Items
 
 | ID | Item | Type | Status | Depends on | Started | Finished |
 |----|------|------|--------|------------|---------|----------|
-| 000 | [Bugs found during the review](items/000-bugs/ITEM.md) | bugs | idea | none | | |
+| 000 | [Bugs found during the review](items/000-bugs/ITEM.md) | bugs | done | none | 2026-10-22 | 2026-10-22 |
 | 001 | [Maverick Engine](items/001-maverick-engine/ITEM.md) | refactor | planned | `001b`: `016`, `010`, `032` | | |
 | 002 | [CI on every branch, one Gradle job, aligned test libraries](items/002-ci-all-branches/ITEM.md) | tooling | planned | none | | |
 | 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | planned | `002` | | |

@@ -1,10 +1,15 @@
 # 000: Bugs found during the review
 
-- Status: idea
+- Status: done
 - Type: bugs
 - Depends on: none
 - Related: `012`, `018`, `019`, `036`, `007`, `008`, `032`, `034`, `040`
 - Branches: none yet
+
+## Moved
+
+On 2026-10-22 every bug and question below moved to `docs/issues/` (one file each, index in
+`docs/issues/README.md`). The files there are the source now. This list is kept as history.
 
 ## Goal
 

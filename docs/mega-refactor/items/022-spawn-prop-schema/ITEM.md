@@ -25,6 +25,10 @@ Answer to review item 21 (2026-10-22, verbatim):
 
 > yes, a schema per entity would be so much easier to work with
 
+## Decisions
+
+- (2026-10-22) Spawn props also carry the layer and the map the object came from (name, class, properties), so that layer-level and map-level properties can act as defaults. The exact shape (separate context objects or flattened props) is under discussion.
+
 ## Open questions
 
 - Commit the exported Tiled files, or generate them locally?
