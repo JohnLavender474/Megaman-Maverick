@@ -3,7 +3,7 @@
 - Status: planned
 - Type: refactor
 - Depends on: none
-- Related: `006`, `020`, `029`, `030`, `031`, `055`
+- Related: `006`, `020`, `029`, `030`, `031`, `055`, `056`
 - Branches: none yet
 
 ## Goal
@@ -28,6 +28,10 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - **Handler signature:** rule handlers take plain ordered fixtures, `(a, b, delta)` (option H2 in `NOTES.md`). The table puts the fixtures in the rule's role order.
 - **`Contact` helpers:** a task for this item. `IContactListener` moves to plain fixture parameters, and the type helpers in `Contact` are removed (see "Proposed scope").
 - **Receivers:** replace the `Megaman` checks with fixture receivers or capabilities in this item. Do not wait for `029`. `029` adjusts them later as needed.
+- **Receiver style:** the owner sees the hand-written receiver extension trios (`setX`/`hasX`/`getX`) as a code smell. The first pass may add new receivers in that style, but item `056` (typed fixture receivers) replaces it. The research recommends doing `056` before the `014` rule files (see `056`).
+- **Phases:** one rule object per pair, with `onBegin`, `onContinue` and `onEnd` methods (option P1 in `NOTES.md` 4.4).
+- **Files:** one class and file per pair effect with real logic; generic classes for the receiver-forward pairs; one `ProjectileRules.kt` (`NOTES.md`, "Per-pair classes"). The branch confirms it in practice.
+- **Contract check:** a manual check of fixed routes is enough for now. A contact trace tool is under research.
 - **Side findings:** filed as issues on 2026-10-22: `2026-10-22-shield-side-contact-never-made.md`, `2026-10-22-block-gravity-change-rule-never-runs.md`, `2026-10-22-player-death-contact-unhandled.md`, `2026-10-22-unused-contact-hooks.md`, `2026-10-22-wrong-contact-log-texts.md`, `2026-10-22-projectile-explosion-shape-order.md`.
 
 ## Owner's input
@@ -40,10 +44,8 @@ Answer to review item 13 (2026-10-22, verbatim):
 
 - Rules in data (JSON) now, or only the simple friction and sense rules? The research recommends Kotlin `SurfaceRule` rows and no JSON for now (`NOTES.md` 4.6).
 - Can some special cases (wall-slide ice friction) become a general body property? The research says yes: a body flag that the wall-slide behavior sets (`NOTES.md` 4.6).
-- One rule object per pair with three phase methods, or one table per phase (`NOTES.md` 4.4)?
 - Should the table mechanism start in `core`, or go into the engine at once?
-- One class and file per pair effect, or group files (`NOTES.md` section "Per-pair classes")?
-- Is a manual trace diff of fixed routes enough for the contract, without `006`/`055`?
+- Should the branch build a contact trace tool, and which kind?
 
 ## Sources
 
