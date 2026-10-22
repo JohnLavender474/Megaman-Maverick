@@ -921,7 +921,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerStatsHandler.update(delta)
 
         if (!game.paused) {
-            spawnsMan.update(delta / 2f)
+            // TODO: this is the only spawn pass per frame. Two rare cases differ from the old second pass after
+            //  engine.update: (1) a spawn_room entity that dies in engine.update in the same frame as an accepted event
+            //  for its own room misses that event and comes back only at the next room entry or respawn; (2) a
+            //  camera-spawned entity that dies off screen just before its spawn point scrolls into view respawns only
+            //  after the camera leaves its spawn area and comes back. The destroy notification in item 019b fixes both.
+            spawnsMan.update(delta)
 
             val spawnsIter = spawns.iterator()
             while (spawnsIter.hasNext()) {
@@ -946,8 +951,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         engine.update(delta)
 
         if (!game.paused) {
-            spawnsMan.update(delta / 2f)
-
             playerSpawnsMan.run()
 
             val spawnsIter = spawns.iterator()

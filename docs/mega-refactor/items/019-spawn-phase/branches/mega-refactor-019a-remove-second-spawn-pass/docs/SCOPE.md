@@ -3,8 +3,8 @@
 What this branch changes and why. This is a draft written ahead of time on `master`. The branch
 does not exist yet, and the user has not approved this scope.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 ## Goal
 
@@ -33,6 +33,8 @@ From the decision K research (`items/019-spawn-phase/NOTES.md`):
 ## In scope
 
 - Remove the `spawnsMan.update(delta / 2f)` call after `engine.update`.
+- Add a `TODO` comment at the remaining spawn pass that names the two rare cases and points to
+  `019b`.
 - Change the call before `engine.update` to `spawnsMan.update(delta)`.
 - Keep `playerSpawnsMan.run()` and the second drain loop where they are.
 
@@ -53,7 +55,10 @@ From the decision K research (`items/019-spawn-phase/NOTES.md`):
 
 ## Overlap with other branches
 
-None active (2026-10-22).
+Wave 1 (2026-10-22) runs `002a` (build and CI files only) and `008a` (the launcher, the boot code,
+and maybe the level start code for `--room`). `008a` may touch `MegaLevelScreen.kt`, but not
+`render()`, which is the only code this branch changes. The second branch to merge checks the
+merge.
 
 ## Open questions
 
