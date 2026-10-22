@@ -31,3 +31,10 @@ newest entry at the bottom.
   `branches/_template/docs/`.
 - Contract check: not needed (docs only).
 - Follow-up: pick the first branch from `BACKLOG.md`.
+
+## 2026-10-22 — master (docs)
+
+- Summary: added the X6 decomp (`mmx-demake-tools`, `~/mmx-data/x6`) as a source of ideas in
+  `CLAUDE.md`. Added the X-style camera bounds item to `BACKLOG.md`.
+- Contract check: not needed (docs only).
+- Follow-up: none.

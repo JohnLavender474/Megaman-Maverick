@@ -34,6 +34,35 @@ files are a better fit than classes.
 Let other developers and level creators build new entities from JSON or YAML, without deep work
 in the code.
 
+## Camera
+
+### Support X-style camera bounds and decouple the camera manager
+
+Today `CameraManagerForRooms` supports only the classic Mega Man way to set camera bounds: the
+bounds are the current room, and the bounds change only through a room transition.
+
+In X6, objects in the stage control the camera bounds. The bounds can change while X stays in
+the same area, with no room transition. See the "Camera" section in
+`~/IdeaProjects/mmx-demake-tools/docs/engine.md`: each layer camera has current limits and target
+limits, and the current limits move toward the target limits at a set speed.
+
+Problems now:
+
+- `MegaLevelScreen` is tightly coupled to `CameraManagerForRooms`. It sets the transition
+  callbacks, reads `currentGameRoom` and `priorGameRoom`, and sends the room events
+  (`BEGIN_ROOM_TRANS`, `CONTINUE_ROOM_TRANS`, `END_ROOM_TRANS`, `SET_TO_ROOM_NO_TRANS`) from those
+  callbacks.
+- Room logic and camera logic are mixed in one class. Music, boss rooms, gravity direction and
+  enemy cleanup are tied to room transitions in the level screen.
+- No logic exists for X-style camera bounds.
+
+Goal:
+
+- An interface for camera control, so that the level screen does not depend on one camera
+  manager.
+- Room-based bounds (the current behavior) and X-style bounds (set by objects in the map) as two
+  options. A level can use either one, and possibly both.
+
 ## Configuration
 
 ### Make values configurable

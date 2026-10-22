@@ -8,6 +8,24 @@ Refactor `engine/` and `core/` so that the game is easier to change, configure a
 The current gameplay is the contract. A branch merges into `master` only if the game still
 plays the same. Each branch writes its own contract in `branches/<branch>/docs/CONTRACT.md`.
 
+## Inspiration: the X6 decomp
+
+Some ideas for the refactor come from the Mega Man X6 (PS1) decomp effort:
+
+- `~/IdeaProjects/mmx-demake-tools/`: the tools and docs. `docs/engine.md` describes how the X6
+  engine works (camera, spawning, damage, game state). `docs/enemies/` and `docs/stages/` hold
+  per-object and per-stage notes.
+- `~/mmx-data/x6/`: the data that the tools and their Claude sessions write (dumps, extracted
+  files, reverse-engineering notes in `re/`).
+
+Rules:
+
+- Use these sources for ideas and facts only. Do not copy code from
+  `~/IdeaProjects/mmx-reference/`, and do not commit any game data from `~/mmx-data/` to this
+  repo.
+- When a branch uses an idea from X6, name the source (file and section) in the branch
+  `docs/NOTES.md`.
+
 ## Files
 
 | File | Purpose | Who changes it |
