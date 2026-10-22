@@ -200,3 +200,6 @@ __pycache__
 
 ## Tiled
 *.tiled-session
+
+## Worktrees:
+.worktrees/

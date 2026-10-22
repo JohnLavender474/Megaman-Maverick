@@ -1,0 +1,140 @@
+# CLAUDE.md
+
+Megaman Maverick is a non-commercial Mega Man fan game. It uses Kotlin and LibGDX. The game is in a complete state. Gameplay changes must keep the current behavior unless the task says otherwise.
+
+## Mega refactor (in progress)
+
+A multi-branch refactor of `engine/` and `core/` is in progress. The goal is to remove deep inheritance, global state (for example `game.megaman`), and fragile event ordering, and to make the game easier to configure and extend. The current gameplay is the contract: a change merges into `master` only if the game still plays the same.
+
+- All docs for this effort are in `docs/mega-refactor/`. Read `docs/mega-refactor/CLAUDE.md` before you do refactor work.
+- Refactor branches use the prefix `mega-refactor-`.
+- Worktrees for parallel branches go in `.worktrees/` (git-ignored).
+
+## Modules
+
+`settings.gradle` includes three Gradle modules:
+
+| Module | Source root | Purpose |
+|---|---|---|
+| `engine` | `engine/src/main/kotlin/com/mega/game/engine/` | Generic ECS game engine. It has no game-specific code. |
+| `core` | `core/src/main/kotlin/com/megaman/maverick/game/` | All game logic. Depends on `:engine`. |
+| `lwjgl3` | `lwjgl3/src/main/kotlin/com/megaman/maverick/game/lwjgl3/` | Desktop launcher (`DesktopLauncher.kt`). |
+
+Versions are in `gradle.properties` (`projectVersion`, `kotlinVersion`, `gdxVersion`). The JVM target is 17.
+
+## Build, run, test
+
+- Debug run: `./run-game-debug.sh`. It adds `--debugText`, `--debugWindow`, `--diagnostics` and a 1920x1080 window.
+- Alpha run: `./run-game-alpha.sh`. Normal play settings with `--pixelPerfect` and `--writeLogsToFile`.
+- Test run: `./run-game-test.sh`. It uses `--runType test`, which starts `LevelDefinition.TEST_1` directly.
+- Build JAR: `./gradlew lwjgl3:jar` (or `./gradlew lwjgl3:dist`). Output name is `Megaman-Maverick-<projectVersion>.jar`.
+- Platform bundles: `./build-game-linux.sh`, `./build-game-mac.sh`, `./build-game-windows.sh`. They call `build-game.sh`, which bundles a JRE from `game-builds/jdk/`.
+- Engine tests: `./gradlew engine:test` (Kotest + MockK, in `engine/src/test/`).
+- `core/` has no tests. To verify a gameplay change, run the game.
+
+Launcher flags are in `DesktopLauncher.DesktopAppArgs`. Examples: `--runType game|test`, `--performance low|medium|high`, `--pathfinding async|sync`, `--worldContainer`, `--logLevels debug,log,error`, `--debugShapes`, `--fixedStepScalar`.
+
+Python tools in `utils/` (`level_analyzer`, `level_builder`, `diagnostics`) each have a `run.sh` and a `run_tests.sh`. `utils/tiled_extensions/` holds Tiled editor extensions.
+
+## Core architecture
+
+### Game object
+
+`MegamanMaverickGame.kt` is the LibGDX `Game`. It owns the shared state:
+
+- `engine: GameEngine`, `eventsMan: EventsManager`, `assMan: AssetManager`, `audioMan: MegaAudioManager`, `state: GameState`.
+- `megaman: Megaman`, the single player instance. It is made once in `postCreate()` and is not pooled.
+- `screens` (keyed by `ScreenEnum.name`), `viewports` (keys `ConstKeys.GAME` and `ConstKeys.UI`), and `runQueue`.
+- `createGameEngine()` sets the system order: Controller, Behaviors, World, Cullables, Motion, Pathfinding, Points, Updatables, Fonts, Animations, Sprites, DrawableShapes, Audio.
+
+Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` (the level screen calls `engine.update(delta)`), then `eventsMan.run()`.
+
+### Engine ECS (`engine/`)
+
+- `GameEngine` queues spawns and destroys. It processes them at the start of `update()`, then updates each `GameSystem`.
+- `GameSystem` takes a component mask. An entity joins a system only if it has all components in the mask.
+- `GameEntity` stores components in a map keyed by `KClass`. Add them with `addComponent(...)`.
+- Components: `BodyComponent`, `SpritesComponent`, `AnimationsComponent`, `UpdatablesComponent`, `BehaviorsComponent`, `ControllerComponent`, `CullablesComponent`, `PointsComponent`, `DrawableShapesComponent`, `FontsComponent`, `PathfindingComponent`, and others.
+- Physics is custom (not Box2D): `engine/.../world/` (`Body`, `Fixture`, `WorldSystem`). Game rules for contacts are in `core/.../world/contacts/MegaContactListener.kt` and `world/collisions/MegaCollisionHandler.kt`.
+
+### Entity lifecycle
+
+`init()` runs once, on the first spawn. Then `onSpawn(spawnProps)` runs on each spawn, and `onDestroy()` runs on each destroy. On destroy, the engine calls `reset()` on every component before `onDestroy()`.
+
+`spawn(props)` and `destroy()` only queue the change. The change happens on the next `engine.update()`.
+
+### Entity base classes (`core/.../entities/contracts/`)
+
+- `MegaGameEntity`: base for all game entities. Handles `id`, `group`, `dead`, `runnablesOnSpawn`/`runnablesOnDestroy`, difficulty spawn flags (`ConstKeys.HARD_MODE_ONLY`, `ConstKeys.NORMAL_MODE_ONLY`) and registration in `MegaGameEntities` (lookup by tag, type or id).
+- `AbstractHealthEntity`: health, damage timers, damage blink, `damageNegotiator`, `onHealthDepleted()`.
+- `AbstractEnemy`: adds Audio, Cullables, Body and Sprites components in `init()`. Subclasses implement `defineBodyComponent()` and `defineSpritesComponent()`. Handles item drops and spawn blink.
+- `AbstractBoss`: boss intro, health fill, defeat sequence. Registers as an event listener in `onSpawn` and removes itself in `onDestroy`.
+- `AbstractProjectile` and many small interfaces (`IFreezableEntity`, `IHazard`, `IOwnable`, `IFaceable`, and so on).
+- `IMegaGameEntity` gives every entity the extension `megaman` (same as `game.megaman`).
+
+Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemies` (about 127 files), `bosses`, `hazards`, `items`, `projectiles`, `sensors`, `special`, `decorations`, `explosions`. The player is in `entities/megaman/` (components, constants, handlers, sprites).
+
+### Factories
+
+- Use `MegaEntityFactory` (`entities/MegaEntityFactory.kt`). It makes one pool per class and calls the primary constructor `(game)` through reflection. Example: `MegaEntityFactory.fetch(Bullet::class)!!.spawn(props(...))`.
+- A pooled entity goes back to its pool through `runnablesOnDestroy[ConstKeys.POOL]` (see `GameEntityPoolCreator`).
+- `EntityFactories` (`entities/factories/EntityFactories.kt`) is deprecated. Do not add new entries to it. Some old code still calls it.
+
+### Events
+
+- `EventsManager` (engine) is pub/sub. Listeners implement `IEventListener` with `eventKeyMask: ObjectSet<Any>` and `onEvent(event)`.
+- Submit with `game.eventsMan.submitEvent(Event(EventType.X, props(...)))`. Event keys are in `events/EventType.kt`.
+- Events are buffered. Listeners get them only when `eventsMan.run()` runs, after the screen render. Listener order is registration order.
+- Register in `onSpawn` (`game.eventsMan.addListener(this)`) and remove in `onDestroy`.
+
+### Levels and Tiled pipeline
+
+- Each level is an entry in `levels/LevelDefinition.kt`. `tmxMapSource` is a file in `assets/tiled_maps/tmx/`. The entry also sets `type`, `music`, `screenOnCompletion` and an optional `levelOverride`.
+- `assets/tiled_maps/tmx/` has many old map versions (for example `MoonMan_16x14_v5.tmx`). Only the file named in `LevelDefinition` is live.
+- `screens/levels/MegaLevelScreen.kt` loads the map. `screens/levels/tiled/layers/MegaMapLayerBuilders.kt` maps layer names (`ConstKeys` values such as `game_rooms`, `player`, `enemies`, `blocks`, `triggers`) to builders. It builds layers in a fixed order and skips unknown layers. Layers named `blocks_*` use the `blocks` builder.
+- `SpawnersLayerBuilder`: the Tiled object `name` is the entity class simple name. It resolves to `com.megaman.maverick.game.entities.<package>.<name>` from the layer's `EntityType`. Object properties become the `spawnProps`.
+- Room transitions are handled by `CameraManagerForRooms` in `MegaLevelScreen`.
+
+### Screens
+
+`screens/ScreenEnum.kt` lists all screens. They are registered in `MegamanMaverickGame.postCreate()`. Change screens with `game.setCurrentScreen(ScreenEnum.X.name)`. Start a level with `game.startLevel(LevelDefinition.X)`.
+
+### Assets
+
+- `assets/TextureAsset.kt` (atlases in `assets/sprites/sprite_sheets/`), `SoundAsset.kt` (`assets/sounds/`), `MusicAsset.kt` (`assets/music/`). All implement `IAsset` (`source`, `assClass`).
+- Get a texture region with `game.assMan.getTextureAtlas(TextureAsset.X.source).findRegion("$TAG/name")`.
+- The `generateAssetList` Gradle task writes `assets/assets.txt` on each build.
+
+### Constants (`Constants.kt`)
+
+- `ConstVals`: numbers. `PPM = 32`, `VIEW_WIDTH = 16f`, `VIEW_HEIGHT = 14f` (tiles), `MAX_HEALTH = 30`.
+- `ConstKeys`: string keys (about 400) for `Properties`, events and Tiled properties. Use an existing key before you add a new one.
+- `ConstFuncs`: camera start positions.
+
+## Conventions
+
+- Each entity has `companion object { const val TAG = "ClassName" }`. `TAG` is also the atlas region prefix.
+- Shared texture regions go in a companion `ObjectMap` and load once in `init()`, before `super.init()`.
+- Components are built in `define...Component()` methods and added in `init()`.
+- Build `Properties` with `props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo spawn)`. Read them with `spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!` or `getOrDefault(key, default, Type::class)`.
+- Scale all sizes, speeds and gravity by `ConstVals.PPM` (for example `SWIM_SPEED * ConstVals.PPM`).
+- Collections are LibGDX types (`Array`, `ObjectMap`, `OrderedMap`, `ObjectSet`). Helpers: `gdxArrayOf`, `objectMapOf`, `objectSetOf`, `orderedMapOf`.
+- Body fixtures use `FixtureType` (`world/body/FixtureType.kt`). Use `BodyComponentCreator.create(this, body, BodyFixtureDef.of(...))`.
+- Log with `GameLogger.debug(TAG, ...)`, `GameLogger.log(TAG, ...)`, `GameLogger.error(TAG, ...)`.
+
+## Gotchas
+
+- `GameLogger.filterByTag` is `true`. Debug and log messages print only if the tag is in `MegamanMaverickGame.TAGS_TO_LOG`. Errors always print.
+- `runQueue` is drained with `removeLast()`, so the last runnable added runs first.
+- Pooled entities are reused. Reset all per-spawn state in `onSpawn`, not in the constructor or `init()`.
+- After `destroy()`, the entity stays in the engine and its systems until the next `engine.update()`. Its `dead` flag is set to `true` at once.
+- `megaman` is created and initialized manually in `postCreate()`. Do not fetch it from a factory.
+- Tiled entity names must match the Kotlin class name and the package for the layer exactly. A wrong name logs an error and skips the spawner.
+
+## Project skills (`.claude/skills/`)
+
+- `level-designer`: design or edit a level.
+- `level-builder`: build or structurally edit a level TMX file (rooms, blocks, spawns).
+- `level-analyzer`: read and analyze an existing TMX level.
+- `gauntlet-stages`: gauntlet stages that use `GauntletMaster`.
+- `diagnostics-analyzer`: analyze `*-diagnostics.txt` files from `--diagnostics` runs.
