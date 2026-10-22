@@ -17,7 +17,7 @@ A multi-branch refactor of `engine/` and `core/` is in progress. The goal is to 
 
 | Module | Source root | Purpose |
 |---|---|---|
-| `engine` | `engine/src/main/kotlin/com/mega/game/engine/` | Generic ECS game engine. It has no game-specific code. |
+| `engine` | `engine/src/main/kotlin/com/mega/game/engine/` | ECS engine for Mega Man-like games (the "Maverick Engine"). Genre concepts are allowed; Megaman Maverick content (its entities, levels, assets) is not. |
 | `core` | `core/src/main/kotlin/com/megaman/maverick/game/` | All game logic. Depends on `:engine`. |
 | `lwjgl3` | `lwjgl3/src/main/kotlin/com/megaman/maverick/game/lwjgl3/` | Desktop launcher (`DesktopLauncher.kt`). |
 

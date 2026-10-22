@@ -25,10 +25,14 @@ Answer to review item 4 (2026-10-22, verbatim):
 
 > X6 uses a lookup table for damage values. What are pros and cons of that approach versus the object-oriented override logic that's currently usedd in Maverick? What options do you propose? The Maverick approach already tries to use a bit of a "default lookup table" approach, but maybe the implementation can be cleaner?
 
+## Decisions
+
+- E (2026-10-22): `DarkSerketClaw` is `SMALL` on purpose, to tune its damage. Research: `size` is read in one place for the claw, `MegamanDamageNegotiator.kt:42`, which sets the damage the claw does to Mega (SMALL = 2, MEDIUM = 3). The damage the claw takes comes from its own `StandardDamageNegotiator()` (`DarkSerketClaw.kt:58`), which picks the table by the damager's size (`StandardDamageNegotiator.kt:152-166`), so `SMALL` has no effect there: the claw takes the MEDIUM values, and 0 from damagers that are not `ISizable`. The owner wants no change in either direction.
+- B (2026-10-22): use a separate `smokeTest` JVM test suite in `core`.
+
 ## Open questions
 
 - Which receiver states matter (shields, phases, boss "ready")?
-- Is the size lookup in `StandardDamageNegotiator.get(damager)` intended? It gives `DarkSerketClaw` the MEDIUM values. (Decision E.)
 - Add the damage duration (invincibility frames) as a column?
 
 ## Sources

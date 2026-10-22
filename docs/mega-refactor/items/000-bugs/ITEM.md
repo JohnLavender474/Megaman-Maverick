@@ -60,16 +60,20 @@ Refuted: a pause during the boss health fill. The controller poller is off then.
 
 ## Behavior questions (maybe intended)
 
-- `StandardDamageNegotiator.get(damager)` picks the table by the damager's size, so
-  `DarkSerketClaw` (SMALL) gets the MEDIUM values for most shots. (Decision E.)
+- Resolved (decision E): `StandardDamageNegotiator.get(damager)` picks the table by the damager's
+  size, so `DarkSerketClaw` takes the MEDIUM values. Keep this. See `005` and `023`.
 - Explosions from Mega's own shots (through `explodeAndDie`) do not hurt an `AbstractEnemy`.
   (Decision E.)
 - A checkpoint can change silently while Mega is not ready (beam-in or death animation).
 - Coins and level points reset only in `start()`, not on respawn.
 
+## Decisions
+
+- A (2026-10-22): bugs go in `docs/issues/`, one Markdown file per bug, not in GitHub Issues. Until the files exist, this list stays the source.
+- E (2026-10-22): `DarkSerketClaw` is `SMALL` on purpose. Its damage must not change. See `005` and `023`.
+
 ## Open questions
 
-- Decision A: GitHub Issues or `docs/issues/`?
 - File the verified bugs now, and the runtime-check ones with an `unverified` label?
 - Do players rely on any of these bugs? Then the fix needs a play check first.
 

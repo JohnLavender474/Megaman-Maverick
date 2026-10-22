@@ -14,6 +14,10 @@ Make the game playable in a web browser and on Android phones.
 
 From the first request (summary): make the game playable in a web browser and on Android phones.
 
+## Decisions
+
+- J (2026-10-22): 16×14 for now; see `035`.
+
 ## Open questions
 
 - Is web a real target or a nice-to-have? (Also asked in `032`.)

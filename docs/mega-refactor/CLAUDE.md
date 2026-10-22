@@ -175,8 +175,8 @@ Do not delete the branch folder after the merge. It stays on `master` as history
 Bugs are not refactors. A bug fix changes gameplay on purpose, so it does not belong in a branch
 whose contract is "plays the same as `master`".
 
-- Until the user picks a bug tracker (decision A in `ITEMS.md`), list bugs in
-  `items/000-bugs/ITEM.md`.
+- Bugs go in `docs/issues/`, one Markdown file per bug (decision A in `ITEMS.md`). Until those
+  files exist, the list in `items/000-bugs/ITEM.md` is the source.
 - If a refactor branch must change buggy behavior, its `CONTRACT.md` names the bug under
   "Intended changes".
 

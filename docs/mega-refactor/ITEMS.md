@@ -10,28 +10,29 @@ Every item of the mega refactor and every branch, with their status. Change this
 - **Started:** the date the first branch of the item (or the branch) was created.
 - **Finished:** the date the item was done or dropped (or the branch merged or dropped).
 
-## Open decisions
+## Decisions
 
 Decisions that block or shape many items. The letters are the names from the review discussion
-(2026-10-22).
+(2026-10-22). The full answers are in the "Decisions" section of each item's `ITEM.md`.
 
-| Decision | Question | Items |
-|----------|----------|-------|
-| A | Bugs in GitHub Issues (install and authenticate `gh`) or in `docs/issues/`? | `000` |
-| B | A separate `smokeTest` Gradle suite, or Kotest tags in `src/test`? | `004`, `005`, `006` |
-| C | Level validator in Kotlin (`tools` subproject, `utils/` wrapper) or Python with a manifest? | `003` |
-| D | Fixed tick: 60 Hz? Accept a physics retune? Slow down or skip time on slow PCs? | `010` |
-| E | Are the `DarkSerketClaw` size lookup and the "Mega explosions do not hurt enemies" rule intended? | `005`, `023`, `030` |
-| F | Render plan from Tiled marker layers, or from a property list? | `026` |
-| G | Checkpoints forward-only? What survives a respawn? | `036`, `037` |
-| H | Co-op: shared lives? Maximum players? | `029`, `031`, `047` |
-| I | Number of save slots? Save the health tank fill? | `007` |
-| J | Commit to the 16×14 view on all platforms? | `035`, `054` |
-| K | Which entity needed the second spawn pass? | `019` |
-| L | Publish the engine? (Sets the root package.) | `001` |
-| M | Host name: `IMaverickGame`/`MaverickGame` or `IMaverickApp`/`MaverickApp`? | `001` |
-| N | Rename `GameEngine` in the package rename? | `001` |
-| O | Does the engine base class own the frame loop? | `001` |
+| Decision | Question | Answer | Items |
+|----------|----------|--------|-------|
+| A | Bugs in GitHub Issues or in `docs/issues/`? | `docs/issues/` | `000` |
+| B | A separate `smokeTest` Gradle suite, or Kotest tags in `src/test`? | `smokeTest` suite | `004`, `005`, `006` |
+| C | Where do level validation rules live: engine, game or a `tools` subproject? | Open (depends on P) | `003` |
+| D | Fixed tick: 60 Hz? Accept a physics retune? Slow down or skip time on slow PCs? | Open | `010` |
+| E | Is `DarkSerketClaw` `SMALL` on purpose? Do Mega's explosions hurt enemies? | Claw: yes, keep its damage as it is. Explosions: open | `005`, `023`, `030` |
+| F | How is the render order defined per level? | Partly: map property `legacy`, `default` or `custom`. Rest open | `026` |
+| G | Checkpoints forward-only? Activation rules? What survives a respawn? | Forward-only by rank, with re-activation between equal ranks; `camera`, `bounds` or custom triggers. What survives: open | `036`, `037` |
+| H | Co-op: lives? Maximum players? Modes? | Lives through a swappable policy; a maximum exists; modes in order: shared screen, split screen, online | `029`, `031`, `047` |
+| I | Number of save slots? | Config value, default 10, no hard limit | `007` |
+| J | Commit to the 16×14 view? | Yes for now, with no coupling to that size | `035`, `054` |
+| K | Which entity needed the second spawn pass? | None found. Remove it first, in `019a` | `019` |
+| L | Publish the engine? (Sets the root package.) | On hold (depends on P) | `001` |
+| M | Host name: Game or App? | `IMaverickGame` / `MaverickGame` | `001` |
+| N | Rename `GameEngine`? | On hold (depends on P) | `001` |
+| O | Does the engine base class own the game loop? | Yes | `001` |
+| P | One project for engine and game, or a separate engine? Which assets, if any, come with the engine? | Open | `001`, `003` |
 
 ## Items
 
@@ -56,7 +57,7 @@ Decisions that block or shape many items. The letters are the names from the rev
 | 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | planned | none | | |
 | 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | planned | none | | |
 | 018 | [Event-driven system membership; component IDs when needed](items/018-ecs-membership/ITEM.md) | refactor | idea | none | | |
-| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | idea | none | | |
+| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | planned | none | | |
 | 020 | [Cheaper broad phase with stable contact order](items/020-broad-phase/ITEM.md) | refactor | planned | none | | |
 | 021 | [Entity registry with stable readable IDs and aliases](items/021-entity-registry/ITEM.md) | refactor | planned | none | | |
 | 022 | [Typed property schema per entity, exported to Tiled](items/022-spawn-prop-schema/ITEM.md) | feature | planned | `021` | | |
@@ -72,7 +73,7 @@ Decisions that block or shape many items. The letters are the names from the rev
 | 032 | [Platform-neutral `engine` module](items/032-platform-neutral-engine/ITEM.md) | refactor | planned | none | | |
 | 033 | [Per-level asset manifests and texture budgets](items/033-per-level-assets/ITEM.md) | refactor | planned | `028` | | |
 | 034 | [Persisted settings file](items/034-persisted-settings/ITEM.md) | feature | planned | `007` | | |
-| 035 | [Aspect-ratio policy for phones](items/035-aspect-ratio/ITEM.md) | research | idea | none | | |
+| 035 | [Aspect-ratio policy for phones](items/035-aspect-ratio/ITEM.md) | research | planned | none | | |
 | 036 | [Checkpoints as typed Tiled data: respawn point, triggers, order](items/036-checkpoints-as-data/ITEM.md) | feature | planned | none | | |
 | 037 | [Explicit respawn state and named `on_respawn` actions](items/037-respawn-state/ITEM.md) | refactor | planned | `036` | | |
 | 038 | [One ordered respawn routine instead of an event chain](items/038-respawn-routine/ITEM.md) | refactor | planned | none | | |
@@ -98,5 +99,6 @@ Decisions that block or shape many items. The letters are the names from the rev
 
 | Branch | Item | Goal | Status | Started | Finished |
 |--------|------|------|--------|---------|----------|
-| [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | planned | | |
+| [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | blocked | | |
 | [`mega-refactor-001b-host-contract`](items/001-maverick-engine/branches/mega-refactor-001b-host-contract/process-log.md) | 001 | Add `IMaverickGame` and `MaverickGame` | blocked | | |
+| [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | planned | | |

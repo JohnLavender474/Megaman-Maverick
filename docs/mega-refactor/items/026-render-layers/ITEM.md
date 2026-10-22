@@ -30,6 +30,10 @@ Answer to review item 45 (2026-10-22, verbatim):
 
 > yes, and this ties into what I said above about making drawing order as configurable and easy to manage as possible
 
+## Decisions
+
+- F (2026-10-22, partial): a map property selects the render order: `legacy` (today's order; the value for existing maps), `default` (the order of the layers in the Tiled panel) or `custom` (an explicit order). The rest of F is still under discussion.
+
 ## Open questions
 
 - Marker layers in the Tiled layer panel, or a property list on the map? (Decision F.)

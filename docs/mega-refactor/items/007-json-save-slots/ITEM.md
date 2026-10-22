@@ -26,9 +26,13 @@ Answer to review item 6 (2026-10-22, verbatim):
 
 > Yes, JSON would be preferable as opposed to the current setup which pulls an XML prefs file. Being able to support multiple save slots would be ideal too. Can we leverage versioning to maintain backwards compatibility with the XML prefs file?
 
+## Decisions
+
+- I (2026-10-22): the slot count is a config value, default 10. It must scale with no hard limit (`SaveStorage.list()` finds the slots; the UI pages).
+
 ## Open questions
 
-- How many slots? Copy and delete slots in the UI? (Decision I.)
+- Copy and delete slots in the UI?
 - Save how full each health tank is? Today the fill is lost on load. Save more (lives, weapons)?
 - Desktop folder: `~/.megaman-maverick/` or the OS app-data folder?
 - Keep the legacy file for ever, or offer a clean-up option later?

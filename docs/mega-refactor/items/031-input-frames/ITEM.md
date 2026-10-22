@@ -26,6 +26,10 @@ Answer to review item 30 (2026-10-22, verbatim):
 
 > yes, let's discuss further
 
+## Decisions
+
+- H (2026-10-22): co-op comes in steps from easiest to hardest: shared screen, then split screen, then online. The input design must not block split screen or online lockstep.
+
 ## Open questions
 
 - Rename the buttons to intents (JUMP, SHOOT) now, or keep the button names?

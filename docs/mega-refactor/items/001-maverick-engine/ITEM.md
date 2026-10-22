@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `001a`: none. `001b`: `016`, `010`, `032`
 - Related: `029`
-- Branches: `mega-refactor-001a-package-rename` (planned), `mega-refactor-001b-host-contract`
+- Branches: `mega-refactor-001a-package-rename` (blocked by decision P), `mega-refactor-001b-host-contract`
   (blocked)
 
 ## Goal
@@ -55,18 +55,21 @@ From the request (2026-10-22, summary): consider making the main game an interfa
 or an abstract class, as part of the engine, named `MaverickEngine`. Consider using the keyword
 `Maverick` in the engine packages and names, so that other developers can tell the engine apart.
 
+## Decisions
+
+- M (2026-10-22): the host types are `IMaverickGame` and `MaverickGame` (Game, not App).
+- O (2026-10-22): the engine base class owns the game loop and the orchestration of systems and entities, so that client games do not set this up.
+- (2026-10-22) The Maverick Engine is meant for Mega Man and Mega Man-like games. The name sets it apart from other Mega Man engines (for example Mega Man Maker).
+- L, N (2026-10-22): on hold. The owner is thinking about keeping engine and game in one project (open decision P in `ITEMS.md`), which changes the rename.
+
 ## Open questions
 
 1. Publishing: do you plan to publish the engine (JitPack or Maven Central) or move it to its
    own repo? This decides the root package (`com.maverick.engine` or
    `io.github.johnlavender474.maverick`). Decide before `001a`, so that the package changes only
    once.
-2. Host name: `IMaverickGame`/`MaverickGame`, or `IMaverickApp`/`MaverickApp`? Do you accept the
-   `I` prefix for the interface?
-3. `GameEngine`: keep the name, or rename it (for example `EntityEngine`) in the `001a` commit,
+2. `GameEngine`: keep the name, or rename it (for example `EntityEngine`) in the `001a` commit,
    so that all mass renames happen at one time?
-4. Base class: should `MaverickGame` own the frame loop (fixed tick, run queue, screen host,
-   auto-perf policy), or do you want only the interface?
 
 ## Sources
 

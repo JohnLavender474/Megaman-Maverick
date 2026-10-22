@@ -1,6 +1,6 @@
 # 035: Aspect-ratio policy for phones
 
-- Status: idea
+- Status: planned
 - Type: research
 - Depends on: none
 - Related: `019`, `031`, `032`, `034`, `036`, `054`
@@ -25,9 +25,12 @@ Answer to review item 34 (2026-10-22, verbatim):
 
 > this is tricky since so much of the level design is oriented around a fixed aspect ratio. should I plan on having a different "mobile-friendly" release of the game for Android? It would have altered level designs etc. in order to accomodate the different aspect ratio and other diffs. What do you think?
 
+## Decisions
+
+- J (2026-10-22): commit to the 16×14 view for now. Do not couple platform-agnostic code to that size: the view size comes from config, and spawn, cull and checkpoint rules do not depend on the camera size. A later Android version with smaller screens and rooms must stay possible.
+
 ## Open questions
 
-- Commit to 16×14 on all platforms as part of the contract? (Decision J.)
 - Integer scaling (sharp pixels, smaller image) or fill the height?
 - HUD in the side bars on phones, or in the game view as today?
 - Is a tablet (4:3) a target?

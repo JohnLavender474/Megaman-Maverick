@@ -28,9 +28,12 @@ Answer to review item 28 (2026-10-22, verbatim):
 
 From the first request (summary): the global `megaman` is reached everywhere through `game.megaman`. This blocks other playable characters and multiplayer.
 
+## Decisions
+
+- H (2026-10-22): lives are a shared pool or per player, by game mode. Use an interface (for example `LivesPolicy` with `SharedPool` and `PerPlayer`) so the rule is easy to swap. There will be a maximum number of players.
+
 ## Open questions
 
-- In co-op, one shared life pool, or one per player? (Decision H.)
 - Target selection: is "nearest" enough, or do some enemies need "last attacker" or "random"?
 - Must camera focus follow one player or a group bounds?
 - Do all characters share the slide and ladder rules (X6 shares the step routines)?

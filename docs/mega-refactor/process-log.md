@@ -79,3 +79,13 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the user answers the open decisions in `ITEMS.md` (A–O), and the `idea` items are
   discussed.
+
+## 2026-10-22 — master (docs)
+
+- Summary: recorded the owner's answers to decisions A, B, E (claw), G, H, I, J, K, M and O in
+  `ITEMS.md` and in the "Decisions" section of each affected `ITEM.md`. Added open decision P
+  (one project or a separate engine). Added the decision K research to `019` and created the
+  branch folder `mega-refactor-019a-remove-second-spawn-pass` ahead of time. `001a` is blocked by
+  P. The root `CLAUDE.md` now describes the engine as an engine for Mega Man-like games.
+- Contract check: not needed (docs only).
+- Follow-up: decisions C, D, F, L, N and P; the open question in the `019a` draft scope.

@@ -25,9 +25,12 @@ Answer to review item 3 (2026-10-22, verbatim):
 
 > Sure, can this be part of a new `src/test/.../smoke-tests/` folder? Is it appropriate to run in a unit-test environment or an e2e environment?
 
+## Decisions
+
+- B (2026-10-22): use a separate `smokeTest` JVM test suite in `core`.
+
 ## Open questions
 
-- A separate `smokeTest` suite, or Kotest tags inside `src/test`? (Decision B.)
 - Stub textures (fast, checks names) or real PNG decode (slower)?
 - Which entity classes are known to be retired? They go on the allowlist (see `039`).
 

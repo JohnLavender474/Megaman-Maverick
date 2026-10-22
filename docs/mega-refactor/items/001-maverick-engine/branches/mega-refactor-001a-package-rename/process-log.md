@@ -2,12 +2,12 @@
 
 ## Status
 
-- State: planned (the branch does not exist yet)
+- State: blocked (the branch does not exist yet)
 - Goal: rename the engine root package to a neutral "Maverick Engine" identity.
 - Done: research (`items/001-maverick-engine/NOTES.md`); draft `docs/SCOPE.md`.
 - Next: the user answers the open questions in `docs/SCOPE.md` and approves the scope. Then
   write `docs/CONTRACT.md`.
-- Blocked: the decision on publishing (it sets the root package name).
+- Blocked: decision P (one project or a separate engine) and decision L (publishing, which sets the root package name).
 
 ## Entries
 

@@ -25,6 +25,10 @@ Answer to review item 5 (2026-10-22, verbatim):
 
 > What would the headless-boot-and-run setup gain us?
 
+## Decisions
+
+- B (2026-10-22): the headless runs go in the `smokeTest` suite.
+
 ## Open questions
 
 - How many frames per level, and from which spawn points?
