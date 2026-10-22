@@ -31,7 +31,7 @@ Rules:
 | Path | Purpose | Who changes it |
 |------|---------|----------------|
 | `CLAUDE.md` | This file. Rules for the effort. | `master` only |
-| `ITEMS.md` | The index: every item and every branch, with status and dates, and the open decisions. | `master` only |
+| `ITEMS.md` | The index: one table of items and one table of branches, with status and dates. Nothing else. | `master` only |
 | `process-log.md` | One entry for each merged or dropped branch, and for each docs change to the setup. | `master` only |
 | `_templates/item/` | The files to copy for a new item. | `master` only |
 | `_templates/branch/` | The files to copy for a new branch folder. | `master` only |
@@ -79,6 +79,19 @@ Branch statuses:
 | `active` | The branch exists and work is in progress. |
 | `merged` | The branch merged into `master`. |
 | `dropped` | The branch was abandoned. |
+
+## `ITEMS.md` columns
+
+- **Depends on:** the items that must be done first.
+- **Started:** the date the first branch of the item (or the branch) was created.
+- **Finished:** the date the item was done or dropped (or the branch merged or dropped).
+
+## Decisions and open questions
+
+Do not put decisions in `ITEMS.md`. An owner decision goes in the "Decisions" section of the
+`ITEM.md` it affects, with the date. A decision that affects several items goes in each of them.
+An open question goes in "Open questions" of the `ITEM.md`. Once a branch exists, decisions about
+that branch's work go in its `docs/NOTES.md` under "Decisions".
 
 ## Rules
 
@@ -183,7 +196,7 @@ Do not delete the branch folder after the merge. It stays on `master` as history
 Bugs are not refactors. A bug fix changes gameplay on purpose, so it does not belong in a branch
 whose contract is "plays the same as `master`".
 
-- Bugs go in `docs/issues/`, one Markdown file per bug (decision A in `ITEMS.md`). The rules and
+- Bugs go in `docs/issues/`, one Markdown file per bug (decision A in `items/000-bugs/ITEM.md`). The rules and
   the index are in `docs/issues/README.md`.
 - If a refactor branch must change buggy behavior, its `CONTRACT.md` names the bug under
   "Intended changes".

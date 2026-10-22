@@ -129,3 +129,12 @@ newest entry at the bottom.
 - Follow-up: filed `docs/issues/2026-10-22-jdk25-test-jvm-target.md`. Item `001` continues
   with `001b` (blocked by `016`, `010`, `032`).
 
+## 2026-10-22 — master (docs)
+
+- Summary: removed the "Decisions" section from `ITEMS.md`, so it holds only the items table and
+  the branches table. Every decision was already in the "Decisions" section of the `ITEM.md` it
+  affects; the open parts of decisions C and F moved into "Open questions" of `003` and `026`.
+  `CLAUDE.md` now explains the `ITEMS.md` columns and where decisions and open questions go.
+- Contract check: not needed (docs only).
+- Follow-up: none.
+

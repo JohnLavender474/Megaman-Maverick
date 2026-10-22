@@ -28,7 +28,7 @@ Answer to review item 2 (2026-10-22, verbatim):
 
 ## Open questions
 
-- Validator language: a Kotlin `tools` subproject with a `utils/` wrapper, or Python with an exported manifest? (Decision C.)
+- Decision C: where do the level validation rules live? Proposed (2026-10-22): the rules in `engine` (a pure `validate(map, registry)` with no `Gdx`, because rooms, layer kinds, spawners and checkpoints are genre concepts), the content (entity registry, schemas, allowed layer names) in `core`, which also calls `validate` at level load in dev runs, and only a thin CLI runner plus the CI test in a `tools` subproject (a CLI main in `core` would ship in the game JAR). The owner asked whether one project makes this simpler; decision P keeps one repo with the `engine` / `core` split, so the proposal still fits. Not confirmed yet.
 - For each finding: was the object meant to spawn, or is it a note that belongs in `temp`?
 - Which layer names are intentional non-built layers (`children`, `temp`, `TODO`, others)?
 - Should the validator also run inside Tiled later (`utils/tiled_extensions`)?

@@ -1,38 +1,7 @@
 # Items
 
-Every item of the mega refactor and every branch, with their status. Change this file only on
-`master`. See `CLAUDE.md` for the rules, the IDs and the statuses.
-
-- **Items:** one row per item. The item folder `items/<id>-<slug>/` holds `ITEM.md` (the item:
-  goal, scope, owner's input, open questions) and `NOTES.md` (research).
-- **Branches:** one row per branch. A branch belongs to one item. Its folder is
-  `items/<id>-<slug>/branches/<branch>/`.
-- **Started:** the date the first branch of the item (or the branch) was created.
-- **Finished:** the date the item was done or dropped (or the branch merged or dropped).
-
-## Decisions
-
-Decisions that block or shape many items. The letters are the names from the review discussion
-(2026-10-22). The full answers are in the "Decisions" section of each item's `ITEM.md`.
-
-| Decision | Question | Answer | Items |
-|----------|----------|--------|-------|
-| A | Bugs in GitHub Issues or in `docs/issues/`? | `docs/issues/` | `000` |
-| B | A separate `smokeTest` Gradle suite, or Kotest tags in `src/test`? | `smokeTest` suite | `004`, `005`, `006` |
-| C | Where do level validation rules live: engine, game or a `tools` subproject? | Open. Proposed: rules in `engine`, content in `core`, a thin runner in `tools` | `003` |
-| D | Fixed tick: 60 Hz? Accept a physics retune? Slow down or skip time on slow PCs? | Open | `010` |
-| E | Is `DarkSerketClaw` `SMALL` on purpose? Do Mega's explosions hurt enemies? | Claw: yes, keep its damage as it is. Explosions: open | `005`, `023`, `030` |
-| F | How is the render order defined per level? | Partly: map property `legacy`, `default` or `custom`. Rest open | `026` |
-| G | Checkpoints forward-only? Activation rules? What survives a respawn? | Forward-only by rank, with re-activation between equal ranks; `camera`, `bounds` or custom triggers. What survives: open | `036`, `037` |
-| H | Co-op: lives? Maximum players? Modes? | Lives through a swappable policy; a maximum exists; modes in order: shared screen, split screen, online | `029`, `031`, `047` |
-| I | Number of save slots? | Config value, default 10, no hard limit | `007` |
-| J | Commit to the 16×14 view? | Yes for now, with no coupling to that size | `035`, `054` |
-| K | Which entity needed the second spawn pass? | None found. Remove it first, in `019a` | `019` |
-| L | Publish the engine? (Sets the root package.) | No. It stays in this repo | `001` |
-| M | Host name: Game or App? | `IMaverickGame` / `MaverickGame` | `001` |
-| N | Rename `GameEngine`? | No | `001` |
-| O | Does the engine base class own the game loop? | Yes | `001` |
-| P | One project for engine and game, or a separate engine? Which assets, if any, come with the engine? | One repo, keep the `engine` / `core` module split; no copyrighted assets in the engine; asset contracts and a later starter sample | `001`, `003` |
+Every item and branch of the mega refactor. Change this file only on `master`. The rules, IDs,
+statuses and column meanings are in `CLAUDE.md`.
 
 ## Items
 
