@@ -169,9 +169,14 @@ alone does not need a new approval, but write the reason in the process log.
    result in the branch process log.
 2. Get the user's explicit approval to merge this branch. Approval for one branch never covers
    another branch, also when branches run in parallel. Merge only one branch at a time. If
-   `master` changed since the branch started (for example another branch merged), first merge
-   `master` into the branch in its worktree, run the contract's automated checks again, and tell
-   the user the result before asking for approval.
+   `master` changed since the branch last took it in, compare the two
+   (`git diff --stat <branch>...master`):
+   - If `master`'s new changes touch the same files or systems as the branch (for example the
+     same classes, the build files, or tests that the branch's changes affect), first merge
+     `master` into the branch in its worktree, run the contract's automated checks again, and
+     tell the user the result.
+   - If they do not (for example docs only, or unrelated code), skip that merge. The build check
+     on `master` after the squash (step 9) catches problems.
 3. Squash-merge the branch into `master`. Do not carry the branch commits over. From the main
    checkout: `git merge --squash <branch>`, then one commit named after the branch goal. List
    the main changes in the commit message.
@@ -186,6 +191,8 @@ alone does not need a new approval, but write the reason in the process log.
 8. Remove the worktree (`git worktree remove .worktrees/<branch>`). Then delete the branch with
    `git branch -D <branch>`: after a squash, git does not see the branch as merged, so `-d`
    refuses.
+9. On `master`, run the contract's automated checks (at least the build and the tests). If they
+   fail, fix `master` at once, before any other merge.
 
 Do not delete the branch folder after the merge. It stays on `master` as history.
 

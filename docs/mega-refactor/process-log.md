@@ -174,3 +174,11 @@ newest entry at the bottom.
 - Follow-up: `019b` (destroy notification) is a `planned` branch. The owner's play test showed the
   old misplaced-object errors, filed as `docs/issues/2026-10-22-misplaced-tmx-objects.md`.
 
+## 2026-10-22 — master (docs)
+
+- Summary: relaxed merge step 2 (owner): merge `master` into a branch before its merge only when
+  `master`'s new changes touch the same files or systems as the branch. Added step 9: run the
+  build and tests on `master` after every squash merge.
+- Contract check: not needed (docs only).
+- Follow-up: none.
+
