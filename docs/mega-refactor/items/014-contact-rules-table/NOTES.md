@@ -1036,3 +1036,140 @@ f=1234 s=2 BEGIN feet-block FEET:Megaman#-3 BLOCK:Block#57 flip=0
 4. **Stage 3** (the receivers): unit tests per changed rule, plus the manual routes with the summary.
 
 The decorator and the line format become the trace for `020` and `055`, so this work is not lost.
+
+## Research: narrow the engine fixture type (2026-10-22)
+
+The owner asked whether the engine should type fixtures as something other than `Any`, for example
+`Int`, `Short` or `Long`. A read-only research agent did this research on `master` at `26a1597f2`.
+It compiled the interface sketch below with the project's Kotlin 2.3.20 compiler in a scratch
+folder.
+
+### Verdict
+
+Narrow it, but to a small engine interface, not to a primitive:
+
+```kotlin
+interface IFixtureType {
+    val ordinal: Int
+    val name: String
+}
+
+interface IFixture : ITypable<IFixtureType>, IPropertizable
+
+enum class FixtureType : IFixtureType { BLOCK, PLAYER, ... }
+```
+
+- An enum gets `ordinal` and `name` from the interface for free, so `FixtureType` needs no code.
+- `when (fixture.getType())` and `getType() == FixtureType.X` still compile.
+- If a name that does not suggest enums is wanted, call the property `index` and add one line:
+  `override val index get() = ordinal`.
+
+### Inventory
+
+- **`ITypable<T>`** has 3 users. Only `IFixture : ITypable<Any>` uses `Any`. `IMegaGameEntity` uses
+  `EntityType` and `Fade` uses `FadeType`, which are already narrow.
+- **Engine:**
+  - `Fixture.kt:17,38` (`type: Any`);
+  - `Body.kt:30` (`fixtures: OrderedMap<Any, OrderedSet<IFixture>>`) and `:62-92`;
+  - `IBody.kt:18` (`getFixtures(out, vararg params: Any)`);
+  - `BodyBuilder.kt:47`;
+  - the 6 `Contact` helpers;
+  - a dummy `getType()` at `WorldSystem.kt:65`.
+  - The engine itself never reads the type on the hot path. Only the client filter does.
+- **Core:**
+  - 1751 `FixtureType.X` references in 321 files;
+  - about 876 `Fixture(...)` calls;
+  - about 32 `getType() ==` checks, 17 `when (getType())`, 17 `getType().equalsAny(...)`;
+  - 23 `body.fixtures[...]` lookups;
+  - 4 `as FixtureType` casts (`MegaContactFilter.kt:96,143,144`, `FixtureTypeOverlapSpawn.kt:71`).
+  - Data paths stay valid: `FixtureType.valueOf` from Tiled strings (`FixtureTypeOverlapSpawn.kt:56`)
+    and `ConstKeys.FIXTURES` pairs (`Block.kt:173`).
+- **Engine tests use strings as fixture types:**
+  - 44 `Fixture(body, "...")` constructions, in `FixtureTest`, `ContactTest`, `WorldSystemTest`
+    (`ObjectMap<Any, ObjectSet<Any>>`), the two container tests (`getType() == "keep"`) and
+    `BodyTest`.
+  - No core test builds a `Fixture`.
+
+### Options
+
+| Option | Type safety | Hot path | Genericity | Logs and trace | Migration |
+|---|---|---|---|---|---|
+| a. `Any` (today) | None. A wrong type gives a `ClassCastException` at run time | As c | High on paper, but the table needs a cast or an `(Any) -> Int` function | Good | 0 |
+| b. `Int`/`Short`/`Long` ID | Weak: any number is accepted | No boxing only with a dedicated `val typeId: Int`. `ITypable<Int>` boxes. The gain over c is too small to measure | Data-driven IDs are easy, but they have no name | Numbers only. The trace needs a name table | Large, and with **silent breaks** (see below) |
+| c. **`IFixtureType` (ordinal + name)** | Good: only declared types | As today: identity hash in maps; the table reads `getType().ordinal` with no boxing and no cast | Any enum, or a class such as `NamedFixtureType(name, ordinal)` for types from JSON | Names for free | Small |
+| d. Generic `IFixture<T : Enum<T>>` | Best in theory | As today | Low: the type parameter spreads into `Body`, `IBody`, `Contact`, `WorldSystem` and the containers (about 1000 uses). `Enum<T>` also blocks data-driven types | Good | Very large |
+| e. `@JvmInline value class FixtureTypeId(val v: Int)` | Medium | **Boxed** (one allocation each time) as an `OrderedMap` key, in `ObjectSet` and in `vararg Any`, which are exactly the lookup paths | Medium | Numbers | Large |
+
+**The silent breaks with option b.** These APIs take `Any`, so they still compile when they are
+given an enum, and then they always return false:
+- `equalsAny(vararg Any)` (17 sites);
+- `getFixtures(vararg Any)`;
+- the `Contact` helpers;
+- `ObjectSet<Any>`.
+
+The `==` and `when` sites do fail to compile. This is the main reason to choose c over b.
+
+**`Short`, `Byte` and `Long`:**
+- Memory does not matter at 29 types, and the JVM does arithmetic on `int`.
+- `Long` helps only as a Box2D-style category/mask bitmask (at most 64 types). A mask can be built
+  from the dense ordinal, so the type itself does not need to be a `Long`.
+- A mask would replace only the last lookup in `MegaContactFilter` (`:143-144`). It cannot replace:
+  - the key-only `shouldProceedFiltering`;
+  - the same-entity, enemy-enemy and gate/cart guards;
+  - the `CONSUMER` filter;
+  - the per-fixture filters.
+- An option for later, when the table branch touches the filter.
+
+**Fit with the table:** `ContactRuleTable(types: List<IFixtureType>)` can check `types[i].ordinal == i`
+at build time. A test can check `types[t.ordinal] === t`, which catches a type from another set.
+
+**Fit with the typed receivers:** independent. The receivers are typed `Properties` keys, not fixture
+types.
+
+### Other `Any`-typed engine keys
+
+`Event.key` and `eventKeyMask`, `Properties` keys, and the map keys of the sprites, animations,
+behaviors, updatables, points, controller, fonts and body `preProcess`/`postProcess` maps all use
+`Any`.
+
+All of these are names for lookups only. None needs a dense index or a dispatch table, and none is
+cast back on a hot path. So narrow only fixtures. A convention for later: "when the engine dispatches
+on a client classification, it takes a small interface with a dense `ordinal` and a `name`." Event
+keys can follow it in `053`, if events get a dispatch table.
+
+### Proposed branch scope
+
+**Engine:**
+- `world/body/IFixtureType.kt`;
+- `IFixture : ITypable<IFixtureType>`;
+- `Fixture(type: IFixtureType)`;
+- `Body.fixtures: OrderedMap<IFixtureType, OrderedSet<IFixture>>`;
+- `BodyBuilder`;
+- `IBody.getFixtures(out, vararg params: IFixtureType)`;
+- the dummy at `WorldSystem.kt:65`.
+
+**Core:**
+- `enum class FixtureType : IFixtureType`;
+- the dummy at `MegaContactListener.kt:1603`.
+- Keep the 4 casts. The table branch removes the filter casts.
+
+**Engine tests:** an `internal enum class TestFixtureType : IFixtureType` replaces the 44 string
+types and the `ObjectMap<Any, ...>` in `WorldSystemTest`.
+
+**Optional:** an `IFixtureType` overload of `equalsAny`. The `Contact` helpers keep `Any`, because the
+table branch deletes them.
+
+**Out of scope:** event keys, `Properties` keys, component map keys, bitmask filters, the table.
+
+**Keep behavior identical:**
+- The run-time representation does not change. Only the compile-time types change.
+- Keep `Body.fixtures` an insertion-ordered `OrderedMap`. Do not change it to an array indexed by
+  ordinal: `forEachFixture` order sets the contact order.
+- Proof: the build, `engine:test core:test lwjgl3:jar`, a grep that shows no fixture-type `Any` left
+  in `engine/.../world/body`, and a short smoke run.
+
+**Order:**
+- It must merge before the table branch.
+- It does not depend on the typed-receiver branch. They touch different files: this branch changes
+  the `Fixture` constructor, `Body` and the tests; the receivers change `IFixtureExtensions.kt`. So
+  they can run in parallel.
