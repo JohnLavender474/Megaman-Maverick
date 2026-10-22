@@ -69,3 +69,9 @@ related-items: [<mega-refactor item IDs>]
 | [Question: coins and level points reset only at level start, not on respawn](2026-10-22-coins-not-reset-on-respawn.md) | question | core | open |
 | [The build fails when Gradle runs on JDK 25](2026-10-22-jdk25-test-jvm-target.md) | yes | build | open |
 | [14 TMX objects in live maps never spawn: wrong layer or unknown class](2026-10-22-misplaced-tmx-objects.md) | yes | content | open |
+| [`MagmaWave`'s shield receiver never fires: the filter never makes `SHIELD`-`SIDE` contacts](2026-10-22-shield-side-contact-never-made.md) | yes | core | open |
+| [The `BLOCK`-`GRAVITY_CHANGE` contact rule never runs](2026-10-22-block-gravity-change-rule-never-runs.md) | yes | core | open |
+| [The filter makes `PLAYER`-`DEATH` contacts that no rule handles](2026-10-22-player-death-contact-unhandled.md) | yes | core | open |
+| [Contact state and hooks that nothing uses: `TOUCHING_CART`, `ConstKeys.CART`, `setHitByLaserReceiver`](2026-10-22-unused-contact-hooks.md) | yes | core | open |
+| [Five contact debug logs name the wrong phase or fixture type](2026-10-22-wrong-contact-log-texts.md) | yes | core | open |
+| [`hitExplosion` gets its two shapes in the reverse order](2026-10-22-projectile-explosion-shape-order.md) | yes | core | open |
