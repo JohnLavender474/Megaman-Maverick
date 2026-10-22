@@ -33,7 +33,7 @@ Versions are in `gradle.properties` (`projectVersion`, `kotlinVersion`, `gdxVers
 - Platform bundles: `./build-game-linux.sh`, `./build-game-mac.sh`, `./build-game-windows.sh`. They call `build-game.sh`, which bundles a JRE from `game-builds/jdk/`.
 - Engine tests: `./gradlew engine:test` (Kotest + MockK, in `engine/src/test/`).
 - Game tests: `./gradlew core:test` (only a few tests in `core/src/test/`; `MegamanHealthTankTest` shows how to build an entity with a relaxed MockK `MegamanMaverickGame`). Most gameplay has no tests. To verify a gameplay change, run the game.
-- CI: `.github/workflows/` runs the engine, game and `utils/` tests on push to `master`.
+- CI: `.github/workflows/ci.yml` runs on a push to any branch and on PRs to `master`: one Gradle job (`engine:test core:test lwjgl3:jar`, JDK 17) and the `utils/` tests. Kotest and MockK versions are in `gradle.properties`. Gradle 8.10.1 runs on JDK 17 or 21, not on JDK 25.
 
 Launcher flags are in `DesktopLauncher.DesktopAppArgs`. Examples: `--performance low|medium|high`, `--pathfinding async|sync`, `--worldContainer`, `--logLevels debug,log,error`, `--debugShapes`, `--fixedStepScalar`. Dev start options (checked by `resolveLaunchOptions`; a bad value exits with code 2): `--level <LevelDefinition>` starts a level; `--screen <ScreenEnum>` opens a screen, and with `--level` it stages that level for the next level start; `--room <name>` (needs `--level`) starts at the first player spawn in that room; `--logTags a,b` or `--logTags all`; `--autoPerf false`. `--runType test` is a deprecated alias for `--level TEST_1`.
 

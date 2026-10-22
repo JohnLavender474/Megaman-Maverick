@@ -44,3 +44,11 @@ CI uses JDK 17, so it does not see this. Workaround: run Gradle with a full JDK 
 `JAVA_HOME=~/.jdks/corretto-17.0.13`. `/usr/lib/jvm/java-17-openjdk-amd64` on the owner's machine
 is a runtime only, with no compiler, so it fails at `:lwjgl3:compileJava`. A fix belongs with
 item `002`.
+
+## Progress
+
+- 2026-10-22: `mega-refactor-002a` (squash `52dde921f`) sets the JVM target to 17 for every compile
+  task, so the build now works when Gradle runs on JDK 21. JDK 25 still fails: Gradle 8.10.1 itself
+  cannot run on it ("Unsupported class file major version 69"). The owner chose to skip JDK 25 for
+  now. A fix needs a newer Gradle, or a committed `gradle/gradle-daemon-jvm.properties` (git-ignored
+  today, `.gitignore:4`).

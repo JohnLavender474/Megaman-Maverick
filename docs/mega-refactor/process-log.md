@@ -182,3 +182,15 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: none.
 
+## 2026-10-22 — mega-refactor-002a-ci-all-branches
+
+- Summary: one `ci.yml` runs on every branch push and on PRs to `master` (one Gradle job plus the
+  `utils` jobs); Kotest 5.9.1 and MockK 1.14.11 from `gradle.properties`; JVM target 17 in every
+  compile task; removed `gradleVersion`. Squash commit `52dde921f`. Item `002` is done.
+- Contract check: 427 engine and 77 core tests pass with JDK 17, the same with JDK 21; class files
+  target Java 17; only one Kotest and one MockK version on the test classpaths; CI run
+  `39854839528` passed on GitHub. `SpriteSystemTest` had passed without checking under Kotest 4
+  and was fixed. The owner approved the merge.
+- Follow-up: JDK 25 stays unsupported (issue updated). The pushed branch
+  `origin/mega-refactor-002a-ci-all-branches` can be deleted on GitHub.
+

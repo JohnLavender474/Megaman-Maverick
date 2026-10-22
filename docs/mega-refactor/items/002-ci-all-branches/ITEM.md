@@ -1,10 +1,10 @@
 # 002: CI on every branch, one Gradle job, aligned test libraries
 
-- Status: active
+- Status: done
 - Type: tooling
 - Depends on: none
 - Related: `003`, `004`, `005`, `006`
-- Branches: `mega-refactor-002a-ci-all-branches` (active, started 2026-10-22)
+- Branches: `mega-refactor-002a-ci-all-branches` (merged 2026-10-22, squash `52dde921f`)
 
 ## Goal
 
