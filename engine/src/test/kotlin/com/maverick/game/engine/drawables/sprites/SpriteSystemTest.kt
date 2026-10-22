@@ -8,7 +8,6 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldNotContain
 import io.mockk.*
-import java.util.*
 
 class SpriteSystemTest :
     DescribeSpec({
@@ -18,7 +17,7 @@ class SpriteSystemTest :
             lateinit var mockSprite3: GameSprite
             lateinit var mockSpritesComponent: SpritesComponent
             lateinit var entity: GameEntity
-            lateinit var spritesQueue: TreeSet<GameSprite>
+            lateinit var spritesQueue: ArrayList<GameSprite>
             lateinit var spritesSystem: SpritesSystem
             lateinit var engine: GameEngine
 
@@ -43,7 +42,7 @@ class SpriteSystemTest :
                 entity = MockGameEntity()
                 entity.addComponent(mockSpritesComponent)
 
-                spritesQueue = TreeSet()
+                spritesQueue = ArrayList()
                 spritesSystem = SpritesSystem({ spritesQueue.add(it) })
                 spritesSystem.on = true
 
