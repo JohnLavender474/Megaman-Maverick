@@ -54,3 +54,13 @@ newest entry at the bottom.
   plans go in the branch folder, not in `docs/superpowers/`.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-22 — master (docs)
+
+- Summary: added `branches/mega-refactor-maverick-engine/` with the research findings and a
+  draft scope for two parts: rename the engine package to a "Maverick Engine" identity, and add
+  the engine host contract (`IMaverickGame` and `MaverickGame`). No branch was created, and no
+  further work was started.
+- Contract check: not needed (docs only).
+- Follow-up: the user answers the open questions in the branch `docs/SCOPE.md` and approves the
+  scope.
