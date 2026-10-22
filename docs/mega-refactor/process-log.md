@@ -147,3 +147,18 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: plan each wave 1 branch.
 
+## 2026-10-22 — mega-refactor-008a-dev-launch-options
+
+- Summary: added the dev launch options `--screen`, `--level` (staged when the screen is not the
+  level screen), `--room`, `--logTags` and `--autoPerf`, with checks that exit with code 2 and the
+  usage. `LaunchOptions` is a plain data class; `resolveLaunchOptions` checks and resolves it (the
+  owner asked for this split during the work). `--runType test` is a deprecated alias. Fixed the
+  `--logLevels` whitespace parse. Squash commit `c731cf9ab`.
+- Contract check: clean build; 427 engine and 77 core tests pass (28 new: 15 for the resolver, 13
+  for `PlayerSpawnsManager`); 133 compiler warnings as before; the error runs checked by me; the
+  owner's play test passed after one fix (`--room` lost its start spawn to spawn `0` on the first
+  frame, because `startAt()` put spawn `0` back).
+- Follow-up: the launcher part of `docs/issues/2026-10-22-literal-whitespace-regex.md` is fixed;
+  the `TODO` in `PlayerSpawnsManager.startAt()` must be revisited in `036`. Later `008` branches
+  are listed in `items/008-dev-launch-options/ITEM.md`.
+

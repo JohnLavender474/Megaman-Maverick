@@ -4,7 +4,7 @@
 - Type: tooling
 - Depends on: none
 - Related: `003`, `007`, `011`, `032`, `034`, `036`, `044`
-- Branches: `mega-refactor-008a-dev-launch-options` (active, started 2026-10-22)
+- Branches: `mega-refactor-008a-dev-launch-options` (merged 2026-10-22, squash `c731cf9ab`). Later branches: `--tmx`, `--checkpoint`, `--slot`/`--state`, `--seed`, `--strictErrors`, hot reload
 
 ## Goal
 

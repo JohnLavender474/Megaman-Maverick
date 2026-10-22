@@ -28,3 +28,8 @@ Read the code. A save string or a `--logLevels` value with spaces is not cleaned
 ## Notes
 
 Items `007` and `008` touch both places.
+
+## Progress
+
+- 2026-10-22: the `DesktopLauncher.kt` part (`--logLevels`) is fixed in `mega-refactor-008a` (squash
+  `c731cf9ab`). `GameState.kt:293` is still open (item `007`).
