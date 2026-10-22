@@ -2,16 +2,16 @@ package com.megaman.maverick.game.entities.items
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.AnimationsComponent
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.animations.IAnimation
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.events.Event
+import com.maverick.game.engine.animations.Animation
+import com.maverick.game.engine.animations.AnimationsComponent
+import com.maverick.game.engine.animations.Animator
+import com.maverick.game.engine.animations.IAnimation
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.orderedMapOf
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef

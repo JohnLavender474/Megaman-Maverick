@@ -3,10 +3,10 @@ package com.megaman.maverick.game.entities.bosses
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.extensions.orderedSetOf
-import com.mega.game.engine.common.objects.IntPair
-import com.mega.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.extensions.orderedMapOf
+import com.maverick.game.engine.common.extensions.orderedSetOf
+import com.maverick.game.engine.common.objects.IntPair
+import com.maverick.game.engine.common.objects.pairTo
 
 internal object ElecDevilConstants {
 

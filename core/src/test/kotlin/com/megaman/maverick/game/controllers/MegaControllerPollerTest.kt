@@ -2,9 +2,9 @@ package com.megaman.maverick.game.controllers
 
 import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.controllers.ControllerMapping
-import com.mega.game.engine.controller.ControllerUtils
-import com.mega.game.engine.controller.buttons.ControllerButton
-import com.mega.game.engine.controller.buttons.ControllerButtons
+import com.maverick.game.engine.controller.ControllerUtils
+import com.maverick.game.engine.controller.buttons.ControllerButton
+import com.maverick.game.engine.controller.buttons.ControllerButtons
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.*

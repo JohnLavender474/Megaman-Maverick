@@ -1,78 +1,87 @@
 # Scope: mega-refactor-001a-package-rename
 
-What this branch changes and why. This is a draft from a research pass. The branch does not
-exist yet, and the user has not approved this scope. The research is in
-`items/001-maverick-engine/NOTES.md`.
+What this branch changes and why. The user approves this file before `CONTRACT.md` is written.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 ## Goal
 
-Rename the engine root package to a neutral "Maverick Engine" identity, in one mechanical commit,
-while no other `mega-refactor-` branch is active.
+Rename the engine root package from `com.mega.game.engine` to `com.maverick.game.engine`, so that
+the engine has its own "Maverick Engine" identity and does not suggest Mega Man by name. Nothing
+else changes. This branch is also the first practice round of the branch process.
 
 ## Item
 
-Item `001` (Maverick Engine), the naming and package rename part:
+Item `001` (Maverick Engine), the package rename part, with the decisions of 2026-10-22:
 
-- Rename the root package `com.mega.game.engine` to one neutral root (for example
-  `com.maverick.engine`). About 304 package lines and 11,376 import lines change in about 760
-  files. Do it in one mechanical commit and add it to `.git-blame-ignore-revs`.
-- Keep the class names. Do not add a `Maverick` prefix to every class. Use the prefix only on new
-  entry-point types. The package solves collisions with LibGDX and Java (`Animation`, `Timer`,
-  `Body`, `Fixture`, `Properties`, `Event`, `Pool`).
-- Rename the Gradle module or artifact to `maverick-engine` and fix `eclipse.project.name` in
-  `engine/build.gradle:2`. Decide whether `GameEngine` keeps its name.
+- Rename the root package. Keep the class names. Do not add a `Maverick` prefix to existing
+  classes.
+- The engine stays in this repo and is not published (decision L), so the package needs no
+  owned domain.
+- `GameEngine` keeps its name (decision N).
 - Do not rename the `core` package. `EntityType.PACKAGE_PREFIX` builds class names from it for
   TMX spawns.
+- Add the rename commit to `.git-blame-ignore-revs`.
 
 ## Current state
 
-- `engine/` has no notion of a host and no game-specific names. A search for `megaman` or
-  `maverick` finds nothing. Only the package root `com.mega` suggests Mega Man.
-- The engine is MIT-licensed and has no assets.
-- No engine package string is built at runtime. Runtime class lookups build only core package
-  strings (`EntityType.kt:20`).
-- Counts and file lists are in `items/001-maverick-engine/NOTES.md`, section "Rename cost and
-  safety".
+Scan of 2026-10-22 on `master` at `f595ec73a`:
+
+- 303 source files declare `package com.mega.game.engine...`: Kotlin files in
+  `engine/src/main/kotlin/com/mega/game/engine/` and `engine/src/test/kotlin/com/mega/game/engine/`,
+  plus one Java file (`engine/.../common/enums/Axis.java`).
+- 11,376 lines import `com.mega.game.engine...` in `engine/`, `core/` (main and test) and
+  `lwjgl3/`.
+- A few fully qualified names outside imports: KDoc links (`LooseQuadtreeWorldContainer.kt:20`,
+  `IContactFilter.kt:12`, `:21`) and test code (`CullableOnUncontainedTest.kt:14`, `:33`).
+- No string in code names the engine package. No `Class.forName`, `mockkStatic` or
+  `qualifiedName` use builds an engine package name at runtime. The only runtime package string
+  is the `core` one in `EntityType.kt:20`, which does not change.
+- No Gradle file, CI workflow, script, `utils/` tool or project skill names the engine package.
+  The Gradle project stays `:engine` in `settings.gradle`, `core/build.gradle:5` and
+  `lwjgl3/build.gradle:34`.
+- `engine/build.gradle:2` sets `eclipse.project.name = appName + '-core'`, the same name as
+  `core/build.gradle:2`. That is a copy-paste error.
+- Docs that name the engine path: the root `CLAUDE.md` (module table), and some notes and issues
+  in `docs/`.
+- No `mega-refactor-` branch is active, so no other branch gets conflicts.
 
 ## In scope
 
-- Rename the engine root package in `engine/src/main` and `engine/src/test`, and update all
-  imports in `core/` and `lwjgl3/`.
-- Update the KDoc links and fully qualified names (`LooseQuadtreeWorldContainer.kt:20`,
-  `IContactFilter.kt:12`, `:21`, `CullableOnUncontainedTest.kt:14`, `:33`) and the path in the
-  root `CLAUDE.md`.
-- Rename the Gradle module or artifact base name to `maverick-engine`. Fix
-  `eclipse.project.name` in `engine/build.gradle:2`.
-- Add the rename commit to `.git-blame-ignore-revs`.
-- Optional, if the user decides so: rename `GameEngine` (for example to `EntityEngine`) in the
-  same commit.
+- Move `engine/src/main/kotlin/com/mega/game/engine/` and
+  `engine/src/test/kotlin/com/mega/game/engine/` to `.../com/maverick/game/engine/` with
+  `git mv`, so that the history follows each file.
+- Replace `com.mega.game.engine` with `com.maverick.game.engine` in every source file (package
+  lines, imports, KDoc and fully qualified names). This is one mechanical change.
+- Set `eclipse.project.name = appName + '-engine'` in `engine/build.gradle`.
+- Update the engine path in the root `CLAUDE.md`.
+- Add `.git-blame-ignore-revs` with the rename commit, so that `git blame` skips it.
 
 ## Out of scope
 
-- A rename of the `core` package (`com.megaman.maverick.game`). It breaks all TMX spawns.
-- A `Maverick` prefix on existing engine classes.
-- The host contract. That is branch `mega-refactor-001b-host-contract`.
-- Publishing the engine (JitPack, Maven Central, own repo), unless the user adds it.
-- Any gameplay change.
+- Any other code change, including the known engine bugs in `docs/issues/`.
+- A rename of the Gradle project `:engine` or of the `engine/` folder.
+- A rename of `GameEngine` or of any class.
+- A rename of the `core` package.
+- Docs history: old notes and process-log entries keep the old package name. Issue files in
+  `docs/issues/` change only on `master`, so their paths are updated on `master` after the merge.
 
 ## Affected areas and risks
 
-- About 760 files change. Any branch that is active at that time gets a conflict in almost every
-  file. Do it when no other branch is active, or freeze the other branches.
-- The change cannot change behavior if it only changes package names. Check:
-  `./gradlew engine:test core:test lwjgl3:jar` and one game run.
+- About 760 files change, but only in package and import text. Behavior cannot change if the
+  build compiles and no runtime string names the engine package (confirmed by the scan).
+- Risk: a missed reference makes the build fail. That is found at once by the compile.
+- Risk: IntelliJ caches and run configurations still point to the old paths. The user may need
+  to reload the Gradle project.
 
 ## Overlap with other branches
 
-No `mega-refactor-` branch is active (2026-10-22). Local branch `overhaul_1` is 9 commits ahead
-and 957 behind `master`, with no engine changes.
+None. No other `mega-refactor-` branch is active (2026-10-22).
 
 ## Open questions
 
-1. Publishing: this decides the root package (`com.maverick.engine` or
-   `io.github.johnlavender474.maverick`). Decide before the rename, so that the package changes
-   only once.
-2. `GameEngine`: keep the name, or rename it in the same commit?
+None open.
+
+- Root package (2026-10-22): `com.maverick.game.engine`. The owner prefers it because it says
+  clearly that this is a game engine.

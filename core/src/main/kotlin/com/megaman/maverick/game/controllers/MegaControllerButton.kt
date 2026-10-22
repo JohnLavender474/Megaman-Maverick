@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.controllers
 
 import com.badlogic.gdx.Input
-import com.mega.game.engine.common.objects.ImmutableCollection
+import com.maverick.game.engine.common.objects.ImmutableCollection
 
 enum class MegaControllerButton(val defaultKeyboardKey: Int) {
     UP(Input.Keys.W),

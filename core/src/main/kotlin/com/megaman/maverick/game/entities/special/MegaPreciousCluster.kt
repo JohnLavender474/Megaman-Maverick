@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.special
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity

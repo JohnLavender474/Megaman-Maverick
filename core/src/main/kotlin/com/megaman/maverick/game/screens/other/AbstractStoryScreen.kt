@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.screens.BaseScreen
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.extensions.toGdxArray
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

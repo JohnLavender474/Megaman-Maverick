@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.entities.megaman.sprites
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.extensions.gdxArrayOf
+import com.maverick.game.engine.common.extensions.orderedMapOf
+import com.maverick.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.animations.AnimationDef
 
 object MegamanAnimationDefs {

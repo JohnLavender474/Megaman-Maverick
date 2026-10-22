@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.screens.levels.camera
 
 import com.badlogic.gdx.graphics.Camera
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.time.Timer
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
 
 class CameraShaker(private val cam: Camera) : Updatable, Resettable {

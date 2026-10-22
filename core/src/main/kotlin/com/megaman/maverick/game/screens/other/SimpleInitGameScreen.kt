@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.screens.other
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.screens.BaseScreen
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.gdxArrayOf
+import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset

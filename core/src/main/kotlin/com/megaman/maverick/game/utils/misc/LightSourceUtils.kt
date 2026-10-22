@@ -2,12 +2,12 @@ package com.megaman.maverick.game.utils.misc
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.extensions.toInt
-import com.mega.game.engine.common.extensions.toObjectSet
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.events.Event
+import com.maverick.game.engine.common.extensions.toInt
+import com.maverick.game.engine.common.extensions.toObjectSet
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

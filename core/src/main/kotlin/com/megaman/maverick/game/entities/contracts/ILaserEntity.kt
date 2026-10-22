@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.IGameEntity
 
 interface ILaserEntity : IGameEntity {
 

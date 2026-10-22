@@ -2,13 +2,13 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.cullables.CullablesComponent
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.cullables.CullablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

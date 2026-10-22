@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.screens.levels.events
 
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.events.Event
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType

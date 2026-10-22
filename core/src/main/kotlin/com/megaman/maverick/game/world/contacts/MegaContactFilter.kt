@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.world.contacts
 
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.world.body.IFixture
-import com.mega.game.engine.world.contacts.IContactFilter
+import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.objectSetOf
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.world.body.IFixture
+import com.maverick.game.engine.world.contacts.IContactFilter
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity

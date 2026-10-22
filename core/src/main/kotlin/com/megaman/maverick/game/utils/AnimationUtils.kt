@@ -3,8 +3,8 @@ package com.megaman.maverick.game.utils
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.animations.IAnimation
+import com.maverick.game.engine.animations.Animation
+import com.maverick.game.engine.animations.IAnimation
 import com.megaman.maverick.game.animations.AnimationDef
 
 object AnimationUtils {

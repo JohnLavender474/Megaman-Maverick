@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.entities.megaman
 
-import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.interfaces.ISizable
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.damage.IDamager
+import com.maverick.game.engine.common.enums.Size
+import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.objectSetOf
+import com.maverick.game.engine.common.interfaces.ISizable
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.damage.IDamager
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType

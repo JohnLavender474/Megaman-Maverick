@@ -2,15 +2,15 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.objects.Matrix
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.cullables.CullablesComponent
-import com.mega.game.engine.entities.contracts.ICullableEntity
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.objects.Matrix
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.cullables.CullablesComponent
+import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

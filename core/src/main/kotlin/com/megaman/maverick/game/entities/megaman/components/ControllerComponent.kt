@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.controller.ControllerComponent
-import com.mega.game.engine.controller.buttons.ButtonActuator
-import com.mega.game.engine.controller.polling.IControllerPoller
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.controller.ControllerComponent
+import com.maverick.game.engine.controller.buttons.ButtonActuator
+import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType

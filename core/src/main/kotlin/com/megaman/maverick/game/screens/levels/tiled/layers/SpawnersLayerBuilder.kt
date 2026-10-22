@@ -4,10 +4,10 @@ import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.objectSetOf
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.objectSetOf
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType

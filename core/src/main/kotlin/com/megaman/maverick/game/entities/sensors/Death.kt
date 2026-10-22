@@ -1,14 +1,14 @@
 package com.megaman.maverick.game.entities.sensors
 
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.Body
-import com.mega.game.engine.world.body.BodyComponent
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.Fixture
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.world.body.Body
+import com.maverick.game.engine.world.body.BodyComponent
+import com.maverick.game.engine.world.body.BodyType
+import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType

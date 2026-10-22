@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.IFixture
+import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 
 interface IWater : IBodyEntity {

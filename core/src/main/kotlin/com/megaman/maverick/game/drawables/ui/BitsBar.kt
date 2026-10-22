@@ -3,10 +3,10 @@ package com.megaman.maverick.game.drawables.ui
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.drawables.IDrawable
-import com.mega.game.engine.drawables.sprites.GameSprite
+import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.drawables.IDrawable
+import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset

@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.factories
 
-import com.mega.game.engine.common.interfaces.IClearable
-import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.factories.Factories
+import com.maverick.game.engine.common.interfaces.IClearable
+import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.factories.Factories
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity

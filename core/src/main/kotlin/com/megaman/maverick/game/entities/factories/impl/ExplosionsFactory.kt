@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.mega.game.engine.common.GameLogger
+import com.maverick.game.engine.common.GameLogger
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.*

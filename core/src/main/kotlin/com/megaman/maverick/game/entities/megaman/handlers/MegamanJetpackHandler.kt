@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.megaman.handlers
 
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.time.Timer
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.time.Timer
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman

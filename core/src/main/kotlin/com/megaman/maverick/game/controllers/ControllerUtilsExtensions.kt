@@ -3,9 +3,9 @@ package com.megaman.maverick.game.controllers
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.controllers.Controller
-import com.mega.game.engine.controller.ControllerUtils
-import com.mega.game.engine.controller.buttons.ControllerButton
-import com.mega.game.engine.controller.buttons.ControllerButtons
+import com.maverick.game.engine.controller.ControllerUtils
+import com.maverick.game.engine.controller.buttons.ControllerButton
+import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.megaman.maverick.game.PreferenceFiles
 
 fun getKeyboardPreferences(): Preferences =

@@ -2,11 +2,11 @@ package com.megaman.maverick.game.drawables.backgrounds
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.animations.Animation
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.Matrix
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.maverick.game.engine.animations.Animation
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.Matrix
+import com.maverick.game.engine.drawables.sorting.DrawingPriority
+import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 

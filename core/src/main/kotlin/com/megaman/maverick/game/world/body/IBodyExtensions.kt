@@ -3,11 +3,11 @@ package com.megaman.maverick.game.world.body
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.IBody
+import com.maverick.game.engine.common.enums.Position
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.world.body.BodyType
+import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IWater

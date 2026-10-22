@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.interfaces.IPositional
-import com.mega.game.engine.drawables.fonts.BitmapFontHandle
-import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
-import com.mega.game.engine.drawables.sorting.IComparableDrawable
+import com.maverick.game.engine.common.enums.Position
+import com.maverick.game.engine.common.interfaces.IPositional
+import com.maverick.game.engine.drawables.fonts.BitmapFontHandle
+import com.maverick.game.engine.drawables.shapes.IDrawableShape
+import com.maverick.game.engine.drawables.sorting.DrawingPriority
+import com.maverick.game.engine.drawables.sorting.DrawingSection
+import com.maverick.game.engine.drawables.sorting.IComparableDrawable
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.utils.MegaUtilMethods.getDefaultFontSize
 

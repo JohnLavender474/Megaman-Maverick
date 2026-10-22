@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.screens.other
 
-import com.mega.game.engine.screens.BaseScreen
+import com.maverick.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset

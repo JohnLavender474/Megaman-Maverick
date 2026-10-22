@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.screens.levels
 
 import com.badlogic.gdx.utils.OrderedSet
-import com.mega.game.engine.drawables.sprites.SpritesSystem
-import com.mega.game.engine.systems.GameSystem
+import com.maverick.game.engine.drawables.sprites.SpritesSystem
+import com.maverick.game.engine.systems.GameSystem
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 

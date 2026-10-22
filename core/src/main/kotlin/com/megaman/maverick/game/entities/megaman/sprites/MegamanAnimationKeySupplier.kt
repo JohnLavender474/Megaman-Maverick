@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.entities.megaman.sprites
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.equalsAny
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.drawables.sprites.containsRegion
-import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.equalsAny
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.drawables.sprites.containsRegion
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType

@@ -2,8 +2,8 @@ package com.megaman.maverick.game.spawns
 
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.events.Event
-import com.mega.game.engine.events.IEventListener
+import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.events.IEventListener
 
 class SpawnerForEvent(
     private val predicate: (Event) -> Boolean,

@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.constants
 
-import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.megaman.maverick.game.controllers.MegaControllerButton
 
 object MegamanValues {

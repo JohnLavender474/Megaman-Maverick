@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.utils.misc
 
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.world.body.Body
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.world.body.Body
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 

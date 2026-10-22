@@ -1,0 +1,13 @@
+package com.maverick.game.engine.common.extensions
+
+import kotlin.math.abs
+
+fun Float.round(decimals: Int = 2) = "%.${decimals}f".format(this).toFloat()
+
+fun Float.coerceIn(abs: Float) = coerceIn(-abs(abs), abs(abs))
+
+fun Float.epsilonEquals(other: Float, epsilon: Float) = abs(other - this) <= epsilon
+
+fun Float.isBetween(i: Float, j: Float) = this in i..j
+
+fun Float.lessThan(other: Float) = this < other

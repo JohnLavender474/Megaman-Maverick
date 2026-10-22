@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.screens.menus.IMenuButton
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.drawables.sprites.GameSprite
+import com.maverick.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset

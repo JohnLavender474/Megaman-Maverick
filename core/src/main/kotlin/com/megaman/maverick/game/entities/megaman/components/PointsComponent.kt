@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
-import com.mega.game.engine.points.PointsComponent
+import com.maverick.game.engine.points.PointsComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.megaman.Megaman

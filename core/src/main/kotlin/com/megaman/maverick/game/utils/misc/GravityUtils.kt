@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.utils.misc
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.world.body.Body
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.world.body.Body
 
 object GravityUtils {
 

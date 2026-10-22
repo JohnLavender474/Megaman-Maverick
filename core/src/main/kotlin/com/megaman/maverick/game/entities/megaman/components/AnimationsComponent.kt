@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.animations.*
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.objects.pairTo
+import com.maverick.game.engine.animations.*
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.orderedMapOf
+import com.maverick.game.engine.common.objects.pairTo
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton

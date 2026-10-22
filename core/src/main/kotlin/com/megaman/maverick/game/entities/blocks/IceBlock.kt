@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.entities.blocks
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.world.body.Fixture
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setEntity

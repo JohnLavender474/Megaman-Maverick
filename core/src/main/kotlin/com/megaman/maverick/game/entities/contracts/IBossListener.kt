@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.entities.contracts.IDestroyable
+import com.maverick.game.engine.entities.contracts.IDestroyable
 
 interface IBossListener : IDestroyable {
 

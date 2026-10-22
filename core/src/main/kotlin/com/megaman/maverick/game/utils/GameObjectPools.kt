@@ -8,13 +8,13 @@ import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.IntPair
-import com.mega.game.engine.common.objects.Pool
-import com.mega.game.engine.common.shapes.GameCircle
-import com.mega.game.engine.common.shapes.GameLine
-import com.mega.game.engine.common.shapes.GamePolygon
-import com.mega.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.IntPair
+import com.maverick.game.engine.common.objects.Pool
+import com.maverick.game.engine.common.shapes.GameCircle
+import com.maverick.game.engine.common.shapes.GameLine
+import com.maverick.game.engine.common.shapes.GamePolygon
+import com.maverick.game.engine.common.shapes.GameRectangle
 import kotlin.reflect.KClass
 import kotlin.reflect.full.cast
 

@@ -2,13 +2,13 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.animations.AnimationsComponentBuilder
-import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.drawables.sprites.SpritesComponentBuilder
-import com.mega.game.engine.entities.contracts.IAnimatedEntity
-import com.mega.game.engine.world.body.BodyComponent
+import com.maverick.game.engine.animations.AnimationsComponentBuilder
+import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.common.interfaces.IFaceable
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
+import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 

@@ -3,10 +3,10 @@ package com.megaman.maverick.game.state
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.toGdxArray
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.points.Points
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.toGdxArray
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.points.Points
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement

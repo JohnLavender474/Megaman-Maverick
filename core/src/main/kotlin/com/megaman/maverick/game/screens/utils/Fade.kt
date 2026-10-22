@@ -2,10 +2,10 @@ package com.megaman.maverick.game.screens.utils
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.mega.game.engine.common.interfaces.*
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.IDrawable
-import com.mega.game.engine.drawables.sprites.GameSprite
+import com.maverick.game.engine.common.interfaces.*
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.drawables.IDrawable
+import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import kotlin.math.floor
 

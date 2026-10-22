@@ -2,7 +2,7 @@ package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Disposable
-import com.mega.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.common.interfaces.Initializable
 import java.time.LocalDateTime
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit

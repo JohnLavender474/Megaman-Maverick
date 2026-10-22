@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.interfaces.ISizable
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.damage.IDamageable
-import com.mega.game.engine.entities.IGameEntity
-import com.mega.game.engine.entities.contracts.ISpritesEntity
-import com.mega.game.engine.events.IEventListener
+import com.maverick.game.engine.common.enums.Size
+import com.maverick.game.engine.common.interfaces.ISizable
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 

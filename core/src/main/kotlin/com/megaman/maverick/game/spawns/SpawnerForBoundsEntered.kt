@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.spawns
 
-import com.mega.game.engine.common.shapes.IGameShape2D
+import com.maverick.game.engine.common.shapes.IGameShape2D
 
 class SpawnerForBoundsEntered(
     var spawnSupplier: () -> Spawn,

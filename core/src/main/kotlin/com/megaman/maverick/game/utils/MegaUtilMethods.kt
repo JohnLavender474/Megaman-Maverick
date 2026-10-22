@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.UtilMethods
-import com.mega.game.engine.common.time.Timer
+import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import java.util.*

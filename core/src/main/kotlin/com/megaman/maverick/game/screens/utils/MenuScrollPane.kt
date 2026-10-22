@@ -4,7 +4,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Direction
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 

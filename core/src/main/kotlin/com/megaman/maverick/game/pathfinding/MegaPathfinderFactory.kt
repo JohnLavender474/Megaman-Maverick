@@ -1,13 +1,13 @@
 package com.megaman.maverick.game.pathfinding
 
 import com.badlogic.gdx.Gdx
-import com.mega.game.engine.pathfinding.IPathfinder
-import com.mega.game.engine.pathfinding.IPathfinderFactory
-import com.mega.game.engine.pathfinding.PathfinderParams
-import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
-import com.mega.game.engine.pathfinding.heuristics.IHeuristic
-import com.mega.game.engine.world.container.IWorldContainer
-import com.mega.game.engine.world.pathfinding.WorldPathfinder
+import com.maverick.game.engine.pathfinding.IPathfinder
+import com.maverick.game.engine.pathfinding.IPathfinderFactory
+import com.maverick.game.engine.pathfinding.PathfinderParams
+import com.maverick.game.engine.pathfinding.heuristics.EuclideanHeuristic
+import com.maverick.game.engine.pathfinding.heuristics.IHeuristic
+import com.maverick.game.engine.world.container.IWorldContainer
+import com.maverick.game.engine.world.pathfinding.WorldPathfinder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

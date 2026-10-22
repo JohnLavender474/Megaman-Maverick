@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.controllers
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.controller.ControllerUtils
-import com.mega.game.engine.controller.buttons.ControllerButton
-import com.mega.game.engine.controller.buttons.ControllerButtons
-import com.mega.game.engine.controller.polling.ControllerPoller
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.controller.ControllerUtils
+import com.maverick.game.engine.controller.buttons.ControllerButton
+import com.maverick.game.engine.controller.buttons.ControllerButtons
+import com.maverick.game.engine.controller.polling.ControllerPoller
 
 class MegaControllerPoller(controllerButtons: ControllerButtons) : ControllerPoller(controllerButtons) {
 

@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.entities.special
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.entities.contracts.ICullableEntity
-import com.mega.game.engine.events.Event
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.entities.contracts.ICullableEntity
+import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType

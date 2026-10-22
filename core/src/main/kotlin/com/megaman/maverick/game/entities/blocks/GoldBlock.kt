@@ -2,9 +2,9 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.updatables.UpdatablesComponent
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.ILightSource

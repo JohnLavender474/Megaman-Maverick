@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.spawns
 
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.interfaces.Updatable
 
 class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
 

@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
-import com.mega.game.engine.GameEngine
+import com.maverick.game.engine.GameEngine
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank

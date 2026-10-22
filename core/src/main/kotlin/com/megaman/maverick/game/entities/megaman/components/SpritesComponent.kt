@@ -1,14 +1,14 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.animations.Animator
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
-import com.mega.game.engine.drawables.sprites.*
+import com.maverick.game.engine.animations.Animator
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.common.enums.Position
+import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.drawables.sorting.DrawingPriority
+import com.maverick.game.engine.drawables.sorting.DrawingSection
+import com.maverick.game.engine.drawables.sprites.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset

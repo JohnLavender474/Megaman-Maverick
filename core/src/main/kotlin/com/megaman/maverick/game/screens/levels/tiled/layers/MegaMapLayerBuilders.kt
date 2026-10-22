@@ -2,13 +2,13 @@ package com.megaman.maverick.game.screens.levels.tiled.layers
 
 import com.badlogic.gdx.maps.MapLayers
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.indexOfKey
-import com.mega.game.engine.common.extensions.orderedMapOf
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
-import com.mega.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilders
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.indexOfKey
+import com.maverick.game.engine.common.extensions.orderedMapOf
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
+import com.maverick.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilders
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.spawns.SpawnsManager

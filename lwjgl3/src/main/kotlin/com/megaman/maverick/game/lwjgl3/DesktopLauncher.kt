@@ -6,7 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.ParameterException
-import com.mega.game.engine.common.GameLogLevel
+import com.maverick.game.engine.common.GameLogLevel
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.MegamanMaverickGame.RunType

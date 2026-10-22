@@ -1,14 +1,14 @@
 package com.megaman.maverick.game.screens.levels.events
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.extensions.getTextureRegion
-import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.IDrawable
-import com.mega.game.engine.events.Event
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.drawables.IDrawable
+import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset

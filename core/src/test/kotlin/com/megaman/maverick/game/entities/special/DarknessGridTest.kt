@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.GameRectangle
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 

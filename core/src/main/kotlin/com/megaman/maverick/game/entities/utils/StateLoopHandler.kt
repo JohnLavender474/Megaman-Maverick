@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.entities.utils
 
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.extensions.orderedMapOfEntries
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.objects.GamePair
-import com.mega.game.engine.common.objects.Loop
-import com.mega.game.engine.common.time.Timer
+import com.maverick.game.engine.common.extensions.orderedMapOfEntries
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.objects.GamePair
+import com.maverick.game.engine.common.objects.Loop
+import com.maverick.game.engine.common.time.Timer
 
 open class StateLoopHandler<T>(states: Array<T>, timers: Array<GamePair<T, Timer>>): Resettable, Updatable {
 

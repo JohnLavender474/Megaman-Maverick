@@ -2,10 +2,10 @@ package com.megaman.maverick.game.screens.levels.stats
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.time.TimeMarkedRunnable
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.IDrawable
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.time.TimeMarkedRunnable
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

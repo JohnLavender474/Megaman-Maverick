@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.spawns
 
 import com.badlogic.gdx.utils.ObjectSet
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.shapes.IGameShape2D
-import com.mega.game.engine.events.Event
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.shapes.IGameShape2D
+import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 
 object SpawnerFactory {

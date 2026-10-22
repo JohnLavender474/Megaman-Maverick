@@ -2,7 +2,7 @@ package com.megaman.maverick.game.screens.other
 
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.common.extensions.gdxArrayOf
+import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.screens.ScreenEnum

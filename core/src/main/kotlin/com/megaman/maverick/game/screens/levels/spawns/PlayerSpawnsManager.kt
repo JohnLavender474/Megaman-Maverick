@@ -3,8 +3,8 @@ package com.megaman.maverick.game.screens.levels.spawns
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps

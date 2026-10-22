@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 
 interface ITeleporterEntity {
 

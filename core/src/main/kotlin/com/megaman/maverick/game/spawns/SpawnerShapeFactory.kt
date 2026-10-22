@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.spawns
 
 import com.badlogic.gdx.maps.MapObject
-import com.mega.game.engine.common.shapes.IGameShape2D
+import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.utils.extensions.getShape
 

@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.entities.utils
 
-import com.mega.game.engine.common.objects.MutableOrderedSet
-import com.mega.game.engine.pathfinding.heuristics.EuclideanHeuristic
-import com.mega.game.engine.pathfinding.heuristics.IHeuristic
-import com.mega.game.engine.world.body.IBody
-import com.mega.game.engine.world.container.IWorldContainer
+import com.maverick.game.engine.common.objects.MutableOrderedSet
+import com.maverick.game.engine.pathfinding.heuristics.EuclideanHeuristic
+import com.maverick.game.engine.pathfinding.heuristics.IHeuristic
+import com.maverick.game.engine.world.body.IBody
+import com.maverick.game.engine.world.container.IWorldContainer
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.world.body.getEntity
 

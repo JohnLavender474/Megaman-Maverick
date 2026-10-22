@@ -3,11 +3,11 @@ package com.megaman.maverick.game.pathfinding
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.common.shapes.GameLine
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.drawables.shapes.IDrawableShape
-import com.mega.game.engine.pathfinding.PathfinderResult
-import com.mega.game.engine.world.body.Body
+import com.maverick.game.engine.common.shapes.GameLine
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.drawables.shapes.IDrawableShape
+import com.maverick.game.engine.pathfinding.PathfinderResult
+import com.maverick.game.engine.world.body.Body
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toWorldCoordinate

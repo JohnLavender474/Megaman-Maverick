@@ -2,12 +2,12 @@ package com.megaman.maverick.game.screens.utils
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Vector3
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.UtilMethods
-import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.common.interfaces.Resettable
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.time.Timer
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.time.Timer
 
 class ScreenSlide(
     private val camera: Camera,

@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.damage
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.enums.Size
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.interfaces.ISizable
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.damage.IDamager
+import com.maverick.game.engine.common.enums.Size
+import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.interfaces.ISizable
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.damage.IDamager
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop

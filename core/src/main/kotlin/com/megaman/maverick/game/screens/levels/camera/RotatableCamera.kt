@@ -3,11 +3,11 @@ package com.megaman.maverick.game.screens.levels.camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.interfaces.IDirectional
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
 // https://stackoverflow.com/questions/16509244/set-camera-rotation-in-libgdx

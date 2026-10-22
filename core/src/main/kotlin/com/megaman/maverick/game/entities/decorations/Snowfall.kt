@@ -2,15 +2,15 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.UtilMethods
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.objects.props
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.updatables.UpdatablesComponent
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.enums.Position
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

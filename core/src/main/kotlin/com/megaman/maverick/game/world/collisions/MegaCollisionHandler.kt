@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.world.collisions
 
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.world.body.BodyType
-import com.mega.game.engine.world.body.IBody
-import com.mega.game.engine.world.collisions.ICollisionHandler
-import com.mega.game.engine.world.collisions.StandardCollisionHandler
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.interfaces.IDirectional
+import com.maverick.game.engine.world.body.BodyType
+import com.maverick.game.engine.world.body.IBody
+import com.maverick.game.engine.world.collisions.ICollisionHandler
+import com.maverick.game.engine.world.collisions.StandardCollisionHandler
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton

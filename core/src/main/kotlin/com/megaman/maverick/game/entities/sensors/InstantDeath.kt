@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.sensors
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 

@@ -6,10 +6,10 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
-import com.mega.game.engine.audio.IAudioManager
-import com.mega.game.engine.audio.SoundRequest
-import com.mega.game.engine.common.interfaces.Updatable
-import com.mega.game.engine.common.time.Timer
+import com.maverick.game.engine.audio.IAudioManager
+import com.maverick.game.engine.audio.SoundRequest
+import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.time.Timer
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 

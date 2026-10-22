@@ -2,11 +2,11 @@ package com.megaman.maverick.game.screens.other
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.OrderedMap
-import com.mega.game.engine.common.extensions.getTextureAtlas
-import com.mega.game.engine.common.interfaces.Initializable
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.sprites.GameSprite
-import com.mega.game.engine.screens.BaseScreen
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.drawables.sprites.GameSprite
+import com.maverick.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset

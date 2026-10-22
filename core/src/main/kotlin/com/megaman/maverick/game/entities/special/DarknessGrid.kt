@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.objects.Matrix
-import com.mega.game.engine.common.shapes.GameRectangle
-import com.mega.game.engine.common.shapes.MinsAndMaxes
+import com.maverick.game.engine.common.objects.Matrix
+import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.MinsAndMaxes
 import com.megaman.maverick.game.entities.special.DarknessGrid.Companion.MIN_ALPHA
 import kotlin.math.abs
 import kotlin.math.ceil

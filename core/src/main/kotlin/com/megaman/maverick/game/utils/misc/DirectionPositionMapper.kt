@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.utils.misc
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Position
-import com.mega.game.engine.common.extensions.objectMapOf
-import com.mega.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Position
+import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.objects.pairTo
 
 object DirectionPositionMapper {
 

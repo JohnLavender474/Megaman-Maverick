@@ -1,0 +1,16 @@
+package com.maverick.game.engine.world.body
+
+import com.maverick.game.engine.common.interfaces.IPropertizable
+import com.maverick.game.engine.common.interfaces.ITypable
+import com.maverick.game.engine.common.shapes.IGameShape2D
+
+interface IFixture : ITypable<Any>, IPropertizable {
+
+    fun getShape(): IGameShape2D
+
+    fun setShape(shape: IGameShape2D): IFixture
+
+    fun setActive(active: Boolean): IFixture
+
+    fun isActive(): Boolean
+}

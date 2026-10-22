@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.world.body
 
-import com.mega.game.engine.common.enums.ProcessState
-import com.mega.game.engine.damage.IDamageable
-import com.mega.game.engine.entities.contracts.IBodyEntity
-import com.mega.game.engine.world.body.IBody
-import com.mega.game.engine.world.body.IFixture
+import com.maverick.game.engine.common.enums.ProcessState
+import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.world.body.IBody
+import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IHealthEntity

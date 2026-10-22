@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.utils
 
 import com.badlogic.gdx.utils.Array
-import com.mega.game.engine.drawables.shapes.DrawableShapesComponent
-import com.mega.game.engine.drawables.shapes.IDrawableShape
+import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
+import com.maverick.game.engine.drawables.shapes.IDrawableShape
 
 class DrawableShapesComponentBuilder {
 

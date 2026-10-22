@@ -2,11 +2,11 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.OrderedSet
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.ProcessState
-import com.mega.game.engine.common.extensions.isAny
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.world.body.IFixture
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.enums.ProcessState
+import com.maverick.game.engine.common.extensions.isAny
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

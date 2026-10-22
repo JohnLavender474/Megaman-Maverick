@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.mega.game.engine.common.interfaces.ITaggable
-import com.mega.game.engine.common.interfaces.ITypable
-import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.common.interfaces.ITaggable
+import com.maverick.game.engine.common.interfaces.ITypable
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.world.body.getBounds

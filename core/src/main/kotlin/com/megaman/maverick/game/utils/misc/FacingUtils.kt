@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.utils.misc
 
-import com.mega.game.engine.common.GameLogger
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.enums.Facing
-import com.mega.game.engine.common.interfaces.IDirectional
-import com.mega.game.engine.common.interfaces.IFaceable
-import com.mega.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.common.interfaces.IDirectional
+import com.maverick.game.engine.common.interfaces.IFaceable
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.world.body.BodySense

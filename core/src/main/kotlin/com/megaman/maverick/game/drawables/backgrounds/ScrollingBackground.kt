@@ -2,10 +2,10 @@ package com.megaman.maverick.game.drawables.backgrounds
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.UtilMethods.interpolate
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.drawables.sorting.DrawingPriority
-import com.mega.game.engine.drawables.sorting.DrawingSection
+import com.maverick.game.engine.common.UtilMethods.interpolate
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.drawables.sorting.DrawingPriority
+import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.utils.GameObjectPools
 

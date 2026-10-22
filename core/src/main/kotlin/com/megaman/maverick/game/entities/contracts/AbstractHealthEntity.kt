@@ -2,13 +2,13 @@ package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.objects.Properties
-import com.mega.game.engine.common.time.Timer
-import com.mega.game.engine.damage.IDamageable
-import com.mega.game.engine.damage.IDamager
-import com.mega.game.engine.points.Points
-import com.mega.game.engine.points.PointsComponent
-import com.mega.game.engine.updatables.UpdatablesComponent
+import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.points.Points
+import com.maverick.game.engine.points.PointsComponent
+import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame

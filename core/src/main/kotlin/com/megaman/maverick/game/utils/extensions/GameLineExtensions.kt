@@ -1,9 +1,9 @@
 package com.megaman.maverick.game.utils.extensions
 
 import com.badlogic.gdx.math.Vector2
-import com.mega.game.engine.common.objects.GamePair
-import com.mega.game.engine.common.objects.pairTo
-import com.mega.game.engine.common.shapes.GameLine
+import com.maverick.game.engine.common.objects.GamePair
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.shapes.GameLine
 import com.megaman.maverick.game.utils.GameObjectPools
 
 fun GameLine.getFirstLocalPoint() = getFirstLocalPoint(GameObjectPools.fetch(Vector2::class))

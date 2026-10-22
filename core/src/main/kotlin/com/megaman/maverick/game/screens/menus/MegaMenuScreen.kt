@@ -1,10 +1,10 @@
 package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.utils.ObjectMap
-import com.mega.game.engine.common.enums.Direction
-import com.mega.game.engine.common.extensions.gdxArrayOf
-import com.mega.game.engine.screens.menus.IMenuButton
-import com.mega.game.engine.screens.menus.StandardMenuScreen
+import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.extensions.gdxArrayOf
+import com.maverick.game.engine.screens.menus.IMenuButton
+import com.maverick.game.engine.screens.menus.StandardMenuScreen
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.controllers.MegaControllerButton
 

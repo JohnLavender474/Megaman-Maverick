@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.world.body
 
-import com.mega.game.engine.world.body.IBody
+import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 
 enum class BodySense {
