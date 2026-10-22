@@ -28,7 +28,9 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - **Handler signature:** rule handlers take plain ordered fixtures, `(a, b, delta)` (option H2 in `NOTES.md`). The table puts the fixtures in the rule's role order.
 - **`Contact` helpers:** a task for this item. `IContactListener` moves to plain fixture parameters, and the type helpers in `Contact` are removed (see "Proposed scope").
 - **Receivers:** replace the `Megaman` checks with fixture receivers or capabilities in this item. Do not wait for `029`. `029` adjusts them later as needed.
-- **Receiver style:** the owner sees the hand-written receiver extension trios (`setX`/`hasX`/`getX`) as a code smell. The first pass may add new receivers in that style, but item `056` (typed fixture receivers) replaces it. The research recommends doing `056` before the `014` rule files (see `056`).
+- **Receiver style:** the owner sees the hand-written receiver extension trios (`setX`/`hasX`/`getX`) as a code smell. Typed fixture receivers replace them (research and scope in `items/056-typed-fixture-receivers/`).
+- **Branch order:** the typed fixture receivers (former item `056`) are the first `014` branch. The rule table work specified in `NOTES.md` is the second. A fixture-type narrowing branch may come first too; it is under research.
+- **Engine:** the table mechanism (`ContactRuleTable`, builder, dispatcher) goes in the engine. `FixtureType`, the rules and the receivers stay in `core`.
 - **Phases:** one rule object per pair, with `onBegin`, `onContinue` and `onEnd` methods (option P1 in `NOTES.md` 4.4).
 - **Files:** one class and file per pair effect with real logic; generic classes for the receiver-forward pairs; one `ProjectileRules.kt` (`NOTES.md`, "Per-pair classes"). The branch confirms it in practice.
 - **Contract check:** a manual check of fixed routes is enough for now. A contact trace tool is under research.
@@ -44,8 +46,8 @@ Answer to review item 13 (2026-10-22, verbatim):
 
 - Rules in data (JSON) now, or only the simple friction and sense rules? The research recommends Kotlin `SurfaceRule` rows and no JSON for now (`NOTES.md` 4.6).
 - Can some special cases (wall-slide ice friction) become a general body property? The research says yes: a body flag that the wall-slide behavior sets (`NOTES.md` 4.6).
-- Should the table mechanism start in `core`, or go into the engine at once?
-- Should the branch build a contact trace tool, and which kind?
+- Should the engine narrow the fixture type from `Any` (for example to an `Int` index or an `IFixtureType` interface), and as a preliminary branch? Under research.
+- Which contact trace tool should the branch build? The research recommends an exhaustive selection test (golden file) in `014`, an optional per-room rule-hit summary behind `--contactTrace`, and the line-by-line diff only after `055` (`NOTES.md`, "Research: contact trace").
 
 ## Sources
 

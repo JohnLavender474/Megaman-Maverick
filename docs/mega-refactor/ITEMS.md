@@ -63,7 +63,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 053 | [Clean up event-driven logic](items/053-event-cleanup/ITEM.md) | refactor | idea | none | | |
 | 054 | [Support web browsers and Android](items/054-web-and-android/ITEM.md) | feature | planned | `032`, `033`, `035` | | |
 | 055 | [Record and replay for contract checks](items/055-record-and-replay/ITEM.md) | feature | planned | `010`, `011`, `006`, `031` | | |
-| 056 | [Typed fixture receivers](items/056-typed-fixture-receivers/ITEM.md) | refactor | planned | none | | |
+| 056 | [Typed fixture receivers](items/056-typed-fixture-receivers/ITEM.md) | refactor | dropped | none | | 2026-10-22 |
 
 ## Branches
 

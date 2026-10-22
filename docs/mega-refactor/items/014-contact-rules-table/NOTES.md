@@ -913,3 +913,126 @@ class ContactRuleTableTest : DescribeSpec({
 - The builder rejects a second rule for the same pair even across phases. The old chain has none of
   those, so this is safe today. If two rules ever need the same pair in different phases, relax the
   check to "per phase".
+
+## Research: contact trace ("print the paths") (2026-10-22)
+
+The owner asked whether a setup that prints which rule each contact takes is feasible, or too much.
+A read-only research agent did this research on `master` at `32257e0e2`.
+
+### Verdict
+
+- **Too much for `014`:** a full trace diffed line by line against manual play. Two manual runs
+  never give the same lines. Making them match needs deterministic replay, which is the work of
+  `010`, `011`, `031`, `006` and `055`.
+- **Cheap, and a stronger proof than play alone:**
+  1. **An exhaustive selection test** (do it in `014`).
+  2. **A per-room rule-hit summary** behind a flag (optional in `014`).
+
+### Facts that drive the design
+
+- **Selection depends only on the fixture types** (section 1). So "which rule, in which role
+  order" is a pure function of `(phase, type1, type2)`. 29 × 29 × 3 = 2523 cases cover every
+  possible input. A test can check all of them. Play cannot.
+- **The old log texts cannot serve as IDs.** 20 of the 80 branches have no `printDebugLog`, and 5
+  texts are wrong. So the trace needs explicit IDs.
+- **The listener can be wrapped with no engine change.** It is built only at
+  `MegamanMaverickGame.kt:863`, and `WorldSystem.contactListener` is a `var` (`WorldSystem.kt:28`).
+  `WorldSystem.iteration` (`:87`) gives the sub-step. There is no frame counter yet; add one next to
+  `diagnostics?.beginFrame()` (`MegamanMaverickGame.kt:435`).
+- **Contact order is deterministic with the default `SimpleGrid` container**, for the same body
+  order. `QuadtreeWorldContainer` iterates `HashSet`s (`:133-134`), so use `--worldContainer simple`
+  (the default).
+- **Entity IDs:**
+  - Tiled entities use their map object ID, which is stable.
+  - Other entities get negative IDs from a global LIFO pool. These match between runs only if the
+    spawn and destroy order matches.
+  - So a full trace prints `Class#id`, and a summary prints the class only.
+- **The existing outputs do not fit:**
+  - `RuntimeDiagnostics` drops frames when its 256-slot queue is full (`RuntimeDiagnostics.kt:155`).
+  - `AsyncFileWriter` opens the file once per line.
+  - `GameLogger` adds timestamps and filters by tag.
+  - So the trace needs its own buffered writer, or it keeps counters in memory and writes them in
+    `dispose()`.
+- **Volume:** at `MEDIUM` there are 150 sub-steps per second, and each live pair calls `continue`
+  in every sub-step. That is about 10^4-10^5 lines per second in busy rooms. So a full mode writes
+  begin and end lines only, plus a `continue` count at end.
+
+### Comparison strategies
+
+| Strategy | Needs determinism | What it catches | Cost | Verdict |
+|---|---|---|---|---|
+| a. Exact diff with record and replay (`055`) | Yes | Everything, including order and effects (with a state hash) | Far away in the dependency chain | Wait for `055` |
+| b. A small recorder and replayer only for `014` (wrap `controllerPoller`, fixed delta through a `Gdx.graphics` proxy, seed `UtilMethods.random` and `MathUtils.random`) | Yes, partly | Same as a, where the run is deterministic | About 250 LOC. `superRandom`, Kotlin `Random.Default` (about 30 calls), `timeSpawned` and the Darkness clock stay non-deterministic. Mostly a throwaway copy of `010`/`011`/`031`/`055` | No |
+| c. **Aggregate summary**: counts per `(room, phase, typeA, typeB, ruleId)` on a manual route, plus a "rules never hit" list | No | A rule that no longer fires, an extra rule, a large change in count. Not order changes or wrong effects | About 150-200 LOC, including the flag | Optional, recommended |
+| d. Live shadow mode: the table's `select` runs next to the old chain and logs mismatches | No | Selection mismatches on the pairs that the route hits | About 10 LOC on top of stage 0 | No: the offline form below is stronger |
+| e. **Exhaustive selection test**, offline | No | Every selection difference, for every pair, both orders, all phases | About 180 LOC, about 1 day | **Yes** |
+| f. Headless scenario tests per rule (mock fixtures, check senses, receivers, `frictionOnSelf`) | No | Wrong effects in the rules tested | About 30-60 LOC per rule. Cheap only after the receivers remove the concrete-class casts | Yes, for the rules that stage 3 changes |
+
+### The exhaustive selection test ("record and abort")
+
+1. **Stage 0 on the `014` branch:**
+   - Add a `ContactRuleIds` object (for example `FEET_BLOCK = "feet-block"`).
+   - In the old chain, add one line right after each branch's role destructuring:
+     `onRule?.invoke(ContactRuleIds.FEET_BLOCK, a, b)`. That is 80 lines.
+   - For `PROJECTILE`, use the ID `"projectile/" + otherFixture.getType()`, placed before the
+     `NO_PROJECTILE_COLLISION` guard.
+   - The new `ContactRulesBuilder.pair(id, …)` calls use the same constants, so the IDs cannot drift.
+2. **The test:**
+   - It sets `onRule` to a lambda that records `(phase, id, a, b)` and then throws a private
+     sentinel exception. So the rule body never runs, and stub fixtures (a type and empty
+     properties) are enough.
+   - It loops over the 29 × 29 ordered pairs × 3 phases and writes `phase typeA typeB -> id roleOrder`
+     to a golden file (about 200 matched lines; an unmatched pair gives `-`).
+3. **After the swap to the table,** the same test runs against `ContactRuleTable.select` and must
+   give the same golden file.
+
+This covers the tests planned in section 7.2 from data, not from hand-written lists:
+- the key sets (48 / 29 / 17);
+- both orders;
+- `(A, A)` keeps the contact order;
+- the `CONSUMER` wildcard, and `CONSUMER`×`CONSUMER` uses `fixture1`.
+
+It runs in CI.
+
+### Where to hook a live trace
+
+| Hook | Pros | Cons |
+|---|---|---|
+| Engine `WorldSystem.processContacts` | Generic; `020` could use it | A new engine API. Does not know the rule ID |
+| `ContactRuleTable.dispatch` | One line | New code only |
+| **Decorator `TracingContactListener(delegate)`** in `core`, set at `MegamanMaverickGame.kt:863` | One wrapper for the old code, the new code and `020`. Zero cost when off. No engine change. Can replace `CONTACT_LISTENER_DEBUG_FILTER`, which `014` must move anyway | Gets the rule ID from the delegate (a `lastRuleId` field) |
+
+Recommendation: the decorator for the context; the rule ID from the old branch calls, or from the
+one dispatcher line.
+
+Line format for a full mode:
+
+```
+f=1234 s=2 BEGIN feet-block FEET:Megaman#-3 BLOCK:Block#57 flip=0
+```
+
+**Flag:**
+- `--contactTrace <file>` and `--contactTraceMode summary|full` (default `summary`).
+- Plumb it like `--diagnostics`: `DesktopAppArgs` → `MegamanMaverickGameParams` → wrap the listener
+  in `createGameEngine()` only when set.
+- `resolveLaunchOptions` is for start options, so it is not needed. It can check that the path is
+  writable, if an exit with code 2 is wanted.
+
+**Not traced:**
+- **Guard exits:** they double the instrumentation, and they are only meaningful with replay. Stages
+  1-2 are verbatim moves (`git diff --color-moved`), and stage 3 has unit tests.
+- **Per-tick state hash, effect fingerprint (sense bits after each dispatch):** replay only, so wait
+  for `055`.
+
+### Staged plan
+
+1. **Stage 0:** `ContactRuleIds`, the 80 `onRule` lines, and the golden selection test. This is the
+   main proof for stages 1-2.
+2. **Stages 1-2:** move the bodies verbatim, swap to the table, run the golden test against
+   `select`.
+3. **Optional:** `TracingContactListener` and the summary flag. Use it on the agreed manual routes:
+   ice, sand, snow, water, ladders, gates, lasers, carts, teleporters, bouncers and gravity. Compare
+   the rule sets per room, and play until the "never hit" list is empty or explained.
+4. **Stage 3** (the receivers): unit tests per changed rule, plus the manual routes with the summary.
+
+The decorator and the line format become the trace for `020` and `055`, so this work is not lost.

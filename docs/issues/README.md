@@ -75,3 +75,4 @@ related-items: [<mega-refactor item IDs>]
 | [Contact state and hooks that nothing uses: `TOUCHING_CART`, `ConstKeys.CART`, `setHitByLaserReceiver`](2026-10-22-unused-contact-hooks.md) | yes | core | open |
 | [Five contact debug logs name the wrong phase or fixture type](2026-10-22-wrong-contact-log-texts.md) | yes | core | open |
 | [`hitExplosion` gets its two shapes in the reverse order](2026-10-22-projectile-explosion-shape-order.md) | yes | core | open |
+| [`BouncingPebble` bounces to the right when its right side hits a block](2026-10-22-bouncing-pebble-right-side-bounce.md) | no | core | open |
