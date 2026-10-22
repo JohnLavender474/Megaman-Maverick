@@ -1,11 +1,11 @@
 # 001: Maverick Engine
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: `001a`: none. `001b`: `016`, `010`, `032`
 - Related: `029`
-- Branches: `mega-refactor-001a-package-rename` (blocked by decision P), `mega-refactor-001b-host-contract`
-  (blocked)
+- Branches: `mega-refactor-001a-package-rename` (active, started 2026-10-22),
+  `mega-refactor-001b-host-contract` (blocked)
 
 ## Goal
 

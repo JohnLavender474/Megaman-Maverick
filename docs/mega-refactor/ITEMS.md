@@ -39,7 +39,7 @@ Decisions that block or shape many items. The letters are the names from the rev
 | ID | Item | Type | Status | Depends on | Started | Finished |
 |----|------|------|--------|------------|---------|----------|
 | 000 | [Bugs found during the review](items/000-bugs/ITEM.md) | bugs | done | none | 2026-10-22 | 2026-10-22 |
-| 001 | [Maverick Engine](items/001-maverick-engine/ITEM.md) | refactor | planned | `001b`: `016`, `010`, `032` | | |
+| 001 | [Maverick Engine](items/001-maverick-engine/ITEM.md) | refactor | active | `001b`: `016`, `010`, `032` | 2026-10-22 | |
 | 002 | [CI on every branch, one Gradle job, aligned test libraries](items/002-ci-all-branches/ITEM.md) | tooling | planned | none | | |
 | 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | planned | `002` | | |
 | 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | planned | `002` | | |
@@ -99,6 +99,6 @@ Decisions that block or shape many items. The letters are the names from the rev
 
 | Branch | Item | Goal | Status | Started | Finished |
 |--------|------|------|--------|---------|----------|
-| [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | blocked | | |
+| [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | active | 2026-10-22 | |
 | [`mega-refactor-001b-host-contract`](items/001-maverick-engine/branches/mega-refactor-001b-host-contract/process-log.md) | 001 | Add `IMaverickGame` and `MaverickGame` | blocked | | |
 | [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | planned | | |
