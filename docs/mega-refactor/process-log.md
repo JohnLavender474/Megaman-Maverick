@@ -98,3 +98,11 @@ newest entry at the bottom.
   the rules and an index) and set `000` to `done`.
 - Contract check: not needed (docs only).
 - Follow-up: start branch `001a` as the first practice round of the branch process.
+
+## 2026-10-22 — master (docs)
+
+- Summary: added a "Worktrees" section to `CLAUDE.md`. The main checkout stays on `master`, and
+  each `mega-refactor-` branch works in its own worktree in `.worktrees/<branch>/`, with the
+  commands to create, list and remove one. Branch `001a` moved into a worktree.
+- Contract check: not needed (docs only).
+- Follow-up: none.

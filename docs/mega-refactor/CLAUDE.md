@@ -113,7 +113,7 @@ Do these steps in a docs-only commit directly on `master`:
    item's first branch, set the item to `active` and fill in its start date.
 3. In `ITEM.md`, list the branch under "Branches".
 
-Then create the branch from `master`.
+Then create the branch from `master` in its own worktree (see "Worktrees").
 
 ### Planning
 
@@ -180,9 +180,24 @@ whose contract is "plays the same as `master`".
 - If a refactor branch must change buggy behavior, its `CONTRACT.md` names the bug under
   "Intended changes".
 
+## Worktrees
+
+- The main checkout of the repo always stays on `master`. Docs-only commits to `master` (branch
+  start, merge steps, new items, issue files) happen there.
+- Each `mega-refactor-` branch is checked out in its own worktree in `.worktrees/<branch>/`. The
+  `.worktrees/` folder is git-ignored. Git creates it with the first worktree.
+- Create the worktree at branch start, from the main checkout:
+  - new branch: `git worktree add -b <branch> .worktrees/<branch> master`
+  - existing branch: `git worktree add .worktrees/<branch> <branch>`
+- Do all branch work (code, branch docs, builds, tests, play tests) inside the worktree. Each
+  worktree has its own `build/` folders, so its first build is a full build. To play-test from
+  IntelliJ, open the worktree folder as its own project, or run the run scripts from inside it.
+- List the worktrees with `git worktree list`.
+- After the merge, run `git worktree remove .worktrees/<branch>` from the main checkout. Then
+  delete the branch with `git branch -d <branch>`, or keep it.
+
 ## Parallel branches
 
-- Use worktrees in `.worktrees/<branch>/`. The `.worktrees/` folder is git-ignored.
 - Before a branch starts and before it merges, read the folders of the other active branches
   (through their worktrees). Look for overlap, for example two branches that change the same
   classes or that plan the same feature. Write each overlap in your branch `docs/NOTES.md`.
