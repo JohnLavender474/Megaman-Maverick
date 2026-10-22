@@ -1,10 +1,10 @@
 # 008: Dev launch options and level staging
 
-- Status: planned
+- Status: active
 - Type: tooling
 - Depends on: none
 - Related: `003`, `007`, `011`, `032`, `034`, `036`, `044`
-- Branches: none yet
+- Branches: `mega-refactor-008a-dev-launch-options` (active, started 2026-10-22)
 
 ## Goal
 

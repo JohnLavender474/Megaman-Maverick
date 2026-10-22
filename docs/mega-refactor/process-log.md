@@ -138,3 +138,12 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: none.
 
+## 2026-10-22 — master (docs)
+
+- Summary: the merge rule now requires the user's explicit approval for each branch, one merge at
+  a time; a branch merges `master` in and runs its checks again if `master` changed since it
+  started. Started wave 1: `019a` (remove the second spawn pass), `002a` (CI) and `008a` (dev
+  launch options), each in its own worktree. The owner accepted the `019a` rare cases.
+- Contract check: not needed (docs only).
+- Follow-up: plan each wave 1 branch.
+

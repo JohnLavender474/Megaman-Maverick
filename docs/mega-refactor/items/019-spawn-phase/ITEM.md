@@ -1,10 +1,10 @@
 # 019: One spawn phase per tick with destroy notifications
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `010`, `013`, `038`, `041`, `045`
-- Branches: `mega-refactor-019a-remove-second-spawn-pass` (planned)
+- Branches: `mega-refactor-019a-remove-second-spawn-pass` (active, started 2026-10-22)
 
 ## Goal
 

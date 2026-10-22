@@ -165,19 +165,25 @@ alone does not need a new approval, but write the reason in the process log.
 
 ### Branch merge
 
-1. Do the checks in the branch `docs/CONTRACT.md`. Write the result in the branch process log.
-2. Squash-merge the branch into `master`. Do not carry the branch commits over. From the main
+1. Do the checks in the branch `docs/CONTRACT.md`, including the user's play test. Write the
+   result in the branch process log.
+2. Get the user's explicit approval to merge this branch. Approval for one branch never covers
+   another branch, also when branches run in parallel. Merge only one branch at a time. If
+   `master` changed since the branch started (for example another branch merged), first merge
+   `master` into the branch in its worktree, run the contract's automated checks again, and tell
+   the user the result before asking for approval.
+3. Squash-merge the branch into `master`. Do not carry the branch commits over. From the main
    checkout: `git merge --squash <branch>`, then one commit named after the branch goal. List
    the main changes in the commit message.
-3. If the branch has a mechanical commit that `.git-blame-ignore-revs` lists (for example a
+4. If the branch has a mechanical commit that `.git-blame-ignore-revs` lists (for example a
    rename), replace its branch SHA in that file with the SHA of the squash commit, in a
    separate commit on `master`. Branch SHAs do not exist on `master` after a squash.
-4. On `master`, add an entry to `process-log.md`. Use the entry format in that file.
-5. On `master`, in `ITEMS.md`, set the branch row to `merged` and fill in its finish date. If
+5. On `master`, add an entry to `process-log.md`. Use the entry format in that file.
+6. On `master`, in `ITEMS.md`, set the branch row to `merged` and fill in its finish date. If
    the item needs no more branches, set the item to `done` and fill in its finish date.
-6. Make each "Backlog candidate" from the branch `docs/TODO.md` a new item (see "New item").
+7. Make each "Backlog candidate" from the branch `docs/TODO.md` a new item (see "New item").
    File each "Bug candidate" (see "Bugs").
-7. Remove the worktree (`git worktree remove .worktrees/<branch>`). Then delete the branch with
+8. Remove the worktree (`git worktree remove .worktrees/<branch>`). Then delete the branch with
    `git branch -D <branch>`: after a squash, git does not see the branch as merged, so `-d`
    refuses.
 
@@ -215,6 +221,7 @@ whose contract is "plays the same as `master`".
   IntelliJ, open the worktree folder as its own project, or run the run scripts from inside it.
 - List the worktrees with `git worktree list`.
 - After the merge, remove the worktree and the branch as in "Branch merge".
+- Parallel branches are validated and approved one by one. See "Branch merge", step 2.
 
 ## Parallel branches
 

@@ -57,6 +57,8 @@ None active (2026-10-22).
 
 ## Open questions
 
-1. Accept the two rare cases as an intended change (listed in `CONTRACT.md`), or add the destroy
-   notification in this branch so that nothing changes? The second option makes the branch
-   bigger.
+None open.
+
+- (2026-10-22) The owner accepts the two rare cases. They go in `CONTRACT.md` under "Intended
+  changes", and a `TODO` comment at the changed code names them and points to `019b`. The
+  destroy notification comes in a later branch (`019b`).

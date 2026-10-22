@@ -9,13 +9,13 @@ statuses and column meanings are in `CLAUDE.md`.
 |----|------|------|--------|------------|---------|----------|
 | 000 | [Bugs found during the review](items/000-bugs/ITEM.md) | bugs | done | none | 2026-10-22 | 2026-10-22 |
 | 001 | [Maverick Engine](items/001-maverick-engine/ITEM.md) | refactor | active | `001b`: `016`, `010`, `032` | 2026-10-22 | |
-| 002 | [CI on every branch, one Gradle job, aligned test libraries](items/002-ci-all-branches/ITEM.md) | tooling | planned | none | | |
+| 002 | [CI on every branch, one Gradle job, aligned test libraries](items/002-ci-all-branches/ITEM.md) | tooling | active | none | 2026-10-22 | |
 | 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | planned | `002` | | |
 | 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | planned | `002` | | |
 | 005 | [Golden damage-table test](items/005-golden-damage-test/ITEM.md) | test | planned | `004`, `002` | | |
 | 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | idea | `002`, `004` | | |
 | 007 | [Versioned JSON save slots with legacy import](items/007-json-save-slots/ITEM.md) | feature | planned | none | | |
-| 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | planned | none | | |
+| 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | active | none | 2026-10-22 | |
 | 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | planned | none | | |
 | 010 | [One simulation clock: fixed tick for gameplay, separate present phase](items/010-fixed-tick/ITEM.md) | refactor | idea | `011`, `017` | | |
 | 011 | [One seedable, interceptable random source with named streams](items/011-game-random/ITEM.md) | refactor | planned | none | | |
@@ -26,7 +26,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | planned | none | | |
 | 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | planned | none | | |
 | 018 | [Event-driven system membership; component IDs when needed](items/018-ecs-membership/ITEM.md) | refactor | idea | none | | |
-| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | planned | none | | |
+| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | active | none | 2026-10-22 | |
 | 020 | [Cheaper broad phase with stable contact order](items/020-broad-phase/ITEM.md) | refactor | planned | none | | |
 | 021 | [Entity registry with stable readable IDs and aliases](items/021-entity-registry/ITEM.md) | refactor | planned | none | | |
 | 022 | [Typed property schema per entity, exported to Tiled](items/022-spawn-prop-schema/ITEM.md) | feature | planned | `021` | | |
@@ -70,4 +70,6 @@ statuses and column meanings are in `CLAUDE.md`.
 |--------|------|------|--------|---------|----------|
 | [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-001b-host-contract`](items/001-maverick-engine/branches/mega-refactor-001b-host-contract/process-log.md) | 001 | Add `IMaverickGame` and `MaverickGame` | blocked | | |
-| [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | planned | | |
+| [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | active | 2026-10-22 | |
+| [`mega-refactor-002a-ci-all-branches`](items/002-ci-all-branches/branches/mega-refactor-002a-ci-all-branches/process-log.md) | 002 | CI on every branch push, one Gradle job, aligned test libraries, JDK toolchain | active | 2026-10-22 | |
+| [`mega-refactor-008a-dev-launch-options`](items/008-dev-launch-options/branches/mega-refactor-008a-dev-launch-options/process-log.md) | 008 | Dev launch options and level staging | active | 2026-10-22 | |
