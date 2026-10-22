@@ -10,7 +10,7 @@ newest entry at the bottom.
 ## YYYY-MM-DD — <branch or "master (docs)">
 
 - Summary: what changed and why.
-- Contract check: which checks in `CONTRACT.md` were done, and the result.
+- Contract check: which checks in the branch `docs/CONTRACT.md` were done, and the result.
 - Follow-up: items moved to `BACKLOG.md` or open issues.
 ```
 
@@ -23,3 +23,11 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: fill in the levels and behaviors in `CONTRACT.md`. Pick the first branch from
   `BACKLOG.md`.
+
+## 2026-10-22 — master (docs)
+
+- Summary: removed the shared `CONTRACT.md`. Each branch now writes its own
+  `docs/CONTRACT.md` during planning, before it changes code. Added `CONTRACT.md` to
+  `branches/_template/docs/`.
+- Contract check: not needed (docs only).
+- Follow-up: pick the first branch from `BACKLOG.md`.

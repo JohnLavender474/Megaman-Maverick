@@ -6,7 +6,7 @@ Read this file before you do any work on the mega refactor.
 
 Refactor `engine/` and `core/` so that the game is easier to change, configure and extend.
 The current gameplay is the contract. A branch merges into `master` only if the game still
-plays the same. `CONTRACT.md` lists what to check.
+plays the same. Each branch writes its own contract in `branches/<branch>/docs/CONTRACT.md`.
 
 ## Files
 
@@ -15,7 +15,6 @@ plays the same. `CONTRACT.md` lists what to check.
 | `CLAUDE.md` | This file. Rules for the effort. | `master` only |
 | `ROADMAP.md` | Each branch, its goal and its coarse status. | `master` only |
 | `BACKLOG.md` | Ideas that are not yet assigned to a branch. | `master` only |
-| `CONTRACT.md` | The manual playthrough checklist to do before a merge. | `master` only |
 | `process-log.md` | One entry for each branch that merged into `master`. | `master` only |
 | `branches/_template/` | The folder to copy when a branch starts. | `master` only |
 | `branches/<branch>/` | The docs of one branch. | That branch only |
@@ -40,6 +39,9 @@ Then create the branch from `master`.
 
 ### During the branch
 
+- Write `docs/CONTRACT.md` during planning, before you change code. It lists the gameplay that
+  the branch must not change and how to check it, for example the levels to play through and
+  what to look for. Only include what the branch can affect.
 - Write docs only inside `branches/<branch>/`. Do not edit the top-level files on the branch.
   Then two active branches cannot conflict in the docs.
 - Keep the status block at the top of `branches/<branch>/process-log.md` up to date.
@@ -50,7 +52,7 @@ Then create the branch from `master`.
 
 ### Branch merge
 
-1. Do the checks in `CONTRACT.md` on the branch. Write the result in the branch process log.
+1. Do the checks in the branch `docs/CONTRACT.md`. Write the result in the branch process log.
 2. Merge the branch into `master`.
 3. On `master`, add an entry to `docs/mega-refactor/process-log.md`. Use the entry format in
    that file.
