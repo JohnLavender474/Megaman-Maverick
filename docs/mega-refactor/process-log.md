@@ -38,3 +38,10 @@ newest entry at the bottom.
   `CLAUDE.md`. Added the X-style camera bounds item to `BACKLOG.md`.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-22 — master (docs)
+
+- Summary: expanded the camera item in `BACKLOG.md`. It now includes auto-scroll, the X6 facts
+  for camera zones and `AutoScroll`, and the research questions to answer before the design.
+- Contract check: not needed (docs only).
+- Follow-up: none.
