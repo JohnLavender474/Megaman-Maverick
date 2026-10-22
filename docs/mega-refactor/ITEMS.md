@@ -99,6 +99,6 @@ Decisions that block or shape many items. The letters are the names from the rev
 
 | Branch | Item | Goal | Status | Started | Finished |
 |--------|------|------|--------|---------|----------|
-| [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | active | 2026-10-22 | |
+| [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-001b-host-contract`](items/001-maverick-engine/branches/mega-refactor-001b-host-contract/process-log.md) | 001 | Add `IMaverickGame` and `MaverickGame` | blocked | | |
 | [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | planned | | |

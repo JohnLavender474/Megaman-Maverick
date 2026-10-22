@@ -56,3 +56,8 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Step 6, play test (owner): ran `./run-game-debug.sh` and played part of the intro stage at a
   stable 60-61 FPS. Start, pause and resume work. Contract result: pass.
 - Step 7: the owner asked to squash-merge the branch into `master`.
+- Merged into `master` as squash commit `1a61734b5`. `.git-blame-ignore-revs` now lists that
+  commit (the branch SHAs do not exist on `master`). In the squash, git again pairs only 278 of
+  the 304 moved files as renames, so for the 26 tiny files use `git log --follow -M20%` to see
+  their history before the rename.
+- The bug candidate is filed as `docs/issues/2026-10-22-jdk25-test-jvm-target.md`.

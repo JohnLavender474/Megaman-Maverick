@@ -106,3 +106,26 @@ newest entry at the bottom.
   commands to create, list and remove one. Branch `001a` moved into a worktree.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-22 — master (docs)
+
+- Summary: the merge rule now says to squash-merge `mega-refactor-` branches into `master`, to
+  move any `.git-blame-ignore-revs` entry to the squash commit, and to delete the branch with
+  `git branch -D` after the worktree is removed.
+- Contract check: not needed (docs only).
+- Follow-up: none.
+
+## 2026-10-22 — mega-refactor-001a-package-rename
+
+- Summary: renamed the engine root package from `com.mega.game.engine` to
+  `com.maverick.game.engine` (304 files moved, about 11,400 import lines changed), fixed the
+  engine Eclipse project name, and added `.git-blame-ignore-revs`. Squash commit `1a61734b5`.
+  This was the first practice round of the branch process. During the work, the plan changed:
+  the move became its own commit so that every file was a 100% rename. The squash merges them
+  again, so for 26 tiny files `git log --follow -M20%` is needed to see their older history.
+- Contract check: all automated checks matched the baseline (427 engine and 49 core tests pass,
+  the JAR builds, the same 133 compiler warnings); all source checks passed; the owner's play
+  test passed (intro stage at 60-61 FPS; start, pause and resume work).
+- Follow-up: filed `docs/issues/2026-10-22-jdk25-test-jvm-target.md`. Item `001` continues
+  with `001b` (blocked by `016`, `010`, `032`).
+

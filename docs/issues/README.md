@@ -67,3 +67,4 @@ related-items: [<mega-refactor item IDs>]
 | [Question: explosions from Mega's own shots do not hurt `AbstractEnemy`](2026-10-22-mega-explosions-do-not-hurt-enemies.md) | question | core | open |
 | [Question: a checkpoint can change silently while Mega is not ready](2026-10-22-checkpoint-changes-while-not-ready.md) | question | core | open |
 | [Question: coins and level points reset only at level start, not on respawn](2026-10-22-coins-not-reset-on-respawn.md) | question | core | open |
+| [The build fails when Gradle runs on JDK 25](2026-10-22-jdk25-test-jvm-target.md) | yes | build | open |
