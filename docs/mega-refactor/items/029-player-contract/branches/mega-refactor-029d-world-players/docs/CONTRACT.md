@@ -38,8 +38,10 @@ every world entity must act as before.
 
 ## Manual playthrough
 
-Run each check on the baseline (before the code changes) and again at the end, from the worktree.
-The test rooms are added to `RefactorTest029.tmx` in the plan; their names can change there.
+The owner plays these once, after the implementation, from the worktree (no baseline
+play-through; see "Test maps" in `docs/mega-refactor/CLAUDE.md`). The test rooms are added to
+`RefactorTest029.tmx` in the plan, and a short launch checks that each one loads on the baseline
+code; their names can change in the plan.
 
 | Level and room | What to check |
 |-------|---------------|

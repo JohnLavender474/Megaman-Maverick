@@ -243,9 +243,12 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
 - **Paint the blocks:** every test map and room has a `tiles` tile layer with a tile on each block
   cell (see the `level-builder` skill and `Test1.tmx`). Block objects alone are invisible in the
   game.
-- **When:** in the first plan steps of the branch, before the code changes. The owner (or a
-  launch) checks each room on the baseline code first, so that the same room shows the behavior
-  before and after the change.
+- **When:** in the first plan steps of the branch, before the code changes. A short launch of each
+  new room on the baseline code checks that the room loads with no exception.
+- **The owner's play test runs once, after the implementation** (owner decision, 2026-10-23). The
+  owner knows the baseline behavior, so the contract does not ask for a baseline play-through of
+  the manual checks. Ask for a baseline run only for a check whose current behavior is unclear,
+  and say why.
 - **Test-only entities:** if no existing entity can trigger a behavior in a small room (for
   example a boss attack), the branch can add a small test entity. Its name starts with `Test`
   (for example `TestStunPulser`), it goes in the package of its `EntityType`, and only test maps

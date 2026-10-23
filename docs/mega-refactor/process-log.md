@@ -389,3 +389,12 @@ newest entry at the bottom.
   all 99 changed lines differ only in the reference. The owner checked 6 of the 10 manual checks on the baseline,
   and played the list at the end. The owner approved the merge.
 - Follow-up: no bugs and no backlog candidates. Next for item `029`: `029d` (world entities).
+
+## 2026-10-23 — master (docs)
+
+- Summary: "Test maps" in `CLAUDE.md`: the owner's play test of the manual checks runs once, after the
+  implementation; no baseline play-through, because the owner knows the baseline behavior. A short launch still
+  checks that each new test room loads on the baseline code. Ask for a baseline run only when a behavior is
+  unclear. The owner asked for this at the `029d` contract, which has many checks; its contract text follows.
+- Contract check: not needed (docs only).
+- Follow-up: none.
