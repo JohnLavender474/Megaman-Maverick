@@ -3,8 +3,8 @@
 How to do the work in `SCOPE.md`. This was written ahead of time on `master`, before the branch
 existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-23
 
 Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`. Read the test counts from
 `build/test-results`. Smoke launches are short (about 20 seconds); a clean exit with no exception is

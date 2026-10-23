@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: World entities, contact rules and world body code reach the player through the players service; `HIT_BY_PLAYER` takes the player view
-- Done: scan; `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`.
-- Next: the owner reviews `docs/PLAN.md`.
+- Done: planning approved; step 1 (branch start).
+- Next: step 2 (baseline).
 - Blocked:
 
 ## Entries
@@ -42,3 +42,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Owner decision: comment out `GravityCapsule` and `PortalHopper`'s `next_body_direction` (both unused) with `TODO`s. Scope updated.
 - Scope approved by the owner. Draft `docs/CONTRACT.md` written; real-level rooms found from the live TMX files (the room with the object, or the nearest earlier room with a player spawn).
 - Contract approved by the owner. Draft `docs/PLAN.md` written (no baseline play step).
+- Plan approved by the owner.
+- Step 1: branch start on `master`, worktree created.
