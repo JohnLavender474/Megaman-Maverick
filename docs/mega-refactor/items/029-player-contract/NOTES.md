@@ -121,3 +121,864 @@ Item 29 (faction), 30 (input per player), 23 (loadout), 11 (lock reasons), 15 (`
 
 `megaman` is reached globally through `game.megaman` (for example in `MegaLevelScreen`,
 `AbstractEnemy` and `AbstractBoss`). This blocks other playable characters and multiplayer.
+
+
+## Research round 2 (2026-10-23): summary
+
+Five research agents reviewed the current design at `bacbd22c4`, after `014` merged. The owner's target for this round:
+
+- A lightweight but complete interface that is the contract for every player in the game.
+- Co-op: many players on one shared screen. Split screen and online are `TODO`s, but no choice now may block them. No logic may depend on a single player instance.
+
+Each agent report is below, in full: review 1 (inside the player), review 2 (uses outside the player), review 3 (systems around the player), review 4 (design options), review 5 (how games and engines usually do it). This summary combines them. Recommendations are not decisions.
+
+### Strengths of the current design
+
+- **Per-instance state is clean.** `Megaman` has no mutable static or companion state. Timers, behaviors, fixtures, receivers and animations are made per instance in `init()` (review 1).
+- **Behaviors are ordered, self-contained objects** (`IBehavior`, order at `BehaviorsComponent.kt:778-785`). They map directly to an ordered ability list (review 1). X6 uses the same "ordered try chain" model (review 4).
+- **The external need is small.** About 65% of the 930 external lines read only position and bounds (targeting and proximity). About 75% of the files use only the `megaman` extension, so one helper change moves most enemies (review 2).
+- **Spawning, culling and checkpoints use the camera, not the player.** A shared screen needs no change there (review 3).
+- **`IFocusable` already decouples the camera from `Megaman`.** A group focus can implement it (review 3).
+- **`014` receivers and capability markers** (`IGateTrigger`, `ICartRider`) already show the style that replaces `is Megaman` (reviews 1, 4).
+- **`MegaWeaponHandler` is already a data-plus-lambdas slot**, a base for a loadout (review 1).
+- **The engine has almost no player concept**, so the engine-side work is additive (review 3).
+
+### Weaknesses
+
+Ranked by how hard they block co-op and a second character:
+
+1. **Input is global.** One poller, pad index 0, all devices merged, menus on the same poller, global `TURN_CONTROLLER_*`. 37 poller calls in the player package, plus 4 entities that read controller 0 for "the player" (`PipePortal`, `SpringBouncer`, `SpiderWeb`, `GroundSlideBlocker`). This is `031`, but `029` must not make it worse (reviews 1, 2, 3).
+2. **Slot, profile and body are one object.** Lives, tanks, enhancements, unlocked weapons and the level reward table live on `Megaman` or in `GameState` with `Megaman` as the only listener. In every engine reviewed, these live longer than the body (reviews 1, 3, 5).
+3. **Player events have no identity, and `PLAYER_SPAWN` is a level reset.** 24 listeners reset or destroy themselves on `PLAYER_SPAWN`. With respawn per player, one player's respawn resets the room for all (review 2).
+4. **One camera focus drives room detection and transitions** (`CameraManagerForRooms.kt:180-238`, `:284-296`) (review 3).
+5. **Level flow assumes one player.** Death, respawn, boss intro and defeat, pause, end level. The handlers keep `game.megaman` in a field from construction (reviews 2, 3).
+6. **Ownership is `owner == megaman`.** The worst site is `AbstractEnemy.kt:255`: a second player's shots would damage no enemy. Damage scaling reads `megaman.hasEnhancement`, not the owner's (review 2). This is `030`.
+7. **Exact-class `KClass` sets fail silently.** `StandardDamageNegotiator` and about 6 other entities look up `damager::class` with `==`. A second character class deals 0 damage or has no effect, with no error (review 2). This was not known before this round.
+8. **Mutations from outside.** About 53 sites write player state: handlers write `ready`, `canBeDamaged`, `gravityOn` and `setAllBehaviorsAllowed`; 6 enemies write the velocity with `MegamanValues.JUMP_VEL` for stomp bounces; gravity devices write `direction` and `aButtonTask` (review 2).
+9. **Self-references through the global inside the player.** 7 sites in the player package read `megaman` (the global), not `this`. Two live instances interfere (stun impulse, sprite visibility, air dash, trail sprites) (review 1).
+10. **Weapon logic is inside the movement behaviors.** 47 checks of specific weapons (`NEEDLE_SPIN`, `RUSH_JET`, `RODENT_CLAWS`, `AXE_SWINGER`). A second character cannot reuse "jump" without them (review 1). This is `024`.
+11. **Values are a global object plus inline numbers.** 90 `MegamanValues` entries (about 45 movement, about 30 weapon), 59 direction switches, and many inline offsets (review 1).
+12. **Determinism.** Clock-seeded RNG, `Gdx.graphics.deltaTime` in the camera, UI timers that freeze systems. These block only online play (reviews 3, 5).
+
+### Where the reviews agree
+
+- Split the contract in layers. Enemies need a small read-only view (position, bounds, facing, direction, alive or active, `isDoing`). Commands and features go on other interfaces or behind capability queries (reviews 2, 4, 5).
+- Identity is a slot, not the entity. Events carry the slot. Death or respawn changes the body, not the slot (reviews 3, 4, 5).
+- A players service in fixed slot order, with no public `primary`. Every engine example and every co-op game example avoids a primary player in gameplay rules; a hidden "player 0" is the most common co-op bug (reviews 4, 5).
+- Targets are picked by a policy (default: nearest), with stickiness or a re-pick at defined points, not every frame. With one player this changes nothing (reviews 2, 4, 5).
+- Lives, tanks, enhancements and weapons owned go to a per-slot profile, with a policy for shared or per-player data (reviews 1, 3, 4, 5).
+- Characters: composition plus data (`CharacterDef` with a movement table and an ordered ability list), not subclasses of `Megaman` (reviews 1, 4, 5).
+- Level flow (camera, off-screen, room transition, death and respawn, checkpoints, boss flow, pause, HUD, pickups) becomes policy objects. Each starts with a single-player implementation that copies today's behavior (review 3).
+
+### Where the reviews differ
+
+- **What is on `IPlayer`.** Review 3 puts `input`, `loadout`, fixtures and `onGravityChanged` on the contract. Review 4 keeps them off: input belongs to the slot (`031`), loadout to an `IHasLoadout` capability (`024`), fixtures to receivers (`014`), gravity to a capability. Review 5 supports review 4. Recommendation: review 4.
+- **Commands needed from outside.** Review 2 finds external writes that a pure view cannot cover: `bounce()` (stomps), a gravity-direction change, and locks with reasons. Review 4 has locks and capabilities but no `bounce()`. These belong on `IPlayer` (the command layer), not on the view.
+- **Lifecycle.** Review 4 proposes one `PlayerPhase` value in place of `dead`, `ready` and `canBeDamaged`. Review 2 counts 22 `dead` and 14 `ready` reads outside. A phase can keep `dead` and `ready` as derived reads during the migration.
+
+### Possible bugs and corrections found
+
+- `swim.init` flips `swimVel` again for DOWN and RIGHT (`BehaviorsComponent.kt:133-137`). By review 1's reading, the swim impulse points toward the floor in those directions. Not verified. Do not file it before an in-game check; any refactor keeps the current result.
+- `MegamanValues` has 90 entries, not 86. The old review numbers in the 2026-10-22 text above map to new IDs: faction `030`, input `031`, lock reasons `012`, replay `055`, `LevelContext` `016`.
+- The 2026-10-22 plan says "replay-proven", but `055` is far away. Review 4 recommends the play-through contract plus unit tests instead.
+
+### Decisions for the owner (merged from all reviews)
+
+1. Maximum number of players: 2 or 4.
+2. Target policy: is nearest the default? Does an enemy keep its target until the target is not targetable, or pick again at state changes? Are `LAST_ATTACKER` or `RANDOM` needed in `029`?
+3. No public `primary`: slot 0 only by name where it is really needed (save, title screen)?
+4. Events: which events become "any player" and which "all players" (`GauntletMaster` resets, level reset, `PLAYER_DONE_DYIN`, projectile cleanup)? Split `PLAYER_SPAWN` into a per-player spawn and a level reset?
+5. Shared or per-slot data, field by field: lives (decision H), health tanks, heart tanks, enhancements, weapons owned, bosses beaten, currency.
+6. Where the types live: slot, players service and targeting in the engine at once, and `IPlayer` in core first?
+7. Do all characters share the ladder and slide code (only values and abilities change)?
+8. Proof for `029`: play-through plus unit tests, without replay?
+9. Proto Man: in `029`, or a separate item after the `CharacterDef` branch?
+10. Level-flow policies for the shared screen (camera, off-screen, room transition, death, checkpoints, boss flow, pause, HUD, pickups, gravity rooms): decide now, or leave them to `047` and implement only the single-player policy in `029`?
+
+## Review 1: the inside of the player (2026-10-23)
+
+Research agent report at `bacbd22c4`. Its angle is `entities/megaman/` and the interfaces `Megaman` implements. The agent changed no files. `M/` = `core/src/main/kotlin/com/megaman/maverick/game/entities/megaman/`, `C/` = `core/src/main/kotlin/com/megaman/maverick/game/`.
+
+### 0. Counts
+
+- 25 files, 5392 lines. The biggest: `M/handlers/MegamanWeaponsHandler.kt` 1292, `M/Megaman.kt` 1045, `M/components/BehaviorsComponent.kt` 788, `M/components/BodyComponent.kt` 452, `M/components/ControllerComponent.kt` 247, `M/components/SpritesComponent.kt` 236, `M/sprites/MegamanAnimations.kt` 236, `M/sprites/MegamanAnimationDefs.kt` 204.
+- `MegamanValues` (`M/constants/MegamanValues.kt`) has 90 `val`/`const val` entries (the 2026-10-22 review says 86).
+- 8 behaviors.
+- 37 `game.controllerPoller` calls in the package (31 in `BehaviorsComponent.kt`, 1 each in `Megaman.kt`, `BodyComponent.kt`, `AnimationsComponent.kt`, `MegamanWeaponsHandler.kt`, `MegamanAnimationKeySupplier.kt`), plus 8 `poller.isPressed` calls in `ControllerComponent.kt`.
+- 59 direction branches (`when (direction)` or `isVertical`/`isHorizontal`): behaviors 23, weapons 15, `Megaman.kt` 8, body 6, sprites 6, animation key 1.
+- 47 checks of a specific weapon (`NEEDLE_SPIN`, `RUSH_JET`, `RODENT_CLAWS`, `AXE_SWINGER`) in the components, `Megaman.kt`, the jetpack handler and the sprites, not counting the weapons handler.
+- 7 self-references through the global `megaman` extension (`C/entities/contracts/IMegaGameEntity.kt:21`) inside the player package (section 2e).
+
+### 1. Structure
+
+**Class.** `Megaman : AbstractHealthEntity` (`M/Megaman.kt:71-73`) implements 16 interfaces: `IBodyEntity`, `ISpritesEntity`, `IBehaviorsEntity`, `IPointsEntity`, `IAudioEntity`, `IAnimatedEntity`, `IScalableGravityEntity`, `IFreezableEntity`, `IGameStateListener`, `IEventListener`, `IFaceable`, `IDirectional`, `IFocusable`, `IDamager`, `IGateTrigger`, `ICartRider`. `AbstractHealthEntity` adds `IHealthEntity`, `IDamageable` and the Points and Updatables components.
+
+**Creation.** The game makes one instance by hand (`C/MegamanMaverickGame.kt:391-396`: `init()`, `initialized = true`, `state.addListener(megaman)`). It is not pooled.
+
+**Components** (added in `init`, `M/Megaman.kt:343-421`):
+
+- Body (`M/components/BodyComponent.kt:78`): 13 fixtures (PLAYER, BODY, FEET, feet-gravity CONSUMER, HEAD, two SIDE, DAMAGEABLE, WATER_LISTENER, TELEPORTER_LISTENER, needle DAMAGER, needle SHIELD, axe SHIELD). Most physics runs in `body.preProcess` (`:299-440`): sizing, gravity selection, clamp, damageable rect. The `014` receivers are registered at `:111-121, 165-168, 189, 211-215, 243`.
+- Behaviors (`M/components/BehaviorsComponent.kt`). The evaluation order is the `OrderedMap` insertion order at `:778-785`: WALL_SLIDING, SWIMMING, JUMPING, AIR_DASHING, GROUND_SLIDING, CROUCHING, CLIMBING, JETPACKING. Each behavior is a closure over `this` with its own timers.
+- Controller (`M/components/ControllerComponent.kt:120-125`): B = charge and shoot, LEFT/RIGHT = run, SELECT = next weapon.
+- Sprites (`M/components/SpritesComponent.kt:105`): main sprite, jetpack flame, damage burst, desert tornado.
+- Animations (`M/components/AnimationsComponent.kt:292`): `MegamanAnimations(game).get()` makes new `Animation` objects per instance from shared atlases. Key supplier: `M/sprites/MegamanAnimationKeySupplier.kt`.
+- Audio, Points (health), Updatables (the large tick at `M/Megaman.kt:732-854`), DrawableShapes (debug, `BodyComponent.kt:442`).
+
+**Handlers.**
+
+- `MegamanWeaponsHandler`: one `MegaWeaponHandler` per owned weapon, with ammo, cooldown, costs, the spawned set and the fire functions.
+- `MegamanJetpackHandler`: Rush Jet ammo drain and refill.
+- `MegamanDamageNegotiator`: a damage table keyed by tag, size and type.
+
+**State on the instance.** About 20 timers, 10 signed physics fields (`:322-331`), `lives` (`:175`) and `damageListeners`. `facing`, `aButtonTask`, `currentWeapon` and `running` are entity properties keyed by `MegamanProps` and `ConstKeys` (`:272-297`).
+
+**Events.** It listens to `BEGIN/CONTINUE/END_ROOM_TRANS`, `GATE_INIT_OPENING`, `STUN_PLAYER` and `END_GAME_CAM_ROTATION` (`:163-170`, handled at `:543-643`). It submits `PLAYER_SPAWN` (`:507`), `PLAYER_JUST_DIED` (`:518`) and `START_GAME_CAM_ROTATION` (`:221`). These events carry no player identity.
+
+**Profile hooks (`IGameStateListener`).** `onAddLevelDefeated` gives weapons through `getWeaponsFromLevelDef` (`:79-93, 917-926`). `onAdd/RemoveHeartTank` changes max health (`:928-934`). `onAddCurrency` plays a sound (`:936`). Health tanks and enhancements are read from `game.state` (`:941-988`).
+
+**Possible dead code (guess):** `M/components/PointsComponent.kt` is shadowed by the member override at `M/Megaman.kt:723`; `M/sprites/MegamanTrailSprite.kt` (V1) is registered only in the deprecated `DecorationsFactory`; a commented block at `:353-409`.
+
+### 2. Classification
+
+**(a) Core contract.** Body and fixture accessors (`BodyComponent.kt:54-76`), `direction`, `facing`, `dead`, `ready`, `canMove`, the health and damage flow (`canBeDamagedBy`, `takeDamageFrom`, `invincible`; `:121-123, 645-707`), `getFocusBounds`/`getFocusPosition` (`:901-915`), `teleporting` and the teleport hooks (`:483-500`), room-transition handling (`:545-595`), `frozen`, stun, `gravityScalar`, `movementScalar`, `isBehaviorActive`.
+
+**(b) Shared machinery other characters can reuse.**
+
+- The movement behaviors (run, jump, wall slide, slide, climb, swim, air dash, crouch) and the `AButtonTask` state machine.
+- Post-action momentum (`:1013-1040`), the feet-gravity "over ground" consumer (`BodyComponent.kt:160-185`), the gravity-selection ladder (`:370-381`).
+- Damage knockback, recovery flash, freeze and unfreeze (`:812-831`).
+- The `MegaWeaponHandler` slot model (`MegamanWeaponsHandler.kt:54-131`).
+- Direction-aware sprite placement (`SpritesComponent.kt:42-103`).
+
+**(c) Mega-specific content.**
+
+- The `MegamanWeapon` enum and all weapon code, including the hard-coded spawn-offset table (`MegamanWeaponsHandler.kt:156-290`).
+- Sprites and animation defs, sounds (`MEGA_BUSTER_CHARGING_SOUND` and others), the death explosion orbs (`:529-537`), `MegamanDamageNegotiator`.
+- Body sizes (`BodyComponent.kt:38-42`).
+- Weapon-driven ability changes inside behaviors: `NEEDLE_SPIN && shooting` blocks 6 behaviors; `RUSH_JET` turns air dash into a jet (`BehaviorsComponent.kt:281-284, 298, 311`); `RODENT_CLAWS` sticks to walls (`:96-102`).
+
+**(d) Profile or progress data on the character.**
+
+- `lives` (`:175, 996-1000`; reset from `C/MegamanMaverickGame.kt:762, 779, 821`).
+- Heart-tank max-health bumps (`:928-934`), `addToHealthTanks`/`hasHealthTank`/`hasHeartTank` (`:957-988`), `hasEnhancement` (`:941`).
+- The unlocked-weapon set inside `weaponsHandler`, the level-to-weapon reward table in the companion (`:79-93`), `game.putProperty(WEAPONS_ATTAINED)` (`:919`).
+- Enhancement scalars applied in behaviors (`BehaviorsComponent.kt:140, 198, 205, 493`; `ControllerComponent.kt:65`; `:711`).
+
+**(e) Global or single-player assumptions.**
+
+- Self-references through the global `megaman`: `M/Megaman.kt:629, 929, 933, 990`; `BodyComponent.kt:192-195`; `SpritesComponent.kt:101`; `BehaviorsComponent.kt:279`; `MegamanAnimationKeySupplier.kt:42-43, 120`; `MegamanTrailSpriteV2.kt:50-74` (the trail sprite reads all of its data from the global).
+- Input: the single `game.controllerPoller` (37 call sites), `ControllerSystem(controllerPoller)` with one poller for all entities (`C/MegamanMaverickGame.kt:859`), `ControllerUtils` index 0. `MegamanValues.BUTTONS_TO_UNFREEZE` puts a button binding in the values table (`MegamanValues.kt:115`). `game.selectButtonAction` is one global setting (`BehaviorsComponent.kt:263-271`, `ControllerComponent.kt:98`).
+- Camera: `game.setFocusSnappedAway` (5 calls); `game.getGameCamera()` and `START_GAME_CAM_ROTATION` in the `direction` setter (`:217-236`); `game.isCameraRotating()` (9 calls).
+- Level checks inside the character: `getMaxRunSpeed` tests `LevelDefinition.MOON_MAN` (`BodyComponent.kt:450`); `MARIO_LEVEL` sounds (`:539`, `BehaviorsComponent.kt:239`, `BodyComponent.kt:190`); the out-of-bounds kill reads `game.getTiledMapLoadResult()` (`:735-737`).
+- The difficulty check from `game.state` is in `editDamageFrom` (`:718`).
+- Mutable companion state: none. The companion holds `TAG`, `explosionOrbTrajectories` (copied before use) and constants. `MegamanValues` holds three gdx `Array`s that are mutable by type but only read. The top-level `BEHAVIORS_TO_END_ON_BOUNCE` is read-only.
+
+### 3. Strengths to keep
+
+- Per-instance state is clean. Timers, physics fields, behaviors, fixtures, receivers and animations are made per instance in `init()`. No static mutable state, so a second instance does not corrupt shared tables.
+- Behaviors are self-contained `IBehavior` objects (`evaluate`, `init`, `act`, `end`) in an explicit order. They map directly to an ordered ability list in a `CharacterDef`.
+- The `014` receivers keep contact reactions on the player's own fixtures.
+- `MegaWeaponHandler` is already a data-plus-lambdas slot (cost, cooldown, chargeable, `canFire`, pre and post shoot). A good base for a loadout.
+- The fixture accessors (`feetFixture`, `headFixture`, `leftSideFixture`, ...) are a small, stable surface.
+- The engine `BehaviorsComponent.setBehaviorAllowed` already supports lock-style gating.
+- `IMegamanDamageListener` is already an observer hook (used by `AbstractBoss`).
+
+### 4. Weaknesses
+
+**(i) A second character.**
+
+- Everything is typed on `Megaman`: extension functions on `Megaman`, `IMegamanDamageListener.onMegamanDamaged(.., megaman: Megaman)`, the `MegamanWeapon` enum in behaviors.
+- The 8 behaviors are built in one function with weapon checks inside. Proto Man cannot reuse "jump" without the `NEEDLE_SPIN`, `RUSH_JET` and `RODENT_CLAWS` logic.
+- Values come from a global `object` (90 entries) and many inline numbers: crouch and slide translate offsets (`BehaviorsComponent.kt:405-415, 461-466, 508`), fixture sizes, sprite offsets, weapon spawn offsets, `MEGAMAN_LADDER_MOVE_OFFSET`, `DEATH_*_OFFSET`.
+- `AButtonTask` ties the A button to JUMP, SWIM and AIR_DASH for all characters.
+- Sounds and assets are named in place (`SoundAsset.MEGA_BUSTER_CHARGING_SOUND` 6 times).
+- `IHazard.getDamageToMegaman()` and `MegaEnhancement` are named for Mega.
+
+**(ii) Two `Megaman` instances alive at once.** A concrete trace: A is `game.megaman`; B is a second instance (`MegaEntityFactory` can make one, because the constructor is `(game)`).
+
+1. **Input.** Both read the same poller, and `ControllerSystem` sends the same statuses to both. They move the same way.
+2. **Room transitions.** Both listen to `BEGIN_ROOM_TRANS`. The event carries one `POSITION`, so both move to the same point (`:552`).
+3. **Stun.** Each instance handles `STUN_PLAYER`, but `:629` writes `megaman.body.physics.velocity`. A gets the impulse twice; B gets none but starts its stun timer.
+4. **Heart tanks.** Only A is a state listener (`C/MegamanMaverickGame.kt:396`), so B never gets a heart tank, weapon reward or currency. If B were registered, `:929`/`:933` would still change A's max health.
+5. **Sprites and animation.** B's visibility depends on A's teleporter (`SpritesComponent.kt:101`). B's pipe-portal animation and weapon key check read A (`MegamanAnimationKeySupplier.kt:42-43, 120`).
+6. **Air dash.** B's air dash is blocked when A faces a block (`BehaviorsComponent.kt:279`).
+7. **Head-bump sound.** The Mario head-bump sound uses A's velocity (`BodyComponent.kt:192-195`).
+8. **Ammo.** `translateAmmo` uses A's current weapon by default (`:990`). `MegamanJetpackHandler.kt:380` passes the weapon, so it is safe.
+9. **Trail sprites.** B's trail sprites spawn at A's position with A's weapon and pose. `MegamanTrailSpriteV2` reads only the global; `tryToSpawnTrailSprite` (`:881`) passes no owner.
+10. **Audio.** `stopSound(key)` stops every playing instance of that `SoundAsset` (`C/audio/MegaAudioManager.kt:172-176`). A's `stopCharging()` cuts B's charge sound.
+11. **Camera.** A gravity change on either player rotates the shared camera and sets the global focus-snap flag. Climbing writes `setFocusSnappedAway` (`BehaviorsComponent.kt:635, 708`), so the two players toggle it against each other.
+12. **Global properties.** `WEAPONS_ATTAINED`; `MegaGameEntities` tag lookups ("Megaman" gives two entities). The `game.updatables` delayed runs use per-instance ids, so they are safe.
+13. **Lifecycle events.** `PLAYER_SPAWN` and `PLAYER_JUST_DIED` have no identity. Listeners cannot tell which player died.
+14. **Friendly fire.** `canBeDamagedBy` excludes only its own projectiles (`:647-650`). `MegamanDamageNegotiator.get` gives 0 for an owned projectile only when the owner is `this` (`:310`). Whether B's bullets hurt A depends on type, size and hazard fallbacks (a plain `Bullet` probably gives 0; guess). There is no faction concept.
+
+What does not break: timers, behaviors, fixtures, health points, weapons handler state, the out-of-bounds check, damage timers. These are per instance.
+
+### 5. Physics and values
+
+How values are applied. Two mechanisms:
+
+1. The `direction` setter (`M/Megaman.kt:239-269`) copies 10 values (`jumpVel`, `wallJumpVel`, 7 gravities, `swimVel`) from `MegamanValues` and negates them for DOWN and LEFT. `body.preProcess` then selects one gravity (`BodyComponent.kt:370-381`) and applies it on the axis of the direction (`:383-437`).
+2. All other values are read from `MegamanValues` at the point of use, with a `when (direction)` per call (59 switches). Examples: run impulse, air dash, slide, climb, jetpack, damage knockback (`:671-692`), stun.
+
+Inconsistencies:
+
+- The stun impulse assumes UP (`:627-632`, existing `TODO`).
+- `swim.init` flips `swimVel` again for DOWN and RIGHT (`BehaviorsComponent.kt:133-137`), but `swimVel` is already signed. By the agent's reading, the swim impulse on DOWN and RIGHT points toward the floor. Guess; verify in game before you call it a bug. A refactor must keep the current result.
+
+Difficulty of a per-character table: low to medium.
+
+- About 45 of the 90 values are movement, gravity, timing or damage values. They are only read and can move into a `MovementValues` data class with `forDirection(dir)` at once. The 10 signed fields already act as a per-direction view.
+- About 30 entries are weapon values (bullet, ice cube, moon scythe, needle, axe, shield gem, jetpack, charge times, `MAX_WEAPON_AMMO`). They belong to a loadout table, not to the character.
+- `BUTTONS_TO_UNFREEZE` belongs to input. `START_HEALTH` and `MAX_WEAPON_AMMO` touch the profile.
+- The harder part is the inline numbers: body and fixture sizes, crouch and slide offsets per direction, sprite offsets, the weapon spawn-offset table, and the scalars in `MegaEnhancement` and the companion. These need a body def and a sprite or attachment def, not only a values table.
+- One "local frame" helper (local x/y to world) would make the 59 direction switches easier to keep correct. Not needed for the first step.
+- Behaviors read values by name, so the first step is mechanical: replace `MegamanValues.X` with `values.x`, where `values` is an instance field with the same constants. Gameplay does not change.
+
+### Suggested first fixes (low risk, needed for co-op)
+
+- Replace the 7 global `megaman` self-references with `this` (in the trail sprite, an owner in the spawn props).
+- Pass the player identity in `PLAYER_SPAWN`, `PLAYER_JUST_DIED` and `STUN_PLAYER`.
+- Move `lives`, the tank and enhancement queries, and the level reward table out of `Megaman` into a profile.
+
+## Review 2: uses of the player outside its package (2026-10-23)
+
+Research agent report at `bacbd22c4`. Its angle is code in `core/` outside `entities/megaman/` that depends on the player. The agent changed no files. Paths are relative to `core/src/main/kotlin/com/megaman/maverick/game/`.
+
+### Count method
+
+- `grep -rnw` for the words `megaman|Megaman|MegamanValues` on all `.kt` files outside `entities/megaman/`, without `import` and `package` lines: 930 lines in 243 files.
+- The lowercase word `megaman`: 883 in 224 files (the 2026-10-22 review says 889 in 224; the scale has not changed). Without comments and log lines: 862 in 223 files.
+- Intent counts come from an ordered regex classifier, checked by hand on samples. Read them as ±10%.
+
+### 1. Counts by package
+
+| Package | Lines | Files |
+|---|---|---|
+| `entities/enemies` | 395 | 104 |
+| `entities/bosses` | 140 | 22 |
+| `entities/special` | 84 | 23 |
+| `entities/projectiles` | 38 | 23 |
+| `screens/levels/events` (spawn, death, end-level handlers) | 37 | 3 |
+| `entities/blocks` | 34 | 13 |
+| `screens/levels/MegaLevelScreen.kt` | 32 | 1 |
+| `screens/levels/stats/PlayerStatsHandler.kt` (HUD) | 31 | 1 |
+| `entities/hazards` | 31 | 16 |
+| `entities/contracts` (`AbstractEnemy`, `AbstractBoss`, `ItemEntity`, `IMegaGameEntity`) | 18 | 4 |
+| `screens/menus` (pause, main, level select) | 18 | 3 |
+| root (`MegamanMaverickGame.kt`, `Constants.kt`) | 18 | 2 |
+| `entities/items` | 16 | 8 |
+| `world` (contact filter, rules, `Receivers`, `IBodyExtensions`) | 7 | 5 |
+| `entities/decorations` | 7 | 5 |
+| `entities/sensors` | 5 | 2 |
+| `utils` (`FacingUtils`) | 4 | 1 |
+| `screens/other` (`GetWeaponScreen`) | 4 | 1 |
+| `damage`, `levels` (comments only), `entities/explosions`, `EntityType` | 3 / 3 / 3 / 2 | 1 / 2 / 2 / 1 |
+| `drawables`, `controllers`, `events`, `state`, `pathfinding`, `spawns`, `audio` | 0 | 0 |
+
+By pattern (lines):
+
+- `game.megaman`: 22 in 16 files. All other uses go through the `IMegaGameEntity.megaman` extension (`entities/contracts/IMegaGameEntity.kt:21-22`).
+- `is Megaman` / `!is Megaman`: 27 / 3 (19 files).
+- `as Megaman`: 1 (`world/contacts/rules/ReceiverRules.kt:110`).
+- `Megaman::class`: 18 in 13 files.
+- Identity or ownership checks (`== megaman`, `!= megaman`, `owner == megaman`): 57 in 40 files.
+- `MegamanValues`: 11 in 9 files.
+- `Megaman.TAG` as a key: 13 in 7 files.
+- 75 files outside the package import from `entities/megaman`: `Megaman` (49), `MegamanValues` (10), `MegaHeartTank` / `MegaHealthTank` (8 / 8), `feetFixture` (8), `left/rightSideFixture` (5 / 5), `MegamanWeapon` (5), `MegaEnhancement` (5), `AButtonTask` (2), `IMegamanDamageListener` (1).
+
+Members reached through `megaman.`:
+
+| Member | Count |
+|---|---|
+| `body.getX` | 180 |
+| `body.getCenter` | 136 |
+| `body.getBounds` | 72 |
+| `body.getY` | 46 |
+| `body.getMaxX` | 26 |
+| `body.getMaxY` | 13 |
+| `body.getPositionPoint` | 9 |
+| `body.physics` (`velocity.y` 15, `velocity.x` 4, `gravityOn` 3) | 22 |
+| `body.isSensing` (`FEET_ON_GROUND` 5, `IN_WATER` 1) | 6 |
+| `direction` | 58 |
+| `dead` / `ready` / `spawned` | 22 / 14 / 1 |
+| `feetFixture` / `left/rightSideFixture` / `headFixture` / `damageableFixture` / `feetGravityFixture` | 10 / 7+7 / 3 / 2 / 1 |
+| `isFacing` / `facing` | 7 / 4 |
+| `currentWeapon` / `weaponsHandler` / `hasWeapon` / `charging` / `fullyCharged` | 7 / 5 / 3 / 4 / 2 |
+| `canBeDamaged` / `setAllBehaviorsAllowed` | 6 / 3 |
+| `lives` / `resetLives` / `removeOneLife` / `isAtMinLives` | 5 / 4 / 1 / 1 |
+| `hasHealthTank` / `hasHeartTank` / `hasAnyHealthTanks` / `addToHealthTanks` | 5 / 3 / 2 / 1 |
+| `isBehaviorActive` / `isAnyBehaviorActive` | 4 / 1 |
+| health getters and mutators | about 15 |
+| `aButtonTask`, `damaged`, `invincible` | 2 each |
+| `teleporting`, `shooting`, `running`, `bodyOverGround`, `getFocusPosition` | 1 each |
+
+### 2. Uses by intent
+
+| Intent | Lines | Files | Typical form |
+|---|---|---|---|
+| Targeting (face, aim, move toward) | about 290 | about 130 | Face: about 180 lines like `facing = if (megaman.body.getX() < body.getX()) LEFT else RIGHT`. Aim or jump at: about 60 (`GlacierMan.kt:655`, `MechaDragon.kt:759`, `MockingByte.kt:298`) |
+| Proximity or trigger | about 195 | about 80 | `SeaMine.kt:138` (`overlaps(sensor)`), `Darspider.kt:157`, `DemonMet.kt:108` (`dst2` ordering) |
+| Reading player state | about 120 | about 65 | `dead`, `ready`, `direction`, `isBehaviorActive(CLIMBING)` (`MagFly.kt:121`), `body.physics.velocity.y` (`RedKoopa.kt:201`), `shooting` / `facing` (`AbstractEnemy.kt:287-290`) |
+| Identity ("is this the player?") | about 70 | about 53 | `entity == megaman`, `is Megaman`, `isAny(Megaman::class, ...)`, `contactWithPlayer(megaman: Megaman)` |
+| Ownership or faction | about 45 | about 32 | `owner == megaman`, `owner is Megaman`, `Megaman::class pairTo dmgNeg(...)`, `DAMAGE_INCREASE` scaling |
+| Changing the player | about 53 | about 24 | see section 5 |
+| UI, HUD or profile | about 49 | about 17 | `PlayerStatsHandler`, `LevelPauseScreen`, `GetWeaponScreen`, item-drop odds |
+| Camera or level flow | about 13, plus the handler writes | 5 | `MegaLevelScreen.kt:266` (`focus = megaman`), beam properties, room property `megaman_direction` |
+| Mega-only internals (fixtures, sprite helpers) | about 15 | about 8 | `FloorButton.kt:168-171`, `InfernoChainPlatform.kt:123`, `EndLevelEventHandler.kt:167` |
+| Audio | 2 | 2 | `Life.kt:52` (one-up sound), `PlayerStatsHandler.kt:46` |
+| Declarations, wiring, comments, logs | about 75 | - | |
+
+### 3. What each intent means with two or more players
+
+| Intent | Default with 2+ players |
+|---|---|
+| Targeting | Nearest player that is alive and `ready`. Keep the target for a time, or pick again each frame? That needs a policy. |
+| Proximity or trigger | Any player (`players.any { overlaps }`). |
+| Identity | The player in the contact. The contact already carries the entity, so this becomes `entity is IPlayer`. |
+| Ownership or faction | Any player faction (`owner is IPlayer`, or a faction check). The owning player for per-player effects. |
+| Reading player state | Usually the player chosen by targeting or by the contact. |
+| Changing the player | The player who triggered it. Spawn and death handlers act per player. |
+| UI or HUD | Per slot (HUD row `n`), or a shared pool by the `LivesPolicy` decision. |
+| Camera | Policy: one focus, a group box, or one camera per player (split screen). |
+
+Uses where the answer is not clear:
+
+- `AbstractEnemy.kt:95-104`: item-drop odds read `lives.current` and `getHealthRatio()`. Lowest-health player, the killer, or an average?
+- `AbstractEnemy.kt:329`: the `ONE_UP` floating points give a life to `megaman`. The killer, or the shared pool?
+- `AbstractEnemy.kt:287-290`, `isMegamanShootingAtMe`: any player who shoots and faces the enemy?
+- `AbstractBoss.kt:130`: `megaman.addDamageListener(this)`, with `PreciousWoman.kt:304` as the one real listener. The boss must listen to all players, also players who join later.
+- `MoonMan.kt:522`, `GravitySwitcharoo.kt:191-193`, `GravityCapsule.kt:181-183`, `MegaLevelScreen.kt:363-371`: these change the player's gravity direction. All players, or only the one in the trigger? A room-wide `megaman_direction` suggests all.
+- `GauntletMaster` (`PLAYER_JUST_DIED`, `:167`): it resets the waves on a death. On any death, or only when all are dead?
+- `PreciousGem.kt:211`, `PreciousGemCluster.kt:109`, `SpiderWeb.kt:130`: they destroy themselves on `PLAYER_JUST_DIED`. Only when the owner or stuck player dies?
+- `MegamanDeath.kt:45-48` and `GravityBlock.kt:210`: they kill only `megaman`. They must kill each player who overlaps.
+- `Rain.kt:200` (`it != megaman || megaman.ready`), `LaserBeamer.kt:244` (`megaman.spawned && megaman.ready`), `DarknessV4.kt:543-555` (one light source keyed by `megaman`): these need "for each player".
+- `WilyFinalBoss.kt:294-297`: sets `canBeDamaged = false` and `facing` on the player and turns the controller off for a cutscene. Needs "all players".
+- `MegaLevelScreen.kt:298`: on a room transition it keeps only projectiles that `megaman` owns. It must keep the projectiles of any player.
+- Room transitions (not in the grep): who triggers them, what happens to the other players, and what `CameraManagerForRooms.focus` follows all need a policy.
+
+### 4. Hidden single-player assumptions (a grep on `megaman` does not find them)
+
+1. **Exact-class sets.** They look up `damager::class` or `entity::class` with `==`, not `isInstance`. A second character class silently gets 0 damage or no effect.
+   - `damage/StandardDamageNegotiator.kt:50,89,128` (`CustomMapDamageNegotiator.kt:9`: `map.get(damager::class)`)
+   - `UnderwaterFan.kt:83/223`
+   - `SmallIceCube.kt:67/198`
+   - `SwinginJoe.kt:218`, `JoeBall.kt:150`, `Snowball.kt:91`: mask sets read by `SnowballExplosion.kt:76` (`damageMask.contains(damageable::class)`)
+   - `PreciousWoman.kt:506,563,908` and `PreciousTron.kt:344`: shatter sets (`PreciousGem.kt:254`)
+2. **Events carry no player id.** `PLAYER_SPAWN` (`Megaman.kt:507`), `PLAYER_JUST_DIED` (`:518`), `PLAYER_SPAWN_INIT` / `PLAYER_READY` (`PlayerSpawnEventHandler.kt:113,196`), `PLAYER_DONE_DYIN` (`PlayerDeathEventHandler.kt:73`), `ADD_PLAYER_HEALTH` / `ADD_WEAPON_ENERGY` / `ADD_CURRENCY` (`HealthBulb.kt:51`, `WeaponEnergyBulb.kt:54`, `Screw.kt:50`), `ATTAIN_*_TANK`, `STUN_PLAYER` (`TimberWoman.kt:808`), `TURN_CONTROLLER_ON/OFF`.
+3. **`PLAYER_SPAWN` is a level-reset signal.** 24 files outside the player listen to it (for example `AbstractEnemy`, `AbstractBoss`, `Gate`, `PushableBlock`, `Lava`, `Cart`, `RoomShaker`, `IProjectileEntity`) and destroy or reset themselves. With per-player respawn, one player's respawn resets the room for all. A separate `LEVEL_RESET` (or "all players dead") event is needed.
+4. **Global input read as "the player's input".** `PipePortal.kt:153-159`, `SpringBouncer.kt:209-216`, `SpiderWeb.kt:185` and `GroundSlideBlocker.kt:44` call `game.controllerPoller`, so they read controller 0.
+5. **Global game properties keyed by `Megaman.TAG`.** `"Megaman_beam"` and `"Megaman_beam_center"` are written in `PlayerSpawnEventHandler.kt:116,125,200` and `EndLevelEventHandler.kt:108,114,215`, and read in `DarknessV2.kt:365-368` and `DarknessV4.kt:547-549`. One beam slot.
+6. **Tiled property keys keyed by `Megaman.TAG`.** `megaman_direction` (`Spike.kt:182`), `megaman_direction_on_receive` (`CapsuleTeleporter.kt:71`) and the room property `megaman_direction` (`MegaLevelScreen.kt:363`). Each holds one value per room or object.
+7. **Single-instance screen handlers.** `PlayerStatsHandler(megaman)` (`MegaLevelScreen.kt:249`), `cameraManagerForRooms.focus = megaman` (`:266`; one `IFocusable?` at `CameraManagerForRooms.kt:63`), and `PlayerSpawnEventHandler`, `PlayerDeathEventHandler` and `EndLevelEventHandler`, which keep `private val megaman = game.megaman` (`:50`, `:36`, `:60`) and one beam sprite each. `PlayerSpawnsManager` has one `current` spawn.
+8. **`GameState` is the player profile.** It holds `heartTanksCollected`, `healthTanksCollected`, `enhancementsAttained` and `currency` (`state/GameState.kt:25-29`). `Megaman` is the only registered listener (`MegamanMaverickGame.kt:396`).
+9. **Special cases in shared world code.**
+   - `world/body/IBodyExtensions.kt:20`: only `Megaman` bodies update during a camera rotation.
+   - `world/contacts/MegaContactFilter.kt:111,115`: `GATE` and `CART` fixtures contact only `EntityType.MEGAMAN`.
+   - `MegaContactRules.kt:33`: `FeetSandRule { game.megaman.ready }` is a single-player check for every feet fixture.
+10. **Snapshots and per-entity flags of the one player.** `SpiderWeb.stuckToMegaman` (`:78`), `CapsuleTeleporter.megamanDirOnReceive` (`:89`), `Spike.followMegamanDir` (`:79`), `ChargedShot.megamanDirOnShoot` / `megamanFacingOnShoot` (`:79-80`; these should come from the owner), and `GravitySwitcharoo` / `GravityCapsule.triggerEntities` (they add only `megaman`). Most enemies do not cache the body; they read `megaman.body` each frame, which helps.
+11. No `MegaGameEntities` lookup by the player tag or type, and no static field that stores the player apart from `game.megaman`.
+
+### 5. Strengths and weaknesses
+
+Strengths:
+
+- About 65% of the lines (targeting plus proximity) read only the position and bounds. A `body` (or `bounds` and `center`) on the contract covers them.
+- About 75% of the files use only the `megaman` extension. One change to the extension, for example a `nearestPlayer(from = body)` helper, moves most enemies with no change to their logic.
+- About 180 lines repeat one facing idiom, which `FacingUtils.getPreferredFacingFor` already partly wraps. A shared `facePlayer()` helper can remove many of them.
+- Identity checks already get the entity from the contact. Most become `is IPlayer` with no targeting policy.
+- The read-only state is small: `dead`, `ready`, `direction`, `facing`, `isBehaviorActive` (3 behaviors), `damaged`, `invincible`, feet-on-ground.
+
+Weaknesses:
+
+- About 53 writes from outside. Spawn, death and end-level handlers write `ready`, `canBeDamaged`, `gravityOn` and `setAllBehaviorsAllowed` (`PlayerSpawnEventHandler.kt:108-111,190-193`). Enemies write `body.physics.velocity.y = MegamanValues.JUMP_VEL ...` for stomp bounces (`Goomba.kt:177`, `RedKoopa.kt:208`, `GreenKoopa.kt:210`, `BulletBill.kt:134`, both Koopa shells) and `SwimBooster.kt:58`. Other writes: `direction` (5 sites), `aButtonTask`, `facing`, `currentWeapon`, `running`, health.
+- Enemies reach Mega-only fields: `feetFixture`, `headFixture`, `left/rightSideFixture`, `bodyOverGround`, `MegamanValues.JUMP_VEL` / `SWIM_VEL_Y`, `teleporting`, `charging`, `fullyCharged`, `hasEnhancement`, `isBehaviorActive(CLIMBING)`.
+- Profile data (lives, tanks, weapons, enhancements) is on `Megaman` and in `GameState`, reached from `AbstractEnemy`, items and three screens.
+- Exact-class `KClass` sets fail silently.
+- Several systems have one slot by design: the camera focus, the stats handler, the spawn manager, the beam properties, and events with no player id.
+
+### 6. Worst coupling sites
+
+1. `entities/contracts/AbstractEnemy.kt:255`: `damager.owner == megaman || damager.owner == null`. A second player's shots would not damage any enemy. This base class covers all enemies.
+2. `AbstractEnemy.kt:243` and `AbstractBoss.kt:193`: damage scaling reads `megaman.hasEnhancement`, not the owner's.
+3. `damage/StandardDamageNegotiator.kt:50,89,128` with `CustomMapDamageNegotiator.kt:9`: an exact-class lookup, so a new character class deals 0 contact damage.
+4. The `PLAYER_SPAWN` level reset in 24 listeners: per-player respawn would reset the room.
+5. `screens/levels/events/PlayerSpawnEventHandler.kt:50,108-125,190-200`: one player, direct writes to internals, global beam properties.
+6. `MegaLevelScreen.kt:249,266,298,363-379,593,622,644,803,829`: one stats handler, one focus, owner-filtered projectile cleanup, per-room gravity, lives.
+7. `AbstractBoss.kt:130,159`: the damage listener is on one player and typed `IMegamanDamageListener` / `onMegamanDamaged(.., Megaman)`.
+8. `world/body/Receivers.kt:42`, `ReceiverRules.kt:110` (`as Megaman`), `ItemEntity.kt:7`, `PlayerItemRule.kt:19`: public signatures typed `Megaman`, already with `TODO`s for `029`.
+9. The stomp bounces in 6 enemies (`Goomba.kt:177`, `RedKoopa.kt:208`, ...): they write the player's velocity with `MegamanValues.JUMP_VEL`. They need a `bounce()` capability on the player.
+10. `GravitySwitcharoo.kt:156-193` and `GravityCapsule.kt:146-184`: they track only `megaman`, write `direction`, and set the Mega-only `aButtonTask` from `bodyOverGround`.
+11. `world/body/IBodyExtensions.kt:20` and `MegaContactFilter.kt:111,115`: special cases on the type `Megaman` / `EntityType.MEGAMAN`.
+12. `PipePortal.kt:149-159`, `SpringBouncer.kt:208-216`, `SpiderWeb.kt:185`, `GroundSlideBlocker.kt:44`: they read controller 0 for "the player".
+13. `screens/levels/stats/PlayerStatsHandler.kt` (31 lines) and `LevelPauseScreen.kt` (16 lines): they read and write profile data, weapons and health on the one player.
+14. `MegamanDeath.kt:45-48` and `GravityBlock.kt:210`: kill zones that check only `megaman`.
+15. `FloorButton.kt:168-171` and `InfernoChainPlatform.kt:123`: they reach Mega's named fixtures and the raw `body.fixtures`. The contract must expose fixtures by role, or these entities must use contacts.
+
+Guess, not verified: a contract of `body`, `facing`, `direction`, `dead`/`ready`, a few `isDoing` flags, faction, plus `bounce()`, `setGravityDirection()` and lock reasons covers about 90% of the external uses. The hard part is the policies (target choice, resets, camera, profile) and the missing player id in events, not the size of the interface.
+
+## Review 3: the systems around the player (2026-10-23)
+
+Research agent report at `bacbd22c4`. Its angle is the game-level systems: the game object, the level screen and its handlers, the camera, spawning and culling, the HUD, input, events and the engine. The agent changed no files. Paths are relative to `core/src/main/kotlin/com/megaman/maverick/game/` unless they start with `engine/`. A line with `~` is close but not exact.
+
+### 1. How each system finds and uses the player today
+
+**Game object.** `MegamanMaverickGame.megaman` is a `lateinit` field (`MegamanMaverickGame.kt:207`). `postCreate` makes it once, calls `init()` by hand and adds it as the only player listener on `GameState` (`:391-396`). Player progress is in three places:
+
+- `GameState`: levels beaten, heart tanks, health tanks, enhancements, currency, difficulty (`state/GameState.kt:25-30`). It has no player key.
+- Lives are on the entity: `Megaman.lives` (`Megaman.kt:175`, `:998-1000`).
+- Weapons are on the entity (`putWeapon`, `clearWeapons`), plus a `WEAPONS_ATTAINED` property-bag entry that `Megaman.onAddLevelDefeated` writes (`Megaman.kt:917-919`).
+
+`resetPlayerProgress`, `applyLevelOverride` and `loadSavedState` change the entity directly (`MegamanMaverickGame.kt:~758-780`, `:~818-822`). The save file holds only `GameState.toString()` (`:~784-791`).
+
+**Level screen.** `MegaLevelScreen` has `val megaman get() = game.megaman` (`MegaLevelScreen.kt:152`). Uses:
+
+- spawn: `megaman.spawn(playerSpawnsMan.currentSpawnProps)` (`:593`)
+- lives: `removeOneLife` (`:622`); `isAtMinLives` leads to game over (`:642-645`)
+- pause: only if not `dead` and `ready` (`:913`); forced resume on death (`:919`)
+- boss flow: early return if `megaman.dead` (`:788`, `:817`); `canBeDamaged` false, then true (`:803`, `:829`)
+- room transition end: the room property `megaman_direction` sets the gravity direction (`:362-376`); `running = false` (`:379`)
+- projectile cleanup on transition: `owner != megaman` (`:298`)
+- focus snap check: `megaman.getFocusPosition()` (`:970`)
+- death overlay: `if (megaman.dead)` (`:948`, `:1044`)
+
+**Handlers.** Each handler copies `game.megaman` into a field when it is built:
+
+- `PlayerSpawnEventHandler.kt:50`: sets `ready`, `canBeDamaged`, gravity and `setAllBehaviorsAllowed` (`:108-111`, `:190-193`).
+- `PlayerDeathEventHandler.kt:36`, `:49-50`.
+- `EndLevelEventHandler.kt:60`: the beam-out uses `direction`, `currentWeapon` and the facing (`:104-105`, `:156-167`).
+- `PlayerStatsHandler(megaman)` (`MegaLevelScreen.kt:249`; `PlayerStatsHandler.kt:29`).
+
+**Camera.** `CameraManagerForRooms.focus: IFocusable?` holds one focus (`CameraManagerForRooms.kt:63`), set to `megaman` (`MegaLevelScreen.kt:266`). The focus drives:
+
+- room detection: `nextGameRoom` checks if the focus center is in a room (`:284-296`)
+- room exit and transition start: the focus bounds overlap the next room (`:197-238`)
+- transition targets: `focusStart` (`:149-176`)
+- follow with clamp: `setCameraToFocusable` (`:303-315`)
+
+`IFocusable` is in `core` (`:319-324`). `Megaman.getFocusPosition` has a `ConstKeys.FOCUS` property override (`Megaman.kt:901-915`). `CameraShaker` works on the one camera.
+
+**Checkpoints.** `PlayerSpawnsManager` activates the next checkpoint when the camera overlaps the spawn rectangle (`PlayerSpawnsManager.kt:67-69`). It does not use the player body. There is one `current` spawn for the level.
+
+**Spawning and culling** use the game camera, not the player:
+
+- `SpawnerFactory.spawnerForWhenInCamera` with `camera.getRotatedBounds()` (`spawns/SpawnerFactory.kt:13-28`; used at `SpawnersLayerBuilder.kt:178-183`).
+- `getGameCameraCullingLogic` and `getUpdateWhenNearCameraPredicate` (`entities/utils/GameEntityUtils.kt:56-71`). About 129 call sites use the culling helpers. 61 files call `getGameCamera()`.
+- The spawner gate is `predBasedOnRoomTrans` (`SpawnersLayerBuilder.kt:60-63`), a global room-transition flag.
+- One exception uses the player: `Gate` turns its collision on only near `megaman` (`entities/sensors/Gate.kt:342-349`). The code comment says "ONLY Mega Man can ever make contact with a Gate".
+
+**HUD and pause.**
+
+- `PlayerStatsHandler` draws one health bar and one weapon bar at fixed positions (`HEALTH_BAR_X`, `WEAPON_BAR_X`, `STATS_BAR_Y`; `PlayerStatsHandler.kt:~63-94`). They read `megaman.getHealthPoints()`, `ammo` and `currentWeapon`.
+- `LevelPauseScreen` reads `megaman.lives`, weapons, ammo and health tanks, and sets `currentWeapon` (`LevelPauseScreen.kt:229`, `:265-290`, `:553`, `:569-585`).
+- `GetWeaponScreen.kt:157`, `:199` and `MainMenuScreen.kt:135` also use `game.megaman`.
+
+**Input.**
+
+- One `controllerPoller` for the game (`MegamanMaverickGame.kt:196-197`, `:280-281`), polled once per frame (`:515`).
+- `ControllerSystem(controllerPoller)` gives the same poller to every `ControllerComponent` (`MegamanMaverickGame.kt:859`; `engine/.../controller/ControllerSystem.kt:10-37`).
+- `ControllerUtils` uses index 0 (`engine/.../controller/ControllerUtils.kt:11`, `:23`). `MegaControllerPoller` binds only the first pad (`controllers/MegaControllerPoller.kt:22-24`).
+- `ControllerButton.isPressed` is keyboard OR pad OR alternates (`engine/.../buttons/ControllerButton.kt:16-21`). All devices merge into one player.
+- Menus, pause and the player read the same poller (`MegaLevelScreen.kt:900-901`).
+- `TURN_CONTROLLER_ON` and `TURN_CONTROLLER_OFF` set `controllerPoller.on` and `ControllerSystem.on` for everyone (`MegamanMaverickGame.kt:624-640`).
+
+**Events.**
+
+- `PLAYER_SPAWN_INIT`, `PLAYER_SPAWN`, `PLAYER_READY`, `PLAYER_JUST_DIED`, `PLAYER_DONE_DYIN`, `ADD_PLAYER_HEALTH`, `ADD_WEAPON_ENERGY` and `STUN_PLAYER` (`events/EventType.kt:8-14`, `:48`) carry no player identity.
+- 25 files use `PLAYER_SPAWN`, mostly as a level-reset signal. `BEGIN_ROOM_TRANS` and `END_ROOM_TRANS` have about 35 users each.
+- `Megaman` listens to the room transition events, `STUN_PLAYER` and `GATE_INIT_OPENING` (`Megaman.kt:163-170`).
+- `ADD_PLAYER_HEALTH` and `ADD_WEAPON_ENERGY` come from `HealthBulb`, `WeaponEnergyBulb` and others, with no target.
+
+**Engine.** `engine/` has no player concept. Its single-player items are index 0 in `ControllerUtils` and one poller in `ControllerSystem`. `TiledMapLevelRenderer.render(camera)` is per camera, which is fine. A determinism problem: `UtilMethods.random` is seeded from the clock (`engine/.../common/UtilMethods.kt:22`), and so is `superRandom` (`ArrayExtensions.kt:112`).
+
+### 2. What must change for each system
+
+| System | Shared screen (2+ players) | Split screen | Online |
+|---|---|---|---|
+| Player ownership | `game.players` (list of slots); spawn and destroy each player | no change | slot ids stable and the same on all peers |
+| Progress | `PlayerProfile` per slot or shared, behind `LivesPolicy` (decision H); lives move off the entity | no change | profiles are part of the synced state |
+| Spawn, death, respawn | handlers work on one player each. Today one death causes "music off, life lost, fade, level respawn" (`MegaLevelScreen.kt:616-650`). This becomes per player, with a level policy for "all dead" | fade per viewport | respawn timing on the sim tick, not a UI timer |
+| Camera | group focus: an `IFocusable` from the bounds of the living players, or a leader rule. Room detection must not use one focus center | one `CameraManagerForRooms` per view; rooms can differ per view | camera state is a pure function of the sim, or kept outside it |
+| Room transition | policy: who triggers it and what happens to players outside it. `Gate` assumes one trigger (`Gate.kt:342-349`) | rooms per view, or a leash rule | transition start is a sim event |
+| Checkpoints | camera overlap still works with one camera | union of cameras, or "first camera that sees it" | fine if cameras are in the sim |
+| Spawn and cull | the single camera is fine | all camera spawn and cull helpers must test a set of views ("visible in any view"). 129 cull sites and 61 `getGameCamera()` files call it directly. Recommendation: put a `ViewSet` service behind the helpers now | culling deterministic; spawn timers use the sim delta |
+| HUD | bars per slot; layout policy | HUD per viewport | none |
+| Pause | who can pause; who drives the menu; tanks and weapon choice per player | same | pause is a global session event, or not allowed |
+| Input | `InputFrame` per slot (`031`); router from devices to slots; menus read `UiInput`; a lock per player replaces global `TURN_CONTROLLER_*` | no change | frames are the lockstep payload; no direct `Gdx.input` in entities |
+| Freezes | `PlayerStatsHandler.addHealth` turns off all systems except sprites (`:~299`), and so do the boss intro (`MegaLevelScreen.kt:~727-760`) and gates (`:~680-700`). With two players both freeze, which is acceptable | same | freezes are sim state, not UI timers |
+
+Choices now that would block split screen or online:
+
+- More global singletons, such as `game.camera` or `cameraManager.focus = players.primary`.
+- `getGameCamera()` as the culling source in new code.
+- Event payloads without a player id.
+- System freezes from UI handlers.
+- `Gdx.graphics.deltaTime` in the camera interpolation (`MegaLevelScreen.kt:262`).
+- Clock-seeded RNG.
+- Lives on the entity.
+- One poller shared by all entities.
+
+### 3. Policy questions for the owner
+
+1. **Camera rule.** Group bounds with no zoom and a leash, or a leader with the others teleported to it? Does the camera stay clamped to one room?
+2. **Off-screen rule.** A player who leaves the view: blocked at the edge, teleported, or damaged? (Mega Man games have no zoom.)
+3. **Room transition.** Triggered by any player, by all players at the edge, or by the leader? The others: warp, or wait?
+4. **Death.** One death while others live: bubble, respawn at the leader, or wait? Is "all dead" the only trigger for the level respawn and `PLAYER_DONE_DYIN`? Does the music still stop at the first death (`:619`)?
+5. **Lives.** `LivesPolicy` is decided. Still open: the game-over condition with per-player lives, and the maximum number of players (2 or 4).
+6. **Checkpoints.** Level-wide (today) or per player?
+7. **Boss intro and defeat.** Lock all players? Today `megaman.dead` (`:788`, `:817`) cancels the victory; with two players this becomes "all dead". Does the end-level beam-out beam out all players?
+8. **Pause.** Can any player pause? Who controls the menu? Are the health tank and weapon screens per player?
+9. **HUD layout.** Bars side by side, one corner per player, or a compact co-op bar?
+10. **Pickups.** Do `ADD_PLAYER_HEALTH` and `ADD_WEAPON_ENERGY` go to the player who picks up, or to all? Today they carry no target.
+11. **Gravity rooms.** Does `megaman_direction` apply to all players?
+12. **Friendly fire and pushing.** This is `030`.
+
+### 4. Strengths to keep
+
+- Spawning and culling depend on the camera, not on the player. A shared screen is easy; a view abstraction gives split screen.
+- `IFocusable` already decouples the camera from `Megaman`. A group focus can implement it.
+- Checkpoint activation uses the camera, so with one camera no player choice is needed.
+- Handlers are separate classes with `init`, `update` and `finished`. They are easy to make per player.
+- `GameState` is already separate from the entity, has a listener pattern and is saved as text.
+- `engine/` has almost no player assumptions.
+- Room transitions are events with full props, a good seam for a policy layer.
+
+### 5. Weaknesses, ranked by how hard they block co-op
+
+1. **Global input.** One poller, pad index 0, all devices merged, one `ControllerSystem` poller, menus on the same poller, global `TURN_CONTROLLER_*`. Co-op is not possible without `031`.
+2. **One camera focus** drives room detection and transitions (`CameraManagerForRooms.kt:180-238`, `:284-296`).
+3. **Level flow assumes one player** on death, respawn, boss defeat, pause and end level (`MegaLevelScreen.kt:572-829`, `:913-919`). The handlers capture `game.megaman` when they are built.
+4. **Lives and weapons on the entity.** Lives, the weapon set and `WEAPONS_ATTAINED` are on the entity or in the property bag. Progress resets write to the entity.
+5. **Player events carry no identity.** Pickups have no target.
+6. **HUD and pause screen** are bound to one `Megaman` with fixed positions.
+7. `Gate` and the projectile cleanup on transition (`owner != megaman`) assume one player. Mostly covered by `030`.
+8. **Determinism.** Clock-seeded RNG, `Gdx.graphics.deltaTime`, UI timers that freeze systems. These block only online.
+9. The handler order in `MegaLevelScreen.render` (`:~940-946`) is fragile. Per-player handlers make it harder.
+
+### 6. Where each concern belongs
+
+- **`IPlayer` contract:** slot; body and fixtures; facing; direction; `dead` and `ready`; health; `IFocusable`; `lock(reason)` and `unlock(reason)` in place of the handler writes to `canBeDamaged`, gravity and `setAllBehaviorsAllowed`; `beamIn` and `beamOut` hooks (the beam-out sprite comes from the character); `loadout`; `input`; `onGravityChanged`. Not lives, tanks or the progress reset. (Review 4 recommends that `input` and `loadout` stay off the core contract.)
+- **Players service** (`game.players`, later through `LevelContext` from `016`): `all`, `alive`, `byIndex`, `nearestTo`, `anyAlive`, `allDead`; spawn and despawn of slots; a group `IFocusable`.
+- **`PlayerProfile`** (per slot, or shared through `LivesPolicy`): lives, heart tanks, health tanks, enhancements, unlocked weapons, maybe currency. `GameState` keeps the world progress (levels beaten, difficulty). The save format changes here.
+- **Input router (`031`):** device-to-slot assignment, `UiInput` for menus, locks per slot.
+- **Level-flow policy objects** (in `MegaLevelScreen` or `LevelContext`): `CameraPolicy`, `OffscreenPolicy`, `RoomTransitionPolicy`, `RespawnPolicy` and `GameOverPolicy` (with `LivesPolicy`), `CheckpointPolicy`, `BossFlowPolicy`, `PausePolicy`, `HudLayout`, `PickupPolicy`. Each starts with a single-player implementation that copies today's behavior exactly.
+- **Views service** (before split screen): wrap `getGameCamera()` in the culling and spawn helpers, so that one later change makes it "any view".
+
+## Review 4: the design options for `IPlayer` (2026-10-23)
+
+Research agent report at `bacbd22c4`. Its angle is the design options, not the code inventory. The agent changed no files. Recommendations are the agent's own, not decisions.
+
+### Documentation problems to fix first
+
+- The 2026-10-22 review text above uses the old review numbers. For example, "Faction (item 29)" is now `030`, "input (item 30)" is `031`, "lock reasons (item 11)" is `012`, "replay (item 5)" is `055`, and "`LevelContext` (item 15)" is `016`.
+- `ITEM.md` says "Depends on: none", but the proof plan ("replay-proven") needs `055`, which is far away (after `010`, `011`, `006`, `031`). Recommendation: do not wait for replay. Prove `029` with the contract play-through and unit tests of the players service.
+
+### 1. Critique of the `IPlayer` sketch
+
+The sketch tries to be both the external contract and the character implementation. It is not lightweight.
+
+Too much:
+
+- Its supertypes are `IMegaGameEntity` (which carries `game: MegamanMaverickGame`), `IHealthEntity` (about 15 mutators), `IDamageable` and `IFocusable`. A caller that needs only a position also sees every setter, for example `setHealth` and `depleteHealth`.
+- `character: CharacterDef` exposes the implementation. A caller that reads the def can branch on it, and that is `is Megaman` under a new name.
+- `input: InputFrame` must not be public on the player. Input belongs to the slot (`031` routes sources to slots). Only the player's own behaviors read it. If enemies or blocks can read a player's input, the `aButtonTask` kind of coupling comes back.
+- `loadout` is used by the HUD, the pause screen, the end-level handler and `GetWeaponScreen`. These are screens, not world entities. Recommendation: a separate interface (`IHasLoadout`), not in the core contract.
+- `onGravityChanged(dir)` is a symptom. `GravitySwitcharoo` and `GravityCapsule` write `aButtonTask`. Model this as a capability, or as a direction change through `IDirectional`, not as a member of every player.
+- `feet`, `head`, `side(left)`: 29 external uses, most of them in contact rules. `014` moved those checks to receivers. Check what remains after `014d`; a receiver is probably enough.
+
+Missing:
+
+- One lifecycle value instead of `dead` plus `ready` plus `canBeDamaged`, for example `enum PlayerPhase { SPAWNING, ACTIVE, DYING, DEAD, EXITED }`. Co-op needs a state "not in the world, but the slot is still in the game" (a player who waits to respawn).
+- A slot id that is not a bare `Int` index (see section 3).
+- A stable way to attribute damage and kills (an `ownerSlot` on projectiles; `030` already plans `ownerPlayerIndex`).
+- Locks with reasons (`lock(reason)`) are correct. Tie them to `012` and type them (`LockReason`, not `Any`). Two handlers can then lock the same player and unlock in any order. This is a real co-op need (spawn handler plus boss intro).
+
+Who outside the player needs what: about 90% of the uses are position, bounds, direction and facing, alive or active state, and `isDoing(...)`. The core contract is small. The rest (profile about 20 uses, loadout about 19, Mega-only about 6) has 3 or 4 consumer groups. Each group should get its own type.
+
+### 2. Recommended layered shape
+
+```kotlin
+// engine: genre level, no Megaman Maverick content
+@JvmInline value class PlayerSlot(val value: Int)
+
+interface ITargetable {
+    val targetCenter: Vector2
+    val targetBounds: GameRectangle
+    val isTargetable: Boolean
+}
+
+interface IPlayerView : ITargetable, IReadFaceable, IReadDirectional {
+    val slot: PlayerSlot
+    val phase: PlayerPhase
+    fun isDoing(action: PlayerAction): Boolean
+}
+
+interface IPlayer : IPlayerView, IBodyEntity {
+    fun lock(reason: LockReason); fun unlock(reason: LockReason)
+    fun <C : Any> capability(type: KClass<C>): C?
+}
+
+// core: optional capabilities
+interface IHasLoadout { val loadout: ILoadout }
+interface IGravityRemappable { var gravityJumpRemap: GravityRemap? }
+interface IHealthOwner { val health: IHealthView }
+```
+
+- Enemies depend on `ITargetable` or `IPlayerView`, not on `IPlayer`. They get a target from the service (`targets.select(self, policy)`) and keep only the view. An enemy then cannot move or damage a player directly. The 524 `megaman.body.*` uses are mostly `getX`, `getCenter` and `getBounds`, so `targetCenter` and `targetBounds` cover most of them.
+- The engine `IFaceable` and `IDirectional` have only `var`. Recommendation: add read-only interfaces (`IReadFaceable`, `IReadDirectional`) and let the current ones extend them. Small and additive.
+- `isDoing(action)` is for short states (CLIMBING, WALL_SLIDING, JETPACKING). `capability(type)` is for features a character has or does not have (gravity remap, loadout, charge). Both tell the caller when the feature is absent, so callers never test the concrete type.
+- `PlayerAction` must be an open set, so a new character can add actions. A core enum is fine for now; a sealed interface with core and per-character objects scales better.
+- This matches the `014` receiver style. `HIT_BY_PLAYER` takes `Megaman` today (the `TODO` in `ReceiverRules.kt:108` points at `029`). Change it to `(player: IPlayerView) -> Unit`. `SmallIceCube` reads `canBeDamaged`; that becomes `phase`, a capability, or a typed lock query.
+
+### 3. Co-op correctness
+
+Identity: use `PlayerSlot`, not the entity reference and not `Megaman.id`. Kill credit, profiles, input routing, the HUD and online replication use the slot. The entity can change (character swap, re-creation); the slot stays.
+
+Players service (recommended):
+
+```kotlin
+interface IPlayers {
+    val slots: List<PlayerSlot>
+    fun get(slot: PlayerSlot): IPlayer?
+    fun active(): Sequence<IPlayer>
+    fun nearestTo(p: Vector2): IPlayerView?
+    fun anyActive(): Boolean
+}
+interface ITargetPolicy { fun select(self: IBodyEntity, players: IPlayers): ITargetable? }
+// NEAREST (default), LOCKED_ON_SPAWN, LAST_ATTACKER, ROUND_ROBIN(rng stream)
+```
+
+`slots` and `active()` are in ascending slot order. `nearestTo` gives ties to the lower slot.
+
+Traps:
+
+- **`primary` becomes the new global.** If `players.primary` exists, the 889 call sites migrate to it and nothing improves. Recommendation: no public `primary`. Code that needs the main player (save, title screen) asks for `PlayerSlot(0)` by name, so a grep finds these sites.
+- **Retargeting each frame.** An enemy that calls `nearestTo` every frame can flip between two players at the midpoint, and its state machine behaves in new ways. Recommendation: an enemy picks a target at a defined point (spawn, state entry, attack start) and keeps it until the target is not targetable. With one player this is the same as today.
+- **Determinism (online lockstep).** Iterate in slot order. Never iterate an `ObjectSet` or `ObjectMap` of players (hash order is not stable across machines). Distance ties go to the lower slot. Random targeting uses a named `011` stream.
+- **Stale references.** An enemy that keeps an `IPlayer` after the player dies, or after the entity is reused, points at a reused object. `PreciousGemCluster` (`owner == megaman` plus `PLAYER_JUST_DIED`) shows this risk. Recommendation: keep `PlayerHandle(slot, generation)` and resolve it through the service on each use. A different generation means the handle is stale.
+- **Pooled players.** `megaman` is made once and not pooled. Keep that: one entity per slot, owned by the service, never from `MegaEntityFactory`.
+- **Per-player events.** `PLAYER_SPAWN`, `PLAYER_JUST_DIED`, `PLAYER_READY` and `STUN_PLAYER` carry no slot. Add `ConstKeys.SLOT` to the props now (always 0 with one player). Then `SpiderWeb` can destroy itself only when its own target dies. `GauntletMaster` must choose "any player died" or "all players died"; this is a behavior decision.
+- **Attribution.** `AbstractEnemy` reads `megaman.lives` for the drop chance (`:96`) and gives `ONE_UP` to `megaman` (`:329`). In co-op these go to the killer's slot (`030` `ownerPlayerIndex`) and to the `LivesPolicy`. Item pickups go by contact, so they are already correct.
+- **Profile against shared pool.** Decision H gives `LivesPolicy { SharedPool, PerPlayer }`. Lives are not the only such data: health tanks, heart tanks, enhancements, weapons owned and bosses beaten each need the same choice. X6 shares the beaten-boss byte between X and Zero (`mmx-demake-tools/docs/players/zero.md`, "Technique bits"). Recommendation: one policy per field group, and a profile store keyed by slot that can point two slots at the same record.
+- **Locks and level handlers.** `PlayerSpawnEventHandler`, `EndLevelEventHandler`, `MegaLevelScreen:803` and `WilyFinalBoss:294` set `canBeDamaged` and behaviors on the single player. They must loop over `active()`, each with one `LockReason`.
+
+### 4. Engine or core
+
+| Concept | Where | Reason |
+|---|---|---|
+| `PlayerSlot`, `PlayerHandle`, `PlayerPhase` | engine | every Mega Man-like game has player slots |
+| `ITargetable`, `ITargetPolicy`, nearest-target helper | engine | genre targeting |
+| `IPlayers` interface and a default implementation | engine | pairs with `001b` services and `016` `LevelContext` |
+| `IReadFaceable`, `IReadDirectional` | engine | small additions next to the current interfaces |
+| `LockReason` | engine type, core values | same pattern as `012` |
+| `PlayerAction` base | engine (sealed interface); core defines CLIMBING and so on | genre verbs, content values |
+| `IPlayer`, `CharacterDef`, `MovementValues`, ability factories | core first; maybe the engine later | they depend on `Faction`, `FixtureType` and the behaviors |
+| `ILoadout`, `WeaponDef`, profile, `LivesPolicy` | core | game rules and save format |
+
+Recommendation: do not put `IPlayer` in the engine in `029a`. It touches `FixtureType` and `MegaGameEntity`. Move it later, after `016` and `001b` give the engine a services seam.
+
+### 5. Customization per character
+
+| Approach | Strengths | Risks |
+|---|---|---|
+| A. Subclass `Megaman` | cheap; Proto Man works at once | Proto inherits 1045 lines and 86 constants; a change to Mega can break Proto |
+| B. `AbstractPlayer` plus `CharacterDef` | X6-like: shared core, data values, hooks; ordered abilities keep the evaluation order | the base class can become a new deep hierarchy; the ability order is easy to break without a test |
+| C. Full data | most flexible | big-bang; hard to keep behavior the same |
+
+X6 facts that support B (inspiration only):
+
+- `map.md`, "Code layout": the 32 steps are shared; per-character hooks run under a test of `mega+0x02`. The stand step is an ordered chain of try calls, and the first that succeeds ends the update. This is the "ordered abilities" model.
+- `movement.md`, "Physics constants": base values are written at beam-in, then part bonuses are added.
+- `steps-extra.md`, "What each form changes": a form changes data (wall slide speed 0, spike immunity, hurt boxes, energy cost) more often than code.
+
+Recommendation: compose, do not inherit.
+
+```kotlin
+class CharacterDef(
+    val id: CharacterId,
+    val movement: MovementValues,
+    val modifiers: List<MovementModifier> = emptyList(),
+    val abilities: List<AbilityFactory>,
+    val body: PlayerBodyDef,
+    val animations: AnimationSetDef,
+    val loadout: LoadoutDef?,
+    val damage: DamageReactionDef,
+)
+```
+
+- Keep `AbstractPlayer` thin: phase, locks, slot, focus, health flow, spawn and room events. If it grows past about 300 lines, move parts into components.
+- Apply `MovementValues.forDirection(dir)` once in the direction setter, in place of the sign copy at `Megaman.kt:239-269`. It must give exactly the current values.
+- Risk: cross-ability couplings (NEEDLE_SPIN or RUSH_JET checks inside behaviors) break the "independent abilities" idea. Move them to modifiers or weapon-driven ability blocks (`024`) before Proto Man exists, or Proto copies them.
+- Ladder and slide (open question 3): recommendation: shared, as in X6. Characters change values and the ability set, not the ladder code.
+
+### 6. Migration path
+
+- **`029a` seam.** Add `PlayerSlot`, `PlayerPhase`, `ITargetable`, `IPlayerView`, `IPlayer` and the read-only engine interfaces. Add `game.players` with one slot that wraps `megaman`. `Megaman : IPlayer`. Add the slot to the player events (always 0). `HIT_BY_PLAYER` takes `IPlayerView`. Mark `IMegaGameEntity.megaman` `@Deprecated`. No new behavior.
+- **`029b` call sites by intent**, in batches: (1) enemies and bosses: target selection and `ITargetable`; (2) hazards, blocks, special: `IPlayerView` and `isDoing`; (3) screens and handlers: locks with reasons, loops over `active()`; (4) `aButtonTask` to `IGravityRemappable`.
+- **`029c` profile.** Lives, tanks, enhancements to `PlayerProfile` keyed by slot, with only `LivesPolicy.SharedPool` used. Coordinate with `007` (save format).
+- **`029d` `CharacterDef` and `AbstractPlayer`.** `MegamanDef` with the exact `MegamanValues` and the current ability order (`BehaviorsComponent.kt:778-785`). A unit test fixes the ability order and the direction table.
+- **`029e` (optional)** a Proto Man prototype behind a dev flag.
+
+Hand to other items: `030` faction and `ownerSlot`; `031` `InputFrame` per slot (in `029` the player reads the global poller through one private adapter); `024` `ILoadout` and `WeaponDef`; `012` `LockReason`; `016` `LevelContext.players`; `047` camera group bounds, off-screen rule, second slot spawn; `037`/`038` respawn per slot; `055` replay proof later.
+
+### 7. Decisions for the owner
+
+1. Maximum players: 2 or 4.
+2. Target policy: keep the target until it dies, or retarget at state changes? Is "nearest" the default? Are `LAST_ATTACKER` and `RANDOM` needed now?
+3. No public `primary`; slot 0 by name only where needed?
+4. Events: "any player died" or "all players died" for `GauntletMaster`, the level reset and the projectile cleanup?
+5. Shared or per-slot data, field by field: lives, tanks, enhancements, weapons owned, bosses beaten.
+6. Where `IPlayer` lives: core now, engine later? Or only the slot, service and targeting types in the engine at once?
+7. Do all characters share the ladder and slide code?
+8. Proof: play-through plus unit tests, given that replay (`055`) is far away?
+9. Proto Man: in `029`, or a separate feature item?
+
+## Review 5: how games and engines usually set this up (2026-10-23)
+
+Research agent report, from web research and training knowledge. **[web]** means a fetched source supports the point (see "Sources"). **[training]** means it comes from the agent's own knowledge and was not checked on the web.
+
+### 1. Engine patterns: player identity and the controlled body
+
+**Unreal** (the best-documented split):
+
+- **[web]** `GameMode` sets the rules of a session and creates the other framework classes. It exists only on the server and only for the current level. `GameState` holds shared match data (scores, the list of players) and replicates to all clients.
+- **[web]** `PlayerController` handles input from one human player and possesses a `Pawn`, "the physical manifestation of the player in the game world". `Character` is a `Pawn` with a capsule and a movement component.
+- **[web]** `PlayerState` holds the data of one player and replicates to all clients.
+- **[web]** "The PlayerController persists throughout the game, while the Pawn can be transient... you may die and respawn, so you would get a new Pawn but your PlayerController would be the same." A score on the `Pawn` resets on respawn; a score on the controller does not.
+- **[web]** For simple cases, input can go in the `Pawn`. For complex cases, the controller "decides what to do and then issues commands to the Pawn".
+- **[web]** Split screen: `UGameInstance::CreateLocalPlayer(controllerId)` adds a `ULocalPlayer`. The `GameInstance` keeps a `LocalPlayers` list. `MaxSplitscreenPlayers` sets the maximum number of local players.
+- **[web]** Damage carries attribution: `ApplyDamage` and `TakeDamage` take an `EventInstigator` (the controller responsible, for example the player who threw a grenade) and a `DamageCauser` (the actor that hit, the grenade).
+- **[training]** AI uses the same `Pawn` through an `AIController`, so "controlled by a human" is not a property of the body.
+
+**Unity Input System:**
+
+- **[web]** "The Player Input component represents a single player." Each `PlayerInput` maps to one `InputUser`, with its own devices.
+- **[web]** `PlayerInputManager` "automatically manages the creation and lifetime of PlayerInput instances as players join and leave". Join modes: a button press on an unpaired device, a specific action, or manual. It sends `PlayerJoined` and `PlayerLeft`.
+- **[web]** With split screen on, the manager "automatically splits the available screen space between the active players". Each player prefab has its own `Camera`. A `MultiplayerEventSystem` lets each player's UI take input from that player only.
+- **[training]** `PlayerInput.playerIndex` is a stable index from 0.
+
+**Godot:**
+
+- **[web]** The input map has no per-player concept. The usual workaround is one set of actions per player (`jump_p1`, `jump_p2`), or a router that maps `device_id` to `player_id`.
+- **[web]** Networking: each peer has a unique id; the server is always `1`. Authority is "the server by default, but can be changed per-node" with `set_multiplayer_authority`.
+- **[training]** A common convention names each player node after its peer id; the node checks `is_multiplayer_authority()` before it reads local input.
+
+**2D frameworks.** **[training]** MonoGame, LibGDX and Celeste-style code have no player framework. The game makes its own player list. Celeste has one player and keeps all player logic in one `Player` class.
+
+**The general separation:**
+
+| Layer | Lifetime | Holds | Unreal / Unity / Godot |
+|---|---|---|---|
+| Slot or local user | join to leave | index, device pairing, viewport and camera | `LocalPlayer` / `PlayerInput` + `InputUser` / device-to-player map |
+| Controller | session | turns input into commands; possesses a body | `PlayerController` / `PlayerInput` callbacks / authority node |
+| Persistent per-player state | session (survives death) | lives, score, chosen character, loadout | `PlayerState` / custom component / custom node |
+| Body | spawn to death | physics, health, abilities | `Pawn`/`Character` / prefab / `CharacterBody2D` |
+| Match or session state | level or session | player list, rules, shared pools | `GameMode` + `GameState` / a manager / an autoload |
+
+### 2. How enemies address "the player" in co-op
+
+Target selection:
+
+- **[web]** Terraria: "Most enemies prioritize to attack the player they are closest to". The distance is taxicab distance between hitbox centers, minus each player's `aggro` stat. If only one player is alive, every enemy targets that player.
+- **[web]** A weighted score (distance, recent damage, visibility, designer bias), with a "stickiness" bonus of about 10-20% for the current target. Without it, enemies flip between targets. Threat from damage decays over about 8-12 seconds. Score again on events (hit, target dead or lost, new hostile) plus a slow timer, not on every tick.
+- **[web]** A real bug from a co-op devlog: enemies always targeted the host because the AI used the default "get player controller" lookup. The fix: loop over the player list, pick the nearest, and measure from the body, not from the controller.
+- **[web]** An MMO-style rule (anecdotal): switch target only when another player's threat is about 2x the current target's.
+- **[training]** Other common rules: random choice at spawn, then keep it; round-robin for bosses with alternating attacks; last attacker; lowest health. Turret-style enemies often pick the nearest player on each attack cycle.
+
+Co-op game examples:
+
+- **NSMB Wii [web].** One shared camera that pans and zooms with the distance between players, up to a limit. A player who falls too far behind loses a life. A dead player comes back in a bubble and cannot be hurt in it; a free player pops it by touch or with a projectile. Players can enter a bubble on purpose. If all players are dead or in bubbles at once, the level restarts from the start or the midway flag. In NSMB 2, a player who falls behind goes into a bubble and does not die.
+- **Rayman Legends [web].** Shared screen. The camera can move past players who are behind, which kills them. A player who is hit or too far behind becomes a balloon; a teammate's touch rescues them. If all are balloons, the group restarts at the checkpoint.
+- **Cuphead [web].** A dead player's soul rises. The other player parries it before it leaves the screen, and the dead player comes back with 1 HP.
+- **Spelunky 2 [web].** Local play has no split screen. The camera follows the player with a white flag; when that player dies, the flag goes to the next player. A level that starts with a dead player spawns a coffin on the main path; a live player breaks it to revive them. Reviewers call the shared leader camera the worst part of co-op.
+- **Shovel Knight [web].** Gold is shared. When a player dies and respawns, the remaining health is split between the two players. Bosses have more health in co-op. Stats are compared at the end of each stage. **[training]** Camera rule not confirmed: the agent's memory is that the screen does not scroll away from a player, and players at the edge are pulled along at screen transitions.
+- **Mega Man [web].** Mega Man 10 prototypes had an unused co-op assist mode (Mega Man and Proto Man) with "Sync Up" obstacles that both players had to break together. Nothing documented on its camera or screen transitions. Mega Man 2.5D (a fan game) has local co-op with Proto Man as player 2.
+- **[training]** Contra and Broforce: shared screen; a player who falls behind is pulled along or dies. Each player has their own lives; some versions let a player take a life from the partner. In fixed-screen rooms, the usual solution is to move every player to the transition point when one player triggers it. Players who are not there are teleported or "bubbled".
+
+Common theme: no game in this list has a "primary player" in its gameplay rules. Where a leader exists, it is a camera choice only (Spelunky's flag), and it moves to another player when the leader dies. Reviewers criticize this design.
+
+### 3. Character customization
+
+- **[web] Celeste.** One `Player.cs` of about 5,400 lines. Tuning is a block of constants (`MaxRun = 90f`, `RunAccel = 1000f`, `Gravity = 900f`, `JumpSpeed = -105f`, `VarJumpTime = .2f`, `JumpGraceTime = 0.1f`, `DashSpeed = 240f`, `DashTime = .15f`). States are integer ids (`StNormal = 0`, `StClimb = 1`, `StDash = 2`, ... `StAttract = 22`) in a `StateMachine` with update, begin and end callbacks per state. A good model for a movement table, but the game has one character.
+- **[web] Type Object pattern.** "Define new types... completely in data." Per-type data goes in a shared type object; each instance keeps only its own state. The limit: it is "easy to use type objects to define type-specific data, but hard to define type-specific behavior". The usual fix is a reference to one of a set of behavior functions.
+- **[web] Unity.** A `CharacterStats` ScriptableObject that many characters share, cloned at runtime so changes during play do not edit the asset.
+- **[training] Common platformer design.** One shared motor (gravity, run, jump, collision, ladder, water) that reads a per-character stats record. Abilities are separate components or a list (slide, dash, charge shot, double jump, wall jump). The state machine has a core set of states; each ability can add states.
+- **[training]** Smash fighters share one engine state machine; each fighter has an attribute table (walk speed, jump squat, gravity, fall speed, weight) and its own move scripts. Mega Man X and Zero (X4 onward) share the X physics; Zero swaps the buster for saber combos. Shovel Knight's later campaigns reuse the engine with very different movement code. Most games use composition plus data, not a deep class tree.
+
+### 4. Interface design advice
+
+- **[web]** "Anytime you make something accessible to every part of your program, you're asking for trouble." A service locator is "a more flexible, more configurable cousin of the Singleton", but "it's harder to understand what your dependencies are". Advice: "first consider passing the object to it instead."
+- **[training] Interface segregation.** Most code that uses the player needs a small read-only view: position and bounds, facing, alive or dead, an id. Keep commands (`damage`, `knockback`, `teleport`) and per-character abilities on separate interfaces. Use capability queries (`player.get(CanSlide::class)` or a component check) in place of `is Megaman`. Unreal's `Pawn`, `Controller` and `PlayerState` split follows the same principle.
+- **[training] Player registry.** A `PlayerManager` (or `GameState.PlayerArray` in Unreal) owns the ordered list, with helpers such as `nearestTo(pos)`, `alive()`, `byId(id)` and `forEach`, and sends join, leave, death and respawn events.
+- **Events and attribution.** **[web]** Unreal damage carries instigator and causer. **[training]** Events about a player (death, pickup, boss defeat, checkpoint) carry a `playerId`, not an object reference, so they stay valid after the body is destroyed and can go over the network.
+
+### 5. Readiness for split screen and online play
+
+- **[web] Lockstep.** Send "the inputs that control that system, rather than the state". A peer "can only simulate frame n when it has the input for that frame". Determinism must hold at the bit level. Unseeded random generators, variable delta time and float differences between builds or platforms break it.
+- **[web] Rollback.** The game must save and load the full state quickly and be deterministic. "Game logic must be independent from everything else in your gameplay loop": rendering, audio and the camera must not run during re-simulation. It must run several logic frames in one real frame. Making rollback "a priority early in development will greatly reduce the amount of investment required". Keep destroyed objects for a few frames, and delay dramatic events (camera moves) until they are certain. GGRS has a `SyncTestSession` that re-runs frames and compares checksums.
+- **[training] Early choices that block online play later:** global singletons for the player or the camera; entities that read the keyboard or pad directly instead of a per-player input frame; iteration over a hash set or map with no fixed order; variable time steps and unseeded `Random` in gameplay; one camera mixed with gameplay rules (culling, spawns, room transitions keyed to "the camera"); a HUD that reads one global player.
+- **[training] Ready designs:** an `InputFrame` per player and tick in a buffer; players in a fixed order (slot index); a fixed time step; seeded random generators in the game state; a camera or viewport per local player, with culling and spawners keyed to the union of all player views or to each player.
+
+### 6. Summary
+
+Common, well-supported conventions:
+
+1. **Separate the slot or controller from the body.** The slot (index, device, viewport) and the per-player state (lives, chosen character) live longer than the body. For this game: `game.megaman` mixes slot, state and body. `IPlayer` is the body contract; a separate slot and state own lives, the character choice and input. Death or respawn replaces or resets the body, not the slot.
+2. **A player registry, not a global.** An ordered list with helpers (`nearest`, `alive`, `byId`). For this game: most of the 900 `megaman` sites become `players.nearestTo(this)` or `players.forEach`.
+3. **Enemies choose targets by a rule.** Default: nearest living player, with stickiness and an event-driven re-check. With one player the result does not change.
+4. **Input frames per player.** The body reads commands from its own controller, never from devices. For this game: each player's `ControllerComponent` reads the input source of its slot.
+5. **Data plus composition for characters.** A stats table per character (like Celeste's constants) and abilities as optional components or capabilities. For this game: Mega's constants go in a character definition; Proto Man is another definition with its own ability set. Contact rules query capabilities, which matches the `014d` receivers.
+6. **Small read-only views for consumers.** Most consumers need position, bounds, facing, alive and id. Split `IPlayer` into a view part (enemies, triggers, HUD) and a command part (damage, teleport). Abilities go behind capability queries.
+7. **Player ids in events, and damage attribution.** Events about the player carry a `playerId`. Projectiles keep `owner` as the instigator.
+8. **Choose a co-op death design before you build it.** Choices: bubble or balloon, parry revive, coffin, shared health. A team wipe means all players are down at once. For fixed-screen rooms, a common choice is "everyone moves to the transition; downed players come back at the next room or checkpoint".
+9. **The camera is a local, per-viewport concept.** It frames a set of players; it is not "the player". `CameraManagerForRooms` and culling should use a target set, so split screen can add viewports later.
+
+Common pitfalls:
+
+1. **A hidden "player 0" default.** For example the host-targeting bug (`getPlayerController(0)`). For this game: a `players.first()` convenience brings back the global. Do not add it, or flag every use.
+2. **A leader camera or "primary player" in gameplay rules.** Room transitions, spawners and cullables that check "Megaman's room" must change to "any player's room" or "all players".
+3. **Target flip-flop.** A pure nearest rule, re-checked every frame, makes enemies jitter between two players. Add stickiness, or re-check only on an attack cycle.
+4. **No fixed iteration order, unseeded RNG.** These block lockstep and rollback. Keep players in slot order (`Array`, not `ObjectSet`) and gameplay random generators in the game state.
+5. **State on the body that should survive death.** Health tanks, lives, weapons and the character choice belong to the per-player state, not to the `Megaman` entity.
+
+### Gaps
+
+- No primary source documents the camera and room-transition rules for Shovel Knight co-op, the Mega Man 10 prototype co-op or Mega Man Powered Up. The Shovel Knight wiki page returned HTTP 402.
+- The Smash, Mega Man X/Zero and King Knight/Specter Knight notes come from training knowledge only.
+
+### Sources
+
+- Gameplay Framework in Unreal Engine: https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-framework-in-unreal-engine
+- Player Controllers in Unreal Engine: https://dev.epicgames.com/documentation/en-us/unreal-engine/player-controllers-in-unreal-engine
+- `UGameInstance::CreateLocalPlayer`: https://dev.epicgames.com/documentation/unreal-engine/API/Runtime/Engine/UGameInstance/CreateLocalPlayer
+- Maximum number of local players (Unreal forum): https://forums.unrealengine.com/t/maximum-number-of-local-players-on-one-pc-can-you-have-more-than-4/303314
+- `UGameplayStatics::ApplyDamage` (UE 4.27): https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/Kismet/UGameplayStatics/ApplyDamage/
+- `AActor::TakeDamage` (UE 4.26): https://docs.unrealengine.com/4.26/en-US/API/Runtime/Engine/GameFramework/AActor/TakeDamage/
+- Damage in UE4 (Unreal blog): https://www.unrealengine.com/blog/damage-in-ue4
+- Unity Input System, Player Input Manager: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.11/manual/PlayerInputManager.html
+- Unity Input System, Player Input: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.11/manual/PlayerInput.html
+- Godot, High-level multiplayer: https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html
+- Customized controls per player for local multiplayer (Godot forum): https://forum.godotengine.org/t/customized-controls-per-player-for-local-multiplayer-coop/277
+- GDQuest, local multiplayer input: https://gdquest.com/tutorial/godot/2d/local-multiplayer-input/
+- Terraria Wiki, Aggro: https://terraria.wiki.gg/wiki/Aggro
+- AI threat tables and target selection in UE5 (StraySpark): https://www.strayspark.studio/blog/ai-threat-tables-target-selection-ue5
+- Enemy targeting devlog (itch.io): https://itch.io/devlog/798680/enemy-targeting.amp
+- Tremblay et al., FDG 2014, target selection for AI companions: https://www.cs.mcgill.ca/~jtremb59/Papers/fdg2014_paper_32.pdf
+- New Super Mario Bros. Wii (Super Mario Wiki): https://www.mariowiki.com/New_Super_Mario_Bros_Wii
+- Bubble (Super Mario Wiki): https://mariowiki.com/Bubble
+- Rayman Legends Co-Op Review (Co-Optimus): https://co-optimus.com/review/1347/page/2/rayman-legends-co-op-review.html
+- Cuphead (Wikipedia): https://en.wikipedia.org/wiki/Cuphead
+- Spelunky Wiki, Other Game Features (2): https://spelunky.fandom.com/wiki/Other_Game_Features_(2)
+- Spelunky 2 review (GamingTrend): https://gamingtrend.com/reviews/unfair-fun-spelunky-2-review/
+- Shovel Knight devs discuss co-op (Game Informer): https://gameinformer.com/b/features/archive/2014/07/29/shovel-knight-devs-discuss-co-op-pogo-jumping-and-beyond.aspx
+- Shovel Knight Update Brings Co-op Play (TrueTrophies): https://i1.truetrophies.com/n11540/shovel-knight-update-brings-coop-play
+- Mega Man 10 prototype co-op (Rockman Corner): https://rockman-corner.com/2024/01/mega-man-10-prototypes-include-evidence.html
+- Mega Man 2.5D (Wikipedia): https://en.wikipedia.org/wiki/Mega_Man_2.5D
+- Celeste `Player.cs` (GitHub, NoelFB/Celeste): https://github.com/NoelFB/Celeste/blob/master/Source/Player/Player.cs
+- Celeste: open-source Player class (itch.io): https://notapixel.itch.io/platformer-test/devlog/729893/celeste-open-source-player-class
+- Game Programming Patterns, Type Object: https://gameprogrammingpatterns.com/type-object.html
+- Game Programming Patterns, Service Locator: https://gameprogrammingpatterns.com/service-locator.html
+- How to use Scriptable Objects in Unity (Red Gate): https://www.red-gate.com/simple-talk/development/dotnet-development/how-to-use-scriptable-objects-in-unity/
+- Gaffer On Games, Deterministic Lockstep: https://gafferongames.com/post/deterministic_lockstep/
+- Infil, fighting game netcode (rollback, part 5): https://words.infil.net/w02-netcode-p5.html
+- Odin GGPO bindings: https://pkg.odin-lang.org/vendor/ggpo
+- Rollback netcode explained (Supercraft): https://crux.supercraft.host/blog/rollback-netcode-explained/
