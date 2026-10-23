@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `007`, `012`, `013`, `014`, `016`, `024`, `030`, `031`, `037`, `038`, `047`, `053`, `057`
-- Branches: none yet
+- Branches: `029a` (planned), `029b` to `029g` (planned)
 
 ## Goal
 
@@ -45,11 +45,29 @@ Research round 2 (2026-10-23, verbatim):
 - 2026-10-23: the players service has no public `primary` or `first()` in its query API. Each caller says which player it wants (nearest, the one in the contact, any, all, the owner, slot `n`). A session-level lead slot for the camera and the save (see `047`) is a policy, not a query helper.
 - 2026-10-23: the players service is an interface plus a base class in the engine. The base class gives standard helpers out of the box, and a game can add its own helpers. Not all helpers can be known ahead of time.
 
+## Branch split
+
+Proposed 2026-10-23. The owner asked for the split. Each later branch gets its own scope, which can still change this list.
+
+| Branch | Goal | Notes |
+|---|---|---|
+| `029a` `player-seam` | Player slot, small `IPlayer`, players service (engine interface plus base class); `Megaman` in slot 0; the global self-references in the player package; slot prop on the player events | No call site outside the player package moves |
+| `029b` `enemy-players` | Enemies (about 395 lines, 104 files) use `game.players` helpers in place of `megaman` | Targeting, proximity, reading player state. `IPlayer` grows by need |
+| `029c` `boss-players` | Bosses (about 140 lines, 22 files), `AbstractBoss`, the boss damage listener (`IMegamanDamageListener`) | |
+| `029d` `world-players` | Special, projectiles, blocks, hazards, sensors, decorations, world code: `is IPlayer` checks, kill zones per contact player, stomp bounce, gravity devices, `HIT_BY_PLAYER` retype | Owner checks stay for `030` (open question) |
+| `029e` `player-profile` | Lives, tanks, enhancements and weapons owned move to one session profile; `ItemEntity` retype (`Life` reads lives) | With `007` (save) |
+| `029f` `level-players` | Level screen, handlers, HUD, pause, menus, camera focus use `game.players` (slot 0 by name where needed); remove `game.megaman` and the `megaman` extension | Rules unchanged (decision 2026-10-23) |
+| `029g` `character-def` | `CharacterDef`, movement values table, ordered ability list, thin player base | Weapon couplings in behaviors overlap `024` |
+
+Order: `029a` first. `029b`, `029c` and `029d` can run in any order after it. `029e` before `029f`, because the HUD and pause read the profile. `029g` last.
+
 ## Open questions
 
 - Target selection: is "nearest" enough, or do some enemies need "last attacker" or "random"?
 - Must camera focus follow one player or a group bounds? (Out of scope for `029`; the owner's direction is in `047`.)
 - Do all characters share the slide and ladder rules (X6 shares the step routines)?
+- `owner == megaman` checks: does `029d` change them to `is IPlayer` (the same result with one player), or do they all wait for `030` (faction)? If they wait, the `megaman` extension cannot be removed in `029f`.
+- Proto Man prototype: part of `029` (after `029g`) or a separate feature item?
 
 ## Sources
 

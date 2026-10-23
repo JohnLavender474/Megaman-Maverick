@@ -76,6 +76,13 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-002a-ci-all-branches`](items/002-ci-all-branches/branches/mega-refactor-002a-ci-all-branches/process-log.md) | 002 | CI on every branch push, one Gradle job, aligned test libraries, JDK toolchain | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-008a-dev-launch-options`](items/008-dev-launch-options/branches/mega-refactor-008a-dev-launch-options/process-log.md) | 008 | Dev launch options and level staging | merged | 2026-10-22 | 2026-10-22 |
 | `mega-refactor-019b-destroy-notification` | 019 | Tell a spawner at once when its entity is destroyed; one spawn phase per tick | planned | | |
+| [`mega-refactor-029a-player-seam`](items/029-player-contract/branches/mega-refactor-029a-player-seam/process-log.md) | 029 | Player slot, small `IPlayer`, players service; `Megaman` in slot 0 | planned | | |
+| `mega-refactor-029b-enemy-players` | 029 | Enemies use the players service in place of `megaman` | planned | | |
+| `mega-refactor-029c-boss-players` | 029 | Bosses and the boss damage listener use the players service | planned | | |
+| `mega-refactor-029d-world-players` | 029 | World entities use `IPlayer` and the players service | planned | | |
+| `mega-refactor-029e-player-profile` | 029 | Lives, tanks, enhancements and weapons owned in one session profile | planned | | |
+| `mega-refactor-029f-level-players` | 029 | Level screen, handlers and UI use the players service; remove `game.megaman` | planned | | |
+| `mega-refactor-029g-character-def` | 029 | `CharacterDef`, movement values and ordered abilities | planned | | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |
