@@ -49,3 +49,50 @@ Option A:
 6. Dependencies
 Item 28, 4 and 22 (damage tests and tables), 13 (contact rules), 44 (pooling safety).
 ````
+
+## Idea: an `owners` structure in place of one `owner` (2026-10-23)
+
+From the `029` research discussion. Not designed yet; for discussion at the `030` scope step.
+
+Owner's input (2026-10-23, verbatim):
+
+> Maybe in `owners` (assuming the design turns out to be a data structure on the entity), each owner has data mapped to it: whether its an instigator, causer, or other; further detail on the state of things when it was added, and why it was added; what triggers its removal from the `owners` structure; etc.
+
+### The problem
+
+Today an entity has one `owner`. One value cannot say both "who is responsible" and "what hit you". Examples:
+
+- A reflected shot: the first owner fired it, the reflector changed its direction. Who gets the kill, and which faction can it hurt now? (`ReactorManProjectile` switches faction today.)
+- An explosion spawned by a projectile: today two conventions give different results (see the `030` proposed scope, "one explosion-owner convention").
+- A shot from an entity that a player placed or summoned (a turret, a helper): the turret causes the hit, the player is responsible.
+- Co-op: kill credit, enhancement scaling and drop odds must go to the right player slot.
+
+Engines often keep two values: the instigator (the player or controller responsible) and the causer (the entity that hit). Example: Unreal `ApplyDamage(..., EventInstigator, DamageCauser)` (see `029` `NOTES.md`, review 5, section 1).
+
+### The idea: an `owners` structure with an entry for each owner
+
+Each entry maps an owner to data about the link. Candidate fields:
+
+| Field | Meaning | Example values |
+|---|---|---|
+| owner | the owning entity, or better a stable handle (player slot, or entity id and generation), so that a dead or reused owner does not leave a stale reference | `PlayerSlot(1)`, `EntityHandle(id, gen)` |
+| role | why this owner is in the structure | `INSTIGATOR`, `CAUSER`, `SPAWNER`, `REFLECTOR`, `OTHER` |
+| reason | why the link was added | `FIRED`, `REFLECTED`, `SPAWNED_BY_EXPLOSION`, `SUMMONED` |
+| snapshot | the state when the link was added | owner faction, owner direction and facing (today `ChargedShot.megamanDirOnShoot` and `megamanFacingOnShoot`), frame or tick number |
+| removal rule | what removes the entry | owner destroyed, owner dead, a reflect replaces the instigator, end of room transition, a timer, never |
+
+Possible queries:
+
+- `instigator`: the entry used for kill credit, score, enhancement scaling and the player slot.
+- `causer`: the entity that made the contact.
+- `faction`: from the current instigator, or kept in the snapshot.
+- `history`: all entries in the order they were added, for debug logs and replays.
+
+### Questions for later
+
+- A structure on each entity, or two fields (`instigator`, `causer`) plus an optional history? The structure is more flexible; two fields are cheaper and cover the known cases.
+- Allocation: projectiles are pooled and spawned often. The structure must reset on spawn with no new allocation (`009` GC baseline).
+- Removal rules: are they data in the entry, or does a system remove entries on events (owner destroyed, reflect)? `019b` (destroy notification) may give the "owner destroyed" signal.
+- Does the faction change when the instigator changes (reflect), or does it stay from the snapshot?
+- Determinism: the order of entries must be stable (online lockstep, `047` step 3).
+- How does this meet `023` (damage profiles keyed by damage tags) and the golden damage test (`005`)?
