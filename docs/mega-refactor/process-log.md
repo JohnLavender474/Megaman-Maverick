@@ -374,3 +374,18 @@ newest entry at the bottom.
   corrected a first version that also named the boss room.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-23 — mega-refactor-029c-boss-players
+
+- Summary: bosses, `AbstractBoss` and `AbstractEnemy` reach the player through the players service.
+  `PlayerStateComponent` holds `shooting`, `canBeDamaged` and the damage listeners; `MegaPlayer` gets settable
+  `facing`, `direction` and `canBeDamaged`, plus `invincible` and `shooting`. `IPlayerDamageListener` replaces
+  `IMegamanDamageListener`. The Wily defeat and Moon Man gravity writes change every player; the boss intro
+  landing checks use `players.all` (with `047` `TODO`s); profile reads keep the global with `029e` `TODO`s. The
+  old bosses are commented out. Named locks were discussed and recorded in the scope, not built. Squash commit
+  `c07f62cf7`.
+- Contract check: clean build; 470 engine and 110 core tests pass; 114 compiler warnings, the same list as before;
+  the contact selection reference file is unchanged; the contract greps pass; a check of the scripted step showed
+  all 99 changed lines differ only in the reference. The owner checked 6 of the 10 manual checks on the baseline,
+  and played the list at the end. The owner approved the merge.
+- Follow-up: no bugs and no backlog candidates. Next for item `029`: `029d` (world entities).
