@@ -95,7 +95,7 @@ The owner asked for one source of truth for the gravity direction (2026-10-23). 
 
 - **`WorldGravity`** (core, a field `gravity` on the game, like `players`; later in `LevelContext`): `direction` (read-only outside) and `set(direction)`, which stores the direction and sets it on every registered player.
 - **Writers** call `gravity.set(...)`:
-  - the gravity devices, through the player receiver (`GravitySwitcharoo`; `GravityCapsule`, which no map uses);
+  - the gravity device `GravitySwitcharoo`, through the player receiver;
   - `MoonMan.activateGravityChange`, only when the target player (always Megaman for now) is alive, with a `TODO` for `047` (today the swap skips a dead Megaman);
   - `Megaman.onSpawn` (the spawn's `direction` property);
   - `PortalHopper` when the hopping entity is a player (`next_entity_direction`); other entities keep their own direction;
@@ -103,7 +103,7 @@ The owner asked for one source of truth for the gravity direction (2026-10-23). 
   - the level screen (room property `megaman_direction`).
 - **Readers** of the world direction (the player's direction used for the world: conveyor belts, spikes, magma, bullets, gems, decorations, explosions) read `game.gravity.direction`.
 - **Camera rotation stays in the player's direction setter**, with a `TODO` in the code and here: the rotation belongs to `WorldGravity`, because with more players each player's setter would ask for it.
-- `PortalHopper`'s `next_body_direction` (no live map) sets the body direction and skips the setter and `WorldGravity`; a `TODO` notes it.
+- **Unused paths are commented out, not deleted** (owner decision): `GravityCapsule` (no TMX file and no code uses it) is commented out in full with a `TODO` at the top that the code may be out of date; `PortalHopper`'s `next_body_direction` (no TMX file sets it) is commented out (the spawn-prop read, the field, the event property and the body-direction write), with a `TODO` that a body direction set this way would bypass `WorldGravity` and the player's setter, and must go through `gravity.set` for players if it comes back.
 - All of this is in `029d`, with more manual checks for the gravity paths.
 
 ## Open questions

@@ -39,3 +39,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   So the direct writes exist, but every one of them still goes through the setter and rotates the camera: today
   the player's direction and the camera's direction are the same "world" gravity, also for the direct writes.
 - The owner decided the gravity questions: `WorldGravity` on the game; all writers call `gravity.set`; world-direction readers read it; camera rotation stays in the player's setter with a `TODO`; Moon Man sets gravity only when the target player is alive (`TODO` for `047`); all in `029d`. Scope updated.
+- Owner decision: comment out `GravityCapsule` and `PortalHopper`'s `next_body_direction` (both unused) with `TODO`s. Scope updated.
