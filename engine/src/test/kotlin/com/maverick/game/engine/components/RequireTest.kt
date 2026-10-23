@@ -6,24 +6,10 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 
-class ComponentKeyTest : DescribeSpec({
+class RequireTest : DescribeSpec({
 
     class TestComponent : IGameComponent
     class OtherComponent : IGameComponent
-
-    describe("ComponentKey") {
-        it("gives the component of its type") {
-            val entity = MockGameEntity()
-            val component = TestComponent()
-            entity.addComponent(component)
-
-            entity[ComponentKey(TestComponent::class)] shouldBeSameInstanceAs component
-        }
-
-        it("gives null when the entity has no component of its type") {
-            MockGameEntity()[ComponentKey(TestComponent::class)] shouldBe null
-        }
-    }
 
     describe("require") {
         it("gives the component") {

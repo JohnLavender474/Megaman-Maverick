@@ -1,8 +1,6 @@
 package com.maverick.game.engine.players
 
 import com.maverick.game.engine.MockGameEntity
-import com.maverick.game.engine.components.ComponentKey
-import com.maverick.game.engine.components.IGameComponent
 import com.maverick.game.engine.entities.IGameEntity
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
@@ -12,8 +10,6 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 private class TestView(override val slot: PlayerSlot, override val entity: IGameEntity) : PlayerView {
     var score = 0f
 }
-
-private class ScoreComponent : IGameComponent
 
 private fun IPlayers<TestView>.totalScore(): Float {
     var total = 0f
@@ -158,17 +154,6 @@ class PlayersTest : DescribeSpec({
             players.register(PlayerSlot(1), spawnedEntity()).score = 2.5f
 
             players.totalScore() shouldBe 4f
-        }
-
-        it("a component key reads a component through the view") {
-            val players = players()
-            val entity = spawnedEntity()
-            val component = ScoreComponent()
-            entity.addComponent(component)
-
-            val view = players.register(PlayerSlot(0), entity)
-
-            view[ComponentKey(ScoreComponent::class)] shouldBeSameInstanceAs component
         }
     }
 })

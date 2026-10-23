@@ -298,3 +298,18 @@ newest entry at the bottom.
   too small for a branch. `CLAUDE.md` now has a rule for such changes ("Small ad-hoc changes on `master`").
 - Contract check: clean build; 475 engine and 102 core tests pass; 114 compiler warnings, as before.
 - Follow-up: none.
+
+## 2026-10-23 — master (direct code change)
+
+- Summary: removed the engine `ComponentKey<T>`, its `get` operators on `IComponentBucket` and `PlayerView`, and
+  their tests. `require` moved to `IComponentBucket.kt`; its tests are now `RequireTest`. Reason: `ComponentKey`
+  was a design mistake that both the owner and Claude let through the `029a` scope, plan and review. It copied
+  `PropertyKey<T>` by analogy, but `PropertyKey` exists because property keys are untyped strings; `KClass<C>` is
+  already a typed key, so `ComponentKey(X::class)` added no type safety. Nothing outside its own tests used it.
+  It was speculative (a possible later array-storage speed-up). If the engine ever moves to integer component ids,
+  that item adds a key type. Made directly on `master` under "Small ad-hoc changes on `master`".
+- Lesson: when a new type mirrors an existing one, check that the reason for the original also holds for the
+  copy, and do not add an API that no caller in the branch needs.
+- Contract check: clean build; 472 engine (3 `ComponentKey` tests removed) and 102 core tests pass; 114 compiler
+  warnings, as before.
+- Follow-up: `048` no longer names `ComponentKey`.

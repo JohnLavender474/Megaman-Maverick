@@ -17,3 +17,5 @@ interface IComponentBucket {
 
     fun clearComponents()
 }
+fun <C : IGameComponent> IComponentBucket.require(type: KClass<C>): C =
+    getComponent(type) ?: throw MissingComponentException(type)
