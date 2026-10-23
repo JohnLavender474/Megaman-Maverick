@@ -55,13 +55,18 @@ About 204 code lines in about 80 files: `entities/special` 83 lines, `projectile
    - world direction, position, facing, fixtures and state reads of one player: `targetPlayer`;
    - identity (`== megaman`, `is Megaman`, `isAny(Megaman::class, ...)`): `players.viewOf(entity)`;
    - ownership: `players.viewOf(owner)`;
+   - contact with any player (owner decision): `PushableBlock` (pushed by any player whose side fixture touches it while facing and moving toward it) and `FlipperPlatform` (any player whose feet are on it) use `players.any`, or `players.forEach` where the block acts on that player, with the checks of today on the same player; other "one player" sites that are really about contact get the same treatment or a `TODO` for `047`;
    - kill zones: `players.forEach` with today's checks for each player (`MegamanDeath`: not dead, overlapping, not invincible unless instant; `GravityBlock`: head overlap);
+   - `MegamanDeath` is renamed `PlayerDeath` (owner decision): the class, its `TAG`, the comment in `Death.kt`, and the 29 objects named `MegamanDeath` in 4 TMX files (`MoonMan_16x14_v5.tmx`, `InfernoMan_16x14_v3.tmx`, `TimberWoman_16x14_v4.tmx`, `TimberWoman_16x14_v5_draft_1.tmx`). A test room checks it;
    - `CapsuleTeleporter` sets the direction of the player it received (the contact entity);
    - `SwimBooster` keeps `MegamanValues.SWIM_VEL_Y` through the view's body, with a `TODO` for `029g` (like the stomp bounce);
    - `SpiderWeb` sticks to the target player;
    - `ChargedShot` takes the direction and facing of the target (with one player the shooter); a `TODO` says the shooter is the owner's view (`030`);
-   - the gravity devices and the Darkness light: open questions 1 and 3.
-3. **World code:** `IBodyExtensions.defaultDoUpdate` tests `players.viewOf(entity) == null` instead of `!is Megaman`; `FeetSandRule` takes its supplier from the players service (open question 4); `Receivers.HIT_BY_PLAYER` becomes `(player: MegaPlayer) -> Unit`, `BodyPlayerRule` passes `players.viewOf(entity)` (its `TODO` goes), and `SmallGrass`, `Togglee`, `SmallIceCube` (`it.canBeDamaged`) take the view.
+   - the gravity devices: a player receiver that Megaman registers ("a gravity device switched you to this direction"); Megaman sets its direction and `aButtonTask` there, unchanged; a device switches every player in its trigger area (owner decision, open question 1);
+   - the Darkness light: `players.forEach`, one light source per player, with the radius from a light-radius receiver that each player registers (owner decision, open question 3);
+   - `teleporting` moves into `PlayerStateComponent`, like `ready` (owner decision, open question 2);
+   - the player's gravity direction used as the world direction: see "Gravity direction" (under discussion).
+3. **World code:** `IBodyExtensions.defaultDoUpdate` tests `players.viewOf(entity) == null` instead of `!is Megaman`; `FeetSandRule` takes `{ game.players.any { it.ready } }`, with a `TODO` for `047` (owner decision, open question 4); `Receivers.HIT_BY_PLAYER` becomes `(player: MegaPlayer) -> Unit`, `BodyPlayerRule` passes `players.viewOf(entity)` (its `TODO` goes), and `SmallGrass`, `Togglee`, `SmallIceCube` (`it.canBeDamaged`) take the view.
 4. **Tests:** the new view accessors; `HIT_BY_PLAYER` is called with the view by `BodyPlayerRule` (with a relaxed game mock and registered test player, if practical).
 
 ## Out of scope
@@ -83,7 +88,13 @@ About 204 code lines in about 80 files: `entities/special` 83 lines, `projectile
 
 - No branch is active.
 
+## Gravity direction (under discussion)
+
+The owner asked for one source of truth for the gravity direction, and for a scan of every way the player's direction changes (2026-10-23). The scan result and the options are in the process log entry of that date; this section gets the decision.
+
 ## Open questions
+
+Answered by the owner (2026-10-23): 1 (receiver; players in the trigger area), 2 (`teleporting` in `PlayerStateComponent`), 3 (light-radius receiver, one light per player), 4 (`players.any { it.ready }` with a `TODO`). Kept below for the record.
 
 1. **Gravity devices** (`GravitySwitcharoo`, `GravityCapsule`) set `direction` and then the Mega-only `aButtonTask`. Options:
    - (a) a player receiver (a typed key on the entity, as in `014d`) that Megaman registers: "a gravity device switched you to this direction"; Megaman sets its direction and its `aButtonTask` there, unchanged. The devices call it for each player they affect.
