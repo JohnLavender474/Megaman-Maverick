@@ -235,3 +235,17 @@ newest entry at the bottom.
   11 checked by hand; the owner's play test passed. The owner approved the merge.
 - Follow-up: `014d` (receivers for the `Megaman` checks, `MegaCollisionHandler` body flags,
   `SurfaceRule`, wall-slide flag). `docs/issues/2026-10-22-wrong-contact-log-texts.md` is closed.
+
+## 2026-10-22 — mega-refactor-014d-contact-receivers
+
+- Summary: the player code that the contact rules ran under `is Megaman` moved into Megaman, behind four
+  typed receivers (`FEET_BLOCK_CONTACT`, `WATER_CONTACT`, `ICE_FRICTION_FILTER`, `SIDE_ICE_FRICTION`) and two
+  capabilities (`IGateTrigger`, `ICartRider`), called at the old points. `FeetSandRule` takes a splash
+  supplier. `MegaCollisionHandler` reads two body keys instead of `game.megaman` and the controller.
+  `PlayerItemRule` and `BodyPlayerRule` keep the `Megaman` type with `TODO`s for `029`. Squash commit
+  `5f90642a9`. Item `014` is done.
+- Contract check: clean build; 454 engine and 95 core tests pass (16 new, pinning the call points); 114
+  compiler warnings as before; the selection reference file is unchanged; only Megaman registers the new
+  receivers and keys; the owner's play test passed. The owner approved the merge.
+- Follow-up: `029` re-types `HIT_BY_PLAYER` and `ItemEntity.contactWithPlayer`, and can fold the
+  capabilities into `IPlayer`; `031` replaces the input read in Megaman's fall-through key.

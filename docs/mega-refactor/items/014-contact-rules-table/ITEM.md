@@ -1,10 +1,10 @@
 # 014: Table-driven contact and collision rules
 
-- Status: active
+- Status: done
 - Type: refactor
 - Depends on: none
 - Related: `006`, `020`, `029`, `030`, `031`, `055`, `056`
-- Branches: `014a` (merged), `014b` (merged), `014c` (merged), `014d` (active)
+- Branches: `014a` (merged), `014b` (merged), `014c` (merged), `014d` (merged)
 
 ## Goal
 
