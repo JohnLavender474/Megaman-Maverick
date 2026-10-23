@@ -261,6 +261,13 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   inline code span on its own line, followed by what to look at. Example:
   - `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_aim`: `Met` and `SniperJoe` face
     Megaman on both sides, aim and fire.
+- Give a `--room` for every check, also in real levels, so the owner never has to play a level from
+  its start. If one level has several checks in different places, list the level once for each,
+  each with its own `--room`. `--room` needs a player spawn inside the room, and a boss room
+  (a `game_rooms` object with the property `event=boss`) usually has none: give the room that has
+  the player spawn nearest to the boss room, which is usually the checkpoint before the boss gate,
+  and say which boss room it leads to. Find the rooms in the live TMX file that `LevelDefinition`
+  names.
 
 ## Bugs
 

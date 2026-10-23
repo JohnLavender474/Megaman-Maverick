@@ -364,3 +364,12 @@ newest entry at the bottom.
 - Contract check: clean build; 470 engine (3 helper tests removed) and 107 core tests pass; 114 compiler warnings,
   as before.
 - Follow-up: none.
+
+## 2026-10-23 — master (docs)
+
+- Summary: "Test maps" in `CLAUDE.md` now says that every check the owner runs has a `--room`, also in real
+  levels; a level with several checks is listed once for each, with its own room; for a boss, the room with the
+  player spawn nearest to the boss room (the boss room itself usually has no spawn). The owner asked for this
+  after the `029c` play-test list gave boss levels with no room.
+- Contract check: not needed (docs only).
+- Follow-up: none.
