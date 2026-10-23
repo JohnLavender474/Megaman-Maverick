@@ -47,6 +47,7 @@ Research round 2 (2026-10-23, verbatim):
 - 2026-10-23: `029` follows the components direction of `048`. There is no `IPlayer` interface on the player entity. The engine assumes only a slot and an entity (no body, no position). `PlayerView` is a small engine interface (choice A), and the game supplies its view type, which resolves the components it requires once, at registration. Engine helpers are deterministic `inline` extensions (slot order, ties to the lower slot); spatial helpers such as `nearestTo` are game helpers. Research: `029a` `docs/NOTES.md`.
 - 2026-10-23: the game passes a players capacity of 1 until co-op (`047`).
 - 2026-10-23: call sites name their intent (`targetFor`, `any`, the contact entity, `forEachPresent`, `require(PlayerSlot(0))`), not a rule and not `players[0]`. Targeting is a `TargetPolicy` with a game default (slot 0 in `029`) and an optional per-entity `TargetingComponent`; a policy returns one player. Details: "Targeting design" in `NOTES.md`.
+- 2026-10-23: `targetFor` and `targetPlayer` must not stay global. Not every entity needs a target player (blocks do not), and each entity that does has its own targeting behavior. Targeting belongs to the entities that need it, as a component or policy that each owns, not as a service-wide function and an extension on every entity. The current `MegaPlayers.targetFor` (slot 0) and `IMegaGameEntity.targetPlayer` stay as the migration path until then, with `TODO`s (item `047`, or the first entity with a rule of its own).
 
 ## Branch split
 

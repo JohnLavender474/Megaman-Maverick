@@ -1077,6 +1077,10 @@ fun MegaPlayers.targetFor(seeker: IGameEntity): MegaPlayer? =
 - Cost: one component lookup per call; no allocation (policies are made once).
 - Timing: `029b` adds `targetFor`, `TargetPolicy` and the `SlotZero` default when it moves the first enemy. `TargetingComponent` comes the first time an entity needs its own rule (probably `047`, or `029c` if a boss shows a real need). `029a` does not include targeting.
 
+### Update (2026-10-23): targeting is not global
+
+Owner preference after `029b`-`029d`: the service-wide `targetFor` and the `targetPlayer` extension on every entity are a migration path, not the design. Not every entity needs a target player (blocks do not), and each entity that targets does it its own way. The `TargetingComponent` idea above fits that: an entity that targets owns its policy; an entity that does not target has none, and no "target player" API reaches it. When the first entity needs its own rule (or co-op arrives in `047`), the call sites that use `targetPlayer` move to the owning entity's component or policy. `TODO`s at `MegaPlayers.targetFor` and `IMegaGameEntity.targetPlayer` point here.
+
 ### One target per policy
 
 The owner asked whether a policy returns one player or several.
