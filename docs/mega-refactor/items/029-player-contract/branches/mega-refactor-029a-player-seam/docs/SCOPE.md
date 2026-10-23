@@ -97,6 +97,8 @@ These are not in this branch (see "Out of scope").
    - Core helpers as extension functions, for example `nearestTo(point)` built on `minByOrNull`.
    - Rules: the view holds fields for required components only; every other helper is an extension. One view type for every character; no view subclass per character.
 4. **`game.players`** in `MegamanMaverickGame`: a `MegaPlayers` with `Megaman` registered in slot 0, in `postCreate` after the current setup. `game.megaman` and the `megaman` extension stay unchanged. `Megaman` gets no new interface.
+   - `game.players` is a plain field with the game session's lifetime: not a Kotlin `object` (global state, not replaceable in tests), not in `GameState` (saved data; the service holds live entity references), and not owned by a level (slots outlive a level). `016` (`LevelContext`) and `001b` (host contract) can expose the same object later.
+   - An extension `val IMegaGameEntity.players get() = game.players`, next to the `megaman` extension (`C/entities/contracts/IMegaGameEntity.kt`). It is the entry point for the call sites that `029b` to `029f` move. Nothing outside the player package uses it in this branch.
 5. **Self-references:** replace the global `megaman` with `this` at the sites in "Current state". The trail sprite gets its player as an owner in its spawn props, and resets it on each spawn (it is pooled).
 6. **Slot prop on the player events:** a new `ConstKeys` key (for example `SLOT`) with the `PlayerSlot` of the player, on the submit sites in the table above, except `STUN_PLAYER` (a broadcast to all players; it stays without a slot). Megaman's own events use its view's slot, read from `game.players` or kept on `Megaman` at registration. No listener reads the prop in this branch.
 7. **Tests:**

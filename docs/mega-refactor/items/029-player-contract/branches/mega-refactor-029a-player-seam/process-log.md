@@ -17,3 +17,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - No branch exists yet. The folder was prepared on `master`.
 - Scan done on `504bcd015`. Draft `docs/SCOPE.md` written.
 - Draft scope revised after discussion: no `IPlayer` on the entity; engine `PlayerView` interface (choice A), `Players<V>` with inline helpers, no position in the engine; game view `MegaPlayer` resolves required components at registration; capacity 1.
+- Scope: added the `IMegaGameEntity.players` extension and where `game.players` lives (owner's request).
