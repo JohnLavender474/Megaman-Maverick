@@ -261,3 +261,12 @@ newest entry at the bottom.
   short sanity pass. Test maps stay on `master` for reuse. The owner asked for this.
 - Contract check: not needed (docs only).
 - Follow-up: `029a` scope and contract use the first test map (`RefactorTest029.tmx`).
+
+## 2026-10-23 — master (docs)
+
+- Summary: test maps must paint their blocks: a `tiles` tile layer with a tile on each block cell,
+  because block objects alone are invisible in the game. Added to "Test maps" in `CLAUDE.md` and to
+  the `level-builder` skill (iteration 2). The owner asked for this after the first test map had no
+  tile layer.
+- Contract check: not needed (docs only).
+- Follow-up: none.

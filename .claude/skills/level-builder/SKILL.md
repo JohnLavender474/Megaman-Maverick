@@ -75,6 +75,14 @@ bottomless pit, the `Death` rectangle is off-screen: `y` = room bottom + 48 px, 
 16 px, `instant=true`. `add-death` takes whole tiles only, so set this `y` and height on
 the object after you add it. Extend floors, ceilings and outer walls past the room edges.
 
+Paint the blocks. `init` makes a map with no tile layer, and `blocks` objects are invisible in
+the game, so a map without painted tiles shows empty rooms. Every level and test room needs a
+tile layer (CSV, named `tiles`, below the object layers) with at least one tile, and in practice
+a tile on every cell that a block covers. The CLI cannot paint tiles; add the layer with a small
+script or by hand, and raise `nextlayerid`. Use a tile from a tileset the map already has, for
+example tile 175 of `Tileset1.tsx`, the most common floor tile in `Test1.tmx`. See the `tiles`
+layer of `Test1.tmx` for the format.
+
 ### Iteration 3 — Player spawns
 Add the stage-start spawn `0` and any respawn points `1..n` with `add-spawn`, each a
 single tile placed directly above a plain block (never a conveyor or other special

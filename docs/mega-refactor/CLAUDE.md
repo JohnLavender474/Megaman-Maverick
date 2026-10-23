@@ -220,6 +220,9 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   rooms to the same map.
 - **Who builds it:** a subagent builds or edits the map with the `level-builder` skill, as a plan
   step. The map is rough by design; the owner can fix it by hand.
+- **Paint the blocks:** every test map and room has a `tiles` tile layer with a tile on each block
+  cell (see the `level-builder` skill and `Test1.tmx`). Block objects alone are invisible in the
+  game.
 - **When:** in the first plan steps of the branch, before the code changes. The owner (or a
   launch) checks each room on the baseline code first, so that the same room shows the behavior
   before and after the change.
