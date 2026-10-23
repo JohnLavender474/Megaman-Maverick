@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: Player slot, a small `IPlayer` contract and a players service (engine interface plus base class); `Megaman` is the only player, in slot 0
-- Done: scan; draft `docs/SCOPE.md` (revised: components direction, choice A, capacity 1).
-- Next: the owner reviews `docs/SCOPE.md`.
+- Done: scan; `docs/SCOPE.md` approved; draft `docs/CONTRACT.md`.
+- Next: the owner reviews `docs/CONTRACT.md`.
 - Blocked:
 
 ## Entries
@@ -19,3 +19,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Draft scope revised after discussion: no `IPlayer` on the entity; engine `PlayerView` interface (choice A), `Players<V>` with inline helpers, no position in the engine; game view `MegaPlayer` resolves required components at registration; capacity 1.
 - Scope: added the `IMegaGameEntity.players` extension and where `game.players` lives (owner's request).
 - Owner answered the open questions: names approved, new `ConstKeys.SLOT` (and `SLOTS`), `STUN_PLAYER` carries target slots (room shake: all players). Scope updated.
+- Scope approved by the owner. Draft `docs/CONTRACT.md` written.
