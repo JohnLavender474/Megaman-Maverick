@@ -4,7 +4,7 @@ What this branch changes and why. Write this file after the scan, before `CONTRA
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: draft
+- Status: draft (names and the slot key decided; see "Open questions")
 - Approved: no
 
 ## Goal
@@ -68,7 +68,7 @@ None of these events carries a player identity today. Submit sites:
 | `ADD_CURRENCY` | `C/entities/items/Screw.kt:50` |
 | `ATTAIN_HEALTH_TANK` | `C/entities/items/HealthTank.kt:73` |
 | `ATTAIN_HEART_TANK` | `C/entities/items/HeartTank.kt:148` |
-| `STUN_PLAYER` | `C/entities/bosses/TimberWoman.kt:808` (a boss ground shake that stuns every player on the ground) |
+| `STUN_PLAYER` | `C/entities/bosses/TimberWoman.kt:808`, the only submit site: Timber Woman's ground pound, with `StunType.STUN_BOUNCE_IF_ON_SURFACE`, next to a `SHAKE_CAM`. `Megaman` handles it (`Megaman.kt:603-633`): it skips the stun if already stunned, or if the type needs a surface and it is not on the ground or wall sliding. It listens only while spawned (`:427`, `:517`) |
 
 The item sites run in `contactWithPlayer(megaman: Megaman)`, so the player in the contact is known there.
 
@@ -89,7 +89,7 @@ These are not in this branch (see "Out of scope").
 2. **Players service in the engine:**
    - `IPlayers<out V : PlayerView>`: `capacity` and `get(slot)`. Nothing else.
    - `Players<V>`: an open class with the storage, `register(slot, entity)` (makes the view through a game-supplied factory and checks that the slot is free and in range), `unregister(slot)` and `get(slot)`. The capacity comes from the game; the engine sets no limit.
-   - Standard helpers as `inline` extension functions on `IPlayers`: `forEachPresent`, `any`, `all`, `firstOrNull`, `minByOrNull`. They iterate in slot order, a tie goes to the lower slot, and they do not allocate. Only a helper whose name says so (for example `forEachPresent`) filters by `present`; the others filter nothing, and the caller passes a predicate. This keeps today's behavior, because today's code reads `megaman` also while it is dead. No `primary`, no `first()`, no position.
+   - Standard helpers as `inline` extension functions on `IPlayers`: `forEach` (every registered player), `forEachPresent`, `any`, `all` (a predicate, as in Kotlin collections), `firstOrNull`, `minByOrNull`. They iterate in slot order, a tie goes to the lower slot, and they do not allocate. Only a helper whose name says so (for example `forEachPresent`) filters by `present`; the others filter nothing, and the caller passes a predicate. This keeps today's behavior, because today's code reads `megaman` also while it is dead. No `primary`, no `first()`, no position.
    - A game adds its own helpers as extension functions in the same way.
 3. **Core view and service:**
    - `MegaPlayer : PlayerView`: one non-null field for each required component, resolved with `require` at registration; accessors read through the component (for example `val body get() = bodyComponent.body`, because `BodyComponent.body` is a `var`). For this branch the required parts are only those that the core helpers below need (the body). Later branches add a field only when a moved call site needs a required part.
@@ -100,7 +100,9 @@ These are not in this branch (see "Out of scope").
    - `game.players` is a plain field with the game session's lifetime: not a Kotlin `object` (global state, not replaceable in tests), not in `GameState` (saved data; the service holds live entity references), and not owned by a level (slots outlive a level). `016` (`LevelContext`) and `001b` (host contract) can expose the same object later.
    - An extension `val IMegaGameEntity.players get() = game.players`, next to the `megaman` extension (`C/entities/contracts/IMegaGameEntity.kt`). It is the entry point for the call sites that `029b` to `029f` move. Nothing outside the player package uses it in this branch.
 5. **Self-references:** replace the global `megaman` with `this` at the sites in "Current state". The trail sprite gets its player as an owner in its spawn props, and resets it on each spawn (it is pooled).
-6. **Slot prop on the player events:** a new `ConstKeys` key (for example `SLOT`) with the `PlayerSlot` of the player, on the submit sites in the table above, except `STUN_PLAYER` (a broadcast to all players; it stays without a slot). Megaman's own events use its view's slot, read from `game.players` or kept on `Megaman` at registration. No listener reads the prop in this branch.
+6. **Player identity on the player events:**
+   - A new key `ConstKeys.SLOT` with the `PlayerSlot` of the player, on every submit site in the table above except `STUN_PLAYER`. Megaman's own events use its slot, read from `game.players` or kept on `Megaman` at registration. No listener reads `SLOT` in this branch.
+   - `STUN_PLAYER` gets its target players: a new key `ConstKeys.SLOTS` with the target slots. A room-wide stun (Timber Woman's ground pound) targets every registered player (`players.forEach`); with capacity 1 that is slot 0. `Megaman` handles the event only if its slot is in the targets, then applies today's checks unchanged. This is the only listener that reads a new key in this branch. With one player the result is the same as today.
 7. **Tests:**
    - Engine: `Players` with a capacity greater than 1 (register, unregister, a full or out-of-range slot, `get` of an empty slot), the helpers (slot order, `present` filter, `minByOrNull` tie to the lower slot, `any`, `all`, `firstOrNull`), a custom extension helper, `require` failure message, `ComponentKey` lookup.
    - Core: `MegaPlayer` registration fails without a `BodyComponent`; the slot prop is on the events where a test is practical with the relaxed game mock.
@@ -132,6 +134,8 @@ These are not in this branch (see "Out of scope").
 
 ## Open questions
 
-1. Names: the engine package (`players`?), `PlayerSlot`, `PlayerView`, `IPlayers`, `Players`, `ComponentKey`, and the core `MegaPlayer` and `MegaPlayers`.
-2. The slot prop key: a new `ConstKeys.SLOT`, or the existing `ConstKeys.PLAYER` (`"player"`)?
-3. `STUN_PLAYER` without a slot means "all players": agree?
+None left. Answered by the owner (2026-10-23):
+
+- Names: as in this file.
+- The slot prop key: a new key (`ConstKeys.SLOT`, and `ConstKeys.SLOTS` for the stun targets).
+- `STUN_PLAYER` carries target players. A room-shake stun targets all players.
