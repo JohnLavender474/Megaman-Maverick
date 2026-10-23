@@ -23,7 +23,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints.TentacleState
@@ -251,7 +251,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
     }
 
     fun lunge(
-        target: Vector2 = megaman.body.getCenter(),
+        target: Vector2 = targetPlayer.body.getCenter(),
         lungeType: LungeType = when {
             game.state.hardMode -> LungeType.entries.random()
             else -> UtilMethods.getRandom(LungeType.SIMPLE, LungeType.MULTI_STEP)
@@ -287,7 +287,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
         tentacle!!.setState(TentacleState.LUNGING)
     }
 
-    fun pin(target: Vector2 = megaman.body.getCenter()) {
+    fun pin(target: Vector2 = targetPlayer.body.getCenter()) {
         if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) {
             GameLogger.error(TAG, "pin(): failed to pin")
             return
@@ -455,7 +455,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
                                     // Fire the second lunge, pulled slightly toward the anchor
                                     // so it's not aimed perfectly at Mega Man
                                     lungePhase = 1
-                                    val megaCenter = megaman.body.getCenter()
+                                    val megaCenter = targetPlayer.body.getCenter()
                                     lungeTarget.set(
                                         megaCenter.x + (anchor.x - megaCenter.x) * MULTI_STEP_PULL_TOWARD_ANCHOR,
                                         megaCenter.y + (anchor.y - megaCenter.y) * MULTI_STEP_PULL_TOWARD_ANCHOR
@@ -467,7 +467,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
                             LungeType.LUNGE_PAST_AND_SWIPE -> {
                                 if (lungePhase == 0) {
                                     // Coil back before swiping
-                                    val swipeUp = megaman.body.getY() > currentTipTarget.y
+                                    val swipeUp = targetPlayer.body.getY() > currentTipTarget.y
                                     val swipeDir = if (swipeUp) 1f else -1f
 
                                     // Extend further horizontally away from the anchor during swipe

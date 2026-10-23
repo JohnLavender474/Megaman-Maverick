@@ -30,7 +30,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.players.any
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -49,6 +48,7 @@ import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Cokonut
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -258,7 +258,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
             debugShapes.add { trunkFixture }
 
             if (trunkFixtureType == FixtureType.BODY) trunkFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-                if (state != CokeyroState.DIE && players.viewOf(projectile.owner) != null) startShaking()
+                if (state != CokeyroState.DIE && projectile.owner.asPlayer != null) startShaking()
             }
 
             body.preProcess.put("trunk_${trunkFixtureType.name.lowercase()}") {

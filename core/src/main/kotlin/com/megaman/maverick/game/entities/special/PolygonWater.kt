@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.splitIntoGameRectanglesBasedOnCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -97,7 +98,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun shouldSplash(fixture: IFixture): Boolean {
         val entity = fixture.getEntity()
-        return entity.getType() != EntityType.PROJECTILE || (entity as IProjectileEntity).owner != megaman
+        return entity.getType() != EntityType.PROJECTILE || (entity as IProjectileEntity).owner.asPlayer == null
     }
 
     override fun doMakeSplashSound(fixture: IFixture) = splashSound

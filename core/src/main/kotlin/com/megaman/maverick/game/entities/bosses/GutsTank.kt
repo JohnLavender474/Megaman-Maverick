@@ -35,7 +35,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.players.all
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -64,6 +63,7 @@ import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.entities.projectiles.PurpleBlast
 import com.megaman.maverick.game.entities.utils.hardMode
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -422,7 +422,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.GRAVITY pairTo gravity,
                                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
-                                        if (players.viewOf(damageable) != null) laugh()
+                                        if (damageable.asPlayer != null) laugh()
                                     }
                                 )
                             )
@@ -484,7 +484,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.POSITION pairTo metSpawn,
                                     ConstKeys.RIGHT pairTo false,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
-                                        if (players.viewOf(damageable) != null) laugh()
+                                        if (damageable.asPlayer != null) laugh()
                                     },
                                     ConstKeys.DROP_ITEM_ON_DEATH pairTo false,
                                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
@@ -516,7 +516,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.FACING pairTo Facing.LEFT,
                                     ConstKeys.TARGET pairTo target,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
-                                        if (players.viewOf(damageable) != null) laugh()
+                                        if (damageable.asPlayer != null) laugh()
                                     },
                                     ConstKeys.DROP_ITEM_ON_DEATH pairTo false,
                                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false

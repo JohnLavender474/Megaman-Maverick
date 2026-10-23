@@ -20,7 +20,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.IGameEntity
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -32,9 +31,9 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
 class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEntity, IFaceable {
@@ -123,7 +122,7 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
-            val player = players.viewOf(feet.getEntity())
+            val player = feet.getEntity().asPlayer
             if (!knockedToDeath &&
                 player != null &&
                 knockabilityDelayTimer.isFinished() &&

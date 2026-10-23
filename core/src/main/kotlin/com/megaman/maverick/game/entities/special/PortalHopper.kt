@@ -40,8 +40,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
@@ -78,7 +78,10 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private var nextEntityDirection: Direction? = null
 
     /** sets the entity's bodily direction; separate from [nextEntityDirection] */
-    private var nextBodyDirection: Direction? = null
+    // TODO: next_body_direction is commented out in this class: no TMX file sets it, and the body direction it wrote
+    //  skipped WorldGravity and the player's direction setter (no camera rotation, no physics values). If it comes
+    //  back, a player's direction must go through game.gravity.set (mega-refactor-029d)
+    // private var nextBodyDirection: Direction? = null
 
     private val hopQueueMap = OrderedMap<IBodyEntity, GamePair<Timer, Direction>>()
     private val timerPool = Pool(supplier = { Timer() })
@@ -126,10 +129,10 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         nextEntityDirection =
             if (nextEntityDirString != null) Direction.valueOf(nextEntityDirString.uppercase()) else null
 
-        val nextBodyDirString =
-            spawnProps.get("${ConstKeys.NEXT}_${ConstKeys.BODY}_${ConstKeys.DIRECTION}", String::class)
-        nextBodyDirection =
-            if (nextBodyDirString != null) Direction.valueOf(nextBodyDirString.uppercase()) else null
+        // val nextBodyDirString =
+        //     spawnProps.get("${ConstKeys.NEXT}_${ConstKeys.BODY}_${ConstKeys.DIRECTION}", String::class)
+        // nextBodyDirection =
+        //     if (nextBodyDirString != null) Direction.valueOf(nextBodyDirString.uppercase()) else null
 
         thisKey = spawnProps.get(ConstKeys.KEY, Int::class)!!
         nextKey = spawnProps.get(ConstKeys.NEXT, Int::class)!!
@@ -154,10 +157,10 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
             val entity = event.getProperty(ConstKeys.ENTITY, IBodyEntity::class)!!
             val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
-            val bodyDirection = event.getProperty("${ConstKeys.BODY}_${ConstKeys.DIRECTION}", Direction::class)
+            // val bodyDirection = event.getProperty("${ConstKeys.BODY}_${ConstKeys.DIRECTION}", Direction::class)
             val entityDirection = event.getProperty("${ConstKeys.ENTITY}_${ConstKeys.DIRECTION}", Direction::class)
 
-            receiveEntity(entity, direction, bodyDirection, entityDirection)
+            receiveEntity(entity, direction, entityDirection)
         }
     }
 
@@ -166,7 +169,6 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun receiveEntity(
         entity: IBodyEntity,
         direction: Direction,
-        bodyDirection: Direction?,
         entityDirection: Direction?
     ) {
         GameLogger.debug(
@@ -175,7 +177,6 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 "thisKey=$thisKey, " +
                 "entity=$entity, " +
                 "direction=$direction, " +
-                "bodyDirection=$bodyDirection, " +
                 "entityDirection=$entityDirection"
         )
 
@@ -197,8 +198,11 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
         onPortalStart?.invoke(this)
 
-        if (bodyDirection != null) entity.body.direction = bodyDirection
-        if (entityDirection != null && entity is IDirectional) entity.direction = entityDirection
+        // if (bodyDirection != null) entity.body.direction = bodyDirection
+        if (entityDirection != null) {
+            if (entity.asPlayer != null) game.gravity.set(entityDirection)
+            else if (entity is IDirectional) entity.direction = entityDirection
+        }
 
         val timer = timerPool.fetch()
         timer.resetDuration(PORTAL_HOP_DELAY)
@@ -215,7 +219,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                     ConstKeys.KEY pairTo nextKey,
                     ConstKeys.ENTITY pairTo entity,
                     ConstKeys.DIRECTION pairTo nextDirection,
-                    "${ConstKeys.BODY}_${ConstKeys.DIRECTION}" pairTo nextBodyDirection,
+                    // "${ConstKeys.BODY}_${ConstKeys.DIRECTION}" pairTo nextBodyDirection,
                     "${ConstKeys.ENTITY}_${ConstKeys.DIRECTION}" pairTo nextEntityDirection
                 )
             )
@@ -273,7 +277,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = if (rotation < 0f) megaman.direction.rotation else rotation
+            sprite.rotation = if (rotation < 0f) game.gravity.direction.rotation else rotation
         }
         .sprite("moon", GameSprite(regions["moon"]).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .preProcess { delta, sprite ->

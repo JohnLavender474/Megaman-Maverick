@@ -16,6 +16,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -54,8 +55,10 @@ class SwimBooster(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
         if (event.key == EventType.END_ROOM_TRANS) {
-            if (megaman.body.isSensing(BodySense.IN_WATER))
-                megaman.body.physics.velocity.y = MegamanValues.SWIM_VEL_Y * ConstVals.PPM
+            // TODO: the boost uses Mega Man's swim velocity for the target player; a value for each character is for
+            //  item 029g
+            if (targetPlayer.body.isSensing(BodySense.IN_WATER))
+                targetPlayer.body.physics.velocity.y = MegamanValues.SWIM_VEL_Y * ConstVals.PPM
             destroy()
         }
     }

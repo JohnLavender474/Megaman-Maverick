@@ -17,7 +17,6 @@ import com.maverick.game.engine.damage.IDamager
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.players.forEach
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -40,6 +39,7 @@ import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.IPlayerDamageListener
 import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
@@ -196,7 +196,7 @@ abstract class AbstractBoss(
 
     // TODO: the enhancement is read from the global megaman, not from the owner's profile, until item 029e
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        damager is IOwnable<*> && players.viewOf(damager.owner) != null &&
+        damager is IOwnable<*> && damager.owner.asPlayer != null &&
             megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
 

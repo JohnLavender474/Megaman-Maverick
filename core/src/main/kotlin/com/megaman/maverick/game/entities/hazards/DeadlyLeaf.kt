@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -114,7 +115,7 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
     }
 
     override fun canBeDamagedBy(damager: IDamager) =
-        (damager is IProjectileEntity && damager.owner == megaman) ||
+        (damager is IProjectileEntity && damager.owner.asPlayer != null) ||
             FULL_DMG_NEGS.contains(damager::class)
 
     override fun takeDamageFrom(damager: IDamager): Boolean {

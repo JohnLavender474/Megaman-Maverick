@@ -18,7 +18,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 
 // This entity adds a DEATH fixture to the world system. This entity should be used if other entities
 // besides Mega Man can make contact with this entity. If it is guaranteed that ONLY Mega Man will make
-// contact, then it is recommended to use the `MegamanDeath` entity instead as an optimization trick.
+// contact, then it is recommended to use the `PlayerDeath` entity instead as an optimization trick.
 open class Death(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
 
     companion object {

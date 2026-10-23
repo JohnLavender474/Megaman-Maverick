@@ -59,6 +59,7 @@ import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.Companion.
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -91,7 +92,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         override fun get(damager: IDamager) = when {
             IGNORE_DMG.contains(damager::class) -> 0
-            owner == megaman -> 6
+            owner.asPlayer != null -> 6
             else -> 0
         }
     }
@@ -155,7 +156,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
         direction = spawnProps.getOrDefault(
             ConstKeys.DIRECTION,
-            if (owner is IDirectional) (owner as IDirectional).direction else megaman.direction,
+            if (owner is IDirectional) (owner as IDirectional).direction else game.gravity.direction,
             Direction::class
         )
 
@@ -208,8 +209,8 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
-        if (owner == megaman && event.key == EventType.PLAYER_JUST_DIED) destroy()
-        if (owner != megaman && event.key.equalsAny(EventType.BEGIN_ROOM_TRANS, EventType.BOSS_DEFEATED)) destroy()
+        if (owner.asPlayer != null && event.key == EventType.PLAYER_JUST_DIED) destroy()
+        if (owner.asPlayer == null && event.key.equalsAny(EventType.BEGIN_ROOM_TRANS, EventType.BOSS_DEFEATED)) destroy()
     }
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
@@ -389,7 +390,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 
-            sprite.hidden = damageBlink || (owner == megaman && megaman.teleporting)
+            sprite.hidden = damageBlink || owner.asPlayer?.teleporting == true
 
             sprite.setCenter(body.getCenter())
         }

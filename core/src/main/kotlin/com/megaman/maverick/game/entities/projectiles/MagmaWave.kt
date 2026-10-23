@@ -42,7 +42,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.enemies.LumberJoe
 import com.megaman.maverick.game.entities.enemies.ShieldGuardBot
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
@@ -86,7 +85,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, game.gravity.direction, Direction::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val position = DirectionPositionMapper.getPosition(direction).opposite()

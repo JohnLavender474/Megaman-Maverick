@@ -6,8 +6,10 @@ import com.megaman.maverick.game.entities.contracts.IMegaGameEntity
 
 class MegaPlayers(capacity: Int = 1) : Players<MegaPlayer>(capacity, ::MegaPlayer) {
 
-    // TODO: always gives slot 0; the targeting policy (a TargetPolicy with a game default and an optional per-entity
-    //  TargetingComponent, see "Targeting design" in docs/mega-refactor/items/029-player-contract/NOTES.md) comes
-    //  with its first real caller (item 047, or a boss in 029c)
+    // TODO: always gives slot 0. Targeting should not be a service-wide function, and targetPlayer should not exist on
+    //  every entity: not every entity needs a target player (blocks do not), and each entity that does has its own
+    //  targeting behavior. It belongs to the entities that need it, as a component or policy that each one owns (see
+    //  "Targeting design" in docs/mega-refactor/items/029-player-contract/NOTES.md); item 047, or the first entity
+    //  with a rule of its own
     fun targetFor(@Suppress("UNUSED_PARAMETER") seeker: IMegaGameEntity): MegaPlayer = get(PlayerSlot(0))!!
 }

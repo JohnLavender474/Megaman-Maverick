@@ -34,14 +34,14 @@ New APIs and their first callers in this branch:
   to `active`. Then `git worktree add -b mega-refactor-029d-world-players
   .worktrees/mega-refactor-029d-world-players master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 470 engine, 110 core) and the warning count
   (expected 114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Test rooms (subagent)
 
@@ -55,7 +55,7 @@ New APIs and their first callers in this branch:
     both gravities.
   The subagent copies placements and properties from real maps.
 - Check: a short launch of each new room shows no exception.
-- Done: no
+- Done: yes
 
 ### 4. Player state, view parts, `WorldGravity` and the receivers
 
@@ -70,7 +70,7 @@ New APIs and their first callers in this branch:
   - `WorldGravity(players)` in core; `MegamanMaverickGame.gravity` made after `players`.
 - Check: tests for `WorldGravity.set`, the new component field, the accessors and the receivers. Build
   and tests pass.
-- Done: no
+- Done: yes
 
 ### 5. Gravity writers and readers
 
@@ -83,7 +83,7 @@ New APIs and their first callers in this branch:
   - The world-direction readers read `game.gravity.direction`.
 - Check: a grep shows no write of a player's direction outside `WorldGravity.set` and the player's own
   setter. Build and tests pass. Launch `gravity_switch`.
-- Done: no
+- Done: yes
 
 ### 6. World code and `HIT_BY_PLAYER`
 
@@ -93,7 +93,7 @@ New APIs and their first callers in this branch:
   `{ game.players.any { it.ready } }` with the `047` `TODO`.
 - Check: a test that `BodyPlayerRule` calls the receiver with the view, if practical. Build and tests
   pass. Launch `hit_by_player`.
-- Done: no
+- Done: yes
 
 ### 7. World entities that need a choice
 
@@ -104,39 +104,39 @@ New APIs and their first callers in this branch:
   `SpiderWeb` sticks to the target; `PreciousGem` reads the owner view's `teleporting`.
 - Check: a review of each site, listed in the process log. Build and tests pass. Launch
   `player_death` and `push_flip`.
-- Done: no
+- Done: yes
 
 ### 8. World entities: the rest
 
 - Changes: a script replaces the remaining `megaman.` reads in the world packages with
   `targetPlayer.`; a check of the diff that each changed line differs only in the reference.
 - Check: the contract grep. Build and tests pass.
-- Done: no
+- Done: yes
 
 ### 9. `PlayerDeath`
 
 - Changes: rename the class `MegamanDeath` to `PlayerDeath` (file, class, `TAG`), the comment in
   `Death.kt`, and every TMX object named `MegamanDeath` (29 objects in 4 files, plus the test room).
 - Check: a grep finds no `MegamanDeath`. Build and tests pass. Launch `player_death`.
-- Done: no
+- Done: yes
 
 ### 10. Unused paths
 
 - Changes: comment out `GravityCapsule` in full with its `TODO`; comment out `PortalHopper`'s
   `next_body_direction` (prop read, field, event property, body write) with its `TODO`.
 - Check: a grep that nothing else uses them. Build and tests pass.
-- Done: no
+- Done: yes
 
 ### 11. Contract checks
 
 - Changes: none, unless a check fails.
 - Check: a clean build; the automated checks in `CONTRACT.md`; the owner's play test. Write the
   results in the process log.
-- Done: no
+- Done: yes
 
 ### 12. Merge
 
 - Changes: the merge steps in `docs/mega-refactor/CLAUDE.md` ("Branch merge"), after the owner's
   explicit approval.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes

@@ -27,6 +27,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -106,7 +107,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
-        if (owner == megaman && event.key == EventType.PLAYER_JUST_DIED) destroy()
+        if (owner.asPlayer != null && event.key == EventType.PLAYER_JUST_DIED) destroy()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

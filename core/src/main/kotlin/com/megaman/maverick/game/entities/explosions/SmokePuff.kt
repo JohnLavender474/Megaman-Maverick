@@ -36,6 +36,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -85,8 +86,8 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
     }
 
     override fun canDamage(damageable: IDamageable) =
-        (damageable == megaman && owner?.isAny(AbstractEnemy::class, IHazard::class) == true) ||
-                (damageable.isAny(AbstractEnemy::class, IHazard::class) && owner == megaman)
+        (damageable.asPlayer != null && owner?.isAny(AbstractEnemy::class, IHazard::class) == true) ||
+                (damageable.isAny(AbstractEnemy::class, IHazard::class) && owner.asPlayer != null)
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         if (animation.isFinished()) destroy()

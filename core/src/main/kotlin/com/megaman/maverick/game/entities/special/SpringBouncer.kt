@@ -39,6 +39,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
@@ -108,7 +109,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
 
         val bounceFixture = Fixture(body, FixtureType.BOUNCER, GameRectangle())
         bounceFixture.setReceiver(Receivers.VELOCITY_ALTERATION) alteration@{ fixture, _, state ->
-            if (state == ProcessState.BEGIN && fixture.getEntity() == megaman)
+            if (state == ProcessState.BEGIN && fixture.getEntity().asPlayer != null)
                 requestToPlaySound(SoundAsset.DINK_SOUND, false)
 
             return@alteration bounce(fixture)
@@ -205,7 +206,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
             Direction.LEFT -> impulse.forceX = -BOUNCE_IMPULSE * ConstVals.PPM
             Direction.RIGHT -> impulse.forceX = BOUNCE_IMPULSE * ConstVals.PPM
         }
-        if (fixture.getEntity() is Megaman) {
+        if (fixture.getEntity().asPlayer != null) {
             val controllerPoller = game.controllerPoller
             when {
                 (direction == Direction.UP && controllerPoller.isPressed(MegaControllerButton.UP)) ||

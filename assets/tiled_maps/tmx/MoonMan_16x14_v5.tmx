@@ -1440,67 +1440,67 @@
   <object id="132" x="5440" y="2416" width="320" height="48"/>
  </objectgroup>
  <objectgroup id="8" name="sensors">
-  <object id="41" name="MegamanDeath" x="896" y="3920" width="448" height="80">
+  <object id="41" name="PlayerDeath" x="896" y="3920" width="448" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="42" name="MegamanDeath" x="1984" y="3920" width="96" height="80">
+  <object id="42" name="PlayerDeath" x="1984" y="3920" width="96" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="43" name="MegamanDeath" x="2112" y="3920" width="96" height="80">
+  <object id="43" name="PlayerDeath" x="2112" y="3920" width="96" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="44" name="MegamanDeath" x="2240" y="3920" width="384" height="80">
+  <object id="44" name="PlayerDeath" x="2240" y="3920" width="384" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="104" name="MegamanDeath" x="4384" y="2928" width="512" height="80">
+  <object id="104" name="PlayerDeath" x="4384" y="2928" width="512" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="105" name="MegamanDeath" x="5216" y="2928" width="64" height="80">
+  <object id="105" name="PlayerDeath" x="5216" y="2928" width="64" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="106" name="MegamanDeath" x="5440" y="2928" width="96" height="80">
+  <object id="106" name="PlayerDeath" x="5440" y="2928" width="96" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="107" name="MegamanDeath" x="5632" y="2928" width="96" height="80">
+  <object id="107" name="PlayerDeath" x="5632" y="2928" width="96" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="108" name="MegamanDeath" x="6048" y="2928" width="128" height="80">
+  <object id="108" name="PlayerDeath" x="6048" y="2928" width="128" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="109" name="MegamanDeath" x="6208" y="2928" width="128" height="80">
+  <object id="109" name="PlayerDeath" x="6208" y="2928" width="128" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="110" name="MegamanDeath" x="3712" y="2928" width="160" height="80">
+  <object id="110" name="PlayerDeath" x="3712" y="2928" width="160" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="139" name="MegamanDeath" x="6976" y="2928" width="128" height="80">
+  <object id="139" name="PlayerDeath" x="6976" y="2928" width="128" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="141" name="MegamanDeath" x="6848" y="2928" width="96" height="80">
+  <object id="141" name="PlayerDeath" x="6848" y="2928" width="96" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>
@@ -1527,7 +1527,7 @@
     <property name="room" value="room14"/>
    </properties>
   </object>
-  <object id="461" name="MegamanDeath" x="15456" y="1296" width="288" height="80">
+  <object id="461" name="PlayerDeath" x="15456" y="1296" width="288" height="80">
    <properties>
     <property name="instant" type="bool" value="true"/>
    </properties>

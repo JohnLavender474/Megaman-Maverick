@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.items.Coin
 import com.megaman.maverick.game.entities.special.GrowingVine
 import com.megaman.maverick.game.entities.special.GrowingVine.GrowingVineState
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -138,13 +139,13 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
         GameLogger.debug(TAG, "hitByHead(): processState=$processState, headFixture=$headFixture")
 
         val entity = headFixture.getEntity()
-        if (entity != megaman) return
+        val player = entity.asPlayer ?: return
 
         val shouldBeHit = when (direction) {
-            Direction.UP -> megaman.body.physics.velocity.y >= 0f
-            Direction.DOWN -> megaman.body.physics.velocity.y <= 0f
-            Direction.LEFT -> megaman.body.physics.velocity.x <= 0f
-            Direction.RIGHT -> megaman.body.physics.velocity.x >= 0f
+            Direction.UP -> player.body.physics.velocity.y >= 0f
+            Direction.DOWN -> player.body.physics.velocity.y <= 0f
+            Direction.LEFT -> player.body.physics.velocity.x <= 0f
+            Direction.RIGHT -> player.body.physics.velocity.x >= 0f
         }
         if (shouldBeHit) {
             spawnedItem = spawnItem()

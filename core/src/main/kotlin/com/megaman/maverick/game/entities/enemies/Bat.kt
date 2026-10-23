@@ -34,7 +34,6 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.pathfinding.PathfinderParams
 import com.maverick.game.engine.pathfinding.PathfindingComponent
 import com.maverick.game.engine.players.any
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -59,6 +58,7 @@ import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -231,7 +231,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         GameLogger.debug(TAG, "onDamageInflictedTo(): damageable=$damageable")
-        if (players.viewOf(damageable) != null)
+        if (damageable.asPlayer != null)
             state = if (hangAfterDamageInflicted) BatState.FLYING_TO_RETREAT else BatState.FLYING_TO_ATTACK
     }
 

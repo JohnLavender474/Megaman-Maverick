@@ -32,7 +32,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.body.FixtureType
@@ -175,6 +174,6 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        direction = megaman.direction
+        direction = game.gravity.direction
     })
 }

@@ -42,6 +42,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.ReactorExplosion
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
 class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
@@ -191,7 +192,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
             shatter(body.getBounds())
         }
 
-        if (owner != megaman || damageable !is IHealthEntity || !damageable.isHealthDepleted())
+        if (owner.asPlayer == null || damageable !is IHealthEntity || !damageable.isHealthDepleted())
             explodeAndDie()
         else {
             damageInflictions++
@@ -212,7 +213,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
         velocity.y = 5f * ConstVals.PPM
 
         bounces++
-        if (owner != megaman) owner = shieldFixture.getEntity()
+        if (owner.asPlayer == null) owner = shieldFixture.getEntity()
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
 

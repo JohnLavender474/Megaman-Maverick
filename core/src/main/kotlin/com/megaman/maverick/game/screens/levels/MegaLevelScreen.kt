@@ -363,8 +363,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val direction = Direction.valueOf(
                     currentRoom.properties.get("megaman_direction", String::class.java).uppercase()
                 )
-                if (direction != megaman.direction) {
-                    megaman.direction = direction
+                if (direction != game.gravity.direction) {
+                    game.gravity.set(direction)
 
                     val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
                     aura.spawn(props(ConstKeys.POSITION pairTo megaman.body.getCenter()))

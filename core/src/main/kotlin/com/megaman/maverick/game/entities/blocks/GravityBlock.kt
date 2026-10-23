@@ -28,6 +28,7 @@ import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -42,6 +43,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.utils.getStandardBodyDoUpdatePredicate
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -134,7 +136,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
         entity == this && block == this.innerBlock
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ direction = megaman.direction })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ direction = game.gravity.direction })
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -205,9 +207,10 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             }
         }
         body.preProcess.put(ConstKeys.DEATH) {
-            if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
-                body.getBounds().overlaps(megaman.headFixture.getShape())
-            ) megaman.depleteHealth()
+            players.forEach {
+                if (!body.isSensing(BodySense.FEET_ON_GROUND) && body.getBounds().overlaps(it.headFixture.getShape()))
+                    it.depleteHealth()
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

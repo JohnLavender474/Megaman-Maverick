@@ -28,7 +28,6 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IMotionEntity
 import com.maverick.game.engine.motion.MotionComponent
 import com.maverick.game.engine.motion.SineWave
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -42,10 +41,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SaucerRay
 import com.megaman.maverick.game.entities.projectiles.Asteroid
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -187,7 +186,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 4f * ConstVals.PPM))
         rayScanner.offsetFromBodyAttachment.y = -body.getHeight()
         rayScanner.setReceiver(Receivers.FILTER) { fixture ->
-            players.viewOf(fixture.getEntity()) != null && fixture.getType() == FixtureType.DAMAGEABLE
+            fixture.getEntity().asPlayer != null && fixture.getType() == FixtureType.DAMAGEABLE
         }
         rayScanner.setReceiver(Receivers.CONSUMER) { processState, _ ->
             if (rayDelay.isFinished() && !raying) startRay()

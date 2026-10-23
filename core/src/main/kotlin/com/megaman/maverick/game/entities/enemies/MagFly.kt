@@ -20,7 +20,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -33,8 +32,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -117,7 +116,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         forceFixture.offsetFromBodyAttachment.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
         forceFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, processState ->
             val entity = fixture.getEntity()
-            val player = players.viewOf(entity)
+            val player = entity.asPlayer
 
             if (entity is AbstractEnemy ||
                 (player != null && (player.damaged || player.isBehaviorActive(BehaviorType.CLIMBING)))

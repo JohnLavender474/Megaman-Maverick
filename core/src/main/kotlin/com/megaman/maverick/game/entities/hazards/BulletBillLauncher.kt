@@ -33,8 +33,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.BulletBill
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -102,7 +102,7 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!overlapsGameCamera() || megaman.dead || !megaman.ready) {
+        if (!overlapsGameCamera() || targetPlayer.dead || !targetPlayer.ready) {
             launchTimer.reset()
             return@UpdatablesComponent
         }
@@ -134,7 +134,7 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         .build()
 
     private fun launchBulletBill() {
-        val facing = if (body.getX() < megaman.body.getX()) Facing.RIGHT else Facing.LEFT
+        val facing = if (body.getX() < targetPlayer.body.getX()) Facing.RIGHT else Facing.LEFT
 
         if ((facing == Facing.LEFT && !canShootLeft) ||
             (facing == Facing.RIGHT && !canShootRight)

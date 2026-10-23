@@ -7,7 +7,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 
 class GroundSlideBlocker(game: MegamanMaverickGame): AbstractBlock(game) {
 
@@ -40,6 +40,6 @@ class GroundSlideBlocker(game: MegamanMaverickGame): AbstractBlock(game) {
         return component
     }
 
-    private fun isActive() = !megaman.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) &&
+    private fun isActive() = !targetPlayer.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) &&
         !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
 }

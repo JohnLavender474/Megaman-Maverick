@@ -24,7 +24,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -158,7 +158,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
                 initSpawnDelay.update(delta)
 
                 if (initSpawnDelay.isFinished()) {
-                    val megamanBounds = megaman.body.getBounds()
+                    val megamanBounds = targetPlayer.body.getBounds()
                     val minX = megamanBounds.getX() - 10f * ConstVals.PPM
                     val maxX = megamanBounds.getMaxX() + 10f * ConstVals.PPM
 

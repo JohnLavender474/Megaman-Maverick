@@ -34,7 +34,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.players.any
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -55,6 +54,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.UFOBomb
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -303,11 +303,11 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         bombConsumerFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         bombConsumerFixture.setReceiver(Receivers.FILTER) { fixture ->
             !dropped && fixture.getType() == FixtureType.PROJECTILE &&
-                players.viewOf((fixture.getEntity() as IProjectileEntity).owner) != null
+                (fixture.getEntity() as IProjectileEntity).owner.asPlayer != null
         }
         bombConsumerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             val projectile = fixture.getEntity() as IProjectileEntity
-            if (players.viewOf(projectile.owner) != null) {
+            if (projectile.owner.asPlayer != null) {
                 // so that the enemy doesn't get stuck in place if the bomb gets destroyed while he's rising
                 rising = false
 

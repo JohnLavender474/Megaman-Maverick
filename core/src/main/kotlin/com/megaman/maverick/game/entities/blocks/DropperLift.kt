@@ -21,12 +21,14 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.getBounds
@@ -72,9 +74,9 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
         timer.reset()
     }
 
-    private fun isMegamanOverlapping() =
-        megaman.feetFixture.getShape().overlaps(body.getBounds()) ||
-            megaman.body.getBounds().overlaps(body.getBounds())
+    private fun isMegamanOverlapping() = players.any {
+        it.feetFixture.getShape().overlaps(body.getBounds()) || it.body.getBounds().overlaps(body.getBounds())
+    }
 
     private fun setActive(active: Boolean) {
         body.physics.collisionOn = active

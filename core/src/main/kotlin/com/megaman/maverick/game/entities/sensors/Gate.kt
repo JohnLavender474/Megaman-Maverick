@@ -46,7 +46,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -343,7 +343,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
             // set the Gate's body and fixtures to inactive as an optimization.
             // This assumes that ONLY Mega Man can ever make contact with a Gate.
             val active = body.getBounds().getCenter()
-                .dst(megaman.body.getBounds().getCenter())
+                .dst(targetPlayer.body.getBounds().getCenter())
                 .lessThan(MAX_MEGA_MAN_DIST * ConstVals.PPM)
             body.physics.collisionOn = active
             body.forEachFixture { fixture -> fixture.setActive(active) }

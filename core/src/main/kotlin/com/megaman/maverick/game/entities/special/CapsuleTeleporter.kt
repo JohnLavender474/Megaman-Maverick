@@ -54,6 +54,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -205,7 +206,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
         incomingBodies.put(entity, Timer(RECEIVE_DELAY))
 
-        if (entity == megaman && megamanDirOnReceive != null) megaman.direction = megamanDirOnReceive!!
+        if (entity.asPlayer != null && megamanDirOnReceive != null) game.gravity.set(megamanDirOnReceive!!)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

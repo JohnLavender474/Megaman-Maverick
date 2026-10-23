@@ -20,6 +20,7 @@ import com.maverick.game.engine.drawables.sprites.setBounds
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -29,6 +30,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.projectiles.Axe
@@ -76,8 +78,10 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             var impulse = PROJECTILE_IMPULSE * ConstVals.PPM
             if (isProjectileRightOfBlock) impulse *= -1f
 
-            if ((impulse > 0f && megaman.leftSideFixture.overlaps(pushableBody.getBounds())) ||
-                (impulse < 0f && megaman.rightSideFixture.overlaps(pushableBody.getBounds()))
+            if (players.any {
+                    (impulse > 0f && it.leftSideFixture.overlaps(pushableBody.getBounds())) ||
+                        (impulse < 0f && it.rightSideFixture.overlaps(pushableBody.getBounds()))
+                }
             ) {
                 pushableBody.physics.velocity.x = 0f
                 return
@@ -161,16 +165,20 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         block!!.body.set(body)
 
         if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
-            megaman.leftSideFixture.overlaps(body.getBounds()) &&
-                megaman.isFacing(Facing.LEFT) &&
-                megaman.body.physics.velocity.x < 0f -> {
+            players.any {
+                it.leftSideFixture.overlaps(body.getBounds()) &&
+                    it.facing == Facing.LEFT &&
+                    it.body.physics.velocity.x < 0f
+            } -> {
                 val impulse = PUSH_IMPULSE * ConstVals.PPM * delta
                 body.physics.velocity.x -= impulse
             }
 
-            megaman.rightSideFixture.overlaps(body.getBounds()) &&
-                megaman.isFacing(Facing.RIGHT) &&
-                megaman.body.physics.velocity.x > 0f -> {
+            players.any {
+                it.rightSideFixture.overlaps(body.getBounds()) &&
+                    it.facing == Facing.RIGHT &&
+                    it.body.physics.velocity.x > 0f
+            } -> {
                 val impulse = PUSH_IMPULSE * ConstVals.PPM * delta
                 body.physics.velocity.x += impulse
             }
@@ -204,8 +212,10 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) body.physics.velocity.setZero()
 
             val velocity = body.physics.velocity
-            if ((velocity.x > 0f && megaman.leftSideFixture.overlaps(body.getBounds())) ||
-                (velocity.x < 0f && megaman.rightSideFixture.overlaps(body.getBounds()))
+            if (players.any {
+                    (velocity.x > 0f && it.leftSideFixture.overlaps(body.getBounds())) ||
+                        (velocity.x < 0f && it.rightSideFixture.overlaps(body.getBounds()))
+                }
             ) velocity.x = 0f
         }
 

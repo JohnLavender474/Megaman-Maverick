@@ -28,7 +28,6 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.pathfinding.PathfinderParams
 import com.maverick.game.engine.pathfinding.PathfindingComponent
 import com.maverick.game.engine.players.any
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -45,6 +44,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
@@ -134,7 +134,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (currentState == DeathBatState.FLY_ATTACK && players.viewOf(damageable) != null) loop.next()
+        if (currentState == DeathBatState.FLY_ATTACK && damageable.asPlayer != null) loop.next()
     }
 
     private fun spawnCacaFlame() {

@@ -27,7 +27,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 
 class DustPuff(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IDirectional,
@@ -64,7 +63,7 @@ class DustPuff(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         this.owner = owner
 
-        direction = if (owner is IDirectional) owner.direction else megaman.direction
+        direction = if (owner is IDirectional) owner.direction else game.gravity.direction
 
         timer.reset()
     }

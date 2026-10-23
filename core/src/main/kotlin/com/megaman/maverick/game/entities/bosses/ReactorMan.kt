@@ -30,7 +30,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -51,12 +50,12 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.TubeBeamerV2
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.entities.projectiles.SlashWave
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -282,7 +281,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (!super.canBeDamagedBy(damager)) return false
-        if (damager is ReactorManProjectile && players.viewOf(damager.owner) == null) return false
+        if (damager is ReactorManProjectile && damager.owner.asPlayer == null) return false
         if (damager.isAny(SlashWave::class, Axe::class)) return true
         return !isShielded()
     }

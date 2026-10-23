@@ -41,11 +41,12 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.RainDrop.RainDropType
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -197,7 +198,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             val mapObjId = (it as MegaGameEntity).id
             if (state == ProcessState.BEGIN &&
                 !ignoreIds.contains(mapObjId) &&
-                (it != megaman || megaman.ready) &&
+                (it.asPlayer?.ready ?: true) &&
                 !it.isAny(RainFall::class, RainDrop::class)
             ) splash()
         }
@@ -306,7 +307,7 @@ class RainFall(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntit
     private fun spawnRainDrops() {
         GameLogger.debug(TAG, "spawnRainDrops()")
 
-        rainSpawnArea.setCenter(megaman.body.getCenter())
+        rainSpawnArea.setCenter(targetPlayer.body.getCenter())
 
         rainSpawners.forEach { rainSpawner ->
             if (!rainSpawner.overlaps(rainSpawnArea)) return@forEach

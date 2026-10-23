@@ -27,7 +27,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -40,11 +39,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.UnderwaterFan
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -105,7 +104,7 @@ class GapingFish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         super.onDamageInflictedTo(damageable)
-        if (players.viewOf(damageable) != null) chompTimer.reset()
+        if (damageable.asPlayer != null) chompTimer.reset()
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

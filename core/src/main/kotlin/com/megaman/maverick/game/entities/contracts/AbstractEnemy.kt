@@ -30,7 +30,6 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.players.any
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
@@ -56,6 +55,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -245,7 +245,7 @@ abstract class AbstractEnemy(
 
     // TODO: the enhancement is read from the global megaman, not from the owner's profile, until item 029e
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        damager is IOwnable<*> && players.viewOf(damager.owner) != null &&
+        damager is IOwnable<*> && damager.owner.asPlayer != null &&
             megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
         else -> baseDamage
@@ -258,7 +258,7 @@ abstract class AbstractEnemy(
         if (!canBeDamaged) return false
 
         if (damager is ReactorManProjectile) return damager.owner != this
-        if (damager is IOwnable<*>) return players.viewOf(damager.owner) != null || damager.owner == null
+        if (damager is IOwnable<*>) return damager.owner.asPlayer != null || damager.owner == null
 
         return true
     }

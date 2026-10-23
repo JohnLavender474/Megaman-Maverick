@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.IceBombExplosion
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
 class IceBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IFreezerEntity, IAnimatedEntity {
@@ -79,7 +80,7 @@ class IceBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IFreezerEnt
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity() as IProjectileEntity
-        if (projectile.owner == megaman) explodeAndDie()
+        if (projectile.owner.asPlayer != null) explodeAndDie()
     }
 
     override fun hitExplosion(explosionFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =

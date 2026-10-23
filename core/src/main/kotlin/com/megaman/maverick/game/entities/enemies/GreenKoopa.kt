@@ -26,7 +26,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IBodyEntity
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -42,11 +41,11 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -202,7 +201,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
-            val player = players.viewOf(feet.getEntity())
+            val player = feet.getEntity().asPlayer
             if (player != null && player.body.physics.velocity.y <= 0f && !knockedToDeath) {
                 destroy()
 

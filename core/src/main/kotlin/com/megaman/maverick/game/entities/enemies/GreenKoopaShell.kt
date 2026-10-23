@@ -26,7 +26,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.players.any
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -51,6 +50,7 @@ import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -209,7 +209,7 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
             if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) return@setReceiver
 
-            val player = players.viewOf(feet.getEntity())
+            val player = feet.getEntity().asPlayer
             if (player != null) {
                 if (state == GreenKoopaShellState.IDLE) startRolling()
 

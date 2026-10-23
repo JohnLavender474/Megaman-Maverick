@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -156,7 +157,7 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         consumerFixture.attachedToBody = false
         consumerFixture.setReceiver(Receivers.FILTER) { fixture ->
-            fixture.getEntity().isAny(Megaman::class, AbstractEnemy::class)
+            fixture.getEntity().let { it.asPlayer != null || it is AbstractEnemy }
         }
         consumerFixture.setReceiver(Receivers.CONSUMER) { _, fixture -> setToCrush() }
         body.addFixture(consumerFixture)

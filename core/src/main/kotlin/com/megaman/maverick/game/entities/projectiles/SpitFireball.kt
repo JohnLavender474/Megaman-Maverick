@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -96,7 +97,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
         val shieldEntity = shieldFixture.getEntity()
         if (shieldEntity is Axe) return
 
-        val explosionDamager = shieldEntity !is Megaman
+        val explosionDamager = shieldEntity.asPlayer == null
 
         explodeAndDie(thisShape, otherShape, explosionDamager)
     }

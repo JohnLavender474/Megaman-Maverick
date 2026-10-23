@@ -20,6 +20,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setBounds
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
@@ -28,6 +29,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.feetGravityFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -115,13 +117,12 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
         if (body.isSensing(BodySense.FEET_ON_GROUND)) return false
         return super.shouldMoveDown() ||
             isMegamanWallSlidingOnMe() ||
-            megaman.feetGravityFixture.getShape().overlaps(body.getBounds())
+            players.any { it.feetGravityFixture.getShape().overlaps(body.getBounds()) }
     }
 
-    private fun isMegamanWallSlidingOnMe(): Boolean {
-        if (!megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) return false
-        val sides = megaman.body.fixtures.get(FixtureType.SIDE)
-        return sides.any { it.getShape().overlaps(body.getBounds()) }
+    private fun isMegamanWallSlidingOnMe() = players.any { player ->
+        player.isBehaviorActive(BehaviorType.WALL_SLIDING) &&
+            player.body.fixtures.get(FixtureType.SIDE).any { it.getShape().overlaps(body.getBounds()) }
     }
 
     override fun defineBodyComponent(): BodyComponent {

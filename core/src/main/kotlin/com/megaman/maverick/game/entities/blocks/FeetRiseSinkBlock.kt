@@ -11,6 +11,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.math.abs
@@ -96,7 +97,7 @@ open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
 
     protected open fun shouldListenToFeet(feetFixture: IFixture): Boolean {
         val entity = feetFixture.getEntity()
-        val shouldListen = entity.isAny(Megaman::class, PushableBlock::class)
+        val shouldListen = entity.asPlayer != null || entity is PushableBlock
         GameLogger.debug(TAG, "shouldListenToFeet(): shouldListen=$shouldListen, entity=$entity")
         return shouldListen
     }

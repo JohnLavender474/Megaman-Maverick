@@ -25,6 +25,8 @@ val IMegaGameEntity.megaman
 val IMegaGameEntity.players
     get() = game.players
 
+// TODO: every entity gets this extension, but only entities with a target need it, and each one targets in its own
+//  way; it moves to the entities that need it (see the TODO at MegaPlayers.targetFor; item 047)
 val IMegaGameEntity.targetPlayer: MegaPlayer
     get() = game.players.targetFor(this)
 

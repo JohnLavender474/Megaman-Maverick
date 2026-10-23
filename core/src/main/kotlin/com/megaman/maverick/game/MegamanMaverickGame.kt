@@ -93,6 +93,7 @@ import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -208,6 +209,7 @@ class MegamanMaverickGame(
 
     lateinit var megaman: Megaman
     lateinit var players: MegaPlayers
+    lateinit var gravity: WorldGravity
 
     var paused = false
         private set
@@ -400,6 +402,7 @@ class MegamanMaverickGame(
 
         players = MegaPlayers()
         players.register(PlayerSlot(0), megaman)
+        gravity = WorldGravity(players)
 
         val levelScreen = MegaLevelScreen(this)
         levelScreen.init()

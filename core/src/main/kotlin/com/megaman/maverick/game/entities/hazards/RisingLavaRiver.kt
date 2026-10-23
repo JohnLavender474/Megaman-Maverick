@@ -47,7 +47,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.FloatingEmber
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
@@ -442,7 +442,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     }
 
     private fun shouldIncreaseRiseSpeed() = allowSpeedUp &&
-        megaman.body.getBounds().getY() > fullBounds.getMaxY() + DIST_TRIGGER_SPEED_UP * ConstVals.PPM
+        targetPlayer.body.getBounds().getY() > fullBounds.getMaxY() + DIST_TRIGGER_SPEED_UP * ConstVals.PPM
 
     override fun getType() = EntityType.HAZARD
 

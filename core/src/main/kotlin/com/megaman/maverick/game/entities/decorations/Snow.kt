@@ -24,7 +24,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 
 class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
@@ -102,7 +102,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
             TAG,
             "onSpawn(): " +
                 "setOfAllSnowSize=${setOfAllSnow.size}, " +
-                "megamanPos=${megaman.body.getCenter()}"
+                "megamanPos=${targetPlayer.body.getCenter()}"
         )
 
         if (setOfAllSnow.size > MAX_SPAWNED_ALLOWED) {

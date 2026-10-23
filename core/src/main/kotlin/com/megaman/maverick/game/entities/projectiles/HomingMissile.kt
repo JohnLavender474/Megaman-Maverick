@@ -41,8 +41,8 @@ import com.megaman.maverick.game.damage.StandardDamageNegotiator
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -185,8 +185,8 @@ class HomingMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
     }
 
     private fun recalcDirection() {
-        val position = if (body.getX() < megaman.body.getX()) Position.TOP_LEFT else Position.TOP_RIGHT
-        val toMegaman = megaman.body.getPositionPoint(position).sub(body.getCenter())
+        val position = if (body.getX() < targetPlayer.body.getX()) Position.TOP_LEFT else Position.TOP_RIGHT
+        val toMegaman = targetPlayer.body.getPositionPoint(position).sub(body.getCenter())
         val mathAngle = toMegaman.angleDeg()
         val gameAngle = 90f - mathAngle
         val snapped = MathUtils.round(gameAngle / 45f) * 45

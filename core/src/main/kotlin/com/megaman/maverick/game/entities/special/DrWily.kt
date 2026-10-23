@@ -35,7 +35,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -128,7 +128,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (position.y >= maxY) {
                     position.x = target.x
                     state = DrWilyState.FALL
-                    facing = if (megaman.body.getX() > position.x) Facing.RIGHT else Facing.LEFT
+                    facing = if (targetPlayer.body.getX() > position.x) Facing.RIGHT else Facing.LEFT
                 }
             }
 
@@ -137,7 +137,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (position.y <= target.y) {
                     position.set(target)
                     state = DrWilyState.LAND
-                    if (!megaman.dead)
+                    if (!targetPlayer.dead)
                         game.audioMan.playMusic(MusicAsset.MM3_ALL_CLEAR_MUSIC, false)
                 }
             }
@@ -147,7 +147,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (begTimer.isJustFinished()) stillTimer.reset()
                 if (begTimer.isFinished()) {
                     stillTimer.update(delta)
-                    if (stillTimer.isJustFinished() && !megaman.dead)
+                    if (stillTimer.isJustFinished() && !targetPlayer.dead)
                         game.setCurrentScreen(ScreenEnum.ENDING_SCREEN.name)
                 }
             }

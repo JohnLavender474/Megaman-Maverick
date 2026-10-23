@@ -36,6 +36,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
 class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, size = Size.SMALL), IAnimatedEntity {
@@ -80,7 +81,7 @@ class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, siz
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity == megaman) burst()
+        if (entity.asPlayer != null) burst()
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) = burst()

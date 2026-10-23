@@ -8,6 +8,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getEntity
@@ -41,7 +42,7 @@ open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
         super.onSpawn(spawnProps)
         body.forEachFixture { fixture ->
             fixture.setReceiver(Receivers.FILTER) { other ->
-                other.getEntity() == megaman
+                other.getEntity().asPlayer != null
             }
         }
     }

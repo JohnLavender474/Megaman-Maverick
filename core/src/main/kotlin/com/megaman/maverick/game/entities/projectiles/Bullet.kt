@@ -38,7 +38,6 @@ import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.decorations.BulletResidual
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -241,7 +240,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         val component = SpritesComponent(TAG pairTo sprite)
         component.putPreProcess(TAG) { _, _ ->
             sprite.setCenter(body.getCenter())
-            val flipX = when (megaman.direction) {
+            val flipX = when (game.gravity.direction) {
                 Direction.UP -> body.physics.velocity.x < 0f
                 Direction.DOWN -> body.physics.velocity.x > 0f
                 Direction.LEFT -> body.physics.velocity.y < 0f
@@ -249,7 +248,7 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
             }
             sprite.setFlip(flipX, false)
             sprite.setOriginCenter()
-            sprite.rotation = megaman.direction.rotation
+            sprite.rotation = game.gravity.direction.rotation
         }
         return component
     }

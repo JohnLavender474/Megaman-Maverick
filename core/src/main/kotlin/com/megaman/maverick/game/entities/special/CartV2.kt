@@ -23,6 +23,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
@@ -34,6 +35,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -110,7 +112,7 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         body.physics.velocity.x *= -1
     }
 
-    private fun shouldMove() = body.getBounds().overlaps(megaman.feetFixture.getShape())
+    private fun shouldMove() = players.any { body.getBounds().overlaps(it.feetFixture.getShape()) }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val shouldImpulse = shouldMove() && abs(body.physics.velocity.x) < MAX_VEL_X * ConstVals.PPM

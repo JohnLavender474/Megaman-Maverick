@@ -47,8 +47,8 @@ code; their names can change in the plan.
 |-------|---------------|
 | `REFACTOR_TEST_029`, `player_death` | Falling into the pit kills Megaman (`PlayerDeath`, after the rename); a falling `GravityBlock` that lands on his head kills him. |
 | `REFACTOR_TEST_029`, `push_flip` | Megaman pushes the `PushableBlock` only while touching it, facing it and moving toward it; the `FlipperPlatform` flips when he stands on it. |
-| `REFACTOR_TEST_029`, `hit_by_player` | `SmallGrass` rustles, `Togglee` switches, and `SmallIceCube` shatters (when Megaman cannot be damaged) when he touches them. |
-| `REFACTOR_TEST_029`, `gravity_switch` | The `GravitySwitcharoo` flips gravity and rotates the camera; after the flip, A jumps if Megaman was on the ground and air dashes if he was in the air; a `ConveyorBelt` in the room keeps working in both gravities. |
+| `REFACTOR_TEST_029`, `hit_by_player` | `SmallGrass` rustles and the `Togglee` lever switches when Megaman touches them. (`SmallIceCube` cannot be placed from a map: it needs a `Vector2` position prop; its `HIT_BY_PLAYER` change is checked by review.) |
+| `REFACTOR_TEST_029`, `gravity_switch` | The `GravitySwitcharoo` near the floor flips gravity down and the one near the ceiling flips it back up, each with a camera rotation; after the flip, A jumps if Megaman was on the ground and air dashes if he was in the air; a `ConveyorBelt` in the room keeps working in both gravities. |
 | `MOON_MAN`, `room6` | The gravity switch flips gravity; the falling `GravityBlock` follows the gravity. |
 | `MOON_MAN`, `room11` | The portal hopper sends Megaman through and sets his direction as before. |
 | `MOON_MAN`, `room12` | Megaman respawns at the checkpoint with the gravity of the spawn. Moon Man's gravity swap during the fight (as in `029c`), and none while Megaman is dead. |

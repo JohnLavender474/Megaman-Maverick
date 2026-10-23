@@ -10,7 +10,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IWater
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.utils.VelocityAlteration
 
 object Receivers {
@@ -39,7 +39,7 @@ object Receivers {
 
     val HIT_BY_BLOCK = PhasedPropertyKey<(block: Block, delta: Float) -> Unit>(ConstKeys.HIT_BY_BLOCK)
 
-    val HIT_BY_PLAYER = PropertyKey<(player: Megaman) -> Unit>(ConstKeys.HIT_BY_PLAYER)
+    val HIT_BY_PLAYER = PropertyKey<(player: MegaPlayer) -> Unit>(ConstKeys.HIT_BY_PLAYER)
 
     val HIT_BY_PROJECTILE = PropertyKey<(projectile: IProjectileEntity) -> Unit>(ConstKeys.HIT_BY_PROJECTILE)
 

@@ -29,7 +29,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -44,11 +43,11 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle.FallingIcicleState
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -168,7 +167,7 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             if (fixture.getType() == FixtureType.PROJECTILE) return@filter true
 
             val entity = fixture.getEntity()
-            return@filter fixture.getType() == FixtureType.DAMAGEABLE && players.viewOf(entity) != null
+            return@filter fixture.getType() == FixtureType.DAMAGEABLE && entity.asPlayer != null
         }
         icicleFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             if (processState == ProcessState.BEGIN && currentState == IcicleTellyState.SPIN) shatterIcicle()

@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
 class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional,
@@ -83,7 +84,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity() as IProjectileEntity
-        if (projectile.owner == megaman) explodeAndDie()
+        if (projectile.owner.asPlayer != null) explodeAndDie()
     }
 
     override fun hitExplosion(explosionFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =

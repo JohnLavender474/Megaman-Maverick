@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -195,7 +196,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             GameRectangle().setSize(3f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         )
         bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-            if (projectile.owner == megaman) bounceTimer.reset()
+            if (projectile.owner.asPlayer != null) bounceTimer.reset()
         }
         bodyFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
         body.addFixture(bodyFixture)
@@ -228,7 +229,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
         )
         topBodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-            if (projectile.owner == megaman) bounceTimer.reset()
+            if (projectile.owner.asPlayer != null) bounceTimer.reset()
         }
         topBodyFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
         body.addFixture(topBodyFixture)
@@ -241,7 +242,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         val leftCannonBody = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1f * ConstVals.PPM))
         leftCannonBody.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-            if (projectile.owner == megaman) bounceTimer.reset()
+            if (projectile.owner.asPlayer != null) bounceTimer.reset()
         }
         leftCannonBody.offsetFromBodyAttachment.set(-2f, 0.5f).scl(ConstVals.PPM.toFloat())
         body.addFixture(leftCannonBody)
@@ -249,7 +250,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         val rightCannonBody = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1f * ConstVals.PPM))
         rightCannonBody.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-            if (projectile.owner == megaman) bounceTimer.reset()
+            if (projectile.owner.asPlayer != null) bounceTimer.reset()
         }
         rightCannonBody.offsetFromBodyAttachment.set(2f, 0.5f).scl(ConstVals.PPM.toFloat())
         body.addFixture(rightCannonBody)

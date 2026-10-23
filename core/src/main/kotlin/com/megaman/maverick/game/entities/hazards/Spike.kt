@@ -42,7 +42,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -118,7 +117,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         direction = when {
             spawnProps.containsKey(ConstKeys.DIRECTION) ->
                 Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
-            else -> megaman.direction
+            else -> game.gravity.direction
         }
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
@@ -206,7 +205,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (followMegamanDir) direction = megaman.direction
+        if (followMegamanDir) direction = game.gravity.direction
     })
 
     private fun defineBodyComponent(): BodyComponent {

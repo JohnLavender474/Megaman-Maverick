@@ -30,7 +30,6 @@ import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.IChildEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -47,7 +46,6 @@ import com.megaman.maverick.game.entities.bosses.GutsTank.GutsTankAttackState
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
@@ -56,6 +54,7 @@ import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -93,7 +92,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override val damageNegotiator = object : IDamageNegotiator {
 
         override fun get(damager: IDamager): Int {
-            if (damager !is IProjectileEntity || players.viewOf(damager.owner) == null) return 0
+            if (damager !is IProjectileEntity || damager.owner.asPlayer == null) return 0
             return when (damager) {
                 is ChargedShot -> if (damager.fullyCharged) 2 else 1
                 is MoonScythe, is MagmaWave, is Axe -> 2
@@ -164,7 +163,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (players.viewOf(damageable) != null) (parent as GutsTank).laugh()
+        if (damageable.asPlayer != null) (parent as GutsTank).laugh()
     }
 
     internal fun launch() {

@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.decorations.WoodCratePiece
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -233,7 +234,7 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
         GameLogger.debug(TAG, "hitByFeet(): feetFixture=$feetFixture")
 
         val entity = feetFixture.getEntity()
-        if (entity != megaman) return
+        if (entity.asPlayer == null) return
 
         if (burning) {
             GameLogger.debug(TAG, "hitByFeet(): burning: set health to 0")
@@ -262,7 +263,7 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
             GameLogger.debug(TAG, "hitByProjectile(): set to burning")
             burning = true
             burnOwner = projectile.owner
-        } else if (projectile.owner == megaman) {
+        } else if (projectile.owner.asPlayer != null) {
             val damage = DAMAGERS[projectile::class]?.get(projectile) ?: 0
             if (damage > 0) {
                 GameLogger.debug(TAG, "hitByProjectile(): apply damage=$damage")

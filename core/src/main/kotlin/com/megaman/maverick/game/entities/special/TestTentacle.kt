@@ -20,6 +20,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.special.TestTentacle.Companion.CIRCLE_UPDATE_INTERVAL
 import com.megaman.maverick.game.entities.special.TestTentacle.Companion.IDLE_DURATION
 import com.megaman.maverick.game.entities.special.TestTentacle.Companion.LUNGE_PAUSE_DURATION
@@ -336,7 +337,7 @@ class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableS
                 idleTimer += delta
                 if (idleTimer >= IDLE_DURATION) {
                     idleTimer = 0f
-                    lungeTarget.set(game.megaman.body.getCenter())
+                    lungeTarget.set(targetPlayer.body.getCenter())
                     state = TentacleState.LUNGING
                 }
             }

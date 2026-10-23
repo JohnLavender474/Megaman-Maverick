@@ -25,6 +25,7 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -33,12 +34,13 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
@@ -266,17 +268,20 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
             MegaGameEntities.getOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntities.getOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
-            if (megaman.body.getBounds().overlaps(bounds) && megaman.charging) {
-                val lightEvent = LightEvent(
-                    LightEventType.LIGHT_SOURCE,
-                    LightEventDef(
-                        true,
-                        megaman.body.getCenter(),
-                        MEGAMAN_CHARGING_RADIUS,
-                        MEGAMAN_CHARGING_RADIANCE
+            players.forEach { player ->
+                val charging = player.light == PlayerLight.HALF_CHARGE || player.light == PlayerLight.FULL_CHARGE
+                if (player.body.getBounds().overlaps(bounds) && charging) {
+                    val lightEvent = LightEvent(
+                        LightEventType.LIGHT_SOURCE,
+                        LightEventDef(
+                            true,
+                            player.body.getCenter(),
+                            MEGAMAN_CHARGING_RADIUS,
+                            MEGAMAN_CHARGING_RADIANCE
+                        )
                     )
-                )
-                lightEventQueue.add(lightEvent)
+                    lightEventQueue.add(lightEvent)
+                }
             }
 
             tiles.forEach { it.set = false }

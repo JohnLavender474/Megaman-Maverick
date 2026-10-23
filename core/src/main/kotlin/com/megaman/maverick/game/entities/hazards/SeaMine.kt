@@ -47,7 +47,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -135,14 +135,14 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         sensor.setCenter(body.getCenter())
 
-        if (!triggered && megaman.body.getBounds().overlaps(sensor)) trigger()
+        if (!triggered && targetPlayer.body.getBounds().overlaps(sensor)) trigger()
 
         if (triggered) {
             val speed = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
                 SPEED_HARD else SPEED
 
             val velocity = GameObjectPools.fetch(Vector2::class)
-                .set(megaman.body.getCenter())
+                .set(targetPlayer.body.getCenter())
                 .sub(body.getCenter())
                 .nor()
                 .scl(speed * ConstVals.PPM)

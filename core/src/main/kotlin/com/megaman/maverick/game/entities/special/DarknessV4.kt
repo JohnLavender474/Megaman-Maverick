@@ -23,6 +23,7 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -33,6 +34,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.PicketJoe
 import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
@@ -44,6 +47,7 @@ import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -522,25 +526,28 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         entities.clear()
 
         // Collect Megaman light source on main thread
-        if (megaman.ready && megaman.body.getBounds().overlaps(bounds)) {
-            val lightSourceDef = lightSourcePool.fetch()
-            lightSourceDef.center = megaman.body.getCenter()
+        players.forEach { player ->
+            if (player.ready && player.body.getBounds().overlaps(bounds)) {
+                val lightSourceDef = lightSourcePool.fetch()
+                lightSourceDef.center = player.body.getCenter()
 
-            if (megaman.charging) {
-                val fullCharged = megaman.fullyCharged
-                lightSourceDef.radius =
-                    (if (fullCharged) MEGAMAN_FULL_CHARGING_RADIUS else MEGAMAN_HALF_CHARGING_RADIUS) * ConstVals.PPM
-                lightSourceDef.radiance =
-                    if (fullCharged) MEGAMAN_FULL_CHARGING_RADIANCE else MEGAMAN_HALF_CHARGING_RADIANCE
-            } else if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) {
-                lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
-                lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
-            } else {
-                lightSourceDef.radius = STANDARD_LIGHT_SOURCE.first * ConstVals.PPM
-                lightSourceDef.radiance = STANDARD_LIGHT_SOURCE.second
+                when (player.light) {
+                    PlayerLight.FULL_CHARGE -> {
+                        lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
+                        lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
+                    }
+                    PlayerLight.HALF_CHARGE, PlayerLight.JETPACK -> {
+                        lightSourceDef.radius = MEGAMAN_HALF_CHARGING_RADIUS * ConstVals.PPM
+                        lightSourceDef.radiance = MEGAMAN_HALF_CHARGING_RADIANCE
+                    }
+                    PlayerLight.STANDARD -> {
+                        lightSourceDef.radius = STANDARD_LIGHT_SOURCE.first * ConstVals.PPM
+                        lightSourceDef.radiance = STANDARD_LIGHT_SOURCE.second
+                    }
+                }
+
+                lightSourceQueue.put(player.entity as MegaGameEntity, lightSourceDef)
             }
-
-            lightSourceQueue.put(megaman, lightSourceDef)
         }
 
         // Collect beam light source
@@ -552,7 +559,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.center = beamCenter
                 lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
-                lightSourceQueue.put(megaman, lightSourceDef)
+                lightSourceQueue.put(targetPlayer.entity as MegaGameEntity, lightSourceDef)
             }
         }
 

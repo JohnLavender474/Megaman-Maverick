@@ -15,6 +15,10 @@ import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
+import com.megaman.maverick.game.entities.contracts.IHealthEntity
+import com.megaman.maverick.game.ConstKeys
+import com.maverick.game.engine.points.PointsComponent
+import com.maverick.game.engine.points.Points
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -31,7 +35,15 @@ private class PlainEntity : GameEntity(mockk(relaxed = true)) {
 }
 
 private class TestPlayerEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectional, IFaceable,
-    IDamageable {
+    IDamageable, IHealthEntity {
+    var deviceSwitches = 0
+    var playerLight = PlayerLight.STANDARD
+
+    init {
+        putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) { deviceSwitches++ }
+        putProperty(PlayerKeys.LIGHT) { playerLight }
+    }
+
     override var direction = Direction.UP
     override var facing = Facing.RIGHT
     override var invincible = false
@@ -54,6 +66,7 @@ class MegaPlayersTest : DescribeSpec({
         it.addComponent(BodyComponent(Body(BodyType.DYNAMIC, 0f, 0f, 2f, 2f)))
         it.addComponent(BehaviorsComponent())
         it.addComponent(PlayerStateComponent(damageTimer, shootAnimTimer))
+        it.addComponent(PointsComponent().also { points -> points.putPoints(ConstKeys.HEALTH, Points(0, 10, 10)) })
     }
 
     describe("MegaPlayer") {
@@ -82,6 +95,15 @@ class MegaPlayersTest : DescribeSpec({
             }
 
             shouldThrow<IllegalArgumentException> { MegaPlayers().register(PlayerSlot(0), entity) }
+        }
+
+        it("stores the view on its entity, and asPlayer reads it") {
+            val entity = playerEntity()
+            val player = MegaPlayers().register(PlayerSlot(0), entity)
+
+            entity.asPlayer shouldBeSameInstanceAs player
+            TestPlayerEntity(game).asPlayer shouldBe null
+            null.asPlayer shouldBe null
         }
 
         it("reads the body through the body component") {
@@ -134,10 +156,44 @@ class MegaPlayersTest : DescribeSpec({
             player.shooting shouldBe false
         }
 
+        it("reads teleporting and the light, calls the gravity device receiver, and depletes health") {
+            val entity = playerEntity()
+            val player = MegaPlayers().register(PlayerSlot(0), entity)
+
+            entity.getComponent(PlayerStateComponent::class)!!.teleporting = true
+            entity.playerLight = PlayerLight.JETPACK
+            player.onGravityDeviceSwitch()
+            player.depleteHealth()
+
+            player.teleporting shouldBe true
+            player.light shouldBe PlayerLight.JETPACK
+            entity.deviceSwitches shouldBe 1
+            entity.getCurrentHealth() shouldBe 0
+        }
+
         it("reads a behavior through the behaviors component") {
             val player = MegaPlayers().register(PlayerSlot(0), playerEntity())
 
             player.isBehaviorActive("missing") shouldBe false
+        }
+    }
+
+    describe("WorldGravity") {
+        it("starts up, and set stores the direction and sets it on every registered player") {
+            val players = MegaPlayers(2)
+            val entity0 = playerEntity()
+            val entity1 = playerEntity()
+            players.register(PlayerSlot(0), entity0)
+            players.register(PlayerSlot(1), entity1)
+            val gravity = WorldGravity(players)
+
+            gravity.direction shouldBe Direction.UP
+
+            gravity.set(Direction.DOWN)
+
+            gravity.direction shouldBe Direction.DOWN
+            entity0.direction shouldBe Direction.DOWN
+            entity1.direction shouldBe Direction.DOWN
         }
     }
 

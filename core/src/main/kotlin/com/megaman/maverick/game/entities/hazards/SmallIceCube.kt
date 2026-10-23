@@ -41,6 +41,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -155,9 +156,9 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
     override fun shatterAndDie() {
         GameLogger.debug(TAG, "shatterAndDie()")
         IceShard.spawn5(body.getCenter(), TAG)
-        if (owner == megaman) {
+        if (owner.asPlayer != null) {
             val explosion = MegaEntityFactory.fetch(IceBombExplosion::class)!!
-            explosion.spawn(props(ConstKeys.OWNER pairTo megaman, ConstKeys.POSITION pairTo body.getCenter()))
+            explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
         }
         destroy()
     }

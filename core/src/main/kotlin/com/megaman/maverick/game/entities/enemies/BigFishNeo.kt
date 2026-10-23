@@ -25,7 +25,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -38,10 +37,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -145,7 +144,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (players.viewOf(damageable) != null) laughTimer.reset()
+        if (damageable.asPlayer != null) laughTimer.reset()
     }
 
     override fun defineBodyComponent(): BodyComponent {

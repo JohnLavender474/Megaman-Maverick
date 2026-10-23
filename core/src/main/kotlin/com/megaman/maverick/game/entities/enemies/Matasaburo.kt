@@ -15,7 +15,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -26,9 +25,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -70,7 +69,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         )
         blowFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity()
-            val player = players.viewOf(entity) ?: return@setReceiver VelocityAlteration.addNone()
+            val player = entity.asPlayer ?: return@setReceiver VelocityAlteration.addNone()
 
             /*
             TODO: for now, ONLY apply force to Megaman and no other entities

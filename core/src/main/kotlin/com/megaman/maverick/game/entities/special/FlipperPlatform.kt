@@ -25,6 +25,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -36,8 +37,10 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
@@ -172,9 +175,9 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.setTopRightToPoint(position)
                 block!!.body.translate(-OFFSET_X * ConstVals.PPM, -OFFSET_Y * ConstVals.PPM)
 
-                if (switchDelay.isFinished() &&
-                    block!!.body.getBounds().overlaps(megaman.feetFixture.getShape()) &&
-                    megaman.body.physics.velocity.y <= 0f
+                if (switchDelay.isFinished() && players.any {
+                        block!!.body.getBounds().overlaps(it.feetFixture.getShape()) && it.body.physics.velocity.y <= 0f
+                    }
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
@@ -186,9 +189,9 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
                 block!!.body.setTopLeftToPoint(position)
                 block!!.body.translate(OFFSET_X * ConstVals.PPM, -OFFSET_Y * ConstVals.PPM)
 
-                if (switchDelay.isFinished() &&
-                    block!!.body.getBounds().overlaps(megaman.feetFixture.getShape()) &&
-                    megaman.body.physics.velocity.y <= 0f
+                if (switchDelay.isFinished() && players.any {
+                        block!!.body.getBounds().overlaps(it.feetFixture.getShape()) && it.body.physics.velocity.y <= 0f
+                    }
                 ) {
                     switchDelay.reset()
                     requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
@@ -199,9 +202,9 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     private fun blockFilter(entity1: MegaGameEntity, entity2: MegaGameEntity): Boolean {
         GameLogger.debug(TAG, "blockFilter(): entity1=$entity1, entity2=$entity2")
-        return entity1 == megaman &&
-            (megaman.body.physics.velocity.y > 0f ||
-                !(entity2 as Block).body.getBounds().overlaps(megaman.feetFixture.getShape()))
+        val player = entity1.asPlayer ?: return false
+        return player.body.physics.velocity.y > 0f ||
+            !(entity2 as Block).body.getBounds().overlaps(player.feetFixture.getShape())
     }
 
     private fun defineCullablesComponent(): CullablesComponent {

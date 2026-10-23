@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IBossListener
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -147,7 +147,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
 
             newWanaanDelay.update(delta)
 
-            if (wanaan == null && newWanaanDelay.isFinished() && sensor.overlaps(megaman.body.getBounds())) {
+            if (wanaan == null && newWanaanDelay.isFinished() && sensor.overlaps(targetPlayer.body.getBounds())) {
                 spawnWanaan()
                 launchDelay.reset()
             } else if (wanaan != null) {

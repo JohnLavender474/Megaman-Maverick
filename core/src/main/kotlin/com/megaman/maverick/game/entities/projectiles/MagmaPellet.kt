@@ -34,7 +34,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -74,7 +73,7 @@ class MagmaPellet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirect
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, game.gravity.direction, Direction::class)
     }
 
     override fun hitBlock(

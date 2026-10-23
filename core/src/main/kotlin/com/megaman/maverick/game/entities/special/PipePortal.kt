@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -113,7 +114,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         exiting.put(entity, Timer(TELEPORT_DUR))
 
-        if (entity == megaman) {
+        if (entity.asPlayer != null) {
             game.setFocusSnappedAway(false)
             entity.putProperty(ConstKeys.TELEPORTER, this)
         }
@@ -137,7 +138,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
         onPortalStart?.invoke(this)
 
-        if (entity == megaman) {
+        if (entity.asPlayer != null) {
             game.setFocusSnappedAway(true)
             entity.putProperty(ConstKeys.TELEPORTER, this)
         }
@@ -146,16 +147,17 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     }
 
     override fun shouldTeleport(entity: IBodyEntity): Boolean {
-        if (!super.shouldTeleport(entity) || entity != megaman || nextKey == -1) return false
+        if (!super.shouldTeleport(entity) || nextKey == -1) return false
+        val player = entity.asPlayer ?: return false
 
         return when (direction) {
-            Direction.UP -> megaman.feetFixture.overlaps(body.getBounds()) &&
+            Direction.UP -> player.feetFixture.overlaps(body.getBounds()) &&
                 game.controllerPoller.isPressed(MegaControllerButton.DOWN)
-            Direction.DOWN -> megaman.headFixture.overlaps(body.getBounds()) &&
+            Direction.DOWN -> player.headFixture.overlaps(body.getBounds()) &&
                 game.controllerPoller.isPressed(MegaControllerButton.UP)
-            Direction.LEFT -> megaman.rightSideFixture.overlaps(body.getBounds()) &&
+            Direction.LEFT -> player.rightSideFixture.overlaps(body.getBounds()) &&
                 game.controllerPoller.isPressed(MegaControllerButton.RIGHT)
-            Direction.RIGHT -> megaman.leftSideFixture.overlaps(body.getBounds()) &&
+            Direction.RIGHT -> player.leftSideFixture.overlaps(body.getBounds()) &&
                 game.controllerPoller.isPressed(MegaControllerButton.LEFT)
         }
     }

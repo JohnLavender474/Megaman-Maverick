@@ -42,6 +42,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -166,8 +167,9 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                 return@setReceiver
             }
 
-            if (entity is Megaman) {
-                val groundslide = entity.isBehaviorActive(BehaviorType.GROUND_SLIDING)
+            val player = entity.asPlayer
+            if (player != null) {
+                val groundslide = player.isBehaviorActive(BehaviorType.GROUND_SLIDING)
                 when {
                     groundslide && timer.duration != FLUFF_MEGAMAN_GROUNDSLIDE_SPAWN_DELAY -> {
                         GameLogger.debug(TAG, "hitByFeet(): CONTINUE: reset timer dur to GROUND_SLIDE")
@@ -190,7 +192,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             if (timer.isFinished()) {
                 val x = feetBounds.getCenter().x
                 val y = when {
-                    entity is Megaman -> feetBounds.getPositionPoint(Position.TOP_CENTER).y + 0.4f * ConstVals.PPM
+                    entity.asPlayer != null -> feetBounds.getPositionPoint(Position.TOP_CENTER).y + 0.4f * ConstVals.PPM
                     else -> feetBounds.getCenter().y
                 }
 
@@ -205,7 +207,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
             val x = feetBounds.getCenter().x
             val y = when {
-                entity is Megaman -> body.getCenter().y
+                entity.asPlayer != null -> body.getCenter().y
                 else -> feetBounds.getCenter().y
             }
 

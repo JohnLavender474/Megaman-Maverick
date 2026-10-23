@@ -35,7 +35,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -54,7 +53,6 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.projectiles.Asteroid
@@ -521,7 +519,9 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun activateGravityChange() {
         currentGravityChangeDir = currentGravityChangeDir.getOpposite()
-        players.forEach { if (!it.dead) it.direction = currentGravityChangeDir }
+        // TODO: the swap changes the gravity only while the target player (always Megaman for now) is alive; with
+        //  more players, the rule for dead players is for item 047
+        if (!targetPlayer.dead) game.gravity.set(currentGravityChangeDir)
 
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()

@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
@@ -62,7 +63,7 @@ class UFOBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        if (bodyFixture.getEntity() is Megaman) explodeAndDie()
+        if (bodyFixture.getEntity().asPlayer != null) explodeAndDie()
     }
 
     override fun explodeAndDie(vararg params: Any?) {

@@ -4,7 +4,7 @@ import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
 object ConsumerRule : IContactRule {
@@ -105,8 +105,7 @@ object BodyPlayerRule : IContactRule {
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = begin(a, b)
 
     private fun begin(bodyFixture: IFixture, playerFixture: IFixture) {
-        // TODO: the player type is Megaman because the HIT_BY_PLAYER receiver takes a Megaman; item 029 (IPlayer)
-        //  re-types it
-        bodyFixture.receiver(Receivers.HIT_BY_PLAYER)?.invoke(playerFixture.getEntity() as Megaman)
+        val playerEntity = playerFixture.getEntity()
+        bodyFixture.receiver(Receivers.HIT_BY_PLAYER)?.invoke(playerEntity.asPlayer!!)
     }
 }

@@ -35,6 +35,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.blocks.PushableBlock
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
@@ -164,11 +166,13 @@ class FloorButton(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISprit
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
         component.put(ConstKeys.ARRAY) {
             reusableArrayOfShapes.clear()
-            reusableArrayOfShapes.add(megaman.body.getBounds())
-            reusableArrayOfShapes.add(megaman.leftSideFixture.getShape())
-            reusableArrayOfShapes.add(megaman.rightSideFixture.getShape())
-            reusableArrayOfShapes.add(megaman.feetFixture.getShape())
-            reusableArrayOfShapes.add(megaman.headFixture.getShape())
+            players.forEach {
+                reusableArrayOfShapes.add(it.body.getBounds())
+                reusableArrayOfShapes.add(it.leftSideFixture.getShape())
+                reusableArrayOfShapes.add(it.rightSideFixture.getShape())
+                reusableArrayOfShapes.add(it.feetFixture.getShape())
+                reusableArrayOfShapes.add(it.headFixture.getShape())
+            }
         }
         super.defineUpdatablesComponent(component)
     }

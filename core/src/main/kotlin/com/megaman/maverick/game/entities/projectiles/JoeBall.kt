@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
@@ -147,7 +148,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
                 ConstKeys.SOUND pairTo soundAsset,
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(
-                    if (owner is Megaman) AbstractEnemy::class else Megaman::class
+                    if (owner.asPlayer != null) AbstractEnemy::class else Megaman::class
                 )
             )
         )

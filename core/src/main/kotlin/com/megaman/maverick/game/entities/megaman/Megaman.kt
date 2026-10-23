@@ -24,7 +24,6 @@ import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.players.slotOf
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -55,7 +54,10 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
+import com.megaman.maverick.game.players.PlayerKeys
+import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerStateComponent
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.state.IGameStateListener
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -135,8 +137,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     private var hitsToUnfreeze = 0
     internal var frozenPushTimer = Timer(MegamanValues.FROZEN_PUSH_DUR)
 
-    var canMove = true
-        get() = field && !stunned && !damaged && !frozen
+    var canMove: Boolean
+        get() = playerState.movementAllowed && !stunned && !damaged && !frozen
+        set(value) {
+            playerState.movementAllowed = value
+        }
 
     internal val stunTimer = Timer(MegamanValues.STUN_DUR)
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
@@ -224,6 +229,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
             if (value != body.direction) {
                 GameLogger.debug(TAG, "direction-set(): value not same as field")
+
+                // TODO: the camera rotation belongs to WorldGravity, not to each player; with more players, each
+                //  player's setter would ask for the rotation (see the 029d scope, "Gravity direction")
 
                 body.direction = value
 
@@ -318,8 +326,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 }
             ) >= MegamanValues.SLIP_SLIDE_THRESHOLD * ConstVals.PPM
 
-    var teleporting = false
-        private set
+    var teleporting: Boolean
+        get() = playerState.teleporting
+        private set(value) {
+            playerState.teleporting = value
+        }
 
     var movementScalar = 1f
         set(value) {
@@ -431,6 +442,21 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         currentWeapon = MegamanWeapon.MEGA_BUSTER
 
         aButtonTask = AButtonTask.JUMP
+
+        putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {
+            aButtonTask = when {
+                body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
+                else -> AButtonTask.AIR_DASH
+            }
+        }
+
+        putProperty(PlayerKeys.LIGHT) {
+            when {
+                charging -> if (fullyCharged) PlayerLight.FULL_CHARGE else PlayerLight.HALF_CHARGE
+                isBehaviorActive(BehaviorType.JETPACKING) -> PlayerLight.JETPACK
+                else -> PlayerLight.STANDARD
+            }
+        }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -450,8 +476,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         runTime = 0f
 
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
-        direction =
+        game.gravity.set(
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
+        )
 
         aButtonTask = AButtonTask.JUMP
 
@@ -716,7 +743,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
 
-        val player = players.viewOf(this)!!
+        val player = this.asPlayer!!
         playerState.damageListeners.forEach { it.onPlayerDamaged(damager, player) }
 
         return true

@@ -61,6 +61,7 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.entities.special.DarknessV2
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.*
@@ -423,11 +424,12 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         // Special case: if the shield is Megaman's axe shield, then the axe shield
         // needs to be facing the origin of the laser. This is to prevent lasers
         // from being reflected when hitting the back of the shield.
-        if (shieldEntity is Megaman && shield.isProperty(ConstKeys.AXE, true)) {
+        val shieldPlayer = shieldEntity.asPlayer
+        if (shieldPlayer != null && shield.isProperty(ConstKeys.AXE, true)) {
             val origin = getFirstLocalPoint()
 
-            if (megaman.isFacing(Facing.LEFT) && origin.x > megaman.body.getCenter().x) return false
-            if (megaman.isFacing(Facing.RIGHT) && origin.x < megaman.body.getCenter().x) return false
+            if (shieldPlayer.facing == Facing.LEFT && origin.x > shieldPlayer.body.getCenter().x) return false
+            if (shieldPlayer.facing == Facing.RIGHT && origin.x < shieldPlayer.body.getCenter().x) return false
         }
 
         return true

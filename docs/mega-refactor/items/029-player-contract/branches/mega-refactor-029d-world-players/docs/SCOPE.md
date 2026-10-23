@@ -89,6 +89,10 @@ About 204 code lines in about 80 files: `entities/special` 83 lines, `projectile
 
 - No branch is active.
 
+## Player view on the entity (added during step 7)
+
+Owner decision (2026-10-23), after asking why `BodyPlayerRule` needs `playerEntity.game.players.viewOf(playerEntity)!!`: the entity is not a `PlayerView` (choice A), so a cast cannot work; instead `MegaPlayer` stores itself on its entity at registration (`PlayerKeys.VIEW`), and a core extension `Any?.asPlayer: MegaPlayer?` reads it. All `players.viewOf(x)` call sites in core (from `029b`, `029c` and this branch) become `x.asPlayer`. A `TODO` at `MegaPlayer` says that unregistering does not remove the view (drop-out is `047`); no engine hook is added before a caller exists. The engine `viewOf` stays (`slotOf` uses it).
+
 ## Gravity direction
 
 The owner asked for one source of truth for the gravity direction (2026-10-23). The scan (process log, same date) found that every change of the player's direction goes through `Megaman.direction`'s setter, which also rotates the camera, so the gravity is already global in practice. Decisions (owner, 2026-10-23):
@@ -101,6 +105,7 @@ The owner asked for one source of truth for the gravity direction (2026-10-23). 
   - `PortalHopper` when the hopping entity is a player (`next_entity_direction`); other entities keep their own direction;
   - `CapsuleTeleporter` (`megaman_direction_on_receive`, for the received player);
   - the level screen (room property `megaman_direction`).
+  - `BodyGravityChangeRule` (found during step 5, 2026-10-23): a `GravityChange` area sets the direction of any directional body in it; for a player it now calls `gravity.set`, other entities keep their own direction. Live only in `Test1.tmx` (`TEST_1`) and old map versions.
 - **Readers** of the world direction (the player's direction used for the world: conveyor belts, spikes, magma, bullets, gems, decorations, explosions) read `game.gravity.direction`.
 - **Camera rotation stays in the player's direction setter**, with a `TODO` in the code and here: the rotation belongs to `WorldGravity`, because with more players each player's setter would ask for it.
 - **Unused paths are commented out, not deleted** (owner decision): `GravityCapsule` (no TMX file and no code uses it) is commented out in full with a `TODO` at the top that the code may be out of date; `PortalHopper`'s `next_body_direction` (no TMX file sets it) is commented out (the spawn-prop read, the field, the event property and the body-direction write), with a `TODO` that a body direction set this way would bypass `WorldGravity` and the player's setter, and must go through `gravity.set` for players if it comes back.

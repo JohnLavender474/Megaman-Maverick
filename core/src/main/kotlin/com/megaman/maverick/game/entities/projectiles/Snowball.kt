@@ -31,6 +31,7 @@ import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
@@ -75,7 +76,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity() as IProjectileEntity
-        if (projectile.owner == megaman) explodeAndDie()
+        if (projectile.owner.asPlayer != null) explodeAndDie()
     }
 
     override fun hitExplosion(explosionFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) =
@@ -88,7 +89,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(
-                    if (owner is Megaman) AbstractEnemy::class else Megaman::class
+                    if (owner.asPlayer != null) AbstractEnemy::class else Megaman::class
                 )
             )
         )

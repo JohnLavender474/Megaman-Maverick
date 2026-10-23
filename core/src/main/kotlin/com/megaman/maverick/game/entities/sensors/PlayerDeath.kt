@@ -5,20 +5,22 @@ import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.world.body.getBounds
 
-// Unlike `Death`, the `MegamanDeath` entity is NOT added to the world system and applies ONLY to Mega Man.
+// Unlike `Death`, the `PlayerDeath` entity is NOT added to the world system and applies ONLY to Mega Man.
 // Use this entity if it is guaranteed that ONLY Mega Man will ever make contact with this entity.
-open class MegamanDeath(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, Updatable {
+open class PlayerDeath(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, Updatable {
 
     companion object {
-        const val TAG = "MegamanDeath"
+        const val TAG = "PlayerDeath"
     }
 
     private val bounds = GameRectangle()
@@ -40,10 +42,9 @@ open class MegamanDeath(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
     }
 
     override fun update(delta: Float) {
-        if (megaman.dead) return
-        if (!bounds.overlaps(megaman.body.getBounds())) return
-        if (!instant && megaman.invincible) return
-        megaman.depleteHealth()
+        players.forEach {
+            if (!it.dead && bounds.overlaps(it.body.getBounds()) && (instant || !it.invincible)) it.depleteHealth()
+        }
     }
 
     override fun getType() = EntityType.SENSOR

@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -172,7 +173,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity() as IProjectileEntity
         if (projectile.owner == owner) return
-        if (projectile.owner == megaman) explodeAndDie()
+        if (projectile.owner.asPlayer != null) explodeAndDie()
     }
 
     override fun defineBodyComponent(): BodyComponent {

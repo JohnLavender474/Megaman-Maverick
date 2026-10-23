@@ -10,6 +10,10 @@ class PlayerStateComponent(private val damageTimer: Timer, private val shootAnim
 
     var canBeDamaged = true
 
+    var teleporting = false
+
+    var movementAllowed = true
+
     val damaged: Boolean
         get() = !damageTimer.isFinished()
 

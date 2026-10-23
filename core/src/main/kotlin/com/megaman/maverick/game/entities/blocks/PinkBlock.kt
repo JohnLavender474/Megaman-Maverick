@@ -13,6 +13,7 @@ import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setEntity
@@ -32,7 +33,7 @@ class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
         heartTankBlock = spawnProps.getOrDefault(ConstKeys.HEART, false, Boolean::class)
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = damager is Laser && damager.owner is Megaman
+    override fun canBeDamagedBy(damager: IDamager) = damager is Laser && damager.owner.asPlayer != null
 
     override fun takeDamageFrom(damager: IDamager): Boolean {
         explodeAndDie()
@@ -50,7 +51,7 @@ class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
         blockFixture.setReceiver(Receivers.HIT_BY_EXPLOSION) {
             if (it is WhiteBurst &&
                 it.owner is Laser &&
-                (!heartTankBlock || (it.owner as Laser).owner is Megaman)
+                (!heartTankBlock || (it.owner as Laser).owner.asPlayer != null)
             ) explodeAndDie()
         }
 

@@ -34,7 +34,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -145,7 +145,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
             TAG,
             "onSpawn(): " +
                 "setOfAllLeaves.size=${setOfAllLeaves.size}, " +
-                "megaman.body.center=${megaman.body.getCenter()}"
+                "targetPlayer.body.center=${targetPlayer.body.getCenter()}"
         )
 
         if (setOfAllLeaves.size > maxAllowedSpawned()) {

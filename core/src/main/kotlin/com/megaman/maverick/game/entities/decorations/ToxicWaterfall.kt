@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -133,7 +134,7 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             when (state) {
                 ProcessState.BEGIN -> {
                     bodiesInWater.put(entity, Timer(SPLASH_FREQ))
-                    if (entity.isAny(Megaman::class, AbstractEnemy::class))
+                    if (entity.asPlayer != null || entity is AbstractEnemy)
                         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
                 }
 
@@ -147,7 +148,7 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         forceFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity()
             return@setReceiver when {
-                !entity.isAny(Megaman::class, AbstractEnemy::class) -> VelocityAlteration.addNone()
+                !(entity.asPlayer != null || entity is AbstractEnemy) -> VelocityAlteration.addNone()
                 else -> VelocityAlteration.add(0f, -FORCE * ConstVals.PPM * delta)
             }
         }

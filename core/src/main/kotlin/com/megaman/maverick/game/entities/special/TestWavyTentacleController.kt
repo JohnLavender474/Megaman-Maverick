@@ -23,6 +23,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import kotlin.math.sqrt
 
@@ -217,7 +218,7 @@ class TestWavyTentacleController(game: MegamanMaverickGame) :
                 idleTimer += delta
                 if (idleTimer >= IDLE_DURATION) {
                     idleTimer = 0f
-                    lungeTarget.set(game.megaman.body.getCenter())
+                    lungeTarget.set(targetPlayer.body.getCenter())
                     tentacle!!.setState(WavyTentacleOfJoints.TentacleState.LUNGING)
                 }
             }

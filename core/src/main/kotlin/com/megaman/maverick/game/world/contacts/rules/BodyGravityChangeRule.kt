@@ -11,7 +11,9 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-object BodyGravityChangeRule : IContactRule {
+class BodyGravityChangeRule(
+    private val changeDirection: (entity: IDirectional, direction: Direction) -> Unit
+) : IContactRule {
 
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = begin(a, b)
 
@@ -59,7 +61,7 @@ object BodyGravityChangeRule : IContactRule {
             if (canChangeGravityRotation) {
                 val direction = gravityChangeFixture.getProperty(ConstKeys.DIRECTION, Direction::class) ?: return
                 if (entity is IDirectional && entity.direction != direction)
-                    entity.direction = direction
+                    changeDirection(entity, direction)
             }
         }
     }
@@ -96,6 +98,6 @@ object BodyGravityChangeRule : IContactRule {
         if (!gravityChangeFixture.getShape().contains(bodyPointToCheck)) return
 
         val entity = bodyFixture.getEntity()
-        if (entity is IDirectional && entity.direction != direction) entity.direction = direction
+        if (entity is IDirectional && entity.direction != direction) changeDirection(entity, direction)
     }
 }

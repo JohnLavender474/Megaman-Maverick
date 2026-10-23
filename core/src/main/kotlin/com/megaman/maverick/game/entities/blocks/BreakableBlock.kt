@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
@@ -141,7 +142,7 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
 
     override fun hitByProjectile(projectileFixture: IFixture) {
         val entity = projectileFixture.getEntity()
-        if (entity is MoonScythe && entity.owner == megaman) explodeAndDie()
+        if (entity is MoonScythe && entity.owner.asPlayer != null) explodeAndDie()
     }
 
     override fun hitByHead(processState: ProcessState, headFixture: IFixture) {
@@ -150,7 +151,7 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
         val entity = headFixture.getEntity()
         when (type) {
             BRICK_TYPE -> if (entity is Wanaan) explodeAndDie()
-            SMB3_GOLD_TYPE -> if (entity is Megaman) explodeAndDie()
+            SMB3_GOLD_TYPE -> if (entity.asPlayer != null) explodeAndDie()
             else -> {}
         }
     }

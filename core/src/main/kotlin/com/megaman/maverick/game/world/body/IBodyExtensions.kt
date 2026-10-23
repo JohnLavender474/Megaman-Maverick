@@ -12,12 +12,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 
 fun IBody.defaultDoUpdate(): Boolean {
     val game = getEntity().game
-    if (getEntity() !is Megaman && game.isCameraRotating()) return false
+    if (getEntity().asPlayer == null && game.isCameraRotating()) return false
     return when (type) {
         // NOTE: an ABSTRACT body that can be spawned OUTSIDE the camera must have its velocity set in
         // `onSpawn`, not only in `body.preProcess`. The `preProcess` function runs only for bodies the

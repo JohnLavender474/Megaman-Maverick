@@ -16,6 +16,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.players.PlayerKeys
+import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.utils.misc.StunType
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -35,6 +37,8 @@ class MegamanStunTargetTest : DescribeSpec({
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(megaman.playerState)
+        megaman.putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {}
+        megaman.putProperty(PlayerKeys.LIGHT) { PlayerLight.STANDARD }
 
         val players = MegaPlayers(2)
         players.register(PlayerSlot(0), megaman)

@@ -29,7 +29,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
-import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -44,9 +43,9 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -220,7 +219,7 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
         )
         blowFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity() as IBodyEntity
-            if (players.viewOf(entity) == null) return@setReceiver VelocityAlteration.addNone()
+            if (entity.asPlayer == null) return@setReceiver VelocityAlteration.addNone()
 
             if ((isFacing(Facing.LEFT) && entity.body.physics.velocity.x <= -BLOW_MAX * ConstVals.PPM) ||
                 (isFacing(Facing.RIGHT) && entity.body.physics.velocity.x >= BLOW_MAX * ConstVals.PPM)

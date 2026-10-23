@@ -35,7 +35,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.MagmaGoopExplosion
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -104,7 +103,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             val thisShape = params[0] as IGameShape2D
             val otherShape = params[1] as IGameShape2D
 
-            val direction = getOverlapPushDirection(thisShape, otherShape) ?: megaman.direction
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: game.gravity.direction
             val position = DirectionPositionMapper.getPosition(direction)
 
             val overlap = GameObjectPools.fetch(Rectangle::class)
