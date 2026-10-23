@@ -4,8 +4,8 @@ What this branch changes and why. Write this file after the scan, before `CONTRA
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: draft (changed after approval: test map and test entity, item 7; needs approval again)
-- Approved: 2026-10-23 (first version)
+- Status: approved
+- Approved: 2026-10-23 (again, with the test map)
 
 ## Goal
 

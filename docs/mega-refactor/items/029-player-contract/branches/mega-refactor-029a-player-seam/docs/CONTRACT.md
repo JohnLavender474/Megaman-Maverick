@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time
 on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-23
 
 This branch adds new engine and core types, registers Megaman as the only player, changes the
 global `megaman` self-references inside the player package to `this`, and adds player identity to

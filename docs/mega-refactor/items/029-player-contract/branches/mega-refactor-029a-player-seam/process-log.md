@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: Player slot, a small `IPlayer` contract and a players service (engine interface plus base class); `Megaman` is the only player, in slot 0
-- Done: scan; `docs/SCOPE.md` approved; draft `docs/CONTRACT.md`.
-- Next: the owner reviews `docs/CONTRACT.md`.
+- Done: scan; `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`.
+- Next: the owner reviews `docs/PLAN.md` (one open question: the test level loadout).
 - Blocked:
 
 ## Entries
@@ -20,3 +20,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Scope: added the `IMegaGameEntity.players` extension and where `game.players` lives (owner's request).
 - Owner answered the open questions: names approved, new `ConstKeys.SLOT` (and `SLOTS`), `STUN_PLAYER` carries target slots (room shake: all players). Scope updated.
 - Scope approved by the owner. Draft `docs/CONTRACT.md` written.
+- Scope (with the test map) and contract approved by the owner. Draft `docs/PLAN.md` written.
