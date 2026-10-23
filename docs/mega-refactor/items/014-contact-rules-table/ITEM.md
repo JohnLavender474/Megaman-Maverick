@@ -30,9 +30,10 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - **Receivers:** replace the `Megaman` checks with fixture receivers or capabilities in this item. Do not wait for `029`. `029` adjusts them later as needed.
 - **Receiver style:** the owner sees the hand-written receiver extension trios (`setX`/`hasX`/`getX`) as a code smell. Typed fixture receivers replace them (research and scope in `items/056-typed-fixture-receivers/`).
 - **Branch order:** the typed fixture receivers (former item `056`) come before the rule table work specified in `NOTES.md`. A fixture-type narrowing branch also comes before the table (research in `NOTES.md`, "Research: narrow the engine fixture type"). Planned branches:
-  - `mega-refactor-014a-fixture-type`: narrow the engine fixture type from `Any`. The type choice is not approved yet (see "Open questions").
+  - `mega-refactor-014a-fixture-type`: narrow the engine fixture type from `Any`.
   - `mega-refactor-014b-typed-fixture-receivers`: the scope of the former item `056`. It does not depend on `014a`, so the two can run in parallel.
   - `mega-refactor-014c-contact-rules-table`: the rule table. It needs `014a` and `014b`.
+- **Fixture type:** the engine types fixtures as an `IFixtureType` interface (`ordinal`, `name`), not `Any` and not a primitive ID. An engine `FixtureTypeSet` owns the set of types: it validates dense, ordered ordinals and unique names (`of`, `validated`), creates types for games without enums (`named`), and checks that a type belongs to the set (`owns`). Fixture types are single instances, with no value equality. This is the scope of `014a` (`NOTES.md`, "Research: narrow the engine fixture type" and its follow-up).
 - **Engine:** the table mechanism (`ContactRuleTable`, builder, dispatcher) goes in the engine. `FixtureType`, the rules and the receivers stay in `core`.
 - **Phases:** one rule object per pair, with `onBegin`, `onContinue` and `onEnd` methods (option P1 in `NOTES.md` 4.4).
 - **Files:** one class and file per pair effect with real logic; generic classes for the receiver-forward pairs; one `ProjectileRules.kt` (`NOTES.md`, "Per-pair classes"). The branch confirms it in practice.
@@ -49,7 +50,6 @@ Answer to review item 13 (2026-10-22, verbatim):
 
 - Rules in data (JSON) now, or only the simple friction and sense rules? The research recommends Kotlin `SurfaceRule` rows and no JSON for now (`NOTES.md` 4.6).
 - Can some special cases (wall-slide ice friction) become a general body property? The research says yes: a body flag that the wall-slide behavior sets (`NOTES.md` 4.6).
-- Which type for the engine fixture type: an `IFixtureType` interface with `ordinal` and `name` (the research recommends this), or a primitive ID (`Int`, `Short`, `Long`)? See `NOTES.md`, "Research: narrow the engine fixture type".
 - Which contact trace tool should the branch build? The research recommends an exhaustive selection test (golden file) in `014`, an optional per-room rule-hit summary behind `--contactTrace`, and the line-by-line diff only after `055` (`NOTES.md`, "Research: contact trace").
 
 ## Sources
