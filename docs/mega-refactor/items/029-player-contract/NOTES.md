@@ -1035,3 +1035,62 @@ Each gap is listed with the item that takes it. The details are in reviews 2 and
 | Exact-class `KClass` damage and mask sets | `030` or `023` |
 | Global input, controller 0 in 4 entities | `031` |
 | Clock-seeded RNG, `Gdx.graphics.deltaTime` in the camera | `011`, `010` |
+
+## Targeting design (2026-10-23)
+
+From the discussion after the `029a` draft scope. Not a branch scope yet; `029b` decides the details.
+
+### Call sites name the intent, not the rule
+
+Today's enemies are not designed around "nearest": there is one player, and they target it at any distance. `029` must not decide a co-op targeting rule (that is `047`), and it must not write `players[0]` at about 900 sites (the hidden "player 0" trap, and a second pass over every site for co-op). Each call site uses a helper for its intent:
+
+| Intent at the call site | Helper | In `029` | Changes later in |
+|---|---|---|---|
+| Aim at, face or move toward "the player" (about 290 lines) | `players.targetFor(this)` | slot 0 | `047`: the default policy, in one place |
+| Proximity or trigger (about 195 lines) | `players.any { ... }` | true if any player matches | nothing |
+| The player in a contact | the entity from the contact | already known | nothing |
+| All players (locks, cutscenes, a shot at each player) | `players.forEachPresent { ... }` | one player | nothing |
+| Save, title screen, single-player flows | `players.require(PlayerSlot(0))` | slot 0, named | only where co-op changes the flow |
+
+In `029`, `targetFor` gives Megaman also while he is dead, as `megaman` does today. With capacity 1 it never gives null.
+
+### The policy is a component, not an extension `when` or an open method
+
+The owner's concern: one extension function that supports every entity grows into a large `when`, and an open function on `AbstractEnemy` is inheritance (`048`). The design:
+
+```kotlin
+fun interface TargetPolicy<V : PlayerView> {
+    fun select(seeker: IGameEntity, players: IPlayers<V>): V?
+}
+
+class TargetingComponent<V : PlayerView>(var policy: TargetPolicy<V>) : IGameComponent
+
+fun MegaPlayers.targetFor(seeker: IGameEntity): MegaPlayer? =
+    (seeker.getComponent(TargetingComponent::class)?.policy ?: defaultTargetPolicy).select(seeker, this)
+```
+
+- The dispatch function never names an entity class. Per-entity behavior is data on the entity, like the `014` receivers.
+- `MegaPlayers.defaultTargetPolicy` is "slot 0" in `029`. `047` changes the default once (for example nearest, or sticky nearest). An entity with its own rule (for example a boss that alternates players) attaches a `TargetingComponent`.
+- Reusable policies: `SlotZero`, `Nearest`, `Sticky(inner)`, `LastAttacker`, `RoundRobin`.
+- A stateful policy (sticky, last attacker) is an instance per entity, held by the component. The component's `reset()` clears it, so pooled entities start clean.
+- `TargetPolicy` and `TargetingComponent` assume only `PlayerView`, so they can live in the engine (targeting is a genre concept). Policies that need a position (`Nearest`) are in core.
+- Cost: one component lookup per call; no allocation (policies are made once).
+- Timing: `029b` adds `targetFor`, `TargetPolicy` and the `SlotZero` default when it moves the first enemy. `TargetingComponent` comes the first time an entity needs its own rule (probably `047`, or `029c` if a boss shows a real need). `029a` does not include targeting.
+
+### One target per policy
+
+The owner asked whether a policy returns one player or several.
+
+- A policy returns one player. Most sites need one target (an enemy faces one way and aims at one point), stateful rules are about one target, and a list would allocate on each call or need `[0]` at every site.
+- "Every player" and "every player that matches" are not targeting choices. They use `forEachPresent` and the filter helpers, with no policy.
+- If a real case needs a policy to choose a subset (for example a boss with 4 players that picks the 2 with the most threat), add a second operation and keep the single one:
+
+  ```kotlin
+  fun interface MultiTargetPolicy<V : PlayerView> {
+      fun select(seeker: IGameEntity, players: IPlayers<V>, out: Array<V?>): Int
+  }
+
+  inline fun MegaPlayers.forEachTarget(seeker: IGameEntity, action: (MegaPlayer) -> Unit) { /* entity's multi policy */ }
+  ```
+
+  It fills a reused buffer and never returns a list. Do not build it before a real case exists; today no entity chooses a subset.

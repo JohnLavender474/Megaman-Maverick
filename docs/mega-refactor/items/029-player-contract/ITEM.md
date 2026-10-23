@@ -46,6 +46,7 @@ Research round 2 (2026-10-23, verbatim):
 - 2026-10-23: the players service is an interface plus a base class in the engine. The base class gives standard helpers out of the box, and a game can add its own helpers. Not all helpers can be known ahead of time.
 - 2026-10-23: `029` follows the components direction of `048`. There is no `IPlayer` interface on the player entity. The engine assumes only a slot and an entity (no body, no position). `PlayerView` is a small engine interface (choice A), and the game supplies its view type, which resolves the components it requires once, at registration. Engine helpers are deterministic `inline` extensions (slot order, ties to the lower slot); spatial helpers such as `nearestTo` are game helpers. Research: `029a` `docs/NOTES.md`.
 - 2026-10-23: the game passes a players capacity of 1 until co-op (`047`).
+- 2026-10-23: call sites name their intent (`targetFor`, `any`, the contact entity, `forEachPresent`, `require(PlayerSlot(0))`), not a rule and not `players[0]`. Targeting is a `TargetPolicy` with a game default (slot 0 in `029`) and an optional per-entity `TargetingComponent`; a policy returns one player. Details: "Targeting design" in `NOTES.md`.
 
 ## Branch split
 
@@ -54,7 +55,7 @@ Proposed 2026-10-23. The owner asked for the split. Each later branch gets its o
 | Branch | Goal | Notes |
 |---|---|---|
 | `029a` `player-seam` | Player slot, small `IPlayer`, players service (engine interface plus base class); `Megaman` in slot 0; the global self-references in the player package; slot prop on the player events | No call site outside the player package moves |
-| `029b` `enemy-players` | Enemies (about 395 lines, 104 files) use `game.players` helpers in place of `megaman` | Targeting, proximity, reading player state. `IPlayer` grows by need |
+| `029b` `enemy-players` | Enemies (about 395 lines, 104 files) use `game.players` helpers in place of `megaman` | Adds `targetFor`, `TargetPolicy` and the `SlotZero` default (see "Targeting design" in `NOTES.md`). Proximity uses `any`. `MegaPlayer` gets a required field only when a moved site needs it |
 | `029c` `boss-players` | Bosses (about 140 lines, 22 files), `AbstractBoss`, the boss damage listener (`IMegamanDamageListener`) | |
 | `029d` `world-players` | Special, projectiles, blocks, hazards, sensors, decorations, world code: `is IPlayer` checks, kill zones per contact player, stomp bounce, gravity devices, `HIT_BY_PLAYER` retype | Owner checks stay for `030` (open question) |
 | `029e` `player-profile` | Lives, tanks, enhancements and weapons owned move to one session profile; `ItemEntity` retype (`Life` reads lives) | With `007` (save) |
