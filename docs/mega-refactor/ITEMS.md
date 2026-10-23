@@ -76,5 +76,5 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-008a-dev-launch-options`](items/008-dev-launch-options/branches/mega-refactor-008a-dev-launch-options/process-log.md) | 008 | Dev launch options and level staging | merged | 2026-10-22 | 2026-10-22 |
 | `mega-refactor-019b-destroy-notification` | 019 | Tell a spawner at once when its entity is destroyed; one spawn phase per tick | planned | | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
-| [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | active | 2026-10-22 | |
+| [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | `mega-refactor-014c-contact-rules-table` | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | planned | | |

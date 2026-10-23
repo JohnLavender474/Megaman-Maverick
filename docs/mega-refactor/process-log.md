@@ -207,3 +207,17 @@ newest entry at the bottom.
   The owner approved the merge.
 - Follow-up: `014b` (typed fixture receivers) waits for scope review; `014c` (rule table, with
   `FixtureTypeSet`) needs `014a` and `014b`.
+
+## 2026-10-22 — mega-refactor-014b-typed-fixture-receivers
+
+- Summary: one typed receiver registration in place of the hand-written extension trios. Engine:
+  `PropertyKey<T>`, `PhasedPropertyKey<T>` and typed `IPropertizable` accessors. Core: `Receivers`
+  (17 keys, function types) with `setReceiver`/`receiver`; all 185 registration sites and the 96
+  reads in the contact listener and filter use them; the old functions and the unused `hitByLaser`
+  kind are deleted. Squash commit `fe5563675`.
+- Contract check: clean build; 436 engine (9 new) and 77 core tests pass; compiler warnings 133 to
+  115 (the old unchecked casts); the contract greps find no old receiver code; the owner's play test
+  passed (Glacier Man: conveyor belts, ice blocks, water, death fixtures; Desert Man dark sections:
+  quicksand, carts). The owner approved the merge.
+- Follow-up: `014c` (rule table, with `FixtureTypeSet`) is next for item `014`. The
+  `setHitByLaserReceiver` part of `docs/issues/2026-10-22-unused-contact-hooks.md` is resolved.

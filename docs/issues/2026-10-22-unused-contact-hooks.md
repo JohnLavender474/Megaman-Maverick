@@ -33,3 +33,9 @@ Remove the dead writes, the sense value and the receiver, or use them. No gamepl
 ## Notes
 
 Item `014` can drop these when it moves the rules, as an intended change with no gameplay effect.
+
+## Progress
+
+- 2026-10-22: the `setHitByLaserReceiver` part is resolved by `mega-refactor-014b` (squash `fe5563675`): the
+  receiver kind and its two reads in `MegaContactListener` are deleted. `ConstKeys.HIT_BY_LASER` is now
+  unused. `TOUCHING_CART` and `ConstKeys.CART` stay open.
