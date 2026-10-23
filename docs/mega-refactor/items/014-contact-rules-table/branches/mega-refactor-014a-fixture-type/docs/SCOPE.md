@@ -8,11 +8,11 @@ existed.
 
 ## Goal
 
-Type fixtures in the engine as `IFixtureType` (`ordinal`, `name`) instead of `Any`. This gives the
+Type fixtures in the engine as `IFixtureType` (one property, `index: Int`) instead of `Any`. This gives the
 `014c` rule table a dense index with no casts. Gameplay does not change: only compile-time types
 change.
 
-`FixtureTypeSet` (from the same decision) moves to `014c`. Only the rule table uses the ordinal, so
+`FixtureTypeSet` (from the same decision) moves to `014c`. Only the rule table uses the index, so
 only the table needs the set and its `owns` check. See "Open questions" for the record of this
 change.
 
@@ -20,10 +20,11 @@ change.
 
 `014` (table-driven contact and collision rules), the decision of 2026-10-22 in its `ITEM.md`:
 
-> **Fixture type:** the engine types fixtures as an `IFixtureType` interface (`ordinal`, `name`),
-> not `Any` and not a primitive ID. An engine `FixtureTypeSet` owns the set of types: it validates
-> dense, ordered ordinals and unique names (`of`, `validated`), creates types for games without
-> enums (`named`), and checks that a type belongs to the set (`owns`). Fixture types are single
+> **Fixture type:** the engine types fixtures as an `IFixtureType` interface with one property,
+> `index: Int`, not `Any` and not a primitive ID. An enum implements it with one line,
+> `override val index get() = ordinal`. There is no `name` property. An engine `FixtureTypeSet`
+> owns the set of types: it validates that the indexes are `0..n-1` in order (`of`, `validated`),
+> creates types for games without enums (`named`), and checks that a type belongs to the set (`owns`). Fixture types are single
 > instances, with no value equality. This is the scope of `014a`.
 
 Research: `items/014-contact-rules-table/NOTES.md`, "Research: narrow the engine fixture type" and
@@ -76,15 +77,15 @@ Scan of `master` at `f8cab20dc`.
 
 **Engine (`world/body/`):**
 
-- New `IFixtureType` interface: `val ordinal: Int`, `val name: String`. An enum implements it with no
-  code.
+- New `IFixtureType` interface: `val index: Int`. No `name`: nothing reads it, and logs use
+  `toString()`, which an enum already gives.
 - `IFixture : ITypable<IFixtureType>`; `Fixture(type: IFixtureType)`.
 - `Body.fixtures: OrderedMap<IFixtureType, OrderedSet<IFixture>>`, the same in `BodyBuilder`, and
   `IBody.getFixtures(out, vararg params: IFixtureType)`.
 
 **Core:**
 
-- `enum class FixtureType : IFixtureType`. No other code in the enum.
+- `enum class FixtureType : IFixtureType`, with one line: `override val index get() = ordinal`.
 
 **Tests:**
 
@@ -128,10 +129,13 @@ Scan of `master` at `f8cab20dc`.
 
 None open.
 
-- (2026-10-22) The index property is named `ordinal`, so an enum gets it free. Owner's decision.
+- (2026-10-22) Scope change approved by the owner: the interface has no `name` (nothing uses it; logs
+  use `toString()`), and its one property is named `index`, a common game-dev name for a dense slot
+  index (Ashley's `ComponentType.getIndex()`). This replaces the earlier decision for `ordinal`. An
+  enum needs one line, `override val index get() = ordinal`.
 
 - (2026-10-22) The first draft passed an optional `FixtureTypeSet` to `WorldSystem` and checked
   `owns` there. The owner asked what that gives. Answer: nothing that matters. `WorldSystem` never
   reads the type. `Body.fixtures`, the filter maps and `==` compare by identity, so a stray type
-  with a used ordinal does no harm there. The ordinal matters only in the `014c` table, so the set
+  with a used index does no harm there. The index matters only in the `014c` table, so the set
   and its check belong to the table. `FixtureTypeSet` moves to `014c`, where it gets its first user.

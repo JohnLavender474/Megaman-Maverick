@@ -29,7 +29,7 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
 ### 3. Add `IFixtureType` and narrow the engine types
 
 - Changes (engine `world/body/`):
-  - New `IFixtureType.kt`: `interface IFixtureType { val ordinal: Int; val name: String }`.
+  - New `IFixtureType.kt`: `interface IFixtureType { val index: Int }`.
   - `IFixture : ITypable<IFixtureType>`.
   - `Fixture(type: IFixtureType)`; the private `fixtureType` field follows.
   - `Body.fixtures: OrderedMap<IFixtureType, OrderedSet<IFixture>>`.
@@ -45,7 +45,8 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
 
 - Changes:
   - New `engine/src/test/kotlin/com/maverick/game/engine/world/body/TestFixtureType.kt`:
-    `internal enum class TestFixtureType : IFixtureType` with one value for each string the tests
+    `internal enum class TestFixtureType : IFixtureType` (with `override val index get() = ordinal`)
+    with one value for each string the tests
     use today (for example `TYPE`, `OTHER_TYPE`, `TYPE1`, `TYPE2`, `F`, `F1`, `F2`, `KEEP`, `SKIP`,
     `FIXTURE1`, ...). Collect the full list with a grep of `Fixture(..., "...")` and
     `getType() == "..."` in `engine/src/test`.
@@ -60,8 +61,8 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
 
 ### 5. Core: `FixtureType` implements `IFixtureType`
 
-- Changes: `enum class FixtureType : IFixtureType` in `core/.../world/body/FixtureType.kt`. No other
-  code. Fix any core compile error that the narrower types show. The scan expects none.
+- Changes: `enum class FixtureType : IFixtureType` in `core/.../world/body/FixtureType.kt`, with
+  `override val index get() = ordinal`. Fix any core compile error that the narrower types show. The scan expects none.
 - Check: `./gradlew core:test lwjgl3:jar` passes, with the same core test count as the baseline.
 - Done: no
 

@@ -19,3 +19,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Draft scope revised: `FixtureTypeSet` and the `WorldSystem` check removed; the set moves to `014c`.
 - Scope approved by the owner (index property named `ordinal`). Draft `docs/CONTRACT.md` written.
 - Contract approved by the owner. Draft `docs/PLAN.md` written.
+- Scope change approved by the owner: `IFixtureType` has only `index: Int` (no `name`, no `ordinal`). Scope and plan updated.

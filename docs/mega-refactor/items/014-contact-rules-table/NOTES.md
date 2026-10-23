@@ -1240,3 +1240,13 @@ class FixtureTypeSet private constructor(private val types: Array<IFixtureType>)
 
 With this, the interface stays usable without enums, and an enum still needs no code. This belongs
 in `014a`.
+
+### Update: one property, `index` (2026-10-22)
+
+The owner decided, after the research above: `IFixtureType` has one property, `index: Int`. It has no
+`name`: nothing reads a fixture type's name (the Tiled data path calls `FixtureType.valueOf` on the
+enum), and logs use `toString()`. `index` is a common game-dev name for a dense slot index (Ashley's
+`ComponentType.getIndex()`). An enum implements it with one line, `override val index get() =
+ordinal`. So in the sketches above, read `ordinal` as `index`, and drop `name`, `valueOf` and the
+unique-name check from `FixtureTypeSet`. `named(...)` still exists, and gives its types a readable
+`toString()`.
