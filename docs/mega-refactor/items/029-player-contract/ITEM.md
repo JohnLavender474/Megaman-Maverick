@@ -44,6 +44,8 @@ Research round 2 (2026-10-23, verbatim):
 - 2026-10-23: `PLAYER_SPAWN` must split into a spawn event for each player and a separate level reset. The split goes to `038` (inside the `013` flow). `029` only adds a player slot prop to the player events.
 - 2026-10-23: the players service has no public `primary` or `first()` in its query API. Each caller says which player it wants (nearest, the one in the contact, any, all, the owner, slot `n`). A session-level lead slot for the camera and the save (see `047`) is a policy, not a query helper.
 - 2026-10-23: the players service is an interface plus a base class in the engine. The base class gives standard helpers out of the box, and a game can add its own helpers. Not all helpers can be known ahead of time.
+- 2026-10-23: `029` follows the components direction of `048`. There is no `IPlayer` interface on the player entity. The engine assumes only a slot and an entity (no body, no position). `PlayerView` is a small engine interface (choice A), and the game supplies its view type, which resolves the components it requires once, at registration. Engine helpers are deterministic `inline` extensions (slot order, ties to the lower slot); spatial helpers such as `nearestTo` are game helpers. Research: `029a` `docs/NOTES.md`.
+- 2026-10-23: the game passes a players capacity of 1 until co-op (`047`).
 
 ## Branch split
 

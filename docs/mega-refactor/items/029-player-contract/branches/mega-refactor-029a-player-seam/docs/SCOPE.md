@@ -9,19 +9,20 @@ again.
 
 ## Goal
 
-Add the seam that the other `029` branches build on: a player slot, a small `IPlayer` contract, and a players service (an engine interface plus a base class with standard helpers). `Megaman` implements `IPlayer` and is the only player, in slot 0. No call site outside the player package moves to the service yet. The game plays the same.
+Add the seam that the other `029` branches build on: a player slot, a player view and a players service, kept as small and abstract as possible in the engine. The game supplies its own view type with the components it requires. `Megaman` is registered as the only player, in slot 0. No call site outside the player package moves to the service yet. The game plays the same.
 
 ## Item
 
 `029`: `IPlayer` contract, players service and `CharacterDef`. This branch takes these parts of `ITEM.md`:
 
-- From "Proposed scope": "`IPlayer` (...). `Megaman` implements it." and "`game.players` (`all`, `byIndex`, `nearestTo`, `primary`)". The decisions below replace `primary`.
+- From "Proposed scope": "`IPlayer` (...). `Megaman` implements it." and "`game.players` (`all`, `byIndex`, `nearestTo`, `primary`)". The decisions below replace both: there is no `IPlayer` interface on `Megaman` and no `primary`.
 - Decisions (2026-10-23):
   - The target is 2 players, but the design must scale to 4 or more. No type, array or rule may assume exactly 2.
   - `029` keeps the current level-flow rules.
   - The players service has no public `primary` or `first()` in its query API. Each caller says which player it wants.
   - The players service is an interface plus a base class in the engine. The base class gives standard helpers out of the box, and a game can add its own helpers.
   - `029` adds a player slot prop to the player events. The `PLAYER_SPAWN` split is in `038`.
+  - The engine makes no assumption about a player beyond its slot and its entity: not a body, not a position. Player identity follows the components direction of `048`: the game supplies a view type whose required components are checked once, at registration (choice A: `PlayerView` is an interface). The game passes a capacity of 1 for now.
 
 ## Current state
 
@@ -81,28 +82,33 @@ These are not in this branch (see "Out of scope").
 ## In scope
 
 1. **Engine player types** (a new package, for example `E/players/`):
-   - `PlayerSlot`: a small value type for the slot index. It does not limit the slot count.
-   - A minimal engine player type, for example `IPlayerEntity : IBodyEntity` with `val slot: PlayerSlot`. The standard helpers need only the slot and the body.
-2. **Read-only facing and direction** in the engine: for example `IReadFaceable` (`val facing`, `isFacing`) and `IReadDirectional` (`val direction`). `IFaceable` and `IDirectional` extend them. This is additive; no current user changes.
-3. **Players service in the engine:**
-   - An interface (for example `IPlayers<P>`): the players in slot order, `get(slot)`, the count, iteration.
-   - A base class (for example `Players<P>`) that stores the players and gives standard helpers: `forEach` in slot order, `any`, `all`, `nearestTo(point, filter)`, `filter`. Every helper iterates in slot order, and a tie in distance goes to the lower slot.
-   - No helper filters by default (for example by alive or ready). The caller passes the filter. This keeps today's behavior when call sites move later, because today's code reads `megaman` whether it is dead or not.
-   - No `primary` and no `first()`.
-   - Register and remove a player in a slot. One player is registered at boot.
-   - Custom helpers: a game adds them as Kotlin extension functions on the interface, or in a subclass of the base class.
-4. **Core `IPlayer`**, small at first: `IPlayerEntity`, `IReadFaceable`, `IReadDirectional`, `dead`, `ready`. Later `029` branches add a member only when a call site that they move needs it.
-5. **`Megaman : IPlayer`**, slot 0.
-6. **`game.players`** in `MegamanMaverickGame`: a players service with `Megaman` registered in slot 0, in `postCreate` next to the current setup. `game.megaman` and the `megaman` extension stay unchanged.
-7. **Self-references:** replace the global `megaman` with `this` at the sites in "Current state". The trail sprite gets its player as an owner in its spawn props, and resets it on each spawn (it is pooled).
-8. **Slot prop on the player events:** a new `ConstKeys` key (for example `SLOT`) with the `PlayerSlot` of the player, on the submit sites in the table above, except `STUN_PLAYER` (a broadcast to all players; it stays without a slot). No listener reads the prop in this branch.
-9. **Tests:** engine unit tests for the players base class (slot order, `get`, register and remove, `nearestTo` with ties and with a filter, `any`, `all`, a custom extension helper). A core test that the slot prop is on the events, where a test is practical with the relaxed game mock.
+   - `PlayerSlot`: a value type for the slot index. It does not limit the slot count.
+   - `PlayerView`: an interface with `slot`, `entity` and `present` (default `entity.spawned`; a game can override it). Nothing else. No entity class implements it; the game writes a small view class.
+   - `IGameEntity.require(type)`: gives the component or fails with a clear message (the entity and the component name). Views use it at registration.
+   - `ComponentKey<T>` next to `PropertyKey<T>`, with a `get` operator on `IGameEntity` and `PlayerView`, for optional components (capability checks).
+2. **Players service in the engine:**
+   - `IPlayers<out V : PlayerView>`: `capacity` and `get(slot)`. Nothing else.
+   - `Players<V>`: an open class with the storage, `register(slot, entity)` (makes the view through a game-supplied factory and checks that the slot is free and in range), `unregister(slot)` and `get(slot)`. The capacity comes from the game; the engine sets no limit.
+   - Standard helpers as `inline` extension functions on `IPlayers`: `forEachPresent`, `any`, `all`, `firstOrNull`, `minByOrNull`. They iterate in slot order, a tie goes to the lower slot, and they do not allocate. Only a helper whose name says so (for example `forEachPresent`) filters by `present`; the others filter nothing, and the caller passes a predicate. This keeps today's behavior, because today's code reads `megaman` also while it is dead. No `primary`, no `first()`, no position.
+   - A game adds its own helpers as extension functions in the same way.
+3. **Core view and service:**
+   - `MegaPlayer : PlayerView`: one non-null field for each required component, resolved with `require` at registration; accessors read through the component (for example `val body get() = bodyComponent.body`, because `BodyComponent.body` is a `var`). For this branch the required parts are only those that the core helpers below need (the body). Later branches add a field only when a moved call site needs a required part.
+   - `MegaPlayers : Players<MegaPlayer>` with capacity 1.
+   - Core helpers as extension functions, for example `nearestTo(point)` built on `minByOrNull`.
+   - Rules: the view holds fields for required components only; every other helper is an extension. One view type for every character; no view subclass per character.
+4. **`game.players`** in `MegamanMaverickGame`: a `MegaPlayers` with `Megaman` registered in slot 0, in `postCreate` after the current setup. `game.megaman` and the `megaman` extension stay unchanged. `Megaman` gets no new interface.
+5. **Self-references:** replace the global `megaman` with `this` at the sites in "Current state". The trail sprite gets its player as an owner in its spawn props, and resets it on each spawn (it is pooled).
+6. **Slot prop on the player events:** a new `ConstKeys` key (for example `SLOT`) with the `PlayerSlot` of the player, on the submit sites in the table above, except `STUN_PLAYER` (a broadcast to all players; it stays without a slot). Megaman's own events use its view's slot, read from `game.players` or kept on `Megaman` at registration. No listener reads the prop in this branch.
+7. **Tests:**
+   - Engine: `Players` with a capacity greater than 1 (register, unregister, a full or out-of-range slot, `get` of an empty slot), the helpers (slot order, `present` filter, `minByOrNull` tie to the lower slot, `any`, `all`, `firstOrNull`), a custom extension helper, `require` failure message, `ComponentKey` lookup.
+   - Core: `MegaPlayer` registration fails without a `BodyComponent`; the slot prop is on the events where a test is practical with the relaxed game mock.
 
 ## Out of scope
 
 - Moving any call site outside the player package to `game.players` (later `029` branches: enemies, bosses, world entities, level flow and UI).
 - Removing or deprecating `game.megaman` or the `megaman` extension. A deprecation now would add about 900 compiler warnings. The last `029` branch removes them.
-- New `IPlayer` members beyond the list in "In scope" (`isDoing`, locks, `bounce`, gravity change, loadout, health). They come with the call sites that need them.
+- More required parts on `MegaPlayer`, and capabilities such as `isDoing`, locks, `bounce`, gravity change, loadout and health. They come with the call sites that need them, as required fields or as optional components.
+- Making facing, direction, `dead` or `ready` into components (`048`). Until then, a view accessor can read them from the entity in a later branch.
 - The `HIT_BY_PLAYER` and `ItemEntity` retypes. They need `canBeDamaged` and `lives`, which are lock and profile concerns (later `029` branches).
 - Listeners that read the slot prop, and the `PLAYER_SPAWN` split (`038`).
 - Owner checks (`owner == megaman`) and exact-class damage sets (`030`).
@@ -111,11 +117,11 @@ These are not in this branch (see "Out of scope").
 
 ## Affected areas and risks
 
-- **Engine:** new files only, plus the read-only parents of `IFaceable` and `IDirectional`. Risk: a Kotlin resolution or override problem in a class that implements `IFaceable` with a custom getter. The build finds it.
-- **`Megaman`:** a new interface and a slot. Risk: a name clash between `IPlayer` members and existing `Megaman` members (`dead`, `ready`, `facing`, `direction`). They have the same meaning, so they become overrides.
+- **Engine:** new files only. Risk: the `inline` helpers must stay in slot order and allocation-free; the unit tests check the order, and the plan step can measure allocation.
+- **Required components and respawn:** `Megaman` keeps the same component objects across destroy and spawn (`reset()` runs on destroy), so a view made once at boot stays valid. Risk: a required component replaced with `addComponent` would make the cached field stale. Core does not do this on `Megaman`. A debug check (or a view rebuild on spawn) catches it.
 - **Self-references:** with one player, `this` and `game.megaman` are the same object, so behavior does not change. Risk: the trail sprite owner. If the owner is not set or not reset on spawn, the trail is wrong or crashes. The spawn site is in `Megaman`.
-- **Event props:** listeners read props by key, so a new key does not change them. Risk: a listener that copies or logs all props. The scan of the plan step checks this.
-- **Boot:** `game.players` must exist before anything reads it. Nothing reads it in this branch except the tests.
+- **Event props:** listeners read props by key, so a new key does not change them. Risk: a listener that copies or logs all props. The plan step checks this.
+- **Boot:** `game.players` must exist before anything reads it, and `Megaman` must have its `BodyComponent` when it registers (after `init()`). Nothing reads `game.players` in this branch except the tests and the event submit sites.
 
 ## Overlap with other branches
 
@@ -124,7 +130,6 @@ These are not in this branch (see "Out of scope").
 
 ## Open questions
 
-1. Names: the engine package (`players`?), `PlayerSlot`, `IPlayerEntity`, `IPlayers` and `Players`, and the read-only interfaces (`IReadFaceable` and `IReadDirectional`, or other names).
-2. Custom helpers: extension functions on the interface (no cast at the call site), a subclass of the base class, or both (recommended: both are possible; the standard helpers are in the base class).
-3. The slot prop key: a new `ConstKeys.SLOT`, or the existing `ConstKeys.PLAYER` (`"player"`)?
-4. `STUN_PLAYER` without a slot means "all players": agree?
+1. Names: the engine package (`players`?), `PlayerSlot`, `PlayerView`, `IPlayers`, `Players`, `ComponentKey`, and the core `MegaPlayer` and `MegaPlayers`.
+2. The slot prop key: a new `ConstKeys.SLOT`, or the existing `ConstKeys.PLAYER` (`"player"`)?
+3. `STUN_PLAYER` without a slot means "all players": agree?
