@@ -3,7 +3,7 @@
 - Status: idea
 - Type: refactor
 - Depends on: none
-- Related: `012`, `013`, `019`, `038`
+- Related: `012`, `013`, `019`, `029`, `038`, `057`
 - Branches: none yet
 
 ## Goal
@@ -16,7 +16,7 @@ From the first request (summary): some events must follow others in a fixed orde
 
 ## Open questions
 
-- Which events are left after `012`, `013`, `019` and `038`? Split this item into concrete items, or drop it.
+- Which events are left after `012`, `013`, `019` and `038`? Split this item into concrete items, or drop it. First split (2026-10-23): `057` (typed event channels).
 
 ## Sources
 

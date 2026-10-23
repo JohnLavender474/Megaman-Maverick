@@ -25,11 +25,16 @@ Answer to review item 29 (2026-10-22, verbatim):
 
 > yes
 
+Item `029` research (2026-10-23, verbatim):
+
+> This might be outside the scope of the current item, but it seems to me a mistake that entities like projectiles can have only one `owner`.
+
 ## Open questions
 
 - Must Mega's own projectile explosions damage enemies? Today the default `explodeAndDie` path says no. (Decision E.)
 - In co-op, can player shots hurt or push other players?
 - Do reflected shots switch faction, as `ReactorManProjectile` does today?
+- One `owner` per entity is probably not enough (owner's input, 2026-10-23). Keep an instigator (the player or entity responsible) and a causer (the entity that hit), or an owner chain? Examples: a reflected shot, an explosion spawned by a projectile, a shot from a turret that a player placed. See `029` `NOTES.md`, "Co-op gaps and ideas".
 
 ## Sources
 

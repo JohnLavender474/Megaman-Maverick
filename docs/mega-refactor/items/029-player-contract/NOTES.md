@@ -982,3 +982,56 @@ Common pitfalls:
 - Infil, fighting game netcode (rollback, part 5): https://words.infil.net/w02-netcode-p5.html
 - Odin GGPO bindings: https://pkg.odin-lang.org/vendor/ggpo
 - Rollback netcode explained (Supercraft): https://crux.supercraft.host/blog/rollback-netcode-explained/
+
+## Co-op gaps and ideas (2026-10-23)
+
+Owner decision: `029` keeps the current level-flow rules. It builds the interface and removes the coupling to `megaman`. This section lists what `029` leaves for other items, so that their decisions tie back to `029`.
+
+### Players service helpers
+
+The owner's direction: an interface and a base class in the engine. The base class gives standard helpers, and a game can add its own. Ideas for the scope step:
+
+- Keep the interface small and primitive: the slots in slot order, `get(slot)`, the active players, iteration.
+- The base class (or engine extension functions on the interface) gives the standard helpers: `nearestTo`, `any`, `all`, `active().forEach`, a distance filter, and so on.
+- Custom helpers: a Kotlin extension function on the interface works at every call site with no cast and no subclass. A subclass with extra members needs callers to hold the subclass type. Compare both in the scope step.
+- Rules for every helper: slot order for every iteration and tie (determinism for online, `047` step 3); no helper that gives "the first player" without a named slot.
+
+### Session lead slot, shared earnings and save files
+
+Owner's input (2026-10-23): saves must not depend on the player count. Example: two players play the campaign on day 1, and one player continues the same save on day 2. One player is registered at boot, and more players can join or leave later. The owner suggests that the camera follows the primary player, the primary player is the "source of truth", and what the primary player earns is shared with the other players.
+
+- This fits the "no public `primary`" rule if the lead slot is a session policy (camera focus policy, profile owner), not a helper in the players query API. Enemies, hazards and triggers still ask for nearest, any, all or the contact player.
+- "Shared earnings" is one profile for the session. Every slot points at the same profile record (review 4, section 3: a profile store keyed by slot can point two slots at the same record). The save holds that one profile and no player count.
+- Open: what happens when the lead player leaves the session? Does the next slot become the lead?
+- Recorded in `047` (owner's input) and `007` (save files).
+
+### Ownership of projectiles and other entities
+
+The owner notes that one `owner` per entity is probably a mistake (for example a reflected shot, a projectile that spawns an explosion, or a shot from a turret that a player placed). Engines often keep two values: the instigator (the player or controller responsible) and the causer (the entity that hit) (review 5, section 1, Unreal `ApplyDamage`). This goes to `030` (faction and root owner).
+
+### Events
+
+- `029`: add a player slot prop to `PLAYER_SPAWN`, `PLAYER_JUST_DIED`, `PLAYER_READY`, `PLAYER_DONE_DYIN`, `STUN_PLAYER` and the pickup events (`ADD_PLAYER_HEALTH`, `ADD_WEAPON_ENERGY`, `ADD_CURRENCY`, `ATTAIN_*_TANK`). With one player the value is always slot 0.
+- `038` (inside the `013` flow): split `PLAYER_SPAWN` into a spawn event for each player and a level reset. Move the 24 listeners that use `PLAYER_SPAWN` as a level reset (review 2, section 4, item 3). The owner wants one orchestrator to own the level reset, not logic spread over many listeners.
+- `057` (split out of `053`): typed event channels (player, level, controller) with typed payloads, in small stages.
+
+### Rules that `029` leaves unchanged
+
+Each gap is listed with the item that takes it. The details are in reviews 2 and 3.
+
+| Gap today | Item |
+|---|---|
+| One camera focus drives room detection and transitions | `047`, `051` |
+| Off-screen rule, room transition with players apart | `047` |
+| Death and respawn of one player while others live; drop-in and drop-out | `038`, `047` |
+| `GauntletMaster` resets on any `PLAYER_JUST_DIED` | `047` |
+| `PlayerStatsHandler` draws one set of bars | `047` |
+| Pause owner and the pause menu | `013`, `047` |
+| Boss intro and defeat lock one player; `megaman.dead` cancels the victory | `013`, `047` |
+| Pickups (`ADD_PLAYER_HEALTH`, `ADD_WEAPON_ENERGY`) have no target | `029` adds the slot prop; the rule is `047` |
+| Room gravity (`megaman_direction`) for all players | `047` |
+| Kill zones (`MegamanDeath`, `GravityBlock`) check only `megaman` | `029` (decoupling: each player in the contact) |
+| `AbstractEnemy.kt:255` owner check, enhancement damage scaling | `030` |
+| Exact-class `KClass` damage and mask sets | `030` or `023` |
+| Global input, controller 0 in 4 entities | `031` |
+| Clock-seeded RNG, `Gdx.graphics.deltaTime` in the camera | `011`, `010` |

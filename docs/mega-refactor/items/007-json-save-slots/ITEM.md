@@ -3,7 +3,7 @@
 - Status: planned
 - Type: feature
 - Depends on: none
-- Related: `008`, `025`, `032`, `034`
+- Related: `008`, `025`, `029`, `032`, `034`, `047`
 - Branches: none yet
 
 ## Goal
@@ -29,6 +29,8 @@ Answer to review item 6 (2026-10-22, verbatim):
 ## Decisions
 
 - I (2026-10-22): the slot count is a config value, default 10. It must scale with no hard limit (`SaveStorage.list()` finds the slots; the UI pages).
+
+- 2026-10-23 (from `029` and `047`): a save does not depend on the player count. Two players can play a save on one day, and one player can continue it on the next day. The save holds one session profile (what the lead player earns is shared), not one profile for each player.
 
 ## Open questions
 
