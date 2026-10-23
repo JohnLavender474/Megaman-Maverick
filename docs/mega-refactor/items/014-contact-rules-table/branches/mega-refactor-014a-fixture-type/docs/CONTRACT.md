@@ -1,10 +1,10 @@
 # Contract: mega-refactor-014a-fixture-type
 
-The gameplay that this branch must not change, and how to check it. This is a draft written ahead
-of time on `master`. The user has not approved it yet.
+The gameplay that this branch must not change, and how to check it. This was written ahead of time
+on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 This branch changes only compile-time types: `IFixture.getType()` returns `IFixtureType` instead of
 `Any`, and `FixtureType` implements `IFixtureType`. At run time, the same enum objects are stored,
