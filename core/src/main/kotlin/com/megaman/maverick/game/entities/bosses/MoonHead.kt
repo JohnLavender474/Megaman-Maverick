@@ -47,7 +47,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.AsteroidsSpawner
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
@@ -186,7 +186,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
         val speed = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
             SHOOT_SPEED_HARD else SHOOT_SPEED
 
-        val impulse = megaman.body.getCenter().sub(spawn).nor().scl(speed * ConstVals.PPM)
+        val impulse = targetPlayer.body.getCenter().sub(spawn).nor().scl(speed * ConstVals.PPM)
 
         val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
         asteroid.spawn(
@@ -200,12 +200,12 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     }
 
     private fun calculateBestArcMotion(): ArcMotion {
-        val left = body.getX() < megaman.body.getX()
+        val left = body.getX() < targetPlayer.body.getX()
         val position = when {
-            body.getY() < megaman.body.getY() -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
+            body.getY() < targetPlayer.body.getY() -> if (left) Position.BOTTOM_LEFT else Position.BOTTOM_RIGHT
             else -> if (left) Position.TOP_LEFT else Position.TOP_RIGHT
         }
-        val target = megaman.body.getPositionPoint(position)
+        val target = targetPlayer.body.getPositionPoint(position)
         val arcMotion1 = ArcMotion(
             startPosition = body.getCenter(),
             targetPosition = target,

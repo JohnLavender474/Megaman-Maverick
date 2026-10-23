@@ -34,6 +34,8 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.all
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -52,7 +54,8 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -270,7 +273,11 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         initTimer.reset()
     }
 
-    override fun isReady(delta: Float) = megaman.body.isSensing(BodySense.FEET_ON_GROUND) && initTimer.isFinished()
+    // TODO: players.all also visits a player who is dead or waits to respawn; such a
+    //  player never lands, so the boss would never start; skipping players who are not
+    //  present is a co-op rule for item 047
+    override fun isReady(delta: Float) =
+        players.all { it.body.isSensing(BodySense.FEET_ON_GROUND) } && initTimer.isFinished()
 
     override fun onDestroy() {
         super.onDestroy()
@@ -320,7 +327,10 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!initTimer.isFinished() && megaman.body.isSensing(BodySense.FEET_ON_GROUND)) {
+            // TODO: players.all also visits a player who is dead or waits to respawn; such a
+            //  player never lands, so the boss would never start; skipping players who are not
+            //  present is a co-op rule for item 047
+            if (!initTimer.isFinished() && players.all { it.body.isSensing(BodySense.FEET_ON_GROUND) }) {
                 initTimer.update(delta)
                 return@add
             }
@@ -379,7 +389,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                 launchFistDelayTimer.update(delta)
 
                 if (launchFistDelayTimer.isFinished() &&
-                    !fist!!.body.getBounds().overlaps(megaman.body.getBounds())
+                    !fist!!.body.getBounds().overlaps(targetPlayer.body.getBounds())
                 ) {
                     launchFistDelayTimer.reset()
                     fist!!.launch()
@@ -399,7 +409,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                             val spawn = body.getCenter().add(-2f * ConstVals.PPM, 1.25f * ConstVals.PPM)
                             val impulse = MegaUtilMethods.calculateJumpImpulse(
                                 spawn,
-                                megaman.body.getCenter(),
+                                targetPlayer.body.getCenter(),
                                 CHUNKED_BULLET_VELOCITY_Y * ConstVals.PPM
                             )
                             val gravity = GameObjectPools.fetch(Vector2::class)
@@ -412,7 +422,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.GRAVITY pairTo gravity,
                                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
-                                        if (damageable is Megaman) laugh()
+                                        if (players.viewOf(damageable) != null) laugh()
                                     }
                                 )
                             )
@@ -474,7 +484,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.POSITION pairTo metSpawn,
                                     ConstKeys.RIGHT pairTo false,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
-                                        if (damageable is Megaman) laugh()
+                                        if (players.viewOf(damageable) != null) laugh()
                                     },
                                     ConstKeys.DROP_ITEM_ON_DEATH pairTo false,
                                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false
@@ -506,7 +516,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.FACING pairTo Facing.LEFT,
                                     ConstKeys.TARGET pairTo target,
                                     ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
-                                        if (damageable is Megaman) laugh()
+                                        if (players.viewOf(damageable) != null) laugh()
                                     },
                                     ConstKeys.DROP_ITEM_ON_DEATH pairTo false,
                                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false

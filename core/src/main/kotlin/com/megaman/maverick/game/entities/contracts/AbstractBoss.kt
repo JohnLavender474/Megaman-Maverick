@@ -16,6 +16,8 @@ import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.damage.IDamager
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.forEach
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -34,9 +36,10 @@ import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
-import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.IPlayerDamageListener
+import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
@@ -47,7 +50,7 @@ abstract class AbstractBoss(
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR,
     defeatDur: Float = DEFAULT_DEFEAT_DURATION,
     size: Size = Size.MEDIUM
-) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IMegamanDamageListener, IEventListener {
+) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IPlayerDamageListener, IEventListener {
 
     companion object {
         const val TAG = "AbstractBoss"
@@ -127,7 +130,9 @@ abstract class AbstractBoss(
         body.forEachFixture { fixture -> fixture.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         game.eventsMan.addListener(this)
-        megaman.addDamageListener(this)
+        // TODO: a player who registers during a boss fight is not listened to; joining players are a co-op rule
+        //  for item 047
+        players.forEach { it.addDamageListener(this) }
 
         bossKey = spawnProps.getOrDefault("${ConstKeys.BOSS}_${ConstKeys.KEY}", "NO_BOSS_KEY", String::class)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
@@ -156,7 +161,7 @@ abstract class AbstractBoss(
 
         ready = false
 
-        megaman.removeDamageListener(this)
+        players.forEach { it.removeDamageListener(this) }
         game.eventsMan.removeListener(this)
         removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
 
@@ -189,14 +194,16 @@ abstract class AbstractBoss(
 
     override fun canBeDamagedBy(damager: IDamager) = !defeated && super.canBeDamagedBy(damager)
 
+    // TODO: the enhancement is read from the global megaman, not from the owner's profile, until item 029e
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        damager is IOwnable<*> && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+        damager is IOwnable<*> && players.viewOf(damager.owner) != null &&
+            megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage
     }
 
-    override fun onMegamanDamaged(damager: IDamager, megaman: Megaman) {}
+    override fun onPlayerDamaged(damager: IDamager, player: MegaPlayer) {}
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

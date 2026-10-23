@@ -29,6 +29,8 @@ import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.any
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
@@ -90,6 +92,8 @@ abstract class AbstractEnemy(
 
         private const val SPAWN_BLINK_INTERVAL = 0.05f
 
+        // TODO: the drop odds read lives and the health ratio of the global megaman; with more players, whose profile
+        //  and health count is open, and the profile moves in item 029e
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
             Life::class pairTo {
                 when {
@@ -239,8 +243,10 @@ abstract class AbstractEnemy(
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
+    // TODO: the enhancement is read from the global megaman, not from the owner's profile, until item 029e
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
-        damager is IOwnable<*> && damager.owner == megaman && megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+        damager is IOwnable<*> && players.viewOf(damager.owner) != null &&
+            megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
         else -> baseDamage
     }
@@ -252,7 +258,7 @@ abstract class AbstractEnemy(
         if (!canBeDamaged) return false
 
         if (damager is ReactorManProjectile) return damager.owner != this
-        if (damager is IOwnable<*>) return damager.owner == megaman || damager.owner == null
+        if (damager is IOwnable<*>) return players.viewOf(damager.owner) != null || damager.owner == null
 
         return true
     }
@@ -283,11 +289,9 @@ abstract class AbstractEnemy(
         explosion.spawn(props)
     }
 
-    open fun isMegamanShootingAtMe(): Boolean {
-        if (!megaman.shooting) return false
-
-        return body.getX() < megaman.body.getX() && megaman.facing == Facing.LEFT ||
-            body.getX() > megaman.body.getX() && megaman.facing == Facing.RIGHT
+    open fun isMegamanShootingAtMe() = players.any { player ->
+        player.shooting && (body.getX() < player.body.getX() && player.facing == Facing.LEFT ||
+            body.getX() > player.body.getX() && player.facing == Facing.RIGHT)
     }
 
     open fun spawnWhackForOverlap(thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -326,10 +330,12 @@ abstract class AbstractEnemy(
             game.putProperty(ConstKeys.LEVEL_POINTS, currentPoints + pointsToAdd)
         }
 
+        // TODO: the one-up goes to the global megaman's lives; with more players, who gets it is open, and lives move
+        //  to the profile in item 029e
         if (floatingPointsType == FloatingPointsType.ONE_UP && megaman.lives.translate(1))
             requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
 
-        val position = when (megaman.direction) {
+        val position = when (targetPlayer.direction) {
             Direction.UP -> GameObjectPools.fetch(Vector2::class)
                 .set(
                     UtilMethods.getRandom(
@@ -364,7 +370,7 @@ abstract class AbstractEnemy(
                 )
         }
 
-        FloatingPoints.spawnFloatingPoints(floatingPointsType, position, megaman.direction)
+        FloatingPoints.spawnFloatingPoints(floatingPointsType, position, targetPlayer.direction)
     }
 
     override fun getType() = EntityType.ENEMY

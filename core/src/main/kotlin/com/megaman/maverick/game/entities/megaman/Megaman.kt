@@ -24,6 +24,7 @@ import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.players.slotOf
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -43,7 +44,6 @@ import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
-import com.megaman.maverick.game.entities.megaman.contracts.IMegamanDamageListener
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
@@ -125,9 +125,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged || dead || !ready
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
-    val playerState = PlayerStateComponent(damageTimer)
-
-    var canBeDamaged = true
+    var canBeDamaged: Boolean
+        get() = playerState.canBeDamaged
+        set(value) {
+            playerState.canBeDamaged = value
+        }
 
     override var frozen = false
     private var hitsToUnfreeze = 0
@@ -144,6 +146,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
+
+    val playerState = PlayerStateComponent(damageTimer, shootAnimTimer)
     internal val chargingTimer = Timer(
         MegamanValues.TIME_TO_FULLY_CHARGED,
         TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
@@ -197,7 +201,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     val fullyCharged: Boolean
         get() = canChargeCurrentWeapon && chargingTimer.isFinished()
     var shooting: Boolean
-        get() = !shootAnimTimer.isFinished()
+        get() = playerState.shooting
         set(value) {
             if (value) shootAnimTimer.reset() else shootAnimTimer.setToEnd()
         }
@@ -347,7 +351,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     internal val wallSlideNotAllowedTimer = Timer(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY)
 
-    private val damageListeners = OrderedSet<IMegamanDamageListener>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -669,10 +672,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     override fun getDamageDuration(damager: IDamager) = MegamanValues.DAMAGE_DURATION
 
-    fun addDamageListener(damageListener: IMegamanDamageListener) = damageListeners.add(damageListener)
-
-    fun removeDamageListener(damageListener: IMegamanDamageListener) = damageListeners.remove(damageListener)
-
     override fun takeDamageFrom(damager: IDamager): Boolean {
         val oldHealth = getCurrentHealth()
 
@@ -717,7 +716,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
 
-        damageListeners.forEach { it.onMegamanDamaged(damager, this) }
+        val player = players.viewOf(this)!!
+        playerState.damageListeners.forEach { it.onPlayerDamaged(damager, player) }
 
         return true
     }

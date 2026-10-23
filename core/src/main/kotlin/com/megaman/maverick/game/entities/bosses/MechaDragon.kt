@@ -57,7 +57,7 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
@@ -756,7 +756,7 @@ class MechaDragon(game: MegamanMaverickGame) : AbstractBoss(game), IFreezableEnt
                 }
             }
 
-            var megamanToSpawnAngle = megaman.body.getCenter().sub(spawn).nor().angleDeg() - 90f
+            var megamanToSpawnAngle = targetPlayer.body.getCenter().sub(spawn).nor().angleDeg() - 90f
             if (megamanToSpawnAngle < 0f) megamanToSpawnAngle += 360f
 
             var angle = megamanToSpawnAngle

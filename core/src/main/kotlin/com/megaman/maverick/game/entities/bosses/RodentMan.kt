@@ -48,7 +48,7 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.SlashDissipation
 import com.megaman.maverick.game.entities.enemies.RatRobot
 import com.megaman.maverick.game.entities.projectiles.Needle
@@ -650,11 +650,11 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                                     else -> "jump_slash"
                                 }
                                 body.physics.velocity.y > 0f -> when {
-                                    megaman.body.getCenter().y > body.getCenter().y -> "jump_up_look_up"
+                                    targetPlayer.body.getCenter().y > body.getCenter().y -> "jump_up_look_up"
                                     else -> "jump_up_look_down"
                                 }
                                 else -> when {
-                                    megaman.body.getCenter().y > body.getCenter().y -> "jump_down_look_straight"
+                                    targetPlayer.body.getCenter().y > body.getCenter().y -> "jump_down_look_straight"
                                     else -> "jump_down_look_down"
                                 }
                             }
@@ -778,7 +778,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                         Facing.RIGHT -> slashAngles.addAll(STAND_RIGHT_SLASH_WAVE_ANGLES)
                     }
                     else -> {
-                        val up = megaman.body.getCenter().y >= body.getCenter().y
+                        val up = targetPlayer.body.getCenter().y >= body.getCenter().y
 
                         when (facing) {
                             Facing.LEFT -> slashAngles.addAll(
@@ -858,7 +858,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         }
 
         val bodyBounds = body.getBounds()
-        val megamanBounds = megaman.body.getBounds()
+        val megamanBounds = targetPlayer.body.getBounds()
 
         // Rodent Man should never jump if he's below the minimum y value
         if (bodyBounds.getMaxY() <= minWallRunJumpY) return false
@@ -911,7 +911,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         } else {
             val rawImpulse = MegaUtilMethods.calculateJumpImpulse(
                 body.getPositionPoint(Position.BOTTOM_CENTER),
-                megaman.body.getPositionPoint(Position.TOP_CENTER),
+                targetPlayer.body.getPositionPoint(Position.TOP_CENTER),
                 JUMP_FROM_GROUND_IMPULSE_Y * ConstVals.PPM
             )
             impulseX = rawImpulse.x.coerceIn(JUMP_MAX_IMPULSE_X * ConstVals.PPM)

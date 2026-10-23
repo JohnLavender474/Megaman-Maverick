@@ -56,6 +56,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
@@ -426,7 +427,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
                 if ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                     (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) ||
-                    megaman.body.getY() > body.getMaxY()
+                    targetPlayer.body.getY() > body.getMaxY()
                 ) return@standToRun false
 
                 return@standToRun getRandom(0, 100) <= RUN_CHANCE
@@ -560,7 +561,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
             TimberWomanState.JUMP_UP -> {
                 body.physics.applyFrictionX = false
-                jump(megaman.body.getCenter())
+                jump(targetPlayer.body.getCenter())
                 if (previous == TimberWomanState.WALLSLIDE) {
                     var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
                     if (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) impulseX *= -1f
@@ -724,9 +725,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
     private fun shouldStopJumpSpinning() = shouldStopJumpingDown()
 
-    private fun shouldJumpSpin() = !megaman.invincible &&
+    private fun shouldJumpSpin() = !targetPlayer.invincible &&
         !body.isSensing(BodySense.FEET_ON_GROUND) &&
-        jumpSpinScannerCircle.overlaps(megaman.damageableFixture.getShape()) &&
+        jumpSpinScannerCircle.overlaps(targetPlayer.damageableFixture.getShape()) &&
         (body.physics.velocity.y > 0f || !jumpSpinScannerCircle.overlaps(ground))
 
     private fun shouldStartWallSliding() = !body.isSensing(BodySense.FEET_ON_GROUND) &&
@@ -738,20 +739,20 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             body.isSensing(BodySense.FEET_ON_GROUND)
 
     private fun shouldTransFromRunningToSwing() =
-        swingAtMegamanScanner.setCenter(body.getCenter()).overlaps(megaman.body.getBounds()) ||
+        swingAtMegamanScanner.setCenter(body.getCenter()).overlaps(targetPlayer.body.getBounds()) ||
             projectilesInVicinity.let {
                 !it.get(VicinityProjectileType.DEFLECTABLE).isEmpty && it.get(VicinityProjectileType.OTHER).isEmpty
             }
 
     private fun shouldStopRunning() = shouldTransFromRunningToSwing() || shouldJump() ||
-        body.getBounds().contains(megaman.body.getCenter()) ||
+        body.getBounds().contains(targetPlayer.body.getCenter()) ||
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
         (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
     private fun updateFacing() {
         when {
-            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
-            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
+            targetPlayer.body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            targetPlayer.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 

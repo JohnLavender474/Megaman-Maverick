@@ -53,7 +53,7 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.MagmaGoop
@@ -565,7 +565,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
             InfernoManState.JUMP -> {
                 body.physics.applyFrictionX = false
-                jump(megaman.body.getCenter())
+                jump(targetPlayer.body.getCenter())
 
                 if (previous == InfernoManState.WALLSLIDE) {
                     var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
@@ -600,7 +600,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
         }
         InfernoManState.JUMP -> when {
-            megaman.body.getMaxY() < body.getY() -> ShootMethod.DOWN
+            targetPlayer.body.getMaxY() < body.getY() -> ShootMethod.DOWN
             isMegamanStraightAhead() -> ShootMethod.STRAIGHT
             else -> ShootMethod.UP
         }
@@ -629,7 +629,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shootWave() {
         // The magma wave's spawn position is dependent on Mega Man's direction. This is for the
         // fight in Wily Stage 2.
-        val spawn = when (megaman.direction) {
+        val spawn = when (targetPlayer.direction) {
             Direction.UP -> body.getPositionPoint(Position.BOTTOM_CENTER)
                 .add(ConstVals.PPM.toFloat() * facing.value, 0f)
             Direction.DOWN -> body.getPositionPoint(Position.TOP_CENTER)
@@ -720,7 +720,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun spawnMeteor(targetMegaman: Boolean) {
         val x = when {
-            targetMegaman -> megaman.body.getCenter().x
+            targetMegaman -> targetPlayer.body.getCenter().x
             else -> {
                 val poppedKey = randomMeteorKeys.pop()
                 val popped = meteorSpawners.remove(poppedKey)
@@ -763,12 +763,12 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun shouldFinishJumping() = isWallSliding() || shouldGoToStandState()
 
     private fun isMegamanStraightAhead() =
-        abs(megaman.body.getY() - body.getY()) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
+        abs(targetPlayer.body.getY() - body.getY()) <= MEGAMAN_STRAIGHT_Y_THRESHOLD * ConstVals.PPM
 
     private fun updateFacing() {
         when {
-            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
-            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
+            targetPlayer.body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            targetPlayer.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
         }
     }
 }

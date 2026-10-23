@@ -3,10 +3,13 @@ package com.megaman.maverick.game.players
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.interfaces.IDirectional
+import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.MissingComponentException
+import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
@@ -27,8 +30,11 @@ private class PlainEntity : GameEntity(mockk(relaxed = true)) {
     override fun onDestroy() {}
 }
 
-private class TestPlayerEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectional {
+private class TestPlayerEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectional, IFaceable,
+    IDamageable {
     override var direction = Direction.UP
+    override var facing = Facing.RIGHT
+    override var invincible = false
     override fun getType() = EntityType.MEGAMAN
 }
 
@@ -41,10 +47,13 @@ class MegaPlayersTest : DescribeSpec({
         every { game.engine } returns mockk<GameEngine>(relaxed = true)
     }
 
-    fun playerEntity(damageTimer: Timer = Timer(1f).setToEnd()) = TestPlayerEntity(game).also {
+    fun playerEntity(
+        damageTimer: Timer = Timer(1f).setToEnd(),
+        shootAnimTimer: Timer = Timer(1f).setToEnd()
+    ) = TestPlayerEntity(game).also {
         it.addComponent(BodyComponent(Body(BodyType.DYNAMIC, 0f, 0f, 2f, 2f)))
         it.addComponent(BehaviorsComponent())
-        it.addComponent(PlayerStateComponent(damageTimer))
+        it.addComponent(PlayerStateComponent(damageTimer, shootAnimTimer))
     }
 
     describe("MegaPlayer") {
@@ -69,7 +78,7 @@ class MegaPlayersTest : DescribeSpec({
             val entity = PlainEntity().also {
                 it.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
                 it.addComponent(BehaviorsComponent())
-                it.addComponent(PlayerStateComponent(Timer(1f)))
+                it.addComponent(PlayerStateComponent(Timer(1f), Timer(1f)))
             }
 
             shouldThrow<IllegalArgumentException> { MegaPlayers().register(PlayerSlot(0), entity) }
@@ -102,6 +111,27 @@ class MegaPlayersTest : DescribeSpec({
             damageTimer.setToEnd()
 
             player.damaged shouldBe false
+        }
+
+        it("reads and writes facing, direction and canBeDamaged, and reads invincible and shooting") {
+            val shootAnimTimer = Timer(1f)
+            val entity = playerEntity(shootAnimTimer = shootAnimTimer)
+            val player = MegaPlayers().register(PlayerSlot(0), entity)
+
+            player.facing = Facing.LEFT
+            player.direction = Direction.DOWN
+            player.canBeDamaged = false
+            entity.invincible = true
+
+            entity.facing shouldBe Facing.LEFT
+            entity.direction shouldBe Direction.DOWN
+            entity.getComponent(PlayerStateComponent::class)!!.canBeDamaged shouldBe false
+            player.invincible shouldBe true
+            player.shooting shouldBe true
+
+            shootAnimTimer.setToEnd()
+
+            player.shooting shouldBe false
         }
 
         it("reads a behavior through the behaviors component") {

@@ -20,6 +20,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
+import com.maverick.game.engine.players.all
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -34,7 +35,8 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.ElecBall
@@ -330,7 +332,10 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (!ready) {
-                if (megaman.body.isSensing(BodySense.FEET_ON_GROUND)) initTimer.update(delta)
+                // TODO: players.all also visits a player who is dead or waits to respawn; such a
+                //  player never lands, so the boss would never start; skipping players who are not
+                //  present is a co-op rule for item 047
+                if (players.all { it.body.isSensing(BodySense.FEET_ON_GROUND) }) initTimer.update(delta)
                 return@add
             }
 
@@ -662,7 +667,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
     private fun shootFromEye() {
         GameLogger.debug(TAG, "shootFromEye()")
 
-        val target = megaman.body.getCenter()
+        val target = targetPlayer.body.getCenter()
         val targetXDelta = UtilMethods.getRandom(-0.5f, 0.5f) * ConstVals.PPM
         val targetYDelta = UtilMethods.getRandom(-0.5f, 0.5f) * ConstVals.PPM
         target.add(targetXDelta, targetYDelta)

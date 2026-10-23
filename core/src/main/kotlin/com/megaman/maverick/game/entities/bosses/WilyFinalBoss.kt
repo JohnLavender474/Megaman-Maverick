@@ -40,6 +40,8 @@ import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.all
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -61,7 +63,8 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.O
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
@@ -279,9 +282,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
 
-        if (!megaman.dead && isHealthDepleted() && currentPhase == WilyFinalBossPhase.PHASE_3) {
+        if (!targetPlayer.dead && isHealthDepleted() && currentPhase == WilyFinalBossPhase.PHASE_3) {
             val wily = MegaEntityFactory.fetch(DrWily::class)!!
-            val facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+            val facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
             wily.spawn(
                 props(
                     ConstKeys.POSITION pairTo body.getCenter(),
@@ -291,8 +294,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 )
             )
 
-            megaman.canBeDamaged = false
-            megaman.facing = if (body.getCenter().x > megaman.body.getX()) Facing.RIGHT else Facing.LEFT
+            players.forEach {
+                it.canBeDamaged = false
+                it.facing = if (body.getCenter().x > it.body.getX()) Facing.RIGHT else Facing.LEFT
+            }
 
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
         }
@@ -429,7 +434,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                     when (state) {
                         WilyPhase1State.SWOOP -> {
-                            if (initSequence && !megaman.body.isSensing(BodySense.FEET_ON_GROUND)) return@add
+                            // TODO: players.all also visits a player who is dead or waits to respawn; such a
+                            //  player never lands, so the boss would never start; skipping players who are not
+                            //  present is a co-op rule for item 047
+                            if (initSequence && !players.all { it.body.isSensing(BodySense.FEET_ON_GROUND) }) return@add
 
                             if (phase1Handler.swoopIn(delta)) {
                                 GameLogger.debug(TAG, "update(): phase 1 - swoop: go to next state")
@@ -716,7 +724,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                                 else -> "angry"
                             }
 
-                            megaman.damaged -> "laugh"
+                            targetPlayer.damaged -> "laugh"
                             else -> "hover"
                         }
 
@@ -728,7 +736,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                                 else -> "angry"
                             }
 
-                            megaman.damaged -> "laugh"
+                            targetPlayer.damaged -> "laugh"
                             else -> "hover"
                         }
                     }
@@ -2141,10 +2149,10 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private fun shouldDive(): Boolean {
             if (!UtilMethods.getRandomBool()) return false
-            if (megaman.body.getMaxY() >= body.getY()) return false
+            if (targetPlayer.body.getMaxY() >= body.getY()) return false
 
-            val minX = megaman.body.getX() - Phase2ConstVals.DIVE_CHECK_X_OFFSET * ConstVals.PPM
-            val maxX = megaman.body.getMaxX() + Phase2ConstVals.DIVE_CHECK_X_OFFSET * ConstVals.PPM
+            val minX = targetPlayer.body.getX() - Phase2ConstVals.DIVE_CHECK_X_OFFSET * ConstVals.PPM
+            val maxX = targetPlayer.body.getMaxX() + Phase2ConstVals.DIVE_CHECK_X_OFFSET * ConstVals.PPM
             return body.getCenter().x.isBetween(minX, maxX)
         }
 
@@ -2169,7 +2177,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyPhase2State.DIVE -> {
                     divePhase = DivePhase.DESCEND
                     diveReturnY = swayAnchor!!.y
-                    diveTargetY = megaman.body.getCenter().y + Phase2ConstVals.DIVE_TARGET_OFFSET_Y * ConstVals.PPM
+                    diveTargetY = targetPlayer.body.getCenter().y + Phase2ConstVals.DIVE_TARGET_OFFSET_Y * ConstVals.PPM
                     diveLaunchedTentacles = false
                 }
 
@@ -2182,7 +2190,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     chargePhase = ChargePhase.APPROACH
                     returnAnchor.set(swayAnchor!!)
 
-                    chargeTarget.set(megaman.body.getCenter())
+                    chargeTarget.set(targetPlayer.body.getCenter())
                     clampChargeTarget(chargeTarget)
 
                     // Tentacles keep their normal idle hang, but chomp while charging.
@@ -2433,7 +2441,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                             if (!diveLaunchedTentacles) {
                                 val center = body.getCenter()
-                                val megaX = megaman.body.getCenter().x
+                                val megaX = targetPlayer.body.getCenter().x
                                 val reachY =
                                     (Phase2ConstVals.TENTACLE_OFFSET_Y - Phase2ConstVals.DIVE_LUNGE_REACH) * ConstVals.PPM
                                 leftTentacle?.lunge(
@@ -2667,7 +2675,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         private fun launchOrbs() {
-            val megamanCenter = megaman.body.getCenter()
+            val megamanCenter = targetPlayer.body.getCenter()
 
             leftOrb?.let { orb ->
                 val center = orb.body.getCenter()
@@ -3183,7 +3191,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         private fun launchOrbs() {
-            val megamanCenter = megaman.body.getCenter()
+            val megamanCenter = targetPlayer.body.getCenter()
 
             listOf(leftOrb, rightOrb, bottomOrb).forEach { orb ->
                 orb?.let {

@@ -53,7 +53,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand.BigAssMaverickRobotHandState
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -188,7 +188,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val angle2 = headAnglesArray[index2]
 
         val angleToMegaman =
-            body.getPositionPoint(Position.TOP_CENTER).sub(megaman.body.getCenter()).nor().angleDeg() + 90f
+            body.getPositionPoint(Position.TOP_CENTER).sub(targetPlayer.body.getCenter()).nor().angleDeg() + 90f
         val valToCompare1 = abs(angle1 - angleToMegaman)
         var valToCompare2 = abs(angle2 - angleToMegaman)
 
@@ -265,7 +265,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         stunnedTimer.setToEnd()
         turnHeadDelay.setToEnd()
 
-        facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.PIECE) && value is RectangleMapObject) {
@@ -465,7 +465,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                 damageTimer.reset()
             }
 
-            if (!stunned) facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+            if (!stunned) facing = if (targetPlayer.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
 
             turnHeadDelay.update(delta)
 
@@ -492,8 +492,8 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
                                 hands.size == 1 -> hands[0]
                                 getRandom(0, 100) <= CLOSEST_HAND_CHANCE -> {
                                     hands.sort { h1, h2 ->
-                                        h1.body.getCenter().dst2(megaman.body.getCenter())
-                                            .compareTo(h2.body.getCenter().dst2(megaman.body.getCenter()))
+                                        h1.body.getCenter().dst2(targetPlayer.body.getCenter())
+                                            .compareTo(h2.body.getCenter().dst2(targetPlayer.body.getCenter()))
                                     }
                                     hands[0]
                                 }
@@ -619,7 +619,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         }
 
         val speed = UtilMethods.interpolate(minSpeed, maxSpeed, 1f - getHealthRatio())
-        val trajectory = megaman.body.getCenter().sub(spawn).nor().scl(speed * ConstVals.PPM)
+        val trajectory = targetPlayer.body.getCenter().sub(spawn).nor().scl(speed * ConstVals.PPM)
 
         val minDelay: Float
         val maxDelay: Float

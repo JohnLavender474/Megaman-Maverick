@@ -38,7 +38,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -261,7 +261,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     private fun startAttack() {
-        if (megaman.body.getMaxY() >= body.getCenter().y) {
+        if (targetPlayer.body.getMaxY() >= body.getCenter().y) {
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_SHOCK, HIGH_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.CLAW_LAUNCH, LOW_CHANCE)
             weightedAttackSelector.putItem(SigmaRatAttack.ELECTRIC_BALLS, LOW_CHANCE)
@@ -313,8 +313,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                     leftClaw!!.shocking || leftClaw!!.launched -> rightClaw
                     rightClaw!!.shocking || rightClaw!!.launched -> leftClaw
                     else -> {
-                        val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                        val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                        val distToLeft = targetPlayer.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                        val distToRight = targetPlayer.body.getCenter().dst2(rightClaw!!.body.getCenter())
                         if (distToLeft > distToRight) rightClaw else leftClaw
                     }
                 }
@@ -329,8 +329,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                     leftClaw!!.shocking || leftClaw!!.launched -> rightClaw
                     rightClaw!!.shocking || rightClaw!!.launched -> leftClaw
                     else -> {
-                        val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                        val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                        val distToLeft = targetPlayer.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                        val distToRight = targetPlayer.body.getCenter().dst2(rightClaw!!.body.getCenter())
                         if (distToLeft > distToRight) leftClaw else rightClaw
                     }
                 }
@@ -365,15 +365,15 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                         val attack = weightedAttackSelector.getRandomItem()
                         when (attack) {
                             SigmaRatAttack.CLAW_SHOCK -> {
-                                val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                                val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                                val distToLeft = targetPlayer.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                                val distToRight = targetPlayer.body.getCenter().dst2(rightClaw!!.body.getCenter())
                                 val claw = if (distToLeft > distToRight) leftClaw else rightClaw
                                 if (!claw!!.shocking && !claw.launched) claw.enterShockState()
                             }
 
                             SigmaRatAttack.CLAW_LAUNCH -> {
-                                val distToLeft = megaman.body.getCenter().dst2(leftClaw!!.body.getCenter())
-                                val distToRight = megaman.body.getCenter().dst2(rightClaw!!.body.getCenter())
+                                val distToLeft = targetPlayer.body.getCenter().dst2(leftClaw!!.body.getCenter())
+                                val distToRight = targetPlayer.body.getCenter().dst2(rightClaw!!.body.getCenter())
                                 val claw = if (distToLeft > distToRight) leftClaw else rightClaw
                                 if (!claw!!.shocking && !claw.launched) claw.enterLaunchState()
                             }

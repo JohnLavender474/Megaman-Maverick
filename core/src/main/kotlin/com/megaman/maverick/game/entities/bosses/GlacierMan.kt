@@ -48,7 +48,7 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFireEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -189,7 +189,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             }
         }
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         shootUp = false
         firstUpdate = true
@@ -265,7 +265,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 GlacierManState.STOP,
                 GlacierManState.ICE_BLAST_ATTACK -> {
                     if (currentState.equalsAny(GlacierManState.STAND, GlacierManState.DUCK))
-                        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     body.physics.velocity.x =
                         if (currentState == GlacierManState.SLED) SLED_SPEED * ConstVals.PPM * facing.value else 0f
@@ -282,7 +282,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 }
 
                 GlacierManState.JUMP -> {
-                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     when {
                         body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND) -> {
@@ -588,11 +588,11 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         val chunkIceBlast = getRandomBool()
         if (chunkIceBlast) {
             trajectory = MegaUtilMethods.calculateJumpImpulse(
-                spawn, megaman.body.getCenter(), CHUNK_ICE_BLAST_VEL_Y * ConstVals.PPM
+                spawn, targetPlayer.body.getCenter(), CHUNK_ICE_BLAST_VEL_Y * ConstVals.PPM
             )
             gravityOn = true
         } else {
-            trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
+            trajectory = targetPlayer.body.getCenter().sub(body.getCenter()).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
             gravityOn = false
         }
 
@@ -652,7 +652,7 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     private fun jump() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getPositionPoint(Position.BOTTOM_CENTER), megaman.body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM
+            body.getPositionPoint(Position.BOTTOM_CENTER), targetPlayer.body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM
         )
         body.physics.velocity.y = impulse.y
     }
@@ -700,9 +700,9 @@ class GlacierMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         }
     }
 
-    private fun isMegamanAboveOffsetY() = megaman.body.getMaxY() >= body.getY() + MEGAMAN_ABOVE_OFFSET_Y * ConstVals.PPM
+    private fun isMegamanAboveOffsetY() = targetPlayer.body.getMaxY() >= body.getY() + MEGAMAN_ABOVE_OFFSET_Y * ConstVals.PPM
 
-    private fun isMegamanOutsideOffsetX() = abs(megaman.body.getX() - body.getX()) > MEGAMAN_OFFSET_X * ConstVals.PPM
+    private fun isMegamanOutsideOffsetX() = abs(targetPlayer.body.getX() - body.getX()) > MEGAMAN_OFFSET_X * ConstVals.PPM
 
     private fun shouldStopSledding() =
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||

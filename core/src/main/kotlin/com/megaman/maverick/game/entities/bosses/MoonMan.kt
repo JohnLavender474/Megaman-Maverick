@@ -35,6 +35,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -53,7 +54,8 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
@@ -239,7 +241,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
         gravityChangeState = ProcessState.BEGIN
 
-        val direction = megaman.direction
+        val direction = targetPlayer.direction
         this.direction = direction
         currentGravityChangeDir = direction
 
@@ -315,7 +317,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 if (throwTimer.isFinished()) {
                     val speed = UtilMethods.interpolate(ASTEROID_MAX_SPEED, ASTEROID_MIN_SPEED, getHealthRatio())
 
-                    val impulse = megaman.body.getCenter()
+                    val impulse = targetPlayer.body.getCenter()
                         .sub(asteroid.body.getCenter())
                         .nor().scl(speed * ConstVals.PPM)
 
@@ -519,7 +521,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
 
     private fun activateGravityChange() {
         currentGravityChangeDir = currentGravityChangeDir.getOpposite()
-        if (!megaman.dead) megaman.direction = currentGravityChangeDir
+        players.forEach { if (!it.dead) it.direction = currentGravityChangeDir }
 
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
@@ -536,7 +538,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         var jumpImpulseY = JUMP_IMPULSE_Y * ConstVals.PPM
         if (direction == Direction.DOWN) jumpImpulseY *= -1f
 
-        val yDiff = abs(megaman.body.getY() - body.getY())
+        val yDiff = abs(targetPlayer.body.getY() - body.getY())
         val horizontalScalar = (yDiff / (JUMP_HORIZONTAL_SCALAR_DENOMINATOR * ConstVals.PPM))
             .coerceIn(JUMP_MIN_HORIZONTAL_SCALAR, JUMP_MAX_HORIZONTAL_SCALAR)
         val impulse = MegaUtilMethods.calculateJumpImpulse(
@@ -569,7 +571,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                 if (canShootInStandState()) shootIndex = 0
             }
             MoonManState.JUMP -> {
-                jump(megaman.body.getCenter())
+                jump(targetPlayer.body.getCenter())
                 if (canShootInJumpState()) shootIndex = 0
             }
             MoonManState.THROW_ASTEROIDS -> {
@@ -683,12 +685,12 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
     }
 
     private fun shootStar() {
-        val position = if (megaman.direction == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
+        val position = if (targetPlayer.direction == Direction.UP) Position.TOP_CENTER else Position.BOTTOM_CENTER
 
         val speed = UtilMethods.interpolate(SHARP_STAR_MAX_SPEED, SHARP_STAR_MIN_SPEED, getHealthRatio())
 
         val trajectory =
-            megaman.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(speed * ConstVals.PPM)
+            targetPlayer.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(speed * ConstVals.PPM)
 
         val starScalar = if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
             SHARP_STAR_MOVEMENT_SCALAR else 1f

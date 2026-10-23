@@ -2,8 +2,11 @@ package com.megaman.maverick.game.players
 
 import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.interfaces.IDirectional
+import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.components.require
+import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.PlayerView
@@ -19,14 +22,37 @@ class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity
     private val behaviorsComponent = entity.require(BehaviorsComponent::class)
     private val state = entity.require(PlayerStateComponent::class)
     private val directional = entity as? IDirectional ?: throw IllegalArgumentException("$entity is not IDirectional")
+    private val faceable = entity as? IFaceable ?: throw IllegalArgumentException("$entity is not IFaceable")
+    private val damageable = entity as? IDamageable ?: throw IllegalArgumentException("$entity is not IDamageable")
     private val megaGameEntity =
         entity as? MegaGameEntity ?: throw IllegalArgumentException("$entity is not a MegaGameEntity")
 
     val body: Body
         get() = bodyComponent.body
 
-    val direction: Direction
+    var direction: Direction
         get() = directional.direction
+        set(value) {
+            directional.direction = value
+        }
+
+    var facing: Facing
+        get() = faceable.facing
+        set(value) {
+            faceable.facing = value
+        }
+
+    val invincible: Boolean
+        get() = damageable.invincible
+
+    val shooting: Boolean
+        get() = state.shooting
+
+    var canBeDamaged: Boolean
+        get() = state.canBeDamaged
+        set(value) {
+            state.canBeDamaged = value
+        }
 
     val dead: Boolean
         get() = megaGameEntity.dead
@@ -50,4 +76,8 @@ class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity
         get() = body.getProperty(ConstKeys.DAMAGEABLE, Fixture::class)!!
 
     fun isBehaviorActive(key: Any) = behaviorsComponent.isBehaviorActive(key)
+
+    fun addDamageListener(listener: IPlayerDamageListener) = state.damageListeners.add(listener)
+
+    fun removeDamageListener(listener: IPlayerDamageListener) = state.damageListeners.remove(listener)
 }

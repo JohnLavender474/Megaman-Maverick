@@ -63,6 +63,24 @@ class MegamanStunTargetTest : DescribeSpec({
         }
     }
 
+    describe("canBeDamaged and shooting") {
+        it("canBeDamaged reads and writes the player state component") {
+            megaman.canBeDamaged = false
+            megaman.playerState.canBeDamaged shouldBe false
+
+            megaman.playerState.canBeDamaged = true
+            megaman.canBeDamaged shouldBe true
+        }
+
+        it("shooting reads the player state component, and the setter still drives the shoot timer") {
+            megaman.shooting = true
+            megaman.playerState.shooting shouldBe true
+
+            megaman.shooting = false
+            megaman.playerState.shooting shouldBe false
+        }
+    }
+
     describe("STUN_PLAYER") {
         it("stuns Megaman when the targets hold his slot") {
             megaman.facing = Facing.RIGHT

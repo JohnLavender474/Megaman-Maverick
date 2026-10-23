@@ -47,13 +47,14 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemColor
 import com.megaman.maverick.game.entities.projectiles.PreciousGemCluster
 import com.megaman.maverick.game.entities.projectiles.SlashWave
+import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -301,8 +302,8 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         shieldGems.clear()
     }
 
-    override fun onMegamanDamaged(damager: IDamager, megaman: Megaman) {
-        GameLogger.debug(TAG, "onMegamanDamaged(): damager=$damager, megaman=$megaman")
+    override fun onPlayerDamaged(damager: IDamager, player: MegaPlayer) {
+        GameLogger.debug(TAG, "onPlayerDamaged(): damager=$damager, player=$player")
         if (currentState == PreciousWomanState.STAND) laughTimer.reset()
     }
 
@@ -564,7 +565,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 )
             )
             gem.putProperty(ConstKeys.SPIN, false)
-            gem.secondTargetSupplier = { megaman.body.getCenter() }
+            gem.secondTargetSupplier = { targetPlayer.body.getCenter() }
         }
     }
 
@@ -874,7 +875,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         ) {
             body.physics.applyFrictionX = false
 
-            jump(megaman.body.getCenter())
+            jump(targetPlayer.body.getCenter())
 
             if (previous == PreciousWomanState.WALLSLIDE) {
                 var impulseX = WALL_JUMP_IMPULSE_X * ConstVals.PPM
@@ -915,7 +916,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         val position = body.getCenter()
 
-        val trajectory = megaman.body.getCenter()
+        val trajectory = targetPlayer.body.getCenter()
             .sub(body.getCenter())
             .nor()
             .scl(SHIELD_GEM_CLUSTER_SPEED * ConstVals.PPM)
@@ -963,9 +964,9 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         shouldStand() || shouldStartWallSliding() || shouldAirPunch() || shouldSpawnShieldGems()
 
     private fun shouldAirPunch() = airpunchCooldown.isFinished() && getRandom(0f, 100f) <= AIRPUNCH_CHANCE &&
-        megaman.body.getY() <= body.getMaxY() && megaman.body.getMaxY() >= body.getY()
+        targetPlayer.body.getY() <= body.getMaxY() && targetPlayer.body.getMaxY() >= body.getY()
 
-    private fun shouldEndAirPunch() = body.getBounds().overlaps(megaman.body.getBounds()) ||
+    private fun shouldEndAirPunch() = body.getBounds().overlaps(targetPlayer.body.getBounds()) ||
         ((isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
             (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)))
 
@@ -975,7 +976,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         !body.isSensing(BodySense.FEET_ON_GROUND) && FacingUtils.isFacingBlock(this)
 
     private fun shouldEndGroundslide() =
-        body.getBounds().overlaps(megaman.body.getBounds()) || FacingUtils.isFacingBlock(this)
+        body.getBounds().overlaps(targetPlayer.body.getBounds()) || FacingUtils.isFacingBlock(this)
 
     private fun shouldEndWallslide() = body.isSensing(BodySense.FEET_ON_GROUND) ||
         !body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)

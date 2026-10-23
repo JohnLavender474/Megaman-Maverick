@@ -30,6 +30,7 @@ import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.IChildEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -46,7 +47,8 @@ import com.megaman.maverick.game.entities.bosses.GutsTank.GutsTankAttackState
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.HeliMet
 import com.megaman.maverick.game.entities.enemies.Met
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -91,7 +93,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     override val damageNegotiator = object : IDamageNegotiator {
 
         override fun get(damager: IDamager): Int {
-            if (damager !is IProjectileEntity || damager.owner != megaman) return 0
+            if (damager !is IProjectileEntity || players.viewOf(damager.owner) == null) return 0
             return when (damager) {
                 is ChargedShot -> if (damager.fullyCharged) 2 else 1
                 is MoonScythe, is MagmaWave, is Axe -> 2
@@ -162,11 +164,11 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (damageable == megaman) (parent as GutsTank).laugh()
+        if (players.viewOf(damageable) != null) (parent as GutsTank).laugh()
     }
 
     internal fun launch() {
-        facing = if (megaman.body.getX() < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getCenter().x) Facing.LEFT else Facing.RIGHT
         fistState = GutsTankFistState.LAUNCHED
         launchDelayTimer.reset()
     }
@@ -187,7 +189,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
                         return@add
                     }
                     if (launchDelayTimer.isJustFinished()) {
-                        val direction = megaman.body.getCenter()
+                        val direction = targetPlayer.body.getCenter()
                             .sub(body.getCenter())
                             .nor()
                             .scl(LAUNCH_DIST * ConstVals.PPM)

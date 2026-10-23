@@ -44,6 +44,7 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.items.HeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -129,7 +130,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
         state = ReactorMonkeyState.STAND
 
-        facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
         ballSpawnY = spawnProps.getOrDefault(BALL_SPAWN_Y_KEY, DEFAULT_BALL_SPAWN_Y, Float::class)
 
         megaHeartTank = when {
@@ -151,6 +152,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         monkeyBall?.let { ball -> if (!ball.dead) ball.destroy() }
         monkeyBall = null
 
+        // TODO: the heart tank check reads the global megaman's profile until item 029e
         if (megaHeartTank != null && !megaman.hasHeartTank(megaHeartTank!!)) {
             val heartTank = MegaEntityFactory.fetch(HeartTank::class)!!
             heartTank.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.VALUE pairTo megaHeartTank!!))
@@ -185,7 +187,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
     fun hurlMonkeyBall() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             ballCatchArea.getCenter(),
-            megaman.body.getPosition(),
+            targetPlayer.body.getPosition(),
             BALL_IMPULSE_Y * ConstVals.PPM,
             HORIZONTAL_SCALAR,
             VERTICAL_SCALAR
@@ -209,7 +211,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
             }
 
             ballCatchArea.setCenter(body.getPositionPoint(Position.TOP_CENTER).add(0f, 1.75f * ConstVals.PPM))
-            facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+            facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
 
             if (state == ReactorMonkeyState.STAND) {
                 throwDelayTimer.update(delta)

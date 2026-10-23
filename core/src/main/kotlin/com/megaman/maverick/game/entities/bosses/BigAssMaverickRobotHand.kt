@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb.OrbColor
@@ -237,13 +238,13 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
     internal fun launch() {
         state = BigAssMaverickRobotHandState.LAUNCH
 
-        launchTarget.set(megaman.body.getCenter())
+        launchTarget.set(targetPlayer.body.getCenter())
         launchDelay.reset()
 
         returnTarget.set(body.getCenter())
     }
 
-    internal fun isBeingStoodUpon() = megaman.feetFixture.getShape().overlaps(block!!.body.getBounds())
+    internal fun isBeingStoodUpon() = targetPlayer.feetFixture.getShape().overlaps(block!!.body.getBounds())
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (!defeated) for (i in 0 until armOrbs.size) {

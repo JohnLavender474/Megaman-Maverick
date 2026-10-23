@@ -30,6 +30,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -50,7 +51,8 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.TubeBeamerV2
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
@@ -280,7 +282,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         if (!super.canBeDamagedBy(damager)) return false
-        if (damager is ReactorManProjectile && damager.owner != megaman) return false
+        if (damager is ReactorManProjectile && players.viewOf(damager.owner) == null) return false
         if (damager.isAny(SlashWave::class, Axe::class)) return true
         return !isShielded()
     }
@@ -642,7 +644,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun findBeamerOverMegaman(): Int {
-        val megamanBounds = megaman.body.getBounds()
+        val megamanBounds = targetPlayer.body.getBounds()
 
         reusableFloatArray.clear()
         reusableFloatArray.addAll(megamanBounds.getX(), megamanBounds.getCenter().x, megamanBounds.getMaxX())
@@ -692,7 +694,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     private fun jump() {
         GameLogger.debug(TAG, "jump()")
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getPosition(), megaman.body.getPosition(), JUMP_IMPULSE * ConstVals.PPM
+            body.getPosition(), targetPlayer.body.getPosition(), JUMP_IMPULSE * ConstVals.PPM
         )
         body.physics.velocity.set(impulse)
     }
@@ -786,7 +788,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             "Should not call throwOneProjectile() if projectiles size = ${projectiles.size}"
         )
 
-        val trajectory = megaman.body.getPositionPoint(Position.TOP_CENTER)
+        val trajectory = targetPlayer.body.getPositionPoint(Position.TOP_CENTER)
             .add(0f, 0.2f * ConstVals.PPM)
             .sub(body.getCenter())
             .nor()
@@ -820,7 +822,7 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun shouldStartRunning() = cyclesSinceRun >= CYCLES_BEFORE_RUN &&
-        abs(megaman.body.getX() - body.getX()) >= MIN_DIST_TO_TRIGGER_RUN * ConstVals.PPM &&
+        abs(targetPlayer.body.getX() - body.getX()) >= MIN_DIST_TO_TRIGGER_RUN * ConstVals.PPM &&
         UtilMethods.getRandom(0f, 100f) <= RUN_CHANCE
 
     private fun shouldStopRunning() = FacingUtils.isFacingBlock(this)
