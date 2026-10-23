@@ -313,3 +313,18 @@ newest entry at the bottom.
 - Contract check: clean build; 472 engine (3 `ComponentKey` tests removed) and 102 core tests pass; 114 compiler
   warnings, as before.
 - Follow-up: `048` no longer names `ComponentKey`.
+
+## 2026-10-23 — mega-refactor-029b-enemy-players
+
+- Summary: every enemy reaches the player through the players service. Core `PlayerStateComponent` (`ready`,
+  `damaged`), `MegaPlayer` accessors checked at registration, `targetFor` (slot 0, with a `TODO` for the targeting
+  policy) and `IMegaGameEntity.targetPlayer`; engine `viewOf`. In 98 enemy files and `FacingUtils`: reads use
+  `targetPlayer`, sensor checks use `players.any`, contact and owner identity use `players.viewOf`; the 6 stomp
+  bounces keep Mega's jump velocity with a `TODO` for `029g`. Six enemy test rooms in `RefactorTest029.tmx`.
+  Squash commit `fd3c9c471`.
+- Contract check: clean build; 473 engine and 108 core tests pass; 114 compiler warnings, the same list as
+  before; the contact selection reference file is unchanged; the contract greps pass; a check of the scripted step
+  showed all 323 changed lines differ only in the reference; the owner checked the new rooms on the baseline and
+  played the rooms, `SMB3_1` and `GLACIER_MAN` at the end. The owner approved the merge.
+- Follow-up: bug filed: `docs/issues/2026-10-23-gaping-fish-missing-frozen-region.md`. No backlog candidates.
+  `AbstractEnemy` and `AbstractBoss` go to `029c` and `029d`. Next for item `029`: `029c` or `029d`.

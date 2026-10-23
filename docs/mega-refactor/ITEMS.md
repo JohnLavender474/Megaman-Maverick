@@ -77,7 +77,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-008a-dev-launch-options`](items/008-dev-launch-options/branches/mega-refactor-008a-dev-launch-options/process-log.md) | 008 | Dev launch options and level staging | merged | 2026-10-22 | 2026-10-22 |
 | `mega-refactor-019b-destroy-notification` | 019 | Tell a spawner at once when its entity is destroyed; one spawn phase per tick | planned | | |
 | [`mega-refactor-029a-player-seam`](items/029-player-contract/branches/mega-refactor-029a-player-seam/process-log.md) | 029 | Player slot, player view and players service; `Megaman` in slot 0 | merged | 2026-10-23 | 2026-10-23 |
-| [`mega-refactor-029b-enemy-players`](items/029-player-contract/branches/mega-refactor-029b-enemy-players/process-log.md) | 029 | Enemies use the players service in place of `megaman` | active | 2026-10-23 | |
+| [`mega-refactor-029b-enemy-players`](items/029-player-contract/branches/mega-refactor-029b-enemy-players/process-log.md) | 029 | Enemies use the players service in place of `megaman` | merged | 2026-10-23 | 2026-10-23 |
 | `mega-refactor-029c-boss-players` | 029 | Bosses and the boss damage listener use the players service | planned | | |
 | `mega-refactor-029d-world-players` | 029 | World entities use `IPlayer` and the players service | planned | | |
 | `mega-refactor-029e-player-profile` | 029 | Lives, tanks, enhancements and weapons owned in one session profile | planned | | |
