@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.players
 
-import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Direction
@@ -42,8 +41,8 @@ class MegaPlayersTest : DescribeSpec({
         every { game.engine } returns mockk<GameEngine>(relaxed = true)
     }
 
-    fun playerEntity(x: Float = 0f, damageTimer: Timer = Timer(1f).setToEnd()) = TestPlayerEntity(game).also {
-        it.addComponent(BodyComponent(Body(BodyType.DYNAMIC, x, 0f, 2f, 2f)))
+    fun playerEntity(damageTimer: Timer = Timer(1f).setToEnd()) = TestPlayerEntity(game).also {
+        it.addComponent(BodyComponent(Body(BodyType.DYNAMIC, 0f, 0f, 2f, 2f)))
         it.addComponent(BehaviorsComponent())
         it.addComponent(PlayerStateComponent(damageTimer))
     }
@@ -125,16 +124,6 @@ class MegaPlayersTest : DescribeSpec({
             entity.spawned = false
 
             players.targetFor(TestPlayerEntity(game)) shouldBeSameInstanceAs player
-        }
-
-        it("nearestTo gives the player whose body center is nearest, and a tie goes to the lower slot") {
-            val players = MegaPlayers(3)
-            players.register(PlayerSlot(0), playerEntity(x = 10f))
-            players.register(PlayerSlot(1), playerEntity(x = 2f))
-            players.register(PlayerSlot(2), playerEntity(x = -2f))
-
-            players.nearestTo(Vector2(9f, 1f))!!.slot shouldBe PlayerSlot(0)
-            players.nearestTo(Vector2(1f, 1f))!!.slot shouldBe PlayerSlot(1)
         }
     }
 })

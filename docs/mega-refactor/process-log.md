@@ -328,3 +328,16 @@ newest entry at the bottom.
   played the rooms, `SMB3_1` and `GLACIER_MAN` at the end. The owner approved the merge.
 - Follow-up: bug filed: `docs/issues/2026-10-23-gaping-fish-missing-frozen-region.md`. No backlog candidates.
   `AbstractEnemy` and `AbstractBoss` go to `029c` and `029d`. Next for item `029`: `029c` or `029d`.
+
+## 2026-10-23 — master (direct code change)
+
+- Summary: removed the core helper `nearestTo` and its test. It came with `029a`, but nothing outside its own test
+  called it: the targeting design moved "nearest" into a future `TargetPolicy` (`047`), and `029b` uses `targetFor`.
+  This is the "no API without a real caller" lesson from `ComponentKey` again. `targetFor` stays a member of
+  `MegaPlayers` (owner decision): it is a service behavior that will read the service's own policy state. Made
+  directly on `master` under "Small ad-hoc changes on `master`", at the owner's request.
+- Contract check: clean build; 473 engine and 107 core tests pass (1 `nearestTo` test removed); 114 compiler
+  warnings, as before.
+- Follow-up: the engine helpers `forEachPresent`, `firstOrNull` and `minByOrNull` have no game caller yet; they
+  are part of the standard set that the owner asked the engine base to give out of the box (decision 2026-10-23),
+  so they stay. `forEach` and `all` get their first callers in `029c`.
