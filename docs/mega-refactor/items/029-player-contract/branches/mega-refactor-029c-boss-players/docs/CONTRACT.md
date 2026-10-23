@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time
 on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-23
 
 This branch changes how bosses, `AbstractBoss` and `AbstractEnemy` reach the player, moves
 `shooting`, `canBeDamaged` and the damage listeners into `PlayerStateComponent`, and renames the boss
