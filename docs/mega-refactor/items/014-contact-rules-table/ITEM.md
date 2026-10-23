@@ -1,10 +1,10 @@
 # 014: Table-driven contact and collision rules
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `006`, `020`, `029`, `030`, `031`, `055`, `056`
-- Branches: `014a`, `014b`, `014c` (planned, see "Decisions")
+- Branches: `014a` (active), `014b`, `014c` (planned, see "Decisions")
 
 ## Goal
 
