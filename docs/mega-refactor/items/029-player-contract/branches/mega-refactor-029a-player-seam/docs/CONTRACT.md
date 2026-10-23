@@ -29,8 +29,9 @@ Megaman, the HUD and every entity must behave the same.
 - [ ] Every submit site in the `SCOPE.md` event table sends `ConstKeys.SLOT`, and `STUN_PLAYER`
       sends `ConstKeys.SLOTS` (grep and review).
 - [ ] Outside the player package, only `MegamanMaverickGame` (registration), the
-      `IMegaGameEntity.players` extension, the event submit sites and the tests reference the
-      players service (grep).
+      `IMegaGameEntity.players` extension, the event submit sites (including `TestStunPulser`) and the
+      tests reference the players service (grep).
+- [ ] `TestStunPulser` appears in no TMX file except `RefactorTest029.tmx` (grep).
 - [ ] A review shows each self-reference change as `megaman` to `this` with nothing else changed,
       and the trail sprite owner set from the spawn props on every spawn.
 
