@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: Enemies reach the player through the players service (target, any, contact identity) instead of the global `megaman`
-- Done: scan; `docs/SCOPE.md` approved; draft `docs/CONTRACT.md`.
-- Next: the owner reviews `docs/CONTRACT.md`.
+- Done: scan; `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`.
+- Next: the owner reviews `docs/PLAN.md`.
 - Blocked:
 
 ## Entries
@@ -19,3 +19,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Open question 2 answered by the owner: `ready` and `damaged` go in a core `PlayerStateComponent`. Scope updated.
 - The owner answered the open questions (targetFor only with TODOs; PlayerStateComponent; stomp write kept with TODOs; AbstractEnemy to 029c and 029d; name `targetPlayer`). Scope updated.
 - Scope approved by the owner. Draft `docs/CONTRACT.md` written.
+- Contract approved by the owner. Draft `docs/PLAN.md` written.
