@@ -5,7 +5,7 @@
 - State: planned
 - Goal: World entities, contact rules and world body code reach the player through the players service; `HIT_BY_PLAYER` takes the player view
 - Done: scan; draft `docs/SCOPE.md`.
-- Next: the owner reviews `docs/SCOPE.md` (4 open questions).
+- Next: the owner approves `docs/SCOPE.md`.
 - Blocked:
 
 ## Entries
@@ -38,3 +38,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
        (2 rooms in `WilyStage3_v4.tmx`).
   So the direct writes exist, but every one of them still goes through the setter and rotates the camera: today
   the player's direction and the camera's direction are the same "world" gravity, also for the direct writes.
+- The owner decided the gravity questions: `WorldGravity` on the game; all writers call `gravity.set`; world-direction readers read it; camera rotation stays in the player's setter with a `TODO`; Moon Man sets gravity only when the target player is alive (`TODO` for `047`); all in `029d`. Scope updated.

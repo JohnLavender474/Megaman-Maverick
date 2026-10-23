@@ -65,9 +65,9 @@ About 204 code lines in about 80 files: `entities/special` 83 lines, `projectile
    - the gravity devices: a player receiver that Megaman registers ("a gravity device switched you to this direction"); Megaman sets its direction and `aButtonTask` there, unchanged; a device switches every player in its trigger area (owner decision, open question 1);
    - the Darkness light: `players.forEach`, one light source per player, with the radius from a light-radius receiver that each player registers (owner decision, open question 3);
    - `teleporting` moves into `PlayerStateComponent`, like `ready` (owner decision, open question 2);
-   - the player's gravity direction used as the world direction: see "Gravity direction" (under discussion).
+   - the player's gravity direction used as the world direction: `game.gravity.direction` (see "Gravity direction").
 3. **World code:** `IBodyExtensions.defaultDoUpdate` tests `players.viewOf(entity) == null` instead of `!is Megaman`; `FeetSandRule` takes `{ game.players.any { it.ready } }`, with a `TODO` for `047` (owner decision, open question 4); `Receivers.HIT_BY_PLAYER` becomes `(player: MegaPlayer) -> Unit`, `BodyPlayerRule` passes `players.viewOf(entity)` (its `TODO` goes), and `SmallGrass`, `Togglee`, `SmallIceCube` (`it.canBeDamaged`) take the view.
-4. **Tests:** the new view accessors; `HIT_BY_PLAYER` is called with the view by `BodyPlayerRule` (with a relaxed game mock and registered test player, if practical).
+4. **Tests:** `WorldGravity.set` stores the direction and sets it on each registered player; the new view accessors; `HIT_BY_PLAYER` is called with the view by `BodyPlayerRule` (with a relaxed game mock and registered test player, if practical).
 
 ## Out of scope
 
@@ -82,15 +82,29 @@ About 204 code lines in about 80 files: `entities/special` 83 lines, `projectile
 - **Instance checks:** `is Megaman` and `isAny(Megaman::class, ...)` are instance checks; `players.viewOf(entity) != null` is true for exactly the same entity (Megaman, the only registered player).
 - **Kill zones:** `forEach` visits Megaman also while he is not present; each keeps its own `dead`/`invincible` checks, so the result is the same.
 - **`IBodyExtensions.defaultDoUpdate`** runs for every body every frame; `viewOf` is a loop over 1 slot.
+- **World gravity:** the readers move from `megaman.direction` to `gravity.direction`. They stay the same only if every write of the player's direction also goes through `gravity.set`. The plan checks this with a grep for direction writes on a player. The one exception kept on purpose is Moon Man skipping a dead player, where neither changes.
 - **Real-level checks:** gravity rooms, dark rooms, the Mario level, pipes, carts, the Wily capsules.
 
 ## Overlap with other branches
 
 - No branch is active.
 
-## Gravity direction (under discussion)
+## Gravity direction
 
-The owner asked for one source of truth for the gravity direction, and for a scan of every way the player's direction changes (2026-10-23). The scan result and the options are in the process log entry of that date; this section gets the decision.
+The owner asked for one source of truth for the gravity direction (2026-10-23). The scan (process log, same date) found that every change of the player's direction goes through `Megaman.direction`'s setter, which also rotates the camera, so the gravity is already global in practice. Decisions (owner, 2026-10-23):
+
+- **`WorldGravity`** (core, a field `gravity` on the game, like `players`; later in `LevelContext`): `direction` (read-only outside) and `set(direction)`, which stores the direction and sets it on every registered player.
+- **Writers** call `gravity.set(...)`:
+  - the gravity devices, through the player receiver (`GravitySwitcharoo`; `GravityCapsule`, which no map uses);
+  - `MoonMan.activateGravityChange`, only when the target player (always Megaman for now) is alive, with a `TODO` for `047` (today the swap skips a dead Megaman);
+  - `Megaman.onSpawn` (the spawn's `direction` property);
+  - `PortalHopper` when the hopping entity is a player (`next_entity_direction`); other entities keep their own direction;
+  - `CapsuleTeleporter` (`megaman_direction_on_receive`, for the received player);
+  - the level screen (room property `megaman_direction`).
+- **Readers** of the world direction (the player's direction used for the world: conveyor belts, spikes, magma, bullets, gems, decorations, explosions) read `game.gravity.direction`.
+- **Camera rotation stays in the player's direction setter**, with a `TODO` in the code and here: the rotation belongs to `WorldGravity`, because with more players each player's setter would ask for it.
+- `PortalHopper`'s `next_body_direction` (no live map) sets the body direction and skips the setter and `WorldGravity`; a `TODO` notes it.
+- All of this is in `029d`, with more manual checks for the gravity paths.
 
 ## Open questions
 
