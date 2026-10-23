@@ -263,11 +263,11 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
     Megaman on both sides, aim and fire.
 - Give a `--room` for every check, also in real levels, so the owner never has to play a level from
   its start. If one level has several checks in different places, list the level once for each,
-  each with its own `--room`. `--room` needs a player spawn inside the room, and a boss room
-  (a `game_rooms` object with the property `event=boss`) usually has none: give the room that has
-  the player spawn nearest to the boss room, which is usually the checkpoint before the boss gate,
-  and say which boss room it leads to. Find the rooms in the live TMX file that `LevelDefinition`
-  names.
+  each with its own `--room`. `--room` needs a player spawn inside the room. For a boss, give the
+  room before the boss room: the room that holds the boss `Gate` (a `game_rooms` object with the
+  property `event=boss` is the boss room). If that room has no player spawn, give the nearest room
+  before it that has one, and say so. Do not name the boss room in the command or next to it. Find
+  the rooms in the live TMX file that `LevelDefinition` names.
 
 ## Bugs
 

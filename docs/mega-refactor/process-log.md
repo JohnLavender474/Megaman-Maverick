@@ -368,8 +368,9 @@ newest entry at the bottom.
 ## 2026-10-23 — master (docs)
 
 - Summary: "Test maps" in `CLAUDE.md` now says that every check the owner runs has a `--room`, also in real
-  levels; a level with several checks is listed once for each, with its own room; for a boss, the room with the
-  player spawn nearest to the boss room (the boss room itself usually has no spawn). The owner asked for this
-  after the `029c` play-test list gave boss levels with no room.
+  levels; a level with several checks is listed once for each, with its own room; for a boss, the room before
+  the boss room (the one that holds the boss `Gate`), or the nearest room before it with a player spawn; the boss
+  room is not named. The owner asked for this after the `029c` play-test list gave boss levels with no room, and
+  corrected a first version that also named the boss room.
 - Contract check: not needed (docs only).
 - Follow-up: none.
