@@ -236,8 +236,10 @@ class DrillTankXT(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         debugShapes.add { body.getBounds() }
 
         drillTipFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        drillTipFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK && fixture.getEntity() is Block }
-        drillTipFixture.setConsumer { processState, fixture ->
+        drillTipFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType() == FixtureType.BLOCK && fixture.getEntity() is Block
+        }
+        drillTipFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             val block = fixture.getEntity() as Block
             if (processState == ProcessState.BEGIN) drillBlocks.add(block)
             else if (processState == ProcessState.END) drillBlocks.remove(block)
@@ -278,8 +280,10 @@ class DrillTankXT(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             (-0.25f * ConstVals.PPM) - (body.getWidth() / 2f),
             -body.getHeight() / 2f
         )
-        leftConsumerFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
-        leftConsumerFixture.setConsumer { _, fixture ->
+        leftConsumerFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
+        }
+        leftConsumerFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> leftConsumerFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)
@@ -297,8 +301,10 @@ class DrillTankXT(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
             (0.25f * ConstVals.PPM) + (body.getWidth() / 2f),
             -body.getHeight() / 2f
         )
-        rightConsumerFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
-        rightConsumerFixture.setConsumer { _, fixture ->
+        rightConsumerFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
+        }
+        rightConsumerFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> rightConsumerFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> rightConsumerFixture.putProperty(ConstKeys.DEATH, true)

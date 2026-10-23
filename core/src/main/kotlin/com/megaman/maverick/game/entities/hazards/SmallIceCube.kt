@@ -211,19 +211,19 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         body.setSize(BODY_SIZE * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().setSize(body.getSize().scl(1.25f)))
-        bodyFixture.setHitByExplosionReceiver { entity ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_EXPLOSION) { entity ->
             if (SMOKE_PUFF_ENTITIES.contains(entity::class)) smokePuff() else shatterAndDie()
         }
-        bodyFixture.setHitByBodyReceiver { entity, state ->
-            if (state != ProcessState.BEGIN) return@setHitByBodyReceiver
+        bodyFixture.setReceiver(Receivers.HIT_BY_BODY) { entity, state ->
+            if (state != ProcessState.BEGIN) return@setReceiver
             if (entity != owner && entity is IDamageable && entity.invincible) shatterAndDie()
             else if (entity is IFireEntity) getHit(entity)
         }
-        bodyFixture.setHitByPlayerReceiver { if (!it.canBeDamaged) shatterAndDie() }
-        bodyFixture.setHitByProjectileReceiver {
+        bodyFixture.setReceiver(Receivers.HIT_BY_PLAYER) { if (!it.canBeDamaged) shatterAndDie() }
+        bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) {
             if (it !is SmallIceCube && it.owner != owner) getHit(it)
         }
-        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { block, _ ->
             if (destroyOnHitBlock) shatterAndDie() else getHit(block)
         }
         body.addFixture(bodyFixture)

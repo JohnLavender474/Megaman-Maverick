@@ -177,7 +177,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+        feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
             facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
         body.addFixture(feetFixture)
@@ -202,15 +202,19 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         debugShapes.add { rightSideFixture }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        leftFootFixture.setConsumer { _, fixture -> body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true) }
+        leftFootFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.BLOCK }
+        leftFootFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
+            body.putProperty("${ConstKeys.LEFT}_${ConstKeys.FOOT}", true)
+        }
         leftFootFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(leftFootFixture)
         debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        rightFootFixture.setConsumer { _, fixture -> body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true) }
+        rightFootFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.BLOCK }
+        rightFootFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
+            body.putProperty("${ConstKeys.RIGHT}_${ConstKeys.FOOT}", true)
+        }
         rightFootFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(rightFootFixture)
         debugShapes.add { rightFootFixture }

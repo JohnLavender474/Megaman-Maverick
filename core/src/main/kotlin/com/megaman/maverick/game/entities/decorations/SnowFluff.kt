@@ -66,21 +66,21 @@ class SnowFluff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
         body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
             GameLogger.debug(TAG, "hitByBlock: BEGIN: velocity=${body.physics.velocity}, destroy()")
             if (body.physics.velocity.y <= 0f) destroy()
         }
-        bodyFixture.setHitByBlockReceiver(ProcessState.CONTINUE) { _, _ ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.CONTINUE) { _, _ ->
             if (body.physics.velocity.y <= 0f) {
                 GameLogger.debug(TAG, "hitByBlock: CONTINUE: velocity=${body.physics.velocity}, destroy()")
                 destroy()
             }
         }
-        bodyFixture.setHitByProjectileReceiver { destroy() }
+        bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { destroy() }
         body.addFixture(bodyFixture)
 
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
-        waterListenerFixture.setHitByWaterReceiver { destroy() }
+        waterListenerFixture.setReceiver(Receivers.HIT_BY_WATER) { destroy() }
         waterListenerFixture.putProperty(ConstKeys.SPLASH, false)
         body.addFixture(waterListenerFixture)
 

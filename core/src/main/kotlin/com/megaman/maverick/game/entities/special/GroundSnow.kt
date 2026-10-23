@@ -147,7 +147,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         val body = Body(BodyType.ABSTRACT)
 
         val snowFixture = Fixture(body, FixtureType.SNOW, GameRectangle())
-        snowFixture.setHitByFeetReceiver(ProcessState.BEGIN) { feet, _ ->
+        snowFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
             val pos = feet.getShape()
                 .getBoundingRectangle()
                 .getPositionPoint(Position.BOTTOM_CENTER)
@@ -157,13 +157,13 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             timer.resetDuration(FLUFF_DEFAULT_CONTINUE_SPAWN_DELAY)
             feetTimers.put(feet.getEntity(), timer)
         }
-        snowFixture.setHitByFeetReceiver(ProcessState.CONTINUE) { feet, delta ->
+        snowFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.CONTINUE) { feet, delta ->
             val entity = feet.getEntity()
 
             val timer = feetTimers.get(entity)
             if (timer == null) {
                 GameLogger.error(TAG, "hitByFeet(): CONTINUE: no timer for entity=$entity in map=$feetTimers")
-                return@setHitByFeetReceiver
+                return@setReceiver
             }
 
             if (entity is Megaman) {
@@ -182,7 +182,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             }
 
             val body = feet.getBody()
-            if (abs(body.physics.velocity.x) < FLUFF_MOVE_X_THRESHOLD * ConstVals.PPM) return@setHitByFeetReceiver
+            if (abs(body.physics.velocity.x) < FLUFF_MOVE_X_THRESHOLD * ConstVals.PPM) return@setReceiver
 
             val feetBounds = feet.getShape().getBoundingRectangle()
 
@@ -199,7 +199,7 @@ class GroundSnow(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
                 timer.reset()
             }
         }
-        snowFixture.setHitByFeetReceiver(ProcessState.END) { feet, _ ->
+        snowFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.END) { feet, _ ->
             val entity = feet.getEntity()
             val feetBounds = feet.getShape().getBoundingRectangle()
 

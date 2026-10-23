@@ -162,13 +162,13 @@ class IcicleTelly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         val icicleFixture =
             Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat()))
         icicleFixture.attachedToBody = false
-        icicleFixture.setFilter filter@{ fixture ->
+        icicleFixture.setReceiver(Receivers.FILTER) filter@{ fixture ->
             if (fixture.getType() == FixtureType.PROJECTILE) return@filter true
 
             val entity = fixture.getEntity()
             return@filter fixture.getType() == FixtureType.DAMAGEABLE && entity == megaman
         }
-        icicleFixture.setConsumer { processState, fixture ->
+        icicleFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             if (processState == ProcessState.BEGIN && currentState == IcicleTellyState.SPIN) shatterIcicle()
         }
         body.addFixture(icicleFixture)

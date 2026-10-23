@@ -203,8 +203,8 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
-        headFixture.setHitByFeetReceiver(ProcessState.BEGIN) { feet, _ ->
-            if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) return@setHitByFeetReceiver
+        headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
+            if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) return@setReceiver
 
             val entity = feet.getEntity()
             if (entity is Megaman) {

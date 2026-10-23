@@ -28,9 +28,10 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.setHitByProjectileReceiver
+import com.megaman.maverick.game.world.body.setReceiver
 
 class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, IAudioEntity {
 
@@ -91,7 +92,7 @@ class BreakableIce(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity, 
         val body = component.body
         body.forEachFixture { fixture ->
             if (fixture.getType() == FixtureType.SHIELD) {
-                fixture.setHitByProjectileReceiver { projectile ->
+                fixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
                     when (projectile) {
                         is Bullet, is TeardropBlast, is SlashWave -> hit()
                         is MoonScythe, is IFireEntity -> explodeAndDie()

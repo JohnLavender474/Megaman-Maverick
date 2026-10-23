@@ -192,7 +192,7 @@ class FloorButton(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISprit
         debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { block, _ ->
             val owner = block.getProperty(ConstKeys.OWNER, IGameEntity::class)
             if (owner != null && owner is PushableBlock) pushableBlocks.add(owner)
         }

@@ -20,7 +20,8 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.setConsumer
+import com.megaman.maverick.game.world.body.Receivers
+import com.megaman.maverick.game.world.body.setReceiver
 
 class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     IParentEntity<IGameEntity> {
@@ -70,7 +71,7 @@ class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game),
         val consumer: (ProcessState, IFixture) -> Unit = { _, it ->
             fixturesConsumed.add(it.getType() as FixtureType)
         }
-        consumerFixture.setConsumer(consumer)
+        consumerFixture.setReceiver(Receivers.CONSUMER, consumer)
         body.addFixture(consumerFixture)
 
         return BodyComponentCreator.create(this, body)

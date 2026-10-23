@@ -7,9 +7,9 @@ import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactFilter
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getEntity
-import com.megaman.maverick.game.world.body.getFilter
-import com.megaman.maverick.game.world.body.hasFilter
+import com.megaman.maverick.game.world.body.receiver
 
 class MegaContactFilter : IContactFilter {
 
@@ -128,7 +128,7 @@ class MegaContactFilter : IContactFilter {
             }
 
             try {
-                return consumer.getFilter().invoke(other)
+                return consumer.receiver(Receivers.FILTER)!!.invoke(other)
             } catch (e: Exception) {
                 throw IllegalStateException(
                     "Failed to perform custom filter on fixtures: fixture1=$fixture1, fixture2=$fixture2", e
@@ -136,8 +136,8 @@ class MegaContactFilter : IContactFilter {
             }
         }
 
-        if ((fixture1.hasFilter() && !fixture1.getFilter().invoke(fixture2)) ||
-            (fixture2.hasFilter() && !fixture2.getFilter().invoke(fixture1))
+        if (fixture1.receiver(Receivers.FILTER)?.invoke(fixture2) == false ||
+            fixture2.receiver(Receivers.FILTER)?.invoke(fixture1) == false
         ) return false
 
         return (filters.get(type1 as FixtureType)?.contains(type2) == true ||

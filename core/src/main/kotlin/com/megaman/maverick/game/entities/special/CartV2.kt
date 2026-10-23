@@ -145,10 +145,10 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         leftFixture.setEntity(this)
         leftFixture.bodyAttachmentPosition = Position.CENTER_LEFT
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.setHitByBodyReceiver { entity, _ ->
+        leftFixture.setReceiver(Receivers.HIT_BY_BODY) { entity, _ ->
             if (moving && entity is AbstractEnemy) entity.depleteHealth()
         }
-        leftFixture.setHitBySideReceiver { fixture, _ ->
+        leftFixture.setReceiver(Receivers.HIT_BY_SIDE) { fixture, _ ->
             val entity = fixture.getEntity()
             if (moving && entity is AbstractEnemy) entity.depleteHealth()
         }
@@ -161,10 +161,10 @@ class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimated
         rightFixture.setEntity(this)
         rightFixture.bodyAttachmentPosition = Position.CENTER_RIGHT
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.setHitByBodyReceiver { entity, _ ->
+        rightFixture.setReceiver(Receivers.HIT_BY_BODY) { entity, _ ->
             if (moving && entity is AbstractEnemy) entity.depleteHealth()
         }
-        rightFixture.setHitBySideReceiver { fixture, _ ->
+        rightFixture.setReceiver(Receivers.HIT_BY_SIDE) { fixture, _ ->
             val entity = fixture.getEntity()
             if (moving && entity is AbstractEnemy) entity.depleteHealth()
         }

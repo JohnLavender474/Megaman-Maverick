@@ -126,10 +126,10 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         val body = Body(BodyType.ABSTRACT)
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
-        consumerFixture.setFilter { fixture ->
+        consumerFixture.setReceiver(Receivers.FILTER) { fixture ->
             fixture.getType() == FixtureType.BODY && fixture.getEntity() is IDamageable
         }
-        consumerFixture.setConsumer { processState, fixture ->
+        consumerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             when (processState) {
                 ProcessState.BEGIN, ProcessState.CONTINUE -> {
                     val bodyEntity = fixture.getEntity() as IBodyEntity

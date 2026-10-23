@@ -225,9 +225,9 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.35f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+        feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { block, _ ->
             if (block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || collisionsToIgnore.contains(block.id))
-                return@setHitByBlockReceiver
+                return@setReceiver
 
             if (burstOnHitBlock) explodeAndDie(
                 feetFixture.getShape().getBoundingRectangle(),

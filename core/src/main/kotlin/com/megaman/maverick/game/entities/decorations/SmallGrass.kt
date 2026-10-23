@@ -30,8 +30,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getPosition
-import com.megaman.maverick.game.world.body.setHitByPlayerReceiver
+import com.megaman.maverick.game.world.body.setReceiver
 
 class SmallGrass(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
 
@@ -76,7 +77,7 @@ class SmallGrass(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         body.setSize(ConstVals.PPM.toFloat(), 0.25f * ConstVals.PPM)
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByPlayerReceiver { brushTimer.reset() }
+        bodyFixture.setReceiver(Receivers.HIT_BY_PLAYER) { brushTimer.reset() }
         body.addFixture(bodyFixture)
 
         return BodyComponentCreator.create(this, body)

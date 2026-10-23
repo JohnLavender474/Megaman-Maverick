@@ -95,7 +95,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         debugShapes.add { bodyFixture}
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM * 0.5f))
-        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+        feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
             if (overlapsGameCamera()) requestToPlaySound(SoundAsset.MARIO_FIREBALL_SOUND, false)
         }
         feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()

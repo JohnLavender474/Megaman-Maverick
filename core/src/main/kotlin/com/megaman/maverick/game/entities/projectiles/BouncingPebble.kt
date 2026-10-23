@@ -139,7 +139,7 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.UP) }
+        feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ -> bounce(Direction.UP) }
         feetFixture.bodyAttachmentPosition = Position.BOTTOM_CENTER
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
@@ -148,7 +148,7 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         headFixture.bodyAttachmentPosition = Position.TOP_CENTER
-        headFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.DOWN) }
+        headFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ -> bounce(Direction.DOWN) }
         body.addFixture(headFixture)
         headFixture.drawingColor = Color.ORANGE
         debugShapes.add { headFixture }
@@ -156,7 +156,7 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         leftFixture.bodyAttachmentPosition = Position.CENTER_LEFT
-        leftFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.RIGHT) }
+        leftFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ -> bounce(Direction.RIGHT) }
         body.addFixture(leftFixture)
         leftFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftFixture }
@@ -164,7 +164,7 @@ class BouncingPebble(game: MegamanMaverickGame) : AbstractProjectile(game) {
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.25f * ConstVals.PPM))
         rightFixture.bodyAttachmentPosition = Position.CENTER_RIGHT
-        rightFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> bounce(Direction.RIGHT) }
+        rightFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ -> bounce(Direction.RIGHT) }
         body.addFixture(rightFixture)
         rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }

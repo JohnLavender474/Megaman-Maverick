@@ -280,7 +280,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             FixtureType.SHIELD,
             GameRectangle().setSize(0.5f * ConstVals.PPM, ConstVals.PPM.toFloat())
         )
-        shieldFixture.setHitByProjectileReceiver { projectile ->
+        shieldFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (projectile is IFireEntity) {
                 GameLogger.debug(TAG, "defineBodyComponent(): hit by fireball, start burning")
                 burning = true

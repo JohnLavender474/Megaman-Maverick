@@ -349,8 +349,8 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
         )
         jumpTriggerFixture.offsetFromBodyAttachment.y =
             (JUMP_SENSOR_HEIGHT * ConstVals.PPM / 2f) - (body.getHeight() / 2f)
-        jumpTriggerFixture.setFilter { fixture -> fixture.getType() == FixtureType.PLAYER }
-        jumpTriggerFixture.setConsumer { processState, _ ->
+        jumpTriggerFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.PLAYER }
+        jumpTriggerFixture.setReceiver(Receivers.CONSUMER) { processState, _ ->
             if (canJump && state == GreenUziJoeState.STAND && processState == ProcessState.BEGIN) jump()
         }
         body.addFixture(jumpTriggerFixture)

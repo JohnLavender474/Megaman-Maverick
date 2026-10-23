@@ -107,7 +107,7 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
         val body = Body(BodyType.STATIC)
 
         val bounceFixture = Fixture(body, FixtureType.BOUNCER, GameRectangle())
-        bounceFixture.setVelocityAlteration alteration@{ fixture, _, state ->
+        bounceFixture.setReceiver(Receivers.VELOCITY_ALTERATION) alteration@{ fixture, _, state ->
             if (state == ProcessState.BEGIN && fixture.getEntity() == megaman)
                 requestToPlaySound(SoundAsset.DINK_SOUND, false)
 

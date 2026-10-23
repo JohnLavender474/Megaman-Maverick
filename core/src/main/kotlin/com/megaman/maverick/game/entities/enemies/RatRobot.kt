@@ -185,8 +185,10 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             (-0.5f * ConstVals.PPM) - (body.getWidth() / 2f),
             -body.getHeight() / 2f
         )
-        leftFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
-        leftFootFixture.setConsumer { _, fixture ->
+        leftFootFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
+        }
+        leftFootFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> leftFootFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> leftFootFixture.putProperty(ConstKeys.DEATH, true)
@@ -204,8 +206,10 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             (0.5f * ConstVals.PPM) + (body.getWidth() / 2f),
             -body.getHeight() / 2f
         )
-        rightFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
-        rightFootFixture.setConsumer { _, fixture ->
+        rightFootFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
+        }
+        rightFootFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> rightFootFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> rightFootFixture.putProperty(ConstKeys.DEATH, true)

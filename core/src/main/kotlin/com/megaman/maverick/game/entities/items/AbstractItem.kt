@@ -135,7 +135,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         debugShapes.add { itemFixture }
 
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
-        waterListenerFixture.setHitByWaterReceiver {
+        waterListenerFixture.setReceiver(Receivers.HIT_BY_WATER) {
             body.physics.velocity.setZero()
             gravity = WATER_GRAVITY
             velClamp = WATER_VEL_CLAMP
@@ -165,7 +165,8 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
             (waterListenerFixture.rawShape as GameRectangle).set(body)
             
             feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-            feetFixture.setShouldStickToBlock(!body.isSensing(BodySense.FEET_ON_SAND))
+            val shouldStick = !body.isSensing(BodySense.FEET_ON_SAND)
+            feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> shouldStick }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

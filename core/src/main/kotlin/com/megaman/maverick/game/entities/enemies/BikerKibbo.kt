@@ -193,7 +193,9 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val leftFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
-        leftFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> if (isFacing(Facing.LEFT)) swapFacing() }
+        leftFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
+            if (isFacing(Facing.LEFT)) swapFacing()
+        }
         body.addFixture(leftFixture)
         leftFixture.drawingColor = Color.YELLOW
         debugShapes.add { leftFixture }
@@ -201,7 +203,9 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val rightFixture = Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
-        rightFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ -> if (isFacing(Facing.RIGHT)) swapFacing() }
+        rightFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
+            if (isFacing(Facing.RIGHT)) swapFacing()
+        }
         body.addFixture(rightFixture)
         rightFixture.drawingColor = Color.YELLOW
         debugShapes.add { rightFixture }
@@ -209,7 +213,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
-        feetFixture.setHitByBlockReceiver(ProcessState.END) { _, _ -> jump() }
+        feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.END) { _, _ -> jump() }
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }

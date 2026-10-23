@@ -168,7 +168,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
         debugShapes.add { damagerFixture }
 
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
-        waterListenerFixture.setHitByWaterReceiver {
+        waterListenerFixture.setReceiver(Receivers.HIT_BY_WATER) {
             destroy()
             playSoundNow(SoundAsset.WHOOSH_SOUND, false)
         }

@@ -162,7 +162,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             FixtureType.FEET,
             GameRectangle().setSize(BODY_WIDTH * 0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM)
         )
-        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) hitByBlock@{ block, _ ->
+        feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) hitByBlock@{ block, _ ->
             if (block == innerBlock) return@hitByBlock
 
             if (game.getGameCamera().getRotatedBounds().overlaps(body.getBounds()))

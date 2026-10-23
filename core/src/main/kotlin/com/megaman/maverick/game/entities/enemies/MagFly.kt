@@ -114,17 +114,17 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             GameRectangle().setSize(ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         )
         forceFixture.offsetFromBodyAttachment.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
-        forceFixture.setVelocityAlteration { fixture, delta, processState ->
+        forceFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, processState ->
             val entity = fixture.getEntity()
 
             if (entity is AbstractEnemy ||
                 (entity is Megaman && (entity.damaged || entity.isBehaviorActive(BehaviorType.CLIMBING)))
-            ) return@setVelocityAlteration VelocityAlteration.addNone()
+            ) return@setReceiver VelocityAlteration.addNone()
 
             if (entity is AbstractProjectile) entity.owner = null
 
             if (entity is Megaman) {
-                if (processState == ProcessState.END) return@setVelocityAlteration VelocityAlteration.addNone()
+                if (processState == ProcessState.END) return@setReceiver VelocityAlteration.addNone()
 
                 val physics = entity.body.physics
 
@@ -138,7 +138,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                     delta
                 )
 
-                return@setVelocityAlteration VelocityAlteration(
+                return@setReceiver VelocityAlteration(
                     carryX,
                     max(0f, minVelY - physics.velocity.y),
                     VelocityAlterationType.TRANSLATE,
@@ -150,7 +150,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             val x = PULL_FORCE_X * ConstVals.PPM * delta * facing.value
             val y = PULL_FORCE_Y * ConstVals.PPM * delta
 
-            return@setVelocityAlteration VelocityAlteration.add(x, y)
+            return@setReceiver VelocityAlteration.add(x, y)
         }
         body.addFixture(forceFixture)
         debugShapes.add { forceFixture }

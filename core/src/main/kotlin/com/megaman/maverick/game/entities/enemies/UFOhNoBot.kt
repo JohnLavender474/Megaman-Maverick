@@ -298,11 +298,11 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         val bombConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameCircle().setRadius(0.5f * ConstVals.PPM))
         bombConsumerFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
-        bombConsumerFixture.setFilter { fixture ->
+        bombConsumerFixture.setReceiver(Receivers.FILTER) { fixture ->
             !dropped && fixture.getType() == FixtureType.PROJECTILE &&
                 (fixture.getEntity() as IProjectileEntity).owner == megaman
         }
-        bombConsumerFixture.setConsumer { processState, fixture ->
+        bombConsumerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             val projectile = fixture.getEntity() as IProjectileEntity
             if (projectile.owner == megaman) {
                 // so that the enemy doesn't get stuck in place if the bomb gets destroyed while he's rising

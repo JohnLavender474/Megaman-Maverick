@@ -133,7 +133,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             body, FixtureType.BOUNCER, GameRectangle().setSize(0.5f * ConstVals.PPM)
         )
         bouncerFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
-        bouncerFixture.setVelocityAlteration alter@{ bounceable, _, state ->
+        bouncerFixture.setReceiver(Receivers.VELOCITY_ALTERATION) alter@{ bounceable, _, state ->
             if (state == ProcessState.BEGIN) requestToPlaySound(SoundAsset.DINK_SOUND, false)
 
             return@alter velocityAlteration(bounceable)

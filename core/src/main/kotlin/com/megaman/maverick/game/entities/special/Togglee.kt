@@ -252,8 +252,8 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle())
-        bodyFixture.setHitByPlayerReceiver { if (switchTimer.isFinished()) switchToggleeState() }
-        bodyFixture.setHitByProjectileReceiver {
+        bodyFixture.setReceiver(Receivers.HIT_BY_PLAYER) { if (switchTimer.isFinished()) switchToggleeState() }
+        bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) {
             if (type != SWITCHAROO_ARROW_TYPE && switchTimer.isFinished()) switchToggleeState()
         }
         body.addFixture(bodyFixture)

@@ -120,7 +120,7 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
-        headFixture.setHitByFeetReceiver(ProcessState.BEGIN) { feet, _ ->
+        headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
             if (!knockedToDeath &&
                 feet.getEntity() == megaman &&
                 knockabilityDelayTimer.isFinished() &&

@@ -906,10 +906,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 PROJECTILE_LISTENER_HEIGHT * ConstVals.PPM
             )
         )
-        projectileListenerFixture.setFilter { fixture ->
+        projectileListenerFixture.setReceiver(Receivers.FILTER) { fixture ->
             fixture.getType() == FixtureType.PROJECTILE && (fixture.getEntity() as IProjectileEntity).owner != this
         }
-        projectileListenerFixture.setConsumer { processState, fixture ->
+        projectileListenerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             if (processState != ProcessState.CONTINUE) GameLogger.debug(
                 TAG,
                 "projectileListenerFixture(): consume: " +

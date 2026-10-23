@@ -3,6 +3,7 @@ package com.maverick.game.engine.common.interfaces
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Predicate
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.PropertyKey
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
@@ -46,4 +47,13 @@ interface IPropertizable {
     }
 
     fun clearProperties() = properties.clear()
+
+    fun <T : Any> putProperty(key: PropertyKey<T>, value: T) = properties.put(key, value)
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> getProperty(key: PropertyKey<T>) = properties.get(key) as T?
+
+    fun hasProperty(key: PropertyKey<*>) = properties.containsKey(key)
+
+    fun removeProperty(key: PropertyKey<*>) = properties.remove(key)
 }

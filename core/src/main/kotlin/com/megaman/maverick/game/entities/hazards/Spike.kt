@@ -221,7 +221,7 @@ open class Spike(game: MegamanMaverickGame) : MegaGameEntity(game), IChildEntity
         // debugShapes.add { body.getBounds() }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        feetFixture.setFilter { it.getEntity() != block }
+        feetFixture.setReceiver(Receivers.FILTER) { it.getEntity() != block }
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }

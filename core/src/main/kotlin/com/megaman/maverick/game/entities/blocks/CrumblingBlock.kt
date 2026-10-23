@@ -70,8 +70,8 @@ class CrumblingBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity {
 
         body.fixtures.get(FixtureType.BLOCK).first()
             .setEntity(this)
-            .setHitByProjectileReceiver { projectile -> hitByProjectile(projectile) }
-            .setHitByExplosionReceiver { explosion -> hitByExplosion(explosion) }
+            .setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile -> hitByProjectile(projectile) }
+            .setReceiver(Receivers.HIT_BY_EXPLOSION) { explosion -> hitByExplosion(explosion) }
 
         val feetFixture = Fixture(body, FixtureType.FEET, GameRectangle().setHeight(0.1f * ConstVals.PPM))
         feetFixture.setEntity(this)

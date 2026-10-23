@@ -131,7 +131,7 @@ class Wanaan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByProjectileReceiver { projectile ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (!frozen && projectile is IFreezerEntity) {
                 frozen = true
                 projectile.shatterAndDie()

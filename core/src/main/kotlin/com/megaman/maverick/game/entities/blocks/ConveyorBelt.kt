@@ -36,9 +36,10 @@ import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getBody
 import com.megaman.maverick.game.world.body.setEntity
-import com.megaman.maverick.game.world.body.setVelocityAlteration
+import com.megaman.maverick.game.world.body.setReceiver
 
 class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity,
     IDirectional {
@@ -114,7 +115,7 @@ class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAn
         var forceX = FORCE_IMPULSE * ConstVals.PPM
         if (left) forceX = -forceX
 
-        forceFixture!!.setVelocityAlteration { fixture, delta, _ ->
+        forceFixture!!.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val body = fixture.getBody()
             if (direction == Direction.UP) when {
                 (left && body.physics.velocity.x <= -FORCE_MAX * ConstVals.PPM) ||

@@ -23,14 +23,14 @@ than the writer used.
     to `active`.
   - `git worktree add -b mega-refactor-014b-typed-fixture-receivers .worktrees/mega-refactor-014b-typed-fixture-receivers master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 427 engine, 77 core) and the compiler
   warning count (expected 133) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Engine: `PropertyKey`, `PhasedPropertyKey`, typed accessors
 
@@ -50,7 +50,7 @@ than the writer used.
     and different objects for different states; `hasProperty` and `removeProperty` work; a typed key
     and a string key with the same text do not collide.
 - Check: `./gradlew engine:test` passes, with the new tests.
-- Done: no
+- Done: yes
 
 ### 4. Core: `Receivers`, typed fixture accessors; old functions use the new keys
 
@@ -66,7 +66,7 @@ than the writer used.
     to store and read through the `Receivers` keys. Their signatures and behavior stay the same.
 - Check: `./gradlew core:test lwjgl3:jar` passes. The game now runs on the new keys, with no call site
   changed. A 25-second launch of `--level TEST_1` shows no exception.
-- Done: no
+- Done: yes
 
 ### 5. Migrate the readers by hand
 
@@ -82,7 +82,7 @@ than the writer used.
   - Delete the two `hitByLaser` reads (`L:806`, `L:1248`). No entity registers this kind.
 - Check: `./gradlew core:test lwjgl3:jar` passes. No old read function is used in the listener or
   the filter (grep). A launch of `--level TEST_1` shows no exception.
-- Done: no
+- Done: yes
 
 ### 6. Migrate the registration sites by script
 
@@ -97,7 +97,7 @@ than the writer used.
     `setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> value }`), and labels such as `filter@`.
   - Review the script's diff and about 15 sites by hand.
 - Check: `./gradlew core:test lwjgl3:jar` passes. The old setters have no callers (grep).
-- Done: no
+- Done: yes
 
 ### 7. Delete the old functions
 
@@ -106,7 +106,7 @@ than the writer used.
   `setHitByLaserReceiver` and its pair. Leave the `ConstKeys` string values in place: some
   (`HIT_BY_BLOCK`) are also `spawnProps` keys.
 - Check: `./gradlew core:test lwjgl3:jar` passes. The contract greps find nothing.
-- Done: no
+- Done: yes
 
 ### 8. Contract checks
 
@@ -120,7 +120,7 @@ than the writer used.
     time.
   - The owner's play test from `CONTRACT.md`.
   - Write the results in the process log.
-- Done: no
+- Done: yes
 
 ### 9. Merge
 
@@ -128,4 +128,4 @@ than the writer used.
   explicit approval. Compare with `master` first (`git diff --stat <branch>...master`), and merge
   `master` into the branch if it touches the same files.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes

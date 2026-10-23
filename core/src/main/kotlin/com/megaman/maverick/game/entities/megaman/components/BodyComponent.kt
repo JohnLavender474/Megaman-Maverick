@@ -103,11 +103,11 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val feetFixture =
         Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    feetFixture.setRunnable {
+    feetFixture.setReceiver(Receivers.RUNNABLE) {
         onBounce.invoke()
         if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
     }
-    feetFixture.setShouldStickToBlock { _, _ -> !body.isSensing(BodySense.IN_WATER) }
+    feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> !body.isSensing(BodySense.IN_WATER) }
     body.addFixture(feetFixture)
     feetFixture.drawingColor = Color.GREEN
     // debugShapes.add { feetFixture }
@@ -118,10 +118,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // fixture and the other feet fixture.
     val feetGravityRect = GameRectangle().setHeight(0.1f * ConstVals.PPM)
     val feetGravityFixture = Fixture(body, FixtureType.CONSUMER, feetGravityRect)
-    feetGravityFixture.setFilter { it.getType() == FixtureType.BLOCK }
+    feetGravityFixture.setReceiver(Receivers.FILTER) { it.getType() == FixtureType.BLOCK }
     val feetGravitySet = ObjectSet<IFixture>()
     feetGravityFixture.putProperty(ConstKeys.SET, feetGravitySet)
-    feetGravityFixture.setConsumer consumer@{ processState, fixture ->
+    feetGravityFixture.setReceiver(Receivers.CONSUMER) consumer@{ processState, fixture ->
         when (processState) {
             ProcessState.BEGIN, ProcessState.CONTINUE -> {
                 val block = fixture.getEntity() as Block
@@ -142,7 +142,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM))
-    headFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+    headFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
         if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) {
             val shouldMakeBumpSound = when (direction) {
                 Direction.UP -> megaman.body.physics.velocity.y >= 0f
@@ -153,7 +153,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
             if (shouldMakeBumpSound) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
         }
     }
-    headFixture.setRunnable(onBounce)
+    headFixture.setReceiver(Receivers.RUNNABLE, onBounce)
     body.addFixture(headFixture)
     headFixture.drawingColor = Color.ORANGE
     // debugShapes.add { headFixture }
@@ -162,9 +162,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val leftFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
     leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
-    leftFixture.setRunnable(onBounce)
+    leftFixture.setReceiver(Receivers.RUNNABLE, onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-    leftFixture.setShouldStickToBlock shouldStick@{ _, blockFixture ->
+    leftFixture.setReceiver(Receivers.STICK_TO_BLOCK) shouldStick@{ _, blockFixture ->
         val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
         return@shouldStick owner !is GutsTank
     }
@@ -175,9 +175,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val rightFixture =
         Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.2f * ConstVals.PPM, ConstVals.PPM.toFloat()))
     rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
-    rightFixture.setRunnable(onBounce)
+    rightFixture.setReceiver(Receivers.RUNNABLE, onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-    rightFixture.setShouldStickToBlock shouldStick@{ _, blockFixture ->
+    rightFixture.setReceiver(Receivers.STICK_TO_BLOCK) shouldStick@{ _, blockFixture ->
         val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
         return@shouldStick owner !is GutsTank
     }

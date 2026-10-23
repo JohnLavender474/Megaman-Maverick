@@ -254,7 +254,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
             trunkFixture.drawingColor = Color.ORANGE
             debugShapes.add { trunkFixture }
 
-            if (trunkFixtureType == FixtureType.BODY) trunkFixture.setHitByProjectileReceiver { projectile ->
+            if (trunkFixtureType == FixtureType.BODY) trunkFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
                 if (state != CokeyroState.DIE && projectile.owner == megaman) startShaking()
             }
 

@@ -210,13 +210,13 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle().set(body))
         bodyFixture.putProperty(ConstKeys.GRAVITY_ROTATABLE, false)
-        bodyFixture.setForceAlterationForState(ProcessState.BEGIN) { alteration ->
+        bodyFixture.setReceiver(Receivers.FORCE_ALTERATION, ProcessState.BEGIN) { alteration ->
             val startVelocity = body.physics.velocity.cpy()
             GameLogger.debug(TAG, "start force alteration: startVel=$startVelocity")
             body.putProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", startVelocity)
             VelocityAlterator.alterate(body, alteration)
         }
-        bodyFixture.setForceAlterationForState(ProcessState.END) { _ ->
+        bodyFixture.setReceiver(Receivers.FORCE_ALTERATION, ProcessState.END) { _ ->
             val newVelocity = body.removeProperty("${ConstKeys.START}_${ConstKeys.VELOCITY}", Vector2::class)
             GameLogger.debug(TAG, "end force alteration: newVel=$newVelocity")
             newVelocity?.let { body.physics.velocity.set(it) }

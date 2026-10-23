@@ -155,8 +155,10 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         consumerFixture.attachedToBody = false
-        consumerFixture.setFilter { fixture -> fixture.getEntity().isAny(Megaman::class, AbstractEnemy::class) }
-        consumerFixture.setConsumer { _, fixture -> setToCrush() }
+        consumerFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getEntity().isAny(Megaman::class, AbstractEnemy::class)
+        }
+        consumerFixture.setReceiver(Receivers.CONSUMER) { _, fixture -> setToCrush() }
         body.addFixture(consumerFixture)
         consumerFixture.drawingColor = Color.CYAN
         debugShapes.add { consumerFixture }
@@ -178,8 +180,8 @@ class CeilingCrusher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
             )
         )
         bottomFixture.attachedToBody = false
-        bottomFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        bottomFixture.setConsumer { _, fixture -> setToStop(fixture) }
+        bottomFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.BLOCK }
+        bottomFixture.setReceiver(Receivers.CONSUMER) { _, fixture -> setToStop(fixture) }
         body.addFixture(bottomFixture)
         bottomFixture.drawingColor = Color.GREEN
         debugShapes.add { bottomFixture }

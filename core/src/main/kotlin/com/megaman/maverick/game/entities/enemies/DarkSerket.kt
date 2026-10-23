@@ -269,7 +269,7 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         // This is set to prevent the scorpion from sinking in quick sand due to the "feet-rise-sink block" falling.
         // However, setting this to false makes it so that the scorpion's feet won't "stick" to any blocks. If this
         // becomes an issue, then "STICK_TO_BLICK" will need to be a callback instead of a boolean flag.
-        feetFixture.setShouldStickToBlock(false)
+        feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> false }
         body.addFixture(feetFixture)
         feetFixture.drawingColor = Color.GRAY
         body.addFixture(feetFixture)
@@ -325,8 +325,10 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
             (-0.25f * ConstVals.PPM) - (body.getWidth() / 2f),
             -body.getHeight() / 2f
         )
-        leftFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
-        leftFootFixture.setConsumer { _, fixture ->
+        leftFootFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
+        }
+        leftFootFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> leftFootFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> leftFootFixture.putProperty(ConstKeys.DEATH, true)
@@ -344,8 +346,10 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
             (0.25f * ConstVals.PPM) + (body.getWidth() / 2f),
             -body.getHeight() / 2f
         )
-        rightFootFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH) }
-        rightFootFixture.setConsumer { _, fixture ->
+        rightFootFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
+        }
+        rightFootFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> rightFootFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> rightFootFixture.putProperty(ConstKeys.DEATH, true)

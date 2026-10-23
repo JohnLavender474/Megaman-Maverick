@@ -173,7 +173,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment.x = -0.125f * ConstVals.PPM
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.setHitByShield { _, _ -> disintegrating = true }
+        leftFixture.setReceiver(Receivers.HIT_BY_SHIELD) { _, _ -> disintegrating = true }
         body.addFixture(leftFixture)
         debugShapes.add { leftFixture }
 
@@ -181,7 +181,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.offsetFromBodyAttachment.x = 0.125f * ConstVals.PPM
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.setHitByShield { _, _ -> disintegrating = true }
+        rightFixture.setReceiver(Receivers.HIT_BY_SHIELD) { _, _ -> disintegrating = true }
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture }
 

@@ -293,8 +293,10 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
             state = BatState.HANGING
         }
-        headFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ -> hitHeadOnBlock.invoke(block) }
-        headFixture.setHitByBlockReceiver(ProcessState.CONTINUE) { block, _ -> hitHeadOnBlock.invoke(block) }
+        headFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { block, _ -> hitHeadOnBlock.invoke(block) }
+        headFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.CONTINUE) { block, _ ->
+            hitHeadOnBlock.invoke(block)
+        }
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         body.addFixture(headFixture)
 

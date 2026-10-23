@@ -301,14 +301,14 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
             FixtureType.CONSUMER,
             GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.5f * ConstVals.PPM)
         )
-        triggerFixture.setFilter filter@{ fixture ->
+        triggerFixture.setReceiver(Receivers.FILTER) filter@{ fixture ->
             return@filter when (direction) {
                 Direction.UP -> fixture.getType() == FixtureType.FEET
                 Direction.DOWN -> fixture.getType() == FixtureType.HEAD
                 Direction.LEFT, Direction.RIGHT -> fixture.getType() == FixtureType.SIDE
             }
         }
-        triggerFixture.setConsumer { processState, fixture ->
+        triggerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             if (processState == ProcessState.BEGIN) trigger(fixture.getEntity() as IBodyEntity)
         }
         triggerFixture.offsetFromBodyAttachment.y = (body.getHeight() / 2f) + ConstVals.PPM

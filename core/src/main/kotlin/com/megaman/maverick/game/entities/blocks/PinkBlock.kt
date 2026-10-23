@@ -14,8 +14,9 @@ import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setEntity
-import com.megaman.maverick.game.world.body.setHitByExplosionReceiver
+import com.megaman.maverick.game.world.body.setReceiver
 
 class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
 
@@ -46,7 +47,7 @@ class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
         damageableFixture.setEntity(this)
         body.addFixture(damageableFixture)
 
-        blockFixture.setHitByExplosionReceiver {
+        blockFixture.setReceiver(Receivers.HIT_BY_EXPLOSION) {
             if (it is WhiteBurst &&
                 it.owner is Laser &&
                 (!heartTankBlock || (it.owner as Laser).owner is Megaman)

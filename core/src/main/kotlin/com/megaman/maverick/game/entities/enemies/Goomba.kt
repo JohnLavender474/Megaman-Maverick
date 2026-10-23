@@ -167,7 +167,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
-        headFixture.setHitByFeetReceiver(ProcessState.BEGIN) { feet, _ ->
+        headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
             if (!smashed && !knockedToDeath && feet.getEntity() == megaman) {
                 smashed = true
 

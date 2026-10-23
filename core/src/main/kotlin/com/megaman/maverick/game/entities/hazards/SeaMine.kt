@@ -162,7 +162,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         debugShapes.add { body }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameCircle().setRadius(0.5f * ConstVals.PPM))
-        bodyFixture.setHitByBodyReceiver { _, state -> if (state == ProcessState.BEGIN) trigger() }
+        bodyFixture.setReceiver(Receivers.HIT_BY_BODY) { _, state -> if (state == ProcessState.BEGIN) trigger() }
         debugShapes.add { bodyFixture }
 
         val damagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(0.55f * ConstVals.PPM))
@@ -170,7 +170,7 @@ class SeaMine(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IS
         debugShapes.add { damagerFixture }
 
         val shieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(0.55f * ConstVals.PPM))
-        shieldFixture.setHitByProjectileReceiver { trigger() }
+        shieldFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { trigger() }
         body.addFixture(shieldFixture)
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

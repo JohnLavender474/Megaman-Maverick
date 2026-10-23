@@ -120,7 +120,7 @@ class SphinxBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
             )
         )
         feetFixture.offsetFromBodyAttachment.y = -0.675f * ConstVals.PPM
-        feetFixture.setShouldStickToBlock(false)
+        feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> false }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture}
 

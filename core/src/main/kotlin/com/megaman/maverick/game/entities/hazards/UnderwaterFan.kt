@@ -218,9 +218,9 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         val blowFixture = Fixture(body, FixtureType.FORCE, forceBounds)
         blowFixture.attachedToBody = false
-        blowFixture.setVelocityAlteration { fixture, delta, _ ->
+        blowFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity() as IBodyEntity
-            if (!ENTITIES_TO_BLOW.contains(entity::class)) return@setVelocityAlteration VelocityAlteration.addNone()
+            if (!ENTITIES_TO_BLOW.contains(entity::class)) return@setReceiver VelocityAlteration.addNone()
 
             val isMax = when (direction) {
                 Direction.UP -> entity.body.physics.velocity.y >= MAX_FORCE_TO_APPLY * ConstVals.PPM
@@ -228,7 +228,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
                 Direction.LEFT -> entity.body.physics.velocity.x <= -MAX_FORCE_TO_APPLY * ConstVals.PPM
                 Direction.RIGHT -> entity.body.physics.velocity.x >= MAX_FORCE_TO_APPLY * ConstVals.PPM
             }
-            if (isMax) return@setVelocityAlteration VelocityAlteration.addNone()
+            if (isMax) return@setReceiver VelocityAlteration.addNone()
 
             positionSorter.clear()
             Position.getCardinalPositions().forEach { cardinal ->
@@ -253,7 +253,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
             // game.setDebugText("${scalar.toInt()}: ${force.toInt()}")
 
-            return@setVelocityAlteration VelocityAlteration.add(force, direction)
+            return@setReceiver VelocityAlteration.add(force, direction)
         }
         body.addFixture(blowFixture)
         blowFixture.drawingColor = Color.PINK

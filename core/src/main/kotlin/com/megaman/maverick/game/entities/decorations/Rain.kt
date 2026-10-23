@@ -190,10 +190,10 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
         body.physics.applyFrictionY = false
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByBlockReceiver(ProcessState.BEGIN) { block, _ ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { block, _ ->
             if (!ignoreIds.contains(block.id)) splash()
         }
-        bodyFixture.setHitByBodyReceiver receiver@{ it, state ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_BODY) receiver@{ it, state ->
             val mapObjId = (it as MegaGameEntity).id
             if (state == ProcessState.BEGIN &&
                 !ignoreIds.contains(mapObjId) &&

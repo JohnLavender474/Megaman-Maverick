@@ -216,16 +216,16 @@ class Coldier(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity,
             FixtureType.FORCE,
             GameRectangle().setSize(10f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
-        blowFixture.setVelocityAlteration { fixture, delta, _ ->
+        blowFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity() as IBodyEntity
-            if (entity != megaman) return@setVelocityAlteration VelocityAlteration.addNone()
+            if (entity != megaman) return@setReceiver VelocityAlteration.addNone()
 
             if ((isFacing(Facing.LEFT) && entity.body.physics.velocity.x <= -BLOW_MAX * ConstVals.PPM) ||
                 (isFacing(Facing.RIGHT) && entity.body.physics.velocity.x >= BLOW_MAX * ConstVals.PPM)
-            ) return@setVelocityAlteration VelocityAlteration.addNone()
+            ) return@setReceiver VelocityAlteration.addNone()
 
             val force = blowForce * ConstVals.PPM * facing.value * delta
-            return@setVelocityAlteration VelocityAlteration.add(force, 0f)
+            return@setReceiver VelocityAlteration.add(force, 0f)
         }
         body.addFixture(blowFixture)
         blowFixture.drawingColor = Color.DARK_GRAY

@@ -69,8 +69,10 @@ class FrozenBlock(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity {
 
         val consumerBounds = GameRectangle()
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, consumerBounds)
-        consumerFixture.setFilter { it.getType() == FixtureType.DEATH && it.getEntity() is RisingLavaRiver }
-        consumerFixture.setConsumer { _, _ -> smokePuffAndDie() }
+        consumerFixture.setReceiver(Receivers.FILTER) {
+            it.getType() == FixtureType.DEATH && it.getEntity() is RisingLavaRiver
+        }
+        consumerFixture.setReceiver(Receivers.CONSUMER) { _, _ -> smokePuffAndDie() }
         body.addFixture(consumerFixture)
 
         val shieldBounds = GameRectangle()

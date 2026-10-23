@@ -271,7 +271,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             FixtureType.SHIELD,
             GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
-        shieldFixture1.setHitByProjectileReceiver { projectile ->
+        shieldFixture1.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (projectile.owner == megaman) {
                 shield1Timer.reset()
                 if (shield1Invincible.isFinished()) {
@@ -294,7 +294,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             FixtureType.SHIELD,
             GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
-        shieldFixture2.setHitByProjectileReceiver { projectile ->
+        shieldFixture2.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (projectile.owner == megaman) {
                 shield2Timer.reset()
                 if (shield2Invincible.isFinished()) {
@@ -313,14 +313,14 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
         debugShapes.add { shieldFixture2 }
 
         shieldDamager1 = Fixture(body, FixtureType.DAMAGER, GameRectangle())
-        shieldDamager1.setHitByDamageableReceiver { damageable, _ ->
+        shieldDamager1.setReceiver(Receivers.HIT_BY_DAMAGEABLE) { damageable, _ ->
             if (damageable == megaman) shield1Timer.reset()
         }
         shieldDamager1.attachedToBody = false
         body.addFixture(shieldDamager1)
 
         shieldDamager2 = Fixture(body, FixtureType.DAMAGER, GameRectangle())
-        shieldDamager2.setHitByDamageableReceiver { damageable, _ ->
+        shieldDamager2.setReceiver(Receivers.HIT_BY_DAMAGEABLE) { damageable, _ ->
             if (damageable == megaman) shield2Timer.reset()
         }
         shieldDamager2.attachedToBody = false

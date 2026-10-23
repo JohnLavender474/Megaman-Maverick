@@ -198,7 +198,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
             )
         )
         leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
-        leftFixture.setRunnable(onBounce)
+        leftFixture.setReceiver(Receivers.RUNNABLE, onBounce)
         leftFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -0.25f * ConstVals.PPM)
         body.addFixture(leftFixture)
         debugShapes.add { leftFixture }
@@ -206,7 +206,7 @@ class CartinJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.5f * ConstVals.PPM))
         rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
-        rightFixture.setRunnable(onBounce)
+        rightFixture.setReceiver(Receivers.RUNNABLE, onBounce)
         rightFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -0.25f * ConstVals.PPM)
         body.addFixture(rightFixture)
         debugShapes.add { rightFixture }

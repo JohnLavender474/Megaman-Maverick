@@ -228,8 +228,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         val leftConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
         leftConsumerFixture.offsetFromBodyAttachment.set(-0.75f, -0.75f).scl(ConstVals.PPM.toFloat())
-        leftConsumerFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.DEATH, FixtureType.BLOCK) }
-        leftConsumerFixture.setConsumer { _, fixture ->
+        leftConsumerFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.DEATH, FixtureType.BLOCK)
+        }
+        leftConsumerFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> leftConsumerFixture.putProperty(ConstKeys.DEATH, true)
                 FixtureType.BLOCK -> leftConsumerFixture.putProperty(ConstKeys.BLOCK, true)
@@ -240,8 +242,10 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         val rightConsumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.2f * ConstVals.PPM))
         rightConsumerFixture.offsetFromBodyAttachment.set(0.75f * ConstVals.PPM, -0.75f * ConstVals.PPM)
-        rightConsumerFixture.setFilter { fixture -> fixture.getType().equalsAny(FixtureType.DEATH, FixtureType.BLOCK) }
-        rightConsumerFixture.setConsumer { _, fixture ->
+        rightConsumerFixture.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getType().equalsAny(FixtureType.DEATH, FixtureType.BLOCK)
+        }
+        rightConsumerFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.DEATH -> rightConsumerFixture.putProperty(ConstKeys.DEATH, true)
                 FixtureType.BLOCK -> rightConsumerFixture.putProperty(ConstKeys.BLOCK, true)

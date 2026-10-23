@@ -184,8 +184,12 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         val rayScanner =
             Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 4f * ConstVals.PPM))
         rayScanner.offsetFromBodyAttachment.y = -body.getHeight()
-        rayScanner.setFilter { fixture -> fixture.getEntity() == megaman && fixture.getType() == FixtureType.DAMAGEABLE }
-        rayScanner.setConsumer { processState, _ -> if (rayDelay.isFinished() && !raying) startRay() }
+        rayScanner.setReceiver(Receivers.FILTER) { fixture ->
+            fixture.getEntity() == megaman && fixture.getType() == FixtureType.DAMAGEABLE
+        }
+        rayScanner.setReceiver(Receivers.CONSUMER) { processState, _ ->
+            if (rayDelay.isFinished() && !raying) startRay()
+        }
         body.addFixture(rayScanner)
         rayScanner.drawingColor = Color.GREEN
         debugShapes.add { rayScanner }

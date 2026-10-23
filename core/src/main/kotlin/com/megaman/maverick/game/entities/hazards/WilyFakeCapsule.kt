@@ -194,7 +194,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             body, FixtureType.BODY,
             GameRectangle().setSize(3f * ConstVals.PPM, 2.5f * ConstVals.PPM)
         )
-        bodyFixture.setHitByProjectileReceiver { projectile ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (projectile.owner == megaman) bounceTimer.reset()
         }
         bodyFixture.offsetFromBodyAttachment.y = -0.25f * ConstVals.PPM
@@ -227,7 +227,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             FixtureType.BODY,
             GameRectangle().setSize(6f * ConstVals.PPM, 2f * ConstVals.PPM)
         )
-        topBodyFixture.setHitByProjectileReceiver { projectile ->
+        topBodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (projectile.owner == megaman) bounceTimer.reset()
         }
         topBodyFixture.offsetFromBodyAttachment.y = 1.5f * ConstVals.PPM
@@ -240,7 +240,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         debugShapes.add { leftCannonDamager }
 
         val leftCannonBody = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1f * ConstVals.PPM))
-        leftCannonBody.setHitByProjectileReceiver { projectile ->
+        leftCannonBody.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (projectile.owner == megaman) bounceTimer.reset()
         }
         leftCannonBody.offsetFromBodyAttachment.set(-2f, 0.5f).scl(ConstVals.PPM.toFloat())
@@ -248,7 +248,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         debugShapes.add { leftCannonBody }
 
         val rightCannonBody = Fixture(body, FixtureType.BODY, GameCircle().setRadius(1f * ConstVals.PPM))
-        rightCannonBody.setHitByProjectileReceiver { projectile ->
+        rightCannonBody.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (projectile.owner == megaman) bounceTimer.reset()
         }
         rightCannonBody.offsetFromBodyAttachment.set(2f, 0.5f).scl(ConstVals.PPM.toFloat())

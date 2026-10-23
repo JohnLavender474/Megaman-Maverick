@@ -272,7 +272,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
         val leftFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
-        leftFixture.setHitByBodyReceiver { entity, processState ->
+        leftFixture.setReceiver(Receivers.HIT_BY_BODY) { entity, processState ->
             if (processState.equalsAny(
                     ProcessState.BEGIN,
                     ProcessState.CONTINUE
@@ -287,7 +287,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
         val rightFixture =
             Fixture(body, FixtureType.SIDE, GameRectangle().setSize(0.1f * ConstVals.PPM, 0.75f * ConstVals.PPM))
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
-        rightFixture.setHitByBodyReceiver { entity, processState ->
+        rightFixture.setReceiver(Receivers.HIT_BY_BODY) { entity, processState ->
             if (processState.equalsAny(
                     ProcessState.BEGIN,
                     ProcessState.CONTINUE

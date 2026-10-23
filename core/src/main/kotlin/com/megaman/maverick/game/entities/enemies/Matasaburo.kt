@@ -65,22 +65,22 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             FixtureType.FORCE,
             GameRectangle().setSize(10f * ConstVals.PPM, 1.25f * ConstVals.PPM)
         )
-        blowFixture.setVelocityAlteration { fixture, delta, _ ->
+        blowFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity()
-            if (entity !is Megaman) return@setVelocityAlteration VelocityAlteration.addNone()
+            if (entity !is Megaman) return@setReceiver VelocityAlteration.addNone()
 
             /*
             TODO: for now, ONLY apply force to Megaman and no other entities
-            if (entity is AbstractEnemy) return@setVelocityAlteration VelocityAlteration.addNone()
+            if (entity is AbstractEnemy) return@setReceiver VelocityAlteration.addNone()
             if (entity is AbstractProjectile) entity.owner = null
              */
 
             if ((isFacing(Facing.LEFT) && entity.body.physics.velocity.x <= -BLOW_MAX * ConstVals.PPM) ||
                 (isFacing(Facing.RIGHT) && entity.body.physics.velocity.x >= BLOW_MAX * ConstVals.PPM)
-            ) return@setVelocityAlteration VelocityAlteration.addNone()
+            ) return@setReceiver VelocityAlteration.addNone()
 
             val force = BLOW_FORCE * ConstVals.PPM * facing.value
-            return@setVelocityAlteration VelocityAlteration.add(force * delta, 0f)
+            return@setReceiver VelocityAlteration.add(force * delta, 0f)
         }
         body.addFixture(blowFixture)
 

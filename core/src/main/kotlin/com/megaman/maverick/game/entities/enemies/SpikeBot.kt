@@ -253,16 +253,16 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         debugShapes.add { rightSideFixture }
 
         val leftFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        leftFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        leftFootFixture.setConsumer { _, _ -> body.putProperty(LEFT_FOOT, true) }
+        leftFootFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.BLOCK }
+        leftFootFixture.setReceiver(Receivers.CONSUMER) { _, _ -> body.putProperty(LEFT_FOOT, true) }
         leftFootFixture.offsetFromBodyAttachment.set(-body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(leftFootFixture)
         leftFootFixture.drawingColor = Color.ORANGE
         debugShapes.add { leftFootFixture }
 
         val rightFootFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        rightFootFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        rightFootFixture.setConsumer { _, _ -> body.putProperty(RIGHT_FOOT, true) }
+        rightFootFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.BLOCK }
+        rightFootFixture.setReceiver(Receivers.CONSUMER) { _, _ -> body.putProperty(RIGHT_FOOT, true) }
         rightFootFixture.offsetFromBodyAttachment.set(body.getWidth() / 2f, -body.getHeight() / 2f)
         body.addFixture(rightFootFixture)
         rightFootFixture.drawingColor = Color.ORANGE

@@ -240,8 +240,8 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         shapes.add { shieldFixture }
 
         val triggerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
-        triggerFixture.setFilter { fixture -> fixture.getType() == FixtureType.PLAYER }
-        triggerFixture.setConsumer { processState, fixture ->
+        triggerFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.PLAYER }
+        triggerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             if (hasShield && processState == ProcessState.BEGIN) setToThrowShield = true
         }
         triggerFixture.attachedToBody = false

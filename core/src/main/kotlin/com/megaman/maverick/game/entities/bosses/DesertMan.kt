@@ -366,7 +366,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -BODY_HEIGHT * ConstVals.PPM / 2f
-        feetFixture.setShouldStickToBlock(false)
+        feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> false }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 

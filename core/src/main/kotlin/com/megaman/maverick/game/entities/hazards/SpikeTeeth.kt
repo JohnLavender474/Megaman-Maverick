@@ -108,17 +108,17 @@ class SpikeTeeth(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         debugShapes.add { body.getBounds() }
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
-        bodyFixture.setHitByBodyReceiver { entity, _ ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_BODY) { entity, _ ->
             if (entity is SpikeTeeth && entity.body.getY() < body.getY()) explodeAndDie()
         }
-        bodyFixture.setHitByProjectileReceiver { projectile ->
+        bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
             if (PROJECTILES.contains(projectile.getTag())) explodeAndDie()
         }
         body.addFixture(bodyFixture)
 
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM))
-        feetFixture.setHitByBlockReceiver(ProcessState.BEGIN) { _, _ ->
+        feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
             requestToPlaySound(SoundAsset.CRASH_BOMBER_SOUND, false)
         }
         feetFixture.bodyAttachmentPosition = Position.BOTTOM_CENTER

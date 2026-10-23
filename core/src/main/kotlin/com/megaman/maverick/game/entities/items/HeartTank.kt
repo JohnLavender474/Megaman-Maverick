@@ -42,9 +42,10 @@ import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.world.body.setFilter
+import com.megaman.maverick.game.world.body.setReceiver
 
 class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, ILightSource {
 
@@ -108,7 +109,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             if (key.toString().contains(ConstKeys.SPAWN) && value is RectangleMapObject) spawnOnContact.add(value)
         }
 
-        body.fixtures[FixtureType.FEET].first().setFilter filter@{ fixture ->
+        body.fixtures[FixtureType.FEET].first().setReceiver(Receivers.FILTER) filter@{ fixture ->
             val entity = fixture.getEntity()
             return@filter entity !is FeetRiseSinkBlock
         }

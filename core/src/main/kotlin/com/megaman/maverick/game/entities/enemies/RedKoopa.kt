@@ -197,7 +197,7 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val headFixture =
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
-        headFixture.setHitByFeetReceiver(ProcessState.BEGIN) { feet, _ ->
+        headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
             if (feet.getEntity() == megaman && megaman.body.physics.velocity.y <= 0f && !knockedToDeath) {
                 destroy()
 
@@ -236,10 +236,10 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val leftScannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.25f * ConstVals.PPM))
         leftScannerFixture.offsetFromBodyAttachment.set(-0.75f * ConstVals.PPM, -body.getHeight() / 2f)
-        leftScannerFixture.setFilter filter@{
+        leftScannerFixture.setReceiver(Receivers.FILTER) filter@{
             return@filter it.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
         }
-        leftScannerFixture.setConsumer { _, fixture ->
+        leftScannerFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> leftScannerFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> leftScannerFixture.putProperty(ConstKeys.DEATH, true)
@@ -251,10 +251,10 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
 
         val rightScannerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.25f * ConstVals.PPM))
         rightScannerFixture.offsetFromBodyAttachment.set(0.75f * ConstVals.PPM, -body.getHeight() / 2f)
-        rightScannerFixture.setFilter filter@{
+        rightScannerFixture.setReceiver(Receivers.FILTER) filter@{
             return@filter it.getType().equalsAny(FixtureType.BLOCK, FixtureType.DEATH)
         }
-        rightScannerFixture.setConsumer { _, fixture ->
+        rightScannerFixture.setReceiver(Receivers.CONSUMER) { _, fixture ->
             when (fixture.getType()) {
                 FixtureType.BLOCK -> rightScannerFixture.putProperty(ConstKeys.BLOCK, true)
                 FixtureType.DEATH -> rightScannerFixture.putProperty(ConstKeys.DEATH, true)

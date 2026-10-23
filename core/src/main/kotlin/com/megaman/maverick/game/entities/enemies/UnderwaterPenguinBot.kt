@@ -138,8 +138,8 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size
         debugShapes.add { body.getBounds() }
 
         val noseFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(0.1f * ConstVals.PPM))
-        noseFixture.setFilter { fixture -> fixture.getType() == FixtureType.BLOCK }
-        noseFixture.setConsumer { processState, fixture ->
+        noseFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.BLOCK }
+        noseFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             if (state == UnderwaterPenguinBotState.SWIM && processState == ProcessState.BEGIN) hitNose()
         }
         body.addFixture(noseFixture)

@@ -126,8 +126,8 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.physics.applyFrictionY = false
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER)
-        consumerFixture.setFilter { fixture -> fixture.getType() == FixtureType.BODY }
-        consumerFixture.setConsumer { state, fixture ->
+        consumerFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.BODY }
+        consumerFixture.setReceiver(Receivers.CONSUMER) { state, fixture ->
             val entity = fixture.getEntity() as IBodyEntity
 
             when (state) {
@@ -144,9 +144,9 @@ class ToxicWaterfall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
         body.addFixture(consumerFixture)
 
         val forceFixture = Fixture(body, FixtureType.FORCE)
-        forceFixture.setVelocityAlteration { fixture, delta, _ ->
+        forceFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity()
-            return@setVelocityAlteration when {
+            return@setReceiver when {
                 !entity.isAny(Megaman::class, AbstractEnemy::class) -> VelocityAlteration.addNone()
                 else -> VelocityAlteration.add(0f, -FORCE * ConstVals.PPM * delta)
             }

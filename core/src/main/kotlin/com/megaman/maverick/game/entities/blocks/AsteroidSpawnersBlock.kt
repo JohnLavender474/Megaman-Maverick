@@ -9,7 +9,8 @@ import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.world.body.FixtureLabel
-import com.megaman.maverick.game.world.body.setExceptionForNoProjectileCollision
+import com.megaman.maverick.game.world.body.Receivers
+import com.megaman.maverick.game.world.body.setReceiver
 
 class AsteroidSpawnersBlock(game: MegamanMaverickGame) : Block(game) {
 
@@ -26,7 +27,7 @@ class AsteroidSpawnersBlock(game: MegamanMaverickGame) : Block(game) {
         spawnProps.put(ConstKeys.BLOCK_FILTERS, objectSetOf(Asteroid.TAG))
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        blockFixture.setExceptionForNoProjectileCollision { projectile, _ ->
+        blockFixture.setReceiver(Receivers.NO_PROJECTILE_COLLISION_EXCEPTION) { projectile, _ ->
             isExceptionForNoProjectileCollision(projectile)
         }
     }
