@@ -154,6 +154,12 @@ alone does not need a new approval, but write the reason in the process log.
 
 ### During the branch
 
+- Write code only when other production code calls it. A test alone is not a caller. Do not add
+  a type, function, helper, overload or field because a design, a spec or a later branch may need
+  it. Until a real caller exists, describe it in the docs (`SCOPE.md`, the item `NOTES.md`), or
+  leave a `TODO` comment at the place where it will be needed. At the scope and plan steps, list
+  each new API with its first caller in the branch; drop any API that has none. (Lessons from
+  `029a`: `ComponentKey` and `nearestTo` were added with no caller and later removed.)
 - On the branch, write docs only inside the branch folder. Do not edit `ITEMS.md`, `ITEM.md`,
   the item `NOTES.md` or other top-level files on the branch. Then two active branches cannot
   conflict in the docs.

@@ -341,3 +341,13 @@ newest entry at the bottom.
 - Follow-up: the engine helpers `forEachPresent`, `firstOrNull` and `minByOrNull` have no game caller yet; they
   are part of the standard set that the owner asked the engine base to give out of the box (decision 2026-10-23),
   so they stay. `forEach` and `all` get their first callers in `029c`.
+
+## 2026-10-23 — master (docs)
+
+- Summary: `CLAUDE.md` ("During the branch") has a new rule: write code only when other production code calls
+  it; a test is not a caller. Until a real caller exists, describe the API in the docs or leave a `TODO` at the
+  place where it will be needed. At the scope and plan steps, list each new API with its first caller. The owner
+  asked for this after `ComponentKey`, `nearestTo` and three engine players helpers turned out to have no caller.
+- Contract check: not needed (docs only).
+- Follow-up: the engine helpers `forEachPresent`, `firstOrNull` and `minByOrNull` have no game caller; the owner
+  decides whether to remove them now.
