@@ -1,10 +1,10 @@
 # Contract: mega-refactor-014d-contact-receivers
 
-The gameplay that this branch must not change, and how to check it. This is a draft written ahead
-of time on `master`. The user has not approved it yet.
+The gameplay that this branch must not change, and how to check it. This was written ahead of time
+on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 This branch moves player-specific code out of the contact rules and the collision handler into
 Megaman, and calls it at the same points through receivers, capabilities and body keys. Megaman
