@@ -12,6 +12,8 @@ import com.maverick.game.engine.common.interfaces.IFinishable
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -19,6 +21,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.slotOf
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -29,6 +32,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -48,6 +52,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     }
 
     private val megaman = game.megaman
+
+    private fun playerSlot() = game.players.slotOf(megaman)!!
 
     private val blinkTimer = Timer(BLINK_READY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
@@ -110,7 +116,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         megaman.body.physics.gravityOn = false
         megaman.setAllBehaviorsAllowed(false)
 
-        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN_INIT))
+        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
@@ -193,7 +199,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             megaman.setAllBehaviorsAllowed(true)
 
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-            game.eventsMan.submitEvent(Event(EventType.PLAYER_READY))
+            game.eventsMan.submitEvent(Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo playerSlot())))
 
             game.audioMan.playSound(SoundAsset.BEAM_SOUND)
 

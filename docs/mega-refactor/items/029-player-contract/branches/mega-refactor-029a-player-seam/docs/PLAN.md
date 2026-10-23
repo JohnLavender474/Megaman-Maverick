@@ -21,14 +21,14 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
   `ITEM.md`; set the branch `process-log.md` state to `active`. Then `git worktree add -b
   mega-refactor-029a-player-seam .worktrees/mega-refactor-029a-player-seam master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 454 engine, 95 core) and the warning count
   (expected 114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Test level entry and test entity
 
@@ -43,7 +43,7 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
     level has one, as `startExtraLevel` does (owner decision (a), 2026-10-23; a small dev-tool QoL
     change, logged in the process log).
 - Check: build and tests pass. `TestStunPulser` is in no TMX file yet.
-- Done: no
+- Done: yes
 
 ### 4. Test map (subagent)
 
@@ -61,7 +61,7 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
 - Check: a launch of each room (`./run-game-alpha.sh --level REFACTOR_TEST_029 --room <room>`) shows
   no exception and the player in the room. Then the owner checks each room on this baseline code
   and the results go in the process log. The owner may fix the map by hand.
-- Done: no
+- Done: yes
 
 ### 5. Engine player types
 
@@ -72,7 +72,7 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
   `IGameEntity` and on `PlayerView`.
 - Check: engine unit tests: `require` returns the component and fails with the message;
   `ComponentKey` lookup gives the component or null. Build and tests pass.
-- Done: no
+- Done: yes
 
 ### 6. Engine players service
 
@@ -85,7 +85,7 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
   of an empty slot; slot order of `forEach` with a gap; the `present` filter; `minByOrNull` tie; `any`,
   `all`, `firstOrNull`; `slotOf`; a custom extension helper declared in the test. Build and tests
   pass.
-- Done: no
+- Done: yes
 
 ### 7. Core view, service and entry point
 
@@ -100,7 +100,7 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
 - Check: core tests: `MegaPlayer` fails without a `BodyComponent`, and gives the body through the
   component (a new `Body` set on the component is seen). Build and tests pass; a launch shows no
   exception.
-- Done: no
+- Done: yes
 
 ### 8. Self-references
 
@@ -112,7 +112,7 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
 - Check: the contract grep for global `megaman` reads in the player package finds none. A review
   shows each change as `megaman` to `this` (or to the owner in the trail sprite). Build and tests
   pass. Launch `REFACTOR_TEST_029`, room `trail`: trail sprites show.
-- Done: no
+- Done: yes
 
 ### 9. Player identity on the events
 
@@ -128,21 +128,21 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
 - Check: the contract grep and review of the submit sites. A core test, if practical with the relaxed
   game mock: `Megaman` ignores a `STUN_PLAYER` whose `SLOTS` does not hold its slot. Build and tests
   pass. Launch `REFACTOR_TEST_029`, room `stun`: Megaman bounces on the floor.
-- Done: no
+- Done: yes
 
 ### 10. Contract checks
 
 - Changes: none, unless a check fails.
 - Check: a clean build; the automated checks in `CONTRACT.md`; the owner's play test of the test
   rooms, `SMB3_1` and `TIMBER_WOMAN`. Write the results in the process log.
-- Done: no
+- Done: yes
 
 ### 11. Merge
 
 - Changes: the merge steps in `docs/mega-refactor/CLAUDE.md` ("Branch merge"), after the owner's
   explicit approval.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes
 
 ## Decisions
 

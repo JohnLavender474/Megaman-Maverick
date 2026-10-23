@@ -37,6 +37,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.registeredSlots
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -54,6 +55,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
@@ -61,6 +63,7 @@ import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -806,7 +809,10 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         game.eventsMan.submitEvent(
             Event(
                 EventType.STUN_PLAYER,
-                props(ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_IF_ON_SURFACE)
+                props(
+                    ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_IF_ON_SURFACE,
+                    PlayerEventKeys.SLOTS pairTo players.registeredSlots()
+                )
             )
         )
 

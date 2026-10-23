@@ -22,7 +22,6 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.bosses.GutsTank
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -189,10 +188,10 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     headFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
         if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) {
             val shouldMakeBumpSound = when (direction) {
-                Direction.UP -> megaman.body.physics.velocity.y >= 0f
-                Direction.DOWN -> megaman.body.physics.velocity.y <= 0f
-                Direction.LEFT -> megaman.body.physics.velocity.x <= 0f
-                Direction.RIGHT -> megaman.body.physics.velocity.x >= 0f
+                Direction.UP -> body.physics.velocity.y >= 0f
+                Direction.DOWN -> body.physics.velocity.y <= 0f
+                Direction.LEFT -> body.physics.velocity.x <= 0f
+                Direction.RIGHT -> body.physics.velocity.x >= 0f
             }
             if (shouldMakeBumpSound) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
         }

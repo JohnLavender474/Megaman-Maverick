@@ -1,0 +1,74 @@
+package com.megaman.maverick.game.entities.megaman
+
+import com.badlogic.gdx.utils.Array
+import com.maverick.game.engine.GameEngine
+import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.world.body.Body
+import com.maverick.game.engine.world.body.BodyComponent
+import com.maverick.game.engine.world.body.BodyType
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.utils.misc.StunType
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.shouldBe
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.unmockkAll
+
+class MegamanStunTargetTest : DescribeSpec({
+
+    lateinit var megaman: Megaman
+
+    beforeEach {
+        val game = mockk<MegamanMaverickGame>(relaxed = true)
+        every { game.engine } returns mockk<GameEngine>(relaxed = true)
+
+        megaman = Megaman(game)
+        megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
+
+        val players = MegaPlayers(2)
+        players.register(PlayerSlot(0), megaman)
+        every { game.players } returns players
+
+        megaman.stunTimer.setToEnd()
+    }
+
+    afterEach { unmockkAll() }
+
+    fun stunEvent(targets: List<PlayerSlot>) = Event(
+        EventType.STUN_PLAYER,
+        props(
+            ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_ALWAYS,
+            PlayerEventKeys.SLOTS pairTo Array<PlayerSlot>().apply { targets.forEach { add(it) } }
+        )
+    )
+
+    describe("STUN_PLAYER") {
+        it("stuns Megaman when the targets hold his slot") {
+            megaman.facing = Facing.RIGHT
+
+            megaman.onEvent(stunEvent(listOf(PlayerSlot(1), PlayerSlot(0))))
+
+            megaman.stunned shouldBe true
+        }
+
+        it("is ignored when the targets do not hold Megaman's slot") {
+            megaman.onEvent(stunEvent(listOf(PlayerSlot(1))))
+
+            megaman.stunned shouldBe false
+        }
+
+        it("is ignored when the event has no targets") {
+            megaman.onEvent(Event(EventType.STUN_PLAYER, props(ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_ALWAYS)))
+
+            megaman.stunned shouldBe false
+        }
+    }
+})

@@ -13,6 +13,7 @@ import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.screens.ScreenEnum
 
 enum class LevelDefinition(
@@ -123,6 +124,15 @@ enum class LevelDefinition(
         tmxMapSource = "QuickRun.tmx",
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+    ),
+    REFACTOR_TEST_029(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "RefactorTest029.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
+        levelOverride = LevelOverride(
+            loadout = LoadoutOverride(weapons = setOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MOON_SCYTHES))
+        )
     ),
     SMB3_1(
         type = LevelType.MARIO_LEVEL,

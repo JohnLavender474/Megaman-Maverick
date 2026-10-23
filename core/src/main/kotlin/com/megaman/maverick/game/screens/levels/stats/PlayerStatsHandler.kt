@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.slotOf
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
@@ -25,6 +26,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 
 class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatable, IDrawable<Batch> {
 
@@ -131,7 +133,12 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 state.addHeartTank(heartTank)
 
                 eventsMan.submitEvent(
-                    Event(EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP))
+                    Event(
+                        EventType.ADD_PLAYER_HEALTH, props(
+                            ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP,
+                            PlayerEventKeys.SLOT pairTo megaman.game.players.slotOf(megaman)!!
+                        )
+                    )
                 )
 
                 engine.systems.forEach { it.on = true }

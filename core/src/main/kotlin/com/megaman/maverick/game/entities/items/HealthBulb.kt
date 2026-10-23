@@ -13,12 +13,15 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.slotOf
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 
 class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimatedEntity {
 
@@ -48,7 +51,10 @@ class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimate
         destroy()
         game.eventsMan.submitEvent(
             Event(
-                EventType.ADD_PLAYER_HEALTH, props(ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT)
+                EventType.ADD_PLAYER_HEALTH, props(
+                    ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT,
+                    PlayerEventKeys.SLOT pairTo players.slotOf(megaman)!!
+                )
             )
         )
     }

@@ -23,6 +23,7 @@ import com.maverick.game.engine.damage.IDamager
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.slotOf
 import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -51,6 +52,7 @@ import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinuePro
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
@@ -504,7 +506,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         removeProperty(ConstKeys.TELEPORTER)
 
-        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN))
+        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo players.slotOf(this)!!)))
     }
 
     override fun onDestroy() {
@@ -515,7 +517,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         val eventsMan = game.eventsMan
         eventsMan.removeListener(this)
-        eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED))
+        eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo players.slotOf(this)!!)))
 
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
 
@@ -603,6 +605,12 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             EventType.STUN_PLAYER -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER: called")
 
+                val targets = event.getProperty(PlayerEventKeys.SLOTS)
+                if (targets == null || !targets.contains(players.slotOf(this), false)) {
+                    GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER: Megaman is not a target: $targets")
+                    return
+                }
+
                 if (stunned) {
                     GameLogger.debug(
                         MEGAMAN_EVENT_LISTENER_TAG,
@@ -626,7 +634,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
                 // TODO: This assumes that Megaman's body is rotated UP.
                 //    Refactor this to support directionally dynamic bouncing.
-                megaman.body.physics.velocity.let {
+                body.physics.velocity.let {
                     it.x = MegamanValues.STUN_IMPULSE_X * ConstVals.PPM * movementScalar * -facing.value
                     it.y = MegamanValues.STUN_IMPULSE_Y * ConstVals.PPM
                 }
@@ -879,7 +887,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         }
 
         val trailSprite = MegaEntityFactory.fetch(MegamanTrailSpriteV2::class)!!
-        return trailSprite.spawn(props(ConstKeys.KEY pairTo animKey))
+        return trailSprite.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.KEY pairTo animKey))
     }
 
     private fun spawnBubble() {
@@ -926,11 +934,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     }
 
     override fun onAddHeartTank(heartTank: MegaHeartTank) {
-        megaman.getHealthPoints().max += MegaHeartTank.HEALTH_BUMP
+        getHealthPoints().max += MegaHeartTank.HEALTH_BUMP
     }
 
     override fun onRemoveHeartTank(heartTank: MegaHeartTank) {
-        megaman.getHealthPoints().max -= MegaHeartTank.HEALTH_BUMP
+        getHealthPoints().max -= MegaHeartTank.HEALTH_BUMP
     }
 
     override fun onAddCurrency(value: Int) {
@@ -987,7 +995,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         return health != temp
     }
 
-    fun translateAmmo(ammo: Int, weapon: MegamanWeapon = megaman.currentWeapon): Int {
+    fun translateAmmo(ammo: Int, weapon: MegamanWeapon = currentWeapon): Int {
         val remaining = weaponsHandler.translateAmmo(weapon, ammo)
         GameLogger.debug(TAG, "translateAmmo(): weapon=$weapon, ammo=$ammo, remaining=$remaining")
         return remaining

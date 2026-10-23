@@ -18,14 +18,17 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.slotOf
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
@@ -70,7 +73,10 @@ class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity
     override fun contactWithPlayer(megaman: Megaman) {
         GameLogger.debug(TAG, "contactWithPlayer()")
         destroy()
-        game.eventsMan.submitEvent(Event(EventType.ATTAIN_HEALTH_TANK, props(ConstKeys.VALUE pairTo healthTank)))
+        game.eventsMan.submitEvent(Event(
+                EventType.ATTAIN_HEALTH_TANK,
+                props(ConstKeys.VALUE pairTo healthTank, PlayerEventKeys.SLOT pairTo players.slotOf(megaman)!!)
+            ))
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {

@@ -13,7 +13,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -98,7 +97,7 @@ fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {
 fun Megaman.shouldHideSprite(): Boolean {
     if (frozen) return false
     if (!ready) return true
-    if (teleporting && megaman.getProperty(ConstKeys.TELEPORTER) !is PipePortal) return true
+    if (teleporting && getProperty(ConstKeys.TELEPORTER) !is PipePortal) return true
     return false
 }
 

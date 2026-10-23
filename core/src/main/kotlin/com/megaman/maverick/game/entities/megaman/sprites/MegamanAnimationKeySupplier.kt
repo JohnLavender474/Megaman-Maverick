@@ -9,7 +9,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -39,8 +38,8 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     damaged -> "damaged"
 
-    teleporting && megaman.getProperty(ConstKeys.TELEPORTER) is PipePortal -> {
-        val pipePortal = megaman.getProperty(ConstKeys.TELEPORTER) as PipePortal
+    teleporting && getProperty(ConstKeys.TELEPORTER) is PipePortal -> {
+        val pipePortal = getProperty(ConstKeys.TELEPORTER) as PipePortal
 
         val action = when {
             pipePortal.isEntering(this) -> "entering"
@@ -117,7 +116,7 @@ fun Megaman.amendKey(baseKey: String) = when {
     }
     baseKey == "jump" &&
         game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
-        megaman.currentWeapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.REACTOR_SHOT) -> {
+        currentWeapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.REACTOR_SHOT) -> {
         if (fullyCharged) "jump_down_charge_full"
         else if (halfCharged) "jump_down_charge_half"
         else "jump_down"

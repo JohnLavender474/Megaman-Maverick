@@ -22,6 +22,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.slotOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -33,9 +34,11 @@ import com.megaman.maverick.game.entities.blocks.FeetRiseSinkBlock
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toProps
@@ -145,7 +148,10 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             entity.spawn(props)
         }
 
-        game.eventsMan.submitEvent(Event(EventType.ATTAIN_HEART_TANK, props(ConstKeys.VALUE pairTo heartTank)))
+        game.eventsMan.submitEvent(Event(
+                EventType.ATTAIN_HEART_TANK,
+                props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo players.slotOf(megaman)!!)
+            ))
     }
 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {

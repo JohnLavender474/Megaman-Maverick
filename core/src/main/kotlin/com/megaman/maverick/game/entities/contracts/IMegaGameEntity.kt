@@ -21,5 +21,8 @@ interface IMegaGameEntity : ITaggable, ITypable<EntityType> {
 val IMegaGameEntity.megaman
     get() = game.megaman
 
+val IMegaGameEntity.players
+    get() = game.players
+
 fun IBodyEntity.overlapsGameCamera() =
     (this as MegaGameEntity).game.getGameCamera().getRotatedBounds().overlaps(body.getBounds())

@@ -59,6 +59,7 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
+import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.points.PointsSystem
 import com.maverick.game.engine.screens.IScreen
 import com.maverick.game.engine.screens.levels.tiledmap.TiledMapLoadResult
@@ -91,6 +92,7 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
+import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -205,6 +207,7 @@ class MegamanMaverickGame(
     lateinit var state: GameState
 
     lateinit var megaman: Megaman
+    lateinit var players: MegaPlayers
 
     var paused = false
         private set
@@ -395,6 +398,9 @@ class MegamanMaverickGame(
         // add megaman as a game state listener
         state.addListener(megaman)
 
+        players = MegaPlayers()
+        players.register(PlayerSlot(0), megaman)
+
         val levelScreen = MegaLevelScreen(this)
         levelScreen.init()
         screens.put(ScreenEnum.LEVEL_SCREEN.name, levelScreen)
@@ -422,7 +428,10 @@ class MegamanMaverickGame(
                 RunType.TEST -> startLevel(LevelDefinition.TEST_1)
             }
 
-            is LaunchStart.StartLevel -> startLevel(start.level)
+            is LaunchStart.StartLevel -> {
+                start.level.levelOverride?.let { applyLevelOverride(it) }
+                startLevel(start.level)
+            }
 
             is LaunchStart.OpenScreen -> {
                 if (!screens.containsKey(start.screen.name))

@@ -21,7 +21,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.levels.LevelType
@@ -276,7 +275,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                     BehaviorType.CLIMBING,
                     BehaviorType.JETPACKING,
                     BehaviorType.WALL_SLIDING,
-                ) || FacingUtils.isFacingBlock(megaman) ||
+                ) || FacingUtils.isFacingBlock(this@defineBehaviorsComponent) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
                 (currentWeapon != MegamanWeapon.RUSH_JET && bodyOverGround) ||
                 (currentWeapon == MegamanWeapon.RUSH_JET &&

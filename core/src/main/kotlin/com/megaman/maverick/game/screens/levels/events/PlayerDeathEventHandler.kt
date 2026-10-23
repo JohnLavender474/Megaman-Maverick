@@ -6,14 +6,18 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.slotOf
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -70,7 +74,9 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
             if (fadeout.isJustFinished()) {
                 GameLogger.debug(TAG, "update(): fade out just finished, submit PLAYER_DONE_DYIN event")
 
-                game.eventsMan.submitEvent(Event(EventType.PLAYER_DONE_DYIN))
+                game.eventsMan.submitEvent(
+                    Event(EventType.PLAYER_DONE_DYIN, props(PlayerEventKeys.SLOT pairTo game.players.slotOf(megaman)!!))
+                )
             }
         }
     }

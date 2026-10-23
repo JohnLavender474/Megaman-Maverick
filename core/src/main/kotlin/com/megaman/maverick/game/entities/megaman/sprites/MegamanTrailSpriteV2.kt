@@ -18,7 +18,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -45,33 +45,34 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
     }
 
     override fun onSpawn(spawnProps: Properties) {
+        val owner = spawnProps.get(ConstKeys.OWNER, Megaman::class)!!
         val rawAnimKey = when {
             spawnProps.containsKey(ConstKeys.KEY) -> spawnProps.get(ConstKeys.KEY, String::class)
-            else -> megaman.currentAnimKey
+            else -> owner.currentAnimKey
         }
         if (rawAnimKey == null) {
             GameLogger.error(TAG, "onSpawn(): destroying trail sprite because raw anim key is null")
             destroy()
             return
         }
-        this.animKey = "${megaman.currentWeapon.name.lowercase()}/$rawAnimKey"
+        this.animKey = "${owner.currentWeapon.name.lowercase()}/$rawAnimKey"
 
         super.onSpawn(spawnProps)
 
-        val position = DirectionPositionMapper.getInvertedPosition(megaman.getSpriteDirection())
-        val spawn = megaman.body.getPositionPoint(position)
+        val position = DirectionPositionMapper.getInvertedPosition(owner.getSpriteDirection())
+        val spawn = owner.body.getPositionPoint(position)
 
         defaultSprite.let { sprite ->
             sprite.setPosition(spawn, position)
 
-            sprite.translateX(megaman.getSpriteXTranslation() * ConstVals.PPM)
-            sprite.translateY(megaman.getSpriteYTranslation() * ConstVals.PPM)
+            sprite.translateX(owner.getSpriteXTranslation() * ConstVals.PPM)
+            sprite.translateY(owner.getSpriteYTranslation() * ConstVals.PPM)
 
             sprite.setOriginCenter()
-            sprite.rotation = megaman.getSpriteRotation()
+            sprite.rotation = owner.getSpriteRotation()
         }
-        flipX = megaman.shouldFlipSpriteX()
-        flipY = megaman.shouldFlipSpriteY()
+        flipX = owner.shouldFlipSpriteX()
+        flipY = owner.shouldFlipSpriteY()
 
         fadeTimer.reset()
 

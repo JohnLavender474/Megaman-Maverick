@@ -439,6 +439,8 @@ object ConstKeys {
     const val DRAWABLES = "drawables"
     const val SHAPES = "shapes"
     const val PLAYER = "player"
+    const val SLOT = "slot"
+    const val SLOTS = "slots"
     const val ENEMIES = "enemies"
     const val ITEMS = "items"
     const val ITEM = "item"
