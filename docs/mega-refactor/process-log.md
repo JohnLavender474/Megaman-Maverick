@@ -221,3 +221,17 @@ newest entry at the bottom.
   quicksand, carts). The owner approved the merge.
 - Follow-up: `014c` (rule table, with `FixtureTypeSet`) is next for item `014`. The
   `setHitByLaserReceiver` part of `docs/issues/2026-10-22-unused-contact-hooks.md` is resolved.
+
+## 2026-10-22 — mega-refactor-014c-contact-rules-table
+
+- Summary: the contact `if/else` chain is replaced by an engine rule table. Engine: `FixtureTypeSet`,
+  `IContactRule`, `ContactRulesBuilder`, `ContactRuleTable`, `ContactRuleDispatcher`; `IContactListener`
+  takes the two fixtures; the `Contact` type helpers are deleted. Core: 24 rule files and
+  `MegaContactRules.kt` (35 registrations), bodies moved unchanged; `MegaContactListener` is deleted.
+  Squash commit `4208cb5c7`.
+- Contract check: clean build; 454 engine and 79 core tests pass; 114 compiler warnings (115 before);
+  `ContactRuleSelectionTest` matches the reference file made from the old chain for all 2523 pair and
+  phase lines, and the file is unchanged since the stage-0 commit; 69 of 80 bodies unchanged by script,
+  11 checked by hand; the owner's play test passed. The owner approved the merge.
+- Follow-up: `014d` (receivers for the `Megaman` checks, `MegaCollisionHandler` body flags,
+  `SurfaceRule`, wall-slide flag). `docs/issues/2026-10-22-wrong-contact-log-texts.md` is closed.

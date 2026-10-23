@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: no
@@ -36,3 +36,9 @@ Read the lines above.
 ## Notes
 
 Item `014` replaces these logs with a dispatcher log that uses rule IDs, which fixes this.
+
+## Resolution
+
+Fixed by `mega-refactor-014c` (squash `4208cb5c7`). `MegaContactListener` and its per-branch debug logs are
+deleted. The engine `ContactRuleDispatcher` logs `phase ruleId fixture1 fixture2` for each contact that the debug
+filter accepts, so the text always names the real phase and rule.

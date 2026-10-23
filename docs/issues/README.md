@@ -73,6 +73,6 @@ related-items: [<mega-refactor item IDs>]
 | [The `BLOCK`-`GRAVITY_CHANGE` contact rule never runs](2026-10-22-block-gravity-change-rule-never-runs.md) | yes | core | open |
 | [The filter makes `PLAYER`-`DEATH` contacts that no rule handles](2026-10-22-player-death-contact-unhandled.md) | yes | core | open |
 | [Contact state and hooks that nothing uses: `TOUCHING_CART`, `ConstKeys.CART`, `setHitByLaserReceiver`](2026-10-22-unused-contact-hooks.md) | yes | core | open |
-| [Five contact debug logs name the wrong phase or fixture type](2026-10-22-wrong-contact-log-texts.md) | yes | core | open |
+| [Five contact debug logs name the wrong phase or fixture type](2026-10-22-wrong-contact-log-texts.md) | yes | core | closed |
 | [`hitExplosion` gets its two shapes in the reverse order](2026-10-22-projectile-explosion-shape-order.md) | yes | core | open |
 | [`BouncingPebble` bounces to the right when its right side hits a block](2026-10-22-bouncing-pebble-right-side-bounce.md) | no | core | open |
