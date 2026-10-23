@@ -31,6 +31,9 @@ From the first request (summary): the global `megaman` is reached everywhere thr
 ## Decisions
 
 - H (2026-10-22): lives are a shared pool or per player, by game mode. Use an interface (for example `LivesPolicy` with `SharedPool` and `PerPlayer`) so the rule is easy to swap. There will be a maximum number of players.
+- 2026-10-23: the target is 2 players, but the design must scale to 4 or more. No type, array or rule may assume exactly 2.
+- 2026-10-23: `029` keeps the current level-flow rules (camera, room transitions, death and respawn, pause, HUD). Its focus is the interface and the removal of the coupling to `megaman`. Gaps and ideas for the co-op rules go in `NOTES.md`.
+- 2026-10-23: `PLAYER_SPAWN` must split into a spawn event for each player and a separate level reset. Which item does the split is still open.
 
 ## Open questions
 
