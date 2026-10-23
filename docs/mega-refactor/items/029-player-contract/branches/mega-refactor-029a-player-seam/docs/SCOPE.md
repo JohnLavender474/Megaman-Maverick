@@ -4,8 +4,8 @@ What this branch changes and why. Write this file after the scan, before `CONTRA
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: approved
-- Approved: 2026-10-23
+- Status: draft (changed after approval: test map and test entity, item 7; needs approval again)
+- Approved: 2026-10-23 (first version)
 
 ## Goal
 
@@ -103,7 +103,13 @@ These are not in this branch (see "Out of scope").
 6. **Player identity on the player events:**
    - A new key `ConstKeys.SLOT` with the `PlayerSlot` of the player, on every submit site in the table above except `STUN_PLAYER`. Megaman's own events use its slot, read from `game.players` or kept on `Megaman` at registration. No listener reads `SLOT` in this branch.
    - `STUN_PLAYER` gets its target players: a new key `ConstKeys.SLOTS` with the target slots. A room-wide stun (Timber Woman's ground pound) targets every registered player (`players.forEach`); with capacity 1 that is slot 0. `Megaman` handles the event only if its slot is in the targets, then applies today's checks unchanged. This is the only listener that reads a new key in this branch. With one player the result is the same as today.
-7. **Tests:**
+7. **Test map** (`CLAUDE.md`, "Test maps"):
+   - `assets/tiled_maps/tmx/RefactorTest029.tmx` and a `LevelDefinition` entry `REFACTOR_TEST_029` (`TEST_LEVEL`), with a `levelOverride` loadout that gives at least one special weapon. A subagent builds the map with the `level-builder` skill. Other `029` branches add rooms later.
+   - Rooms (names can change in the plan): `trail` (a long floor and a wall: air dash and ground slide with trail sprites, an air dash into the wall, special weapon ammo); `stun` (a floor and a wall to wall slide on, with a `TestStunPulser`); `heart` (a `HeartTank`); `pickups` (a health bulb, a weapon energy bulb, a screw and a health tank); `death` (a pit or spikes, for death and respawn).
+   - `TestStunPulser` (in `entities/special/`): at a Tiled interval, it submits `STUN_PLAYER` with `StunType.STUN_BOUNCE_IF_ON_SURFACE` and a `SHAKE_CAM`, as Timber Woman's ground pound does. It sends `ConstKeys.SLOTS` in the same way as Timber Woman after item 6.
+   - The pipe portal and the head-bump sound depend on a `MARIO_LEVEL`, so their checks stay in `SMB3_1`.
+   - The map and the test entity are made and checked on the baseline code first, before the code changes.
+8. **Tests:**
    - Engine: `Players` with a capacity greater than 1 (register, unregister, a full or out-of-range slot, `get` of an empty slot), the helpers (slot order, `present` filter, `minByOrNull` tie to the lower slot, `any`, `all`, `firstOrNull`), a custom extension helper, `require` failure message, `ComponentKey` lookup.
    - Core: `MegaPlayer` registration fails without a `BodyComponent`; the slot prop is on the events where a test is practical with the relaxed game mock.
 
@@ -125,6 +131,7 @@ These are not in this branch (see "Out of scope").
 - **Required components and respawn:** `Megaman` keeps the same component objects across destroy and spawn (`reset()` runs on destroy), so a view made once at boot stays valid. Risk: a required component replaced with `addComponent` would make the cached field stale. Core does not do this on `Megaman`. A debug check (or a view rebuild on spawn) catches it.
 - **Self-references:** with one player, `this` and `game.megaman` are the same object, so behavior does not change. Risk: the trail sprite owner. If the owner is not set or not reset on spawn, the trail is wrong or crashes. The spawn site is in `Megaman`.
 - **Event props:** listeners read props by key, so a new key does not change them. Risk: a listener that copies or logs all props. The plan step checks this.
+- **Test map and test entity:** a new `LevelDefinition` entry is loaded at boot with the others (`MegamanMaverickGame.kt:841`). Test levels do not show in the menus (only `EXTRA_LEVEL` entries appear in the extras screen). `TestStunPulser` appears only in the test map, so real levels do not change.
 - **Boot:** `game.players` must exist before anything reads it, and `Megaman` must have its `BodyComponent` when it registers (after `init()`). Nothing reads `game.players` in this branch except the tests and the event submit sites.
 
 ## Overlap with other branches

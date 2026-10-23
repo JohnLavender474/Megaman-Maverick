@@ -36,21 +36,24 @@ Megaman, the HUD and every entity must behave the same.
 
 ## Manual playthrough
 
-| Level | What to check |
-|-------|---------------|
-| `TEST_1` | Air dash and ground slide, also while shooting: the trail sprites appear behind Megaman, in the same pose, weapon colors and position as before. Air dash toward a wall while facing it: blocked as before. Fire a special weapon until its ammo runs low: the weapon bar drops as before. |
-| `TIMBER_WOMAN` | Boss fight: on the ground pound, Megaman bounces when he stands on the ground or wall slides, and does not bounce in the air. The room shakes as before. |
-| `SMB3_1` | Hit a block from below: the head-bump sound plays as before. Enter a pipe portal: Megaman is hidden in the pipe and comes out with the pipe animation. |
-| Any stage with a heart tank (or a save with heart tanks) | After a heart tank is collected, the health bar max grows as before. |
+Run each check on the baseline (before the code changes) and again at the end. Use
+`./run-game-alpha.sh --level <LEVEL> --room <ROOM>` from the worktree. The room names can change in
+the plan.
 
-Use `./run-game-alpha.sh --level <LEVEL>` from the worktree; add `--room <name>` to jump to a room.
+| Level and room | What to check |
+|-------|---------------|
+| `REFACTOR_TEST_029`, `trail` | Air dash and ground slide, also while shooting: the trail sprites appear behind Megaman, with the same pose, weapon colors and position as before. Air dash toward the wall while facing it: blocked as before. Fire a special weapon until its ammo runs low: the weapon bar drops as before. |
+| `REFACTOR_TEST_029`, `stun` | When the pulser fires: the room shakes, and Megaman bounces when he stands on the floor or wall slides, and does not bounce in the air or while already stunned. |
+| `REFACTOR_TEST_029`, `heart` | Collect the heart tank: the health bar max grows as before. |
+| `REFACTOR_TEST_029`, `pickups` | The health bulb, weapon energy bulb, screw and health tank work as before. |
+| `REFACTOR_TEST_029`, `death` | Megaman dies, respawns and the room resets as before. |
+| `SMB3_1` | Hit a block from below: the head-bump sound plays as before. Enter a pipe portal: Megaman is hidden in the pipe and comes out with the pipe animation. (These depend on a `MARIO_LEVEL`.) |
+| `TIMBER_WOMAN` (sanity pass of a real stage) | The boss fight: the ground pound stuns as in the `stun` room. |
 
 ## Behaviors to check
 
-- Death and respawn: Megaman dies, the respawn runs as before, and the level resets as before
-  (`PLAYER_SPAWN`, `PLAYER_JUST_DIED`, `PLAYER_READY` and `PLAYER_DONE_DYIN` still reach their
-  listeners).
-- Pickups: health bulbs, weapon energy bulbs, screws, health tanks and heart tanks work as before.
+- The player events still reach their listeners (`PLAYER_SPAWN`, `PLAYER_JUST_DIED`,
+  `PLAYER_READY`, `PLAYER_DONE_DYIN`): covered by the `death` and `pickups` rooms.
 - Boot: the game starts, the main menu works, and a level starts with no exception.
 
 ## Intended changes

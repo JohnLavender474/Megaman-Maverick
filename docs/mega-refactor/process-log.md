@@ -249,3 +249,15 @@ newest entry at the bottom.
   receivers and keys; the owner's play test passed. The owner approved the merge.
 - Follow-up: `029` re-types `HIT_BY_PLAYER` and `ItemEntity.contactWithPlayer`, and can fold the
   capabilities into `IPlayer`; `031` replaces the input read in Megaman's fall-through key.
+
+## 2026-10-23 — master (docs)
+
+- Summary: `CLAUDE.md` has a new section "Test maps". Manual contract checks use small targeted test
+  maps where practical: one map per item (`RefactorTest<id>.tmx`, `LevelDefinition`
+  `REFACTOR_TEST_<id>`), one room per check, reached with `--level` and `--room`. A subagent builds
+  them with the `level-builder` skill in the first plan steps, and they are checked on the baseline
+  code before the change. Small `Test...` entities are allowed when no existing entity can trigger a
+  behavior. Real levels stay where the behavior depends on real content or the level type, plus one
+  short sanity pass. Test maps stay on `master` for reuse. The owner asked for this.
+- Contract check: not needed (docs only).
+- Follow-up: `029a` scope and contract use the first test map (`RefactorTest029.tmx`).

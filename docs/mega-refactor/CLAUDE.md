@@ -208,6 +208,32 @@ Do not delete the branch folder after the merge. It stays on `master` as history
 - Item: set it to `dropped` in `ITEMS.md`, fill in the finish date, and give the reason in
   `ITEM.md`.
 
+## Test maps
+
+A manual check is faster and easier to repeat in a small room made for it than in a full stage.
+Use targeted test maps for the manual checks in a branch contract where it is practical.
+
+- **One test map per item:** `assets/tiled_maps/tmx/RefactorTest<id>.tmx` (for example
+  `RefactorTest029.tmx`), with a `LevelDefinition` entry `REFACTOR_TEST_<id>` of type
+  `TEST_LEVEL`. Each check gets its own room with a short descriptive room name, so that
+  `--level REFACTOR_TEST_<id> --room <name>` goes straight to it. Several branches of the item add
+  rooms to the same map.
+- **Who builds it:** a subagent builds or edits the map with the `level-builder` skill, as a plan
+  step. The map is rough by design; the owner can fix it by hand.
+- **When:** in the first plan steps of the branch, before the code changes. The owner (or a
+  launch) checks each room on the baseline code first, so that the same room shows the behavior
+  before and after the change.
+- **Test-only entities:** if no existing entity can trigger a behavior in a small room (for
+  example a boss attack), the branch can add a small test entity. Its name starts with `Test`
+  (for example `TestStunPulser`), it goes in the package of its `EntityType`, and only test maps
+  use it. Log it in the branch process log. A test entity must not change any real level.
+- **Real levels stay in the contract** where the behavior depends on real level content or on the
+  level type (for example a `MARIO_LEVEL` sound), and as one short sanity pass of a real stage.
+- **Keep them:** test maps, their rooms and test entities stay on `master` after the merge, so
+  later branches and items can use them again. A later branch may add rooms, but does not change
+  a room that another contract uses without a note in its process log.
+- The contract lists each check with its `--level` and `--room`.
+
 ## Bugs
 
 Bugs are not refactors. A bug fix changes gameplay on purpose, so it does not belong in a branch
