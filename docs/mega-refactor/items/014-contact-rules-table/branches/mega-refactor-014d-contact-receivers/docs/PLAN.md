@@ -21,14 +21,14 @@ and a short launch pass. The selection test must keep passing (the table does no
   to `active`. Then `git worktree add -b mega-refactor-014d-contact-receivers
   .worktrees/mega-refactor-014d-contact-receivers master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 454 engine, 79 core) and the warning
   count (expected 114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Declarations
 
@@ -40,7 +40,7 @@ and a short launch pass. The selection test must keep passing (the table does no
     `FALL_THROUGH_PRESS_UP: PropertyKey<() -> Boolean>`.
   - New marker interfaces `IGateTrigger` and `ICartRider` in `core/.../entities/contracts/`.
 - Check: `./gradlew core:compileKotlin` passes.
-- Done: no
+- Done: yes
 
 ### 4. Feet-block contact
 
@@ -55,7 +55,7 @@ and a short launch pass. The selection test must keep passing (the table does no
     `block.hitByFeet` runs (begin, continue), and after `FEET_ON_GROUND` is updated and before
     `block.hitByFeet` (end).
 - Check: build, tests, a 25-second `TEST_1` launch.
-- Done: no
+- Done: yes
 
 ### 5. Water contact
 
@@ -69,7 +69,7 @@ and a short launch pass. The selection test must keep passing (the table does no
   - Test (`WaterRuleTest`): the receiver gets the right state and `wasInWater`, runs after the
     splash decision, and on end only when no water is left.
 - Check: build, tests, launch.
-- Done: no
+- Done: yes
 
 ### 6. Ice friction
 
@@ -84,7 +84,7 @@ and a short launch pass. The selection test must keep passing (the table does no
     when there is no filter; `SideIceRule` applies the friction when the predicate returns `true` and
     the body property is `false`, and not when both are false.
 - Check: build, tests, launch.
-- Done: no
+- Done: yes
 
 ### 7. Gate and cart capabilities
 
@@ -92,21 +92,21 @@ and a short launch pass. The selection test must keep passing (the table does no
   ICartRider`. `Megaman` implements both markers. Test: `GateRule` triggers a triggerable gate for an
   `IGateTrigger` entity and not for another entity.
 - Check: build, tests, launch.
-- Done: no
+- Done: yes
 
 ### 8. Sand splash supplier
 
 - Changes: `FeetSandRule(splashesOn: () -> Boolean)` instead of `(game)`;
   `megaContactRules` passes `{ game.megaman.ready }`.
 - Check: build, tests, launch.
-- Done: no
+- Done: yes
 
 ### 9. `TODO` comments for `029`
 
 - Changes: a `TODO` comment at the `Megaman` reference in `PlayerItemRule` and in `BodyPlayerRule`,
   which says that the player type in the signature waits for `029` (`IPlayer`).
 - Check: build.
-- Done: no
+- Done: yes
 
 ### 10. Collision handler body keys
 
@@ -122,18 +122,18 @@ and a short launch pass. The selection test must keep passing (the table does no
     passes a `COLLIDE_DOWN_ONLY` static body; without the key it is handled as before; the press-up
     key lets a body through a `PRESS_UP_FALL_THRU` body.
 - Check: build, tests, launches of `TEST_1` and `INTRO_STAGE`.
-- Done: no
+- Done: yes
 
 ### 11. Contract checks
 
 - Changes: none, unless a check fails.
 - Check: a clean build; the checks and reviews in `CONTRACT.md`; the owner's play test. Write the
   results in the process log.
-- Done: no
+- Done: yes
 
 ### 12. Merge
 
 - Changes: the merge steps in `docs/mega-refactor/CLAUDE.md` ("Branch merge"), after the owner's
   explicit approval. Item `014` is done after this merge.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes

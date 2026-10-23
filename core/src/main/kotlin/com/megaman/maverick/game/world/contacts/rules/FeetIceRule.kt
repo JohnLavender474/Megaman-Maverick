@@ -1,11 +1,9 @@
 package com.megaman.maverick.game.world.contacts.rules
 
-import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.contacts.ContactValues.ICE_FRICTION
 
@@ -31,13 +29,7 @@ object FeetIceRule : IContactRule {
 
         body.setBodySense(BodySense.FEET_ON_ICE, true)
 
-        val entity = feetFixture.getEntity()
-        if (entity is Megaman) {
-            if (entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
-                (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && entity.isFacing(Facing.LEFT) ||
-                    (entity.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && entity.isFacing(Facing.RIGHT)))
-            ) return
-        }
+        if (feetFixture.receiver(Receivers.ICE_FRICTION_FILTER)?.invoke() == false) return
 
         val applyIceFrictionX =
             body.getOrDefaultProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", true, Boolean::class)

@@ -4,8 +4,6 @@ import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.contacts.ContactValues.ICE_FRICTION
 
@@ -22,8 +20,7 @@ object SideIceRule : IContactRule {
 
         val applyIceFrictionY =
             body.getOrDefaultProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", true, Boolean::class)
-        val entity = body.getEntity()
-        if (applyIceFrictionY || (entity is Megaman && entity.isBehaviorActive(BehaviorType.WALL_SLIDING)))
+        if (applyIceFrictionY || sideFixture.receiver(Receivers.SIDE_ICE_FRICTION)?.invoke() == true)
             body.physics.frictionOnSelf.y = ICE_FRICTION * ConstVals.PPM
 
         val sideType = sideFixture.getProperty(ConstKeys.SIDE)

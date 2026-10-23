@@ -30,7 +30,7 @@ fun megaContactRules(game: MegamanMaverickGame, debugFilter: (IFixture, IFixture
         pair(ContactRuleIds.SIDE_ICE, SIDE, ICE, SideIceRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_BLOCK, FEET, BLOCK, FeetBlockRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_ICE, FEET, ICE, FeetIceRule, BEGIN, CONTINUE, END)
-        pair(ContactRuleIds.FEET_SAND, FEET, SAND, FeetSandRule(game), BEGIN, CONTINUE, END)
+        pair(ContactRuleIds.FEET_SAND, FEET, SAND, FeetSandRule { game.megaman.ready }, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_SNOW, FEET, SNOW, FeetSnowRule, BEGIN, CONTINUE, END)
         sets(ContactRuleIds.BOUNCER, setOf(BOUNCER), setOf(BODY, FEET, HEAD, SIDE), BouncerRule, BEGIN)
         pair(ContactRuleIds.HEAD_BLOCK, HEAD, BLOCK, HeadBlockRule, BEGIN, CONTINUE, END)

@@ -14,6 +14,8 @@ object PlayerItemRule : IContactRule {
         val playerEntity = playerFixture.getEntity()
         val itemEntity = itemFixture.getEntity()
 
+        // TODO: the player type is Megaman because ItemEntity.contactWithPlayer takes a Megaman; item 029 (IPlayer)
+        //  re-types it
         if (playerEntity is Megaman && itemEntity is ItemEntity) itemEntity.contactWithPlayer(playerEntity)
     }
 }

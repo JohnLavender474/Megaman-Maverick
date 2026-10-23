@@ -70,7 +70,7 @@ import kotlin.math.min
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
     IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
-    IEventListener, IFaceable, IDirectional, IFocusable, IDamager {
+    IEventListener, IFaceable, IDirectional, IFocusable, IDamager, IGateTrigger, ICartRider {
 
     companion object {
         const val TAG = "Megaman"

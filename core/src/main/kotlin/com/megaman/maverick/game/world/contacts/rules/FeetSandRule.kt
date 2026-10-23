@@ -7,7 +7,6 @@ import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -17,7 +16,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.contacts.ContactValues.SAND_FRICTION
 
-class FeetSandRule(private val game: MegamanMaverickGame) : IContactRule {
+class FeetSandRule(private val splashesOn: () -> Boolean) : IContactRule {
 
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = begin(a)
 
@@ -34,7 +33,7 @@ class FeetSandRule(private val game: MegamanMaverickGame) : IContactRule {
         if (takeFriction)
             body.physics.frictionOnSelf.set(SAND_FRICTION, SAND_FRICTION).scl(ConstVals.PPM.toFloat())
 
-        if (game.megaman.ready) {
+        if (splashesOn.invoke()) {
             val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
             val position = feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
             splash.spawn(

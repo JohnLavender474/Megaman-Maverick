@@ -19,6 +19,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.contracts.megaman
@@ -77,6 +78,10 @@ val Megaman.bodyOverGround: Boolean
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)
     body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
+    body.putProperty(BodyKeys.PASS_THROUGH_ONE_WAY) { isBehaviorActive(BehaviorType.CLIMBING) }
+    body.putProperty(BodyKeys.FALL_THROUGH_PRESS_UP) {
+        isBehaviorActive(BehaviorType.CLIMBING) && game.controllerPoller.isJustPressed(MegaControllerButton.UP)
+    }
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true
     body.drawingColor = Color.GRAY
@@ -108,6 +113,45 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
     }
     feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> !body.isSensing(BodySense.IN_WATER) }
+    feetFixture.setReceiver(Receivers.ICE_FRICTION_FILTER) {
+        !(body.isSensing(BodySense.FEET_ON_GROUND) &&
+            (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT) ||
+                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT))))
+    }
+    feetFixture.setReceiver(Receivers.FEET_BLOCK_CONTACT) { state, block ->
+        when (state) {
+            ProcessState.BEGIN -> {
+                aButtonTask = AButtonTask.JUMP
+
+                val blockMakesSound = block.getOrDefaultProperty(
+                    "${ConstKeys.FEET}_${ConstKeys.SOUND}",
+                    !block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || when (direction) {
+                        Direction.UP -> body.physics.velocity.y <= 0f
+                        Direction.DOWN -> body.physics.velocity.y >= 0f
+                        Direction.LEFT -> body.physics.velocity.x >= 0f
+                        Direction.RIGHT -> body.physics.velocity.x <= 0f
+                    },
+                    Boolean::class
+                )
+                if (blockMakesSound && canMakeLandSound) {
+                    requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
+                    canMakeLandSound = false
+                }
+            }
+
+            ProcessState.CONTINUE -> aButtonTask = AButtonTask.JUMP
+
+            ProcessState.END -> {
+                if (!bodyOverGround) {
+                    aButtonTask = when {
+                        body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
+                        else -> AButtonTask.AIR_DASH
+                    }
+                }
+                if (!body.hasAnyFeetBlock()) canMakeLandSound = true
+            }
+        }
+    }
     body.addFixture(feetFixture)
     feetFixture.drawingColor = Color.GREEN
     // debugShapes.add { feetFixture }
@@ -164,6 +208,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     leftFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     leftFixture.setReceiver(Receivers.RUNNABLE, onBounce)
     leftFixture.putProperty(ConstKeys.SIDE, ConstKeys.LEFT)
+    leftFixture.setReceiver(Receivers.SIDE_ICE_FRICTION) { isBehaviorActive(BehaviorType.WALL_SLIDING) }
     leftFixture.setReceiver(Receivers.STICK_TO_BLOCK) shouldStick@{ _, blockFixture ->
         val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
         return@shouldStick owner !is GutsTank
@@ -177,6 +222,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     rightFixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
     rightFixture.setReceiver(Receivers.RUNNABLE, onBounce)
     rightFixture.putProperty(ConstKeys.SIDE, ConstKeys.RIGHT)
+    rightFixture.setReceiver(Receivers.SIDE_ICE_FRICTION) { isBehaviorActive(BehaviorType.WALL_SLIDING) }
     rightFixture.setReceiver(Receivers.STICK_TO_BLOCK) shouldStick@{ _, blockFixture ->
         val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
         return@shouldStick owner !is GutsTank
@@ -194,6 +240,33 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     debugShapes.add { damageableFixture }
 
     val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle())
+    waterListenerFixture.setReceiver(Receivers.WATER_CONTACT) { state, wasInWater ->
+        when (state) {
+            ProcessState.BEGIN -> {
+                if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    !isBehaviorActive(BehaviorType.WALL_SLIDING)
+                ) aButtonTask = AButtonTask.SWIM
+
+                gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
+
+                if (!wasInWater) {
+                    if (direction.isVertical()) body.physics.velocity.y = 0f
+                    else body.physics.velocity.x = 0f
+                }
+            }
+
+            ProcessState.CONTINUE -> {
+                if (!body.isSensing(BodySense.FEET_ON_GROUND) &&
+                    !isBehaviorActive(BehaviorType.WALL_SLIDING)
+                ) aButtonTask = AButtonTask.SWIM
+            }
+
+            ProcessState.END -> {
+                aButtonTask = AButtonTask.AIR_DASH
+                gravityScalar = 1f
+            }
+        }
+    }
     body.addFixture(waterListenerFixture)
 
     val teleporterListenerFixture = Fixture(body, FixtureType.TELEPORTER_LISTENER, GameRectangle())

@@ -52,6 +52,14 @@ object Receivers {
 
     val HIT_BY_SHIELD = PropertyKey<(state: ProcessState, shieldFixture: IFixture) -> Unit>(ConstKeys.HIT_BY_SHIELD)
 
+    val FEET_BLOCK_CONTACT = PropertyKey<(state: ProcessState, block: Block) -> Unit>("feet_block_contact")
+
+    val WATER_CONTACT = PropertyKey<(state: ProcessState, wasInWater: Boolean) -> Unit>("water_contact")
+
+    val ICE_FRICTION_FILTER = PropertyKey<() -> Boolean>("ice_friction_filter")
+
+    val SIDE_ICE_FRICTION = PropertyKey<() -> Boolean>("side_ice_friction")
+
     val NO_PROJECTILE_COLLISION_EXCEPTION =
         PropertyKey<(projectile: IProjectileEntity, fixture: IFixture) -> Boolean>(
             "${FixtureLabel.NO_PROJECTILE_COLLISION}_${ConstKeys.EXCEPTION}"

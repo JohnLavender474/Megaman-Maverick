@@ -866,7 +866,7 @@ class MegamanMaverickGame(
                         megaContactRules(this, CONTACT_LISTENER_DEBUG_FILTER),
                         CONTACT_LISTENER_DEBUG_FILTER
                     ),
-                    collisionHandler = MegaCollisionHandler(this),
+                    collisionHandler = MegaCollisionHandler(),
                     contactFilter = MegaContactFilter(),
                     fixedStepScalar = params.fixedStepScalar,
                     maxIterations = 2 * MathUtils.ceil(

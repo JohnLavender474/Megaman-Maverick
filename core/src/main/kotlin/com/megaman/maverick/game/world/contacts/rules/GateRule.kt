@@ -2,7 +2,7 @@ package com.megaman.maverick.game.world.contacts.rules
 
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.contracts.IGateTrigger
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.world.body.*
 
@@ -12,7 +12,7 @@ object GateRule : IContactRule {
 
     private fun begin(otherFixture: IFixture, gateFixture: IFixture) {
         val entity = otherFixture.getEntity()
-        if (entity is Megaman) {
+        if (entity is IGateTrigger) {
             val gate = gateFixture.getEntity() as Gate
             if (gate.isTriggerable()) gate.trigger()
         }

@@ -1,15 +1,9 @@
 package com.megaman.maverick.game.world.contacts.rules
 
-import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
-import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.blocks.Block
-import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.world.body.*
 
 object FeetBlockRule : IContactRule {
@@ -42,25 +36,7 @@ object FeetBlockRule : IContactRule {
             body.translate(posDelta)
         }
 
-        val entity = feetFixture.getEntity()
-        if (entity is Megaman) {
-            entity.aButtonTask = AButtonTask.JUMP
-
-            val blockMakesSound = block.getOrDefaultProperty(
-                "${ConstKeys.FEET}_${ConstKeys.SOUND}",
-                !block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || when (entity.direction) {
-                    Direction.UP -> entity.body.physics.velocity.y <= 0f
-                    Direction.DOWN -> entity.body.physics.velocity.y >= 0f
-                    Direction.LEFT -> entity.body.physics.velocity.x >= 0f
-                    Direction.RIGHT -> entity.body.physics.velocity.x <= 0f
-                },
-                Boolean::class
-            )
-            if (blockMakesSound && entity.canMakeLandSound) {
-                entity.requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
-                entity.canMakeLandSound = false
-            }
-        }
+        feetFixture.receiver(Receivers.FEET_BLOCK_CONTACT)?.invoke(ProcessState.BEGIN, block)
 
         body.setBodySense(BodySense.FEET_ON_GROUND, true)
 
@@ -90,8 +66,7 @@ object FeetBlockRule : IContactRule {
             body.translate(posDelta)
         }
 
-        val entity = feetFixture.getEntity()
-        if (entity is Megaman) entity.aButtonTask = AButtonTask.JUMP
+        feetFixture.receiver(Receivers.FEET_BLOCK_CONTACT)?.invoke(ProcessState.CONTINUE, block)
 
         body.setBodySense(BodySense.FEET_ON_GROUND, true)
 
@@ -109,16 +84,7 @@ object FeetBlockRule : IContactRule {
         body.removeFeetBlock(block)
         if (!body.hasAnyFeetBlock()) body.setBodySense(BodySense.FEET_ON_GROUND, false)
 
-        val entity = feetFixture.getEntity()
-        if (entity is Megaman) {
-            if (!entity.bodyOverGround) {
-                entity.aButtonTask = when {
-                    entity.body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
-                    else -> AButtonTask.AIR_DASH
-                }
-            }
-            if (!body.hasAnyFeetBlock()) entity.canMakeLandSound = true
-        }
+        feetFixture.receiver(Receivers.FEET_BLOCK_CONTACT)?.invoke(ProcessState.END, block)
 
         block.hitByFeet(ProcessState.END, feetFixture)
         feetFixture.receiver(Receivers.HIT_BY_BLOCK, ProcessState.END)?.invoke(block, delta)

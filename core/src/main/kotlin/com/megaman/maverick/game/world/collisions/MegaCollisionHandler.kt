@@ -6,13 +6,10 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IBody
 import com.maverick.game.engine.world.collisions.ICollisionHandler
 import com.maverick.game.engine.world.collisions.StandardCollisionHandler
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.world.body.*
 
-class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHandler {
+class MegaCollisionHandler : ICollisionHandler {
 
     private fun trySpecialCollission(body1: IBody, body2: IBody): Boolean {
         if (!body1.physics.collisionOn || !body2.physics.collisionOn) return true
@@ -38,19 +35,15 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
             dynamicBodyFilters.any { it.invoke(staticBody.getEntity(), dynamicBody.getEntity()) }
         ) return true
 
-        val megaman = game.megaman
-
         if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
-            dynamicBody == megaman.body &&
-            megaman.isBehaviorActive(BehaviorType.CLIMBING) &&
-            game.controllerPoller.isJustPressed(MegaControllerButton.UP)
+            dynamicBody.getProperty(BodyKeys.FALL_THROUGH_PRESS_UP)?.invoke() == true
         ) {
             dynamicBody.setMaxY(staticBody.getMaxY())
             return true
         }
 
         if (staticBody.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY)) {
-            if (dynamicBody == megaman.body && megaman.isBehaviorActive(BehaviorType.CLIMBING)) return true
+            if (dynamicBody.getProperty(BodyKeys.PASS_THROUGH_ONE_WAY)?.invoke() == true) return true
 
             val dynamicBodyEntity = dynamicBody.getEntity()
             val dynamicBodyDirection =
@@ -105,7 +98,7 @@ class MegaCollisionHandler(private val game: MegamanMaverickGame) : ICollisionHa
         } else if (staticBody.hasBodyLabel(BodyLabel.COLLIDE_UP_ONLY)) {
             // TODO: account for IDirectional logic similar to "collide down only" logic
 
-            if (dynamicBody == megaman.body && megaman.isBehaviorActive(BehaviorType.CLIMBING)) return true
+            if (dynamicBody.getProperty(BodyKeys.PASS_THROUGH_ONE_WAY)?.invoke() == true) return true
 
             if (dynamicBody.isSensing(BodySense.FEET_ON_GROUND)) {
                 dynamicBody.setMaxY(staticBody.getY())

@@ -1,14 +1,11 @@
 package com.megaman.maverick.game.world.contacts.rules
 
+import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.decorations.Splash
-import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
-import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.world.body.*
 
 object WaterRule : IContactRule {
@@ -20,8 +17,6 @@ object WaterRule : IContactRule {
     override fun onEnd(a: IFixture, b: IFixture, delta: Float) = end(a, b)
 
     private fun begin(listenerFixture: IFixture, waterFixture: IFixture) {
-        val entity = listenerFixture.getEntity()
-
         val body = listenerFixture.getBody()
         val wasInWater = body.hasAnyContactWater()
 
@@ -41,18 +36,7 @@ object WaterRule : IContactRule {
             water.doMakeSplashSound(listenerFixture)
         )
 
-        if (entity is Megaman) {
-            if (!entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
-                !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
-            ) entity.aButtonTask = AButtonTask.SWIM
-
-            entity.gravityScalar = MegamanValues.WATER_GRAVITY_SCALAR
-
-            if (!wasInWater) {
-                if (entity.direction.isVertical()) body.physics.velocity.y = 0f
-                else body.physics.velocity.x = 0f
-            }
-        }
+        listenerFixture.receiver(Receivers.WATER_CONTACT)?.invoke(ProcessState.BEGIN, wasInWater)
     }
 
     private fun continueContact(listenerFixture: IFixture, waterFixture: IFixture) {
@@ -62,10 +46,7 @@ object WaterRule : IContactRule {
         body.setBodySense(BodySense.IN_WATER, true)
         body.addContactWater(water)
 
-        val entity = listenerFixture.getEntity()
-        if (entity is Megaman && !entity.body.isSensing(BodySense.FEET_ON_GROUND) &&
-            !entity.isBehaviorActive(BehaviorType.WALL_SLIDING)
-        ) entity.aButtonTask = AButtonTask.SWIM
+        listenerFixture.receiver(Receivers.WATER_CONTACT)?.invoke(ProcessState.CONTINUE, false)
     }
 
     private fun end(listenerFixture: IFixture, waterFixture: IFixture) {
@@ -86,11 +67,7 @@ object WaterRule : IContactRule {
                 water.doMakeSplashSound(listenerFixture)
             )
 
-            val listener = listenerFixture.getEntity()
-            if (listener is Megaman) {
-                listener.aButtonTask = AButtonTask.AIR_DASH
-                listener.gravityScalar = 1f
-            }
+            listenerFixture.receiver(Receivers.WATER_CONTACT)?.invoke(ProcessState.END, false)
         }
     }
 }

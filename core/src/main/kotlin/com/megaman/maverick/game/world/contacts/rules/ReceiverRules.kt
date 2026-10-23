@@ -105,6 +105,8 @@ object BodyPlayerRule : IContactRule {
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = begin(a, b)
 
     private fun begin(bodyFixture: IFixture, playerFixture: IFixture) {
+        // TODO: the player type is Megaman because the HIT_BY_PLAYER receiver takes a Megaman; item 029 (IPlayer)
+        //  re-types it
         bodyFixture.receiver(Receivers.HIT_BY_PLAYER)?.invoke(playerFixture.getEntity() as Megaman)
     }
 }
