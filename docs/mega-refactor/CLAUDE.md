@@ -250,6 +250,11 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   later branches and items can use them again. A later branch may add rooms, but does not change
   a room that another contract uses without a note in its process log.
 - The contract lists each check with its `--level` and `--room`.
+- When you ask the owner to run checks, give them as a list, not a table, so the commands are easy
+  to copy. Put each full command (from the worktree, with `--level` and `--room`) in its own
+  inline code span on its own line, followed by what to look at. Example:
+  - `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_aim`: `Met` and `SniperJoe` face
+    Megaman on both sides, aim and fire.
 
 ## Bugs
 
