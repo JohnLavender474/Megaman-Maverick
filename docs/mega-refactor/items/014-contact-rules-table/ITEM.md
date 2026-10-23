@@ -34,6 +34,9 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
   - `mega-refactor-014b-typed-fixture-receivers`: the scope of the former item `056`. It does not depend on `014a`, so the two can run in parallel.
   - `mega-refactor-014c-contact-rules-table`: the rule table. It needs `014a` and `014b`.
 - **Fixture type:** the engine types fixtures as an `IFixtureType` interface (`ordinal`, `name`), not `Any` and not a primitive ID. An engine `FixtureTypeSet` owns the set of types: it validates dense, ordered ordinals and unique names (`of`, `validated`), creates types for games without enums (`named`), and checks that a type belongs to the set (`owns`). Fixture types are single instances, with no value equality. This is the scope of `014a` (`NOTES.md`, "Research: narrow the engine fixture type" and its follow-up).
+- **No JSON rules:** simple surface rules are Kotlin data (`SurfaceRule`), not JSON (`NOTES.md` 4.6).
+- **Wall-slide ice friction:** a body flag that the wall-slide behavior sets replaces the `Megaman` check (`NOTES.md` 4.6).
+- **Contact trace:** `014c` builds the exhaustive selection test with a reference file (`NOTES.md`, "Research: contact trace"). No `--contactTrace` flag for now. The line-by-line diff waits for `055`.
 - **Engine:** the table mechanism (`ContactRuleTable`, builder, dispatcher) goes in the engine. `FixtureType`, the rules and the receivers stay in `core`.
 - **Phases:** one rule object per pair, with `onBegin`, `onContinue` and `onEnd` methods (option P1 in `NOTES.md` 4.4).
 - **Files:** one class and file per pair effect with real logic; generic classes for the receiver-forward pairs; one `ProjectileRules.kt` (`NOTES.md`, "Per-pair classes"). The branch confirms it in practice.
@@ -48,9 +51,7 @@ Answer to review item 13 (2026-10-22, verbatim):
 
 ## Open questions
 
-- Rules in data (JSON) now, or only the simple friction and sense rules? The research recommends Kotlin `SurfaceRule` rows and no JSON for now (`NOTES.md` 4.6).
-- Can some special cases (wall-slide ice friction) become a general body property? The research says yes: a body flag that the wall-slide behavior sets (`NOTES.md` 4.6).
-- Which contact trace tool should the branch build? The research recommends an exhaustive selection test (golden file) in `014`, an optional per-room rule-hit summary behind `--contactTrace`, and the line-by-line diff only after `055` (`NOTES.md`, "Research: contact trace").
+- The reference file of the selection test: committed (recommended, because the test needs it after the old chain is deleted), or git-ignored in `temp/`?
 
 ## Sources
 
