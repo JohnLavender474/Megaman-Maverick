@@ -2,6 +2,7 @@ package com.megaman.maverick.game.players
 
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.components.MissingComponentException
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
@@ -10,7 +11,6 @@ import com.maverick.game.engine.world.body.BodyType
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.mockk
 
@@ -29,9 +29,9 @@ class MegaPlayersTest : DescribeSpec({
         it("fails to register an entity without a body component") {
             val players = MegaPlayers()
 
-            val e = shouldThrow<IllegalStateException> { players.register(PlayerSlot(0), TestEntity()) }
+            val e = shouldThrow<MissingComponentException> { players.register(PlayerSlot(0), TestEntity()) }
 
-            e.message!! shouldContain "has no BodyComponent"
+            e.type shouldBe BodyComponent::class
         }
 
         it("reads the body through the body component") {

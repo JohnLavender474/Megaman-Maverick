@@ -288,3 +288,13 @@ newest entry at the bottom.
 - Follow-up: the backlog candidate (delete the dead `MegamanTrailSprite` V1) went into `039` as a known
   candidate, with a note that `029f` must remove it if `039` has not. Next for item `029`: `029b`, `029c` or
   `029d` (in any order).
+
+## 2026-10-23 — master (direct code change)
+
+- Summary: `IComponentBucket.require` threw an `IllegalStateException` whose message said "Entity", but the
+  function is on `IComponentBucket`, not on an entity. It now throws a new engine `MissingComponentException`
+  (no message; it holds the missing component `type`). `ComponentKeyTest` and `MegaPlayersTest` check the type.
+  Made directly on `master` at the owner's request: a small cleanup of a smell in code that `029a` had just merged,
+  too small for a branch. `CLAUDE.md` now has a rule for such changes ("Small ad-hoc changes on `master`").
+- Contract check: clean build; 475 engine and 102 core tests pass; 114 compiler warnings, as before.
+- Follow-up: none.

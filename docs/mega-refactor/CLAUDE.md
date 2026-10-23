@@ -200,6 +200,20 @@ alone does not need a new approval, but write the reason in the process log.
 
 Do not delete the branch folder after the merge. It stays on `master` as history.
 
+### Small ad-hoc changes on `master`
+
+Code changes go through a branch. Avoid direct code changes on `master`. The exception is a
+small, ad-hoc cleanup that the owner asks for, for example a fix to a smell in code that a branch
+just merged (a wrong name, a misleading message, a missing test). Such a change:
+
+- must be small, must not change gameplay, and must not belong to the work of an active branch;
+- is one commit whose message says that it is a direct change to `master`, what it changes, and
+  why it did not go through a branch;
+- gets an entry in `process-log.md` with the same reason;
+- passes the build and the tests on `master` before the commit (step 9 of "Branch merge").
+
+Anything larger, or anything that changes gameplay, is a new item or a branch.
+
 ### Dropped branch or item
 
 - Branch: in `ITEMS.md`, set its row to `dropped` and fill in the finish date. Give the reason in
