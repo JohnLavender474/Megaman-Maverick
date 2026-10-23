@@ -5,7 +5,7 @@
 - State: planned
 - Goal: Bosses, `AbstractBoss` and `AbstractEnemy` reach the player through the players service; the boss damage listener uses the player view
 - Done: scan; draft `docs/SCOPE.md`.
-- Next: the owner reviews `docs/SCOPE.md` (5 open questions).
+- Next: the owner approves `docs/SCOPE.md`.
 - Blocked:
 
 ## Entries
@@ -16,3 +16,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 
 - No branch exists yet. The folder was prepared on `master`.
 - Scan done on `01d0947e7`. Draft `docs/SCOPE.md` written.
+- The owner answered the open questions (shared state in the component; settable view properties, named locks recorded but not built; `players.all` for the boss intro landing checks with `TODO`s; listener renamed; old bosses commented out, not deleted). Scope updated; `047` notes the landing-check edge case.

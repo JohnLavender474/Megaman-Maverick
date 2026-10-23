@@ -37,6 +37,7 @@ Item `029` research (2026-10-23, verbatim):
 - What happens when the lead player leaves? Does the next slot become the lead?
 - Respawn with drop-in and drop-out: is a respawn routine behind an interface (`038`) enough?
 - The other shared-screen rules: see `029` `NOTES.md`, "Co-op gaps and ideas".
+- Boss intro landing checks (`GutsTank`, `ElecDevil`, `WilyFinalBoss`) use `players.all { landed }` after `029c`. A dead player or one who waits to respawn never lands, so the boss would never start. Rule needed: skip players who are not present? (`TODO` comments at the four sites.)
 
 ## Sources
 
