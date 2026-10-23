@@ -59,7 +59,7 @@ Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` 
 - `GameSystem` takes a component mask. An entity joins a system only if it has all components in the mask.
 - `GameEntity` stores components in a map keyed by `KClass`. Add them with `addComponent(...)`.
 - Components: `BodyComponent`, `SpritesComponent`, `AnimationsComponent`, `UpdatablesComponent`, `BehaviorsComponent`, `ControllerComponent`, `CullablesComponent`, `PointsComponent`, `DrawableShapesComponent`, `FontsComponent`, `PathfindingComponent`, and others.
-- Physics is custom (not Box2D): `engine/.../world/` (`Body`, `Fixture`, `WorldSystem`). Game rules for contacts are in `core/.../world/contacts/MegaContactListener.kt` and `world/collisions/MegaCollisionHandler.kt`.
+- Physics is custom (not Box2D): `engine/.../world/` (`Body`, `Fixture`, `WorldSystem`). Game rules for contacts are in `core/.../world/contacts/MegaContactRules.kt` (a table of fixture-type pairs, dispatched by the engine `ContactRuleDispatcher`; one rule class per pair in `world/contacts/rules/`) and `world/collisions/MegaCollisionHandler.kt`. `ContactRuleSelectionTest` checks the table against `core/src/test/resources/contact-rule-selection.txt`.
 
 ### Entity lifecycle
 

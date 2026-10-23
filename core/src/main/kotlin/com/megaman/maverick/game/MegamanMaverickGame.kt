@@ -66,7 +66,8 @@ import com.maverick.game.engine.screens.viewports.PixelPerfectFitViewport
 import com.maverick.game.engine.systems.GameSystem
 import com.maverick.game.engine.updatables.UpdatablesSystem
 import com.maverick.game.engine.world.WorldSystem
-import com.maverick.game.engine.world.contacts.Contact
+import com.maverick.game.engine.world.body.IFixture
+import com.maverick.game.engine.world.contacts.ContactRuleDispatcher
 import com.maverick.game.engine.world.container.IWorldContainer
 import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.MegamanMaverickGame.RunType
@@ -108,7 +109,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
-import com.megaman.maverick.game.world.contacts.MegaContactListener
+import com.megaman.maverick.game.world.contacts.megaContactRules
 import java.time.LocalDateTime
 import java.util.zip.Deflater
 import kotlin.reflect.KClass
@@ -165,9 +166,10 @@ class MegamanMaverickGame(
         private const val AUTO_PERF_CRISIS_SPEED = 2.0f    // timer multiplier: 3s / ~1.5s
         private const val NOTIFICATION_DUR = 5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
-        val CONTACT_LISTENER_DEBUG_FILTER: (Contact) -> Boolean = { contact ->
-            contact.fixturesMatch(FixtureType.WATER, FixtureType.WATER_LISTENER) &&
-                (contact.fixture1.getEntity() is UnderWaterBubble || contact.fixture2.getEntity() is UnderWaterBubble)
+        val CONTACT_LISTENER_DEBUG_FILTER: (IFixture, IFixture) -> Boolean = { fixture1, fixture2 ->
+            ((fixture1.getType() == FixtureType.WATER && fixture2.getType() == FixtureType.WATER_LISTENER) ||
+                (fixture2.getType() == FixtureType.WATER && fixture1.getType() == FixtureType.WATER_LISTENER)) &&
+                (fixture1.getEntity() is UnderWaterBubble || fixture2.getEntity() is UnderWaterBubble)
         }
     }
 
@@ -860,7 +862,10 @@ class MegamanMaverickGame(
                     ppm = ConstVals.PPM,
                     fixedStep = getPerformance().fixedStep,
                     worldContainerSupplier = { getWorldContainer() },
-                    contactListener = MegaContactListener(this, CONTACT_LISTENER_DEBUG_FILTER),
+                    contactListener = ContactRuleDispatcher(
+                        megaContactRules(this, CONTACT_LISTENER_DEBUG_FILTER),
+                        CONTACT_LISTENER_DEBUG_FILTER
+                    ),
                     collisionHandler = MegaCollisionHandler(this),
                     contactFilter = MegaContactFilter(),
                     fixedStepScalar = params.fixedStepScalar,

@@ -22,14 +22,14 @@ switches to it.
     `active`.
   - `git worktree add -b mega-refactor-014c-contact-rules-table .worktrees/mega-refactor-014c-contact-rules-table master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 436 engine, 77 core) and the warning
   count (expected 115) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Stage 0: rule IDs and the hook in the old chain
 
@@ -43,7 +43,7 @@ switches to it.
     fixtures. Nothing else changes.
 - Check: `./gradlew core:test lwjgl3:jar` passes. Each of the 80 branches has exactly one hook line
   (count). A 25-second launch of `--level TEST_1` shows no exception.
-- Done: no
+- Done: yes
 
 ### 4. Stage 0: the selection test and the reference file
 
@@ -63,7 +63,7 @@ switches to it.
     process log as the "stage-0 commit".
 - Check: `./gradlew core:test` passes with the new test. The file has 3 × 29 × 29 = 2523 lines; the
   matched lines per phase are 48 + 29 + 17 exact pairs plus the `CONSUMER` lines (from `NOTES.md`).
-- Done: no
+- Done: yes
 
 ### 5. Stage 1: `FixtureTypeSet`
 
@@ -72,7 +72,7 @@ switches to it.
   `named(vararg names)` (creates the types and assigns the indexes; `toString()` is the name),
   `size`, `get(index)`, `owns(type)`. Tests in `FixtureTypeSetTest`.
 - Check: `./gradlew engine:test` passes.
-- Done: no
+- Done: yes
 
 ### 6. Stage 1: the engine table
 
@@ -91,7 +91,7 @@ switches to it.
     set rule expands; each build check throws; `dispatch` throws for a type that is not owned; a
     phase with no rule does nothing.
 - Check: `./gradlew engine:test` passes.
-- Done: no
+- Done: yes
 
 ### 7. `IContactListener` takes fixtures
 
@@ -105,7 +105,7 @@ switches to it.
   - The selection test calls the listener with fixtures.
 - Check: `./gradlew engine:test core:test lwjgl3:jar` passes; the selection test still matches the
   reference file. A launch of `--level TEST_1` shows no exception.
-- Done: no
+- Done: yes
 
 ### 8. Stage 2: the rule classes and the core table
 
@@ -125,7 +125,7 @@ switches to it.
     and by reading).
 - Check: `./gradlew core:test lwjgl3:jar` passes; both the old chain and the table match the
   reference file. The game still uses the old chain.
-- Done: no
+- Done: yes
 
 ### 9. Stage 2: switch the game to the table and delete the old chain
 
@@ -138,7 +138,7 @@ switches to it.
     tests in `ContactTest`. The selection test now runs only against the table.
 - Check: `./gradlew engine:test core:test lwjgl3:jar` passes. The reference file is unchanged since
   the stage-0 commit. Launches of `--level TEST_1` and `--level GLACIER_MAN` show no exception.
-- Done: no
+- Done: yes
 
 ### 10. Contract checks
 
@@ -149,7 +149,7 @@ switches to it.
   - At merge time on `master`: close `docs/issues/2026-10-22-wrong-contact-log-texts.md`.
   - The owner's play test from `CONTRACT.md`.
   - Write the results in the process log.
-- Done: no
+- Done: yes
 
 ### 11. Merge
 
@@ -157,4 +157,4 @@ switches to it.
   explicit approval. Compare with `master` first, and merge `master` into the branch if it touches
   the same files.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes

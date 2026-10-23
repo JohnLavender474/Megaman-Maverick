@@ -208,14 +208,14 @@ class WorldSystem(
     internal fun processContacts(delta: Float) {
         diagnostics?.beginEntry("begin/continue contacts")
         currentContactSet.forEach {
-            if (priorContactSet.contains(it)) contactListener.continueContact(it, delta)
-            else contactListener.beginContact(it, delta)
+            if (priorContactSet.contains(it)) contactListener.continueContact(it.fixture1, it.fixture2, delta)
+            else contactListener.beginContact(it.fixture1, it.fixture2, delta)
         }
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("end contacts")
         priorContactSet.forEach {
-            if (!currentContactSet.contains(it)) contactListener.endContact(it, delta)
+            if (!currentContactSet.contains(it)) contactListener.endContact(it.fixture1, it.fixture2, delta)
             contactPool.free(it)
         }
         diagnostics?.endEntry()

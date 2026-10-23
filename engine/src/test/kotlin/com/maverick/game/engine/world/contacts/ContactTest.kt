@@ -1,37 +1,12 @@
 package com.maverick.game.engine.world.contacts
 
-import com.maverick.game.engine.common.objects.GamePair
-import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
-import com.maverick.game.engine.world.body.IFixture
-import com.maverick.game.engine.world.body.IFixtureType
 import com.maverick.game.engine.world.body.TestFixtureType
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-
-private class DummyFixture : IFixture {
-    override fun getShape() =
-        throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
-
-    override fun setShape(shape: IGameShape2D) =
-        throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
-
-    override fun setActive(active: Boolean) =
-        throw IllegalStateException("The `setShape` method should never be called on a DummyFixture instance")
-
-    override fun isActive() =
-        throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
-
-    override fun getType() =
-        throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
-
-    override val properties: Properties
-        get() = throw IllegalStateException("The `getType` method should never be called on a DummyFixture instance")
-}
 
 class ContactDescribeSpec :
     DescribeSpec({
@@ -41,40 +16,9 @@ class ContactDescribeSpec :
             val fixture2 = Fixture(body, TestFixtureType.TYPE2, GameRectangle())
             val contact = Contact(fixture1, fixture2)
 
-            val out = GamePair<IFixture, IFixture>(DummyFixture(), DummyFixture())
-
             it("should have the correct initial properties") {
                 contact.fixture1 shouldBe fixture1
                 contact.fixture2 shouldBe fixture2
-            }
-
-            it("should get fixtures in order correctly") {
-                val fixtureType1 = TestFixtureType.TYPE1
-                val fixtureType2 = TestFixtureType.TYPE2
-
-                var fixturesInOrder = contact.getFixturesInOrder(fixtureType1, fixtureType2, out)
-                fixturesInOrder shouldBe GamePair(fixture1, fixture2)
-
-                fixturesInOrder = contact.getFixturesInOrder(fixtureType2, fixtureType1, out)
-                fixturesInOrder shouldBe GamePair(fixture2, fixture1)
-            }
-
-            it("should check if fixtures are of types correctly") {
-                val fixtureType1 = TestFixtureType.TYPE1
-                val fixtureType2 = TestFixtureType.TYPE2
-                val badFixtureType = TestFixtureType.TYPE3
-
-                val test: (IFixtureType, IFixtureType, Boolean) -> Unit = { f1, f2, expected ->
-                    contact.fixturesMatch(f1, f2) shouldBe expected
-                }
-
-                test(fixtureType1, fixtureType2, true)
-                test(fixtureType2, fixtureType1, true)
-                test(fixtureType1, fixtureType1, false)
-                test(fixtureType2, fixtureType2, false)
-                test(fixtureType1, badFixtureType, false)
-                test(fixtureType2, badFixtureType, false)
-                test(badFixtureType, badFixtureType, false)
             }
 
             it("should check equality correctly") {

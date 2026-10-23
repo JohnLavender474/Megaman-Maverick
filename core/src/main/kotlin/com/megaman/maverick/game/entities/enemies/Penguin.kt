@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
-import com.megaman.maverick.game.world.contacts.MegaContactListener
+import com.megaman.maverick.game.world.contacts.ContactValues
 import kotlin.math.abs
 
 class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable {
@@ -82,8 +82,8 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.physics.defaultFrictionOnSelf.set(
-            MegaContactListener.ICE_FRICTION,
-            MegaContactListener.ICE_FRICTION
+            ContactValues.ICE_FRICTION,
+            ContactValues.ICE_FRICTION
         ).scl(ConstVals.PPM.toFloat())
         body.physics.applyFrictionX = true
         body.physics.applyFrictionY = false
