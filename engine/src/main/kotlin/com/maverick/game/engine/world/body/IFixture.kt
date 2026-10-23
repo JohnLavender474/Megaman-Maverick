@@ -4,7 +4,7 @@ import com.maverick.game.engine.common.interfaces.IPropertizable
 import com.maverick.game.engine.common.interfaces.ITypable
 import com.maverick.game.engine.common.shapes.IGameShape2D
 
-interface IFixture : ITypable<Any>, IPropertizable {
+interface IFixture : ITypable<IFixtureType>, IPropertizable {
 
     fun getShape(): IGameShape2D
 

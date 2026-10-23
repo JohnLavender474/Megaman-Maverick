@@ -76,9 +76,9 @@ class SimpleGridWorldContainerTest : DescribeSpec({
 
             val body = mockk<Body>()
             val fixtures = gdxArrayOf(
-                Fixture(body, "Fixture1", GameRectangle(0f, 0f, 10f, 10f), attachedToBody = false),
-                Fixture(body, "Fixture2", GameRectangle(42f, 42f, 15f, 15f), attachedToBody = false),
-                Fixture(body, "Fixture3", GameRectangle(92f, 92f, 5f, 5f), attachedToBody = false)
+                Fixture(body, TestFixtureType.FIXTURE1, GameRectangle(0f, 0f, 10f, 10f), attachedToBody = false),
+                Fixture(body, TestFixtureType.FIXTURE2, GameRectangle(42f, 42f, 15f, 15f), attachedToBody = false),
+                Fixture(body, TestFixtureType.FIXTURE3, GameRectangle(92f, 92f, 5f, 5f), attachedToBody = false)
             )
 
             // when
@@ -140,9 +140,9 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             // given
             val body = mockk<Body>()
             val fixtures = gdxArrayOf(
-                Fixture(body, "Fixture1", GameRectangle(10f, 10f, 20f, 20f), attachedToBody = false),
-                Fixture(body, "Fixture2", GameRectangle(40f, 40f, 10f, 10f), attachedToBody = false),
-                Fixture(body, "Fixture3", GameRectangle(80f, 80f, 5f, 5f), attachedToBody = false)
+                Fixture(body, TestFixtureType.FIXTURE1, GameRectangle(10f, 10f, 20f, 20f), attachedToBody = false),
+                Fixture(body, TestFixtureType.FIXTURE2, GameRectangle(40f, 40f, 10f, 10f), attachedToBody = false),
+                Fixture(body, TestFixtureType.FIXTURE3, GameRectangle(80f, 80f, 5f, 5f), attachedToBody = false)
             )
 
             fixtures.forEach { grid.addFixture(it) }
@@ -325,7 +325,7 @@ class SimpleGridWorldContainerTest : DescribeSpec({
         it("should retrieve fixtures in the specified area and apply subtractOnExactInteger=false") {
             // Given
             val body = mockk<Body>()
-            val fixture = Fixture(body, "Fixture1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(body, TestFixtureType.FIXTURE1, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
 
             // When
             grid.addFixture(fixture)
@@ -427,8 +427,8 @@ class SimpleGridWorldContainerTest : DescribeSpec({
         it("forEachFixture single-cell should invoke action for matching fixtures") {
             // Given
             val body = mockk<Body>()
-            val fixture1 = Fixture(body, "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
-            val fixture2 = Fixture(body, "F2", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            val fixture1 = Fixture(body, TestFixtureType.F1, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(body, TestFixtureType.F2, GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
             grid.addFixture(fixture1)
             grid.addFixture(fixture2)
 
@@ -445,8 +445,8 @@ class SimpleGridWorldContainerTest : DescribeSpec({
         it("forEachFixture range should invoke action for all fixtures in range") {
             // Given
             val body = mockk<Body>()
-            val fixture1 = Fixture(body, "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
-            val fixture2 = Fixture(body, "F2", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            val fixture1 = Fixture(body, TestFixtureType.F1, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(body, TestFixtureType.F2, GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
             grid.addFixture(fixture1)
             grid.addFixture(fixture2)
 
@@ -463,15 +463,15 @@ class SimpleGridWorldContainerTest : DescribeSpec({
         it("forEachFixture action can filter inline") {
             // Given
             val body = mockk<Body>()
-            val fixture1 = Fixture(body, "keep", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
-            val fixture2 = Fixture(body, "skip", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture1 = Fixture(body, TestFixtureType.KEEP, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(body, TestFixtureType.SKIP, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
             grid.addFixture(fixture1)
             grid.addFixture(fixture2)
 
             val visited = mutableListOf<IFixture>()
 
             // When
-            grid.forEachFixture(1, 1) { fixture, _ -> if (fixture.getType() == "keep") visited.add(fixture); true }
+            grid.forEachFixture(1, 1) { fixture, _ -> if (fixture.getType() == TestFixtureType.KEEP) visited.add(fixture); true }
 
             // Then
             visited shouldContain fixture1
@@ -482,7 +482,7 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             // given
             val body = mockk<Body>()
             val original = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
-            val originalFixture = Fixture(body, "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val originalFixture = Fixture(body, TestFixtureType.F1, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
             grid.addBody(original)
             grid.addFixture(originalFixture)
 
@@ -492,7 +492,7 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             grid.clear()
 
             val replacement = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
-            val replacementFixture = Fixture(body, "F2", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val replacementFixture = Fixture(body, TestFixtureType.F2, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
             grid.addBody(replacement)
             grid.addFixture(replacementFixture)
 
@@ -559,7 +559,7 @@ class SimpleGridWorldContainerTest : DescribeSpec({
         it("clear should recycle cells so rebuilding does not reallocate them") {
             // given - a populated grid whose cells are about to be released
             grid.addBody(Body(BodyType.DYNAMIC, 0f, 0f, 10f, 10f))
-            grid.addFixture(Fixture(mockk<Body>(), "F1", GameRectangle(0f, 0f, 10f, 10f), attachedToBody = false))
+            grid.addFixture(Fixture(mockk<Body>(), TestFixtureType.F1, GameRectangle(0f, 0f, 10f, 10f), attachedToBody = false))
 
             val bodyCells = grid.getOccupiedBodyCellCount()
             val fixtureCells = grid.getOccupiedFixtureCellCount()
@@ -582,7 +582,7 @@ class SimpleGridWorldContainerTest : DescribeSpec({
         it("cells should collapse duplicate adds") {
             // given
             val body = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
-            val fixture = Fixture(mockk<Body>(), "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockk<Body>(), TestFixtureType.F1, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
 
             // when - added repeatedly without an intervening clear
             repeat(3) {
@@ -603,7 +603,7 @@ class SimpleGridWorldContainerTest : DescribeSpec({
         it("forEachFixture stops early when action returns false") {
             // Given
             val body = mockk<Body>()
-            val fixtures = (1..5).map { Fixture(body, "F$it", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false) }
+            val fixtures = (1..5).map { Fixture(body, TestFixtureType.F, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false) }
             fixtures.forEach { grid.addFixture(it) }
 
             val visited = mutableListOf<IFixture>()

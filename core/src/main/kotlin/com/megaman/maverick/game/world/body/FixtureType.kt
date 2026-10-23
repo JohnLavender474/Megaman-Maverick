@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.world.body
 
-enum class FixtureType {
+import com.maverick.game.engine.world.body.IFixtureType
+
+enum class FixtureType : IFixtureType {
     BLOCK,
     PLAYER,
     BODY,
@@ -29,5 +31,7 @@ enum class FixtureType {
     WATER_LISTENER,
     GRAVITY_CHANGE,
     TELEPORTER,
-    TELEPORTER_LISTENER
+    TELEPORTER_LISTENER;
+
+    override val index get() = ordinal
 }

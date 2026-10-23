@@ -18,7 +18,7 @@ class BodyTest :
         describe("Body") {
             val bodyType = BodyType.ABSTRACT
             val physicsData = PhysicsData()
-            val fixtures = orderedMapOf<Any, OrderedSet<IFixture>>()
+            val fixtures = orderedMapOf<IFixtureType, OrderedSet<IFixture>>()
             val props = Properties()
             val body = Body(bodyType, physics = physicsData, fixtures = fixtures, properties = props)
             val out = Vector2()
@@ -73,19 +73,19 @@ class BodyTest :
                 body.setSize(10f)
                 body.setCenter(0f, 0f)
 
-                val bottomFixture = Fixture(body, "bottom", GameRectangle().setSize(1f))
+                val bottomFixture = Fixture(body, TestFixtureType.BOTTOM, GameRectangle().setSize(1f))
                 bottomFixture.offsetFromBodyAttachment.y = -5f
                 body.addFixture(bottomFixture)
 
-                val topFixture = Fixture(body, "top", GameRectangle().setSize(1f))
+                val topFixture = Fixture(body, TestFixtureType.TOP, GameRectangle().setSize(1f))
                 topFixture.offsetFromBodyAttachment.y = 5f
                 body.addFixture(topFixture)
 
-                val leftFixture = Fixture(body, "left", GameRectangle().setSize(1f))
+                val leftFixture = Fixture(body, TestFixtureType.LEFT, GameRectangle().setSize(1f))
                 leftFixture.offsetFromBodyAttachment.x = -5f
                 body.addFixture(leftFixture)
 
-                val rightFixture = Fixture(body, "right", GameRectangle().setSize(1f))
+                val rightFixture = Fixture(body, TestFixtureType.RIGHT, GameRectangle().setSize(1f))
                 rightFixture.offsetFromBodyAttachment.x = 5f
                 body.addFixture(rightFixture)
 

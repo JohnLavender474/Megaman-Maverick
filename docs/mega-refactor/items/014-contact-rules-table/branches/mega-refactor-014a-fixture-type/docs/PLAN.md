@@ -18,13 +18,13 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
     `ITEM.md`. Set the branch `process-log.md` state to `active`.
   - `git worktree add -b mega-refactor-014a-fixture-type .worktrees/mega-refactor-014a-fixture-type master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. In the worktree, run `./gradlew engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 427 engine, 77 core) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Add `IFixtureType` and narrow the engine types
 
@@ -39,7 +39,7 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
     `getFixtures` and `forEachFixture` the same apart from the types.
 - Check: `./gradlew engine:compileKotlin` passes. The engine tests do not compile yet; step 4 fixes
   them.
-- Done: no
+- Done: yes
 
 ### 4. Engine tests: a test enum instead of strings
 
@@ -57,14 +57,14 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
     fine. Leave strings that are not fixture types alone (property keys, event keys).
   - Fix any test `DummyFixture` that overrides `getType()`.
 - Check: `./gradlew engine:test` passes, with the same test count as the baseline.
-- Done: no
+- Done: yes
 
 ### 5. Core: `FixtureType` implements `IFixtureType`
 
 - Changes: `enum class FixtureType : IFixtureType` in `core/.../world/body/FixtureType.kt`, with
   `override val index get() = ordinal`. Fix any core compile error that the narrower types show. The scan expects none.
 - Check: `./gradlew core:test lwjgl3:jar` passes, with the same core test count as the baseline.
-- Done: no
+- Done: yes
 
 ### 6. Contract checks
 
@@ -75,7 +75,7 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
   - The owner runs the smoke run in `CONTRACT.md` (`TEST_1`, and one minute of a Robot Master
     level).
   - Write the results in the process log.
-- Done: no
+- Done: yes
 
 ### 7. Merge
 
@@ -84,4 +84,4 @@ Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
   merge `master` into this branch first if they overlap (`MegaContactFilter.kt` imports, engine
   tests).
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes

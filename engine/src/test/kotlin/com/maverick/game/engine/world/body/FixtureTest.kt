@@ -9,7 +9,7 @@ class FixtureTest :
     DescribeSpec({
         describe("Fixture class") {
             val shape = GameRectangle(0f, 0f, 10f, 10f)
-            val type = "type"
+            val type = TestFixtureType.TYPE
             val offset = Vector2(5f, 5f)
             val body = Body(BodyType.DYNAMIC)
 
@@ -26,7 +26,7 @@ class FixtureTest :
             }
 
             it("should overlap with another fixture") {
-                val otherFixture = Fixture(body, "otherType", shape)
+                val otherFixture = Fixture(body, TestFixtureType.OTHER_TYPE, shape)
                 fixture.overlaps(otherFixture) shouldBe true
             }
 

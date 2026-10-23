@@ -8,7 +8,7 @@ import com.maverick.game.engine.common.shapes.IGameShape2D
 
 class FixtureBuilder(
     private var body: Body,
-    private var type: Any,
+    private var type: IFixtureType,
     private var rawShape: IGameShape2D = GameRectangle(),
     private var active: Boolean = true,
     private var attachedToBody: Boolean = true,
@@ -17,7 +17,7 @@ class FixtureBuilder(
     private var properties: Properties = Properties()
 ) {
 
-    fun type(type: Any): FixtureBuilder {
+    fun type(type: IFixtureType): FixtureBuilder {
         this.type = type
         return this
     }

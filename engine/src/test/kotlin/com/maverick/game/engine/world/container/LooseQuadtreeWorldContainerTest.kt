@@ -70,7 +70,7 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
         it("should find a fixture when querying its grid cell") {
             val mockBody = mockk<Body>()
             // world [30, 30, 40, 40] -> grid cell (3, 3)
-            val fixture = Fixture(mockBody, "TestFixture", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockBody, TestFixtureType.TEST_FIXTURE, GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
             tree.addFixture(fixture)
 
             tree.getFixtures(3, 3, outFixtures)
@@ -80,7 +80,7 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         it("should not find a fixture when querying a far-away region") {
             val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, "TestFixture", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockBody, TestFixtureType.TEST_FIXTURE, GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
             tree.addFixture(fixture)
 
             tree.getFixtures(50, 50, 60, 60, outFixtures)
@@ -109,8 +109,8 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         it("should find multiple fixtures in a range query and exclude distant fixtures") {
             val mockBody = mockk<Body>()
-            val fixture1 = Fixture(mockBody, "F1", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
-            val fixture2 = Fixture(mockBody, "F2", GameRectangle(500f, 500f, 10f, 10f), attachedToBody = false)
+            val fixture1 = Fixture(mockBody, TestFixtureType.F1, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(mockBody, TestFixtureType.F2, GameRectangle(500f, 500f, 10f, 10f), attachedToBody = false)
 
             tree.addFixture(fixture1)
             tree.addFixture(fixture2)
@@ -188,7 +188,7 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         it("should find a fixture at negative world coordinates") {
             val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, "NegFix", GameRectangle(-80f, -80f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockBody, TestFixtureType.NEG_FIX, GameRectangle(-80f, -80f, 10f, 10f), attachedToBody = false)
             tree.addFixture(fixture)
 
             tree.getFixtures(-8, -8, outFixtures)
@@ -204,7 +204,7 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
         it("should remove all bodies and fixtures after clear") {
             val body = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
             val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, "F", GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockBody, TestFixtureType.F, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
 
             tree.addBody(body)
             tree.addFixture(fixture)
@@ -222,7 +222,7 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
         it("copy should contain the same bodies and fixtures as the original") {
             val body = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
             val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, "F", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockBody, TestFixtureType.F, GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
 
             tree.addBody(body)
             tree.addFixture(fixture)
@@ -316,7 +316,7 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         it("forEachFixture single-cell should invoke action for a nearby fixture") {
             val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, "F", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockBody, TestFixtureType.F, GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
             tree.addFixture(fixture)
 
             val visited = mutableListOf<IFixture>()
@@ -327,7 +327,7 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         it("forEachFixture range should exclude a far-away fixture") {
             val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, "F", GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
+            val fixture = Fixture(mockBody, TestFixtureType.F, GameRectangle(30f, 30f, 10f, 10f), attachedToBody = false)
             tree.addFixture(fixture)
 
             val visited = mutableListOf<IFixture>()
@@ -338,13 +338,13 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         it("forEachFixture action can filter inline") {
             val mockBody = mockk<Body>()
-            val fixture1 = Fixture(mockBody, "keep", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
-            val fixture2 = Fixture(mockBody, "skip", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture1 = Fixture(mockBody, TestFixtureType.KEEP, GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(mockBody, TestFixtureType.SKIP, GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
             tree.addFixture(fixture1)
             tree.addFixture(fixture2)
 
             val visited = mutableListOf<IFixture>()
-            tree.forEachFixture(4, 4, 6, 6) { f, _ -> if (f.getType() == "keep") visited.add(f); true }
+            tree.forEachFixture(4, 4, 6, 6) { f, _ -> if (f.getType() == TestFixtureType.KEEP) visited.add(f); true }
 
             visited shouldContain fixture1
             visited shouldNotContain fixture2
@@ -352,8 +352,8 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         it("forEachFixture stops early when action returns false") {
             val mockBody = mockk<Body>()
-            val fixture1 = Fixture(mockBody, "F1", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
-            val fixture2 = Fixture(mockBody, "F2", GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture1 = Fixture(mockBody, TestFixtureType.F1, GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
+            val fixture2 = Fixture(mockBody, TestFixtureType.F2, GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
             tree.addFixture(fixture1)
             tree.addFixture(fixture2)
 

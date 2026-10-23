@@ -8,6 +8,8 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.maverick.game.engine.world.body.IFixture
+import com.maverick.game.engine.world.body.IFixtureType
+import com.maverick.game.engine.world.body.TestFixtureType
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
@@ -35,8 +37,8 @@ class ContactDescribeSpec :
     DescribeSpec({
         describe("Contact data class") {
             val body = Body(BodyType.ABSTRACT)
-            val fixture1 = Fixture(body, "type1", GameRectangle())
-            val fixture2 = Fixture(body, "type2", GameRectangle())
+            val fixture1 = Fixture(body, TestFixtureType.TYPE1, GameRectangle())
+            val fixture2 = Fixture(body, TestFixtureType.TYPE2, GameRectangle())
             val contact = Contact(fixture1, fixture2)
 
             val out = GamePair<IFixture, IFixture>(DummyFixture(), DummyFixture())
@@ -47,8 +49,8 @@ class ContactDescribeSpec :
             }
 
             it("should get fixtures in order correctly") {
-                val fixtureType1 = "type1"
-                val fixtureType2 = "type2"
+                val fixtureType1 = TestFixtureType.TYPE1
+                val fixtureType2 = TestFixtureType.TYPE2
 
                 var fixturesInOrder = contact.getFixturesInOrder(fixtureType1, fixtureType2, out)
                 fixturesInOrder shouldBe GamePair(fixture1, fixture2)
@@ -58,11 +60,11 @@ class ContactDescribeSpec :
             }
 
             it("should check if fixtures are of types correctly") {
-                val fixtureType1 = "type1"
-                val fixtureType2 = "type2"
-                val badFixtureType = "type3"
+                val fixtureType1 = TestFixtureType.TYPE1
+                val fixtureType2 = TestFixtureType.TYPE2
+                val badFixtureType = TestFixtureType.TYPE3
 
-                val test: (String, String, Boolean) -> Unit = { f1, f2, expected ->
+                val test: (IFixtureType, IFixtureType, Boolean) -> Unit = { f1, f2, expected ->
                     contact.fixturesMatch(f1, f2) shouldBe expected
                 }
 
@@ -78,7 +80,7 @@ class ContactDescribeSpec :
             it("should check equality correctly") {
                 val sameContact = Contact(fixture1, fixture2)
                 val swappedContact = Contact(fixture2, fixture1)
-                val differentFixture = Fixture(body, "type3", GameRectangle())
+                val differentFixture = Fixture(body, TestFixtureType.TYPE3, GameRectangle())
                 val differentContact = Contact(fixture1, differentFixture)
 
                 (contact == sameContact) shouldBe true

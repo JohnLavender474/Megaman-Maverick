@@ -59,7 +59,7 @@ class WorldSystemTest : DescribeSpec({
     }
 
     it("should add body and fixtures to world container correctly") {
-        val fixture = Fixture(body, "Type", GameRectangle())
+        val fixture = Fixture(body, TestFixtureType.TYPE, GameRectangle())
         body.addFixture(fixture)
 
         worldSystem.update(fixedStep)
@@ -94,10 +94,10 @@ class WorldSystemTest : DescribeSpec({
     }
 
     it("should filter contacts correctly") {
-        val fixture1 = Fixture(mockk(), "Type1", mockk(), drawingColor = Color.RED)
-        val fixture2 = Fixture(mockk(), "Type2", mockk(), drawingColor = Color.RED)
-        val filterMap = ObjectMap<Any, ObjectSet<Any>>().apply {
-            put("Type1", objectSetOf("Type2"))
+        val fixture1 = Fixture(mockk(), TestFixtureType.TYPE1, mockk(), drawingColor = Color.RED)
+        val fixture2 = Fixture(mockk(), TestFixtureType.TYPE2, mockk(), drawingColor = Color.RED)
+        val filterMap = ObjectMap<IFixtureType, ObjectSet<IFixtureType>>().apply {
+            put(TestFixtureType.TYPE1, objectSetOf(TestFixtureType.TYPE2))
         }
 
         val filteredSystem = WorldSystem(
@@ -123,7 +123,7 @@ class WorldSystemTest : DescribeSpec({
     }
 
     it("should update fixture positions correctly - 1") {
-        val fixture = Fixture(body, "Type", GameRectangle()).apply {
+        val fixture = Fixture(body, TestFixtureType.TYPE, GameRectangle()).apply {
             offsetFromBodyAttachment.set(5f, 5f)
         }
         body.addFixture(fixture)
@@ -133,7 +133,7 @@ class WorldSystemTest : DescribeSpec({
 
     it("should update fixture positions correctly - 2") {
         body.setCenter(5f, 5f)
-        val fixture = Fixture(body, "Type", GameRectangle()).apply {
+        val fixture = Fixture(body, TestFixtureType.TYPE, GameRectangle()).apply {
             offsetFromBodyAttachment.set(5f, 5f)
         }
         body.addFixture(fixture)

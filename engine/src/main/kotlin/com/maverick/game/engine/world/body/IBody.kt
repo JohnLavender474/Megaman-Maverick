@@ -15,7 +15,7 @@ interface IBody : IRectangle, IProcessable, IDirectional, IPropertizable, Resett
 
     fun removeFixture(fixture: IFixture): Boolean
 
-    fun getFixtures(out: Array<IFixture>, vararg params: Any): Array<IFixture>
+    fun getFixtures(out: Array<IFixture>, vararg params: IFixtureType): Array<IFixture>
 
     fun forEachFixture(action: (IFixture) -> Unit): IBody
 

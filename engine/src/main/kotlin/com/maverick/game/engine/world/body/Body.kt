@@ -27,7 +27,7 @@ class Body(
     width: Float = 0f,
     height: Float = 0f,
     override var physics: PhysicsData = PhysicsData(),
-    var fixtures: OrderedMap<Any, OrderedSet<IFixture>> = OrderedMap(),
+    var fixtures: OrderedMap<IFixtureType, OrderedSet<IFixture>> = OrderedMap(),
     var preProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
     var postProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
     var onReset: OrderedMap<Any, () -> Unit> = OrderedMap(),
@@ -80,7 +80,7 @@ class Body(
         return true
     }
 
-    override fun getFixtures(out: Array<IFixture>, vararg params: Any): Array<IFixture> {
+    override fun getFixtures(out: Array<IFixture>, vararg params: IFixtureType): Array<IFixture> {
         when {
             !params.isEmpty() -> params.forEach { type ->
                 val set = fixtures[type] ?: return@forEach

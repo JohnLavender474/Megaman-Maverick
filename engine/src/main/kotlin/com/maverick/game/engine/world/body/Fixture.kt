@@ -14,7 +14,7 @@ import com.maverick.game.engine.drawables.shapes.IDrawableShape
 
 class Fixture(
     var body: Body,
-    type: Any,
+    type: IFixtureType,
     rawShape: IGameShape2D = GameRectangle(),
     active: Boolean = true,
     var attachedToBody: Boolean = true,

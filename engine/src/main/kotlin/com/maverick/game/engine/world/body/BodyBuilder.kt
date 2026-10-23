@@ -13,7 +13,7 @@ class BodyBuilder(
     private var width: Float = 0f,
     private var height: Float = 0f,
     private var physics: PhysicsData = PhysicsData(),
-    private var fixtures: OrderedMap<Any, OrderedSet<IFixture>> = OrderedMap(),
+    private var fixtures: OrderedMap<IFixtureType, OrderedSet<IFixture>> = OrderedMap(),
     private var preProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
     private var postProcess: OrderedMap<Any, (Body) -> Unit> = OrderedMap(),
     private var onReset: OrderedMap<Any, () -> Unit> = OrderedMap(),
