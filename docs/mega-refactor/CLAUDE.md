@@ -162,6 +162,10 @@ alone does not need a new approval, but write the reason in the process log.
 - Put other docs (design notes, decisions, TODO lists) in the branch `docs/`.
 - If you find a new idea that is out of scope, write it in the branch `docs/TODO.md` under
   "Backlog candidates". If you find a bug, write it under "Bug candidates".
+- A very small quality-of-life change that is out of scope (for example a run script option or a
+  docs line) may go into the current branch, with no new scope approval. It must not change
+  gameplay. Write each one in the branch process log. Anything larger, or anything that changes
+  gameplay, is a backlog candidate or a bug candidate as above.
 
 ### Branch merge
 
