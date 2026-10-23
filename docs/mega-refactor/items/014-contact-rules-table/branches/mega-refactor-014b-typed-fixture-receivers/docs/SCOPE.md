@@ -1,10 +1,10 @@
 # Scope: mega-refactor-014b-typed-fixture-receivers
 
-What this branch changes and why. This is a draft written ahead of time on `master`. The branch
-does not exist yet, and the user has not approved this scope.
+What this branch changes and why. This was written ahead of time on `master`, before the branch
+existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 ## Goal
 
@@ -185,8 +185,8 @@ That is 182 registration sites, plus 3 for the exception.
 
 ## Open questions
 
-1. Function types (bare lambdas, `delta` still boxed as today) or `fun interface`s (no boxing, an
-   explicit constructor at each registration site)? The draft uses function types.
-2. Migrate all sites and delete the trios in this branch (the draft), or keep one-line adapters
-   first and migrate later?
-3. The generic key in the engine (the draft) or in `core` first?
+None open.
+
+- (2026-10-22) Owner's decisions: function types for the receiver types; migrate every site and
+  delete the trios in this branch; the generic key (`PropertyKey`, `PhasedPropertyKey`) goes in the
+  engine. All three match the draft.
