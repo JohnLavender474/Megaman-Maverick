@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: World entities, contact rules and world body code reach the player through the players service; `HIT_BY_PLAYER` takes the player view
-- Done: scan; draft `docs/SCOPE.md`.
-- Next: the owner approves `docs/SCOPE.md`.
+- Done: scan; `docs/SCOPE.md` approved; draft `docs/CONTRACT.md`.
+- Next: the owner reviews `docs/CONTRACT.md`.
 - Blocked:
 
 ## Entries
@@ -40,3 +40,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   the player's direction and the camera's direction are the same "world" gravity, also for the direct writes.
 - The owner decided the gravity questions: `WorldGravity` on the game; all writers call `gravity.set`; world-direction readers read it; camera rotation stays in the player's setter with a `TODO`; Moon Man sets gravity only when the target player is alive (`TODO` for `047`); all in `029d`. Scope updated.
 - Owner decision: comment out `GravityCapsule` and `PortalHopper`'s `next_body_direction` (both unused) with `TODO`s. Scope updated.
+- Scope approved by the owner. Draft `docs/CONTRACT.md` written; real-level rooms found from the live TMX files (the room with the object, or the nearest earlier room with a player spawn).
