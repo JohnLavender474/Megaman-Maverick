@@ -2,6 +2,22 @@
 
 ## Decisions
 
+Owner answers to the scan questions (2026-10-23):
+
+- Q2: one shared lives count now; `TODO` for per-player lives (`047`). No `LivesPolicy` interface yet.
+- Q3: option (a). The owned weapons are a set in `GameState` (not saved). The reward table fills it and moves
+  out of `Megaman`. The level override adds to it. Each player copies it into its handler. The ammo stays on
+  the player.
+- Q4: a `TODO` for `047` at the registration (late join misses the heart tank bumps and weapons); no code.
+- Q6: `contactWithPlayer(player: MegaPlayer)`; items use `player.slot`; `PlayerItemRule` uses `asPlayer`.
+- Q7: the wrappers' logic moves to `GameState`; every caller changes in this branch, also the `029f` screens.
+  The screens keep `megaman` for health, ammo and the current weapon until `029f`.
+- Q1: lives go into `GameState`. The owner wants the switch between a shared pool and per-player lives to
+  be straightforward, so the lives calls take the player's slot now (the shared count ignores it), and the
+  game-over check is one call (`livesExhausted`) with a `047` `TODO`.
+- Q5: the `Life` drop odds use `targetPlayer`'s slot; the `HealthBulb` drop odds read `targetPlayer`'s
+  health ratio, with a `047` `TODO`.
+
 ## Overlap with other branches
 
 No other `029` branch is active. The active items `001`, `008` and `019` do not touch the profile code.

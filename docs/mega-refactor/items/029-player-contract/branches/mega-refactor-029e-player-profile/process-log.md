@@ -5,7 +5,7 @@
 - State: planned
 - Goal: Lives, tanks, enhancements and weapons owned in one session profile; `ItemEntity` takes the player view
 - Done:
-- Next: the owner answers the scan questions; then draft `docs/SCOPE.md`
+- Next: the owner reviews the draft `docs/SCOPE.md`
 - Blocked:
 
 ## Entries
@@ -17,3 +17,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - No branch exists yet. The folder was prepared on `master`.
 - Scan done on `b3bc97f80`. Findings and open questions in `docs/NOTES.md` ("Scan"). No scope yet.
 
+- The owner answered the scan questions 1-7 (`docs/NOTES.md`, "Decisions"). Draft `docs/SCOPE.md` written.
