@@ -1,10 +1,10 @@
 # Plan: mega-refactor-014b-typed-fixture-receivers
 
-How to do the work in `SCOPE.md`. This is a draft written ahead of time on `master`. The user has
-not approved it yet.
+How to do the work in `SCOPE.md`. This was written ahead of time on `master`, before the branch
+existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`.
 

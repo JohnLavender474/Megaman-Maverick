@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `006`, `020`, `029`, `030`, `031`, `055`, `056`
-- Branches: `014a` (merged), `014b`, `014c` (planned, see "Decisions")
+- Branches: `014a` (merged), `014b` (active), `014c` (planned, see "Decisions")
 
 ## Goal
 
