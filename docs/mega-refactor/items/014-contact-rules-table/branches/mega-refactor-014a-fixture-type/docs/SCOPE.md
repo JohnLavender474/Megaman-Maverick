@@ -1,10 +1,10 @@
 # Scope: mega-refactor-014a-fixture-type
 
-What this branch changes and why. This is a draft written ahead of time on `master`. The branch
-does not exist yet, and the user has not approved this scope.
+What this branch changes and why. This was written ahead of time on `master`, before the branch
+existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 ## Goal
 
@@ -126,10 +126,9 @@ Scan of `master` at `f8cab20dc`.
 
 ## Open questions
 
-1. Name of the index property: `ordinal` (an enum gets it free) or `index` (needs one line in the
-   enum, but does not suggest that only enums fit)? The draft uses `ordinal`.
+None open.
 
-Resolved in the draft:
+- (2026-10-22) The index property is named `ordinal`, so an enum gets it free. Owner's decision.
 
 - (2026-10-22) The first draft passed an optional `FixtureTypeSet` to `WorldSystem` and checked
   `owns` there. The owner asked what that gives. Answer: nothing that matters. `WorldSystem` never
