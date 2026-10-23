@@ -3,7 +3,7 @@
 ## Status
 
 - State: planned
-- Goal: Narrow the engine fixture type from `Any` to `IFixtureType`, with a `FixtureTypeSet`
+- Goal: Narrow the engine fixture type from `Any` to `IFixtureType`
 - Done:
 - Next: the owner reviews the draft `docs/SCOPE.md`.
 - Blocked:
@@ -16,4 +16,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 
 - No branch exists yet. The folder was prepared on `master`.
 - Scan done. Draft `docs/SCOPE.md` written for the owner to review.
-
+- Draft scope revised: `FixtureTypeSet` and the `WorldSystem` check removed; the set moves to `014c`.

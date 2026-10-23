@@ -8,10 +8,13 @@ does not exist yet, and the user has not approved this scope.
 
 ## Goal
 
-Type fixtures in the engine as `IFixtureType` (`ordinal`, `name`) instead of `Any`, and add an
-engine `FixtureTypeSet` that owns a game's fixture types and checks them. This gives the `014c`
-rule table a dense, checked index with no casts. Gameplay does not change: only compile-time types
-change, and the new check never fails for the game's own types.
+Type fixtures in the engine as `IFixtureType` (`ordinal`, `name`) instead of `Any`. This gives the
+`014c` rule table a dense index with no casts. Gameplay does not change: only compile-time types
+change.
+
+`FixtureTypeSet` (from the same decision) moves to `014c`. Only the rule table uses the ordinal, so
+only the table needs the set and its `owns` check. See "Open questions" for the record of this
+change.
 
 ## Item
 
@@ -75,41 +78,24 @@ Scan of `master` at `f8cab20dc`.
 
 - New `IFixtureType` interface: `val ordinal: Int`, `val name: String`. An enum implements it with no
   code.
-- New `FixtureTypeSet`:
-  - `of(entries)` for an enum that implements `IFixtureType`;
-  - `validated(list)` for a hand-written list. It checks that the ordinals are `0..n-1` in list
-    order and that the names are unique, and it throws with the type's name if not;
-  - `named(vararg names)` creates the types and assigns the ordinals, for games that do not use
-    enums;
-  - `size`, `get(ordinal)`, `valueOf(name)`, `owns(type)` (`type.ordinal in 0 until size &&
-    types[type.ordinal] === type`).
 - `IFixture : ITypable<IFixtureType>`; `Fixture(type: IFixtureType)`.
 - `Body.fixtures: OrderedMap<IFixtureType, OrderedSet<IFixture>>`, the same in `BodyBuilder`, and
   `IBody.getFixtures(out, vararg params: IFixtureType)`.
-- `WorldSystem` takes an optional `fixtureTypes: FixtureTypeSet? = null`. When it is set,
-  `collectContacts` checks `owns` for each fixture it visits, and throws with the fixture and type if
-  the check fails. This catches a type from outside the set, for example a second instance with a
-  used ordinal. The cost is one array read and one reference compare per fixture per sub-step.
 
 **Core:**
 
 - `enum class FixtureType : IFixtureType`. No other code in the enum.
-- `MegamanMaverickGame.createGameEngine()` passes `FixtureTypeSet.of(FixtureType.entries)` to
-  `WorldSystem`.
 
 **Tests:**
 
 - Engine: an `internal enum class TestFixtureType : IFixtureType` replaces the string types and the
   `ObjectMap<Any, ...>` filter in `WorldSystemTest`.
-- New `FixtureTypeSetTest`: `of`, `validated` (a gap, a wrong order and a duplicate name throw),
-  `named`, `valueOf`, `owns` (a stray instance with a used ordinal is not owned).
-- New `WorldSystemTest` case: with a set given, a fixture whose type is not owned makes
-  `collectContacts` throw; with no set, nothing is checked.
-- Core: a test that `FixtureTypeSet.of(FixtureType.entries)` builds and owns every `FixtureType`.
 
 ## Out of scope
 
 - The `014c` rule table, and the removal of the `Contact` helpers.
+- `FixtureTypeSet`: it moves to `014c`, with the table that uses it.
+- Any fixture-type check in `WorldSystem`: the world never reads the type.
 - Removing the 4 `as FixtureType` casts. `014c` replaces the filter casts; they are harmless here.
 - An `IFixtureType` overload of `equalsAny`.
 - Changing `Body.fixtures` to an array indexed by ordinal. The insertion order of the map sets the
@@ -121,14 +107,10 @@ Scan of `master` at `f8cab20dc`.
 
 ## Affected areas and risks
 
-- **Files:** engine `world/body/` (`IFixture`, `Fixture`, `Body`, `IBody`, `BodyBuilder`, 2 new
-  files), `WorldSystem`, about 6 engine test files, core `FixtureType.kt` and
-  `MegamanMaverickGame.kt`, and 1 or 2 new test files.
+- **Files:** engine `world/body/` (`IFixture`, `Fixture`, `Body`, `IBody`, `BodyBuilder`, 1 new
+  file), about 6 engine test files, and core `FixtureType.kt`.
 - **No behavior change by design.** Enum `equals` and `hashCode` stay the same, and the generic
   types are erased at run time. The map keeps its insertion order.
-- **The new check could throw in the game** if some code makes a fixture with a type that is not a
-  `FixtureType`. The scan found none, and the compiler rejects any non-`IFixtureType` type. A
-  smoke run covers the rest.
 - **Engine tests:** a mechanical rewrite of the string types. A wrong rewrite shows up as a failing
   test, not as a silent change.
 - **The 1751 core references and the 876 constructor calls do not change.**
@@ -144,8 +126,13 @@ Scan of `master` at `f8cab20dc`.
 
 ## Open questions
 
-1. Should `WorldSystem` require the `FixtureTypeSet` (no default), so that every game must declare
-   its types? The draft makes it optional, which keeps the engine tests short, and `014c` makes the
-   table require it anyway.
-2. Name of the index property: `ordinal` (an enum gets it free) or `index` (needs one line in the
+1. Name of the index property: `ordinal` (an enum gets it free) or `index` (needs one line in the
    enum, but does not suggest that only enums fit)? The draft uses `ordinal`.
+
+Resolved in the draft:
+
+- (2026-10-22) The first draft passed an optional `FixtureTypeSet` to `WorldSystem` and checked
+  `owns` there. The owner asked what that gives. Answer: nothing that matters. `WorldSystem` never
+  reads the type. `Body.fixtures`, the filter maps and `==` compare by identity, so a stray type
+  with a used ordinal does no harm there. The ordinal matters only in the `014c` table, so the set
+  and its check belong to the table. `FixtureTypeSet` moves to `014c`, where it gets its first user.
