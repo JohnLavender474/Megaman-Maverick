@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `006`, `020`, `029`, `030`, `031`, `055`, `056`
-- Branches: `014a` (merged), `014b` (merged), `014c` (planned, see "Decisions")
+- Branches: `014a` (merged), `014b` (merged), `014c`, `014d` (planned, see "Decisions")
 
 ## Goal
 
@@ -32,11 +32,12 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - **Branch order:** the typed fixture receivers (former item `056`) come before the rule table work specified in `NOTES.md`. A fixture-type narrowing branch also comes before the table (research in `NOTES.md`, "Research: narrow the engine fixture type"). Planned branches:
   - `mega-refactor-014a-fixture-type`: narrow the engine fixture type from `Any`.
   - `mega-refactor-014b-typed-fixture-receivers`: the scope of the former item `056`. It does not depend on `014a`, so the two can run in parallel.
-  - `mega-refactor-014c-contact-rules-table`: the rule table. It needs `014a` and `014b`.
+  - `mega-refactor-014c-contact-rules-table`: the rule table, with the rule bodies moved unchanged. It needs `014a` and `014b`.
+  - `mega-refactor-014d-contact-receivers`: receivers and capabilities in place of the `Megaman` checks, the `MegaCollisionHandler` body flags, `SurfaceRule` and the wall-slide flag. It needs `014c`. The owner approved this split on 2026-10-22.
 - **Fixture type:** the engine types fixtures as an `IFixtureType` interface with one property, `index: Int` (a dense slot index, as in Ashley's `ComponentType.getIndex()`), not `Any` and not a primitive ID. An enum implements it with one line, `override val index get() = ordinal`. There is no `name` property: nothing reads it, and logs use `toString()` (owner's decision, 2026-10-22, which replaced the earlier `ordinal` and `name`). An engine `FixtureTypeSet` owns the set of types: it validates that the indexes are `0..n-1` in order (`of`, `validated`), creates types for games without enums (`named`, which also gives them a readable `toString()`), and checks that a type belongs to the set (`owns`). Fixture types are single instances, with no value equality. `014a` adds `IFixtureType`. `FixtureTypeSet` goes in `014c` with the table, because only the table uses the index (owner's question, 2026-10-22: `WorldSystem` never reads the type, so a check there gives nothing) (`NOTES.md`, "Research: narrow the engine fixture type" and its follow-up).
 - **No JSON rules:** simple surface rules are Kotlin data (`SurfaceRule`), not JSON (`NOTES.md` 4.6).
 - **Wall-slide ice friction:** a body flag that the wall-slide behavior sets replaces the `Megaman` check (`NOTES.md` 4.6).
-- **Contact trace:** `014c` builds the exhaustive selection test with a reference file (`NOTES.md`, "Research: contact trace"). No `--contactTrace` flag for now. The line-by-line diff waits for `055`.
+- **Contact trace:** `014c` builds the exhaustive selection test with a committed reference file (`NOTES.md`, "Research: contact trace"). No `--contactTrace` flag for now. The line-by-line diff waits for `055`.
 - **Engine:** the table mechanism (`ContactRuleTable`, builder, dispatcher) goes in the engine. `FixtureType`, the rules and the receivers stay in `core`.
 - **Phases:** one rule object per pair, with `onBegin`, `onContinue` and `onEnd` methods (option P1 in `NOTES.md` 4.4).
 - **Files:** one class and file per pair effect with real logic; generic classes for the receiver-forward pairs; one `ProjectileRules.kt` (`NOTES.md`, "Per-pair classes"). The branch confirms it in practice.
@@ -51,7 +52,7 @@ Answer to review item 13 (2026-10-22, verbatim):
 
 ## Open questions
 
-- The reference file of the selection test: committed (recommended, because the test needs it after the old chain is deleted), or git-ignored in `temp/`?
+None open.
 
 ## Sources
 

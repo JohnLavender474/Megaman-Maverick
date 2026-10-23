@@ -1,10 +1,10 @@
 # Scope: mega-refactor-014c-contact-rules-table
 
-What this branch changes and why. This is a draft written ahead of time on `master`. The branch
-does not exist yet, and the user has not approved this scope.
+What this branch changes and why. This was written ahead of time on `master`, before the branch
+existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 ## Goal
 
@@ -15,8 +15,7 @@ helpers in `Contact` go away. A test proves that the table picks the same rule, 
 order, as the old chain for every possible pair. Gameplay does not change: the rule bodies move as
 they are.
 
-This draft proposes to split the work of item `014` that remains into two branches (see "Split"
-below): this branch builds the table and moves the bodies unchanged; a new branch `014d` replaces
+The work of item `014` that remains is split into two branches (see "Split" below): this branch builds the table and moves the bodies unchanged; a new branch `014d` replaces
 the `Megaman` checks inside the bodies.
 
 ## Item
@@ -93,11 +92,11 @@ issues.
 
 Item `014` still has four parts: the table, the receivers for the `Megaman` checks, the
 `MegaCollisionHandler` flags, and the surface-rule and wall-slide clean-ups. Together they are too
-large for one review and one play test. This draft proposes:
+large for one review and one play test. The owner approved this split (2026-10-22):
 
 - **`014c` (this branch): the table, with the bodies moved unchanged.** Each body keeps its
   `Megaman` checks. The proof is mechanical: the selection test plus a verbatim move.
-- **`014d` (new, planned): receivers and flags.** Replace the 16 `Megaman` references in the rule
+- **`014d` (planned): receivers and flags.** Replace the 16 `Megaman` references in the rule
   classes with receivers or capabilities (for example the feet-block contact receiver and
   `IGateTrigger` from the `NOTES.md` sample), the wall-slide body flag, the
   `MegaCollisionHandler` body flags, and `SurfaceRule`. These change rule bodies, so they need
@@ -120,9 +119,11 @@ large for one review and one play test. This draft proposes:
 
 **Stage 1: engine mechanism.**
 
-- `FixtureTypeSet` (engine `world/body/` or `world/contacts/`): `of(entries)`, `validated(list)`,
+- `FixtureTypeSet` (engine `world/body/`, next to `IFixtureType`): `of(entries)`, `validated(list)`,
   `named(vararg names)` (gives its types a readable `toString()`), `size`, `get(index)`,
   `owns(type)`. With tests.
+- `ContactRuleTable.dispatch` checks `owns` for both fixture types and throws with the type and
+  the fixture if one is not owned.
 - `IContactRule` (engine `world/contacts/`): `onBegin(a, b, delta)`, `onContinue(a, b, delta)`,
   `onEnd(a, b, delta)`, all default no-ops.
 - `ContactRulesBuilder`: `pair(id, a, b, rule, vararg phases)`, `sets(id, setA, setB, rule,
@@ -201,16 +202,13 @@ set of each phase equals the old chain's (from the reference file).
 - No `mega-refactor-` branch is active now.
 - `020` (broad phase) changes the contact order and must not run at the same time (`ITEM.md`).
   The selection test and its reference file help `020` later.
-- `014d` (proposed) needs this branch.
+- `014d` needs this branch.
 
 ## Open questions
 
-1. **The split:** do you approve `014c` (the table, bodies unchanged) and a new `014d` (receivers,
-   `MegaCollisionHandler` flags, `SurfaceRule`, wall-slide flag)?
-2. **The reference file:** commit it (recommended: after stage 2 deletes the old chain, nothing can
-   make it again, and CI needs it), or git-ignore it in `temp/`?
-3. **`owns` check:** at table build time only (free), or also in `dispatch` (two array reads and two
-   reference compares per contact, and a clear error for a stray fixture type)? The draft checks
-   in `dispatch`.
-4. **Where `FixtureTypeSet` lives:** engine `world/body/` (next to `IFixtureType`, recommended) or
-   `world/contacts/` (next to the table)?
+None open.
+
+- (2026-10-22) Owner's decisions: the split into `014c` (table, bodies unchanged) and `014d`
+  (receivers, `MegaCollisionHandler` flags, `SurfaceRule`, wall-slide flag) is approved; the
+  reference file of the selection test is committed; `owns` is checked in `dispatch`;
+  `FixtureTypeSet` lives in engine `world/body/`.
