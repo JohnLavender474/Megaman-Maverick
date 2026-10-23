@@ -57,7 +57,7 @@ Members read: `body.getX` 146, `body.getCenter` 66, `body.getBounds` 47, `body.g
 
 ## In scope
 
-1. **The target helper (core):** a core extension for "the player this entity targets", for example `val IMegaGameEntity.targetPlayer: MegaPlayer`, built on `players.targetFor(this)`. In `029` it gives the view in slot 0 (Megaman), also while he is dead, as `megaman` does today. It is not null: the game always has at least one registered player, and a slot stays registered while its player waits to respawn. Open question 1 decides how much of the policy design comes with it.
+1. **The target helper (core):** `MegaPlayers.targetFor(seeker)` and the extension `val IMegaGameEntity.targetPlayer: MegaPlayer` (`players.targetFor(this)`). In `029` it gives the view in slot 0 (Megaman), also while he is dead, as `megaman` does today. It is not null: the game always has at least one registered player, and a slot stays registered while its player waits to respawn. No `TargetPolicy` and no `TargetingComponent` yet: a `TODO` comment at `targetFor` says that it always gives slot 0, and that the policy design (item `029` `NOTES.md`, "Targeting design") comes with its first real caller (`047`, or a boss).
 2. **An identity helper (engine):** `IPlayers.viewOf(entity): V?` (the view of a registered entity, or null), in slot order. `slotOf` is then built on it.
 3. **`MegaPlayer` accessors**, only those that the moved enemy sites need. Each one reads a part that the view checks at registration:
    - `direction` (the entity is an `IDirectional`), `dead` (a `MegaGameEntity`), `isBehaviorActive` (an `IBehaviorsEntity`);
@@ -73,7 +73,7 @@ Members read: `body.getX` 146, `body.getCenter` 66, `body.getBounds` 47, `body.g
    - Sensor or area overlap with the player's body: `players.any { ... }`.
    - Identity from a contact or damage callback (`== megaman`, `is Megaman`): `players.viewOf(entity)`. When the site then reads the player, it reads the view.
    - Ownership (`owner == megaman`, 5 lines): `players.viewOf(owner) != null`. With one player this is the same result. `030` later replaces it with a faction check.
-   - Stomp bounce (6 lines): see open question 3.
+   - Stomp bounce (6 lines): the write stays as it is (`MegamanValues.JUMP_VEL`), through the view's body. A `TODO` comment at each site says that every player bounces with Mega's jump velocity, and that a bounce capability per character is for `029g`.
    - Fixture overlap in the Koopa shells and `JetpackBlaster`: through the target's view accessors.
    - The 8 direct `game.megaman` reads: as above.
 6. **`FacingUtils`:** `entity.megaman` becomes the target helper.
@@ -82,7 +82,7 @@ Members read: `body.getX` 146, `body.getCenter` 66, `body.getBounds` 47, `body.g
 
 ## Out of scope
 
-- `AbstractEnemy` and `AbstractBoss`: their reads are profile (`029e`), faction (`030`) or boss flow (`029c`). Open question 4.
+- `AbstractEnemy` and `AbstractBoss`: the owner gives them to `029c` and `029d` (2026-10-23). Their profile reads (drop odds, the one-up) may need `029e` (profile) first; `029c` and `029d` decide at their scope steps.
 - Bosses (`029c`), world entities (`029d`), screens and handlers (`029f`).
 - A shared "face the player" helper, and renames of methods with "Megaman" in the name (behavior at equal x and churn; a candidate for `049`).
 - The damage-class sets (`Megaman::class` in `SwinginJoe` and `PreciousTron`): `030` or `023`. They name the type, not the global, so they do not block removing the `megaman` extension in `029f`.
@@ -102,8 +102,10 @@ Members read: `body.getX` 146, `body.getCenter` 66, `body.getBounds` 47, `body.g
 
 ## Open questions
 
-1. **How much of the targeting design comes now?** The recorded design is a `TargetPolicy` with a game default and an optional per-entity `TargetingComponent`. In this branch no entity needs its own rule, and the only policy is "slot 0". Under the "no speculative API" lesson (`ComponentKey`), I recommend that `029b` adds only `targetFor` (and the `targetPlayer` extension), which gives slot 0 in one place. `TargetPolicy` and `TargetingComponent` come with their first real caller (a second rule in `047`, or a boss in `029c`). The call sites do not change when they come. Or add `TargetPolicy` with its one `SlotZero` implementation now, as recorded?
-2. Answered (2026-10-23): `ready` and `damaged` are shared by every player, so they go in a core `PlayerStateComponent` that the view requires (in scope, item 4), not through a `Megaman` cast and not through a role interface.
-3. **Stomp bounce** (6 Mario enemies write the player's velocity with `MegamanValues.JUMP_VEL`): (a) keep the write, through the view's body, as today (mechanical; the Mega constant stays in the enemy); (b) a player capability (a body receiver or key that Megaman registers, like the `014d` receivers), so each character can bounce its own way. Recommendation: (b) has 6 real callers, but it changes how the bounce is applied; (a) is the smaller step and keeps this branch mechanical. I lean to (a), with (b) noted for `029g`.
-4. **`AbstractEnemy`:** leave it to `029c` (with `AbstractBoss`, as "base classes") and `029e` (drops and the one-up), or move its target reads (`isMegamanShootingAtMe`, the floating points direction) here?
-5. **Target helper name:** `targetPlayer`, `target`, or another name?
+None left. Answered by the owner (2026-10-23):
+
+1. Targeting: only `targetFor` and `targetPlayer` now, with `TODO` comments for the gaps. `TargetPolicy` and `TargetingComponent` come with their first real caller.
+2. `ready` and `damaged`: a core `PlayerStateComponent` that the view requires (in scope, item 4).
+3. Stomp bounce: keep today's write through the view's body, with a `TODO` that points to `029g`.
+4. `AbstractEnemy`: left to `029c` and `029d`.
+5. The helper is named `targetPlayer`, so that the caller knows what it gets.
