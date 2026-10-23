@@ -398,3 +398,19 @@ newest entry at the bottom.
   unclear. The owner asked for this at the `029d` contract, which has many checks; its contract text follows.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-23 — mega-refactor-029d-world-players
+
+- Summary: world entities, contact rules and world body code reach the player through the players service.
+  `WorldGravity` is the one source of the gravity direction: all seven writers (one found during the work,
+  `BodyGravityChangeRule`) go through `gravity.set`, and world-direction readers read it; camera rotation stays in
+  the player's setter with a `TODO`. The player view lives on its entity (`asPlayer`), replacing `players.viewOf`
+  everywhere. Kill zones act on each player; contact entities work for any player; one dark-room light per player.
+  `HIT_BY_PLAYER` takes the view. `MegamanDeath` is renamed `PlayerDeath` (30 TMX objects). `GravityCapsule` and
+  `next_body_direction` are commented out. Squash commit `8d536baad`.
+- Contract check: clean build; 470 engine and 113 core tests pass; 114 compiler warnings, the same list as before;
+  the contact selection reference file is unchanged; the contract greps pass (`PlayerItemRule` is the logged
+  `029e` exception); the owner played the full list once, after the implementation. The owner approved the merge.
+- Follow-up: the backlog candidate became item `058` (camera rotation as its own mechanism). No bugs. The owner's
+  preference that targeting is not global is in `029`'s `ITEM.md` and `NOTES.md`. Next for item `029`: `029e`
+  (profile).

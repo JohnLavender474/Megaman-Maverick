@@ -65,6 +65,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 055 | [Record and replay for contract checks](items/055-record-and-replay/ITEM.md) | feature | planned | `010`, `011`, `006`, `031` | | |
 | 056 | [Typed fixture receivers](items/056-typed-fixture-receivers/ITEM.md) | refactor | dropped | none | | 2026-10-22 |
 | 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | idea | none | | |
+| 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
@@ -79,7 +80,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-029a-player-seam`](items/029-player-contract/branches/mega-refactor-029a-player-seam/process-log.md) | 029 | Player slot, player view and players service; `Megaman` in slot 0 | merged | 2026-10-23 | 2026-10-23 |
 | [`mega-refactor-029b-enemy-players`](items/029-player-contract/branches/mega-refactor-029b-enemy-players/process-log.md) | 029 | Enemies use the players service in place of `megaman` | merged | 2026-10-23 | 2026-10-23 |
 | [`mega-refactor-029c-boss-players`](items/029-player-contract/branches/mega-refactor-029c-boss-players/process-log.md) | 029 | Bosses and the boss damage listener use the players service | merged | 2026-10-23 | 2026-10-23 |
-| [`mega-refactor-029d-world-players`](items/029-player-contract/branches/mega-refactor-029d-world-players/process-log.md) | 029 | World entities use `IPlayer` and the players service | active | 2026-10-23 | |
+| [`mega-refactor-029d-world-players`](items/029-player-contract/branches/mega-refactor-029d-world-players/process-log.md) | 029 | World entities use `IPlayer` and the players service | merged | 2026-10-23 | 2026-10-23 |
 | `mega-refactor-029e-player-profile` | 029 | Lives, tanks, enhancements and weapons owned in one session profile | planned | | |
 | `mega-refactor-029f-level-players` | 029 | Level screen, handlers and UI use the players service; remove `game.megaman` | planned | | |
 | `mega-refactor-029g-character-def` | 029 | `CharacterDef`, movement values and ordered abilities | planned | | |
