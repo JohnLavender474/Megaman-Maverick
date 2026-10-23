@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: One typed receiver registration in place of the hand-written extension trios
-- Done: scope approved (2026-10-22).
-- Next: the owner reviews the draft `docs/CONTRACT.md`.
+- Done: scope and contract approved (2026-10-22).
+- Next: the owner reviews the draft `docs/PLAN.md`.
 - Blocked:
 
 ## Entries
@@ -17,3 +17,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - No branch exists yet. The folder was prepared on `master`.
 - Scan done. Draft `docs/SCOPE.md` written for the owner to review.
 - Scope approved by the owner (function types, migrate all now, key in the engine). Draft `docs/CONTRACT.md` written.
+- Contract accepted: the owner asked for the plan. Draft `docs/PLAN.md` written.

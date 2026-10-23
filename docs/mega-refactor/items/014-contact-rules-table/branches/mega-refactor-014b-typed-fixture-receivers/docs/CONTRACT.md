@@ -1,10 +1,10 @@
 # Contract: mega-refactor-014b-typed-fixture-receivers
 
-The gameplay that this branch must not change, and how to check it. This is a draft written ahead
-of time on `master`. The user has not approved it yet.
+The gameplay that this branch must not change, and how to check it. This was written ahead of time
+on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 This branch changes how fixture receivers are stored and read: typed object keys instead of string
 keys and hand-written extension functions. Each receiver must still be stored on the same fixture,
