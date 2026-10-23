@@ -49,7 +49,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.StarknerTrailSprite
 import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
@@ -279,7 +279,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
-            direction = megaman.direction
+            direction = targetPlayer.direction
 
             if (game.isCameraRotating()) {
                 body.physics.velocity.setZero()
@@ -295,7 +295,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     }
                 }
                 StarknerState.BLUE, StarknerState.YELLOW, StarknerState.RED -> {
-                    if (megaman.dead) moving = false
+                    if (targetPlayer.dead) moving = false
 
                     if (moving) {
                         val speed = STATE_SPEEDS[state]
@@ -334,10 +334,10 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     body.physics.velocity.setZero()
 
                     stateTimer.update(delta)
-                    if (!megaman.dead && stateTimer.isFinished()) {
+                    if (!targetPlayer.dead && stateTimer.isFinished()) {
                         moving = true
                         targetTimer.reset()
-                        target.set(megaman.body.getCenter())
+                        target.set(targetPlayer.body.getCenter())
                         GameLogger.debug(TAG, "update(): state timer finished, set moving to target=$target")
                     }
 
@@ -394,7 +394,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
             sprite.setOriginCenter()
             if (!game.paused) when {
-                moving && !megaman.dead -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
+                moving && !targetPlayer.dead -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
                 else -> rawRotation = direction.rotation
             }
             sprite.rotation = (rawRotation / 90f).toInt() * 90f

@@ -5,6 +5,7 @@ import com.maverick.game.engine.common.interfaces.ITypable
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.world.body.getBounds
 
 interface IMegaGameEntity : ITaggable, ITypable<EntityType> {
@@ -23,6 +24,9 @@ val IMegaGameEntity.megaman
 
 val IMegaGameEntity.players
     get() = game.players
+
+val IMegaGameEntity.targetPlayer: MegaPlayer
+    get() = game.players.targetFor(this)
 
 fun IBodyEntity.overlapsGameCamera() =
     (this as MegaGameEntity).game.getGameCamera().getRotatedBounds().overlaps(body.getBounds())

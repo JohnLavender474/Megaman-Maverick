@@ -22,14 +22,14 @@ choice to the mechanical rest, so that the last step can be a scripted replace t
   to `active`. Then `git worktree add -b mega-refactor-029b-enemy-players
   .worktrees/mega-refactor-029b-enemy-players master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 472 engine, 102 core) and the warning count
   (expected 114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Test rooms (subagent)
 
@@ -47,7 +47,7 @@ choice to the mechanical rest, so that the last step can be a scripted replace t
   what it could not place.
 - Check: a launch of each new room shows no exception. Then the owner checks each new room on this
   baseline code; the results go in the process log.
-- Done: no
+- Done: yes
 
 ### 4. Engine identity helper
 
@@ -55,7 +55,7 @@ choice to the mechanical rest, so that the last step can be a scripted replace t
   null); `slotOf` uses it.
 - Check: engine tests for `viewOf` (registered entity, other entity, empty slots). Build and tests
   pass.
-- Done: no
+- Done: yes
 
 ### 5. Player state, view accessors and the target helper
 
@@ -74,7 +74,7 @@ choice to the mechanical rest, so that the last step can be a scripted replace t
 - Check: core tests: registration fails without the component or the interfaces; each accessor reads
   through its part; `targetFor` gives slot 0 also when the player is not present; `Megaman.ready`
   reads and writes the component. Build and tests pass; a launch shows no exception.
-- Done: no
+- Done: yes
 
 ### 6. Enemy sites that need a choice: identity, ownership, fixtures, stomp
 
@@ -88,7 +88,7 @@ choice to the mechanical rest, so that the last step can be a scripted replace t
     is for `029g`.
 - Check: a review of each site against the old line. Build and tests pass. Launch `enemy_contact`
   and `enemy_owner`.
-- Done: no
+- Done: yes
 
 ### 7. Enemy sites: proximity
 
@@ -97,7 +97,7 @@ choice to the mechanical rest, so that the last step can be a scripted replace t
   (for example aim after the check) stay with the target and move in step 8. Each choice is listed in
   the process log.
 - Check: a review of each site. Build and tests pass. Launch `enemy_drop` and `enemy_chase`.
-- Done: no
+- Done: yes
 
 ### 8. Enemy sites: the rest, and `FacingUtils`
 
@@ -107,7 +107,7 @@ choice to the mechanical rest, so that the last step can be a scripted replace t
   review of the diff.
 - Check: the contract grep finds only comments, log text, names and the two damage-class sets. Build
   and tests pass. Launch `enemy_aim`, `enemy_magfly` and `death`.
-- Done: no
+- Done: yes
 
 ### 9. Contract checks
 

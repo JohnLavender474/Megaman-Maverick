@@ -15,6 +15,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -25,6 +26,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -53,7 +56,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        facing = if (game.megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -67,7 +70,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         )
         blowFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity()
-            if (entity !is Megaman) return@setReceiver VelocityAlteration.addNone()
+            val player = players.viewOf(entity) ?: return@setReceiver VelocityAlteration.addNone()
 
             /*
             TODO: for now, ONLY apply force to Megaman and no other entities
@@ -75,8 +78,8 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             if (entity is AbstractProjectile) entity.owner = null
              */
 
-            if ((isFacing(Facing.LEFT) && entity.body.physics.velocity.x <= -BLOW_MAX * ConstVals.PPM) ||
-                (isFacing(Facing.RIGHT) && entity.body.physics.velocity.x >= BLOW_MAX * ConstVals.PPM)
+            if ((isFacing(Facing.LEFT) && player.body.physics.velocity.x <= -BLOW_MAX * ConstVals.PPM) ||
+                (isFacing(Facing.RIGHT) && player.body.physics.velocity.x >= BLOW_MAX * ConstVals.PPM)
             ) return@setReceiver VelocityAlteration.addNone()
 
             val force = BLOW_FORCE * ConstVals.PPM * facing.value
@@ -112,7 +115,7 @@ class Matasaburo(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (game.megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+            facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
         }
     }
 

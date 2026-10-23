@@ -47,13 +47,15 @@ inline fun <V : PlayerView> IPlayers<V>.minByOrNull(selector: (V) -> Float): V? 
     return best
 }
 
-fun IPlayers<*>.slotOf(entity: IGameEntity): PlayerSlot? {
+fun <V : PlayerView> IPlayers<V>.viewOf(entity: Any?): V? {
     for (i in 0 until capacity) {
         val view = get(PlayerSlot(i)) ?: continue
-        if (view.entity === entity) return view.slot
+        if (view.entity === entity) return view
     }
     return null
 }
+
+fun IPlayers<*>.slotOf(entity: IGameEntity): PlayerSlot? = viewOf(entity)?.slot
 
 fun IPlayers<*>.registeredSlots(out: Array<PlayerSlot> = Array()): Array<PlayerSlot> {
     for (i in 0 until capacity) get(PlayerSlot(i))?.let { out.add(it.slot) }

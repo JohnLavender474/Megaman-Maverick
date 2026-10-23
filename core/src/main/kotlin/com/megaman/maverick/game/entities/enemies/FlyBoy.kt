@@ -34,8 +34,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -71,7 +71,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (body.getX() > targetPlayer.body.getX()) Facing.LEFT else Facing.RIGHT
 
         standTimer.reset()
         flyTimer.setToEnd()
@@ -144,7 +144,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
+            facing = if (body.getX() > targetPlayer.body.getX()) Facing.LEFT else Facing.RIGHT
 
             if (body.isSensing(BodySense.FEET_ON_GROUND)) body.physics.velocity.x = 0f
 
@@ -179,7 +179,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     }
 
     private fun impulseToPlayer() {
-        body.physics.velocity.x = 1.85f * (megaman.body.getX() - body.getX())
+        body.physics.velocity.x = 1.85f * (targetPlayer.body.getX() - body.getX())
         body.physics.velocity.y = 0f
     }
 

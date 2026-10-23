@@ -32,7 +32,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -92,7 +92,7 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             if (!moving) {
                 body.physics.velocity.setZero()
@@ -102,7 +102,7 @@ class Peat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
                     moving = true
 
                     startPosition = body.getCenter(false)
-                    targetPosition = megaman.body.getCenter(false)
+                    targetPosition = targetPlayer.body.getCenter(false)
 
                     val midX = (startPosition!!.x + targetPosition!!.x) / 2f
                     val midY = (startPosition!!.y + targetPosition!!.y) / 2f

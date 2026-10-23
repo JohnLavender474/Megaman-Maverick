@@ -39,7 +39,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
@@ -97,7 +97,7 @@ class FireFlower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             super.onChangeState(current, previous)
 
             if (current == FireFlowerState.RISE)
-                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
     }
     private val currentState: FireFlowerState
@@ -127,7 +127,7 @@ class FireFlower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val point = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(position)
         body.positionOnPoint(point, position)
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         stateLoopHandler.reset()
 
@@ -247,13 +247,13 @@ class FireFlower(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         .build()
 
     private fun canFire() =
-        (isFacing(Facing.LEFT) && megaman.body.getX() < body.getX()) ||
-            (isFacing(Facing.RIGHT) && megaman.body.getX() > body.getX())
+        (isFacing(Facing.LEFT) && targetPlayer.body.getX() < body.getX()) ||
+            (isFacing(Facing.RIGHT) && targetPlayer.body.getX() > body.getX())
 
     private fun fire() {
         val position = body.getCenter().add(0.25f * facing.value * ConstVals.PPM, 0.25f * ConstVals.PPM)
 
-        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(FIRE_VEL * ConstVals.PPM)
+        val trajectory = targetPlayer.body.getCenter().sub(body.getCenter()).nor().scl(FIRE_VEL * ConstVals.PPM)
 
         val fire = MegaEntityFactory.fetch(Fireball::class)!!
         fire.spawn(

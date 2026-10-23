@@ -40,7 +40,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -124,7 +124,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                     }
                 }
                 body.setCenter(spawn)
-                facing = if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                facing = if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
             }
             else -> {
                 body.setSize(0.75f * ConstVals.PPM, 1.5f * ConstVals.PPM)
@@ -142,7 +142,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                     }
                 }
                 body.setCenter(spawn)
-                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
 
@@ -300,7 +300,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
-            sprite.setFlip(turning != switch, flipY || megaman.direction == Direction.DOWN)
+            sprite.setFlip(turning != switch, flipY || targetPlayer.direction == Direction.DOWN)
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
             sprite.rotation = if (vertical) 90f else 0f

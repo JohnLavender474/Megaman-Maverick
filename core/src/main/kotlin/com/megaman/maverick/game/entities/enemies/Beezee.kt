@@ -43,7 +43,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.moveTowards
@@ -219,7 +219,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                         )
 
                         attackTrajectory.set(
-                            megaman.body.getCenter()
+                            targetPlayer.body.getCenter()
                                 .sub(body.getCenter())
                                 .nor()
                                 .scl(ATTACK_SPEED * ConstVals.PPM)

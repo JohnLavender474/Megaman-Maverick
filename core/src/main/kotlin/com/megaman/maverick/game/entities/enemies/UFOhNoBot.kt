@@ -33,6 +33,8 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.any
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -48,7 +50,8 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.UFOBomb
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
@@ -123,7 +126,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         dropped = false
         rising = false
@@ -162,8 +165,8 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         frozen = false
     }
 
-    private fun isMegamanUnderMe() = megaman.body.getMaxY() <= body.getY() &&
-        megaman.body.getCenter().x >= body.getX() && megaman.body.getCenter().x <= body.getMaxX()
+    private fun isMegamanUnderMe() = targetPlayer.body.getMaxY() <= body.getY() &&
+        targetPlayer.body.getCenter().x >= body.getX() && targetPlayer.body.getCenter().x <= body.getMaxX()
 
     private fun moveX() {
         val xVel = (if (dropped) X_VEL_NO_BOMB else X_VEL_WITH_BOMB) * ConstVals.PPM * facing.value
@@ -178,7 +181,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     }
 
     private fun setToHover() {
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         moveX()
     }
 
@@ -199,7 +202,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             }
 
             if (waiting) when {
-                triggers.any { trigger -> megaman.body.getBounds().overlaps(trigger) } -> {
+                triggers.any { trigger -> players.any { player -> player.body.getBounds().overlaps(trigger) } } -> {
                     waiting = false
                     rising = true
 
@@ -211,7 +214,7 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                     body.forEachFixture { it.setActive(true) }
 
                     facing = when {
-                        trajectory.x == 0f -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        trajectory.x == 0f -> if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                         trajectory.x < 0f -> Facing.LEFT
                         else -> Facing.RIGHT
                     }
@@ -300,11 +303,11 @@ class UFOhNoBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         bombConsumerFixture.offsetFromBodyAttachment.y = -1.25f * ConstVals.PPM
         bombConsumerFixture.setReceiver(Receivers.FILTER) { fixture ->
             !dropped && fixture.getType() == FixtureType.PROJECTILE &&
-                (fixture.getEntity() as IProjectileEntity).owner == megaman
+                players.viewOf((fixture.getEntity() as IProjectileEntity).owner) != null
         }
         bombConsumerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             val projectile = fixture.getEntity() as IProjectileEntity
-            if (projectile.owner == megaman) {
+            if (players.viewOf(projectile.owner) != null) {
                 // so that the enemy doesn't get stuck in place if the bomb gets destroyed while he's rising
                 rising = false
 

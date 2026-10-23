@@ -37,7 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.CaveRock
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -79,7 +79,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         newRockOffsetY = spawnProps.get(ConstKeys.OFFSET_Y, Float::class)!!
         waitTimer.reset()
         throwing = false
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -91,7 +91,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+            facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
             waitTimer.update(it)
             if (waitTimer.isJustFinished()) {
                 throwRock()
@@ -181,7 +181,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPositionPoint(Position.TOP_CENTER),
-            megaman.body.getCenter(),
+            targetPlayer.body.getCenter(),
             ROCK_IMPULSE_Y * ConstVals.PPM
         )
         impulse.x = impulse.x.coerceIn(-ROCK_IMPULSE_X * ConstVals.PPM, ROCK_IMPULSE_X * ConstVals.PPM)

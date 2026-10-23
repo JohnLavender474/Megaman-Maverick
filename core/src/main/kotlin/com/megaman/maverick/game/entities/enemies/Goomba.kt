@@ -26,6 +26,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -40,7 +41,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -102,7 +104,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
         body.forEachFixture { it.setActive(true) }
 
-        facing = if (megaman.body.getBounds().getX() < position.x) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getBounds().getX() < position.x) Facing.LEFT else Facing.RIGHT
 
         smashed = false
         smashedTimer.reset()
@@ -168,13 +170,15 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
             Fixture(body, FixtureType.HEAD, GameRectangle().setSize(ConstVals.PPM.toFloat(), 0.1f * ConstVals.PPM))
         headFixture.offsetFromBodyAttachment.y = body.getHeight() / 2f
         headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
-            if (!smashed && !knockedToDeath && feet.getEntity() == megaman) {
+            val player = players.viewOf(feet.getEntity())
+            if (!smashed && !knockedToDeath && player != null) {
                 smashed = true
 
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
                 spawnFloatingPoints()
 
-                megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
+                // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for item 029g
+                player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 requestToPlaySound(SoundAsset.SWIM_SOUND, false)
 
                 body.physics.velocity.setZero()

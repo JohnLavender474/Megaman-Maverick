@@ -20,6 +20,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -32,8 +33,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -80,7 +81,7 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -116,17 +117,18 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         forceFixture.offsetFromBodyAttachment.y = -ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f
         forceFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, processState ->
             val entity = fixture.getEntity()
+            val player = players.viewOf(entity)
 
             if (entity is AbstractEnemy ||
-                (entity is Megaman && (entity.damaged || entity.isBehaviorActive(BehaviorType.CLIMBING)))
+                (player != null && (player.damaged || player.isBehaviorActive(BehaviorType.CLIMBING)))
             ) return@setReceiver VelocityAlteration.addNone()
 
             if (entity is AbstractProjectile) entity.owner = null
 
-            if (entity is Megaman) {
+            if (player != null) {
                 if (processState == ProcessState.END) return@setReceiver VelocityAlteration.addNone()
 
-                val physics = entity.body.physics
+                val physics = player.body.physics
 
                 val ownMovementX = physics.velocity.x * delta
                 val carryX = body.getPositionDelta().x - (1f - MEGAMAN_MOVEMENT_X_SCALAR) * ownMovementX
@@ -189,10 +191,10 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                 forceFlashTimer.reset()
             }
 
-            val slow = megaman.body.getBounds().overlaps(forceFixture.getShape())
+            val slow = targetPlayer.body.getBounds().overlaps(forceFixture.getShape())
 
-            if (!slow && megaman.body.getY() < body.getY() && !facingAndMMDirMatch())
-                facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+            if (!slow && targetPlayer.body.getY() < body.getY() && !facingAndMMDirMatch())
+                facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
             when {
                 (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
@@ -215,6 +217,6 @@ class MagFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         (target - gravity * delta) / exp(-friction * delta)
 
     private fun facingAndMMDirMatch() =
-        (game.megaman.body.getX() > body.getX() && facing == Facing.RIGHT) ||
-            (game.megaman.body.getX() < body.getX() && facing == Facing.LEFT)
+        (targetPlayer.body.getX() > body.getX() && facing == Facing.RIGHT) ||
+            (targetPlayer.body.getX() < body.getX() && facing == Facing.LEFT)
 }

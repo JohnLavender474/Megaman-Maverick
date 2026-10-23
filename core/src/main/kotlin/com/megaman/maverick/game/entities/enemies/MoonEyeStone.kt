@@ -40,6 +40,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -54,7 +55,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -211,7 +213,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
                 return@update
             }
 
-            direction = megaman.body.direction
+            direction = targetPlayer.body.direction
 
             if (game.isCameraRotating()) return@update
 
@@ -221,7 +223,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
                 MoonEyeStoneState.SLEEP -> {
                     body.physics.velocity.setZero()
                     awakenArea.setCenter(body.getCenter())
-                    if (megaman.body.getBounds().overlaps(awakenArea)) nextState()
+                    if (players.any { player -> player.body.getBounds().overlaps(awakenArea) }) nextState()
                 }
                 MoonEyeStoneState.AWAKEN -> {
                     body.physics.velocity.setZero()
@@ -246,7 +248,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         val blocks = MegaGameEntities.getOfType(EntityType.BLOCK)
         return asteroids.keys().any { asteroid ->
             val line = GameObjectPools.fetch(GameLine::class)
-                .set(asteroid.body.getCenter(), megaman.body.getCenter())
+                .set(asteroid.body.getCenter(), targetPlayer.body.getCenter())
             return@any blocks.none { block -> block is IBodyEntity && block.body.getBounds().overlaps(line) }
         }
     }
@@ -303,7 +305,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
             val asteroid = iter.next()
 
             val target =
-                if (targetMegaman) megaman.body.getCenter()
+                if (targetMegaman) targetPlayer.body.getCenter()
                 else GameObjectPools.fetch(Vector2::class)
                     .set(asteroid.body.getCenter())
                     .add(

@@ -37,7 +37,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.HeadUtils
@@ -99,7 +99,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
 
         frozen = false
 
-        facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     override fun onDestroy() {
@@ -158,7 +158,7 @@ class Ratton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
             if (body.isSensing(BodySense.FEET_ON_GROUND)) {
                 standTimer.update(delta)
                 if (body.physics.velocity.y <= 0f) body.physics.velocity.x = 0f
-                facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+                facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
             }
 
             if (standTimer.isFinished()) {

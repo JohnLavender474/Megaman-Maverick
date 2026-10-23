@@ -34,7 +34,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.SmallGreenMissile
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -75,7 +75,7 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
         launchedBomb = false
 
-        facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (body.getX() > targetPlayer.body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -94,14 +94,14 @@ class BombPotton(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
                 if (body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                     speed = 0f
                     targetReached = true
-                    facing = if (body.getX() > megaman.body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (body.getX() > targetPlayer.body.getX()) Facing.LEFT else Facing.RIGHT
                 }
             } else {
                 val trajectory = GameObjectPools.fetch(Vector2::class)
                     .set(speed * facing.value * ConstVals.PPM, 0f)
                 body.physics.velocity.set(trajectory)
 
-                if (!launchedBomb && body.getX() < megaman.body.getMaxX() && body.getMaxX() > megaman.body.getX()) {
+                if (!launchedBomb && body.getX() < targetPlayer.body.getMaxX() && body.getMaxX() > targetPlayer.body.getX()) {
                     launchBomb()
                     launchedBomb = true
                 }

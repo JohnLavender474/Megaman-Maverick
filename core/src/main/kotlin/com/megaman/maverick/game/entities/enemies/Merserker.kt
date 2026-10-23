@@ -36,7 +36,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -89,9 +89,9 @@ class Merserker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
     }
 
     private fun shouldChopDown() =
-        megaman.body.getX() >= body.getX() &&
-            megaman.body.getBounds().getMaxX() <= body.getBounds().getMaxX() &&
-            megaman.body.getBounds().getY() <= body.getBounds().getMaxY()
+        targetPlayer.body.getX() >= body.getX() &&
+            targetPlayer.body.getBounds().getMaxX() <= body.getBounds().getMaxX() &&
+            targetPlayer.body.getBounds().getY() <= body.getBounds().getMaxY()
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

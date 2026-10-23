@@ -30,6 +30,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.*
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
@@ -45,6 +46,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -272,7 +274,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         shieldFixture1.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-            if (projectile.owner == megaman) {
+            if (players.viewOf(projectile.owner) != null) {
                 shield1Timer.reset()
                 if (shield1Invincible.isFinished()) {
                     val damage = if (projectile is MoonScythe) 15 else 10
@@ -295,7 +297,7 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
             GameRectangle().setSize(0.5f * ConstVals.PPM, 1.5f * ConstVals.PPM)
         )
         shieldFixture2.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-            if (projectile.owner == megaman) {
+            if (players.viewOf(projectile.owner) != null) {
                 shield2Timer.reset()
                 if (shield2Invincible.isFinished()) {
                     val damage = if (projectile is MoonScythe) 15 else 10
@@ -314,14 +316,14 @@ class StagedMoonLandingFlag(game: MegamanMaverickGame) : AbstractEnemy(game, siz
 
         shieldDamager1 = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         shieldDamager1.setReceiver(Receivers.HIT_BY_DAMAGEABLE) { damageable, _ ->
-            if (damageable == megaman) shield1Timer.reset()
+            if (players.viewOf(damageable) != null) shield1Timer.reset()
         }
         shieldDamager1.attachedToBody = false
         body.addFixture(shieldDamager1)
 
         shieldDamager2 = Fixture(body, FixtureType.DAMAGER, GameRectangle())
         shieldDamager2.setReceiver(Receivers.HIT_BY_DAMAGEABLE) { damageable, _ ->
-            if (damageable == megaman) shield2Timer.reset()
+            if (players.viewOf(damageable) != null) shield2Timer.reset()
         }
         shieldDamager2.attachedToBody = false
         body.addFixture(shieldDamager2)

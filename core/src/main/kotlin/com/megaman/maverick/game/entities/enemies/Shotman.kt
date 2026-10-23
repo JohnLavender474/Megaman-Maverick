@@ -35,8 +35,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -104,8 +104,8 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         spawn.y += 0.25f * ConstVals.PPM
 
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
-        val xFactor = 1f - ((abs(megaman.body.getY() - body.getY()) / ConstVals.PPM) / 10f) + 0.2f
-        val impulseX = (megaman.body.getX() - body.getX()) * xFactor
+        val xFactor = 1f - ((abs(targetPlayer.body.getY() - body.getY()) / ConstVals.PPM) / 10f) + 0.2f
+        val impulseX = (targetPlayer.body.getX() - body.getX()) * xFactor
 
         bullet.spawn(
             props(
@@ -119,11 +119,11 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     }
 
     private fun shootBullet() {
-        val offsetX = if (megaman.body.getX() > body.getX()) 0.5f else -0.5f
+        val offsetX = if (targetPlayer.body.getX() > body.getX()) 0.5f else -0.5f
         val spawn = body.getCenter().add(offsetX * ConstVals.PPM, 0.2f * ConstVals.PPM)
         val bullet = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.BULLET)!!
         val impulseX =
-            if (megaman.body.getX() > body.getX()) SHOOT_SPEED_X * ConstVals.PPM else -SHOOT_SPEED_X * ConstVals.PPM
+            if (targetPlayer.body.getX() > body.getX()) SHOOT_SPEED_X * ConstVals.PPM else -SHOOT_SPEED_X * ConstVals.PPM
         bullet.spawn(
             props(
                 ConstKeys.OWNER pairTo this,

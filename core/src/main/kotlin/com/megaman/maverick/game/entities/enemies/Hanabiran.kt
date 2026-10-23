@@ -38,7 +38,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -98,7 +98,7 @@ class Hanabiran(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
 
     private fun shoot() {
         val start = body.getCenter()
-        val target = megaman.body.getCenter()
+        val target = targetPlayer.body.getCenter()
         val trajectory = target.sub(start).nor()
 
         val petal = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.PETAL)!!

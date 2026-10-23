@@ -28,6 +28,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -43,7 +44,8 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -141,11 +143,13 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             if (frozen) return@add
 
             if (!triggered &&
-                !megaman.isBehaviorActive(BehaviorType.CLIMBING) &&
-                triggers.any { it.overlaps(megaman.body.getBounds()) }
+                players.any { player ->
+                    !player.isBehaviorActive(BehaviorType.CLIMBING) &&
+                        triggers.any { it.overlaps(player.body.getBounds()) }
+                }
             ) {
                 triggered = true
-                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
     }

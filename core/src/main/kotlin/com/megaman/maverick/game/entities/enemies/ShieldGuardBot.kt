@@ -39,7 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -121,7 +121,7 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                     }
                 }
                 body.setCenter(spawn)
-                facing = if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                facing = if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
             }
             else -> {
                 body.setSize(0.75f * ConstVals.PPM, 1f * ConstVals.PPM)
@@ -139,7 +139,7 @@ class ShieldGuardBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
                     }
                 }
                 body.setCenter(spawn)
-                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
 

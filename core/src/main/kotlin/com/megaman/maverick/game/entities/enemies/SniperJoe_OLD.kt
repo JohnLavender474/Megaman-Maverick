@@ -43,8 +43,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
@@ -201,9 +201,9 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         scaleBullet = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BULLET}", true, Boolean::class)
 
         facing = when (direction) {
-            Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+            Direction.UP, Direction.DOWN -> if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (targetPlayer.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
         }
     }
 
@@ -300,9 +300,9 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
             if (!shouldUpdate) return@add
 
             facing = when (direction) {
-                Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-                Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+                Direction.UP, Direction.DOWN -> if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                Direction.LEFT -> if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                Direction.RIGHT -> if (targetPlayer.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
             }
 
             if (canJump && shouldJump()) jump()
@@ -455,7 +455,7 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     private fun throwShield() {
         val trajectory = normalizedTrajectory(
             body.getCenter(),
-            megaman.body.getCenter(),
+            targetPlayer.body.getCenter(),
             SHIELD_VEL * ConstVals.PPM,
             GameObjectPools.fetch(Vector2::class)
         )
@@ -473,21 +473,21 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
     private fun shouldJump(): Boolean {
         if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
         return when (direction) {
-            Direction.UP -> megaman.body.getY() > body.getMaxY() &&
-                megaman.body.getX() >= body.getX() &&
-                megaman.body.getMaxX() <= body.getMaxX()
+            Direction.UP -> targetPlayer.body.getY() > body.getMaxY() &&
+                targetPlayer.body.getX() >= body.getX() &&
+                targetPlayer.body.getMaxX() <= body.getMaxX()
 
-            Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
-                megaman.body.getX() >= body.getX() &&
-                megaman.body.getMaxX() <= body.getMaxX()
+            Direction.DOWN -> targetPlayer.body.getMaxY() < body.getY() &&
+                targetPlayer.body.getX() >= body.getX() &&
+                targetPlayer.body.getMaxX() <= body.getMaxX()
 
-            Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
-                megaman.body.getY() >= body.getY() &&
-                megaman.body.getMaxY() <= body.getMaxY()
+            Direction.LEFT -> targetPlayer.body.getMaxX() < body.getX() &&
+                targetPlayer.body.getY() >= body.getY() &&
+                targetPlayer.body.getMaxY() <= body.getMaxY()
 
-            Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
-                megaman.body.getY() >= body.getY() &&
-                megaman.body.getMaxY() <= body.getMaxY()
+            Direction.RIGHT -> targetPlayer.body.getX() > body.getMaxX() &&
+                targetPlayer.body.getY() >= body.getY() &&
+                targetPlayer.body.getMaxY() <= body.getMaxY()
         }
     }
 

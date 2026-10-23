@@ -36,7 +36,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
@@ -137,9 +137,9 @@ class PreciousCube(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
             when (state) {
                 PreciousCubeState.FLOAT -> {
-                    if (!body.getBounds().overlaps(megaman.body.getBounds())) {
+                    if (!body.getBounds().overlaps(targetPlayer.body.getBounds())) {
                         val velocity =
-                            megaman.body.getCenter().sub(body.getCenter()).nor().scl(FLOAT_SPEED * ConstVals.PPM)
+                            targetPlayer.body.getCenter().sub(body.getCenter()).nor().scl(FLOAT_SPEED * ConstVals.PPM)
                         body.physics.velocity.set(velocity)
 
                         FacingUtils.setFacingOf(this)
@@ -159,11 +159,11 @@ class PreciousCube(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
     private fun onNewState(state: PreciousCubeState) {
         if (state == PreciousCubeState.BLINK_IN) {
-            val currentAngle = megaman.body.getCenter().sub(body.getCenter()).nor().angleRad()
+            val currentAngle = targetPlayer.body.getCenter().sub(body.getCenter()).nor().angleRad()
 
             val positions = reusablePosArray
             (0 until BLINK_IN_POS_MAX_RETRIES).forEach {
-                var radius = megaman.body.getCenter().dst(body.getCenter())
+                var radius = targetPlayer.body.getCenter().dst(body.getCenter())
                 if (radius < BLINK_IN_MIN_DIST * ConstVals.PPM) radius = BLINK_IN_MIN_DIST * ConstVals.PPM
 
                 var angle = MathUtils.random() * MathUtils.PI * 2f
@@ -175,7 +175,7 @@ class PreciousCube(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 val x = MathUtils.cos(angle) * radius
                 val y = MathUtils.sin(angle) * radius
 
-                val position = megaman.body.getCenter().add(x, y)
+                val position = targetPlayer.body.getCenter().add(x, y)
 
                 positions.add(position)
             }
@@ -186,8 +186,8 @@ class PreciousCube(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
 
             if (blinkInPos == null) {
                 positions.sort { pos1, pos2 ->
-                    pos1.dst2(megaman.body.getCenter())
-                        .minus(pos2.dst2(megaman.body.getCenter()))
+                    pos1.dst2(targetPlayer.body.getCenter())
+                        .minus(pos2.dst2(targetPlayer.body.getCenter()))
                         .toInt()
                 }
                 blinkInPos = positions[0]

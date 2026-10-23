@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -450,9 +450,9 @@ class GreenUziJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEn
 
     private fun updateFacing() {
         facing = when (direction) {
-            Direction.UP, Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+            Direction.UP, Direction.DOWN -> if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (targetPlayer.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
         }
     }
 

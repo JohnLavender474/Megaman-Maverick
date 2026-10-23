@@ -30,6 +30,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -42,8 +43,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -97,7 +99,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
         walrusBotState = WalrusBotState.STAND
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     private fun shoot() {
@@ -122,7 +124,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         updatablesComponent.add { delta ->
             when (walrusBotState) {
                 WalrusBotState.STAND -> {
-                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                     standTimer.update(delta)
                     if (standTimer.isFinished()) {
                         standTimer.reset()
@@ -135,13 +137,13 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 }
 
                 WalrusBotState.SHOOT -> {
-                    if (scannerBox.overlaps(megaman.body.getBounds()))
+                    if (players.any { player -> scannerBox.overlaps(player.body.getBounds()) })
                         stateQueudForAfterShoot = WalrusBotState.JET
 
                     shootTimer.update(delta)
                     if (shootTimer.isFinished()) {
                         shootTimer.reset()
-                        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                         walrusBotState = stateQueudForAfterShoot
                     }
                 }
@@ -156,7 +158,7 @@ class WalrusBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
                 }
 
                 WalrusBotState.SLIDE -> {
-                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
                     if (body.isSensing(BodySense.FEET_ON_GROUND) &&
                         abs(body.physics.velocity.x) < SLIDE_MIN_VEL * ConstVals.PPM
                     ) walrusBotState = WalrusBotState.STAND

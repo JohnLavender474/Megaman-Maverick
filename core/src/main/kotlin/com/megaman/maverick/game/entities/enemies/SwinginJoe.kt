@@ -42,7 +42,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.JoeBall
@@ -107,7 +107,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
         loop.reset()
         stateTimer.reset()
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         frozen = false
     }
@@ -162,7 +162,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
             freezeHandler.update(delta)
             if (frozen) return@add
 
-            facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+            facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
             stateTimer.update(delta)
             if (stateTimer.isJustFinished()) {

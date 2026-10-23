@@ -29,6 +29,8 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
+import com.maverick.game.engine.players.any
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -43,9 +45,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Cokonut
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -255,7 +258,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
             debugShapes.add { trunkFixture }
 
             if (trunkFixtureType == FixtureType.BODY) trunkFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-                if (state != CokeyroState.DIE && projectile.owner == megaman) startShaking()
+                if (state != CokeyroState.DIE && players.viewOf(projectile.owner) != null) startShaking()
             }
 
             body.preProcess.put("trunk_${trunkFixtureType.name.lowercase()}") {
@@ -292,7 +295,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
         )
         .build()
 
-    private fun shouldStartShaking() = megaman.body.getBounds().overlaps(shakeScanner)
+    private fun shouldStartShaking() = players.any { player -> player.body.getBounds().overlaps(shakeScanner) }
 
     private fun startShaking() {
         GameLogger.debug(TAG, "startShaking()")
@@ -319,7 +322,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             position,
-            megaman.body.getBounds().getCenter(),
+            targetPlayer.body.getBounds().getCenter(),
             COKO_IMPULSE_Y * ConstVals.PPM
         )
         impulse.coerceX(-COKO_MAX_IMPULSE_X * ConstVals.PPM, COKO_MAX_IMPULSE_X * ConstVals.PPM)

@@ -32,7 +32,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -77,7 +77,7 @@ class MockingBit(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        val trajectory = megaman.body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
+        val trajectory = targetPlayer.body.getCenter().sub(body.getCenter()).nor().scl(SPEED * ConstVals.PPM)
         body.physics.velocity.set(trajectory)
 
         facing = if (trajectory.x <= 0f) Facing.LEFT else Facing.RIGHT

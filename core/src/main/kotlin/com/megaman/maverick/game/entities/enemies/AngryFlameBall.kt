@@ -30,7 +30,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -69,7 +69,7 @@ class AngryFlameBall(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
     }
 

@@ -29,6 +29,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.*
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -42,8 +43,9 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -140,10 +142,10 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                         triggers.add(TriggerDef(trigger, start, target))
                     }
                 }
-                facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
             else -> {
-                val center = megaman.body.getCenter()
+                val center = targetPlayer.body.getCenter()
 
                 val targets =
                     PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
@@ -193,7 +195,7 @@ class Popoheli(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 PopoheliState.WAITING -> {
                     body.physics.velocity.setZero()
                     triggers.forEach {
-                        if (megaman.body.getBounds().overlaps(it.trigger)) {
+                        if (players.any { player -> player.body.getBounds().overlaps(it.trigger) }) {
                             body.setCenter(it.start)
                             target.set(it.target)
                             state = PopoheliState.APPROACHING

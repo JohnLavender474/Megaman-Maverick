@@ -30,7 +30,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.contacts.ContactValues
@@ -76,7 +76,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         body.setBottomCenterToPoint(spawn)
         slideTimer.setToEnd()
         standTimer.reset()
-        facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -160,7 +160,7 @@ class Penguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
     }
 
     private fun stand(delta: Float) {
-        facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
         standTimer.update(delta)
         if (body.isSensing(BodySense.FEET_ON_GROUND) && standTimer.isFinished()) jump()
     }

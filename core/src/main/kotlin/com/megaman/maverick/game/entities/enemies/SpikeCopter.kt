@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SpikeTeeth
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -280,7 +280,7 @@ class SpikeCopter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     private fun shouldDrop(): Boolean {
         val bodyCenter = body.getCenter()
-        val megamanCenter = megaman.body.getCenter()
+        val megamanCenter = targetPlayer.body.getCenter()
         return megamanCenter.y <= bodyCenter.y && bodyCenter.x.epsilonEquals(megamanCenter.x, 0.25f * ConstVals.PPM)
     }
 

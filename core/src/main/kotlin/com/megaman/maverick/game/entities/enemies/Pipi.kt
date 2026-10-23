@@ -35,7 +35,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -67,7 +67,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM),
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         hasEgg = true
     }
 
@@ -75,7 +75,7 @@ class Pipi(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM),
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
             body.physics.velocity.x = FLY_SPEED * ConstVals.PPM * facing.value
-            if (hasEgg && megaman.body.getX() <= body.getMaxX() && megaman.body.getMaxX() >= body.getX()) dropEgg()
+            if (hasEgg && targetPlayer.body.getX() <= body.getMaxX() && targetPlayer.body.getMaxX() >= body.getX()) dropEgg()
         }
     }
 

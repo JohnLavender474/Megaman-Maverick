@@ -36,7 +36,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -199,7 +199,7 @@ class Eyee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), 
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = megaman.direction.rotation
+            sprite.rotation = targetPlayer.direction.rotation
             sprite.setCenter(body.getCenter())
             sprite.hidden = damageBlink
         }

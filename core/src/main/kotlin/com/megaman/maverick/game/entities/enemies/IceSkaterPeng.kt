@@ -25,6 +25,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -40,7 +41,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -125,7 +127,7 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezable
         brakeTimer.reset()
         jumpDelay.reset()
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         body.physics.defaultFrictionOnSelf.x = DEFAULT_FRICTION_X
 
@@ -317,13 +319,14 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezable
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
             (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
-    private fun shouldBrake() =
-        sensor.overlaps(megaman.body.getBounds()) &&
-            ((isFacing(Facing.LEFT) && megaman.body.getX() > body.getMaxX()) ||
-                (isFacing(Facing.RIGHT) && megaman.body.getMaxX() < body.getX()))
+    private fun shouldBrake() = players.any { player ->
+        sensor.overlaps(player.body.getBounds()) &&
+            ((isFacing(Facing.LEFT) && player.body.getX() > body.getMaxX()) ||
+                (isFacing(Facing.RIGHT) && player.body.getMaxX() < body.getX()))
+    }
 
     private fun shouldJump(): Boolean {
-        val center = megaman.body.getCenter()
+        val center = targetPlayer.body.getCenter()
         return center.y >= body.getY() && center.x >= body.getX() && center.x <= body.getMaxX()
     }
 
@@ -334,8 +337,8 @@ class IceSkaterPeng(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezable
 
     private fun updateFacing() {
         when {
-            megaman.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
-            megaman.body.getMaxX() < body.getX() -> facing = Facing.LEFT
+            targetPlayer.body.getX() > body.getMaxX() -> facing = Facing.RIGHT
+            targetPlayer.body.getMaxX() < body.getX() -> facing = Facing.LEFT
         }
     }
 }

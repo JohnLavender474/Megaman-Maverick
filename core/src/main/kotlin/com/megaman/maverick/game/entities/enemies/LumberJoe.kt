@@ -33,6 +33,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -48,6 +49,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
@@ -425,7 +428,8 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     private fun shouldCooldown() = axesThrown >= AXES_BEFORE_COOLDOWN
 
     private fun shouldJump() =
-        megaman.body.getBounds().overlaps(jumpSensor) || !body.isSensing(BodySense.FEET_ON_GROUND)
+        players.any { player -> player.body.getBounds().overlaps(jumpSensor) } ||
+            !body.isSensing(BodySense.FEET_ON_GROUND)
 
     private fun shouldStopJump() = body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f
 
@@ -440,7 +444,7 @@ class LumberJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         val impulse = MegaUtilMethods.calculateJumpImpulse(
             body.getPositionPoint(Position.TOP_CENTER),
-            megaman.body.getPositionPoint(Position.BOTTOM_CENTER),
+            targetPlayer.body.getPositionPoint(Position.BOTTOM_CENTER),
             AXE_IMPULSE_Y * ConstVals.PPM,
             horizontalScalar = 1.25f,
         )

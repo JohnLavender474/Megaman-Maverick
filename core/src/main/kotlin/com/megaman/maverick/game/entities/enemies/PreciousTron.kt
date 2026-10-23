@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
@@ -121,8 +121,8 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
     private val currentPosition = Vector2()
     private val positionSuppliers = Array<() -> Vector2>()
     private val positionQueue = PriorityQueue(Comparator<Vector2> compare@{ o1, o2 ->
-        val dist1 = o1.dst2(megaman.body.getCenter())
-        val dist2 = o2.dst2(megaman.body.getCenter())
+        val dist1 = o1.dst2(targetPlayer.body.getCenter())
+        val dist2 = o2.dst2(targetPlayer.body.getCenter())
         return@compare dist1.compareTo(dist2)
     })
 
@@ -348,7 +348,7 @@ class PreciousTron(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
         )
 
         gem.putProperty(ConstKeys.SPIN, false)
-        gem.secondTargetSupplier = { megaman.body.getCenter() }
+        gem.secondTargetSupplier = { targetPlayer.body.getCenter() }
     }
 
     private fun setNextPosition() {

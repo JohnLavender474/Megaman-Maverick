@@ -43,7 +43,7 @@ the plan.
 | `REFACTOR_TEST_029`, `enemy_drop` | `Darspider` drops when Megaman is under it; `SuicideBummer` reacts when he is in range, not before. |
 | `REFACTOR_TEST_029`, `enemy_chase` | `Bat` wakes and chases Megaman, and returns after it hits him. |
 | `REFACTOR_TEST_029`, `enemy_magfly` | `MagFly` pulls Megaman up, and does not pull him while he climbs the ladder or while he is damaged. |
-| `REFACTOR_TEST_029`, `enemy_contact` | `Matasaburo` blows Megaman back; `GapingFish` chomps when it hits him. |
+| `REFACTOR_TEST_029`, `enemy_contact` | The `Matasaburo` and `Coldier` winds push Megaman. (`GapingFish` was replaced: it crashes on spawn on the baseline too; bug candidate.) |
 | `REFACTOR_TEST_029`, `enemy_owner` | `Cokeyro` shakes when Megaman's shot hits it. |
 | `REFACTOR_TEST_029`, `death` | While Megaman dies and respawns, the enemies in the rooms above do not crash and act as before. |
 | `SMB3_1` | Stomp a `Goomba`, a `RedKoopa` and a `GreenKoopa`: Megaman bounces as before. Kick a shell; a shell hits Megaman from the side. Stomp a `BulletBill`. |

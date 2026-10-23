@@ -140,6 +140,15 @@ class PlayersTest : DescribeSpec({
             players.slotOf(spawnedEntity()) shouldBe null
         }
 
+        it("viewOf gives the view of a registered entity, or null") {
+            val players = players()
+            val entity = spawnedEntity()
+            val view = players.register(PlayerSlot(1), entity)
+
+            players.viewOf(entity) shouldBeSameInstanceAs view
+            players.viewOf(spawnedEntity()) shouldBe null
+        }
+
         it("registeredSlots adds the registered slots in slot order") {
             val players = players()
             players.register(PlayerSlot(2), spawnedEntity())

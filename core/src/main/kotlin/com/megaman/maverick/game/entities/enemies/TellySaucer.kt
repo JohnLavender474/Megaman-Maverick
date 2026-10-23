@@ -28,6 +28,7 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IMotionEntity
 import com.maverick.game.engine.motion.MotionComponent
 import com.maverick.game.engine.motion.SineWave
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -41,7 +42,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SaucerRay
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -97,7 +99,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         if (!super.canSpawn(spawnProps)) return false
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        val left = megaman.body.getCenter().x <= spawn.x
+        val left = targetPlayer.body.getCenter().x <= spawn.x
 
         val canSpawnLeft = spawnProps.getOrDefault(
             "${ConstKeys.CAN}_${ConstKeys.SPAWN}_${ConstKeys.LEFT}", true, Boolean::class
@@ -119,7 +121,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman.body.getX() <= body.getX(), Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, targetPlayer.body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
 
         val sinePos = body.getCenter(false)
@@ -143,7 +145,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
-            direction = megaman.direction
+            direction = targetPlayer.direction
 
             if (game.isCameraRotating()) {
                 body.physics.velocity.setZero()
@@ -185,7 +187,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             Fixture(body, FixtureType.CONSUMER, GameRectangle().setSize(ConstVals.PPM.toFloat(), 4f * ConstVals.PPM))
         rayScanner.offsetFromBodyAttachment.y = -body.getHeight()
         rayScanner.setReceiver(Receivers.FILTER) { fixture ->
-            fixture.getEntity() == megaman && fixture.getType() == FixtureType.DAMAGEABLE
+            players.viewOf(fixture.getEntity()) != null && fixture.getType() == FixtureType.DAMAGEABLE
         }
         rayScanner.setReceiver(Receivers.CONSUMER) { processState, _ ->
             if (rayDelay.isFinished() && !raying) startRay()
@@ -207,7 +209,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = megaman.direction.rotation
+            sprite.rotation = targetPlayer.direction.rotation
         }
         .build()
 

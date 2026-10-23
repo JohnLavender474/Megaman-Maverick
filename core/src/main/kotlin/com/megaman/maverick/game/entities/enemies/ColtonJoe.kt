@@ -29,6 +29,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -42,10 +43,11 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.SmallGreenMissile
+import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -97,7 +99,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
         shootTimer.setToEnd()
         shootDelayTimer.setToEnd()
 
-        facing = if (body.getX() < megaman.body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (body.getX() < targetPlayer.body.getX()) Facing.RIGHT else Facing.LEFT
 
         frozen = false
     }
@@ -141,7 +143,8 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
             val position = if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
             scanner.positionOnPoint(body.getCenter(), position)
 
-            if (shootDelayTimer.isFinished() && scanner.overlaps(megaman.body.getBounds())) shootDelayTimer.reset()
+            if (shootDelayTimer.isFinished() && players.any { player -> scanner.overlaps(player.body.getBounds()) })
+                shootDelayTimer.reset()
 
             if (!shootDelayTimer.isFinished()) {
                 shootDelayTimer.update(delta)
@@ -152,7 +155,7 @@ class ColtonJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
                 }
             }
 
-            facing = if (body.getX() < megaman.body.getX()) Facing.RIGHT else Facing.LEFT
+            facing = if (body.getX() < targetPlayer.body.getX()) Facing.RIGHT else Facing.LEFT
         }
     }
 

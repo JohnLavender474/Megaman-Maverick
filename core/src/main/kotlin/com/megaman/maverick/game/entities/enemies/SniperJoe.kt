@@ -45,6 +45,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -446,18 +447,18 @@ class SniperJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             body.physics.velocity.y <= 0f &&
             body.isSensing(BodySense.FEET_ON_GROUND) &&
             when (direction) {
-                Direction.UP -> megaman.body.getY() > body.getMaxY() &&
-                    megaman.body.getX() <= body.getMaxX() &&
-                    megaman.body.getMaxX() >= body.getX()
-                Direction.DOWN -> megaman.body.getMaxY() < body.getY() &&
-                    megaman.body.getX() <= body.getMaxX() &&
-                    megaman.body.getMaxX() >= body.getX()
-                Direction.LEFT -> megaman.body.getMaxX() < body.getX() &&
-                    megaman.body.getY() <= body.getMaxY() &&
-                    megaman.body.getMaxY() >= body.getY()
-                Direction.RIGHT -> megaman.body.getX() > body.getMaxX() &&
-                    megaman.body.getY() <= body.getMaxY() &&
-                    megaman.body.getMaxY() >= body.getY()
+                Direction.UP -> targetPlayer.body.getY() > body.getMaxY() &&
+                    targetPlayer.body.getX() <= body.getMaxX() &&
+                    targetPlayer.body.getMaxX() >= body.getX()
+                Direction.DOWN -> targetPlayer.body.getMaxY() < body.getY() &&
+                    targetPlayer.body.getX() <= body.getMaxX() &&
+                    targetPlayer.body.getMaxX() >= body.getX()
+                Direction.LEFT -> targetPlayer.body.getMaxX() < body.getX() &&
+                    targetPlayer.body.getY() <= body.getMaxY() &&
+                    targetPlayer.body.getMaxY() >= body.getY()
+                Direction.RIGHT -> targetPlayer.body.getX() > body.getMaxX() &&
+                    targetPlayer.body.getY() <= body.getMaxY() &&
+                    targetPlayer.body.getMaxY() >= body.getY()
             }
 
     private fun jump() {

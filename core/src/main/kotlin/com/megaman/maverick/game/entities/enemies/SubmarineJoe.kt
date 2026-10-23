@@ -52,7 +52,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.SubmarineMissile
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
@@ -136,13 +136,13 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                 FacingUtils.setFacingOf(this@SubmarineJoe)
 
             if (currentState != SubmarineJoeState.MOVE ||
-                body.getBounds().overlaps(megaman.body.getBounds())
+                body.getBounds().overlaps(targetPlayer.body.getBounds())
             ) body.physics.velocity.setZero()
         }
 
         override fun shouldGoToNextState(state: SubmarineJoeState, timer: Timer?): Boolean {
             if (state == SubmarineJoeState.MOVE) {
-                if (!aimLine.overlaps(megaman.body.getBounds())) return false
+                if (!aimLine.overlaps(targetPlayer.body.getBounds())) return false
 
                 val overlapsBlock = MegaGameEntities
                     .getOfType(EntityType.BLOCK)
@@ -248,7 +248,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { megaman.body.getPositionPoint(Position.BOTTOM_CENTER).toGridCoordinate() },
+            targetCoordinateSupplier = { targetPlayer.body.getPositionPoint(Position.BOTTOM_CENTER).toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ x, y, container ->
                 val bodySet = MutableOrderedSet<IBody>()
@@ -272,7 +272,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                     start = body.getCenter(),
                     speed = { MOVE_SPEED * ConstVals.PPM },
                     stopOnTargetReached = false,
-                    onTargetNull = { moveTowards(megaman.body.getCenter(), MOVE_SPEED * ConstVals.PPM) },
+                    onTargetNull = { moveTowards(targetPlayer.body.getCenter(), MOVE_SPEED * ConstVals.PPM) },
                     trajectoryConsumer = { trajectory ->
                         body.physics.velocity.lerp(trajectory, MOVE_LERP_SCALAR * Gdx.graphics.deltaTime)
                     },
@@ -283,7 +283,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
             {
                 canMove &&
                     currentState == SubmarineJoeState.MOVE &&
-                    !body.getBounds().overlaps(megaman.body.getBounds())
+                    !body.getBounds().overlaps(targetPlayer.body.getBounds())
             },
             intervalTimer = Timer(PATHFINDING_UPDATE_INTERVAL)
         )

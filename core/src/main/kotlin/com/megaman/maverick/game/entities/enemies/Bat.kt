@@ -33,6 +33,8 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.pathfinding.PathfinderParams
 import com.maverick.game.engine.pathfinding.PathfindingComponent
+import com.maverick.game.engine.players.any
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -49,7 +51,8 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
@@ -228,7 +231,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
         GameLogger.debug(TAG, "onDamageInflictedTo(): damageable=$damageable")
-        if (damageable == megaman)
+        if (players.viewOf(damageable) != null)
             state = if (hangAfterDamageInflicted) BatState.FLYING_TO_RETREAT else BatState.FLYING_TO_ATTACK
     }
 
@@ -245,7 +248,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
             when (state) {
                 BatState.HANGING -> {
                     if (!triggered) trigger?.let {
-                        if (megaman.body.getBounds().overlaps(it)) {
+                        if (players.any { player -> player.body.getBounds().overlaps(it) }) {
                             GameLogger.debug(TAG, "update(): Megaman touched trigger")
                             triggered = true
                         }
@@ -340,7 +343,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setOriginCenter()
-            sprite.rotation = megaman.direction.rotation
+            sprite.rotation = targetPlayer.direction.rotation
             sprite.setCenter(body.getCenter())
         }
         return component
@@ -366,7 +369,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { targetPlayer.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ x, y, container ->
                 val rect1 = GameRectangle()
@@ -405,7 +408,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     }
 
     private fun directlyChaseMegaman() = body.physics.velocity.set(
-        megaman.body
+        targetPlayer.body
             .getCenter()
             .sub(body.getCenter())
             .nor()

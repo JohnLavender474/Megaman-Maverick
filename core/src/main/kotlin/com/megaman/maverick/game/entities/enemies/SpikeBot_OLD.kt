@@ -44,8 +44,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Needle.NeedleType
@@ -124,7 +124,7 @@ class SpikeBot_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
 
         loop.reset()
         timers.values().forEach { it.reset() }
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         type = when {
             spawnProps.containsKey(ConstKeys.TYPE) -> {
@@ -197,10 +197,10 @@ class SpikeBot_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
                         FacingUtils.isFacingBlock(this) -> swapFacing()
 
                         isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) ->
-                            if (megaman.body.getX() < body.getX()) jump() else swapFacing()
+                            if (targetPlayer.body.getX() < body.getX()) jump() else swapFacing()
 
                         isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) ->
-                            if (megaman.body.getX() > body.getX()) jump() else swapFacing()
+                            if (targetPlayer.body.getX() > body.getX()) jump() else swapFacing()
                     }
                 }
             }
@@ -212,7 +212,7 @@ class SpikeBot_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.
                 timer.reset()
                 loop.next()
                 if (loop.getCurrent() != SpikeBotState.WALK)
-                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             }
         }
     }

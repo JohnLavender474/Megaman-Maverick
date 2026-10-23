@@ -41,8 +41,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.DustPuff
 import com.megaman.maverick.game.entities.utils.delayNextPossibleSpawn
 import com.megaman.maverick.game.entities.utils.isNextPossibleSpawnDelayed
@@ -112,7 +112,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         dustPuffDelay.reset()
         dustPuffIndex = 0
@@ -142,9 +142,9 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
             }
 
             if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-                megaman.body.getMaxX() >= body.getX() &&
-                megaman.body.getX() <= body.getMaxX() &&
-                megaman.body.getY() > body.getY()
+                targetPlayer.body.getMaxX() >= body.getX() &&
+                targetPlayer.body.getX() <= body.getMaxX() &&
+                targetPlayer.body.getY() > body.getY()
             ) jump()
 
             dustPuffDelay.update(delta)

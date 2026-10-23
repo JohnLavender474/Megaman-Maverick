@@ -34,6 +34,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -51,6 +52,8 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.MockingByteNest
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.MockingByteEgg
@@ -271,7 +274,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
                     if (currentState == MockingByteState.SLEEP) {
                         awakenArea.setCenter(body.getCenter())
 
-                        if (megaman.body.getBounds().overlaps(awakenArea)) {
+                        if (players.any { player -> player.body.getBounds().overlaps(awakenArea) }) {
                             GameLogger.debug(TAG, "update(): megaman entered awaken area, wake up")
                             stateMachine.next()
                         }
@@ -295,7 +298,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
                         if (hoverDelay.isJustFinished()) {
                             startPosition.set(body.getCenter())
-                            targetPosition.set(megaman.body.getCenter())
+                            targetPosition.set(targetPlayer.body.getCenter())
 
                             GameLogger.debug(
                                 TAG, "update(): hover delay just finished: " +
@@ -340,7 +343,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
                     }
                     if (diveDelay.isJustFinished()) {
                         startPosition.set(body.getCenter())
-                        targetPosition.set(megaman.body.getCenter())
+                        targetPosition.set(targetPlayer.body.getCenter())
                         GameLogger.debug(
                             TAG, "update(): dive delay just finished: " +
                                 "startPos=$startPosition, targetPos=$targetPosition"
@@ -515,7 +518,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
                 GameLogger.debug(
                     TAG, "onChangeState(): RISE: " +
-                        "startPos=$startPosition, targetPos=$targetPosition, megamanPos=${megaman.body.getCenter()}"
+                        "startPos=$startPosition, targetPos=$targetPosition, megamanPos=${targetPlayer.body.getCenter()}"
                 )
             }
             MockingByteState.HOVER -> {
@@ -524,7 +527,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
                 GameLogger.debug(
                     TAG, "onChangeState(): HOVER: " +
-                        "startPos=$startPosition, targetPos=$targetPosition, megamanPos=${megaman.body.getCenter()}"
+                        "startPos=$startPosition, targetPos=$targetPosition, megamanPos=${targetPlayer.body.getCenter()}"
                 )
             }
             MockingByteState.DIVE -> {
@@ -542,7 +545,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
                 val returnPositions = reusableVec2Array
                 returnPositions.addAll(nest.returnPositions)
                 returnPositions.sort { a, b ->
-                    (a.dst2(megaman.body.getCenter()) - b.dst2(megaman.body.getCenter())).toInt()
+                    (a.dst2(targetPlayer.body.getCenter()) - b.dst2(targetPlayer.body.getCenter())).toInt()
                 }
 
                 startPosition.set(returnPositions[0])
@@ -587,7 +590,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         for (nest in nests) if (isNestAttainable(nest)) sortedNests.add(nest)
         if (sortedNests.isEmpty) return false
         sortedNests.sort { a, b ->
-            (a.position.dst2(megaman.body.getCenter()) - b.position.dst2(megaman.body.getCenter())).toInt()
+            (a.position.dst2(targetPlayer.body.getCenter()) - b.position.dst2(targetPlayer.body.getCenter())).toInt()
         }
         nestId = sortedNests[0].id
 

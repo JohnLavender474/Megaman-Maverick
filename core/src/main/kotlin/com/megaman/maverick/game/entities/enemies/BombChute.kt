@@ -31,7 +31,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -103,7 +103,7 @@ class BombChute(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
             var xSpeed = body.physics.velocity.x
 
             when {
-                body.getX() < megaman.body.getX() -> xSpeed += X_ACCELERATION * delta * ConstVals.PPM
+                body.getX() < targetPlayer.body.getX() -> xSpeed += X_ACCELERATION * delta * ConstVals.PPM
                 else -> xSpeed -= X_ACCELERATION * delta * ConstVals.PPM
             }
 

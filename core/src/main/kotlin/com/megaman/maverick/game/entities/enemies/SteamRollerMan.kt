@@ -26,6 +26,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -46,6 +47,7 @@ import com.megaman.maverick.game.entities.blocks.SteamRoller
 import com.megaman.maverick.game.entities.blocks.SteamRoller.SteamRollerState
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.entities.projectiles.Rock
 import com.megaman.maverick.game.entities.projectiles.Rock.RockSize
@@ -385,7 +387,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
     }
 
     private fun shouldStopRolling() = FacingUtils.isFacingBlock(this) ||
-        (canSmash() && megaman.body.getBounds().overlaps(smashArea))
+        (canSmash() && players.any { player -> player.body.getBounds().overlaps(smashArea) })
 
     private fun shouldStopReversing(): Boolean {
         val sense = when (facing) {

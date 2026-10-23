@@ -41,7 +41,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ToxicGoopShot
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
@@ -146,7 +146,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         openTimer.reset()
 
         toxicBarrelBotState = ToxicBarrelBotState.CLOSED
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         shot = false
 
         frozen = false
@@ -167,7 +167,7 @@ class ToxicBarrelBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
 
             when (toxicBarrelBotState) {
                 ToxicBarrelBotState.CLOSED -> {
-                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {

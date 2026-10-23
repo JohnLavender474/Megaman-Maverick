@@ -47,8 +47,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Needle
 import com.megaman.maverick.game.entities.projectiles.Needle.NeedleType
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
@@ -347,12 +347,12 @@ class SpikeBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private fun shouldSwapFacing() = FacingUtils.isFacingBlock(this) ||
-        (isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) && megaman.body.getX() > body.getX()) ||
-        (isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) && megaman.body.getX() < body.getX())
+        (isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) && targetPlayer.body.getX() > body.getX()) ||
+        (isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) && targetPlayer.body.getX() < body.getX())
 
     private fun shouldJump() =
-        (isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) && megaman.body.getX() < body.getX()) ||
-            (isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) && megaman.body.getX() > body.getX())
+        (isFacing(Facing.LEFT) && !body.isProperty(LEFT_FOOT, true) && targetPlayer.body.getX() < body.getX()) ||
+            (isFacing(Facing.RIGHT) && !body.isProperty(RIGHT_FOOT, true) && targetPlayer.body.getX() > body.getX())
 
     private fun jump() {
         body.physics.velocity.set(

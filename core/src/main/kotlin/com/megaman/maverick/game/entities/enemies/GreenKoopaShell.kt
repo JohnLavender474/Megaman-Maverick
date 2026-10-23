@@ -25,6 +25,8 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.any
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -40,10 +42,10 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.KoopaShellTrailSprite
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
@@ -145,7 +147,7 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
                         startRolling()
 
                         facing = when {
-                            megaman.body.getBounds().getX() < body.getBounds().getX() -> Facing.RIGHT
+                            targetPlayer.body.getBounds().getX() < body.getBounds().getX() -> Facing.RIGHT
                             else -> Facing.LEFT
                         }
                     }
@@ -172,16 +174,17 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         }
     }
 
-    private fun shouldStartRolling() =
-        megaman.leftSideFixture.getShape().overlaps(body.getBounds()) ||
-            megaman.rightSideFixture.getShape().overlaps(body.getBounds()) ||
-            megaman.feetFixture.getShape().overlaps(body.getBounds()) ||
-            megaman.body.getBounds().overlaps(body.getBounds())
+    private fun shouldStartRolling() = players.any {
+        it.leftSideFixture.getShape().overlaps(body.getBounds()) ||
+            it.rightSideFixture.getShape().overlaps(body.getBounds()) ||
+            it.feetFixture.getShape().overlaps(body.getBounds()) ||
+            it.body.getBounds().overlaps(body.getBounds())
+    }
 
     private fun startRolling() {
         state = GreenKoopaShellState.ROLLING
         requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
-        facing = if (megaman.body.getBounds().getX() < body.getBounds().getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getBounds().getX() < body.getBounds().getX()) Facing.RIGHT else Facing.LEFT
     }
 
     private fun getKnockedToDeath(shellBounds: GameRectangle) {
@@ -206,13 +209,14 @@ class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceabl
         headFixture.setReceiver(Receivers.HIT_BY_FEET, ProcessState.BEGIN) { feet, _ ->
             if (state == GreenKoopaShellState.KNOCKED_TO_DEATH) return@setReceiver
 
-            val entity = feet.getEntity()
-            if (entity is Megaman) {
+            val player = players.viewOf(feet.getEntity())
+            if (player != null) {
                 if (state == GreenKoopaShellState.IDLE) startRolling()
 
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
 
-                megaman.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
+                // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for item 029g
+                player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 requestToPlaySound(SoundAsset.SWIM_SOUND, false)
             }
         }

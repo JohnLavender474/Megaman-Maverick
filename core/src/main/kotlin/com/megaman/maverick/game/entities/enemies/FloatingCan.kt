@@ -49,7 +49,7 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.hardMode
@@ -229,7 +229,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter(Vector2()).toGridCoordinate() },
-            targetCoordinateSupplier = { megaman.body.getCenter(Vector2()).toGridCoordinate() },
+            targetCoordinateSupplier = { targetPlayer.body.getCenter(Vector2()).toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ x, y, container ->
                 val rect1 = GameRectangle()
@@ -274,7 +274,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     private fun directlyChaseMegaman() {
         val speed = if (game.state.hardMode) FLY_SPEED_HARD else FLY_SPEED
         body.physics.velocity.set(
-            megaman.body
+            targetPlayer.body
                 .getCenter()
                 .sub(body.getCenter())
                 .nor()

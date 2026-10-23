@@ -37,7 +37,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -72,7 +72,7 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         wasSideOnGround = false
     }
 
@@ -100,9 +100,9 @@ class SuicideBummer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
             if (
                 (wasSideOnGround && !isSideOnGround) ||
                 (isSideOnGround &&
-                    megaman.body.getMaxX() >= body.getX() &&
-                    megaman.body.getX() <= body.getMaxX() &&
-                    megaman.body.getY() > body.getY())
+                    targetPlayer.body.getMaxX() >= body.getX() &&
+                    targetPlayer.body.getX() <= body.getMaxX() &&
+                    targetPlayer.body.getY() > body.getY())
             ) jump()
             wasSideOnGround = isSideOnGround
         }

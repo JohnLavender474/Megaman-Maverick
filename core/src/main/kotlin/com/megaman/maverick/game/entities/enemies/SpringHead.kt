@@ -23,6 +23,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -31,7 +32,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -67,8 +69,8 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     private val speedUpScanner = GameRectangle().setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.PPM / 4f)
 
     private val facingWrongDirection: Boolean
-        get() = (body.getX() < megaman.body.getX() && isFacing(Facing.LEFT)) ||
-            (body.getX() > megaman.body.getX() && isFacing(Facing.RIGHT))
+        get() = (body.getX() < targetPlayer.body.getX() && isFacing(Facing.LEFT)) ||
+            (body.getX() > targetPlayer.body.getX() && isFacing(Facing.RIGHT))
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
@@ -85,7 +87,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         bounceTimer.setToEnd()
     }
@@ -165,7 +167,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             turnTimer.update(it)
 
             if (turnTimer.isJustFinished())
-                facing = if (megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+                facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
             if (turnTimer.isFinished() && facingWrongDirection) turnTimer.reset()
 
@@ -181,7 +183,7 @@ class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
                     (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) -> 0f
 
                 else -> when {
-                    megaman.body.getBounds().overlaps(speedUpScanner) -> SPEED_SUPER
+                    players.any { player -> player.body.getBounds().overlaps(speedUpScanner) } -> SPEED_SUPER
                     else -> SPEED_NORMAL
                 } * ConstVals.PPM * facing.value
             }

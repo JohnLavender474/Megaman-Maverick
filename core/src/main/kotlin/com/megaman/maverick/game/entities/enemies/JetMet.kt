@@ -45,7 +45,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -91,8 +91,8 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     private val target = Vector2()
     private val targetPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
-        val d1 = o1.dst2(megaman.body.getCenter())
-        val d2 = o2.dst2(megaman.body.getCenter())
+        val d1 = o1.dst2(targetPlayer.body.getCenter())
+        val d2 = o2.dst2(targetPlayer.body.getCenter())
         d1.compareTo(d2)
     }
 
@@ -119,7 +119,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        direction = megaman.direction
+        direction = targetPlayer.direction
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.TARGET) && value is RectangleMapObject)
@@ -136,10 +136,10 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
         jetMetState = JetMetState.STAND
         facing = when (direction) {
-            Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.DOWN -> if (megaman.body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
-            Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-            Direction.RIGHT -> if (megaman.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.UP -> if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.DOWN -> if (targetPlayer.body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+            Direction.LEFT -> if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+            Direction.RIGHT -> if (targetPlayer.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
         targetReached = false
@@ -166,7 +166,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                 return@add
             }
 
-            direction = megaman.direction
+            direction = targetPlayer.direction
 
             if (!canMove) {
                 body.physics.velocity.setZero()
@@ -183,11 +183,11 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
                     if (liftoffTimer.isFinished()) jetMetState = JetMetState.JET
                 }
                 JetMetState.JET -> {
-                    facing = when (megaman.direction) {
-                        Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (megaman.body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
-                        Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (megaman.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
+                    facing = when (targetPlayer.direction) {
+                        Direction.UP -> if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (targetPlayer.body.getX() > body.getX()) Facing.LEFT else Facing.RIGHT
+                        Direction.LEFT -> if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (targetPlayer.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
                     }
 
                     if (!targetReached) {
@@ -213,7 +213,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
 
     private fun shoot() {
         val trajectory = GameObjectPools.fetch(Vector2::class)
-            .set(megaman.body.getCenter())
+            .set(targetPlayer.body.getCenter())
             .sub(body.getCenter())
             .nor()
             .scl(BULLET_SPEED * ConstVals.PPM)

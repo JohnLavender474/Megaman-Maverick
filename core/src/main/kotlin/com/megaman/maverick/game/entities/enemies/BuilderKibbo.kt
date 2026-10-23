@@ -39,7 +39,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.KibboHammer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -116,7 +116,7 @@ class BuilderKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!megaman.ready) {
+            if (!targetPlayer.ready) {
                 loop.reset()
                 stateTimers.values().forEach { it.reset() }
             }
@@ -222,7 +222,7 @@ class BuilderKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         val impulse = MegaUtilMethods
             .calculateJumpImpulse(
                 spawn,
-                megaman.body.getBounds().getPositionPoint(Position.BOTTOM_CENTER),
+                targetPlayer.body.getBounds().getPositionPoint(Position.BOTTOM_CENTER),
                 HAMMER_IMPULSE_Y * ConstVals.PPM
             )
             .let {

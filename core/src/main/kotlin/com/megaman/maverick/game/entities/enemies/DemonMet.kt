@@ -45,8 +45,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
@@ -105,8 +105,8 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private val target = Vector2()
     private val targetsPQ = PriorityQueue { o1: Vector2, o2: Vector2 ->
-        val d1 = o1.dst2(megaman.body.getCenter())
-        val d2 = o2.dst2(megaman.body.getCenter())
+        val d1 = o1.dst2(targetPlayer.body.getCenter())
+        val d2 = o2.dst2(targetPlayer.body.getCenter())
         d1.compareTo(d2)
     }
     private var targetReached = false
@@ -144,7 +144,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         targetReached = false
 
         state = DemonMetState.STAND
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         standTimer.reset()
         fireTimer.reset()
@@ -196,13 +196,13 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
             when (state) {
                 DemonMetState.STAND -> {
-                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     standTimer.update(delta)
                     if (standTimer.isFinished()) state = DemonMetState.FLY
                 }
                 DemonMetState.FLY -> {
-                    facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                     if (!targetReached && body.getCenter().epsilonEquals(target, 0.1f * ConstVals.PPM)) {
                         targetReached = true
@@ -277,7 +277,7 @@ class DemonMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private fun fire() {
         for (i in 0 until FIRE_PELLET_COUNT) {
-            val impulse = megaman.body.getCenter().sub(body.getCenter()).nor().scl(FIRE_SPEED * ConstVals.PPM)
+            val impulse = targetPlayer.body.getCenter().sub(body.getCenter()).nor().scl(FIRE_SPEED * ConstVals.PPM)
             when (i) {
                 0 -> impulse.rotateDeg(-FIRE_PELLET_ANGLE_OFFSET)
                 2 -> impulse.rotateDeg(FIRE_PELLET_ANGLE_OFFSET)

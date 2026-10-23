@@ -27,6 +27,8 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.pathfinding.PathfinderParams
 import com.maverick.game.engine.pathfinding.PathfindingComponent
+import com.maverick.game.engine.players.any
+import com.maverick.game.engine.players.viewOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -36,7 +38,8 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -131,7 +134,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     override fun onDamageInflictedTo(damageable: IDamageable) {
-        if (currentState == DeathBatState.FLY_ATTACK && damageable == megaman) loop.next()
+        if (currentState == DeathBatState.FLY_ATTACK && players.viewOf(damageable) != null) loop.next()
     }
 
     private fun spawnCacaFlame() {
@@ -149,7 +152,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     body.physics.velocity.setZero()
 
                     if (!triggered) trigger?.let {
-                        if (megaman.body.getBounds().overlaps(it)) {
+                        if (players.any { player -> player.body.getBounds().overlaps(it) }) {
                             GameLogger.debug(TAG, "update(): Megaman touched trigger")
                             triggered = true
                         }
@@ -184,9 +187,9 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     val centerX = body.getCenter().x
 
                     if (!body.isSensing(BodySense.BODY_TOUCHING_BLOCK) &&
-                        body.getY() > megaman.body.getMaxY() &&
-                        centerX >= megaman.body.getX() &&
-                        centerX <= megaman.body.getMaxX()
+                        body.getY() > targetPlayer.body.getMaxY() &&
+                        centerX >= targetPlayer.body.getX() &&
+                        centerX <= targetPlayer.body.getMaxX()
                     ) {
                         spawnCacaFlame()
 
@@ -246,7 +249,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     private fun definePathfindingComponent(): PathfindingComponent {
         val params = PathfinderParams(
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
-            targetCoordinateSupplier = { megaman.body.getCenter().toGridCoordinate() },
+            targetCoordinateSupplier = { targetPlayer.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
             filter = filter@{ x, y, container ->
                 val bodySet = MutableOrderedSet<IBody>()
@@ -281,7 +284,7 @@ class DeathBat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     }
 
     private fun directlyChaseMegaman() = body.physics.velocity.set(
-        megaman.body
+        targetPlayer.body
             .getCenter()
             .sub(body.getCenter())
             .nor()

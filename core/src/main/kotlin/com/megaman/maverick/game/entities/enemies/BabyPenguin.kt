@@ -31,7 +31,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.world.body.*
 
 class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
@@ -57,7 +57,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         super.onSpawn(spawnProps)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman.body.getX() < body.getX(), Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, targetPlayer.body.getX() < body.getX(), Boolean::class)
         facing = if (left) Facing.LEFT else Facing.RIGHT
     }
 

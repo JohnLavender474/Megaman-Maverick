@@ -39,7 +39,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
@@ -110,7 +110,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
         loop.reset()
         loop.forEach { it.second.reset() }
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -128,7 +128,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add {
-            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
             val (_, timer) = loop.getCurrent()
             timer.update(it)
             if (timer.isFinished()) {
@@ -231,7 +231,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         val spawn = body.getPositionPoint(Position.TOP_CENTER)
         spawn.x += 0.25f * ConstVals.PPM * -facing.value
         val ball = EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.EXPLODING_BALL)!!
-        val impulseX = (megaman.body.getX() - body.getX()) * 0.9f
+        val impulseX = (targetPlayer.body.getX() - body.getX()) * 0.9f
         val impulseY = BALL_IMPULSE * ConstVals.PPM
         ball.spawn(
             props(

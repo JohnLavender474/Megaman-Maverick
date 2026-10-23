@@ -38,7 +38,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -113,7 +113,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
 
         behaviorTimer.reset()
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         frozen = false
     }
@@ -221,7 +221,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
                     }
                 }
                 DragonFlyBehavior.MOVE_DOWN -> {
-                    if (megamanScannerFixture.getShape().contains(megaman.body.getCenter()) ||
+                    if (megamanScannerFixture.getShape().contains(targetPlayer.body.getCenter()) ||
                         (!isMegamanBelow() && !game.getGameCamera().overlaps(
                             oobScannerFixture.getShape().getBoundingRectangle(),
                             GameObjectPools.fetch(BoundingBox::class)
@@ -286,7 +286,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         behaviorTimer.reset()
     }
 
-    private fun isMegamanLeft() = game.megaman.body.getCenter().x < body.getX()
+    private fun isMegamanLeft() = targetPlayer.body.getCenter().x < body.getX()
 
-    private fun isMegamanBelow() = game.megaman.body.getCenter().y < body.getY()
+    private fun isMegamanBelow() = targetPlayer.body.getCenter().y < body.getY()
 }

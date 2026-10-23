@@ -41,7 +41,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.FireMetFlame
@@ -99,7 +99,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         spawnFlame()
 
         fireMetState = FireMetState.MOVE
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         moveTimer.reset()
         shootTimer.setToEnd()
@@ -138,7 +138,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
                         moveTimer.update(delta)
                         if (moveTimer.isFinished()) {
-                            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                            facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
                             shoot()
                             shootTimer.reset()
@@ -171,7 +171,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
     private fun shoot() {
         val impulse = MegaUtilMethods.calculateJumpImpulse(
-            body.getCenter(), megaman.body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
+            body.getCenter(), targetPlayer.body.getCenter(), JUMP_IMPULSE_Y * ConstVals.PPM,
         ).coerceX(-MAX_SHOOT_X * ConstVals.PPM, MAX_SHOOT_Y * ConstVals.PPM)
         flame!!.launch(impulse)
 

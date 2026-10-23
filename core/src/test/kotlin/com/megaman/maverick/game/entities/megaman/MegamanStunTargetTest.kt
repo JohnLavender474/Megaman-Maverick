@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.GameEngine
+import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -32,6 +33,8 @@ class MegamanStunTargetTest : DescribeSpec({
 
         megaman = Megaman(game)
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
+        megaman.addComponent(BehaviorsComponent())
+        megaman.addComponent(megaman.playerState)
 
         val players = MegaPlayers(2)
         players.register(PlayerSlot(0), megaman)
@@ -49,6 +52,16 @@ class MegamanStunTargetTest : DescribeSpec({
             PlayerEventKeys.SLOTS pairTo Array<PlayerSlot>().apply { targets.forEach { add(it) } }
         )
     )
+
+    describe("ready") {
+        it("reads and writes the player state component") {
+            megaman.ready = true
+            megaman.playerState.ready shouldBe true
+
+            megaman.playerState.ready = false
+            megaman.ready shouldBe false
+        }
+    }
 
     describe("STUN_PLAYER") {
         it("stuns Megaman when the targets hold his slot") {

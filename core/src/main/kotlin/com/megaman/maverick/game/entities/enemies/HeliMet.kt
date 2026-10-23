@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.GutsTankFist
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.HeliMet.HeliMetState.*
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -141,7 +141,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                     }
                 }
 
-                val megamanCenter = megaman.body.getCenter()
+                val megamanCenter = targetPlayer.body.getCenter()
                 queue.sort sort@{ t1, t2 ->
                     val t1Dst = t1.dst2(megamanCenter)
                     val t2Dst = t2.dst2(megamanCenter)
@@ -226,10 +226,10 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
                 }
                 FLY -> {
                     facing = when (direction) {
-                        Direction.UP -> if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
-                        Direction.DOWN -> if (megaman.body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
-                        Direction.LEFT -> if (megaman.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
-                        Direction.RIGHT -> if (megaman.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
+                        Direction.UP -> if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                        Direction.DOWN -> if (targetPlayer.body.getX() < body.getX()) Facing.RIGHT else Facing.LEFT
+                        Direction.LEFT -> if (targetPlayer.body.getY() < body.getY()) Facing.LEFT else Facing.RIGHT
+                        Direction.RIGHT -> if (targetPlayer.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
                     }
 
                     sideToSideTimer.update(delta)
@@ -328,7 +328,7 @@ class HeliMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             Direction.RIGHT -> body.getCenter().add(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM * facing.value)
         }
 
-        val trajectory = megaman.body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
+        val trajectory = targetPlayer.body.getCenter().sub(spawn).nor().scl(BULLET_VELOCITY * ConstVals.PPM)
 
         val bullet = MegaEntityFactory.fetch(Bullet::class)!!
         bullet.spawn(

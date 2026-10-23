@@ -55,6 +55,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
+import com.megaman.maverick.game.players.PlayerStateComponent
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.state.IGameStateListener
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -123,6 +124,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     override val invincible: Boolean
         get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged || dead || !ready
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
+
+    val playerState = PlayerStateComponent(damageTimer)
 
     var canBeDamaged = true
 
@@ -204,7 +207,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             else -> weaponsHandler.getAmmo(currentWeapon)
         }
 
-    var ready = false
+    var ready: Boolean
+        get() = playerState.ready
+        set(value) {
+            playerState.ready = value
+        }
 
     override var direction: Direction
         get() = body.direction
@@ -346,6 +353,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         GameLogger.debug(TAG, "init()")
         super.init()
 
+        addComponent(playerState)
         addComponent(defineBodyComponent())
         addComponent(defineBehaviorsComponent())
         addComponent(defineControllerComponent())

@@ -34,7 +34,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -87,7 +87,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
 
-        facing = if (game.megaman.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
         onWall = false
         wasOnWall = false
@@ -114,11 +114,11 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
             wasOnWall = onWall
             onWall = FacingUtils.isFacingBlock(this)
 
-            if (!megaman.dead && body.isSensing(BodySense.FEET_ON_GROUND)) when {
-                megaman.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX() ->
+            if (!targetPlayer.dead && body.isSensing(BodySense.FEET_ON_GROUND)) when {
+                targetPlayer.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX() ->
                     facing = Facing.LEFT
 
-                megaman.body.getX() > body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x ->
+                targetPlayer.body.getX() > body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x ->
                     facing = Facing.RIGHT
             }
         }

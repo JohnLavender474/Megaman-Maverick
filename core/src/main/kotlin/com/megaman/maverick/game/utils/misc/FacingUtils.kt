@@ -7,7 +7,7 @@ import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.isSensing
@@ -17,7 +17,7 @@ object FacingUtils {
     const val TAG = "StandardFacingSetter"
 
     fun getPreferredFacingFor(entity: MegaGameEntity): Facing {
-        val megaman = entity.megaman
+        val target = entity.targetPlayer
 
         entity as IBodyEntity
         entity as IFaceable
@@ -26,7 +26,7 @@ object FacingUtils {
             // assert facing is already defined
             entity.facing.value
 
-            val megamanBody = megaman.body.getBounds()
+            val megamanBody = target.body.getBounds()
             val thisBody = entity.body.getBounds()
 
             val direction = if (entity is IDirectional) entity.direction else Direction.UP
@@ -55,11 +55,11 @@ object FacingUtils {
                 }
             }
 
-            return facing ?: if (megaman.body.getX() < entity.body.getX()) Facing.LEFT else Facing.RIGHT
+            return facing ?: if (target.body.getX() < entity.body.getX()) Facing.LEFT else Facing.RIGHT
         } catch (e: Exception) {
             GameLogger.log(TAG, "get(): ran into error while trying to get preferred facing value", e)
 
-            return if (megaman.body.getX() < entity.body.getX()) Facing.LEFT else Facing.RIGHT
+            return if (target.body.getX() < entity.body.getX()) Facing.LEFT else Facing.RIGHT
         }
     }
 

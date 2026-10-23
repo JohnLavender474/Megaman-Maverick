@@ -33,6 +33,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -49,7 +50,8 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.FireWall
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
@@ -126,7 +128,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
         scanner.set(spawnProps.get(ConstKeys.SCANNER, RectangleMapObject::class)!!.rectangle.toGameRectangle())
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         timers.values().forEach { timer -> timer.reset() }
         stateMachine.reset()
@@ -162,7 +164,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
                     FireDispensenatorState.CLOSE,
                     FireDispensenatorState.FIRE
                 )
-            ) facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            ) facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
             val timer = timers[state.name.lowercase()]
             timer.update(delta)
@@ -234,7 +236,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         builder.initialState(FireDispensenatorState.SLEEP.name)
             // sleep
             .transition(FireDispensenatorState.SLEEP.name, FireDispensenatorState.OPEN.name) {
-                megaman.body.getBounds().overlaps(scanner)
+                players.any { player -> player.body.getBounds().overlaps(scanner) }
             }
             // open
             .transition(FireDispensenatorState.OPEN.name, FireDispensenatorState.FIRE.name) { true }
@@ -242,7 +244,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             .transition(FireDispensenatorState.FIRE.name, FireDispensenatorState.CLOSE.name) { true }
             // close
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.OPEN.name) {
-                megaman.body.getBounds().overlaps(scanner)
+                players.any { player -> player.body.getBounds().overlaps(scanner) }
             }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.SLEEP.name) { true }
         return builder.build()

@@ -30,6 +30,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -45,7 +46,8 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.DarkSerketClaw
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -500,8 +502,8 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     private fun isAnyBlockInTheWay() = MegaGameEntities.getOfType(EntityType.BLOCK).any any@{
         val blockBounds = (it as IBodyEntity).body.getBounds()
         return@any blockBounds.overlaps(scanner) && when (facing) {
-            Facing.LEFT -> blockBounds.getCenter().x > megaman.body.getCenter().x
-            Facing.RIGHT -> blockBounds.getCenter().x < megaman.body.getCenter().x
+            Facing.LEFT -> blockBounds.getCenter().x > targetPlayer.body.getCenter().x
+            Facing.RIGHT -> blockBounds.getCenter().x < targetPlayer.body.getCenter().x
         }
     }
 
@@ -512,8 +514,8 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
 
     private fun shouldJumpAtLedge() = !isFootOnBlock(facing) &&
         (facing == FacingUtils.getPreferredFacingFor(this) ||
-            megaman.body.getBounds().getY() >= body.getBounds().getMaxY() ||
-            megaman.body.getBounds().getMaxY() <= body.getBounds().getY())
+            targetPlayer.body.getBounds().getY() >= body.getBounds().getMaxY() ||
+            targetPlayer.body.getBounds().getMaxY() <= body.getBounds().getY())
 
     private fun shouldJumpToAttack() = isMegamanOverlappingScanner() && !isAnyBlockInTheWay() &&
         UtilMethods.getRandom(0f, 100f) <= RANDOM_CLOSE_RANGE_JUMP_CHANCE
@@ -571,6 +573,6 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     private fun isMegamanOverlappingScanner(): Boolean {
         val position = if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
         scanner.positionOnPoint(body.getCenter(), position)
-        return scanner.overlaps(megaman.body.getBounds())
+        return players.any { player -> scanner.overlaps(player.body.getBounds()) }
     }
 }

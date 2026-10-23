@@ -28,6 +28,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
+import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.DeathBomb
 import com.megaman.maverick.game.entities.projectiles.LampeonBullet
@@ -266,7 +268,8 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezabl
         }
     }
 
-    private fun canShoot() = shootDelay.isFinished() && megaman.body.getBounds().overlaps(standShootScanner)
+    private fun canShoot() =
+        shootDelay.isFinished() && players.any { player -> player.body.getBounds().overlaps(standShootScanner) }
 
     private fun shoot() {
         val position = body.getCenter().add(1.5f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)

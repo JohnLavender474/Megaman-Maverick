@@ -38,7 +38,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.projectiles.Snowhead
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -108,7 +108,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
         spawnHeadTimer.reset()
         throwHeadTimer.reset()
 
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
     override fun onDestroy() {
@@ -166,7 +166,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
         updatablesComponent.add { delta ->
             when (state) {
                 SnowheadThrowerState.HEADLESS -> {
-                    facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
 
                     spawnHeadTimer.update(delta)
 
@@ -184,7 +184,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
                         state = SnowheadThrowerState.HEADLESS
                     }
 
-                    facing = if (megaman.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
+                    facing = if (targetPlayer.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
 
                     spawnHeadTimer.update(delta)
 

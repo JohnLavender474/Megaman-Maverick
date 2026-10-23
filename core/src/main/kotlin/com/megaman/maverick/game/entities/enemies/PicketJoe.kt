@@ -42,8 +42,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Picket
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -95,7 +95,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         }
         body.setBottomCenterToPoint(spawn)
 
-        facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
 
         throwTimer.setToEnd()
         standTimer.reset()
@@ -106,7 +106,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         updatablesComponent.add {
             when {
                 standing -> {
-                    facing = if (megaman.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
+                    facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
 
                     standTimer.update(it)
                     if (standTimer.isFinished()) setToThrowingPickets()
@@ -220,7 +220,7 @@ class PicketJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
         spawn.y += 0.75f * ConstVals.PPM
 
         val impulse = MegaUtilMethods
-            .calculateJumpImpulse(spawn, megaman.body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM)
+            .calculateJumpImpulse(spawn, targetPlayer.body.getCenter(), PICKET_IMPULSE_Y * ConstVals.PPM)
             .let {
                 when (facing) {
                     Facing.LEFT -> it.coerceX(-MAX_IMPULSE_X * ConstVals.PPM, 0f)

@@ -34,7 +34,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -76,7 +76,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, 0, Int::class)
 
-        val left = spawnProps.getOrDefault(ConstKeys.LEFT, megaman.body.getX() <= body.getX(), Boolean::class)
+        val left = spawnProps.getOrDefault(ConstKeys.LEFT, targetPlayer.body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         val motion = SineWave(
             body.getCenter(false),
@@ -127,7 +127,7 @@ class Adamski(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()
-            sprite.rotation = megaman.direction.rotation
+            sprite.rotation = targetPlayer.direction.rotation
         }
         return spritesComponent
     }

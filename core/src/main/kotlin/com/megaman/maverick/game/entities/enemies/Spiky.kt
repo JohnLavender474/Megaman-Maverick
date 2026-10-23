@@ -30,7 +30,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -64,7 +64,7 @@ class Spiky(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL),
             spawnProps.containsKey(ConstKeys.FACING) ->
                 Facing.valueOf(spawnProps.get(ConstKeys.FACING, String::class)!!.uppercase())
 
-            megaman.body.getX() < body.getX() -> Facing.LEFT
+            targetPlayer.body.getX() < body.getX() -> Facing.LEFT
 
             else -> Facing.RIGHT
         }

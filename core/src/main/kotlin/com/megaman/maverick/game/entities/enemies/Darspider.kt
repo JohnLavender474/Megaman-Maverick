@@ -38,7 +38,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -95,7 +95,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
                 ConstKeys.DIRECTION, if (onCeiling) ConstKeys.DOWN else ConstKeys.UP, String::class
             ).uppercase()
         )
-        facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
             .getPositionPoint(DirectionPositionMapper.getPosition(direction).opposite())
@@ -154,11 +154,11 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
             }
 
             if (onCeiling) {
-                if (megaman.body.getMaxX() > body.getX() && megaman.body.getX() < body.getMaxX()) drop()
+                if (targetPlayer.body.getMaxX() > body.getX() && targetPlayer.body.getX() < body.getMaxX()) drop()
             } else if (body.isSensing(BodySense.FEET_ON_GROUND) &&
-                megaman.body.getMaxX() >= body.getX() &&
-                megaman.body.getX() <= body.getMaxX() &&
-                megaman.body.getY() >= body.getMaxY()
+                targetPlayer.body.getMaxX() >= body.getX() &&
+                targetPlayer.body.getX() <= body.getMaxX() &&
+                targetPlayer.body.getY() >= body.getMaxY()
             ) jump()
         }
     }
@@ -178,7 +178,7 @@ class Darspider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.5f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
-            facing = if (megaman.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+            facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
         }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }

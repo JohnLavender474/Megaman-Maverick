@@ -38,7 +38,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.megaman
+import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Nutt
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -225,7 +225,7 @@ class NuttGlider(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
     private fun shouldDropNutt(): Boolean {
         val x = body.getCenter().x + NUTT_DROP_OFFSET_X * ConstVals.PPM * facing.value
-        return x >= megaman.body.getX() && x <= megaman.body.getMaxX()
+        return x >= targetPlayer.body.getX() && x <= targetPlayer.body.getMaxX()
     }
 
     private fun dropNutt() {
