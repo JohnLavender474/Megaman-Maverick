@@ -3,7 +3,7 @@
 ## Status
 
 - State: planned
-- Goal: Player slot, a small `IPlayer` contract and a players service (engine interface plus base class); `Megaman` is the only player, in slot 0
+- Goal: Player slot, player view and players service in the engine; the game view `MegaPlayer`; `Megaman` registered in slot 0
 - Done: scan; `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`.
 - Next: the owner reviews `docs/PLAN.md` (one open question: the test level loadout).
 - Blocked:
