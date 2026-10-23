@@ -270,3 +270,21 @@ newest entry at the bottom.
   tile layer.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-23 — mega-refactor-029a-player-seam
+
+- Summary: the seam for the player contract. Engine: `PlayerSlot`, `PlayerView` (slot, entity, present),
+  `IPlayers`/`Players` with deterministic `inline` helpers (slot order, ties to the lower slot), `slotOf`,
+  `registeredSlots`, and `ComponentKey` with `require`; no player assumption beyond slot and entity. Core:
+  `MegaPlayer` (requires `BodyComponent`), `MegaPlayers` (capacity 1), `nearestTo`, `game.players` with `Megaman`
+  in slot 0, `IMegaGameEntity.players`. The player package reads `this` instead of the global `megaman`. The
+  player events carry `PlayerEventKeys.SLOT`; `STUN_PLAYER` carries target `SLOTS`. First test map
+  (`RefactorTest029.tmx`, `REFACTOR_TEST_029`) and test entity (`TestStunPulser`); the dev start applies a level's
+  override. Squash commit `59f912af9`.
+- Contract check: clean build; 475 engine and 102 core tests pass (28 new); 114 compiler warnings, the same list
+  as before; the contact selection reference file is unchanged; the contract greps pass (the dead V1 trail
+  sprite is the one logged exception); the owner checked every test room on the baseline and again at the end,
+  plus `SMB3_1` and `TIMBER_WOMAN`. The owner approved the merge.
+- Follow-up: the backlog candidate (delete the dead `MegamanTrailSprite` V1) went into `039` as a known
+  candidate, with a note that `029f` must remove it if `039` has not. Next for item `029`: `029b`, `029c` or
+  `029d` (in any order).

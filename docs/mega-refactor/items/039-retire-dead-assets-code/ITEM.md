@@ -18,6 +18,7 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - A Gradle staging task with an allow-list for packr, so source art and unlisted maps are not shipped.
 - `utils/dead_code` generates review sheets (code and assets) with evidence and a verdict column.
 - Apply the owner's verdicts: delete (with a SHA index), retire, or mark `@NotYetUsed`.
+- Known candidate (from `029a`, 2026-10-23): `entities/megaman/sprites/MegamanTrailSprite.kt` (V1) and its pool in the deprecated `DecorationsFactory`. Nothing fetches it. It is the last read of the global `megaman` in the player package, so `029f` (which removes the `megaman` extension) must delete it if this item has not.
 
 ## Owner's input
 
