@@ -351,3 +351,16 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the engine helpers `forEachPresent`, `firstOrNull` and `minByOrNull` have no game caller; the owner
   decides whether to remove them now.
+
+## 2026-10-23 — master (direct code change)
+
+- Summary: removed the engine players helpers `forEachPresent`, `firstOrNull` and `minByOrNull`, and their tests.
+  No game code called them. They were added in `029a` as part of the standard helper set that the owner asked for;
+  the new rule "write code only when production code calls it" overrides that. Each can come back with its first
+  real caller (for example `forEachPresent` when `047` needs "every present player"). `forEach` and `all` stay:
+  `029c` gives them their first callers. Made directly on `master` under "Small ad-hoc changes on `master`", at the
+  owner's request. Also: `016`'s `ITEM.md` records the option of a generic `LevelContext<out P : IPlayers<out
+  PlayerView>>` (docs).
+- Contract check: clean build; 470 engine (3 helper tests removed) and 107 core tests pass; 114 compiler warnings,
+  as before.
+- Follow-up: none.

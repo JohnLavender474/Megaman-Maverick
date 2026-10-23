@@ -80,17 +80,6 @@ class PlayersTest : DescribeSpec({
             visited shouldBe listOf(0, 2)
         }
 
-        it("forEachPresent skips players that are not present") {
-            val players = players()
-            players.register(PlayerSlot(0), spawnedEntity())
-            players.register(PlayerSlot(1), MockGameEntity())
-
-            val visited = mutableListOf<Int>()
-            players.forEachPresent { visited.add(it.slot.index) }
-
-            visited shouldBe listOf(0)
-        }
-
         it("forEach does not filter by present") {
             val players = players()
             players.register(PlayerSlot(0), MockGameEntity())
@@ -101,7 +90,7 @@ class PlayersTest : DescribeSpec({
             count shouldBe 1
         }
 
-        it("any, all and firstOrNull test the registered players in slot order") {
+        it("any and all test the registered players") {
             val players = players()
             players.register(PlayerSlot(0), spawnedEntity()).score = 1f
             players.register(PlayerSlot(2), spawnedEntity()).score = 5f
@@ -110,25 +99,10 @@ class PlayersTest : DescribeSpec({
             players.any { it.score > 9f } shouldBe false
             players.all { it.score > 0f } shouldBe true
             players.all { it.score > 2f } shouldBe false
-            players.firstOrNull { it.score > 0f }!!.slot shouldBe PlayerSlot(0)
-            players.firstOrNull { it.score > 9f } shouldBe null
         }
 
         it("all is true when no player is registered") {
             players().all { false } shouldBe true
-        }
-
-        it("minByOrNull gives the lowest value and a tie goes to the lower slot") {
-            val players = players()
-            players.register(PlayerSlot(0), spawnedEntity()).score = 3f
-            players.register(PlayerSlot(1), spawnedEntity()).score = 2f
-            players.register(PlayerSlot(2), spawnedEntity()).score = 2f
-
-            players.minByOrNull { it.score }!!.slot shouldBe PlayerSlot(1)
-        }
-
-        it("minByOrNull gives null when no player is registered") {
-            players().minByOrNull { it.score } shouldBe null
         }
 
         it("slotOf gives the slot of a registered entity, or null") {

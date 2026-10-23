@@ -14,10 +14,6 @@ inline fun <V : PlayerView> IPlayers<V>.forEach(action: (V) -> Unit) {
     for (i in 0 until capacity) get(PlayerSlot(i))?.let(action)
 }
 
-inline fun <V : PlayerView> IPlayers<V>.forEachPresent(action: (V) -> Unit) {
-    for (i in 0 until capacity) get(PlayerSlot(i))?.let { if (it.present) action(it) }
-}
-
 inline fun <V : PlayerView> IPlayers<V>.any(predicate: (V) -> Boolean): Boolean {
     for (i in 0 until capacity) get(PlayerSlot(i))?.let { if (predicate(it)) return true }
     return false
@@ -26,25 +22,6 @@ inline fun <V : PlayerView> IPlayers<V>.any(predicate: (V) -> Boolean): Boolean 
 inline fun <V : PlayerView> IPlayers<V>.all(predicate: (V) -> Boolean): Boolean {
     for (i in 0 until capacity) get(PlayerSlot(i))?.let { if (!predicate(it)) return false }
     return true
-}
-
-inline fun <V : PlayerView> IPlayers<V>.firstOrNull(predicate: (V) -> Boolean): V? {
-    for (i in 0 until capacity) get(PlayerSlot(i))?.let { if (predicate(it)) return it }
-    return null
-}
-
-inline fun <V : PlayerView> IPlayers<V>.minByOrNull(selector: (V) -> Float): V? {
-    var best: V? = null
-    var bestValue = 0f
-    for (i in 0 until capacity) {
-        val view = get(PlayerSlot(i)) ?: continue
-        val value = selector(view)
-        if (best == null || value < bestValue) {
-            best = view
-            bestValue = value
-        }
-    }
-    return best
 }
 
 fun <V : PlayerView> IPlayers<V>.viewOf(entity: Any?): V? {

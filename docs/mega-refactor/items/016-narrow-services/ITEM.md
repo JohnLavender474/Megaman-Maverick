@@ -26,7 +26,18 @@ Answer to review item 15 (2026-10-22, verbatim):
 
 ## Open questions
 
-None yet. The scan for the first branch will find them.
+- How does `LevelContext` hold the players service? Option from `029` (2026-10-23): a generic context, so that core sees its concrete service and engine code stays generic:
+
+  ```kotlin
+  class LevelContext<out P : IPlayers<out PlayerView>>(val players: P /* , rooms, camera, ... */)
+  typealias MegaLevelContext = LevelContext<MegaPlayers>   // core
+  ```
+
+  - Core call sites see `MegaPlayers`, so its members (`targetFor`, and later its targeting policy field) stay usable; nothing has to become an extension only to be reachable through the interface.
+  - An engine system can take `LevelContext<IPlayers<PlayerView>>`; because `P` is `out`, a `LevelContext<MegaPlayers>` passes.
+  - Tests need no fake: `MegaPlayers` is a plain class with no game dependency, so a test builds a real one with test entities (see `MegaPlayersTest`).
+  - Cost: the type parameter spreads to every holder of the context; the core `typealias` hides it in game code.
+  - Context: `targetFor` stays a member of `MegaPlayers` (owner decision, 2026-10-23); the alternative was an extension on `IPlayers<MegaPlayer>` so that code holding the interface could call it.
 
 ## Sources
 
