@@ -194,3 +194,16 @@ newest entry at the bottom.
 - Follow-up: JDK 25 stays unsupported (issue updated). The pushed branch
   `origin/mega-refactor-002a-ci-all-branches` can be deleted on GitHub.
 
+
+## 2026-10-22 — mega-refactor-014a-fixture-type
+
+- Summary: the engine types fixtures as `IFixtureType` (one property, `index: Int`) instead of
+  `Any`: `IFixture`, `Fixture`, `FixtureBuilder`, `Body.fixtures`, `IBody.getFixtures`,
+  `BodyBuilder`. `FixtureType` implements it (`index = ordinal`). Engine tests use a test enum in
+  place of string types. Small change outside the scope: the run scripts pass extra arguments
+  through. Squash commit `a7335e90d`.
+- Contract check: clean build; 427 engine and 77 core tests pass; 133 compiler warnings as
+  before; no fixture type typed `Any` in `engine/.../world/body/`; the owner's smoke run passed.
+  The owner approved the merge.
+- Follow-up: `014b` (typed fixture receivers) waits for scope review; `014c` (rule table, with
+  `FixtureTypeSet`) needs `014a` and `014b`.
