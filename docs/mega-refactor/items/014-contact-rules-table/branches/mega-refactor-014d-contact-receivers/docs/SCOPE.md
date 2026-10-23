@@ -1,10 +1,10 @@
 # Scope: mega-refactor-014d-contact-receivers
 
-What this branch changes and why. This is a draft written ahead of time on `master`. The branch
-does not exist yet, and the user has not approved this scope.
+What this branch changes and why. This was written ahead of time on `master`, before the branch
+existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-22
 
 ## Goal
 
@@ -27,9 +27,11 @@ The decisions of 2026-10-22 that apply (`ITEM.md`, "Decisions"):
 - **Receivers:** replace the `Megaman` checks with fixture receivers or capabilities in this item.
   Do not wait for `029`. `029` adjusts them later as needed.
 - **Receiver style:** typed receivers (`Receivers`, `setReceiver`, `receiver`) from `014b`.
-- **No JSON rules:** simple surface rules are Kotlin data (`SurfaceRule`).
-- **Wall-slide ice friction:** a body flag that the wall-slide behavior sets replaces the `Megaman`
-  check (see "Open questions", 1).
+- **No JSON rules.** On 2026-10-22 the owner chose to keep the three feet-surface rules as small
+  separate rules, with no `SurfaceRule` base class.
+- **Wall-slide ice friction:** a predicate receiver on the side fixture (owner, 2026-10-22; it
+  replaces the earlier "body flag" decision, because a pushed flag can disagree with the behavior
+  state).
 - The `014c` split put this work in `014d`.
 
 Research: `items/014-contact-rules-table/NOTES.md` ("Per-pair classes and sample code" has the
@@ -87,7 +89,10 @@ has the player check between the sense and the friction; side ice sets a left or
 3. `FeetIceRule` continue: a new predicate receiver on the feet fixture,
    `Receivers.ICE_FRICTION_FILTER: () -> Boolean`, checked where the player check was. Megaman
    registers "not (grounded and pushing into a wall)".
-4. `SideIceRule`: see "Open questions", 1.
+4. `SideIceRule`: a new predicate receiver on the side fixtures,
+   `Receivers.SIDE_ICE_FRICTION: () -> Boolean`, checked where the player check was. Megaman
+   registers `{ isBehaviorActive(WALL_SLIDING) }`. The rule applies the friction if the body
+   property allows it or the predicate returns `true`.
 5. `GateRule`: a capability `IGateTrigger` (marker interface in core). Megaman implements it.
 6. `FeetCartRule`: a capability `ICartRider` (marker). Megaman implements it. The rule keeps its
    writes of `TOUCHING_CART` and `CART` as they are (removing them is the unused-hooks issue, not
@@ -109,11 +114,6 @@ with `game.megaman.body`. Only Megaman registers the keys, so only Megaman's bod
 before. The handler no longer takes the game. The input read moves into Megaman (item `031`
 replaces it with an input frame later).
 
-**`SurfaceRule`:** one open base class for `FeetIceRule`, `FeetSandRule` and `FeetSnowRule` with the
-fixed order "set sense, optional check, apply friction, optional extra" and the per-surface data
-(sense, opt-out key, friction values). The subclasses add the sand splash, the snow receiver and the
-ice check. `SideIceRule` stays separate (left/right sense).
-
 **Tests** (core, MockK fixtures and bodies; no game needed):
 
 - `FeetBlockRule` calls `FEET_BLOCK_CONTACT` after the stick translate and before `FEET_ON_GROUND`
@@ -121,6 +121,8 @@ ice check. `SideIceRule` stays separate (left/right sense).
 - `WaterRule` calls `WATER_CONTACT` with the right `wasInWater`, after the splash; on end only when
   no water is left.
 - `FeetIceRule` continue skips the friction when the filter returns `false`.
+- `SideIceRule` applies the friction when the predicate returns `true` and the body property is
+  `false`.
 - `GateRule` triggers only for an `IGateTrigger`.
 - `MegaCollisionHandler`: a body with `PASS_THROUGH_ONE_WAY` returning `true` passes a
   `COLLIDE_DOWN_ONLY` block; a body without it collides as before.
@@ -130,7 +132,8 @@ ice check. `SideIceRule` stays separate (left/right sense).
 
 - `PlayerItemRule` (`ItemEntity.contactWithPlayer(Megaman)`) and `BodyPlayerRule`
   (`HIT_BY_PLAYER` typed `Megaman`): these are the player's identity in a signature, not a special
-  case. `029` re-types them to `IPlayer`. A `TODO` at each site points to `029`.
+  case. `029` re-types them to `IPlayer`. A `TODO` comment at each site points to `029`.
+- A `SurfaceRule` base class: the three feet-surface rules stay small and separate.
 - Removing the unused `TOUCHING_CART` sense and `CART` property (filed issue).
 - The filter, the dead rules, the broad phase.
 - Any change to what Megaman does: the moved code is the same code.
@@ -160,13 +163,8 @@ ice check. `SideIceRule` stays separate (left/right sense).
 
 ## Open questions
 
-1. **Wall-slide ice friction:** the decision says "a body flag that the wall-slide behavior sets".
-   A flag pushed by the behavior is equal to `isBehaviorActive(WALL_SLIDING)` only if the behavior
-   state never changes between the behavior update and the contact (for example a reset during a
-   contact). A predicate on the side fixture, `Receivers.SIDE_ICE_FRICTION: () -> Boolean` =
-   `{ isBehaviorActive(WALL_SLIDING) }`, gives the same result in every case. Which one?
-   (Recommended: the predicate.)
-2. `PlayerItemRule` and `BodyPlayerRule`: leave for `029` with a `TODO` (recommended), or add a
-   receiver now?
-3. `SurfaceRule`: a shared base class for the three feet surfaces (as drafted), or leave the three
-   small rules as they are (YAGNI: about 60 lines each, rarely changed)?
+None open.
+
+- (2026-10-22) Owner's decisions: side ice friction uses the predicate receiver; `PlayerItemRule`
+  and `BodyPlayerRule` wait for `029`, each with a `TODO` comment; the three feet-surface rules stay
+  separate (no `SurfaceRule`).
