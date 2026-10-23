@@ -16,3 +16,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 
 - No branch exists yet. The folder was prepared on `master`.
 - Scan done on `6fcb858fb`. Draft `docs/SCOPE.md` written.
+- Open question 2 answered by the owner: `ready` and `damaged` go in a core `PlayerStateComponent`. Scope updated.

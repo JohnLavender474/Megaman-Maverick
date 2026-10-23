@@ -62,8 +62,13 @@ Members read: `body.getX` 146, `body.getCenter` 66, `body.getBounds` 47, `body.g
 3. **`MegaPlayer` accessors**, only those that the moved enemy sites need. Each one reads a part that the view checks at registration:
    - `direction` (the entity is an `IDirectional`), `dead` (a `MegaGameEntity`), `isBehaviorActive` (an `IBehaviorsEntity`);
    - the feet, side and damageable fixtures (from the body properties that Megaman's fixture accessors read today);
-   - `ready` and `damaged` (2 sites; see open question 2).
-4. **The enemy call sites (104 files)**, by intent:
+   - `ready` and `damaged` (2 sites), from a new core `PlayerStateComponent` (decision below).
+4. **`PlayerStateComponent` (core):** the state that every player shares, as a component that the player view requires.
+   - It holds `ready` and gives `damaged` from the player's damage timer (`!damageTimer.isFinished()`, the same as `Megaman.damaged` today).
+   - `Megaman` adds it in `init()`. His `ready` property reads and writes the component, so the about 40 existing `ready` call sites do not change; `damaged` keeps its meaning.
+   - Its `reset()` stays a no-op: the engine resets every component on destroy, and Megaman already sets `ready` himself on spawn and death.
+   - Other shared state (for example `stunned`, `teleporting`) moves in later, only when a moved call site needs it. It is the start of the lifecycle component that `048` plans.
+5. **The enemy call sites (104 files)**, by intent:
    - Facing, position, aim, line of sight, pathfinding targets and state reads: `megaman` becomes the target helper. Each expression stays the same apart from the reference.
    - Sensor or area overlap with the player's body: `players.any { ... }`.
    - Identity from a contact or damage callback (`== megaman`, `is Megaman`): `players.viewOf(entity)`. When the site then reads the player, it reads the view.
@@ -71,9 +76,9 @@ Members read: `body.getX` 146, `body.getCenter` 66, `body.getBounds` 47, `body.g
    - Stomp bounce (6 lines): see open question 3.
    - Fixture overlap in the Koopa shells and `JetpackBlaster`: through the target's view accessors.
    - The 8 direct `game.megaman` reads: as above.
-5. **`FacingUtils`:** `entity.megaman` becomes the target helper.
-6. **Test map rooms:** a subagent adds rooms to `RefactorTest029.tmx` with the `level-builder` skill, built and checked on the baseline code first. A first list (the plan fixes it): a facing and aiming room (`Met`, `SniperJoe`), a proximity room (`Darspider` or `SuicideBummer`), a chaser room (`Bat` or `DeathBat`, pathfinding), a `MagFly` room near a ladder (climbing and damaged checks), a `JetpackBlaster` room (aim line against the damageable fixture), a contact-identity room (`Matasaburo` or `Coldier` wind, `GapingFish` chomp), and an ownership room (`Cokeyro` or `UFOhNoBot`, hit by a player shot). The Mario enemies stay in `SMB3_1` (see the risks).
-7. **Tests:** engine `viewOf`; core: the target helper gives the slot 0 view, also while the player is not present; the `MegaPlayer` accessors read through their parts, and registration fails without them.
+6. **`FacingUtils`:** `entity.megaman` becomes the target helper.
+7. **Test map rooms:** a subagent adds rooms to `RefactorTest029.tmx` with the `level-builder` skill, built and checked on the baseline code first. A first list (the plan fixes it): a facing and aiming room (`Met`, `SniperJoe`), a proximity room (`Darspider` or `SuicideBummer`), a chaser room (`Bat` or `DeathBat`, pathfinding), a `MagFly` room near a ladder (climbing and damaged checks), a `JetpackBlaster` room (aim line against the damageable fixture), a contact-identity room (`Matasaburo` or `Coldier` wind, `GapingFish` chomp), and an ownership room (`Cokeyro` or `UFOhNoBot`, hit by a player shot). The Mario enemies stay in `SMB3_1` (see the risks).
+8. **Tests:** engine `viewOf`; core: the target helper gives the slot 0 view, also while the player is not present; the `MegaPlayer` accessors read through their parts, and registration fails without them; `Megaman.ready` reads and writes `PlayerStateComponent`.
 
 ## Out of scope
 
@@ -98,7 +103,7 @@ Members read: `body.getX` 146, `body.getCenter` 66, `body.getBounds` 47, `body.g
 ## Open questions
 
 1. **How much of the targeting design comes now?** The recorded design is a `TargetPolicy` with a game default and an optional per-entity `TargetingComponent`. In this branch no entity needs its own rule, and the only policy is "slot 0". Under the "no speculative API" lesson (`ComponentKey`), I recommend that `029b` adds only `targetFor` (and the `targetPlayer` extension), which gives slot 0 in one place. `TargetPolicy` and `TargetingComponent` come with their first real caller (a second rule in `047`, or a boss in `029c`). The call sites do not change when they come. Or add `TargetPolicy` with its one `SlotZero` implementation now, as recorded?
-2. **`ready` and `damaged`** are fields of `Megaman` with no interface (one site each: `BuilderKibbo.kt:119`, `MagFly.kt:121`). Options: (a) the view reads them through a `Megaman` cast that the view checks at registration, with a `TODO` that points to the lifecycle component (`048`) or `029g`; (b) a small core interface that `Megaman` implements. Recommendation: (a), because (b) adds a role interface for 2 sites.
+2. Answered (2026-10-23): `ready` and `damaged` are shared by every player, so they go in a core `PlayerStateComponent` that the view requires (in scope, item 4), not through a `Megaman` cast and not through a role interface.
 3. **Stomp bounce** (6 Mario enemies write the player's velocity with `MegamanValues.JUMP_VEL`): (a) keep the write, through the view's body, as today (mechanical; the Mega constant stays in the enemy); (b) a player capability (a body receiver or key that Megaman registers, like the `014d` receivers), so each character can bounce its own way. Recommendation: (b) has 6 real callers, but it changes how the bounce is applied; (a) is the smaller step and keeps this branch mechanical. I lean to (a), with (b) noted for `029g`.
 4. **`AbstractEnemy`:** leave it to `029c` (with `AbstractBoss`, as "base classes") and `029e` (drops and the one-up), or move its target reads (`isMegamanShootingAtMe`, the floating points direction) here?
 5. **Target helper name:** `targetPlayer`, `target`, or another name?
