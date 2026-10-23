@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: Player slot, player view and players service in the engine; the game view `MegaPlayer`; `Megaman` registered in slot 0
-- Done: scan; `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`.
-- Next: the owner reviews `docs/PLAN.md` (one open question: the test level loadout).
+- Done: planning approved; step 1 (branch start).
+- Next: step 2 (baseline).
 - Blocked:
 
 ## Entries
@@ -21,3 +21,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Owner answered the open questions: names approved, new `ConstKeys.SLOT` (and `SLOTS`), `STUN_PLAYER` carries target slots (room shake: all players). Scope updated.
 - Scope approved by the owner. Draft `docs/CONTRACT.md` written.
 - Scope (with the test map) and contract approved by the owner. Draft `docs/PLAN.md` written.
+- Plan approved by the owner, with option (a): the dev start applies a level's override.
+- Step 1: branch start on `master`, worktree created.

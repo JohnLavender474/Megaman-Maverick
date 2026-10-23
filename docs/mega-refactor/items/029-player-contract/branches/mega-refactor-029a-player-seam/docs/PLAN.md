@@ -3,8 +3,8 @@
 How to do the work in `SCOPE.md`. This was written ahead of time on `master`, before the branch
 existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-23
 
 Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`. Read the test counts from
 `build/test-results` (a Kotest `--tests` filter does not match).
@@ -39,9 +39,9 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
   - `entities/special/TestStunPulser`: spawned from Tiled with an `interval` property. Each time the
     interval ends, it submits `STUN_PLAYER` with `StunType.STUN_BOUNCE_IF_ON_SURFACE` and a
     `SHAKE_CAM` with Timber Woman's shake values. It stops when destroyed (culled with the room).
-  - The level override is applied today only by `startExtraLevel`; the dev start
-    (`--level`, `MegamanMaverickGame.kt:425`) calls `startLevel`, so the loadout would not apply.
-    Owner decision needed before this step (see "Open questions").
+  - The dev start (`--level`, `MegamanMaverickGame.kt:425`) applies the level's override when the
+    level has one, as `startExtraLevel` does (owner decision (a), 2026-10-23; a small dev-tool QoL
+    change, logged in the process log).
 - Check: build and tests pass. `TestStunPulser` is in no TMX file yet.
 - Done: no
 
@@ -144,13 +144,7 @@ of `REFACTOR_TEST_029` (once the map exists) shows no exception.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
 - Done: no
 
-## Open questions
+## Decisions
 
-1. The test level's loadout (step 3): the dev start does not apply a level override. Options:
-   - (a) The dev start applies the level's override when the level has one, as `startExtraLevel`
-     does. This also applies the two existing extra-level overrides on a dev start of those levels,
-     which matches a normal start of them. A small dev-tool change, logged as a QoL change.
-   - (b) No override. The `trail` room gets no special weapon, and the ammo check (the
-     `translateAmmo` default at `Megaman.kt:990`) moves to a real stage played with a save that has
-     weapons.
-   Recommendation: (a).
+- 2026-10-23: the dev start applies a level's override when the level has one (option (a)). Without
+  it, the test level's loadout would not apply on `--level`.

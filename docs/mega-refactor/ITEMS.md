@@ -36,7 +36,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 026 | [Per-level render layers and an allocation-free draw queue](items/026-render-layers/ITEM.md) | refactor | planned | none | | |
 | 027 | [Non-null APIs instead of `!!`](items/027-non-null-apis/ITEM.md) | refactor | planned | none | | |
 | 028 | [Game-owned texture and animation cache](items/028-texture-cache/ITEM.md) | refactor | planned | none | | |
-| 029 | [`IPlayer` contract, players service and `CharacterDef`](items/029-player-contract/ITEM.md) | refactor | planned | none | | |
+| 029 | [`IPlayer` contract, players service and `CharacterDef`](items/029-player-contract/ITEM.md) | refactor | active | none | 2026-10-23 | |
 | 030 | [Faction and root owner instead of `owner == megaman`](items/030-faction/ITEM.md) | refactor | planned | `029`, `005` | | |
 | 031 | [Input intents per player (`InputFrame`), sources and router](items/031-input-frames/ITEM.md) | refactor | idea | `029` | | |
 | 032 | [Platform-neutral `engine` module](items/032-platform-neutral-engine/ITEM.md) | refactor | planned | none | | |
@@ -76,7 +76,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-002a-ci-all-branches`](items/002-ci-all-branches/branches/mega-refactor-002a-ci-all-branches/process-log.md) | 002 | CI on every branch push, one Gradle job, aligned test libraries, JDK toolchain | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-008a-dev-launch-options`](items/008-dev-launch-options/branches/mega-refactor-008a-dev-launch-options/process-log.md) | 008 | Dev launch options and level staging | merged | 2026-10-22 | 2026-10-22 |
 | `mega-refactor-019b-destroy-notification` | 019 | Tell a spawner at once when its entity is destroyed; one spawn phase per tick | planned | | |
-| [`mega-refactor-029a-player-seam`](items/029-player-contract/branches/mega-refactor-029a-player-seam/process-log.md) | 029 | Player slot, small `IPlayer`, players service; `Megaman` in slot 0 | planned | | |
+| [`mega-refactor-029a-player-seam`](items/029-player-contract/branches/mega-refactor-029a-player-seam/process-log.md) | 029 | Player slot, player view and players service; `Megaman` in slot 0 | active | 2026-10-23 | |
 | `mega-refactor-029b-enemy-players` | 029 | Enemies use the players service in place of `megaman` | planned | | |
 | `mega-refactor-029c-boss-players` | 029 | Bosses and the boss damage listener use the players service | planned | | |
 | `mega-refactor-029d-world-players` | 029 | World entities use `IPlayer` and the players service | planned | | |

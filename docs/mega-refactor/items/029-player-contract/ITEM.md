@@ -1,10 +1,10 @@
 # 029: `IPlayer` contract, players service and `CharacterDef`
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `007`, `012`, `013`, `014`, `016`, `024`, `030`, `031`, `037`, `038`, `047`, `053`, `057`
-- Branches: `029a` (planned), `029b` to `029g` (planned)
+- Branches: `029a` (active), `029b` to `029g` (planned)
 
 ## Goal
 
