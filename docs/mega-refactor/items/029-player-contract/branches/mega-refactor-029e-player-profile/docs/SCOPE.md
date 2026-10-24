@@ -4,8 +4,8 @@ What this branch changes and why. Write this file after the scan, before `CONTRA
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-23
 
 ## Goal
 
@@ -76,6 +76,7 @@ The full scan is in `docs/NOTES.md` ("Scan", on `b3bc97f80`). Summary, with path
    today in every case (no other code writes the max). A `TODO` at the player registration says that a
    player that registers later must run the same set (`047`). The set stays a stored value, because
    `Points.max` is a field; a max that is read through on each access needs an engine change (not in scope).
+   A `TODO` at the set says so, tracked as a backlog candidate in `docs/TODO.md` (owner request).
 4. **Shared and per-player data** (owner direction, option (a), 2026-10-23). Shared data lives in
    `GameState` and has no slot (weapons, heart tanks, health tanks, enhancements, currency, levels). Data
    that can become per-player is keyed by slot in its calls (lives). All data is shared in this branch.
