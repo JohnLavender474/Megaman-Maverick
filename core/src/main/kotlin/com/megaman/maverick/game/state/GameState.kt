@@ -114,11 +114,8 @@ class GameState : Resettable {
             GameLogger.error(TAG, "addHealthTank(): already has health tank: $healthTank")
             return
         }
-
         GameLogger.debug(TAG, "addHealthTank(): healthTank=$healthTank")
-
         healthTanksCollected.put(healthTank, Points(ConstVals.MIN_HEALTH, ConstVals.MAX_HEALTH, value))
-
         listeners.forEach { it.onPutHealthTank(healthTank) }
     }
 
@@ -127,7 +124,6 @@ class GameState : Resettable {
             GameLogger.error(TAG, "removeHealthTank(): does not have health tank: $healthTank")
             return
         }
-
         GameLogger.debug(TAG, "removeHealthTank(): healthTank=$healthTank")
         healthTanksCollected.remove(healthTank)
         listeners.forEach { it.onRemoveHealthTank(healthTank) }
