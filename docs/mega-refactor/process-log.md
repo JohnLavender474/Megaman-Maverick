@@ -430,3 +430,18 @@ newest entry at the bottom.
   once, after the implementation. The owner approved the merge.
 - Follow-up: the backlog candidate became item `059` (max health read through from the profile). No bugs. Next
   for item `029`: `029f` (level screen, UI, removal of `game.megaman`).
+
+## 2026-10-24 — mega-refactor-029f-level-players
+
+- Summary: the level screen, its spawn, death and end-level handlers, the HUD, the pause screen and the
+  get-weapon screen reach the player through the players service: the lead player (slot 0 by name, `047`
+  `TODO`s) for level rules, `players.forEach` for level-wide writes, `asPlayer` for identity. `MegaPlayer` gets
+  health reads, `spawn`, `focus` and a writable `ready`; Megaman-only reads go through the typed accessor
+  `MegaPlayer.megaman` (`024`/`029g` `TODO`). `game.megaman` and the `megaman` extension are removed (40 unused
+  imports of it went too). `MegamanTrailSprite` (V1) is commented out. The root `CLAUDE.md` no longer describes
+  the global player. Squash commit `6716d074f`.
+- Contract check: clean build; 470 engine and 142 core tests pass (4 new); 114 compiler warnings, the same as
+  before; the contact selection reference file is unchanged; the contract greps pass; a review of the diff (only
+  references changed; handler order and checks unchanged; no lead-player read before the registration). The
+  owner played the full list once, after the implementation. The owner approved the merge.
+- Follow-up: no backlog or bug candidates. Next for item `029`: `029g` (`CharacterDef`).

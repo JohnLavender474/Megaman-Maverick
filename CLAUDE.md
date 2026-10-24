@@ -33,7 +33,7 @@ Versions are in `gradle.properties` (`projectVersion`, `kotlinVersion`, `gdxVers
 - Build JAR: `./gradlew lwjgl3:jar` (or `./gradlew lwjgl3:dist`). Output name is `Megaman-Maverick-<projectVersion>.jar`.
 - Platform bundles: `./build-game-linux.sh`, `./build-game-mac.sh`, `./build-game-windows.sh`. They call `build-game.sh`, which bundles a JRE from `game-builds/jdk/`.
 - Engine tests: `./gradlew engine:test` (Kotest + MockK, in `engine/src/test/`).
-- Game tests: `./gradlew core:test` (only a few tests in `core/src/test/`; `MegamanHealthTankTest` shows how to build an entity with a relaxed MockK `MegamanMaverickGame`). Most gameplay has no tests. To verify a gameplay change, run the game.
+- Game tests: `./gradlew core:test` (only a few tests in `core/src/test/`; `MegamanHeartTankTest` shows how to build an entity with a relaxed MockK `MegamanMaverickGame`). Most gameplay has no tests. To verify a gameplay change, run the game.
 - CI: `.github/workflows/ci.yml` runs on a push to any branch and on PRs to `master`: one Gradle job (`engine:test core:test lwjgl3:jar`, JDK 17) and the `utils/` tests. Kotest and MockK versions are in `gradle.properties`. Gradle 8.10.1 runs on JDK 17 or 21, not on JDK 25.
 
 Launcher flags are in `DesktopLauncher.DesktopAppArgs`. Examples: `--performance low|medium|high`, `--pathfinding async|sync`, `--worldContainer`, `--logLevels debug,log,error`, `--debugShapes`, `--fixedStepScalar`. Dev start options (checked by `resolveLaunchOptions`; a bad value exits with code 2): `--level <LevelDefinition>` starts a level; `--screen <ScreenEnum>` opens a screen, and with `--level` it stages that level for the next level start; `--room <name>` (needs `--level`) starts at the first player spawn in that room; `--logTags a,b` or `--logTags all`; `--autoPerf false`. `--runType test` is a deprecated alias for `--level TEST_1`.
@@ -47,7 +47,7 @@ Python tools in `utils/` (`level_analyzer`, `level_builder`, `diagnostics`) each
 `MegamanMaverickGame.kt` is the LibGDX `Game`. It owns the shared state:
 
 - `engine: GameEngine`, `eventsMan: EventsManager`, `assMan: AssetManager`, `audioMan: MegaAudioManager`, `state: GameState`.
-- `megaman: Megaman`, the single player instance. It is made once in `postCreate()` and is not pooled.
+- `players: MegaPlayers` (the players service; capacity 1) and `gravity: WorldGravity`. `postCreate()` makes the one `Megaman` once (not pooled) and registers it in slot 0. Code reaches a player through `game.players` (for example `targetPlayer`, `players.forEach`, `x.asPlayer`), not through a global.
 - `screens` (keyed by `ScreenEnum.name`), `viewports` (keys `ConstKeys.GAME` and `ConstKeys.UI`), and `runQueue`.
 - `createGameEngine()` sets the system order: Controller, Behaviors, World, Cullables, Motion, Pathfinding, Points, Updatables, Fonts, Animations, Sprites, DrawableShapes, Audio.
 
@@ -74,7 +74,7 @@ Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` 
 - `AbstractEnemy`: adds Audio, Cullables, Body and Sprites components in `init()`. Subclasses implement `defineBodyComponent()` and `defineSpritesComponent()`. Handles item drops and spawn blink.
 - `AbstractBoss`: boss intro, health fill, defeat sequence. Registers as an event listener in `onSpawn` and removes itself in `onDestroy`.
 - `AbstractProjectile` and many small interfaces (`IFreezableEntity`, `IHazard`, `IOwnable`, `IFaceable`, and so on).
-- `IMegaGameEntity` gives every entity the extension `megaman` (same as `game.megaman`).
+- `IMegaGameEntity` gives every entity the extensions `players` and `targetPlayer` (see `docs/mega-refactor/items/029-player-contract/`).
 
 Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemies` (about 127 files), `bosses`, `hazards`, `items`, `projectiles`, `sensors`, `special`, `decorations`, `explosions`. The player is in `entities/megaman/` (components, constants, handlers, sprites).
 
@@ -132,7 +132,7 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - `runQueue` is drained with `removeLast()`, so the last runnable added runs first.
 - Pooled entities are reused. Reset all per-spawn state in `onSpawn`, not in the constructor or `init()`.
 - After `destroy()`, the entity stays in the engine and its systems until the next `engine.update()`. Its `dead` flag is set to `true` at once.
-- `megaman` is created and initialized manually in `postCreate()`. Do not fetch it from a factory.
+- The `Megaman` player is created, initialized and registered manually in `postCreate()`. Do not fetch it from a factory.
 - Tiled entity names must match the Kotlin class name and the package for the layer exactly. A wrong name logs an error and skips the spawner.
 
 ## Project skills (`.claude/skills/`)

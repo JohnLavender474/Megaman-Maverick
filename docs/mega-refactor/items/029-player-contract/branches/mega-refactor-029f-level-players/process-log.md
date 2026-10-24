@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: Level screen, handlers, HUD, pause and menus use the players service; remove `game.megaman` and the `megaman` extension
-- Done: steps 1-7
-- Next: step 8 (merge), after the owner's approval
+- Done: all steps. Merged into `master`.
+- Next: none. Merged.
 - Blocked:
 
 ## Entries
@@ -28,3 +28,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Step 6: `MegamanMaverickGame.megaman` became a local value in `postCreate`; the extension `IMegaGameEntity.megaman` is gone; `AbstractItem` reads `game.gravity.direction`; `MegamanTrailSprite` (V1) is commented out in full with a `TODO`, with its `DecorationsFactory` pool entry and import. The build then showed 40 files that still imported the removed extension without using it (left from `029b` to `029d`); a script removed that one import line in each (the diff has no other change in them). The contract grep finds no `game.megaman`, no field and no extension. Build passes; 470 engine and 142 core tests, 0 failures. A launch of `--room lives` ran with no exception until the timeout. Root `CLAUDE.md` update noted in `docs/TODO.md` for `master`.
 - Step 7, automated checks (on `a5eea8f67`): clean build passes; 470 engine and 142 core tests (138 on `master` plus 4 new), 0 failures; 114 warnings (same as `master`); `lwjgl3:jar` builds; `contact-rule-selection.txt` unchanged; the grep finds no `game.megaman` and no `megaman` extension in `core` and `lwjgl3`; the only `megaman` fields left are the weapon handler, jetpack handler and damage negotiator (their own player) and the local value in `postCreate`; the `TODO`s exist (lead slot in the level screen, the three handlers, the HUD, pause and get-weapon screens; the accessor; the commented-out trail sprite). The diff review of steps 3 to 6 showed only reference changes, unchanged handler order and checks, and no lead-player read before the registration.
 - Step 7, play test: the owner played every manual check in `docs/CONTRACT.md` (`lives`, `player_death`, `pickups`, `GLACIER_MAN` `room1` and `room12`, `REACTOR_MAN` `room5`, `WILY_STAGE_3` `room2`, `MOON_MAN` `room6`) and reported "All tests pass". The contract checks are done.
+- Step 8: the owner approved the merge. Squash commit `6716d074f` on `master`. The root `CLAUDE.md` was updated on `master` (the `docs/TODO.md` task; it also named the renamed `MegamanHealthTankTest`). No backlog or bug candidates.
