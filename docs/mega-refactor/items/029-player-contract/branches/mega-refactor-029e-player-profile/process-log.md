@@ -5,7 +5,7 @@
 - State: planned
 - Goal: Lives, tanks, enhancements and weapons owned in one session profile; `ItemEntity` takes the player view
 - Done:
-- Next: the owner reviews the draft `docs/CONTRACT.md`
+- Next: the owner reviews the draft `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -21,3 +21,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner proposed that the player reads the owned weapons from `GameState` (no copy), with heart tanks too if easy, and shared data separate from per-player data (option (a)). Scope updated.
 - The owner approved `docs/SCOPE.md`, and asked for a `TODO` for the read-through max health (backlog candidate in `docs/TODO.md`).
 - Draft `docs/CONTRACT.md` written.
+- The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written.

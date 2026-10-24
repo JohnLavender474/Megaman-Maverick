@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time
 on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-23
 
 This branch moves the lives and the owned weapons into `GameState`, makes the player read the weapons
 and the heart-tank max health from it, moves every profile read to `game.state`, and makes `ItemEntity`
