@@ -99,6 +99,9 @@ class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity
     val light: PlayerLight
         get() = lightReceiver()
 
+    val healthRatio: Float
+        get() = health.getHealthRatio()
+
     fun depleteHealth() = health.depleteHealth()
 
     fun onGravityDeviceSwitch() = gravityDeviceSwitch()

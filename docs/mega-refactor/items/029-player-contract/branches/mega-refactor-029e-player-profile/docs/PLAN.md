@@ -38,7 +38,7 @@ New APIs and their first callers in this branch:
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 470 engine, 113 core) and the warning count
   (expected 114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Test room (subagent)
 
@@ -46,7 +46,7 @@ New APIs and their first callers in this branch:
   player spawn, painted tiles, a floor, and one `Life` item (properties copied from a real map, for
   example `IntroStage_v3.tmx`). No other room changes.
 - Check: a short launch of `--room lives` shows no exception.
-- Done: no
+- Done: yes
 
 ### 4. Save-string test and `GameState` profile calls
 
@@ -62,7 +62,7 @@ New APIs and their first callers in this branch:
   - The `Megaman` wrappers delegate to `GameState` for now, so no caller changes in this step.
 - Check: tests for the lives calls and the moved health-tank cases; the save-string test still passes.
   Build and tests pass.
-- Done: no
+- Done: yes
 
 ### 5. Owned weapons in `GameState`; the handler reads them
 
@@ -80,7 +80,7 @@ New APIs and their first callers in this branch:
   `fromString` giving the reward weapons; the save-string test still passes. A review that each reset path
   keeps its current-weapon reset. Build and tests pass. Launch `--room pickups` (the override weapons are
   in the pause screen).
-- Done: no
+- Done: yes
 
 ### 6. Heart tanks: max health from `GameState`
 
@@ -88,7 +88,7 @@ New APIs and their first callers in this branch:
   `game.state`. `TODO`s: the read-through max health at the set (backlog candidate in `docs/TODO.md`); late
   join (heart tanks, weapons) at the player registration in `MegamanMaverickGame` (`047`).
 - Check: a test that the max health follows heart tanks added and removed. Build and tests pass.
-- Done: no
+- Done: yes
 
 ### 7. Profile reads move to `game.state`
 
@@ -104,7 +104,7 @@ New APIs and their first callers in this branch:
   - The wrappers on `Megaman` go. The `029e` `TODO`s go.
 - Check: the contract grep (no profile read through `megaman`, no `029e` `TODO`). Build and tests pass.
   Launch `--room lives` and `--room player_death`.
-- Done: no
+- Done: yes
 
 ### 8. `ItemEntity` takes the player view
 
@@ -112,14 +112,14 @@ New APIs and their first callers in this branch:
   `state.addLife(player.slot)`); `PlayerItemRule` uses `asPlayer` and loses its cast and `TODO`.
 - Check: a test that `PlayerItemRule` passes the view, if practical. The contract grep for `Megaman` in
   `ItemEntity` and `PlayerItemRule`. Build and tests pass. Launch `--room pickups`.
-- Done: no
+- Done: yes
 
 ### 9. Contract checks
 
 - Changes: none, unless a check fails.
 - Check: a clean build; the automated checks in `CONTRACT.md`; the owner's play test. Write the results in
   the process log.
-- Done: no
+- Done: yes
 
 ### 10. Merge
 

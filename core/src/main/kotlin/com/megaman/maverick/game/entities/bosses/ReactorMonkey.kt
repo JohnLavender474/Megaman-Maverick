@@ -152,8 +152,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         monkeyBall?.let { ball -> if (!ball.dead) ball.destroy() }
         monkeyBall = null
 
-        // TODO: the heart tank check reads the global megaman's profile until item 029e
-        if (megaHeartTank != null && !megaman.hasHeartTank(megaHeartTank!!)) {
+        if (megaHeartTank != null && !game.state.containsHeartTank(megaHeartTank!!)) {
             val heartTank = MegaEntityFactory.fetch(HeartTank::class)!!
             heartTank.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.VALUE pairTo megaHeartTank!!))
         }

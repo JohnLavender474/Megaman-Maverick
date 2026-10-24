@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
@@ -24,7 +23,6 @@ import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.players.slotOf
-import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -53,6 +51,7 @@ import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelRewards
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.players.PlayerKeys
 import com.megaman.maverick.game.players.PlayerLight
@@ -71,7 +70,6 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getContactWater
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
-import kotlin.math.min
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
     IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
@@ -80,22 +78,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     companion object {
         const val TAG = "Megaman"
         const val MEGAMAN_EVENT_LISTENER_TAG = "MegamanEventListener"
-
-        fun getWeaponsFromLevelDef(levelDef: LevelDefinition): OrderedSet<MegamanWeapon> {
-            val set = OrderedSet<MegamanWeapon>()
-            when (levelDef) {
-                LevelDefinition.MOON_MAN -> set.addAll(MegamanWeapon.MOON_SCYTHES, MegamanWeapon.RUSH_JET)
-                LevelDefinition.PRECIOUS_WOMAN -> set.add(MegamanWeapon.PRECIOUS_GUARD)
-                LevelDefinition.INFERNO_MAN -> set.add(MegamanWeapon.INFERNAL_BARRAGE)
-                LevelDefinition.GLACIER_MAN -> set.add(MegamanWeapon.FRIGID_SHOT)
-                LevelDefinition.TIMBER_WOMAN -> set.add(MegamanWeapon.AXE_SWINGER)
-                LevelDefinition.DESERT_MAN -> set.add(MegamanWeapon.NEEDLE_SPIN)
-                LevelDefinition.RODENT_MAN -> set.add(MegamanWeapon.RODENT_CLAWS)
-                LevelDefinition.REACTOR_MAN -> set.add(MegamanWeapon.REACTOR_SHOT)
-                else -> {}
-            }
-            return set
-        }
 
         private val explosionOrbTrajectories = gdxArrayOf(
             Vector2(-EXPLOSION_ORB_SPEED, 0f),
@@ -185,11 +167,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
     internal lateinit var jetpackHandler: MegamanJetpackHandler
-
-    internal val lives = Points(ConstVals.MIN_LIVES, ConstVals.MAX_LIVES, ConstVals.START_LIVES)
-
-    val hasAnyHealthTanks: Boolean
-        get() = MegaHealthTank.entries.any { game.state.containsHealthTank(it) }
 
     val canChargeCurrentWeapon: Boolean
         get() = weaponsHandler.isChargeable(currentWeapon)
@@ -435,7 +412,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         addComponent(defineAnimationsComponent(animations))
 
         weaponsHandler = MegamanWeaponsHandler(this)
-        weaponsHandler.putWeapon(MegamanWeapon.MEGA_BUSTER)
 
         jetpackHandler = MegamanJetpackHandler(this)
 
@@ -751,7 +727,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     override fun editDamageFrom(damager: IDamager, baseDamage: Int): Int {
         var damage = when {
-            hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
+            game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
                 baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR
             )
 
@@ -958,22 +934,19 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     }
 
     override fun onAddLevelDefeated(level: LevelDefinition) {
-        val weaponsAttained = getWeaponsFromLevelDef(level)
-        game.putProperty(ConstKeys.WEAPONS_ATTAINED, weaponsAttained)
-        weaponsAttained.forEach { weapon -> if (!weaponsHandler.hasWeapon(weapon)) weaponsHandler.putWeapon(weapon) }
+        game.putProperty(ConstKeys.WEAPONS_ATTAINED, LevelRewards.weaponsFor(level))
     }
 
-    override fun onRemoveLevelDefeated(level: LevelDefinition) {
-        val weaponsToRemove = getWeaponsFromLevelDef(level)
-        weaponsToRemove.forEach { weapon -> if (weaponsHandler.hasWeapon(weapon)) weaponsHandler.removeWeapon(weapon) }
-    }
+    override fun onAddHeartTank(heartTank: MegaHeartTank) = setMaxHealthFromHeartTanks()
 
-    override fun onAddHeartTank(heartTank: MegaHeartTank) {
-        getHealthPoints().max += MegaHeartTank.HEALTH_BUMP
-    }
+    override fun onRemoveHeartTank(heartTank: MegaHeartTank) = setMaxHealthFromHeartTanks()
 
-    override fun onRemoveHeartTank(heartTank: MegaHeartTank) {
-        getHealthPoints().max -= MegaHeartTank.HEALTH_BUMP
+    // TODO: the max health is a stored copy that is set when a heart tank changes; a max that is read through from
+    //  the game state on each access needs a change to the engine Points (backlog candidate "max health read through
+    //  from the profile", item 029)
+    private fun setMaxHealthFromHeartTanks() {
+        val heartTanks = MegaHeartTank.entries.count { game.state.containsHeartTank(it) }
+        setMaxHealth(MegamanValues.START_HEALTH + heartTanks * MegaHeartTank.HEALTH_BUMP)
     }
 
     override fun onAddCurrency(value: Int) {
@@ -981,66 +954,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             requestToPlaySound(SoundAsset.CURRENCY_PICKUP_SOUND, false)
     }
 
-    fun hasEnhancement(enhancement: MegaEnhancement) = game.state.containsEnhancement(enhancement)
-
-    fun hasWeapon(weapon: MegamanWeapon) = weaponsHandler.hasWeapon(weapon)
-
-    fun putWeapon(weapon: MegamanWeapon) {
-        if (!weaponsHandler.hasWeapon(weapon)) weaponsHandler.putWeapon(weapon)
-    }
-
-    fun clearWeapons() {
-        MegamanWeapon.entries.forEach { weapon ->
-            if (weapon != MegamanWeapon.MEGA_BUSTER && weaponsHandler.hasWeapon(weapon))
-                weaponsHandler.removeWeapon(weapon)
-        }
-        currentWeapon = MegamanWeapon.MEGA_BUSTER
-    }
-
-    fun hasHeartTank(heartTank: MegaHeartTank) = game.state.containsHeartTank(heartTank)
-
-    fun hasHealthTank(healthTank: MegaHealthTank) = game.state.containsHealthTank(healthTank)
-
-    fun addToHealthTanks(health: Int): Boolean {
-        check(health >= 0) { "Cannot add negative amount of health" }
-
-        // fill the tanks that are closest to being full first so that health is topped off into a partially
-        // filled tank instead of being spread across tanks that are empty; ties are broken by enum order
-        val tanks = MegaHealthTank.entries
-            .filter { game.state.containsHealthTank(it) && game.state.getHealthTankValue(it) < ConstVals.MAX_HEALTH }
-            .sortedWith(compareByDescending<MegaHealthTank> { game.state.getHealthTankValue(it) }.thenBy { it.ordinal })
-
-        var temp = health
-        for (healthTank in tanks) {
-            if (temp <= 0) break
-
-            val tankAmountToFill = ConstVals.MAX_HEALTH - game.state.getHealthTankValue(healthTank)
-            val amountToAdd = min(tankAmountToFill, temp)
-
-            GameLogger.debug(
-                TAG, "addToHealthTanks(): healthTank=$healthTank: " +
-                    "tankAmountToFill=$tankAmountToFill, temp=$temp: add amountToAdd=$amountToAdd"
-            )
-
-            game.state.addHealthToHealthTank(healthTank, amountToAdd)
-            temp -= amountToAdd
-        }
-
-        // if any tanks were filled, then the temp health value should not be equal to the original health value
-        return health != temp
-    }
-
     fun translateAmmo(ammo: Int, weapon: MegamanWeapon = currentWeapon): Int {
         val remaining = weaponsHandler.translateAmmo(weapon, ammo)
         GameLogger.debug(TAG, "translateAmmo(): weapon=$weapon, ammo=$ammo, remaining=$remaining")
         return remaining
     }
-
-    fun isAtMinLives() = lives.isMin()
-
-    fun removeOneLife() = lives.translate(-1)
-
-    fun resetLives() = lives.set(ConstVals.START_LIVES)
 
     fun stopCharging() {
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)

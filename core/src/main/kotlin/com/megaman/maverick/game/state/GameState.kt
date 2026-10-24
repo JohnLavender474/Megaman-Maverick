@@ -6,15 +6,19 @@ import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.points.Points
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefMap
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelRewards
 import com.megaman.maverick.game.levels.LevelType
+import kotlin.math.min
 
 class GameState : Resettable {
 
@@ -26,8 +30,13 @@ class GameState : Resettable {
     private val heartTanksCollected = ObjectSet<MegaHeartTank>()
     private val enhancementsAttained = ObjectSet<MegaEnhancement>()
     private val healthTanksCollected = ObjectMap<MegaHealthTank, Points>()
+    private val weaponsOwned = ObjectSet<MegamanWeapon>()
     private var currency = Points(ConstVals.MIN_CURRENCY, ConstVals.MAX_CURRENCY, ConstVals.MIN_CURRENCY)
     private var difficultyMode = DifficultyMode.NORMAL
+
+    // TODO: one lives count is shared by all players; per-player lives (decision H in item 029) need a count for
+    //  each slot, and the lives calls already take the slot (item 047)
+    private val lives = Points(ConstVals.MIN_LIVES, ConstVals.MAX_LIVES, ConstVals.START_LIVES)
 
     private val listeners = OrderedSet<IGameStateListener>()
 
@@ -46,13 +55,19 @@ class GameState : Resettable {
     fun addLevelDefeated(level: LevelDefinition) {
         val added = levelsDefeated.add(level)
         GameLogger.debug(TAG, "addLevelDefeated(): level=$level, added=$added")
-        if (added) listeners.forEach { it.onAddLevelDefeated(level) }
+        if (added) {
+            weaponsOwned.addAll(LevelRewards.weaponsFor(level))
+            listeners.forEach { it.onAddLevelDefeated(level) }
+        }
     }
 
     fun removeLevelDefeated(level: LevelDefinition) {
         val removed = levelsDefeated.remove(level)
         GameLogger.debug(TAG, "removeLevelDefeated(): level=$level, removed=$removed")
-        if (removed) listeners.forEach { it.onRemoveLevelDefeated(level) }
+        if (removed) {
+            LevelRewards.weaponsFor(level).forEach { weaponsOwned.remove(it) }
+            listeners.forEach { it.onRemoveLevelDefeated(level) }
+        }
     }
 
     fun allRobotMasterLevelsDefeated() =
@@ -65,6 +80,18 @@ class GameState : Resettable {
     }
 
     fun allLevelsDefeated() = allRobotMasterLevelsDefeated() && getNextWilyStage() == null
+
+    fun containsWeapon(weapon: MegamanWeapon) = weapon == MegamanWeapon.MEGA_BUSTER || weaponsOwned.contains(weapon)
+
+    fun addWeapon(weapon: MegamanWeapon) {
+        val added = weaponsOwned.add(weapon)
+        GameLogger.debug(TAG, "addWeapon(): weapon=$weapon, added=$added")
+    }
+
+    fun clearWeapons() {
+        GameLogger.debug(TAG, "clearWeapons()")
+        weaponsOwned.clear()
+    }
 
     fun containsHeartTank(heartTank: MegaHeartTank) = heartTanksCollected.contains(heartTank)
 
@@ -155,6 +182,37 @@ class GameState : Resettable {
         )
     }
 
+    fun hasAnyHealthTanks() = MegaHealthTank.entries.any { containsHealthTank(it) }
+
+    fun addToHealthTanks(health: Int): Boolean {
+        check(health >= 0) { "Cannot add negative amount of health" }
+
+        // fill the tanks that are closest to being full first so that health is topped off into a partially
+        // filled tank instead of being spread across tanks that are empty; ties are broken by enum order
+        val tanks = MegaHealthTank.entries
+            .filter { containsHealthTank(it) && getHealthTankValue(it) < ConstVals.MAX_HEALTH }
+            .sortedWith(compareByDescending<MegaHealthTank> { getHealthTankValue(it) }.thenBy { it.ordinal })
+
+        var temp = health
+        for (healthTank in tanks) {
+            if (temp <= 0) break
+
+            val tankAmountToFill = ConstVals.MAX_HEALTH - getHealthTankValue(healthTank)
+            val amountToAdd = min(tankAmountToFill, temp)
+
+            GameLogger.debug(
+                TAG, "addToHealthTanks(): healthTank=$healthTank: " +
+                    "tankAmountToFill=$tankAmountToFill, temp=$temp: add amountToAdd=$amountToAdd"
+            )
+
+            addHealthToHealthTank(healthTank, amountToAdd)
+            temp -= amountToAdd
+        }
+
+        // if any tanks were filled, then the temp health value should not be equal to the original health value
+        return health != temp
+    }
+
     fun containsEnhancement(enhancement: MegaEnhancement) = enhancementsAttained.contains(enhancement)
 
     fun addEnhancement(enhancement: MegaEnhancement) {
@@ -202,6 +260,23 @@ class GameState : Resettable {
     fun getCurrency() = currency.current
 
     fun getMaxCurrency() = currency.max
+
+    @Suppress("UNUSED_PARAMETER")
+    fun getLives(slot: PlayerSlot) = lives.current
+
+    @Suppress("UNUSED_PARAMETER")
+    fun addLife(slot: PlayerSlot) = lives.translate(1)
+
+    @Suppress("UNUSED_PARAMETER")
+    fun removeLife(slot: PlayerSlot) = lives.translate(-1)
+
+    // TODO: with per-player lives, game over is a level-flow rule (for example when every player has no lives left)
+    //  (item 047)
+    fun livesExhausted() = lives.isMin()
+
+    fun resetLives() = lives.set(ConstVals.START_LIVES)
+
+    fun setLives(value: Int) = lives.set(value)
 
     fun setDifficultyMode(difficultyMode: DifficultyMode) {
         this.difficultyMode = difficultyMode

@@ -132,7 +132,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         buttons.put(MainScreenButton.START_NEW_GAME.text, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
                 game.state.reset()
-                game.megaman.resetLives()
+                game.state.resetLives()
                 game.setCurrentScreen(ScreenEnum.SELECT_DIFFICULTY_SCREEN.name)
                 return true
             }

@@ -38,6 +38,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.EventsManager
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
@@ -70,6 +71,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
@@ -619,7 +621,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
 
-                megaman.removeOneLife()
+                game.state.removeLife(event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!)
 
                 playerDeathEventHandler.init()
 
@@ -639,9 +641,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 music?.let { audioMan.playMusic(it, it.loop) }
 
-                if (megaman.isAtMinLives()) {
+                if (game.state.livesExhausted()) {
                     game.setCurrentScreen(ScreenEnum.GAME_OVER_SCREEN.name)
-                    megaman.resetLives()
+                    game.state.resetLives()
                     return
                 }
 

@@ -87,6 +87,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
@@ -401,6 +402,8 @@ class MegamanMaverickGame(
         state.addListener(megaman)
 
         players = MegaPlayers()
+        // TODO: a player that registers after progress exists keeps the base max health, because the heart tank
+        //  max health is set only when a heart tank changes; a late join must set it from the game state (item 047)
         players.register(PlayerSlot(0), megaman)
         gravity = WorldGravity(players)
 
@@ -770,8 +773,9 @@ class MegamanMaverickGame(
     fun resetPlayerProgress() {
         GameLogger.debug(TAG, "resetPlayerProgress()")
         state.reset()
-        megaman.clearWeapons()
-        megaman.resetLives()
+        state.clearWeapons()
+        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+        state.resetLives()
         removeProperty(ConstKeys.WEAPONS_ATTAINED)
     }
 
@@ -786,9 +790,9 @@ class MegamanMaverickGame(
         loadout.heartTanks.forEach { state.addHeartTank(it) }
         loadout.healthTanks.forEach { (tank, value) -> state.putHealthTank(tank, value) }
         loadout.enhancements.forEach { state.addEnhancement(it) }
-        loadout.weapons.forEach { megaman.putWeapon(it) }
+        loadout.weapons.forEach { state.addWeapon(it) }
         override.difficultyMode?.let { state.setDifficultyMode(it) }
-        override.lives?.let { megaman.lives.set(it) }
+        override.lives?.let { state.setLives(it) }
     }
 
     fun startExtraLevel(level: LevelDefinition) {
@@ -830,7 +834,7 @@ class MegamanMaverickGame(
 
                 this.state.reset()
                 this.state.fromString(state)
-                megaman.resetLives()
+                this.state.resetLives()
 
                 return true
             }

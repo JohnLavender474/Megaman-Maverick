@@ -136,7 +136,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 Direction.RIGHT -> impulse.set(-swimVel, 0f)
             }.scl(ConstVals.PPM.toFloat())
 
-            if (hasEnhancement(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
+            if (game.state.containsEnhancement(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
 
             body.physics.velocity.add(impulse)
         }
@@ -194,14 +194,14 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
 
                 Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                    hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    game.state.containsEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
             }
             v.y = when (direction) {
                 Direction.UP, Direction.DOWN -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                    hasEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    game.state.containsEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
 
@@ -489,7 +489,7 @@ internal fun Megaman.defineBehaviorsComponent(): BehaviorsComponent {
                 else -> MegamanValues.GROUND_SLIDE_VEL
             }) * ConstVals.PPM * movementScalar
 
-            if (hasEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) vel *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
+            if (game.state.containsEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) vel *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
 
             when (direction) {
                 Direction.UP -> body.physics.velocity.x = vel * facing.value

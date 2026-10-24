@@ -1,34 +1,17 @@
-package com.megaman.maverick.game.entities.megaman
+package com.megaman.maverick.game.state
 
-import com.maverick.game.engine.GameEngine
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
-import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.unmockkAll
 
-class MegamanHealthTankTest : DescribeSpec({
+class GameStateHealthTankTest : DescribeSpec({
 
     lateinit var state: GameState
-    lateinit var megaman: Megaman
 
     fun tankValues() = MegaHealthTank.entries.associateWith { state.getHealthTankValue(it) }
 
-    beforeEach {
-        state = GameState()
-
-        val game = mockk<MegamanMaverickGame>(relaxed = true)
-        every { game.engine } returns mockk<GameEngine>(relaxed = true)
-        every { game.state } returns state
-
-        megaman = Megaman(game)
-    }
-
-    afterEach { unmockkAll() }
+    beforeEach { state = GameState() }
 
     describe("addToHealthTanks") {
         it("fills a partially filled tank before an empty tank that comes earlier in enum order") {
@@ -37,7 +20,7 @@ class MegamanHealthTankTest : DescribeSpec({
             state.putHealthTank(MegaHealthTank.B, 0)
             state.putHealthTank(MegaHealthTank.C, ConstVals.MAX_HEALTH / 2)
 
-            megaman.addToHealthTanks(5) shouldBe true
+            state.addToHealthTanks(5) shouldBe true
 
             tankValues() shouldBe mapOf(
                 MegaHealthTank.A to 0,
@@ -52,7 +35,7 @@ class MegamanHealthTankTest : DescribeSpec({
             state.putHealthTank(MegaHealthTank.B, 2)
             state.putHealthTank(MegaHealthTank.C, 20)
 
-            megaman.addToHealthTanks(5) shouldBe true
+            state.addToHealthTanks(5) shouldBe true
 
             tankValues() shouldBe mapOf(
                 MegaHealthTank.A to ConstVals.MAX_HEALTH,
@@ -66,7 +49,7 @@ class MegamanHealthTankTest : DescribeSpec({
             state.putHealthTank(MegaHealthTank.B, 0)
             state.putHealthTank(MegaHealthTank.C, ConstVals.MAX_HEALTH - 4)
 
-            megaman.addToHealthTanks(10) shouldBe true
+            state.addToHealthTanks(10) shouldBe true
 
             tankValues() shouldBe mapOf(
                 MegaHealthTank.A to 0,
@@ -80,7 +63,7 @@ class MegamanHealthTankTest : DescribeSpec({
             state.putHealthTank(MegaHealthTank.B, 0)
             state.putHealthTank(MegaHealthTank.D, 0)
 
-            megaman.addToHealthTanks(5) shouldBe true
+            state.addToHealthTanks(5) shouldBe true
 
             tankValues() shouldBe mapOf(
                 MegaHealthTank.A to 0,
@@ -93,7 +76,7 @@ class MegamanHealthTankTest : DescribeSpec({
         it("discards excess health once every owned tank is full") {
             state.putHealthTank(MegaHealthTank.A, ConstVals.MAX_HEALTH - 1)
 
-            megaman.addToHealthTanks(10) shouldBe true
+            state.addToHealthTanks(10) shouldBe true
 
             tankValues() shouldBe mapOf(
                 MegaHealthTank.A to ConstVals.MAX_HEALTH,
@@ -106,11 +89,19 @@ class MegamanHealthTankTest : DescribeSpec({
         it("returns false when no owned tank has room") {
             state.putHealthTank(MegaHealthTank.A, ConstVals.MAX_HEALTH)
 
-            megaman.addToHealthTanks(5) shouldBe false
+            state.addToHealthTanks(5) shouldBe false
         }
 
         it("returns false when no tanks are owned") {
-            megaman.addToHealthTanks(5) shouldBe false
+            state.addToHealthTanks(5) shouldBe false
+        }
+    }
+
+    describe("hasAnyHealthTanks") {
+        it("is false with no tanks and true with one") {
+            state.hasAnyHealthTanks() shouldBe false
+            state.putHealthTank(MegaHealthTank.C)
+            state.hasAnyHealthTanks() shouldBe true
         }
     }
 })

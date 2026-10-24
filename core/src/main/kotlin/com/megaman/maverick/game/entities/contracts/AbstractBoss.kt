@@ -194,10 +194,9 @@ abstract class AbstractBoss(
 
     override fun canBeDamagedBy(damager: IDamager) = !defeated && super.canBeDamagedBy(damager)
 
-    // TODO: the enhancement is read from the global megaman, not from the owner's profile, until item 029e
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner.asPlayer != null &&
-            megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+            game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage

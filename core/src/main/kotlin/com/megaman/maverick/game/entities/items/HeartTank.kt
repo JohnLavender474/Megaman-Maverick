@@ -22,7 +22,6 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.players.slotOf
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -33,9 +32,6 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.FeetRiseSinkBlock
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
-import com.megaman.maverick.game.entities.contracts.players
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
@@ -49,6 +45,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setReceiver
+import com.megaman.maverick.game.players.MegaPlayer
 
 class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, ILightSource {
 
@@ -96,7 +93,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             else -> throw IllegalArgumentException("Invalid value: $value")
         }
 
-        val canSpawn = !megaman.hasHeartTank(heartTank)
+        val canSpawn = !game.state.containsHeartTank(heartTank)
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
 
         return canSpawn
@@ -133,8 +130,8 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             body.physics.velocity.y = MIN_SAND_VEL_Y * ConstVals.PPM
     }
 
-    override fun contactWithPlayer(megaman: Megaman) {
-        GameLogger.debug(TAG, "contactWithPlayer(): megaman=$megaman")
+    override fun contactWithPlayer(player: MegaPlayer) {
+        GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
 
         destroy()
 
@@ -150,7 +147,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
         game.eventsMan.submitEvent(Event(
                 EventType.ATTAIN_HEART_TANK,
-                props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo players.slotOf(megaman)!!)
+                props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo player.slot)
             ))
     }
 

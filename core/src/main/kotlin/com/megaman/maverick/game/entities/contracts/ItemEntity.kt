@@ -1,8 +1,8 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.MegaPlayer
 
 interface ItemEntity {
 
-    fun contactWithPlayer(megaman: Megaman)
+    fun contactWithPlayer(player: MegaPlayer)
 }

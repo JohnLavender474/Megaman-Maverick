@@ -12,6 +12,7 @@ import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.Initializable
+import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.common.objects.IntPair
 import com.maverick.game.engine.common.objects.table.Table
 import com.maverick.game.engine.common.objects.table.TableBuilder
@@ -226,7 +227,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         fontHandles.addAll(
             MegaFontHandle(
-                textSupplier = { "0${megaman.lives.current}" },
+                textSupplier = { "0${game.state.getLives(PlayerSlot(0))}" },
                 positionX = LIVES_X * ConstVals.PPM,
                 positionY = LIVES_Y * ConstVals.PPM,
                 centerX = false,
@@ -262,7 +263,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             for (j in 0 until columnCount) {
                 when (val element = FULL_TABLE.get(i, j).element) {
                     is MegamanWeapon -> {
-                        if (megaman.hasWeapon(element)) {
+                        if (state.containsWeapon(element)) {
                             row.add(element)
 
                             val button = createWeaponButton(element)
@@ -287,7 +288,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                     }
 
                     is MegaHealthTank -> {
-                        if (megaman.hasHealthTank(element)) {
+                        if (state.containsHealthTank(element)) {
                             row.add(element)
 
                             val button = createHealthTankButton(element)
@@ -387,7 +388,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         buttonSprites.put(ConstKeys.SETTINGS, settingsButtonSprite)
 
         MegamanWeapon.entries.forEach { weapon ->
-            if (!megaman.hasWeapon(weapon)) return@forEach
+            if (!state.containsWeapon(weapon)) return@forEach
 
             val key = weapon.name.lowercase()
             try {
@@ -404,7 +405,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         }
 
         MegaHealthTank.entries.forEach { healthTank ->
-            if (!megaman.hasHealthTank(healthTank)) return@forEach
+            if (!state.containsHealthTank(healthTank)) return@forEach
 
             val key = healthTank.toString().lowercase()
             try {
@@ -618,7 +619,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                     // health tanks. In this case, find the first available health tank and move the selection there.
                     if (oldNode.element is MegamanWeapon &&
                         nextNode.element == ConstKeys.EXIT &&
-                        megaman.hasAnyHealthTanks
+                        state.hasAnyHealthTanks()
                     ) {
                         val iteration = when (direction) {
                             Direction.UP -> IntProgression.fromClosedRange(HEALTH_TANKS.size - 1, 0, -1)
@@ -628,7 +629,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                         for (index in iteration) {
                             val healthTank = HEALTH_TANKS[index]
 
-                            if (megaman.hasHealthTank(healthTank)) {
+                            if (state.containsHealthTank(healthTank)) {
                                 val position = table.findPositionOf(healthTank)
 
                                 if (position != null) {

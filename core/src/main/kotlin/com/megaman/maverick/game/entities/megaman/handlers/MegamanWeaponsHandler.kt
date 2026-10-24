@@ -142,6 +142,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     private val weaponHandlers = ObjectMap<MegamanWeapon, MegaWeaponHandler>()
 
+    init {
+        MegamanWeapon.entries.forEach { weapon -> weaponHandlers.put(weapon, createWeaponEntry(weapon)) }
+    }
+
     override fun reset() {
         weaponHandlers.values().forEach { entry ->
             entry.clearAllSpawned()
@@ -287,20 +291,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
 
         return out
-    }
-
-    fun putWeapon(weapon: MegamanWeapon) {
-        val entry = createWeaponEntry(weapon)
-        weaponHandlers.put(weapon, entry)
-
-        GameLogger.debug(TAG, "putWeapon(): weapon=$weapon, entry=$entry, weapons=${weaponHandlers.keys()}")
-    }
-
-    fun removeWeapon(weapon: MegamanWeapon) {
-        if (megaman.currentWeapon == weapon) megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
-        weaponHandlers.remove(weapon)
-
-        GameLogger.debug(TAG, "removeWeapon(): weapon=$weapon, weapons=${weaponHandlers.keys()}")
     }
 
     private fun createWeaponEntry(weapon: MegamanWeapon) = when (weapon) {
@@ -513,7 +503,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         )
     }
 
-    fun hasWeapon(weapon: MegamanWeapon) = weaponHandlers.containsKey(weapon)
+    fun hasWeapon(weapon: MegamanWeapon) = game.state.containsWeapon(weapon)
 
     fun onChangeWeapon(current: MegamanWeapon, previous: MegamanWeapon?) {
         GameLogger.debug(TAG, "onChangeWeapon(): current=$current, previous=$previous")

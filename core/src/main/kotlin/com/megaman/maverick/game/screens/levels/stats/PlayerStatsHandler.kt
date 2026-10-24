@@ -108,7 +108,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     }
 
     fun attain(heartTank: MegaHeartTank) {
-        if (megaman.hasHeartTank(heartTank)) {
+        if (state.containsHeartTank(heartTank)) {
             GameLogger.error(TAG, "attain(): already has heart tank: $heartTank")
             audioMan.playSound(SoundAsset.ERROR_SOUND, false)
             return
@@ -147,7 +147,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
     }
 
     fun attain(healthTank: MegaHealthTank) {
-        if (megaman.hasHealthTank(healthTank)) {
+        if (state.containsHealthTank(healthTank)) {
             GameLogger.error(TAG, "attain(): already has health tank: $healthTank")
             audioMan.playSound(SoundAsset.ERROR_SOUND, false)
             return
@@ -200,7 +200,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 break
             }
 
-            if (!megaman.hasWeapon(weapon)) {
+            if (!state.containsWeapon(weapon)) {
                 GameLogger.debug(TAG, "addWeaponEnergy(): loop: megaman does not have weapon $weapon")
                 continue
             }
@@ -219,7 +219,7 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
 
     private fun canAddWeaponEnergyTo(weapon: MegamanWeapon) =
         weapon != MegamanWeapon.MEGA_BUSTER &&
-            megaman.weaponsHandler.hasWeapon(weapon) &&
+            state.containsWeapon(weapon) &&
             megaman.weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
 
     private fun addWeaponEnergyTo(weapon: MegamanWeapon, ammoToAdd: Int): Int {
@@ -266,9 +266,9 @@ class PlayerStatsHandler(private val megaman: Megaman) : Initializable, Updatabl
                 healthToAddNow = healthMegamanNeeds
 
                 when {
-                    megaman.hasAnyHealthTanks -> {
+                    state.hasAnyHealthTanks() -> {
                         val valueToAddToTanks = value - healthMegamanNeeds
-                        val hasAddedToTanks = megaman.addToHealthTanks(valueToAddToTanks)
+                        val hasAddedToTanks = state.addToHealthTanks(valueToAddToTanks)
                         addToTanks = hasAddedToTanks
                         GameLogger.debug(TAG, "addHealth(): hasAddedToTanks=$hasAddedToTanks")
                     }

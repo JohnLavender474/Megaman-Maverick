@@ -92,19 +92,18 @@ abstract class AbstractEnemy(
 
         private const val SPAWN_BLINK_INTERVAL = 0.05f
 
-        // TODO: the drop odds read lives and the health ratio of the global megaman; with more players, whose profile
-        //  and health count is open, and the profile moves in item 029e
+        // TODO: the HealthBulb odds read the target player's health ratio; with more players, whose health counts
+        //  is a co-op rule (item 047)
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
             Life::class pairTo {
                 when {
-                    it.megaman.lives.current < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
+                    it.game.state.getLives(it.targetPlayer.slot) < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
                     else -> LOW_LIFE_CHANCE
                 }
             },
             // TODO: Screw::class pairTo { SCREW_CHANCE },
             HealthBulb::class pairTo chance@{ it ->
-                val megaman = it.megaman
-                val playerHealthModifier = 100 - (100 * megaman.getHealthRatio())
+                val playerHealthModifier = 100 - (100 * it.targetPlayer.healthRatio)
                 return@chance HEALTH_CHANCE + (playerHealthModifier * MEGAMAN_HEALTH_INFLUENCE_FACTOR)
             },
             WeaponEnergyBulb::class pairTo { WEAPON_CHANCE }
@@ -243,10 +242,9 @@ abstract class AbstractEnemy(
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
-    // TODO: the enhancement is read from the global megaman, not from the owner's profile, until item 029e
     override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner.asPlayer != null &&
-            megaman.hasEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+            game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
         else -> baseDamage
     }
@@ -330,9 +328,8 @@ abstract class AbstractEnemy(
             game.putProperty(ConstKeys.LEVEL_POINTS, currentPoints + pointsToAdd)
         }
 
-        // TODO: the one-up goes to the global megaman's lives; with more players, who gets it is open, and lives move
-        //  to the profile in item 029e
-        if (floatingPointsType == FloatingPointsType.ONE_UP && megaman.lives.translate(1))
+        // TODO: the one-up goes to the target player's slot; with more players, who gets it is a co-op rule (item 047)
+        if (floatingPointsType == FloatingPointsType.ONE_UP && game.state.addLife(targetPlayer.slot))
             requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
 
         val position = when (targetPlayer.direction) {
