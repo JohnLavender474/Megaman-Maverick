@@ -2,6 +2,8 @@
 
 ## Decisions
 
+- 2026-10-24: the owner accepted the scan recommendations 1-7 ("Go ahead").
+
 ## Overlap with other branches
 
 No other `029` branch is active. No branch of `001`, `008` or `019` is active (`001b` is blocked). `019`
