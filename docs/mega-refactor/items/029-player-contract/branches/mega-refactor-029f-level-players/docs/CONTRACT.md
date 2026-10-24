@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time
 on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-24
 
 This branch changes how the level screen, its handlers, the HUD, the pause screen, the get-weapon screen and
 the game setup reach the player, and removes `game.megaman` and the `megaman` extension. With one player the

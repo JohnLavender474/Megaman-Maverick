@@ -5,7 +5,7 @@
 - State: planned
 - Goal: Level screen, handlers, HUD, pause and menus use the players service; remove `game.megaman` and the `megaman` extension
 - Done:
-- Next: the owner reviews the draft `docs/CONTRACT.md`
+- Next: the owner reviews the draft `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -19,3 +19,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 
 - The owner accepted the scan recommendations 1-7. Draft `docs/SCOPE.md` written.
 - The owner approved `docs/SCOPE.md`. Draft `docs/CONTRACT.md` written.
+- The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written.
