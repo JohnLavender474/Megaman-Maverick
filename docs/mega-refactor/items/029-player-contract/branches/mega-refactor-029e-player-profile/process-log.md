@@ -18,3 +18,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Scan done on `b3bc97f80`. Findings and open questions in `docs/NOTES.md` ("Scan"). No scope yet.
 
 - The owner answered the scan questions 1-7 (`docs/NOTES.md`, "Decisions"). Draft `docs/SCOPE.md` written.
+- The owner proposed that the player reads the owned weapons from `GameState` (no copy), with heart tanks too if easy, and shared data separate from per-player data (option (a)). Scope updated.

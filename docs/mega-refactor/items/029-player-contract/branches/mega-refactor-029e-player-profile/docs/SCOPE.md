@@ -60,33 +60,44 @@ The full scan is in `docs/NOTES.md` ("Scan", on `b3bc97f80`). Summary, with path
      is a level-flow rule (`047`).
    - `resetLives()` and `setLives(value)` (level override).
    - `GameState.reset()` does not reset the lives, as today; the callers keep their own `resetLives` call.
-2. **Owned weapons in `GameState`.** A set, not in the save string.
-   - The reward table moves out of the `Megaman` companion to the levels package.
-   - `addLevelDefeated` adds the reward weapons; `removeLevelDefeated` removes them; the level override
-     adds its weapons; `reset` clears the set. `MEGA_BUSTER` stays owned at all times, as today.
-   - New listener calls `onAddWeapon`/`onRemoveWeapon`. Megaman puts or removes the weapon in its handler
-     there. The ammo and the current weapon stay on the player. Reset still sets the current weapon to
-     `MEGA_BUSTER`.
+2. **Owned weapons in `GameState`; the player reads them from there** (owner design, 2026-10-23).
+   - A set in `GameState`, not in the save string. The reward table moves out of the `Megaman` companion
+     to the levels package. `addLevelDefeated` adds the reward weapons; `removeLevelDefeated` removes them;
+     the level override adds its weapons; `reset` clears the set. `MEGA_BUSTER` is owned at all times.
+   - `MegamanWeaponsHandler` no longer stores ownership. It keeps one runtime entry for each weapon (ammo,
+     cooldown, the shots on screen, chargeable), and `hasWeapon` reads `game.state`. `putWeapon`,
+     `removeWeapon` and `Megaman.clearWeapons` go. No listener call copies weapons into the player.
+   - Two effects that today come from the map change are kept: a weapon that is gained has full ammo, and a
+     lost current weapon falls back to `MEGA_BUSTER`. `Megaman.onSpawn` already refills all ammo and selects
+     the buster on each spawn; the reset paths keep their current-weapon reset.
    - `WEAPONS_ATTAINED` keeps today's value at each point where the screens read it.
-   - A `TODO` at the player registration: a player that registers after progress exists misses the
-     heart-tank bumps and the weapon events (`047`). No code.
-3. **The profile reads move to `game.state`.** The `Megaman` wrappers go. Their logic moves to `GameState`
-   (`addToHealthTanks`, `hasAnyHealthTanks`, the lives calls, the weapon calls). Every caller changes,
+3. **Heart tanks: max health from `GameState`.** Megaman's heart-tank listener sets the max health to
+   `START_HEALTH + count × HEALTH_BUMP` from `game.state`, in place of `+=`/`-=`. The value is the same as
+   today in every case (no other code writes the max). A `TODO` at the player registration says that a
+   player that registers later must run the same set (`047`). The set stays a stored value, because
+   `Points.max` is a field; a max that is read through on each access needs an engine change (not in scope).
+4. **Shared and per-player data** (owner direction, option (a), 2026-10-23). Shared data lives in
+   `GameState` and has no slot (weapons, heart tanks, health tanks, enhancements, currency, levels). Data
+   that can become per-player is keyed by slot in its calls (lives). All data is shared in this branch.
+   Configuration to pick per field (option (b)) is for later (`047`).
+5. **The profile reads move to `game.state`.** The `Megaman` wrappers go. Their logic moves to `GameState`
+   (`addToHealthTanks`, `hasAnyHealthTanks`, the lives calls). Every caller changes,
    inside the player and outside it, including the `029f` screens (`MegaLevelScreen`, `MainMenuScreen`,
    `PlayerStatsHandler`, `LevelPauseScreen`). The screens keep `megaman` for health, ammo and the current
    weapon until `029f`. The `029e` `TODO`s at `AbstractEnemy`, `AbstractBoss` and `ReactorMonkey` go.
-4. **Call sites that need a slot:**
+6. **Call sites that need a slot:**
    - death: `MegaLevelScreen` reads the slot from `PLAYER_JUST_DIED` (it is there since `029a`);
    - `Life`: the slot of the player view it receives;
    - the one-up: `targetPlayer`'s slot, with a `047` `TODO` (who gets it is a co-op rule);
    - the `Life` drop odds: `targetPlayer`'s slot;
    - the pause screen display: `PlayerSlot(0)` by name.
-5. **`HealthBulb` drop odds** read `targetPlayer`'s health ratio, with a `047` `TODO` (whose health counts
+7. **`HealthBulb` drop odds** read `targetPlayer`'s health ratio, with a `047` `TODO` (whose health counts
    is a co-op rule).
-6. **`ItemEntity.contactWithPlayer(player: MegaPlayer)`.** The items put `player.slot` in their event
+8. **`ItemEntity.contactWithPlayer(player: MegaPlayer)`.** The items put `player.slot` in their event
    props. `PlayerItemRule` uses `asPlayer` and loses its cast and `TODO`.
-7. **Tests:** the lives calls (shared count, the slot is ignored, bounds, `livesExhausted`, reset); the
-   owned-weapon set (reward table on level add and remove, override, reset, listener calls, the buster);
+9. **Tests:** the lives calls (shared count, the slot is ignored, bounds, `livesExhausted`, reset); the
+   owned-weapon set (reward table on level add and remove, override, reset, the buster) and `hasWeapon`
+   reading it; the max health from the heart-tank count;
    the save string is the same as before for the same data; `addToHealthTanks` moves with
    `MegamanHealthTankTest` (renamed for `GameState`); `PlayerItemRule` passes the view, if practical.
 
@@ -95,15 +106,16 @@ New APIs and their first callers:
 | API | First callers |
 |---|---|
 | `GameState.getLives`, `addLife`, `removeLife`, `livesExhausted`, `resetLives`, `setLives` | `LevelPauseScreen`, `Life`, `AbstractEnemy`, `MegaLevelScreen`, `MainMenuScreen`, `MegamanMaverickGame` |
-| `GameState` weapon set (`containsWeapon`, `addWeapon`) and the reward table | `LevelPauseScreen`, `PlayerStatsHandler`, `MegamanJetpackHandler`, the level override, `addLevelDefeated` |
-| `IGameStateListener.onAddWeapon`, `onRemoveWeapon` | `Megaman` |
+| `GameState` weapon set (`containsWeapon`, `addWeapon`) and the reward table | `MegamanWeaponsHandler.hasWeapon`, `LevelPauseScreen`, `PlayerStatsHandler`, the level override, `addLevelDefeated` |
 | `GameState.addToHealthTanks`, `hasAnyHealthTanks` | `PlayerStatsHandler`, `LevelPauseScreen` |
 | `MegaPlayer.healthRatio` | `AbstractEnemy` (`HealthBulb` drop odds) |
 
 ## Out of scope
 
 - The save format, health-tank fill in the save, saving lives (`007`).
-- `LivesPolicy` and per-player lives, game over with more players, late join (`047`).
+- `LivesPolicy` and per-player lives, game over with more players, late join, configuration of shared and
+  per-player data (`047`).
+- A max health that is read through from `GameState` on each access (needs a `Points` change in the engine).
 - Coins and level points (per-level game properties), difficulty reads.
 - The level screens' use of `megaman` for health, ammo, current weapon and the stats handler (`029f`).
 - The weapon handler and loadout per character (`024`).
@@ -113,9 +125,12 @@ New APIs and their first callers:
 
 - **The save string.** Lives and weapons must stay out of `toString`; `fromString` must fill the weapons
   through `addLevelDefeated` as today. A test compares the string.
-- **Listener order.** Today the weapons arrive in the handler inside `onAddLevelDefeated`. With the set,
-  they arrive through `onAddWeapon` in the same call. The pause screen, the stats handler and
-  `GetWeaponScreen` must see the same weapons at the same time.
+- **Weapon ownership.** The handler today makes a new entry when a weapon is gained (full ammo) and removes
+  it when a weapon is lost (current weapon to the buster). With fixed entries, these come from
+  `Megaman.onSpawn` (all ammo full, buster selected) and the reset paths. The pause screen, the stats
+  handler and `GetWeaponScreen` must see the same weapons at the same time as today.
+- **Max health.** The heart-tank listener now sets the max, not adds to it. Same value, if no other code
+  writes the max (the scan found none).
 - **The buster.** The pause screen loops over every `MegamanWeapon`, including `MEGA_BUSTER`; it must stay
   owned after reset, load and override.
 - **Reset paths.** `resetPlayerProgress`, the main menu, load, and game over each reset a different mix of

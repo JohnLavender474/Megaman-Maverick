@@ -15,6 +15,10 @@ Owner answers to the scan questions (2026-10-23):
 - Q1: lives go into `GameState`. The owner wants the switch between a shared pool and per-player lives to
   be straightforward, so the lives calls take the player's slot now (the shared count ignores it), and the
   game-over check is one call (`livesExhausted`) with a `047` `TODO`.
+- Weapons (owner design, replaces the listener copy of Q3): the handler reads ownership from `GameState`
+  and keeps only runtime entries. Heart tanks are folded in: the max health is set from the heart-tank
+  count in `GameState`. Shared data has no slot; data that can become per-player is keyed by slot (option
+  (a)); per-field configuration (option (b)) is for later (`047`).
 - Q5: the `Life` drop odds use `targetPlayer`'s slot; the `HealthBulb` drop odds read `targetPlayer`'s
   health ratio, with a `047` `TODO`.
 
