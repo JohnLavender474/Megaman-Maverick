@@ -37,7 +37,7 @@ New APIs and their first callers in this branch:
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 470 engine, 138 core) and the warning count
   (expected 114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Health reads, the `megaman` accessor; HUD, pause, get-weapon screen, game reset
 
@@ -55,7 +55,7 @@ New APIs and their first callers in this branch:
     `.megaman`).
 - Check: tests for the health reads and the accessor in `MegaPlayersTest`. Build and tests pass. Launch
   `--room pickups`.
-- Done: no
+- Done: yes
 
 ### 4. Level screen
 
@@ -69,7 +69,7 @@ New APIs and their first callers in this branch:
     resume, the death handler; `047` `TODO`s;
   - the projectile cleanup keeps a projectile when `owner.asPlayer != null`.
 - Check: tests for `spawn` and `focus` in `MegaPlayersTest`. Build and tests pass. Launch `--room lives`.
-- Done: no
+- Done: yes
 
 ### 5. Spawn, death and end-level handlers
 
@@ -80,7 +80,7 @@ New APIs and their first callers in this branch:
 - Check: a review that each read happens after the registration (the handlers are made in
   `MegaLevelScreen.init`, which runs after `players.register` in `postCreate`). Build and tests pass. Launch
   `--room player_death`.
-- Done: no
+- Done: yes
 
 ### 6. Removals
 
@@ -89,14 +89,14 @@ New APIs and their first callers in this branch:
   `MegamanTrailSprite` (V1) is commented out in full with its `DecorationsFactory` pool entry and a `TODO`.
 - Check: the contract grep (no `game.megaman`, no field, no extension). Build and tests pass. Launch
   `--room lives`.
-- Done: no
+- Done: yes
 
 ### 7. Contract checks
 
 - Changes: none, unless a check fails.
 - Check: a clean build; the automated checks in `CONTRACT.md`; the owner's play test. Write the results in
   the process log.
-- Done: no
+- Done: yes
 
 ### 8. Merge
 

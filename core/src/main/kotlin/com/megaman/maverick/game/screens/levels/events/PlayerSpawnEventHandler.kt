@@ -21,7 +21,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.players.slotOf
+import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -33,6 +33,8 @@ import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.megaman
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -51,9 +53,11 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         private const val FADE_IN_DUR = 0.25f
     }
 
-    private val megaman = game.megaman
+    // TODO: the beam-in acts on the lead player in slot 0; with more players, each player needs its own (item 047)
+    private val player: MegaPlayer
+        get() = game.players.get(PlayerSlot(0))!!
 
-    private fun playerSlot() = game.players.slotOf(megaman)!!
+    private fun playerSlot() = player.slot
 
     private val blinkTimer = Timer(BLINK_READY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
@@ -83,7 +87,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
             val priority = DrawingPriority()
-            beamSprite = GameSprite(beamRegion, megaman.getSpritePriority(priority))
+            beamSprite = GameSprite(beamRegion, player.megaman.getSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             beamLandAnimation = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false)
@@ -111,10 +115,10 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
 
-        megaman.ready = false
-        megaman.canBeDamaged = false
-        megaman.body.physics.gravityOn = false
-        megaman.setAllBehaviorsAllowed(false)
+        player.ready = false
+        player.canBeDamaged = false
+        player.body.physics.gravityOn = false
+        player.setAllBehaviorsAllowed(false)
 
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
@@ -176,10 +180,10 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private fun beamDown(delta: Float) {
         beamDownTimer.update(delta)
 
-        val startY = game.megaman.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val startY = player.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         val offsetY = (ConstVals.VIEW_HEIGHT * ConstVals.PPM) * beamDownTimer.getRatio()
 
-        beamSprite.setCenterX(game.megaman.body.getCenter().x)
+        beamSprite.setCenterX(player.body.getCenter().x)
         beamSprite.y = startY - offsetY
     }
 
@@ -188,15 +192,15 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         beamLandAnimation.update(delta)
 
         beamSprite.setRegion(beamLandAnimation.getCurrentRegion())
-        beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
+        beamSprite.setFlip(player.facing == Facing.LEFT, false)
 
         if (beamTransitionTimer.isJustFinished()) {
             GameLogger.debug(TAG, "beamTrans(): just finished")
 
-            megaman.body.physics.gravityOn = true
-            megaman.canBeDamaged = true
-            megaman.ready = true
-            megaman.setAllBehaviorsAllowed(true)
+            player.body.physics.gravityOn = true
+            player.canBeDamaged = true
+            player.ready = true
+            player.setAllBehaviorsAllowed(true)
 
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             game.eventsMan.submitEvent(Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo playerSlot())))

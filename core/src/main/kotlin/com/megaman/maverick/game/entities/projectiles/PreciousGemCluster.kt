@@ -25,7 +25,6 @@ import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools

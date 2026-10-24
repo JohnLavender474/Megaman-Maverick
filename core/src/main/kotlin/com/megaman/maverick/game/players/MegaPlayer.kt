@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.players
 
+import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
@@ -16,6 +17,7 @@ import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.screens.levels.camera.IFocusable
 
 class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity) : PlayerView {
 
@@ -32,6 +34,8 @@ class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity
         ?: throw IllegalArgumentException("$entity has no light receiver")
     private val megaGameEntity =
         entity as? MegaGameEntity ?: throw IllegalArgumentException("$entity is not a MegaGameEntity")
+
+    val focus = entity as? IFocusable ?: throw IllegalArgumentException("$entity is not IFocusable")
 
     init {
         // TODO: unregistering a player does not remove this view from its entity; players who drop out are a co-op
@@ -69,8 +73,11 @@ class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity
     val dead: Boolean
         get() = megaGameEntity.dead
 
-    val ready: Boolean
+    var ready: Boolean
         get() = state.ready
+        set(value) {
+            state.ready = value
+        }
 
     val damaged: Boolean
         get() = state.damaged
@@ -102,7 +109,17 @@ class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity
     val healthRatio: Float
         get() = health.getHealthRatio()
 
+    val currentHealth: Int
+        get() = health.getCurrentHealth()
+
+    val maxHealth: Int
+        get() = health.getMaxHealth()
+
+    fun translateHealth(value: Int) = health.translateHealth(value)
+
     fun depleteHealth() = health.depleteHealth()
+
+    fun spawn(props: Properties) = megaGameEntity.spawn(props)
 
     fun onGravityDeviceSwitch() = gravityDeviceSwitch()
 

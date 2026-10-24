@@ -12,7 +12,6 @@ import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.Initializable
-import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.common.objects.IntPair
 import com.maverick.game.engine.common.objects.table.Table
 import com.maverick.game.engine.common.objects.table.TableBuilder
@@ -22,6 +21,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.containsRegion
+import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -30,10 +30,11 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.Fade
@@ -101,8 +102,10 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         private val buttonRegions = OrderedMap<String, TextureRegion>()
     }
 
-    private val megaman: Megaman
-        get() = game.megaman
+    // TODO: the pause screen acts on the lead player in slot 0; which player the pause screen shows is a session
+    //  policy (item 047)
+    private val player: MegaPlayer
+        get() = game.players.get(PlayerSlot(0))!!
     private val state: GameState
         get() = game.state
     private val audioMan: MegaAudioManager
@@ -273,11 +276,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                             val bitsBarY = WEAPON_BITS_ROWS_1_Y + (WEAPON_ROWS - i - 1) * WEAPON_BITS_ROW_OFFSET
                             val bitsSupplier: () -> Int = when (element) {
                                 MegamanWeapon.MEGA_BUSTER -> {
-                                    { megaman.getCurrentHealth() }
+                                    { player.currentHealth }
                                 }
 
                                 else -> {
-                                    { megaman.weaponsHandler.getAmmo(element) }
+                                    { player.megaman.weaponsHandler.getAmmo(element) }
                                 }
                             }
                             val bitsBar = LevelPauseScreenBitsBar(
@@ -551,7 +554,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         override fun onSelect(delta: Float): Boolean {
             GameLogger.debug(TAG, "createWeaponButton(): onSelect(): weapon=$weapon")
-            megaman.currentWeapon = weapon
+            player.megaman.currentWeapon = weapon
             return true
         }
 
@@ -567,13 +570,13 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         override fun onSelect(delta: Float): Boolean {
             GameLogger.debug(TAG, "createHealthTankButton(): onSelect(): healthTank=$healthTank")
 
-            if (megaman.hasMaxHealth() || state.getHealthTankValue(healthTank) <= 0) {
+            if (player.currentHealth >= player.maxHealth || state.getHealthTankValue(healthTank) <= 0) {
                 audioMan.playSound(SoundAsset.ERROR_SOUND, false)
                 return false
             }
 
             val healthToUse = min(
-                megaman.getMaxHealth() - megaman.getCurrentHealth(), state.getHealthTankValue(healthTank)
+                player.maxHealth - player.currentHealth, state.getHealthTankValue(healthTank)
             )
 
             val duration = healthToUse * ConstVals.DUR_PER_BIT
@@ -583,7 +586,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                 val time = i * ConstVals.DUR_PER_BIT
 
                 fillHealthTimer.addRunnable(TimeMarkedRunnable(time) {
-                    megaman.translateHealth(1)
+                    player.translateHealth(1)
                     state.removeHealthFromHealthTank(healthTank, 1)
                     game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
                 })

@@ -27,7 +27,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -80,7 +79,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)
 
         direction = Direction.valueOf(
-            spawnProps.getOrDefault(ConstKeys.DIRECTION, megaman.direction.name, String::class).uppercase()
+            spawnProps.getOrDefault(ConstKeys.DIRECTION, game.gravity.direction.name, String::class).uppercase()
         )
 
         val centered = spawnProps.getOrDefault("${ConstKeys.CENTER}_${ConstKeys.POSITION}", false, Boolean::class)
@@ -175,7 +174,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
     }
 
     open fun defineUpdatablesComponent(component: UpdatablesComponent) {
-        component.add { direction = megaman.direction }
+        component.add { direction = game.gravity.direction }
     }
 
     protected open fun whenFeetOnSand() {

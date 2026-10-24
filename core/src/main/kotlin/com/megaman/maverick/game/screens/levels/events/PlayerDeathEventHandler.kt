@@ -11,13 +11,14 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.players.slotOf
+import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -37,7 +38,9 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
     private val fadeout = Fade(FadeType.FADE_OUT, FADE_OUT_DUR)
     private val deathTimer = Timer(ON_DEATH_DELAY).setToEnd()
 
-    private val megaman = game.megaman
+    // TODO: the death flow acts on the lead player in slot 0; with more players, each player needs its own (item 047)
+    private val player: MegaPlayer
+        get() = game.players.get(PlayerSlot(0))!!
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -50,8 +53,8 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
-        megaman.body.physics.gravityOn = false
-        megaman.ready = false
+        player.body.physics.gravityOn = false
+        player.ready = false
 
         game.audioMan.playSound(SoundAsset.DEFEAT_SOUND)
     }
@@ -75,7 +78,7 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
                 GameLogger.debug(TAG, "update(): fade out just finished, submit PLAYER_DONE_DYIN event")
 
                 game.eventsMan.submitEvent(
-                    Event(EventType.PLAYER_DONE_DYIN, props(PlayerEventKeys.SLOT pairTo game.players.slotOf(megaman)!!))
+                    Event(EventType.PLAYER_DONE_DYIN, props(PlayerEventKeys.SLOT pairTo player.slot))
                 )
             }
         }

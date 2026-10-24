@@ -19,6 +19,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -32,6 +33,8 @@ import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.megaman
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -57,7 +60,9 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamTransitionTimer.isFinished() &&
             beamEndTimer.isFinished()
 
-    private val megaman = game.megaman
+    // TODO: the beam-out acts on the lead player in slot 0; with more players, each player needs its own (item 047)
+    private val player: MegaPlayer
+        get() = game.players.get(PlayerSlot(0))!!
 
     private val startDelayTimer = Timer(START_DELAY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
@@ -89,7 +94,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamTransAnim = BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name)
 
             val priority = DrawingPriority()
-            beamSprite = GameSprite(beamRegion, megaman.getSpritePriority(priority))
+            beamSprite = GameSprite(beamRegion, player.megaman.getSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             initialized = true
@@ -101,8 +106,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamSprite.hidden = true
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * -ConstVals.PPM)
 
-        megaman.canBeDamaged = false
-        megaman.setAllBehaviorsAllowed(false)
+        player.canBeDamaged = false
+        player.setAllBehaviorsAllowed(false)
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
@@ -153,18 +158,18 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         if (preBeamTimer.isFinished()) {
             GameLogger.debug(TAG, "pre-beam timer just finished")
 
-            megaman.ready = false
+            player.ready = false
 
-            val weaponKey = megaman.currentWeapon.name
+            val weaponKey = player.megaman.currentWeapon.name
             beamRegion = BEAM_REGIONS.get(weaponKey) ?: BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)
             beamTransAnim = (BEAM_TRANS_ANIMS.get(weaponKey) ?: BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name))
                 .also { it.reset() }
 
             beamSprite.setOriginCenter()
-            beamSprite.rotation = megaman.direction.rotation
-            val position = DirectionPositionMapper.getInvertedPosition(megaman.direction)
-            beamSprite.setPosition(megaman.body.getPositionPoint(position), position)
-            beamSprite.setFlip(megaman.shouldFlipSpriteX(), megaman.shouldFlipSpriteY())
+            beamSprite.rotation = player.direction.rotation
+            val position = DirectionPositionMapper.getInvertedPosition(player.direction)
+            beamSprite.setPosition(player.body.getPositionPoint(position), position)
+            beamSprite.setFlip(player.megaman.shouldFlipSpriteX(), player.megaman.shouldFlipSpriteY())
 
             beamTransitionTimer.reset()
 
@@ -176,7 +181,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamTransitionTimer.update(delta)
         beamTransAnim.update(delta)
         beamSprite.setRegion(beamTransAnim.getCurrentRegion())
-        beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
+        beamSprite.setFlip(player.facing == Facing.LEFT, false)
 
         if (beamTransitionTimer.isFinished()) {
             GameLogger.debug(TAG, "beam transition timer just finished")
@@ -187,11 +192,11 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     private fun beamUp(delta: Float) {
         beamUpTimer.update(delta)
 
-        val position = DirectionPositionMapper.getInvertedPosition(megaman.direction)
-        beamSprite.setPosition(megaman.body.getPositionPoint(position), position)
-        beamSprite.setFlip(megaman.isFacing(Facing.LEFT), false)
+        val position = DirectionPositionMapper.getInvertedPosition(player.direction)
+        beamSprite.setPosition(player.body.getPositionPoint(position), position)
+        beamSprite.setFlip(player.facing == Facing.LEFT, false)
 
-        when (megaman.direction) {
+        when (player.direction) {
             Direction.UP -> beamSprite.y += ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()
             Direction.DOWN -> beamSprite.y -= ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()
             Direction.LEFT -> beamSprite.x -= ConstVals.VIEW_HEIGHT * ConstVals.PPM * beamUpTimer.getRatio()

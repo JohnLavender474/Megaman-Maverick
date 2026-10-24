@@ -5,7 +5,6 @@ import com.megaman.maverick.game.entities.decorations.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
-import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSprite
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 
 class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
@@ -66,7 +65,7 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
         pools.put(LIGHT_SOURCE, GameEntityPoolCreator.create { LightSourceEntity(game) })
         pools.put(LANTERN, GameEntityPoolCreator.create { Lantern(game) })
         pools.put(SPACE_SATELLITE, GameEntityPoolCreator.create { SpaceSatellite(game) })
-        pools.put(MEGAMAN_TRAIL_SPRITE, GameEntityPoolCreator.create { MegamanTrailSprite(game) })
+        // pools.put(MEGAMAN_TRAIL_SPRITE, GameEntityPoolCreator.create { MegamanTrailSprite(game) })
         pools.put(MEGAMAN_TRAIL_SPRITE_V2, GameEntityPoolCreator.create { MegamanTrailSpriteV2(game) })
         pools.put(CHARGED_SHOT_RESIDUAL, GameEntityPoolCreator.create { ChargedShotResidual(game) })
         pools.put(SNOW, GameEntityPoolCreator.create { Snow(game) })

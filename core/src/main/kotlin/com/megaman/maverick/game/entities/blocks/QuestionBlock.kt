@@ -35,7 +35,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.items.Coin
 import com.megaman.maverick.game.entities.special.GrowingVine
 import com.megaman.maverick.game.entities.special.GrowingVine.GrowingVineState

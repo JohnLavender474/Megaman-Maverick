@@ -46,7 +46,6 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.HomingMissile
 import com.megaman.maverick.game.players.asPlayer

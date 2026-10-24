@@ -19,9 +19,6 @@ interface IMegaGameEntity : ITaggable, ITypable<EntityType> {
     fun stopSoundNow(soundKey: Any) = game.audioMan.stopSound(soundKey)
 }
 
-val IMegaGameEntity.megaman
-    get() = game.megaman
-
 val IMegaGameEntity.players
     get() = game.players
 

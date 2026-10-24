@@ -20,8 +20,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.points.Points
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.screens.levels.camera.IFocusable
+import com.badlogic.gdx.math.Vector2
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.megaman.Megaman
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -35,7 +39,19 @@ private class PlainEntity : GameEntity(mockk(relaxed = true)) {
 }
 
 private class TestPlayerEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectional, IFaceable,
-    IDamageable, IHealthEntity {
+    IDamageable, IHealthEntity, IFocusable {
+    private val bounds = GameRectangle(1f, 2f, 3f, 4f)
+    var spawnedWith: Properties? = null
+
+    override fun getFocusBounds() = bounds
+
+    override fun getFocusPosition(): Vector2 = bounds.getCenter(Vector2())
+
+    override fun spawn(spawnProps: Properties): Boolean {
+        spawnedWith = spawnProps
+        return true
+    }
+
     var deviceSwitches = 0
     var playerLight = PlayerLight.STANDARD
 
@@ -116,7 +132,7 @@ class MegaPlayersTest : DescribeSpec({
             player.body shouldBeSameInstanceAs newBody
         }
 
-        it("reads direction, dead, ready and damaged from the entity and its player state") {
+        it("reads direction, dead, ready and damaged from the entity and its player state, and writes ready") {
             val damageTimer = Timer(1f)
             val entity = playerEntity(damageTimer = damageTimer)
             val player = MegaPlayers().register(PlayerSlot(0), entity)
@@ -133,6 +149,10 @@ class MegaPlayersTest : DescribeSpec({
             damageTimer.setToEnd()
 
             player.damaged shouldBe false
+
+            player.ready = false
+
+            entity.getComponent(PlayerStateComponent::class)!!.ready shouldBe false
         }
 
         it("reads and writes facing, direction and canBeDamaged, and reads invincible and shooting") {
@@ -169,6 +189,61 @@ class MegaPlayersTest : DescribeSpec({
             player.light shouldBe PlayerLight.JETPACK
             entity.deviceSwitches shouldBe 1
             entity.getCurrentHealth() shouldBe 0
+        }
+
+        it("reads current and max health, and translates health") {
+            val entity = playerEntity()
+            val player = MegaPlayers().register(PlayerSlot(0), entity)
+
+            player.translateHealth(-4) shouldBe true
+
+            player.currentHealth shouldBe 6
+            player.maxHealth shouldBe 10
+            entity.getCurrentHealth() shouldBe 6
+        }
+
+        it("gives the Megaman entity through the megaman accessor") {
+            val megaman = Megaman(game)
+            megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
+            megaman.addComponent(BehaviorsComponent())
+            megaman.addComponent(megaman.playerState)
+            megaman.putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {}
+            megaman.putProperty(PlayerKeys.LIGHT) { PlayerLight.STANDARD }
+
+            val player = MegaPlayers().register(PlayerSlot(0), megaman)
+
+            player.megaman shouldBeSameInstanceAs megaman
+        }
+
+        it("gives the entity as the camera focus, and spawns the entity") {
+            val entity = playerEntity()
+            val player = MegaPlayers().register(PlayerSlot(0), entity)
+            val props = Properties()
+
+            player.spawn(props) shouldBe true
+
+            player.focus shouldBeSameInstanceAs entity
+            player.focus.getFocusPosition() shouldBe Vector2(2.5f, 4f)
+            entity.spawnedWith shouldBeSameInstanceAs props
+        }
+
+        it("fails to register an entity that is not focusable") {
+            val entity = object : MegaGameEntity(game), IDirectional, IFaceable, IDamageable, IHealthEntity {
+                init {
+                    putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {}
+                    putProperty(PlayerKeys.LIGHT) { PlayerLight.STANDARD }
+                    addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
+                    addComponent(BehaviorsComponent())
+                    addComponent(PlayerStateComponent(Timer(1f), Timer(1f)))
+                }
+
+                override var direction = Direction.UP
+                override var facing = Facing.RIGHT
+                override var invincible = false
+                override fun getType() = EntityType.MEGAMAN
+            }
+
+            shouldThrow<IllegalArgumentException> { MegaPlayers().register(PlayerSlot(0), entity) }
         }
 
         it("reads a behavior through the behaviors component") {

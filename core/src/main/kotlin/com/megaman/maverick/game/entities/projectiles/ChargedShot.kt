@@ -42,7 +42,6 @@ import com.megaman.maverick.game.entities.blocks.WoodCrate
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.megaman
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.ChargedShotResidual
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
