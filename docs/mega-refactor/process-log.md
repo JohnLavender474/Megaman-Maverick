@@ -414,3 +414,19 @@ newest entry at the bottom.
 - Follow-up: the backlog candidate became item `058` (camera rotation as its own mechanism). No bugs. The owner's
   preference that targeting is not global is in `029`'s `ITEM.md` and `NOTES.md`. Next for item `029`: `029e`
   (profile).
+
+## 2026-10-24 — mega-refactor-029e-player-profile
+
+- Summary: `GameState` is the one session profile. Lives move off the player into one shared count (not saved);
+  the lives calls take the player's slot, so per-player lives change only `GameState` (`047` `TODO`s). Owned
+  weapons are a set in `GameState` (not saved; the reward table moves to `levels/LevelRewards`), and the weapon
+  handler reads ownership from it (owner design: read, not copy). The max health is set from the heart-tank count
+  in `GameState`. Shared data has no slot; data that can become per-player is keyed by slot (owner option (a)).
+  Every profile read goes to `game.state`; the `Megaman` profile wrappers are gone. `ItemEntity` takes the player
+  view. Squash commit `eca1b3571`.
+- Contract check: clean build; 470 engine and 138 core tests pass (25 new); 114 compiler warnings, the same as
+  before; the contact selection reference file is unchanged; the save string is unchanged (pinned by a test that
+  passed on the old code); the contract greps pass; a review of each reset path. The owner played the full list
+  once, after the implementation. The owner approved the merge.
+- Follow-up: the backlog candidate became item `059` (max health read through from the profile). No bugs. Next
+  for item `029`: `029f` (level screen, UI, removal of `game.megaman`).

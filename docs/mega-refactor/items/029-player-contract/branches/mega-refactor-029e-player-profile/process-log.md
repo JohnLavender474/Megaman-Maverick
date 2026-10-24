@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: Lives, tanks, enhancements and weapons owned in one session profile; `ItemEntity` takes the player view
-- Done: steps 1-9
-- Next: step 10 (merge), after the owner's approval
+- Done: all steps. Merged into `master`.
+- Next: none. Merged.
 - Blocked:
 
 ## Entries
@@ -44,3 +44,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   - Game over: lives reset only. Same.
   - The only shift: on "Start new game" and load, a selected weapon that is lost no longer switches to the buster at once; the next spawn selects the buster (as it always does), and no play state is reached in between.
 - Step 9, play test: the owner played every manual check in `docs/CONTRACT.md` (`lives`, `player_death`, `pickups`, `REACTOR_MAN` `room5`, load, new game, save) and reported "All tests pass". The contract checks are done.
+- Step 10: the owner approved the merge. Squash commit `eca1b3571` on `master`. The backlog candidate became item `059`. No bugs.

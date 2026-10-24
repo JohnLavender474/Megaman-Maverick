@@ -3,8 +3,8 @@
 - Status: active
 - Type: refactor
 - Depends on: none
-- Related: `007`, `012`, `013`, `014`, `016`, `024`, `030`, `031`, `037`, `038`, `047`, `053`, `057`
-- Branches: `029a` (merged), `029b` (merged), `029c` (merged), `029d` (merged), `029e` (active), `029f` and `029g` (planned)
+- Related: `007`, `012`, `013`, `014`, `016`, `024`, `030`, `031`, `037`, `038`, `047`, `053`, `057`, `059`
+- Branches: `029a` (merged), `029b` (merged), `029c` (merged), `029d` (merged), `029e` (merged), `029f` and `029g` (planned)
 
 ## Goal
 

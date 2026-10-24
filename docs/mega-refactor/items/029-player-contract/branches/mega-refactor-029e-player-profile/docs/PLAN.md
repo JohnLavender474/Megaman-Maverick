@@ -126,4 +126,4 @@ New APIs and their first callers in this branch:
 - Changes: the merge steps in `docs/mega-refactor/CLAUDE.md` ("Branch merge"), after the owner's
   explicit approval.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes

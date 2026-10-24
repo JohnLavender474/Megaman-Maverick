@@ -66,6 +66,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 056 | [Typed fixture receivers](items/056-typed-fixture-receivers/ITEM.md) | refactor | dropped | none | | 2026-10-22 |
 | 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | idea | none | | |
 | 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | idea | none | | |
+| 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
@@ -81,7 +82,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-029b-enemy-players`](items/029-player-contract/branches/mega-refactor-029b-enemy-players/process-log.md) | 029 | Enemies use the players service in place of `megaman` | merged | 2026-10-23 | 2026-10-23 |
 | [`mega-refactor-029c-boss-players`](items/029-player-contract/branches/mega-refactor-029c-boss-players/process-log.md) | 029 | Bosses and the boss damage listener use the players service | merged | 2026-10-23 | 2026-10-23 |
 | [`mega-refactor-029d-world-players`](items/029-player-contract/branches/mega-refactor-029d-world-players/process-log.md) | 029 | World entities use `IPlayer` and the players service | merged | 2026-10-23 | 2026-10-23 |
-| [`mega-refactor-029e-player-profile`](items/029-player-contract/branches/mega-refactor-029e-player-profile/process-log.md) | 029 | Lives, tanks, enhancements and weapons owned in one session profile | active | 2026-10-23 | |
+| [`mega-refactor-029e-player-profile`](items/029-player-contract/branches/mega-refactor-029e-player-profile/process-log.md) | 029 | Lives, tanks, enhancements and weapons owned in one session profile | merged | 2026-10-23 | 2026-10-24 |
 | `mega-refactor-029f-level-players` | 029 | Level screen, handlers and UI use the players service; remove `game.megaman` | planned | | |
 | `mega-refactor-029g-character-def` | 029 | `CharacterDef`, movement values and ordered abilities | planned | | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
