@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: Lives, tanks, enhancements and weapons owned in one session profile; `ItemEntity` takes the player view
-- Done:
-- Next: the owner reviews the draft `docs/PLAN.md`
+- Done: step 1
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -22,3 +22,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/SCOPE.md`, and asked for a `TODO` for the read-through max health (backlog candidate in `docs/TODO.md`).
 - Draft `docs/CONTRACT.md` written.
 - The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written.
+- The owner approved `docs/PLAN.md`. Branch start (step 1): `ITEMS.md` row and `ITEM.md` set to active; worktree created.
