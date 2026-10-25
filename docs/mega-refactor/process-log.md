@@ -463,3 +463,11 @@ newest entry at the bottom.
   the implementation. The owner approved the merge.
 - Follow-up: the backlog candidate became item `060` (Proto Man, with `CharacterDef`). No bug candidates. Item
   `029` is done.
+
+## 2026-10-25 — master (docs)
+
+- Summary: merge step 8 in `CLAUDE.md` now also removes the empty folder that can stay in `.worktrees/` after
+  `git worktree remove` (Gradle can leave an empty `.gradle` folder). The 12 empty folders left by earlier
+  branches were removed with `rmdir`.
+- Contract check: not needed (docs only).
+- Follow-up: none.

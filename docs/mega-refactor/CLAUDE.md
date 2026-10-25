@@ -200,7 +200,9 @@ alone does not need a new approval, but write the reason in the process log.
    File each "Bug candidate" (see "Bugs").
 8. Remove the worktree (`git worktree remove .worktrees/<branch>`). Then delete the branch with
    `git branch -D <branch>`: after a squash, git does not see the branch as merged, so `-d`
-   refuses.
+   refuses. If an empty folder stays behind (Gradle can leave an empty `.gradle` folder in it),
+   remove it with `rmdir .worktrees/<branch>/.gradle .worktrees/<branch>`. `rmdir` removes only
+   empty folders, so it cannot delete files.
 9. On `master`, run the contract's automated checks (at least the build and the tests). If they
    fail, fix `master` at once, before any other merge.
 
