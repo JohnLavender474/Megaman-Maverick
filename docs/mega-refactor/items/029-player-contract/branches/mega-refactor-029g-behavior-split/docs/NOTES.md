@@ -1,4 +1,4 @@
-# Notes: mega-refactor-029g-character-def
+# Notes: mega-refactor-029g-behavior-split
 
 ## Decisions
 

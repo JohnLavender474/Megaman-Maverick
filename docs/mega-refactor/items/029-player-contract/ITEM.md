@@ -62,7 +62,7 @@ Proposed 2026-10-23. The owner asked for the split. Each later branch gets its o
 | `029d` `world-players` | Special, projectiles, blocks, hazards, sensors, decorations, world code: `is IPlayer` checks, kill zones per contact player, stomp bounce, gravity devices, `HIT_BY_PLAYER` retype | Owner checks stay for `030` (open question) |
 | `029e` `player-profile` | Lives, tanks, enhancements and weapons owned move to one session profile; `ItemEntity` retype (`Life` reads lives) | With `007` (save) |
 | `029f` `level-players` | Level screen, handlers, HUD, pause, menus, camera focus use `game.players` (slot 0 by name where needed); remove `game.megaman` and the `megaman` extension | Rules unchanged (decision 2026-10-23) |
-| `029g` `character-def` | `CharacterDef`, movement values table, ordered ability list, thin player base | Weapon couplings in behaviors overlap `024` |
+| `029g` `behavior-split` | Split the player behaviors into factory functions; tests fix the order | Was `character-def`; `CharacterDef` moved to a Proto Man item (decision 2026-10-25) |
 
 Order: `029a` first. `029b`, `029c` and `029d` can run in any order after it. `029e` before `029f`, because the HUD and pause read the profile. `029g` last.
 

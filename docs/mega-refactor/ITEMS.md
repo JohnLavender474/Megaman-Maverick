@@ -84,7 +84,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-029d-world-players`](items/029-player-contract/branches/mega-refactor-029d-world-players/process-log.md) | 029 | World entities use `IPlayer` and the players service | merged | 2026-10-23 | 2026-10-23 |
 | [`mega-refactor-029e-player-profile`](items/029-player-contract/branches/mega-refactor-029e-player-profile/process-log.md) | 029 | Lives, tanks, enhancements and weapons owned in one session profile | merged | 2026-10-23 | 2026-10-24 |
 | [`mega-refactor-029f-level-players`](items/029-player-contract/branches/mega-refactor-029f-level-players/process-log.md) | 029 | Level screen, handlers and UI use the players service; remove `game.megaman` | merged | 2026-10-24 | 2026-10-24 |
-| `mega-refactor-029g-character-def` | 029 | `CharacterDef`, movement values and ordered abilities | planned | | |
+| `mega-refactor-029g-behavior-split` | 029 | Split the player behaviors into factory functions | planned | | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |

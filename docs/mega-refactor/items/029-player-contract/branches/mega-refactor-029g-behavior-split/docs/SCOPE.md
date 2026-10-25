@@ -1,11 +1,11 @@
-# Scope: mega-refactor-029g-character-def
+# Scope: mega-refactor-029g-behavior-split
 
 What this branch changes and why. Write this file after the scan, before `CONTRACT.md` and
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-25
 
 ## Goal
 
@@ -18,7 +18,7 @@ the item notes for the Proto Man item, which will have two callers. The game pla
 
 `029`: `IPlayer` contract, players service and `CharacterDef`. This branch takes:
 
-- Branch split: "`029g` `character-def`: `CharacterDef`, movement values table, ordered ability list, thin player
+- Branch split (the text before the rename to `behavior-split`): "`029g` `character-def`: `CharacterDef`, movement values table, ordered ability list, thin player
   base. Weapon couplings in behaviors overlap `024`". This branch takes only the preparation for the ordered
   ability list: the split of the behaviors (decision 2026-10-25, after the review).
 - Decision 2026-10-23: no `IPlayer` interface on the player entity; roles come from components (`048`). So no
