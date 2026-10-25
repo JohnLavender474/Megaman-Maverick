@@ -471,3 +471,15 @@ newest entry at the bottom.
   branches were removed with `rmdir`.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-25 — master (direct change)
+
+- Summary: the older ladder in `RefactorTest029.tmx` (id 87, room `enemy_magfly`) gets its `LadderTop` (id 146,
+  `blocks`, 32x8 px at the ladder's x and y), as the live stages and the `level-builder` skill do; its tiles were
+  already painted. Owner's request after the `029g` merge, which fixed the same gap in the room `movement`. A
+  direct change to `master`, not a branch: one object in a test map, no code and no real level. The `029b`
+  contract used `enemy_magfly` for `MagFly`; the player can now stand on the ladder top, which does not change
+  that check.
+- Contract check: the map parses with no duplicate object id; a launch of `--room enemy_magfly` showed no
+  exception; build passes; 470 engine and 144 core tests, 0 failures.
+- Follow-up: none.
