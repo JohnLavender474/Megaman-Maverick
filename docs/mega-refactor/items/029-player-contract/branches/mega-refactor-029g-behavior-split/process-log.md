@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: split the player behaviors into 8 factory functions with no change in their bodies; tests fix the order
-- Done: scan; scope and contract approved
-- Next: the owner approves `docs/PLAN.md`
+- Done: planning; step 1 (branch start)
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -23,3 +23,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/SCOPE.md` and the rename of the branch from `mega-refactor-029g-character-def` to `mega-refactor-029g-behavior-split` (folder, `ITEMS.md` row, `ITEM.md` branch split).
 - Draft `docs/CONTRACT.md` written.
 - The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written.
+- The owner approved `docs/PLAN.md`. Branch start (step 1): `ITEMS.md` row and `ITEM.md` set to active; worktree created.
