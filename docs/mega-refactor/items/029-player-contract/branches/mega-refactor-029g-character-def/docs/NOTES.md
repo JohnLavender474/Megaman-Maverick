@@ -28,6 +28,43 @@
   components and outside the player stay on `MegamanValues` with `TODO`s. A helper that switches on the target
   player's character was rejected (`is Megaman` under a new name); when a second character exists, each
   character gives its own value and the reader reads it from the contact player.
+- 2026-10-25 (after the review below; replaces the decisions above on `CharacterDef`, `MegamanDef`,
+  `Megaman.character` and the factory parameters): `029g` only splits the behaviors into 8 factory functions
+  with no parameters, keeps `defineBehaviorsComponent` as the ordered list, and adds the order test and the
+  two-instance test. The owner keeps the split for readability and to make reuse a smaller lift later.
+  `CharacterDef` goes to the Proto Man item (two callers); its design is in the item `NOTES.md`
+  ("`CharacterDef` design").
+- 2026-10-25: suppliers in place of fixed parameters (owner's question). Pros: they reach the direction-signed
+  values (`{ jumpVel }`) and values that change at runtime. Cons: they still do not reach the gravities (body)
+  or the run values (controller); a Kotlin `() -> Float` boxes on each call (use a primitive
+  `fun interface FloatSupplier`); the timers made at construction would read the value at each `init`; more
+  indirection; one caller. Decision: not in `029g`; recorded for the Proto Man item.
+
+## Review (2026-10-25)
+
+An independent review agent read the item docs, this scan, the draft scope (factory parameters and a
+`CharacterDef` with `abilities`) and the code. Findings, checked against the code:
+
+1. The parameters covered the wrong values. The values that set how a character feels are not in the behaviors:
+   jump height is `jumpVel`/`wallJumpVel` from the `direction` setter (`Megaman.kt:239-265`); swim uses
+   `swimVel` (`BehaviorsComponent.kt:133-136`); the gravities are applied in `BodyComponent` `preProcess`; the
+   run values are in `ControllerComponent.kt:178-229` and `BodyComponent.kt:447`; the crouch delays, wall-jump
+   impetus and wall-slide lockout are timers made at construction (`Megaman.kt:146, 153-154, 340`).
+2. `CharacterDef` with one instance and a `(Megaman) -> IBehavior` factory type is a guessed shape (the
+   `ComponentKey` lesson); `024`, `031` and `048` will likely change it.
+3. `024` (`NEEDLE_SPIN` in 7 behaviors, `RUSH_JET` in the air dash, `JETPACKING` only with `RUSH_JET`), `031`
+   (31 poller reads) and `048` (shared fields) will rewrite the same factory bodies.
+4. The ability list has hidden coupling: `BehaviorType` is used 141 more times outside the behaviors file (also
+   in `GroundSnow`, `RatRobot`, `MagFly`, `GroundSlideBlocker`, `InfernoChainPlatform`); the `direction` setter
+   resets `JETPACKING` (`Megaman.kt:229`); the engine `setBehaviorAllowed` throws for a missing key; wall slide
+   and climb set `aButtonTask = AIR_DASH` when they end (`BehaviorsComponent.kt:104, 714`).
+5. Risks: the declaration order differs from the insertion order (`crouch` before `groundSlide`); the air dash
+   reads `AIR_DASH_MAX_TIME` at construction and in `init`; behavior objects must not be shared between
+   `Megaman` objects (add a two-instance test); swapped normal and water `Float` arguments would compile.
+6. Scope errors: the behaviors do not read the gravities; the jetpack rule should be "movement values only".
+
+The review agreed with: no base class, no values table, core placement, Proto Man as a separate item, the order
+test. It recommended the cut that the owner chose.
 
 ## Overlap with other branches
 

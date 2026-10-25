@@ -1098,3 +1098,52 @@ The owner asked whether a policy returns one player or several.
   ```
 
   It fills a reused buffer and never returns a list. Do not build it before a real case exists; today no entity chooses a subset.
+
+## `CharacterDef` design (2026-10-25)
+
+From the `029g` planning (branch `docs/NOTES.md`, "Decisions" and "Review"). `029g` only splits the behaviors
+into factory functions. `CharacterDef` waits for the Proto Man item, so that two characters show its shape.
+
+### Decisions so far
+
+- Name: `CharacterDef`, not `PlayerDef`. A player is a slot and its controller; the def describes the body it
+  controls (review 5, `Pawn` and `Controller`). A later NPC sidekick could use it once input (`031`) and the
+  player-only parts (`048`) allow it. Package: `characters/` is recommended over `players/` (not decided yet).
+- Place: core first. Move to the engine when two characters show the shared fields and factory signature.
+- No player base class (`048`).
+- No `CharacterValues` table with Mega's field list: it would claim to be generic while its fields are the
+  settings of Mega's behaviors. Mega's numbers stay in `MegamanValues`; a second character gets its own values
+  file.
+- No helper that selects a value by the target player's character (`is Megaman` under a new name). Each
+  character gives its own value, and readers (the stomp bounce in 6 enemies, `SwimBooster`) read it from the
+  contact player.
+
+### How the values reach the code
+
+- The behaviors read their values through parameters on the factory functions. Suppliers fit the values that
+  change with the direction (`{ jumpVel }`) or at runtime. Use a primitive `fun interface FloatSupplier`, not
+  `() -> Float` (boxing on each call).
+- Parameters on the behaviors alone are not enough. The values that set how a character feels are elsewhere:
+  - jump and swim velocities and the 7 gravities: the `direction` setter (`Megaman.kt:239-265`) and
+    `BodyComponent` `preProcess`;
+  - the run steps and impulses: `ControllerComponent.kt:178-229`; max speed and clamp: `BodyComponent.kt:392,
+    447`;
+  - timers made at construction: crouch delays, wall-jump impetus, wall-slide lockout (`Megaman.kt:146,
+    153-154, 340`);
+  - damage, stun and freeze values in `Megaman.kt`.
+
+  `defineBodyComponent` and `defineControllerComponent` need the same kind of parameters or suppliers.
+
+### What a second character needs first
+
+1. Its jump, gravity and run values (above).
+2. A body def: the sizes (`BodyComponent.kt:36-41`) and the fixtures.
+3. Sprites, animations (the key supplier picks animations by `BehaviorType`) and sounds.
+4. A loadout (`024`): Proto Man's shield and buster are weapon or ability work. `JETPACKING` is a Rush Jet
+   ability and leaves the ability list with `024`.
+5. An ability-set contract: which `BehaviorType` keys outside code may expect (141 uses outside the behaviors,
+   some in enemies and blocks); the engine `setBehaviorAllowed` throws for a missing key; the `aButtonTask`
+   transitions (wall slide and climb set `AIR_DASH` when they end).
+6. A damage reaction and a damage negotiator per character.
+7. The remaining Mega-named APIs (`IHazard.getDamageToMegaman`, `MegaPlayer.megaman`) and `is Megaman` checks.
+8. Factories that a separate player class can use (they read `Megaman` fields today; `048`).

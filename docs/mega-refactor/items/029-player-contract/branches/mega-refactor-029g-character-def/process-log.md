@@ -3,7 +3,7 @@
 ## Status
 
 - State: planned
-- Goal: `CharacterDef` with a movement values table and an ordered ability list; `Megaman` reads its values and builds its behaviors from it
+- Goal: split the player behaviors into 8 factory functions with no change in their bodies; tests fix the order
 - Done: scan; draft scope
 - Next: the owner approves `docs/SCOPE.md`; then `docs/CONTRACT.md`
 - Blocked:
@@ -19,3 +19,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 
 - The owner accepted the scan recommendations 1-9 and the core placement of `CharacterDef`. Decisions in `docs/NOTES.md`. Draft `docs/SCOPE.md` written.
 - The owner asked about the values table; decision: no table, behavior factories take their values as parameters, numbers stay in `MegamanValues` (`docs/NOTES.md`, "Decisions"). `docs/SCOPE.md` rewritten. One open question: the package of `CharacterDef`.
+- Independent review of the draft scope (`docs/NOTES.md`, "Review"). The owner chose the smaller cut: split the behaviors only, with the order and two-instance tests; `CharacterDef` goes to a Proto Man item (backlog candidate in `docs/TODO.md`). `docs/SCOPE.md` rewritten. On `master`: "`CharacterDef` design" added to the item `NOTES.md`; decision added to `ITEM.md`; the Proto Man open question removed from it.

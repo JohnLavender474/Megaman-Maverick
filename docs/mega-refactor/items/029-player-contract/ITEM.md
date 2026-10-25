@@ -47,6 +47,7 @@ Research round 2 (2026-10-23, verbatim):
 - 2026-10-23: `029` follows the components direction of `048`. There is no `IPlayer` interface on the player entity. The engine assumes only a slot and an entity (no body, no position). `PlayerView` is a small engine interface (choice A), and the game supplies its view type, which resolves the components it requires once, at registration. Engine helpers are deterministic `inline` extensions (slot order, ties to the lower slot); spatial helpers such as `nearestTo` are game helpers. Research: `029a` `docs/NOTES.md`.
 - 2026-10-23: the game passes a players capacity of 1 until co-op (`047`).
 - 2026-10-23: call sites name their intent (`targetFor`, `any`, the contact entity, `forEachPresent`, `require(PlayerSlot(0))`), not a rule and not `players[0]`. Targeting is a `TargetPolicy` with a game default (slot 0 in `029`) and an optional per-entity `TargetingComponent`; a policy returns one player. Details: "Targeting design" in `NOTES.md`.
+- 2026-10-25: `029g` only splits the player behaviors into factory functions. `CharacterDef` waits for a Proto Man feature item (after `024`), so that two characters show its shape. Design: "`CharacterDef` design" in `NOTES.md`.
 - 2026-10-23: `targetFor` and `targetPlayer` must not stay global. Not every entity needs a target player (blocks do not), and each entity that does has its own targeting behavior. Targeting belongs to the entities that need it, as a component or policy that each owns, not as a service-wide function and an extension on every entity. The current `MegaPlayers.targetFor` (slot 0) and `IMegaGameEntity.targetPlayer` stay as the migration path until then, with `TODO`s (item `047`, or the first entity with a rule of its own).
 
 ## Branch split
@@ -71,7 +72,6 @@ Order: `029a` first. `029b`, `029c` and `029d` can run in any order after it. `0
 - Must camera focus follow one player or a group bounds? (Out of scope for `029`; the owner's direction is in `047`.)
 - Do all characters share the slide and ladder rules (X6 shares the step routines)?
 - `owner == megaman` checks: does `029d` change them to `is IPlayer` (the same result with one player), or do they all wait for `030` (faction)? If they wait, the `megaman` extension cannot be removed in `029f`.
-- Proto Man prototype: part of `029` (after `029g`) or a separate feature item?
 
 ## Sources
 
