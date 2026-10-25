@@ -77,3 +77,5 @@ related-items: [<mega-refactor item IDs>]
 | [Five contact debug logs name the wrong phase or fixture type](2026-10-22-wrong-contact-log-texts.md) | yes | core | closed |
 | [`hitExplosion` gets its two shapes in the reverse order](2026-10-22-projectile-explosion-shape-order.md) | yes | core | open |
 | [`BouncingPebble` bounces to the right when its right side hits a block](2026-10-22-bouncing-pebble-right-side-bounce.md) | no | core | open |
+| [`GameLine.rotate` sets `originY` to the `originX` value](2026-10-25-game-line-rotate-origin-y.md) | yes | engine | open |
+| [`isPerformanceSubpar()` is true for the high tiers and has no caller](2026-10-25-is-performance-subpar-inverted.md) | yes | core | open |

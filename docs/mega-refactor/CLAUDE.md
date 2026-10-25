@@ -8,6 +8,11 @@ Refactor `engine/` and `core/` so that the game is easier to change, configure a
 The current gameplay is the contract. A branch merges into `master` only if the game still
 plays the same. Each branch writes its own contract in its `docs/CONTRACT.md`.
 
+Performance is also a goal. The game must play well on weak hardware, not only on the owner's
+laptop. So an optimization does not need proof of a slowdown on the owner's machine before it is
+worth doing. Measure before and after (for example with `--diagnostics`) to show the gain and
+to choose between options, but not to decide whether the work is necessary.
+
 ## Inspiration: the X6 decomp
 
 Some ideas for the refactor come from the Mega Man X6 (PS1) decomp effort:
@@ -172,6 +177,20 @@ alone does not need a new approval, but write the reason in the process log.
   docs line) may go into the current branch, with no new scope approval. It must not change
   gameplay. Write each one in the branch process log. Anything larger, or anything that changes
   gameplay, is a backlog candidate or a bug candidate as above.
+- A branch may use a **temporary contract test suite** to prove that a rewrite keeps the old
+  behavior. Put a frozen copy of the old code (for example the old `WorldSystem`) in the test
+  sources. Run the old and the new code side by side on the same seeded inputs, and assert that
+  their outputs are equal (for example the ordered list of contacts and the body positions after
+  each step). Rules:
+  - Name the suite and its frozen copy so that they are clearly temporary, and list them in the
+    branch `docs/PLAN.md` and `docs/CONTRACT.md`.
+  - Delete the suite and the frozen copy in the last commit before the merge. They do not go to
+    `master`, because the old code no longer exists there.
+  - Also write a permanent test suite against the new code for the rules that must stay true
+    after the merge (for example a stable contact order). The temporary suite proves "same as
+    before"; the permanent suite protects the new code from later changes.
+  - The frozen copy is test code, so the rule "write code only when production code calls it"
+    does not apply to it.
 
 ### Branch merge
 

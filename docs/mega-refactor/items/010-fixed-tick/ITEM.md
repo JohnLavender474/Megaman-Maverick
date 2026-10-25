@@ -26,9 +26,18 @@ Answer to review item 9 (2026-10-22, verbatim):
 
 > Please expand on this. What does "fixed simulation step" mean exactly, here? Should we record physics step, FPS, and other info when recording?
 
+## Decisions
+
+- 2026-10-25: 60 FPS is the source of truth for how the game is meant to look and feel. The physics reference is
+  the `MEDIUM` tier (60 fps, step 1/150 s). A unified step or tick must match the feel at 60 FPS; the other tiers
+  may change to match it.
+
 ## Open questions
 
 - Target tick: 60 Hz like X6, or another value? (Decision D.)
+- May a weak machine run more simulation work per second than `VERY_LOW` does today (for example 5 physics
+  sub-steps per frame at 30 fps with one shared step of 1/150 s)? Or must the tick rate or the step count go down
+  on weak machines? See `NOTES.md`, "Trade-offs of doing 010 (2026-10-25)".
 - Is a small physics retune acceptable when the step is unified?
 - Must replays reproduce real player sessions, or only scripted inputs?
 - On slow PCs, slow down like X6, or skip time?

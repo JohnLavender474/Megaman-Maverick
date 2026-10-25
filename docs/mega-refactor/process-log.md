@@ -483,3 +483,14 @@ newest entry at the bottom.
 - Contract check: the map parses with no duplicate object id; a launch of `--room enemy_magfly` showed no
   exception; build passes; 470 engine and 144 core tests, 0 failures.
 - Follow-up: none.
+
+## 2026-10-25 — master (docs)
+
+- Summary: scan and options for item `020` (broad phase) in its `NOTES.md`, from four read-only scans, with the
+  owner's feedback (two test suites, Option B and Option D in depth, Option C agreed). The owner put `020` on hold
+  for more pressing items; the item stays `planned`. Item `010` `NOTES.md` gets "Trade-offs of doing 010"; its
+  `ITEM.md` gets the decision that 60 FPS (`MEDIUM`) is the source of truth for the look and feel, and a new open
+  question about simulation work on weak machines. `docs/mega-refactor/CLAUDE.md` gets performance on weak
+  hardware as a goal (also in the root `CLAUDE.md`) and the rule for temporary contract test suites.
+- Contract check: not needed (docs only).
+- Follow-up: filed `2026-10-25-game-line-rotate-origin-y.md` and `2026-10-25-is-performance-subpar-inverted.md`.

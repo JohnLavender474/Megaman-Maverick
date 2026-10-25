@@ -24,9 +24,22 @@ Answer to review item 19 (2026-10-22, verbatim):
 
 > yes
 
+## Decisions
+
+- 2026-10-25: two test suites. A temporary suite runs a frozen copy of today's `WorldSystem` side by side with the
+  new one and is deleted before the merge. A permanent suite checks a stable contact order in the new code.
+- 2026-10-25: the work is necessary because of the weak-hardware goal. A measurement shows the gain; it is not a
+  gate.
+- 2026-10-25: Option C (small clean-ups) is agreed. The recommended first branch is Options A, B and C. Option D
+  (an incremental grid) comes later, in its own branch. See `NOTES.md`, "Options" and "Owner's feedback and
+  follow-up".
+- 2026-10-25: not now. The owner put this item on hold to work on more pressing items. The scan and the options in
+  `NOTES.md` stay valid until the code changes; check the line numbers again before the work starts.
+
 ## Open questions
 
-- Is there a list of "moving static" blocks, or may an `immobile` flag be added in Tiled?
+- Is there a list of "moving static" blocks, or may an `immobile` flag be added in Tiled? Answered by the scan
+  (2026-10-25): no list exists, and no flag is needed for Options A, B, C or D4. See `NOTES.md`.
 
 ## Sources
 
