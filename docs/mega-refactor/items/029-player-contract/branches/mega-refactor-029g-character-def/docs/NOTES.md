@@ -2,6 +2,21 @@
 
 ## Decisions
 
+- 2026-10-25: the owner accepted the scan recommendations 1-9 ("I agree with all recommendations").
+- 2026-10-25: `CharacterDef` goes in core (`players/`), with `MegamanDef` in `entities/megaman/`. It moves to the
+  engine when a second character shows which fields and which factory signature all characters share. Pros and
+  cons as given to the owner:
+  - Engine: allowed (genre concepts) and forces a generic shape; but the factories use core types
+    (`Megaman`, `BehaviorType`) and need a type parameter, some fields are this game's tuning, and one caller
+    cannot show the right generic shape (the `ComponentKey` risk).
+  - Core: concrete types, no generics, matches the item notes ("core first; maybe the engine later"), cheap to
+    move later because only the player package calls it; but another game cannot reuse it until then.
+- 2026-10-25: `CharacterDef` grows later (body def, sprite and animation def, loadout and unlocks from `024`,
+  damage table, sounds, `id`), each when a caller exists. As designed, it supports the same player class with
+  other data (values, ability set and order; variants through `copy`). A separate player class cannot reuse the
+  factories, because they read `Megaman` fields; that waits for a second character (or `048`).
+- 2026-10-25: `Megaman` holds `val character: CharacterDef = MegamanDef` (one field; the swap is one line).
+
 ## Overlap with other branches
 
 No branch is active. `024` (weapon defs and loadout) and `048` (components in place of inheritance) are
