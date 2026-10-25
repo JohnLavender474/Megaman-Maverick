@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time
 on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-25
 
 This branch moves the 8 player behaviors into factory functions with no change in their bodies, and keeps the
 order in which they are added. Wall slide, swim, jump, air dash, ground slide, crouch, climb and jetpack must act

@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: split the player behaviors into 8 factory functions with no change in their bodies; tests fix the order
-- Done: scan; scope approved
-- Next: the owner approves `docs/CONTRACT.md`
+- Done: scan; scope and contract approved
+- Next: the owner approves `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -22,3 +22,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Independent review of the draft scope (`docs/NOTES.md`, "Review"). The owner chose the smaller cut: split the behaviors only, with the order and two-instance tests; `CharacterDef` goes to a Proto Man item (backlog candidate in `docs/TODO.md`). `docs/SCOPE.md` rewritten. On `master`: "`CharacterDef` design" added to the item `NOTES.md`; decision added to `ITEM.md`; the Proto Man open question removed from it.
 - The owner approved `docs/SCOPE.md` and the rename of the branch from `mega-refactor-029g-character-def` to `mega-refactor-029g-behavior-split` (folder, `ITEMS.md` row, `ITEM.md` branch split).
 - Draft `docs/CONTRACT.md` written.
+- The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written.
