@@ -75,6 +75,10 @@ def test_build_scenario_matches_expected_at_each_step(interactive):
         # one empty tile (row 4) between it and the rooms' bottom (row 5), and it's off-screen
         # (below the rooms' own row range) so it only catches a player who falls through the water.
         ('18_add_death', f'./run.sh add-death {WORK} --col 0 --row 0 --w 48 --h 4'),
+        # Ladder in col 6, just right of the ledge (id 8, cols 2-5). It stands on the floor (id 3,
+        # top surface row 10) and its top edge (row 10 + h 3 = row 13) is level with the ledge top.
+        # The LadderTop goes in blocks: 32x8 px, same x and y as the ladder.
+        ('19_add_ladder', f'./run.sh add-ladder {WORK} --col 6 --row 10 --h 3'),
     ]
 
     _analyze('start', work)

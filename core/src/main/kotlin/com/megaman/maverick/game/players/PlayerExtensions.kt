@@ -7,6 +7,7 @@ val Any?.asPlayer: MegaPlayer?
     get() = (this as? IPropertizable)?.getProperty(PlayerKeys.VIEW)
 
 // TODO: the screens read Megaman-only state (current weapon, ammo, running, sprite look) through this cast; the
-//  loadout moves to item 024 and the character's look to item 029g, and then this accessor goes
+//  loadout reads move with item 024, and running and the sprite look with the second playable character (Proto
+//  Man item); then this accessor goes
 val MegaPlayer.megaman: Megaman
     get() = entity as Megaman

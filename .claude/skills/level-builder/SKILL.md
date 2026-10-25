@@ -83,6 +83,33 @@ script or by hand, and raise `nextlayerid`. Use a tile from a tileset the map al
 example tile 175 of `Tileset1.tsx`, the most common floor tile in `Test1.tmx`. See the `tiles`
 layer of `Test1.tmx` for the format.
 
+#### Ladders
+
+A ladder has three parts. Add all three. Without the tiles the ladder is invisible, and without
+the `LadderTop` the player cannot stand on top of the ladder.
+
+1. A `Ladder` object in the `specials` layer. It is 1 tile wide (32 px). Its bottom is on the
+   floor surface. Its top edge is level with the top surface of the ledge or floor that it
+   reaches, and that ledge touches the ladder's side. No properties.
+2. A `LadderTop` object in the `blocks` layer. It has the same `x` and `y` as the `Ladder`,
+   width 32 px, height 8 px, and no properties. It is a one-way block (`entities/blocks/LadderTop.kt`):
+   the player stands on it from above and climbs down through it.
+3. A ladder tile painted on every cell the `Ladder` covers, in a tile layer, for example `tiles`.
+   Do not paint the cell above the ladder top. Use one of the `Tileset1.tsx` ladder tiles,
+   local ids 128-132 (row 4 of the tileset). The live stages use local id 130
+   (`TimberWoman_16x14_v4.tmx`, `RodentMan_16x14.tmx`), 131 (`IntroStage_v3.tmx`) and 132
+   (`DesertMan_16x14_v4.tmx`). The gid is the tileset's `firstgid` + the local id. When
+   `Tileset1.tsx` has `firstgid="1"`, local id 130 is gid 131. If the map does not have
+   `Tileset1.tsx`, add `<tileset firstgid="N" source="../tsx/Tileset1.tsx"/>`, with `N` greater
+   than the last gid of the tileset before it.
+
+`add-ladder` adds parts 1 and 2. Its `--row` is the bottom row of the ladder and `--h` is the
+height in tiles, so the top edge is at row `row + h`. Make that row the top surface of the ledge.
+The CLI cannot paint part 3; paint the tiles with a small script or by hand, as for the blocks.
+
+Some older stages use a wider `LadderTop` (40 px, 8 px of it on the ledge). Use the 32 px form
+for new ladders.
+
 ### Iteration 3 — Player spawns
 Add the stage-start spawn `0` and any respawn points `1..n` with `add-spawn`, each a
 single tile placed directly above a plain block (never a conveyor or other special

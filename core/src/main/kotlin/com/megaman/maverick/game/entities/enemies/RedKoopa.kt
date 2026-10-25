@@ -207,7 +207,8 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
                 spawnFloatingPoints()
 
-                // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for item 029g
+                // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for the
+                //  second playable character (Proto Man item)
                 player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 playSoundNow(SoundAsset.SWIM_SOUND, false)
             }

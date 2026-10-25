@@ -36,7 +36,7 @@ New APIs and their first callers in this branch:
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 470 engine, 142 core) and the warning count
   (expected 114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Test room (subagent)
 
@@ -45,7 +45,7 @@ New APIs and their first callers in this branch:
   `Ladder` that reaches a ledge, and a `Water` pool deep enough to swim. Properties of `Ladder` and `Water` are
   copied from `Test1.tmx`. Painted tiles on every block cell. No other room changes.
 - Check: a short launch of `--room movement` shows no exception.
-- Done: no
+- Done: yes
 
 ### 4. Tests on the current code
 
@@ -55,7 +55,7 @@ New APIs and their first callers in this branch:
     `CROUCHING`, `CLIMBING`, `JETPACKING`;
   - two `Megaman` objects get a different behavior object for each key.
 - Check: both tests pass on the code before the split. Build and tests pass.
-- Done: no
+- Done: yes
 
 ### 5. Split the behaviors
 
@@ -76,25 +76,25 @@ New APIs and their first callers in this branch:
   - the step 4 tests pass with no change to them;
   - `git diff master --stat` shows no change in `MegamanValues.kt`, `Megaman.kt` or the other components;
   - build and tests pass; a launch of `--room movement` shows no exception.
-- Done: no
+- Done: yes
 
 ### 6. `MegaPlayer.megaman` `TODO`
 
 - Changes: the `TODO` in `players/PlayerExtensions.kt` names `024` for the loadout reads and a second character
   for the `running` and sprite reads, not `029g`.
 - Check: a grep finds no `029g` in `core/src/main`. Build passes.
-- Done: no
+- Done: yes
 
 ### 7. Contract checks
 
 - Changes: none, unless a check fails.
 - Check: a clean build; the automated checks in `CONTRACT.md`; the owner's play test. Write the results in the
   process log.
-- Done: no
+- Done: yes
 
 ### 8. Merge
 
 - Changes: the merge steps in `docs/mega-refactor/CLAUDE.md` ("Branch merge"), after the owner's explicit
   approval. The backlog candidate (Proto Man) becomes a new item. With this merge, item `029` is `done`.
 - Check: step 9 of the merge rules: the build and tests pass on `master`.
-- Done: no
+- Done: yes

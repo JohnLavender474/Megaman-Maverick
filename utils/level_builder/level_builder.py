@@ -13,6 +13,8 @@ DEFAULT_LAYERS = ('game_rooms', 'blocks', 'player', 'enemies', 'hazards', 'TODO'
 # Layers that hold single-tile name-only markers via `add-marker`
 MARKER_LAYERS = ('enemies', 'hazards', 'TODO')
 
+LADDER_TOP_HEIGHT = 8
+
 
 def _fmt(n) -> str:
     n = float(n)
@@ -202,6 +204,21 @@ def cmd_add_water(args):
     })
     _save(tree, args.file, dry_run=args.dry_run)
     print(f'Added Water at col={args.col} row={args.row} ({args.w}×{args.h} tiles)')
+
+
+def cmd_add_ladder(args):
+    tree, root = _load(args.file)
+    x = args.col * TILE
+    y = _row_to_y_px(root, args.row, args.h)
+    ladder = _add_object(root, _find_or_create_group(root, 'specials'), {
+        'name': 'Ladder', 'x': x, 'y': y, 'width': TILE, 'height': args.h * TILE,
+    })
+    top = _add_object(root, _find_or_create_group(root, 'blocks'), {
+        'name': 'LadderTop', 'x': x, 'y': y, 'width': TILE, 'height': LADDER_TOP_HEIGHT,
+    })
+    _save(tree, args.file, dry_run=args.dry_run)
+    print(f'Added Ladder id={ladder.get("id")} at col={args.col} row={args.row} '
+          f'(1×{args.h} tiles) and LadderTop id={top.get("id")} at its top')
 
 
 def cmd_add_death(args):
@@ -492,6 +509,19 @@ def build_parser():
     _add_rect_args(p)
     _add_dry_run_arg(p)
     p.set_defaults(func=cmd_add_water)
+
+    p = sub.add_parser('add-ladder',
+                       help='add a 1-tile-wide Ladder to specials and a 32x8 px LadderTop '
+                            'to blocks at its top; --row is the bottom row, and the top '
+                            'edge (row + h) must be level with the surface it reaches; '
+                            'the ladder tiles are not painted')
+    p.add_argument('file')
+    p.add_argument('--col', type=int, required=True)
+    p.add_argument('--row', type=int, required=True,
+                   help='bottom row of the ladder (the row above the floor)')
+    p.add_argument('--h', type=int, required=True, help='ladder height in tiles')
+    _add_dry_run_arg(p)
+    p.set_defaults(func=cmd_add_ladder)
 
     p = sub.add_parser('add-death', help='add a Death rectangle to sensors')
     p.add_argument('file')
