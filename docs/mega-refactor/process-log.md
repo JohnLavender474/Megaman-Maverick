@@ -445,3 +445,21 @@ newest entry at the bottom.
   references changed; handler order and checks unchanged; no lead-player read before the registration). The
   owner played the full list once, after the implementation. The owner approved the merge.
 - Follow-up: no backlog or bug candidates. Next for item `029`: `029g` (`CharacterDef`).
+
+## 2026-10-25 — mega-refactor-029g-behavior-split
+
+- Summary: the player's 8 behaviors move out of one 787-line function into 8 factory functions in
+  `entities/megaman/behaviors/` (one file each). The bodies moved without change (the air dash names its own
+  receiver label). `defineBehaviorsComponent` keeps the ordered `addBehavior` list, with a `024` `TODO` for the
+  weapon checks. `TODO`s that named `029g` now name `024` or the Proto Man item. The test map gets the room
+  `movement`; the `level-builder` skill and CLI learn ladders (`Ladder`, `LadderTop`, tiles; `add-ladder`).
+  The branch was planned as `character-def`. After an independent review, the owner cut it to the split:
+  `CharacterDef`, a values table and factory parameters would each have one caller and a guessed shape. The
+  design is in the item `029` `NOTES.md` ("`CharacterDef` design"). Squash commit `037a5f1a0`.
+- Contract check: clean build; 470 engine and 144 core tests pass (2 new: the behavior order, per-instance
+  behavior objects); 114 compiler warnings, the same as before; the contact selection reference file is
+  unchanged; a script compared each moved body with `master` (whitespace removed); no change in
+  `MegamanValues.kt`, `Megaman.kt` or the other player components. The owner played the full list once, after
+  the implementation. The owner approved the merge.
+- Follow-up: the backlog candidate became item `060` (Proto Man, with `CharacterDef`). No bug candidates. Item
+  `029` is done.

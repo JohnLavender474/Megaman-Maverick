@@ -76,7 +76,7 @@ Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` 
 - `AbstractProjectile` and many small interfaces (`IFreezableEntity`, `IHazard`, `IOwnable`, `IFaceable`, and so on).
 - `IMegaGameEntity` gives every entity the extensions `players` and `targetPlayer` (see `docs/mega-refactor/items/029-player-contract/`).
 
-Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemies` (about 127 files), `bosses`, `hazards`, `items`, `projectiles`, `sensors`, `special`, `decorations`, `explosions`. The player is in `entities/megaman/` (components, constants, handlers, sprites).
+Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemies` (about 127 files), `bosses`, `hazards`, `items`, `projectiles`, `sensors`, `special`, `decorations`, `explosions`. The player is in `entities/megaman/` (behaviors, components, constants, handlers, sprites).
 
 ### Factories
 
