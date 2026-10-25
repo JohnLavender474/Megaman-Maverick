@@ -494,3 +494,12 @@ newest entry at the bottom.
   hardware as a goal (also in the root `CLAUDE.md`) and the rule for temporary contract test suites.
 - Contract check: not needed (docs only).
 - Follow-up: filed `2026-10-25-game-line-rotate-origin-y.md` and `2026-10-25-is-performance-subpar-inverted.md`.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031` (input frames) gets three owner decisions in `ITEM.md`: keep the NES button names (the frame
+  is keyed by button, not intent), a digital threshold for analog sticks (no axes), and at most 2 players on a
+  shared screen with 4 slots supported. Its `NOTES.md` gets "Input assignment: cases and options" (12 cases;
+  Options A, B, C; sub-choices for disconnect, reconnect and the way out for an unresponsive gamepad).
+- Contract check: not needed (docs only).
+- Follow-up: the owner decides Option B or C, the single-player disconnect behavior, and the reconnect rule.

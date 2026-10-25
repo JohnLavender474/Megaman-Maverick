@@ -59,3 +59,109 @@ Replace "Support multiple controllers and co-op" with: "Input intents per player
 6. Dependencies
 Item 28 (players), 11 (locks), 9/10 (replay), 7 (start args for replay), 5 (headless replay), 33 (persisted bindings), 31 (input sources are platform-specific; keep them out of `engine` core).
 ````
+
+## Input assignment: cases and options (2026-10-25)
+
+Based on `master` at `95deef9b2`. This is a first pass for discussion, not a full scan.
+
+### Today
+
+- `ControllerButton.isPressed()` ORs the keyboard, gamepad 0 and the touch overlay (`ScreenController`) into one
+  set of buttons. There is one player.
+- `MegaControllerPoller.run()` (`C/controllers/MegaControllerPoller.kt`) checks each frame if a gamepad is
+  connected. On connect it maps the gamepad codes (from prefs keyed by the gamepad name, or the default mapping). On
+  disconnect it clears the gamepad codes. The game does not pause. The keyboard still works, so in single player
+  the keyboard is already a silent fallback.
+- Only one gamepad is used (`ControllerUtils.getController()`). The library is `gdx-controllers` `2.2.3`, which has
+  connect and disconnect events (`ControllerListener`) and `Controller.getUniqueId()`. The game does not use
+  either.
+- The mouse is not used, except that the touch overlay can be clicked.
+
+### Cases the design must handle
+
+1. Single player, keyboard only.
+2. Single player, keyboard and a gamepad, both used (today's merge). The player picks up whichever is closer.
+3. Single player, the gamepad is unplugged.
+4. Single player, the gamepad stops responding but stays connected. The game cannot detect this. Only the player
+   knows.
+5. Single player, a gamepad is plugged in during play.
+6. Co-op, player 1 on a gamepad and player 2 on the keyboard. They must not merge.
+7. Co-op, two gamepads (maybe two of the same model, with the same name).
+8. Co-op, one player's gamepad is unplugged or stops responding. The other player keeps a working device.
+9. Co-op, the unplugged gamepad comes back, or the player wants to switch to another free device.
+10. A player joins or leaves co-op during a session.
+11. Menus and pause: who controls them in co-op.
+12. Later: 4 slots for split screen and online. Online slots get frames from the network, not from local devices.
+
+### The parts of the design
+
+- **Devices:** the keyboard, each gamepad (by its unique id while connected), the touch overlay, and the mouse.
+- **Slots:** player 1 to player 4. Each slot claims a set of devices. Its `InputFrame` is the OR of its devices.
+- **The mouse is never a player device.** It can only drive menus, so it belongs to nobody.
+- **System keys:** a few keyboard keys (for example `Esc` for pause and the input menu) that work even when the
+  keyboard belongs to a player. The rest of the keyboard belongs to its slot.
+
+### Option A: keep today's merge for player 1; co-op takes only free devices
+
+- Pros: no change for single player.
+- Cons: fails case 6. Player 1's merge takes the keyboard, so player 2 cannot have it. Rejected.
+
+### Option B: "auto" in single player, explicit claims in co-op (recommended)
+
+- Single player: slot 1 is in auto mode. It claims every device, including any gamepad that is plugged in later.
+  This is today's merge, so cases 1, 2, 3 and 5 behave as today.
+- Co-op: a join step ("press `START`") claims one device for each slot. A device that a slot claimed is not part of
+  any other slot. Case 6 and case 7 work. Two gamepads of the same model are told apart by the unique id, not by
+  the name. Bindings stay keyed by the gamepad name, so identical pads share bindings.
+- Disconnect in co-op (case 8): the game pauses and shows "Player 2: press `START` on a device". Any free device,
+  or the same gamepad when it comes back, claims the slot (case 9).
+- Unresponsive gamepad (case 4 and case 8): nothing can detect it, so the player needs a way out that does not use
+  that gamepad. The system keys and the mouse open the pause menu and the input menu from any state. There, the
+  player gives the slot another device.
+- Pros: single player stays the same, so the contract is easy. Co-op gets clear ownership. One model covers all 12
+  cases.
+- Cons: two modes (auto and claimed) to test. The switch from single player to co-op must move slot 1 from auto to
+  claimed.
+
+### Option C: explicit claims always
+
+Each session starts with "press `START`", also in single player. Slot 1 claims only that device.
+
+- Pros: one mode only. The same code path for single player and co-op.
+- Cons: a change in gameplay for single player. The player can no longer use the keyboard and the gamepad at the
+  same time, and an unplugged gamepad stops the game where today the keyboard takes over. Slot 1 can claim several
+  devices to fix this, but then it is Option B's auto mode again.
+
+### Sub-choices (for Option B or C)
+
+Disconnect in single player:
+- (i) Keep today's behavior: no pause, the keyboard keeps working. No contract change.
+- (ii) Pause and show the reconnect prompt, as in co-op. This is clearer for the player, but it changes gameplay.
+
+Reconnect in co-op:
+- (i) "Press `START` on any free device" claims the slot. Simple and robust, also for a different device.
+- (ii) Match the same gamepad by unique id and give it back to its slot automatically. More convenient, but the id
+  is valid only while the game runs, and a new device still needs (i).
+- Recommended: (i), with (ii) only if the same id comes back while the game runs.
+
+The way out for an unresponsive gamepad:
+- (i) System keys on the keyboard (for example `Esc`). The keyboard is always connected on desktop, so it is the
+  most trusted device. In co-op, a key press by the keyboard player then pauses for both players. That is normal in
+  shared-screen co-op.
+- (ii) The mouse drives the pause menu and the input menu. It belongs to nobody, so it never conflicts. But it is a
+  new input path for menus (today the menus use only buttons), and some setups have no mouse (a handheld PC).
+- (iii) Both. Recommended: the keyboard first (no new UI input path), the mouse as an addition in the input menu.
+
+The input menu:
+- It shows each slot and its devices, and lets a player claim or free a device ("press a button on the device to
+  give it to player 2").
+- It is reachable from pause, from the system keys and from the mouse.
+- It also handles keyboard-only co-op later (two players on one keyboard with two key sets), if wanted. That is
+  out of scope for now.
+
+### Effect on the `031` scope
+
+- The adapter step (an `InputFrame` for slot 1 from today's poller) does not depend on this choice.
+- Devices, slots, the router and the join step belong to a later branch of `031`, or to `047` (co-op), which needs
+  `MegaPlayers` with a capacity above 1.
+- The input menu is a new screen. It belongs with the router branch, not with the adapter.
