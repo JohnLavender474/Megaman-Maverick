@@ -16,6 +16,18 @@
   other data (values, ability set and order; variants through `copy`). A separate player class cannot reuse the
   factories, because they read `Megaman` fields; that waits for a second character (or `048`).
 - 2026-10-25: `Megaman` holds `val character: CharacterDef = MegamanDef` (one field; the swap is one line).
+- 2026-10-25: keep the name `CharacterDef`, not `PlayerDef`: a player is a slot and its controller; the def
+  describes the body it controls (review 5, `Pawn` and `Controller`). A later NPC sidekick could use the same
+  def once input (`031`) and the player-only parts (`048`) allow it.
+- 2026-10-25 (replaces recommendations 2 to 4 and 6): no values table. The owner found that a
+  `CharacterValues` type would claim to be generic while its fields are the settings of Mega's behaviors.
+  Options discussed: per-ability value classes (`JumpValues`); keeping `MegamanValues` with no change; the
+  middle option (numbers stay in `MegamanValues`, behaviors read them through a parameter). The owner chose the
+  middle option in its simplest form: each behavior factory takes its values as parameters, and `MegamanDef`
+  passes `MegamanValues` constants. `CharacterDef` holds only `abilities`. The reads in `Megaman.kt`, its
+  components and outside the player stay on `MegamanValues` with `TODO`s. A helper that switches on the target
+  player's character was rejected (`is Megaman` under a new name); when a second character exists, each
+  character gives its own value and the reader reads it from the contact player.
 
 ## Overlap with other branches
 
