@@ -720,3 +720,12 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the owner decides the direction for `MegaPlayer` (thin view, free functions over components, counted
   locks, a synchronous signal registry) and its order against `031d`.
+
+## 2026-10-26 — master (docs)
+
+- Summary: new item `061` (thin player view; locks and signals as components and functions), from the owner's
+  experimental branch `temp-thin-player`, which the owner tested ("Tests pass"). Branch folder
+  `mega-refactor-061a-thin-player` prepared ahead of time (status `planned`) with draft `SCOPE.md`, `CONTRACT.md` and
+  `PLAN.md` for one review. `ITEMS.md` has the item and branch rows.
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews the three drafts.
