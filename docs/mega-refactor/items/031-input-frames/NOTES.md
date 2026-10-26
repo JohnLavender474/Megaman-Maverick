@@ -638,3 +638,243 @@ Owner's decisions, after a discussion of the `Enter` question above. They replac
 - No migration (owner): the plan in "Persistence and migration" to import the old prefs is dropped. The new settings
   start from the defaults, and players set their bindings again once. Open question 10 (which old file's
   `selectButtonAction` wins) no longer applies. Item `034` `ITEM.md` is updated to match.
+
+## Scan: the size of the work (2026-10-25)
+
+Based on `master` at `48c602ed4`. Four read-only scans: the input pipeline and its timing, the gameplay readers,
+screens and settings, and devices with tests and overlaps. Paths: `E` = `engine/src/main/kotlin/com/maverick/game/engine/`,
+`C` = `core/src/main/kotlin/com/megaman/maverick/game/`.
+
+Corrections to the review above:
+- The poll is at `C/MegamanMaverickGame.kt:529` (not `:485`).
+- `MegaCollisionHandler` does not read input itself. The read inside the collision step is the
+  `FALL_THROUGH_PRESS_UP` lambda in `C/entities/megaman/components/BodyComponent.kt:81-83`, which
+  `MegaCollisionHandler.kt:38-39` calls.
+- "Slot 1" in these docs is `PlayerSlot(0)` in code (slots are 0-based).
+
+### Summary
+
+- **One poll per rendered frame.** `controllerPoller.run()` runs once per frame at `MegamanMaverickGame.kt:529`,
+  before `screen.render` (so before every engine system and every physics sub-step) and before `eventsMan.run()`.
+  There is no poll in the asset-loading frames. Every reader runs on the main thread between two polls. So an
+  `InputFrame` built right after `run()` from the poller's statuses gives every reader the same data as today.
+- **The frame must copy the poller's 4 states, not the raw devices.** The control lock (`on = false`) forces
+  `JUST_RELEASED` and then `RELEASED` while a key is still down, and the unlock gives a new `JUST_PRESSED` for a key
+  that is still held. Only the poller knows this.
+- **Readers:** 56 explicit gameplay reads, plus 4 implicit ones (`ControllerSystem` dispatch for B, LEFT, RIGHT,
+  SELECT) and 4 lines that read `selectButtonAction`. Plus one menu choke point (`MegaMenuScreen`) and 7 direct reads
+  in other screens.
+- **Risk is low for a first branch that keeps the poller as the source.** Most reads are in Megaman's code and only
+  change where they read from.
+
+### The pipeline today
+
+- `ControllerButton.isPressed()` (`E/controller/buttons/ControllerButton.kt:21`) ORs the keyboard key, gamepad 0
+  and the alternate actuators (touch). The OR happens before any edge.
+- `ControllerPoller.run()` (`E/controller/polling/ControllerPoller.kt:20-47`), per button in enum order:
+
+  | Case | Old status | New status |
+  |---|---|---|
+  | `on`, enabled | `RELEASED` or `JUST_RELEASED` | `JUST_PRESSED` if pressed, else `RELEASED` |
+  | `on`, enabled | `PRESSED` or `JUST_PRESSED` | `PRESSED` if pressed, else `JUST_RELEASED` |
+  | `on`, disabled | `JUST_RELEASED` | `RELEASED` |
+  | `on`, disabled | any other | `JUST_RELEASED` |
+  | `on = false` | `PRESSED` or `JUST_PRESSED` | `JUST_RELEASED` |
+  | `on = false` | `RELEASED` or `JUST_RELEASED` | `RELEASED` |
+
+  - A `JUST_*` state lasts exactly one frame. A tap that starts and ends between two polls is lost.
+  - Quirk: a disabled button flips `RELEASED` and `JUST_RELEASED` every frame. No production code sets
+    `enabled = false` (only `MegaControllerPollerTest`), so this is latent.
+  - Before the first poll, `getStatus` returns `null`: readers see `false`, and `ControllerSystem` skips the key.
+- `MegaControllerPoller.run()` (`C/controllers/MegaControllerPoller.kt:19-46`) checks gamepad 0 for connect and
+  disconnect first, sets the gamepad codes, then calls `super.run()`. It logs a debug line every frame.
+- **The control lock.** `TURN_CONTROLLER_OFF/ON` is handled in `MegamanMaverickGame.onEvent` (`:633-651`): it sets
+  `controllerPoller.on` and, unless the event says otherwise, `ControllerSystem.on`.
+  - 13 submitters: `MegaLevelScreen` `:286` (room transition), `:367`, `:619` (`PLAYER_READY`), `:788`
+    (`END_BOSS_SPAWN`), `:806` (`BOSS_DEFEATED`: poller off, system kept on), `:836`, `:864`, `:1126` (`reset`);
+    `PlayerSpawnEventHandler:124, 205`; `PlayerDeathEventHandler:54`; `EndLevelEventHandler:112`;
+    `WilyFinalBoss:302`.
+  - An event sent inside `eventsMan.run()` is delivered one frame later (`E/events/EventsManager.kt:29-31, 58-81`).
+    So a lock change shows at the next poll or one poll later.
+  - With the system kept on (`:806`), Megaman's actuators get `onJustReleased` for a held button (for example a
+    held B fires the charged shot), then `onReleaseContinued`.
+  - `LevelStateHandler.pause/resume` and `engine.systems.forEach { it.on = ... }` (`MegaLevelScreen.kt:428, 591,
+    781, 790`) also switch `ControllerSystem`. After `END_BOSS_SPAWN`, the system runs one frame with every button
+    `RELEASED` before the poller unlocks.
+- **`ControllerSystem`** (`E/controller/ControllerSystem.kt:13-37`) calls exactly one actuator callback per key per
+  frame, from the global poller, and passes the poller into each callback (`IButtonActuator` takes an
+  `IControllerPoller`). Only Megaman has a `ControllerComponent` (`C/entities/megaman/components/ControllerComponent.kt:27-125`,
+  actuators for B, LEFT, RIGHT, SELECT). The actuator map is an `ObjectMap` keyed by enum values, whose hash is the
+  identity hash, so **the call order of the four actuators can differ between JVM runs**.
+
+### The gameplay readers
+
+(a) **The player's own input (Megaman): 44 explicit reads.**
+- `ControllerComponent` 8 (all held, through the actuator's `poller` parameter), plus `selectButtonAction` at `:98`.
+- The 8 behavior files: 31 reads (`ClimbBehavior` 11, `AirDashBehavior` 5 plus 2 `selectButtonAction`,
+  `GroundSlideBehavior` 4, `JumpBehavior` 3, `JetpackBehavior` 3, `CrouchBehavior` 2, `WallSlideBehavior` 2,
+  `SwimBehavior` 1). All in the Behaviors system, once per frame.
+- `JetpackBehavior.kt:29-32` uses `allMatch(UP == PRESSED, A == JUST_PRESSED)`: UP must be held from an earlier frame.
+  A frame with only held, pressed and released sets must express this as `held(UP) && !pressed(UP)`.
+- `BodyComponent.kt:82`: UP **just pressed**, read inside the collision handler, so on every physics sub-step and
+  for every `PRESS_UP_FALL_THRU` block.
+- `AnimationsComponent.kt:93`, `MegamanAnimationKeySupplier.kt:118` (Animations system), `MegamanWeaponsHandler.kt:674`
+  (from the attack actuator), `Megaman.kt:833` (B just released, Updatables system).
+
+(b) **Other entities, about a player: 10 reads.**
+- `PipePortal.kt:154-160` (held, in `TeleporterRule`, a contact rule) and `SpringBouncer.kt:209-216` (held, in
+  `BouncerRule`). Both already resolve the contact player with `asPlayer`.
+- `SpiderWeb.kt:185` (any of 6 buttons just released, Updatables) and `GroundSlideBlocker.kt:43-44` (DOWN held, in
+  body `preProcess`). Both use `targetPlayer` (always slot 0). `GroundSlideBlocker` turns collision on or off for
+  all bodies at once, so it cannot serve two players in co-op (a `047` problem, not a `031` one).
+
+(c) **Global flow.**
+- Pause (`MegaLevelScreen.kt:908-909`): START just released, or SELECT just pressed when `selectButtonAction ==
+  START`. Uses `PlayerSlot(0)`.
+
+Reads inside physics sub-steps (they see the same frame on every sub-step): `BodyComponent:82` (the only edge),
+`GroundSlideBlocker:44`, `PipePortal:154-160`, `SpringBouncer:211-216`. If `010` later runs several ticks per frame,
+an edge must go to one tick only; `010` owns that change.
+
+Tests: no test checks how a behavior reacts to a button. Six core tests build `Megaman` with a relaxed mock game, so
+`controllerPoller` and `selectButtonAction` return mock defaults and hide the input reads.
+
+### Screens and settings
+
+- **Menus:** all 9 live menu instances read input through `MegaMenuScreen` (`C/screens/menus/MegaMenuScreen.kt:19-31`):
+  navigation on `isJustReleased` of the d-pad, confirm on START or A just released. There is no back input: every
+  "BACK" is a row to confirm. `LevelSelectScreenV2` has no way back at all.
+- **Pause menu** (`LevelPauseScreen`): confirming a weapon resumes the game; there is no dedicated "START unpauses".
+- **Other screens:** 7 direct reads (`AbstractStoryScreen:110`, `CreditsScreen:89` (on press), `LogoScreen:129`,
+  `GetWeaponScreen:244`, `SimpleInitGameScreen:59`, `GameOverScreen:85`, plus pause above).
+- **No screen reads raw keys.** `Esc` is used nowhere. The arrow keys and numpad `Enter` do nothing today.
+- **Default gamepad mapping** (`C/controllers/ControllerMappingExtensions.kt:6-13`): A = `buttonB`, B = `buttonY`,
+  START = `buttonStart`, SELECT = `buttonA` (the south face button is SELECT, not confirm).
+- **The bindings screen** (`ControllerSettingsScreen`, one class for keyboard and gamepad): capture swaps
+  `Gdx.input.inputProcessor` (keyboard) or adds a listener on gamepad 0. Any key is accepted (no reserved keys,
+  no cancel). A duplicate is swapped. Each rebind saves at once, "RESET TO DEFAULTS" does not save. No prefs are read
+  at boot.
+- **The touch overlay is dead code.** `screenController` (`MegamanMaverickGame.kt:218`) is never assigned, and
+  `--showScreenController` sets a parameter that nothing reads. Its construction was removed in commit `274641680`.
+- **What `UiInput` must cover:** navigate (4 directions, edge), adjust left/right, confirm, back (new), skip/advance,
+  and the pause entry. The bindings screen needs raw device events, not frames.
+
+### Devices and the library (`gdx-controllers` `2.2.3`, desktop Jamepad backend)
+
+- About 13 places in 6 files assume gamepad index 0 (`ControllerUtils`, `ControllerButton`, `MegaControllerPoller`,
+  `ControllerUtilsExtensions`, `ControllerSettingsScreen`, `GameSettingsPanel`).
+- `Controllers.getControllers()` is the live list in connect order, up to 4 on desktop. Listeners run on the render
+  thread. **Index shift:** if pad 0 is unplugged while pad 1 stays, pad 1 becomes index 0, and
+  `MegaControllerPoller` never sees a disconnect, so it keeps pad 0's codes.
+- `getUniqueId()` is a new random UUID for each connect. `getName()` is the only stable key; identical models share
+  it. No GUID or vendor id.
+- `getMapping()` is one shared mapping for every pad. It has no trigger fields. On desktop the triggers are axes 4
+  and 5 (values 0 to 1). Sticks are axes 0 to 3 (about -1 to 1; the Y sign needs a check on real hardware).
+- `gradle.properties` says `jamepadVersion=2.0.14.2`, but Gradle resolves `2.0.20.0` (inference, from the cache).
+
+### Module placement
+
+- Engine today: `ControllerSystem`, `ControllerComponent`, `ControllerPoller`, `IControllerPoller`, `ButtonStatus`,
+  `ButtonActuator`, `ControllerButton(s)`, `ControllerUtils`. Core: `MegaControllerButton`, `SelectButtonAction`,
+  `MegaControllerPoller`, prefs helpers, `ScreenController`, the settings screens.
+- `InputFrame` is keyed by `MegaControllerButton`, so it goes in core (a new `input/` package), stored as plain
+  `Int` masks (8 bits each; immutable, no allocation). An engine form waits for an engine caller (as in `014b`).
+- `032` keeps `gdx-controllers-core` in the engine and removes `gdx-controllers-desktop`. The device adapters go in
+  core and get the trigger axis codes injected, so they add no desktop dependency to the engine.
+
+### Players API
+
+`MegaPlayer` (`C/players/`) is a view. `input` can be a read-through property: `MegaPlayer.input` returns the frame
+of its slot from a per-slot frame store owned by an input service. `MegaPlayers` builds views with `::MegaPlayer`,
+so its factory must capture that service. Item `029` decided that input belongs to the slot, not to the character.
+
+### Overlaps
+
+- `012` (named freezes) replaces `TURN_CONTROLLER_*` with freeze reasons, and edits `MegamanMaverickGame.onEvent`
+  like `031b` would. Do not run them in parallel.
+- `013` (pause overlay) owns the pause flow later. `031` does the small fixes (the `Esc` pause entry, back to pause
+  from the bindings screen).
+- `034` persists the per-slot settings. The escape hatch must exist before `034` applies bindings at boot.
+- `010` latches input per tick later. An immutable frame makes this simple.
+- `016` (narrow services): expose input as a service, not as more `game` fields.
+- `032`: the adapters must not add desktop dependencies to the engine. Deleting the engine's `ControllerButton` and
+  `ControllerUtils` reads later helps `032`.
+- `047` and `055` need `031a` first. `060` reads the same button frame.
+- No branch is active in a worktree.
+
+### Bug candidates (not filed yet)
+
+1. The index shift above: after pad 0 is unplugged while pad 1 stays, the game keeps pad 0's codes for pad 1
+   (from the library source; not seen in the game).
+2. "RESET TO DEFAULTS" in the bindings screen is not saved, so "LOAD SAVED SETTINGS" brings the old codes back
+   (`ControllerSettingsScreen.kt:251-258`, `ControllerUtilsExtensions.kt:57-70`).
+3. If the gamepad disconnects during a capture, the screen leaves with the listener still attached and the capture
+   state still set; the next visit shows the hint text (`ControllerSettingsScreen.kt:387-392`).
+4. Inference, not run: after a rebind, the menu unlocks 0.25 s later. If the player binds START or A and holds the
+   key longer, its release confirms the same row again and starts a new capture.
+5. Inference, not run: if a focus-loss pause (`DesktopLauncher.kt:160-173`) happens while the controller is locked
+   (for example during a room transition), the pause menu cannot be used, because it reads the same locked poller.
+6. `jamepadVersion` in `gradle.properties` does not match the resolved jar (build).
+
+## Options for the first branch (2026-10-25)
+
+All options keep the poller as the only source in the first branch, so the contract is "plays the same". The
+devices (keyboard aliases, all gamepads, stick, triggers) and the bindings come in later branches.
+
+### Option 1: frame and Megaman's reads only
+
+Build `InputFrame` for slot 0 after `controllerPoller.run()`. Add `MegaPlayer.input` (first caller: the Megaman
+behaviors). Move group (a) only.
+
+- Pros: the smallest diff (about 14 files, all in `entities/megaman/`). Lowest risk.
+- Cons: the other entities, pause and `ControllerSystem` still read the global poller, so the global stays in
+  gameplay code. A second branch must still touch the same concepts.
+
+### Option 2: frame and all gameplay reads (recommended)
+
+Option 1, plus group (b) (`PipePortal` and `SpringBouncer` read the contact player's frame; `SpiderWeb` and
+`GroundSlideBlocker` read `targetPlayer`'s frame, as today) and group (c) (pause reads the slot-0 frame). Menus,
+skip screens and `ControllerSystem` stay on the poller.
+
+- Pros: after the branch, no gameplay code reads `game.controllerPoller`; only the frame builder, `ControllerSystem`
+  and the screens do. That is a clear line for the next branch. Every move is mechanical. The parity suite covers
+  all of it.
+- Cons: about 20 files. `selectButtonAction` still lives on `game` (it moves with the per-slot settings later).
+
+### Option 3: Option 2 plus `ControllerSystem` and the lock
+
+Also make `ControllerSystem` give each entity its owner's frame (an engine API change in `IButtonActuator`), and
+turn `on` into a per-slot lock with the same release sequence.
+
+- Pros: the poller is used only by the frame builder and the screens.
+- Cons: it changes engine API and `ControllerSystemTest`, and the lock edits `MegamanMaverickGame.onEvent`, which
+  `012` also changes. The actuator order is hash-ordered, which makes parity harder. A larger branch with more risk.
+
+### Later branches (for all options)
+
+- `031b`: `ControllerSystem` on frames, the per-slot lock (in step with `012`), menus and skip screens on `UiInput`
+  with `Esc` as back and the pause entry.
+- `031c`: device adapters in auto mode: the keyboard with the reserved aliases, every connected gamepad (fixing the
+  index shift and the code-0 bug), the stick at `0.5`, the triggers on axes 4 and 5, touch with a `TODO`.
+  Intended changes: the aliases, the stick and the bug fixes.
+- `031d`: per-slot bindings for slot 0 (one settings object: tables by `keyboard` or pad name, plus
+  `selectButtonAction`), the bindings screen (capture from one device, reserved keys refused, back to pause with no
+  restart, key names on screen), and `--resetBindings`. In step with `034`.
+
+### Verification for the first branch
+
+- **Temporary suite** (deleted before the merge): a frozen copy of `ControllerPoller` and `MegaControllerPoller.run`
+  in the test sources, and fake `IControllerButton`s driven by seeded scripts (held bits from 3 devices, `on`
+  toggles, `enabled` toggles, connect and disconnect). Each tick, the status of each button from the frozen poller
+  must equal the status read back from the new frame. Named cases: hold then lock, lock with the system kept on,
+  unlock while held, press and lock in one tick, keyboard holds A and the pad presses A, the disabled-button flip.
+- **Permanent suite:** frame edges and the `held && !pressed` case (`JetpackBehavior`); the frame is the same for all
+  readers in a frame; a frame per slot is addressable.
+- **Manual checks** in the game: jump, slide, climb, wall slide, air dash, jetpack, swim, the charged shot through a
+  boss intro, pipe portals, spring bouncers, spider webs, ground-slide blockers, pause with START and with SELECT
+  set to START.
+
+### Recommendation
+
+Option 2 for `031a`. Then `031b`, `031c` and `031d` as above. File the bug candidates 1, 2, 3 and 6 now; check 4 and
+5 in the game first.

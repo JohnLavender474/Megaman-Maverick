@@ -572,3 +572,10 @@ newest entry at the bottom.
   names, no intents; the co-op router flows moved to `047`).
 - Contract check: not needed (docs only).
 - Follow-up: the multi-angle scan of `031` goes into its `NOTES.md`.
+
+## 2026-10-25 — master (docs)
+
+- Summary: scan of item `031` from four read-only scans (pipeline and timing, gameplay readers, screens and settings,
+  devices with tests and overlaps), with options for the first branch, in its `NOTES.md`.
+- Contract check: not needed (docs only).
+- Follow-up: the owner picks the first-branch option; six bug candidates are listed in the notes.
