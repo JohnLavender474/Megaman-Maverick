@@ -4,18 +4,23 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.Queue
+import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.*
+import com.maverick.game.engine.entities.EntityExistenceState
+import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.systems.GameSystem
 
 class GameEngine(
     var systems: Array<GameSystem> = Array(),
-    var onQueueToSpawn: ((IGameEntity) -> Unit)? = null,
-    var onQueueToDestroy: ((IGameEntity) -> Unit)? = null,
     var onSpawnRejected: ((IGameEntity) -> Unit)? = null
 ) : Updatable, Resettable, Disposable {
+
+    companion object {
+        const val TAG = "GameEngine"
+    }
 
     internal class EntitiesToSpawn {
 
@@ -31,6 +36,8 @@ class GameEngine(
             }
 
         internal fun contains(entity: IGameEntity) = set.contains(entity)
+
+        internal fun forEachEntity(action: (IGameEntity) -> Unit) = set.forEach(action)
 
         internal fun isEmpty() = queue.isEmpty
 
@@ -62,19 +69,40 @@ class GameEngine(
 
     fun spawn(entity: IGameEntity, spawnProps: Properties = Properties()) = if (entity.canSpawn(spawnProps)) {
         val queued = entitiesToSpawn.add(entity, spawnProps)
-        if (queued) onQueueToSpawn?.invoke(entity)
+        if (queued) onSpawnQueued(entity)
         queued
     } else {
         onSpawnRejected?.invoke(entity)
         false
     }
 
+    private fun onSpawnQueued(entity: IGameEntity) {
+        val destroyQueued = entitiesToKill.contains(entity)
+        when (entity.existenceState) {
+            EntityExistenceState.UNSPAWNED ->
+                if (destroyQueued) logSpawnWhileDestroyQueued(entity)
+                else setExistenceState(entity, EntityExistenceState.SPAWN_QUEUED)
+
+            EntityExistenceState.LIVE ->
+                GameLogger.debug(TAG, "spawn(): the entity is live, so onSpawn runs again: $entity")
+
+            EntityExistenceState.DESTROY_QUEUED -> if (destroyQueued) logSpawnWhileDestroyQueued(entity)
+            EntityExistenceState.SPAWN_QUEUED -> {}
+        }
+    }
+
+    private fun logSpawnWhileDestroyQueued(entity: IGameEntity) =
+        GameLogger.debug(TAG, "spawn(): a destroy is queued, so the entity ends destroyed: $entity")
+
     private fun spawnNow(entity: IGameEntity, spawnProps: Properties) {
         entities.add(entity)
 
         if (!entity.initialized) initialize(entity)
         entity.onSpawn(spawnProps)
-        entity.spawned = true
+        setExistenceState(
+            entity,
+            if (entitiesToKill.contains(entity)) EntityExistenceState.DESTROY_QUEUED else EntityExistenceState.LIVE
+        )
 
         updateSystemMembershipsFor(entity)
     }
@@ -86,8 +114,17 @@ class GameEngine(
 
     fun destroy(entity: IGameEntity): Boolean {
         val shouldBeQueued = entitiesToKill.add(entity)
-        if (shouldBeQueued) onQueueToDestroy?.invoke(entity)
+        if (shouldBeQueued) onDestroyQueued(entity)
         return shouldBeQueued
+    }
+
+    private fun onDestroyQueued(entity: IGameEntity) = when (entity.existenceState) {
+        EntityExistenceState.LIVE -> setExistenceState(entity, EntityExistenceState.DESTROY_QUEUED)
+        EntityExistenceState.SPAWN_QUEUED -> setExistenceState(entity, EntityExistenceState.UNSPAWNED)
+        EntityExistenceState.UNSPAWNED ->
+            GameLogger.debug(TAG, "destroy(): the entity is not spawned, so onDestroy runs again: $entity")
+
+        EntityExistenceState.DESTROY_QUEUED -> {}
     }
 
     private fun destroyNow(entity: IGameEntity) {
@@ -97,7 +134,23 @@ class GameEngine(
 
         entity.components.forEach { it.value.reset() }
         entity.onDestroy()
-        entity.spawned = false
+        val respawnQueued = entitiesToSpawn.contains(entity) && !entitiesToKill.contains(entity)
+        setExistenceState(
+            entity,
+            if (respawnQueued) EntityExistenceState.SPAWN_QUEUED else EntityExistenceState.UNSPAWNED
+        )
+    }
+
+    private fun setExistenceState(entity: IGameEntity, state: EntityExistenceState) {
+        val gameEntity = entity as? GameEntity
+            ?: throw IllegalArgumentException("The engine can only hold a GameEntity: $entity")
+        gameEntity.existenceState = state
+    }
+
+    private fun clearQueues() {
+        entitiesToSpawn.forEachEntity { setExistenceState(it, EntityExistenceState.UNSPAWNED) }
+        entitiesToSpawn.clear()
+        entitiesToKill.clear()
     }
 
     fun updateSystemMembershipsFor(entity: IGameEntity) =
@@ -132,8 +185,7 @@ class GameEngine(
                 entities.filter { it.spawned }.forEach { destroyNow(it) }
                 entities.clear()
 
-                entitiesToSpawn.clear()
-                entitiesToKill.clear()
+                clearQueues()
 
                 systems.forEach { it.reset() }
 
@@ -146,8 +198,7 @@ class GameEngine(
         entities.filter { it.spawned }.forEach { destroyNow(it) }
         entities.clear()
 
-        entitiesToSpawn.clear()
-        entitiesToKill.clear()
+        clearQueues()
 
         systems.forEach { it.reset() }
         systems.forEach { it.dispose() }

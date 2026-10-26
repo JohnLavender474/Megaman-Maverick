@@ -169,7 +169,7 @@
  </objectgroup>
  <objectgroup id="4" name="enemies">
   <object id="33" name="Met" x="2560" y="416" width="32" height="32"/>
-  <object id="78" name="Met" x="3968" y="416" width="32" height="32"/>
+  <object id="78" name="Met" x="3840" y="416" width="32" height="32"/>
   <object id="79" name="SniperJoe" x="4224" y="416" width="32" height="32"/>
   <object id="80" name="Darspider" x="4768" y="96" width="32" height="32">
    <properties>

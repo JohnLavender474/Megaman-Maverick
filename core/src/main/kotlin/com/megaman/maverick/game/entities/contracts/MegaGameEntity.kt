@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Pool
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.GameEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -25,7 +26,9 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
     val runnablesOnDestroy = OrderedMap<String, () -> Unit>()
 
-    var dead = true
+    val dead: Boolean
+        get() = existenceState == EntityExistenceState.UNSPAWNED ||
+            existenceState == EntityExistenceState.DESTROY_QUEUED
     var id = 0
         private set
     var group: String? = null

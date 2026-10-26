@@ -97,7 +97,7 @@ class PlayersTest : DescribeSpec({
 
         it("forEach does not filter by spawned") {
             val players = players()
-            players.register(PlayerSlot(0), ScoredEntity().also { it.spawned = false })
+            players.register(PlayerSlot(0), ScoredEntity())
 
             var count = 0
             players.forEach { count++ }

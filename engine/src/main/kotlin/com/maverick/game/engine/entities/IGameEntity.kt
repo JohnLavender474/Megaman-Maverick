@@ -12,7 +12,10 @@ interface IGameEntity : IComponentBucket, IPropertizable, Initializable {
 
     val components: OrderedMap<KClass<out IGameComponent>, IGameComponent>
     var initialized: Boolean
-    var spawned: Boolean
+    val existenceState: EntityExistenceState
+
+    val spawned: Boolean
+        get() = existenceState == EntityExistenceState.LIVE || existenceState == EntityExistenceState.DESTROY_QUEUED
 
     fun canSpawn(spawnProps: Properties): Boolean
 

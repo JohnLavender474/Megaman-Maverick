@@ -20,7 +20,8 @@ abstract class GameEntity(
     }
 
     override var initialized = false
-    override var spawned = false
+    final override var existenceState = EntityExistenceState.UNSPAWNED
+        internal set
 
     override fun init(vararg params: Any) {}
 
