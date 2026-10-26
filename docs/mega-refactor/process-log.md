@@ -754,3 +754,10 @@ newest entry at the bottom.
   branch that moves the `MegaPlayerAccess.kt` callers to entity-level functions (decisions of 2026-10-26 in `ITEM.md`).
   No backlog or bug candidates. `temp-thin-player` and its worktree are deleted. The double space in the item `061` row
   of `ITEMS.md` is fixed.
+
+## 2026-10-26 — master (docs)
+
+- Summary: branch folder `mega-refactor-061b-lifecycle-transport` prepared ahead of time (status `planned`, no branch
+  yet) with a draft `docs/SCOPE.md`. `ITEMS.md` has the branch row.
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews the draft scope (2 open questions: the name `inPlay`, the package).
