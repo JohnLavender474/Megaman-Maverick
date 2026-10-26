@@ -44,11 +44,11 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.RainDrop.RainDropType
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -200,7 +200,7 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
             val mapObjId = (it as MegaGameEntity).id
             if (state == ProcessState.BEGIN &&
                 !ignoreIds.contains(mapObjId) &&
-                (it.asPlayer?.ready ?: true) &&
+                it.inPlay &&
                 !it.isAny(RainFall::class, RainDrop::class)
             ) splash()
         }

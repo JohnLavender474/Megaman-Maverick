@@ -17,6 +17,9 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.PipePortal
+import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.teleporter
+import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getCenter
@@ -96,8 +99,8 @@ fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {
 
 fun Megaman.shouldHideSprite(): Boolean {
     if (frozen) return false
-    if (!ready) return true
-    if (teleporting && getProperty(ConstKeys.TELEPORTER) !is PipePortal) return true
+    if (!inPlay) return true
+    if (teleporting && teleporter !is PipePortal) return true
     return false
 }
 

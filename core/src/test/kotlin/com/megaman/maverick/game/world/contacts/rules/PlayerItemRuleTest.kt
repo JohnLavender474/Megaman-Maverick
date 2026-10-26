@@ -42,7 +42,6 @@ class PlayerItemRuleTest : DescribeSpec({
         megaman = Megaman(game)
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         megaman.addComponent(BehaviorsComponent())
-        megaman.addComponent(megaman.playerState)
         megaman.addComponent(ControllerComponent())
 
         players = MegaPlayers(1)

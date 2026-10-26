@@ -51,7 +51,6 @@ import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.SigmaRatElectricBall
 import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*

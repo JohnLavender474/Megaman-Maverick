@@ -9,10 +9,10 @@ import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.ContactRuleTable
 import com.maverick.game.engine.world.contacts.ContactRulesBuilder
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.direction
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.FixtureType.*
 import com.megaman.maverick.game.world.contacts.rules.*
@@ -35,9 +35,9 @@ fun megaContactRules(game: MegamanMaverickGame, debugFilter: (IFixture, IFixture
         pair(ContactRuleIds.SIDE_ICE, SIDE, ICE, SideIceRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_BLOCK, FEET, BLOCK, FeetBlockRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_ICE, FEET, ICE, FeetIceRule, BEGIN, CONTINUE, END)
-        // TODO: sand splashes for every feet fixture while any player is ready, as it did for the one player; whether
+        // TODO: sand splashes for every feet fixture while any player is in play, as it did for the one player; whether
         //  the feet's own player should count is a co-op rule for item 047
-        pair(ContactRuleIds.FEET_SAND, FEET, SAND, FeetSandRule { game.players.any { it.ready } }, BEGIN, CONTINUE, END)
+        pair(ContactRuleIds.FEET_SAND, FEET, SAND, FeetSandRule { game.players.any { it.entity.inPlay } }, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_SNOW, FEET, SNOW, FeetSnowRule, BEGIN, CONTINUE, END)
         sets(ContactRuleIds.BOUNCER, setOf(BOUNCER), setOf(BODY, FEET, HEAD, SIDE), BouncerRule, BEGIN)
         pair(ContactRuleIds.HEAD_BLOCK, HEAD, BLOCK, HeadBlockRule, BEGIN, CONTINUE, END)

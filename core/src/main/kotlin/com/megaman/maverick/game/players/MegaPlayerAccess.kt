@@ -43,15 +43,6 @@ val MegaPlayer.invincible: Boolean
 val MegaPlayer.damaged: Boolean
     get() = (entity as? AbstractHealthEntity)?.damaged == true
 
-var MegaPlayer.ready: Boolean
-    get() = entity.getComponent(PlayerStateComponent::class)?.ready == true
-    set(value) {
-        entity.require(PlayerStateComponent::class).ready = value
-    }
-
-val MegaPlayer.teleporting: Boolean
-    get() = entity.getComponent(PlayerStateComponent::class)?.teleporting == true
-
 private val MegaPlayer.health: IHealthEntity
     get() = entity as? IHealthEntity ?: missing("health")
 

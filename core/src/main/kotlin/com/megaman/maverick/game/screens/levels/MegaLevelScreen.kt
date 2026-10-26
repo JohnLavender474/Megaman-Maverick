@@ -71,6 +71,7 @@ import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelType
@@ -83,7 +84,6 @@ import com.megaman.maverick.game.players.dead
 import com.megaman.maverick.game.players.direction
 import com.megaman.maverick.game.players.focus
 import com.megaman.maverick.game.players.megaman
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.CameraShaker
@@ -242,7 +242,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         spawnsMan = SpawnsManager(spawns)
         playerSpawnsMan = PlayerSpawnsManager(gameCamera) { current, old ->
-            if (current != null && player.ready) {
+            if (current != null && player.entity.inPlay) {
                 GameLogger.debug(TAG, "playerSpawnsMan(): onChangeSpawn(): current=${current.name}, old=${old?.name}")
 
                 checkpointText.setText("CHECKPOINT ${current.name}")
@@ -924,7 +924,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
          */
 
         // do not allow pausing if Megaman is dead
-        if (!game.paused && !player.dead && player.ready && isPauseButtonRequested()) {
+        if (!game.paused && !player.dead && player.entity.inPlay && isPauseButtonRequested()) {
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }

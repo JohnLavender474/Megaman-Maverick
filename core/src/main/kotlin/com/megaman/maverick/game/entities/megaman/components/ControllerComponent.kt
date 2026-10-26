@@ -18,6 +18,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
@@ -53,7 +55,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
     val attack = ButtonActuator(
         onPressContinued = { delta ->
-            if (!ready || stunned || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JET ||
+            if (!inPlay || stunned || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JET ||
                 (!charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
             ) {
@@ -69,7 +71,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             chargingTimer.update(delta * scalar)
         },
         onJustReleased = {
-            if (stunned || damaged || game.isCameraRotating() || teleporting || !ready ||
+            if (stunned || damaged || game.isCameraRotating() || teleporting || !inPlay ||
                 !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
                 game.isProperty(ConstKeys.ROOM_TRANSITION, true)
             ) {
@@ -77,7 +79,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                     MEGAMAN_CONTROLLER_COMPONENT_TAG,
                     "attack actuator just released, do not shoot: " +
                         "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.isCameraRotating()}, " +
-                        "teleporting=$teleporting, ready=$ready, " +
+                        "teleporting=$teleporting, inPlay=$inPlay, " +
                         "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
                 )
 
@@ -97,10 +99,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val select = ButtonActuator(onJustReleased = {
         when (game.selectButtonAction) {
             SelectButtonAction.NEXT_WEAPON -> {
-                if (!ready || damaged || teleporting) {
+                if (!inPlay || damaged || teleporting) {
                     GameLogger.debug(
                         MEGAMAN_CONTROLLER_COMPONENT_TAG,
-                        "select actuator just released, do nothing: ready=$ready, damaged=$damaged, teleporting=$teleporting"
+                        "select actuator just released, do nothing: inPlay=$inPlay, damaged=$damaged, teleporting=$teleporting"
                     )
                     return@ButtonActuator
                 }
@@ -152,7 +154,7 @@ private fun Megaman.setToNextWeapon() {
 }
 
 private fun Megaman.runLeft(delta: Float) {
-    if (!ready || !canMove || damaged || teleporting ||
+    if (!inPlay || !canMove || damaged || teleporting ||
         input.isPressed(MegaControllerButton.RIGHT) ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround)
     ) {
@@ -196,7 +198,7 @@ private fun Megaman.runLeft(delta: Float) {
 }
 
 private fun Megaman.runRight(delta: Float) {
-    if (!ready || !canMove || damaged || teleporting ||
+    if (!inPlay || !canMove || damaged || teleporting ||
         input.isPressed(MegaControllerButton.LEFT) ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround)
     ) {

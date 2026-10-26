@@ -41,8 +41,8 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.KibboHammer
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -118,7 +118,7 @@ class BuilderKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!targetPlayer.ready) {
+            if (!targetPlayer.entity.inPlay) {
                 loop.reset()
                 stateTimers.values().forEach { it.reset() }
             }

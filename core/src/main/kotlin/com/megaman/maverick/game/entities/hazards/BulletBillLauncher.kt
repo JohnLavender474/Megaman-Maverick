@@ -36,10 +36,10 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.BulletBill
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.dead
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -105,7 +105,7 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!overlapsGameCamera() || targetPlayer.dead || !targetPlayer.ready) {
+        if (!overlapsGameCamera() || targetPlayer.dead || !targetPlayer.entity.inPlay) {
             launchTimer.reset()
             return@UpdatablesComponent
         }

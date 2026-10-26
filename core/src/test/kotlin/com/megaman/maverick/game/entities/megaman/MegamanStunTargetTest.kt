@@ -35,7 +35,6 @@ class MegamanStunTargetTest : DescribeSpec({
         megaman = Megaman(game)
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         megaman.addComponent(BehaviorsComponent())
-        megaman.addComponent(megaman.playerState)
         megaman.addComponent(ControllerComponent())
 
         val players = MegaPlayers(2)
@@ -54,16 +53,6 @@ class MegamanStunTargetTest : DescribeSpec({
             PlayerEventKeys.SLOTS pairTo Array<PlayerSlot>().apply { targets.forEach { add(it) } }
         )
     )
-
-    describe("ready") {
-        it("reads and writes the player state component") {
-            megaman.ready = true
-            megaman.playerState.ready shouldBe true
-
-            megaman.playerState.ready = false
-            megaman.ready shouldBe false
-        }
-    }
 
     describe("shooting") {
         it("reads the shoot animation timer that its setter drives") {

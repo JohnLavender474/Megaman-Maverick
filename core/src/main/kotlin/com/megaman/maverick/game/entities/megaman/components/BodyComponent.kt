@@ -27,6 +27,7 @@ import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -353,7 +354,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
 
-        if (!ready) {
+        if (!inPlay) {
             body.physics.velocity.setZero()
             body.physics.gravity.setZero()
             return@put

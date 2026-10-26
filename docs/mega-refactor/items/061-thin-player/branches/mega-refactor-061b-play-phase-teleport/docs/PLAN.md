@@ -19,13 +19,13 @@ the build and the tests pass and the game plays the same.
   branch `process-log.md` to `active`. Then
   `git worktree add -b mega-refactor-061b-play-phase-teleport .worktrees/mega-refactor-061b-play-phase-teleport master`.
 - Check: `git worktree list`.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
 - Changes: none. A clean build in the worktree.
 - Check: the test counts (expected 501 engine, 159 core) and 114 warnings, in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Play phase
 
@@ -45,7 +45,7 @@ the build and the tests pass and the game plays the same.
 - Check: build and tests pass. A script lists every former `ready` read and write (file, line, negation, value) and
   the new line, and they match one for one. Short launches of `REFACTOR_TEST_029 --room movement` and
   `INTRO_STAGE --room room12` show no exception.
-- Done: no
+- Done: yes
 
 ### 4. Teleportable
 
@@ -67,17 +67,17 @@ the build and the tests pass and the game plays the same.
 - Check: build and tests pass; the one-for-one list for the `teleporting` reads; greps (no `ConstKeys.TELEPORTER`,
   no teleporter reads the hooks, no `PlayerStateComponent`). Short launches of `REFACTOR_TEST_031 --room pipe_portal`,
   `MOON_MAN --room room11` and `WILY_STAGE_3 --room room3` show no exception.
-- Done: no
+- Done: yes
 
 ### 5. Contract checks
 
 - Changes: none (fixes only if a check fails).
 - Check: every automated check in `docs/CONTRACT.md` on a clean build; results in the process log; then the manual
   checks for the owner.
-- Done: no
+- Done: yes
 
 ### 6. Owner's play test and merge
 
 - Check: the owner plays the manual checks and approves the merge; then "Branch merge" in
   `docs/mega-refactor/CLAUDE.md`.
-- Done: no
+- Done: yes

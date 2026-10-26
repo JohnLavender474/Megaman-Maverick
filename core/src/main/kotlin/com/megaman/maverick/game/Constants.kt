@@ -61,7 +61,6 @@ object ConstKeys {
     const val CONTACT = "contact"
     const val COINS = "coin"
     const val THIS = "this"
-    const val TELEPORTER = "teleporter"
     const val LEVEL_POINTS = "level_points"
     const val TIME_SINCE_LAST_FLOATING_POINTS = "time_since_last_floating_points"
     const val LAST_FLOATING_POINTS_TYPE = "last_floating_points_type"

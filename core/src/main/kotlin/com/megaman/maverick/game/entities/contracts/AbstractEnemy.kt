@@ -52,8 +52,6 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.entities.special.CartV2
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-import com.megaman.maverick.game.entities.utils.setStandardOnTeleportEndProp
-import com.megaman.maverick.game.entities.utils.setStandardOnTeleportStartProp
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.players.body
@@ -161,9 +159,6 @@ abstract class AbstractEnemy(
                 }
             }
         }
-
-        setStandardOnTeleportStartProp(this)
-        setStandardOnTeleportEndProp(this)
     }
 
     fun isSpawnBlinking() = !spawnBlinkTimer.isFinished()

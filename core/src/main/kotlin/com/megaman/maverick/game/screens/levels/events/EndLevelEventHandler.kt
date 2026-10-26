@@ -33,6 +33,8 @@ import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
 import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
+import com.megaman.maverick.game.entities.state.PlayPhase
+import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
@@ -41,7 +43,6 @@ import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.direction
 import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.players.megaman
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -165,7 +166,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         if (preBeamTimer.isFinished()) {
             GameLogger.debug(TAG, "pre-beam timer just finished")
 
-            player.ready = false
+            player.entity.setPlayPhase(PlayPhase.POST_PLAY)
 
             val weaponKey = player.megaman.currentWeapon.name
             beamRegion = BEAM_REGIONS.get(weaponKey) ?: BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)

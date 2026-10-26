@@ -33,10 +33,10 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.TubeBeam
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -103,7 +103,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!targetPlayer.ready) return@UpdatablesComponent
+        if (!targetPlayer.entity.inPlay) return@UpdatablesComponent
 
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {

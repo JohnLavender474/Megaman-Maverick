@@ -43,11 +43,11 @@ import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.lightOrNull
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
@@ -346,7 +346,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             entities.clear()
 
             players.forEach { player ->
-                if (player.ready && player.body.getBounds().overlaps(bounds)) {
+                if (player.entity.inPlay && player.body.getBounds().overlaps(bounds)) {
                     val lightSourceDef = lightSourcePool.fetch()
                     lightSourceDef.center.set(player.body.getCenter())
 

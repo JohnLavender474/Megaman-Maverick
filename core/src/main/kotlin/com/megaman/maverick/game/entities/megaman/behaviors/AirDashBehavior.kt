@@ -15,6 +15,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -39,7 +41,7 @@ internal fun Megaman.airDashBehavior(): IBehavior {
         }
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !ready || !canMove || damaged || teleporting || maxTimer.isFinished() ||
+            if (dead || !inPlay || !canMove || damaged || teleporting || maxTimer.isFinished() ||
                 isAnyBehaviorActive(
                     BehaviorType.CLIMBING,
                     BehaviorType.JETPACKING,

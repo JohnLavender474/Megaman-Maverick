@@ -33,6 +33,8 @@ import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
+import com.megaman.maverick.game.entities.state.PlayPhase
+import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.locks.MegaLockGroup
@@ -41,7 +43,6 @@ import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.players.megaman
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -122,7 +123,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
 
-        player.ready = false
+        player.entity.setPlayPhase(PlayPhase.PRE_PLAY)
         player.entity.lock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
         player.body.physics.gravityOn = false
         player.entity.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
@@ -206,7 +207,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
             player.body.physics.gravityOn = true
             player.entity.unlock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
-            player.ready = true
+            player.entity.setPlayPhase(PlayPhase.IN_PLAY)
             player.entity.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
 
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))

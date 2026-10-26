@@ -76,7 +76,6 @@ class MegaPlayersTest : DescribeSpec({
     fun playerEntity() = TestPlayerEntity(game).also {
         it.addComponent(BodyComponent(Body(BodyType.DYNAMIC, 0f, 0f, 2f, 2f)))
         it.addComponent(BehaviorsComponent())
-        it.addComponent(PlayerStateComponent())
         it.addComponent(ControllerComponent())
         it.addComponent(PointsComponent().also { points -> points.putPoints(ConstKeys.HEALTH, Points(0, 10, 10)) })
     }
@@ -86,8 +85,6 @@ class MegaPlayersTest : DescribeSpec({
             val player = MegaPlayers().register(PlayerSlot(0), PlainEntity())
 
             player.hasBody shouldBe false
-            player.ready shouldBe false
-            player.teleporting shouldBe false
             player.damaged shouldBe false
             player.invincible shouldBe true
             player.shooting shouldBe false
@@ -105,7 +102,6 @@ class MegaPlayersTest : DescribeSpec({
             shouldThrow<IllegalStateException> { player.facing }
             shouldThrow<IllegalStateException> { player.focus }
             shouldThrow<IllegalStateException> { player.currentHealth }
-            shouldThrow<MissingComponentException> { player.ready = true }
         }
 
         it("stores the view on its entity, and asPlayer reads it") {
@@ -128,7 +124,7 @@ class MegaPlayersTest : DescribeSpec({
             player.body shouldBeSameInstanceAs newBody
         }
 
-        it("reads direction, facing, dead, invincible and ready from the entity, and writes ready") {
+        it("reads direction, facing, dead and invincible from the entity") {
             val entity = playerEntity()
             val player = MegaPlayers().register(PlayerSlot(0), entity)
 
@@ -136,29 +132,21 @@ class MegaPlayersTest : DescribeSpec({
             entity.facing = Facing.LEFT
             entity.dead = false
             entity.invincible = true
-            entity.getComponent(PlayerStateComponent::class)!!.ready = true
 
             player.direction shouldBe Direction.LEFT
             player.facing shouldBe Facing.LEFT
             player.dead shouldBe false
             player.invincible shouldBe true
-            player.ready shouldBe true
-
-            player.ready = false
-
-            entity.getComponent(PlayerStateComponent::class)!!.ready shouldBe false
         }
 
-        it("reads teleporting and the light, calls the gravity device receiver, and depletes health") {
+        it("reads the light, calls the gravity device receiver, and depletes health") {
             val entity = playerEntity()
             val player = MegaPlayers().register(PlayerSlot(0), entity)
 
-            entity.getComponent(PlayerStateComponent::class)!!.teleporting = true
             entity.playerLight = PlayerLight.JETPACK
             player.onGravityDeviceSwitch()
             player.depleteHealth()
 
-            player.teleporting shouldBe true
             player.lightOrNull shouldBe PlayerLight.JETPACK
             entity.deviceSwitches shouldBe 1
             entity.getCurrentHealth() shouldBe 0
@@ -179,7 +167,6 @@ class MegaPlayersTest : DescribeSpec({
             val megaman = Megaman(game)
             megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
             megaman.addComponent(BehaviorsComponent())
-            megaman.addComponent(megaman.playerState)
             megaman.addComponent(ControllerComponent())
 
             val player = MegaPlayers().register(PlayerSlot(0), megaman)

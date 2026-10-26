@@ -13,6 +13,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -22,7 +24,7 @@ const val MEGAMAN_JUMP_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: JumpBehavior
 internal fun Megaman.jumpBehavior(): IBehavior {
     return FunctionalBehaviorImpl(
         evaluate = {
-            if (dead || !ready || !canMove || damaged || teleporting ||
+            if (dead || !inPlay || !canMove || damaged || teleporting ||
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 !input.isPressed(MegaControllerButton.A) ||

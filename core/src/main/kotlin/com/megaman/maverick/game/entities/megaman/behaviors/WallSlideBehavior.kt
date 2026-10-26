@@ -9,6 +9,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
@@ -16,7 +17,7 @@ const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSl
 internal fun Megaman.wallSlideBehavior(): IBehavior {
     return FunctionalBehaviorImpl(
         evaluate = evaluate@{
-            if (dead || !ready || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
+            if (dead || !inPlay || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isBehaviorActive(BehaviorType.JETPACKING) || !wallSlideNotAllowedTimer.isFinished() ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@evaluate false

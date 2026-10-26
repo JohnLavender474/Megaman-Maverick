@@ -52,6 +52,8 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.state.beginTeleport
+import com.megaman.maverick.game.entities.state.endTeleport
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -177,8 +179,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             return
         }
 
-        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
-        onPortalStart?.invoke(this)
+        entity.beginTeleport(this)
 
         outgoingBodies.put(entity, Timer(SEND_DELAY))
     }
@@ -255,8 +256,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
                 requestToPlaySound(SoundAsset.TELEPORT_SOUND, false)
 
-                val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
-                onPortalEnd?.invoke()
+                entity.endTeleport()
 
                 ignoredBodies.add(entity)
 

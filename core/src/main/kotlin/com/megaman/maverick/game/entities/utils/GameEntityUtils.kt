@@ -24,7 +24,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
@@ -135,10 +134,6 @@ fun standardOnTeleportStart(entity: GameEntity) {
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = true }
 }
 
-fun setStandardOnTeleportStartProp(entity: GameEntity) {
-    entity.putProperty(ConstKeys.ON_TELEPORT_START, { _: ITeleporterEntity -> standardOnTeleportStart(entity) })
-}
-
 fun setStandardOnTeleportContinueProp(entity: GameEntity) {
     entity.putProperty(ConstKeys.ON_TELEPORT_CONTINUE, { standardOnTeleportStart(entity) })
 }
@@ -153,10 +148,6 @@ fun standardOnTeleportEnd(entity: GameEntity) {
         body.forEachFixture { fixture -> fixture.setActive(true) }
     }
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = false }
-}
-
-fun setStandardOnTeleportEndProp(entity: GameEntity) {
-    entity.putProperty(ConstKeys.ON_TELEPORT_END, { standardOnTeleportEnd(entity) })
 }
 
 fun IBodyEntity.moveTowards(target: Vector2, speed: Float, lerp: Boolean = false, lerpScalar: Float = 1f) {

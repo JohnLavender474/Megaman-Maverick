@@ -14,6 +14,9 @@ import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.special.PipePortal
+import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.teleporter
+import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -31,7 +34,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     game.isCameraRotating() -> amendKey(if (damaged) "damaged" else "jump")
 
-    !ready -> "spawn"
+    !inPlay -> "spawn"
 
     frozen -> "frozen"
 
@@ -39,8 +42,8 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 
     damaged -> "damaged"
 
-    teleporting && getProperty(ConstKeys.TELEPORTER) is PipePortal -> {
-        val pipePortal = getProperty(ConstKeys.TELEPORTER) as PipePortal
+    teleporting && teleporter is PipePortal -> {
+        val pipePortal = teleporter as PipePortal
 
         val action = when {
             pipePortal.isEntering(this) -> "entering"

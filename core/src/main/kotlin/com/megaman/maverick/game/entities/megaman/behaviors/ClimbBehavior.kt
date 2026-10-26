@@ -16,6 +16,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -30,7 +31,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
         private lateinit var ladder: IBodyEntity
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !ready || !canMove) return false
+            if (dead || !inPlay || !canMove) return false
 
             if (damaged || !body.properties.containsKey(ConstKeys.LADDER) || isAnyBehaviorActive(
                     BehaviorType.JUMPING,

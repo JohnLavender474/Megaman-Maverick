@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -573,7 +574,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
     fun isDepleted(weapon: MegamanWeapon) = getAmmo(weapon) == 0
 
     fun canFireWeapon(weapon: MegamanWeapon, stat: MegaChargeStatus): Boolean {
-        if (!megaman.ready) {
+        if (!megaman.inPlay) {
             GameLogger.debug(TAG, "canFireWeapon(): cannot fire $weapon: megaman is not ready")
             return false
         }

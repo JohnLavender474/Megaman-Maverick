@@ -40,6 +40,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.beginTeleport
+import com.megaman.maverick.game.entities.state.endTeleport
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -195,8 +197,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
             Direction.RIGHT -> entity.body.setCenterLeftToPoint(hopPoint)
         }
 
-        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
-        onPortalStart?.invoke(this)
+        entity.beginTeleport(this)
 
         // if (bodyDirection != null) entity.body.direction = bodyDirection
         if (entityDirection != null) {
@@ -248,8 +249,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
                 requestToPlaySound(SoundAsset.FLOATING_PORTAL_SOUND, false)
 
-                val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
-                onPortalEnd?.invoke()
+                entity.endTeleport()
 
                 val velocity = entity.body.physics.velocity
                 when (direction) {

@@ -11,6 +11,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.components.require
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.events.Event
@@ -30,6 +31,10 @@ import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
+import com.megaman.maverick.game.entities.state.TeleportableComponent
+import com.megaman.maverick.game.entities.state.beginTeleport
+import com.megaman.maverick.game.entities.state.endTeleport
+import com.megaman.maverick.game.entities.state.teleporter
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
@@ -121,7 +126,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         if (entity.asPlayer != null) {
             game.setFocusSnappedAway(false)
-            entity.putProperty(ConstKeys.TELEPORTER, this)
+            entity.require(TeleportableComponent::class).teleporter = this
         }
 
         requestToPlaySound(SoundAsset.SMB3_PIPE_SOUND, false)
@@ -140,13 +145,9 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         entering.put(entity, Timer(TELEPORT_DUR))
 
-        val onPortalStart = entity.getProperty(ConstKeys.ON_TELEPORT_START) as? (ITeleporterEntity) -> Unit
-        onPortalStart?.invoke(this)
+        entity.beginTeleport(this)
 
-        if (entity.asPlayer != null) {
-            game.setFocusSnappedAway(true)
-            entity.putProperty(ConstKeys.TELEPORTER, this)
-        }
+        if (entity.asPlayer != null) game.setFocusSnappedAway(true)
 
         requestToPlaySound(SoundAsset.SMB3_PIPE_SOUND, false)
     }
@@ -228,8 +229,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "update(): receive timer finished; thisKey=$thisKey, entity=$entity")
 
-                val onPortalEnd = entity.getProperty(ConstKeys.ON_TELEPORT_END) as? () -> Unit
-                onPortalEnd?.invoke()
+                entity.endTeleport()
 
                 exitingIter.remove()
             }

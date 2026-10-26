@@ -13,6 +13,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: GroundSlideBehavior"
@@ -29,7 +30,7 @@ internal fun Megaman.groundSlideBehavior(): IBehavior {
         override fun evaluate(delta: Float): Boolean {
             cooldown.update(delta)
 
-            if (dead || !ready || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
+            if (dead || !inPlay || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isBehaviorActive(BehaviorType.JETPACKING) || !cooldown.isFinished() ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false

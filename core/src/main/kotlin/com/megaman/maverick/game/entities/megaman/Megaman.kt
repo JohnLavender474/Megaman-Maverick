@@ -18,6 +18,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.components.require
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.damage.IDamager
 import com.maverick.game.engine.entities.contracts.*
@@ -51,6 +52,9 @@ import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
+import com.megaman.maverick.game.entities.state.PlayPhaseComponent
+import com.megaman.maverick.game.entities.state.TeleportableComponent
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
@@ -65,7 +69,6 @@ import com.megaman.maverick.game.locks.behaviorsLockHook
 import com.megaman.maverick.game.players.GravityDeviceComponent
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
-import com.megaman.maverick.game.players.PlayerStateComponent
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.state.IGameStateListener
@@ -114,7 +117,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         get() = !stunTimer.isFinished()
 
     override val invincible: Boolean
-        get() = damaged || !damageRecoveryTimer.isFinished() || isLocked(MegaLockGroup.DAMAGE) || dead || !ready
+        get() = damaged || !damageRecoveryTimer.isFinished() || isLocked(MegaLockGroup.DAMAGE) || dead || !inPlay
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
     override var frozen = false
@@ -133,7 +136,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
 
-    val playerState = PlayerStateComponent()
     internal val chargingTimer = Timer(
         MegamanValues.TIME_TO_FULLY_CHARGED,
         TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
@@ -191,12 +193,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         get() = when (currentWeapon) {
             MegamanWeapon.MEGA_BUSTER -> Int.MAX_VALUE
             else -> weaponsHandler.getAmmo(currentWeapon)
-        }
-
-    var ready: Boolean
-        get() = playerState.ready
-        set(value) {
-            playerState.ready = value
         }
 
     override var direction: Direction
@@ -289,7 +285,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         }
 
     var running: Boolean
-        get() = ready && getProperty(ConstKeys.RUNNING, Boolean::class)!!
+        get() = inPlay && getProperty(ConstKeys.RUNNING, Boolean::class)!!
         set(value) {
             putProperty(ConstKeys.RUNNING, value)
         }
@@ -302,12 +298,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                     else -> body.physics.velocity.y
                 }
             ) >= MegamanValues.SLIP_SLIDE_THRESHOLD * ConstVals.PPM
-
-    var teleporting: Boolean
-        get() = playerState.teleporting
-        private set(value) {
-            playerState.teleporting = value
-        }
 
     var movementScalar = 1f
         set(value) {
@@ -344,7 +334,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         GameLogger.debug(TAG, "init()")
         super.init()
 
-        addComponent(playerState)
+        addComponent(PlayPhaseComponent())
+        addComponent(TeleportableComponent())
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
         addComponent(defineBehaviorsComponent())
@@ -468,7 +459,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         running = false
 
         clearLocks(MegaLockGroup.MOVEMENT)
-        teleporting = false
+        require(TeleportableComponent::class).teleporter = null
         clearLocks(MegaLockGroup.DAMAGE)
         recoveryFlash = false
         canMakeLandSound = false
@@ -498,29 +489,23 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         pendingPostActionMomentumKill = false
         airDashConsumed = false
 
-        putProperty(ConstKeys.ON_TELEPORT_START, { teleporter: ITeleporterEntity ->
+        putProperty(ConstKeys.ON_TELEPORT_START, { _: ITeleporterEntity ->
             stopCharging()
             standardOnTeleportStart(this)
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
-            teleporting = true
             lock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-            putProperty(ConstKeys.TELEPORTER, teleporter)
         })
         setStandardOnTeleportContinueProp(this)
         putProperty(ConstKeys.ON_TELEPORT_END, {
             stopCharging()
             standardOnTeleportEnd(this)
             aButtonTask = AButtonTask.AIR_DASH
-            teleporting = false
             unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
             game.setFocusSnappedAway(false)
-            removeProperty(ConstKeys.TELEPORTER)
         })
 
         removeProperty(ConstKeys.FOCUS)
         game.setFocusSnappedAway(false)
-
-        removeProperty(ConstKeys.TELEPORTER)
 
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo players.slotOf(this)!!)))
     }
@@ -536,8 +521,6 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo players.slotOf(this)!!)))
 
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
-
-        removeProperty(ConstKeys.TELEPORTER)
     }
 
     override fun onHealthDepleted() {
@@ -826,7 +809,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 if (trailSpriteSpawned) trailSpriteTimer.reset()
             }
 
-            if (ready) spawningTimer.update(delta)
+            if (inPlay) spawningTimer.update(delta)
 
             frozenPushTimer.update(delta)
             if (frozen) {

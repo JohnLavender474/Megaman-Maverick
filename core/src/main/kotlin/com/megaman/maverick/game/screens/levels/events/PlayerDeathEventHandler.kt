@@ -16,11 +16,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.state.PlayPhase
+import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -56,7 +57,7 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
         player.body.physics.gravityOn = false
-        player.ready = false
+        player.entity.setPlayPhase(PlayPhase.POST_PLAY)
 
         game.audioMan.playSound(SoundAsset.DEFEAT_SOUND)
     }

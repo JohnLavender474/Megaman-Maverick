@@ -57,11 +57,11 @@ import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.projectiles.PreciousGemBomb.Companion.SHATTER_IMPULSES
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
+import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.direction
-import com.megaman.maverick.game.players.teleporting
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
@@ -392,7 +392,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
 
-            sprite.hidden = damageBlink || owner.asPlayer?.teleporting == true
+            sprite.hidden = damageBlink || owner?.teleporting == true
 
             sprite.setCenter(body.getCenter())
         }

@@ -45,11 +45,11 @@ import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.lightOrNull
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -529,7 +529,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         // Collect Megaman light source on main thread
         players.forEach { player ->
-            if (player.ready && player.body.getBounds().overlaps(bounds)) {
+            if (player.entity.inPlay && player.body.getBounds().overlaps(bounds)) {
                 val lightSourceDef = lightSourcePool.fetch()
                 lightSourceDef.center = player.body.getCenter()
 

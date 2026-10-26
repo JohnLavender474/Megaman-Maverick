@@ -47,12 +47,12 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.direction
-import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getFirstLocalPoint
@@ -245,7 +245,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         if (!beaming) {
-            if (targetPlayer.present && targetPlayer.ready && overlapsGameCamera()) {
+            if (targetPlayer.present && targetPlayer.entity.inPlay && overlapsGameCamera()) {
                 beaming = true
                 laser?.on = true
                 requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)

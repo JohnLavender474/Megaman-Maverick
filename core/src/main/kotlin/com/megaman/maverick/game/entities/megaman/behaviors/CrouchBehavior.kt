@@ -9,6 +9,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
+import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -28,7 +29,7 @@ internal fun Megaman.crouchBehavior(): IBehavior {
 
             if (!buttonToCrouchDelay.isFinished() || !groundSlideToCrouchDelay.isFinished()) return false
 
-            if (dead || damaged || !ready || !canMove || game.isCameraRotating() ||
+            if (dead || damaged || !inPlay || !canMove || game.isCameraRotating() ||
                 isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.JETPACKING) ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
                 !input.isPressed(MegaControllerButton.DOWN) ||
