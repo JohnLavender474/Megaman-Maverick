@@ -670,3 +670,12 @@ newest entry at the bottom.
   (`KClassImpl` hashing and `KClass.cast`), not an allocation. The branch process log has the same correction.
 - Contract check: not needed (docs only).
 - Follow-up: the owner decides whether the component-key research becomes an item.
+
+## 2026-10-26 — master (docs)
+
+- Summary: the owner skips the component-key research for now (no item). Item `031`: the rest of the item splits into
+  `031c` (input pipeline, parity), `031d` (devices) and `031e` (bindings), plus a later menu-input branch, with five
+  choices for `031c` (decisions of 2026-10-26 in `ITEM.md`). Branch folder `mega-refactor-031c-input-pipeline`
+  prepared ahead of time (status `planned`, no branch yet) with a draft `docs/SCOPE.md`. `ITEMS.md` has the branch row.
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews the draft scope.

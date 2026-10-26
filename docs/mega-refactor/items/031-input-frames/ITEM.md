@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`
-- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged); next: `031c` (device adapters), `031d` (per-slot bindings), see `NOTES.md`
+- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged); next: `031c` (input pipeline, parity), `031d` (devices), `031e` (per-slot bindings), then the menu-input branch
 
 ## Goal
 
@@ -80,6 +80,17 @@ Answer to review item 30 (2026-10-22, verbatim):
   touch device adapter adds a `TODO` there for the mobile work.
 - 2026-10-25 (bindings): no migration of the old binding prefs. The new settings start from the defaults, and
   players set their bindings again once. The old prefs files are left on disk, unused.
+- 2026-10-26: the rest of `031` splits into a parity branch and two branches with intended changes. `031c`: the new
+  input pipeline with the same behavior (device adapters for the keyboard and gamepad 0, one held mask per device, an
+  engine edge builder that holds the lock, the poller removed; proved by a temporary contract suite against a frozen
+  copy of the poller). `031d`: devices (the keyboard aliases, every connected gamepad with the index-shift and code-0
+  fixes, the stick at `0.5`, the triggers). `031e`: bindings (the content planned before as `031d`). A later branch
+  moves the menus and skip screens to frames, with `Esc` and the back action.
+- 2026-10-26 (for `031c`): `ControllerButtons` stays as the storage of the key and gamepad codes only, so the bindings
+  screen does not change (`031e` replaces the storage); the menus and skip screens read a thin `IControllerPoller`
+  facade over the slot-0 frame until the menu-input branch; the edge builder drops the `enabled` flag (no production
+  code sets it); the lock moves to the edge builder and is still switched by `TURN_CONTROLLER_*` (`012` replaces the
+  events later); the edge builder goes in the engine and the device adapters in core, so the engine reads no device.
 
 ## Open questions
 
