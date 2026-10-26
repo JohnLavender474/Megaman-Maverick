@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time on `master`,
 before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 This branch moves `InputFrame` and `InputSource` to the engine (with `InputButton`), gives each controlled entity its
 own input source on `ControllerComponent`, and makes `ControllerSystem` dispatch from that source in button-index
