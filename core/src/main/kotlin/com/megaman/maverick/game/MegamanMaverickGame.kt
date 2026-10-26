@@ -2,7 +2,6 @@ package com.megaman.maverick.game
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Music
@@ -132,7 +131,7 @@ class MegamanMaverickGameParams {
     var pixelPerfect: Boolean = false
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
-    var allowScreenshots: Boolean = false
+    var screenshotTrigger: (() -> Boolean)? = null
     var showScreenController: Boolean = false
     var vsync: Boolean = false
     var diagnostics: Boolean = false
@@ -161,7 +160,6 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
-        private const val SCREENSHOT_KEY = Input.Keys.P
         private const val AUTO_PERF_SUSTAINED_DUR = 3f
         private const val AUTO_PERF_GRACE_DUR = 5f         // suppression window after any perf change
         private const val AUTO_PERF_NEAR_DEFICIT = 5       // fps below target → ~10s tolerance
@@ -556,20 +554,17 @@ class MegamanMaverickGame(
                 }
             }
 
-            if (params.allowScreenshots) {
-                val takeScreenshot = Gdx.input.isKeyJustPressed(SCREENSHOT_KEY)
-                if (takeScreenshot) {
-                    diagnostics?.beginEntry("screenshot")
+            if (params.screenshotTrigger?.invoke() == true) {
+                diagnostics?.beginEntry("screenshot")
 
-                    val currentTime = LocalDateTime.now().toString()
-                    val filename = "screenshot_${currentTime}.png"
+                val currentTime = LocalDateTime.now().toString()
+                val filename = "screenshot_${currentTime}.png"
 
-                    val pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.width, Gdx.graphics.height)
-                    PixmapIO.writePNG(Gdx.files.external(filename), pixmap, Deflater.DEFAULT_COMPRESSION, true)
-                    pixmap.dispose()
+                val pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.width, Gdx.graphics.height)
+                PixmapIO.writePNG(Gdx.files.external(filename), pixmap, Deflater.DEFAULT_COMPRESSION, true)
+                pixmap.dispose()
 
-                    diagnostics?.endEntry()
-                }
+                diagnostics?.endEntry()
             }
 
             diagnostics?.beginEntry("eventsMan")

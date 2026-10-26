@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.lwjgl3
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter
@@ -134,7 +136,9 @@ object DesktopLauncher {
         params.pixelPerfect = appArgs.pixelPerfect
         params.writeLogsToFile = appArgs.writeLogsToFile
         params.fixedStepScalar = appArgs.fixedStepScalar
-        params.allowScreenshots = appArgs.allowScreenshots
+        // TODO: the screenshot trigger is hard-coded to the `P` key; it moves to a system key or a binding with the
+        //  input work of item 031 (see its NOTES.md, "Owner's answers on bindings")
+        if (appArgs.allowScreenshots) params.screenshotTrigger = { Gdx.input.isKeyJustPressed(Input.Keys.P) }
         params.showScreenController = appArgs.showScreenController
         params.diagnostics = appArgs.diagnostics
         params.worldContainer = appArgs.worldContainer

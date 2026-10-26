@@ -513,3 +513,14 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: filed `2026-10-25-preferred-controller-code-zero.md` and `2026-10-25-bindings-screen-restarts-level.md`.
   The screenshot trigger change follows as a direct change to `master`.
+
+## 2026-10-25 — master (direct change)
+
+- Summary: the screenshot logic in `MegamanMaverickGame` no longer knows the `P` key. `MegamanMaverickGameParams`
+  has `screenshotTrigger: (() -> Boolean)?` in place of `allowScreenshots`. With `--allowScreenshots`, the launcher
+  gives `{ Gdx.input.isKeyJustPressed(Input.Keys.P) }`, with a `TODO` that it moves to a system key or a binding
+  with item `031`. Owner's request (answer 3 on the `031` bindings questions). A direct change to `master`, not a
+  branch: small, no gameplay change (the same key and the same flag), and not part of an active branch.
+- Contract check: build passes; 470 engine and 144 core tests, 0 failures; a launch of `TEST_1` with
+  `--allowScreenshots` showed no exception.
+- Follow-up: the `TODO` in `DesktopLauncher.kt` points to item `031`.
