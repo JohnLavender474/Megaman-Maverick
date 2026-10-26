@@ -3,10 +3,11 @@ package com.megaman.maverick.game.players
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.Players
 import com.megaman.maverick.game.entities.contracts.IMegaGameEntity
+import com.megaman.maverick.game.input.InputSource
 import com.megaman.maverick.game.input.PlayerInputs
 
 class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(capacity)) :
-    Players<MegaPlayer>(capacity, { slot, entity -> MegaPlayer(slot, entity) { inputs[slot] } }) {
+    Players<MegaPlayer>(capacity, { slot, entity -> MegaPlayer(slot, entity, InputSource { inputs[slot] }) }) {
 
     // TODO: always gives slot 0. Targeting should not be a service-wide function, and targetPlayer should not exist on
     //  every entity: not every entity needs a target player (blocks do not), and each entity that does has its own

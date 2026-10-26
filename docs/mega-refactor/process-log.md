@@ -607,3 +607,16 @@ newest entry at the bottom.
   comparison). The owner played every manual check: "All tests pass".
 - Follow-up: item `031` stays active; the next branches are `031b`, `031c` and `031d` (item `NOTES.md`). No backlog
   or bug candidates.
+
+## 2026-10-26 — master (direct change)
+
+- Summary: `MegaPlayer` reads only its own slot's input. `3306253a7` gave each view a reader for its slot in place of
+  the whole `PlayerInputs` store. That reader was a `() -> InputFrame` lambda, which boxes the value class on each
+  read (the bytecode showed `InputFrame.box-impl` in the lambda and `checkcast` plus `unbox-impl` in `getInput`). This
+  commit replaces it with `input/InputSource`, a `fun interface` with a non-generic `read()`, which returns a plain
+  `Int`. Owner's request, after the review of `031a`. A direct change to `master`, not a branch: two small edits to the
+  players view, no change in gameplay. `3306253a7` did not name itself a direct change or log one; this entry covers
+  both commits.
+- Contract check: build passes; 470 engine and 157 core tests, 0 failures; `lwjgl3:jar` builds; `javap` shows
+  `InputSource.read-b3ISFDg()I` and no box or unbox in `MegaPlayer.getInput`.
+- Follow-up: `InputSource` is the input type that `031b` uses (see item `031` `NOTES.md`).
