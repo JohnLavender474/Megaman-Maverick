@@ -639,3 +639,22 @@ newest entry at the bottom.
   (status `planned`, no branch yet) with a draft `docs/SCOPE.md`. `ITEMS.md` has the branch row.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the draft scope (4 open questions).
+
+## 2026-10-26 — mega-refactor-031b-engine-input
+
+- Summary: input frames are an engine mechanism. The engine `input/` package has `InputButton` (an explicit `index`)
+  with `checkInputButtons`, `InputFrame` (a value class over a `Long`, 2 bits per button, 32 buttons) and
+  `InputSource`. `MegaControllerButton` implements `InputButton` (index equal to its ordinal). Each controlled entity
+  holds its source on `ControllerComponent`; the slot view binds it. `ControllerSystem` reads each entity's source once
+  per update and dispatches in button index order; the actuators lose the poller parameter. `Megaman.input` reads its
+  cached `ControllerComponent`, not `asPlayer`. The poller stays the only source of input. Intended change: the
+  actuator order is fixed (LEFT, RIGHT, B, SELECT); on `master` it was the hash order of an `ObjectMap`. Squash commit
+  `46ad99b55`.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` (clean build; 481 engine and 161 core tests,
+  0 failures; 114 warnings; jar; contact file unchanged; greps; `javap` shows no boxing in the read path; single
+  build point). The `javap` check found a `ClassReference` allocation per read in `Megaman.input`, fixed in the branch
+  by caching the component. The owner played the manual checks: "Branch tests pass".
+- Follow-up: item `031` stays active; next are `031c` (devices, one edge builder with the lock) and `031d`
+  (bindings), and a later menu-input branch (`Esc`, back action, menus and skip screens on frames). No backlog or bug
+  candidates. A research agent is checking whether components should have keys other than `KClass` (the `ClassReference`
+  finding); the owner decides after its report whether that becomes an item.
