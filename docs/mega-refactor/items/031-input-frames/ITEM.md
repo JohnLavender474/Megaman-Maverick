@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`
-- Branches: none yet
+- Branches: `mega-refactor-031a-input-frame` (planned)
 
 ## Goal
 

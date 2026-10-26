@@ -586,3 +586,10 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: filed `2026-10-25-gamepad-index-shift-keeps-old-codes.md`, `2026-10-25-reset-to-defaults-not-saved.md`,
   `2026-10-25-capture-state-left-after-gamepad-disconnect.md` and `2026-10-25-jamepad-version-mismatch.md`.
+
+## 2026-10-25 — master (docs)
+
+- Summary: branch folder `mega-refactor-031a-input-frame` prepared ahead of time (status `planned`, no branch yet),
+  with a draft `docs/SCOPE.md` for Option 2. `ITEMS.md` has the branch row.
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews the draft scope (3 open questions).
