@@ -1152,3 +1152,184 @@ into factory functions. `CharacterDef` waits for the Proto Man item, so that two
 
 A proposal that touches this item (driver, thin slot view, faction; the owner's "boss becomes playable" case) is in
 `031` `NOTES.md`, "Who drives an entity: driver, slot view and side". Not decided.
+
+## `MegaPlayer` review and engine patterns (2026-10-26)
+
+Two research agents, on `master` at `43f1d5742`. A proposal for discussion, not decided. The owner's questions after
+the first two reports are at the end of this section; a third research report (functions, components and events
+instead of classes) follows in its own section.
+
+### Why `MegaPlayer` is big
+
+`MegaPlayer` (`core/.../players/MegaPlayer.kt`, 150 lines, 37 public members) is a forwarding façade. `029` built it
+as a one-to-one replacement for each `game.megaman.X` call site. In effect it is "Megaman, with its type hidden".
+
+Member inventory (from `grep` on `core/src/main`; receivers `targetPlayer`, `player`, `it` in `players.*` lambdas,
+`asPlayer`; the engine has no callers):
+
+| Member | Lines / files | Who uses it | Note |
+|---|---|---|---|
+| `body` | ~414 / 136 (`targetPlayer.body`) + 62 (`player.body`) | enemies, bosses, hazards | `getX` 172, `getCenter` 138, `getBounds` 74; writes: `physics` 32, `setCenter*` 4 |
+| `direction` (get/set) | 27 | enemies, bosses | only setter: `WorldGravity.kt:13` (runs Megaman's gravity table, `Megaman.kt:239-265`) |
+| `facing` (get/set) | 8 | blocks, hazards | only setter: `WilyFinalBoss.kt:299` |
+| `dead` | 21 | enemies, level screen | forwards to `MegaGameEntity.dead` |
+| `ready` (get/set) | 13 | handlers write, hazards read | flag in `PlayerStateComponent` |
+| `canBeDamaged` (get/set) | 7 / 5 | handlers, 1 boss, 1 hazard | only `Megaman.invincible` reads it (`Megaman.kt:111`) |
+| `setAllBehaviorsAllowed` | 5 / 3 | handlers, `SpiderWeb` | forwards to `BehaviorsComponent` |
+| `allowMovement` | 2 / 1 | `SpiderWeb` | only `Megaman.canMove` reads it (`Megaman.kt:124`) |
+| `input` | 9 / 5 | special, block, level screen | duplicates `ControllerComponent.input` |
+| `slot` | 11 / 10 | items, enemy drops | real slot identity |
+| six fixture getters (`feet`, `left/rightSide`, `head`, `damageable`, `feetGravity`) | 1-10 each | blocks, special | string-keyed body properties with Megaman's fixture names |
+| `currentHealth`, `maxHealth`, `translateHealth`, `healthRatio`, `depleteHealth` | 1-5 each | HUD, pause, drops, kill zones | forward to `IHealthEntity` |
+| `isBehaviorActive`, `isAnyBehaviorActive` | 4, 1 | few | forward to `BehaviorsComponent` |
+| `light` | 4 | `Darkness*` only | Megaman-only (`PlayerKeys.LIGHT`) |
+| `onGravityDeviceSwitch` | 1 | `GravitySwitcharoo` | Megaman-only |
+| `shooting`, `damaged` | 1, 3 | `AbstractEnemy`, 2 bosses | borrow Megaman's `shootAnimTimer` and `damageTimer` |
+| `teleporting`, `invincible`, `focus`, `spawn`, `present` | 1-2 each | few | flags or forwards |
+| `add/removeDamageListener` | 1 each | `AbstractBoss` (every boss registers) | only `PreciousWoman.kt:305` reacts |
+| `entity` | 5 / 3 | escape hatch | followed by a cast |
+
+- About 22 of the 37 members only forward to a component or an interface the entity already has.
+- 9 members have one caller file. Megaman-specific: `light`, `onGravityDeviceSwitch`, `shooting`, the 6 fixture
+  getters, and the `megaman` downcast (`PlayerExtensions.kt:12`, 19 uses in 7 files: weapon, ammo, sprite look).
+- No fully dead members.
+
+### Smells
+
+- **Forwarding façade and fat interface.** A caller that needs a position also gets `depleteHealth`, `spawn`,
+  `setAllBehaviorsAllowed` and the `facing` setter. Enemies can write the player's state.
+- **The constructor forces Megaman's shape** (`MegaPlayer.kt:31-48`): `IDirectional`, `IFaceable`, `IDamageable`,
+  `IHealthEntity`, `MegaGameEntity`, `IFocusable`; `BodyComponent`, `BehaviorsComponent`, `PlayerStateComponent`,
+  `ControllerComponent`; two property lambdas. A boss or Proto Man must fake the lambdas to register. The engine
+  `IFaceable` and `IDirectional` have only `var`, so 35 read-only callers get write access for 2 writers.
+- **`PlayerStateComponent` is honored only by `Megaman`** (`Megaman.kt:111`, `:124`, `:726`; timers borrowed at
+  `Megaman.kt:138`; no `reset()`). Handlers that set the flags on any other entity have no effect, and nothing
+  reports it.
+- **`asPlayer` means three things** (side, player-body rules, player state); 152 uses in 64 files; a property lookup
+  on each call.
+- **String-keyed fixtures**, two cast styles, one map lookup per access.
+- **Lifecycle:** `unregister` leaves `PlayerKeys.VIEW` and the input source on the entity (`TODO` at
+  `MegaPlayer.kt:49`); `AbstractBoss` adds its damage listener only to players present at its spawn.
+- **Reversed dependency:** `Megaman` reads its own view to fire its damage listeners (`Megaman.kt:725`).
+- **Co-op leak:** `FeetSandRule { game.players.any { it.ready } }` (`MegaContactRules.kt:37`) checks any player, not
+  the player in the contact.
+- **`invincible` and `canBeDamaged` overlap:** `Megaman.invincible` includes `!canBeDamaged || !ready`.
+
+### Options compared (first review)
+
+| | (a) Thin view + capabilities | (b) Role interfaces | (c) Events for writes | (d) Plain component reads |
+|---|---|---|---|---|
+| Targeting | `view.entity` → body component, facing | `ITargetable` on the entity | not suitable | read the components |
+| Damage gating | a locks capability | `IDamageGate` | an event: 1 frame late | read a locks component |
+| Level locks | capability lookup | `ILockable.lock(reason)` | handlers only | write a locks component |
+| HUD | loadout capability | `IHasLoadout` | not suitable | loadout component |
+| Proto Man | supplies only what it has | implements the roles it has | same | adds the components it has |
+| Playable boss | new view; missing parts give `null` | must implement the roles | — | add components at the switch |
+| Cost per call | 1 map lookup (cacheable) | a virtual call | allocates an `Event` and `Properties`; 1 frame late | 1 map lookup (cacheable) |
+
+Events in this engine are buffered until `eventsMan.run()` after the render, so a write sent as an event acts one
+frame late. The first review rejected events for locks, gravity and targeting for that reason, and kept them only
+for the player-damaged notification (only `PreciousWoman` reacts; a one-frame delay there is probably harmless,
+inferred).
+
+### How other engines and games do it (second review)
+
+Scope: beyond reviews 4 and 5 above. Tags: [web] with a source, [code] this repo, [training] unchecked.
+
+- **Unreal Gameplay Ability System.** Gameplay tags are hierarchical labels (`Movement.Mode.Swimming`), queried with
+  `HasTag`, `HasAny`, `HasAll`; `IGameplayTagAssetInterface` gives an object's tags without a cast. The ability
+  system keeps a count per tag: a tag stays on until its count is 0 (`AddLooseGameplayTag`,
+  `RemoveLooseGameplayTag`); a stun is the tag `State.Debuff.Stun` for its duration; a delegate fires on add and
+  remove. Abilities have `ActivationBlockedTags` and `ActivationRequiredTags`, so "can this start" is a tag query.
+  The owner actor (often `PlayerState`) differs from the avatar actor (the body). [web]
+  <https://dev.epicgames.com/documentation/en-us/unreal-engine/using-gameplay-tags-in-unreal-engine>,
+  <https://github.com/tranek/GASDocumentation>
+- **Unity (classic).** Components on GameObjects; `TryGetComponent<T>` does not allocate when the component is
+  missing [web] <https://docs.unity3d.com/ScriptReference/Component.TryGetComponent.html>. A common pattern puts an
+  interface such as `IDamageable` on a component, and a bullet calls `TryGetComponent<IDamageable>` on what it hit,
+  so it never learns the concrete class [training].
+- **Godot.** Groups work like tags; a node can be in many groups; `call_group("guards", "enter_alert_mode")` calls a
+  method on every member [web] <https://docs.godotengine.org/en/stable/tutorials/scripting/groups.html>. Type tests
+  use `is_in_group("player")` and `has_method("hit")` (duck typing) [training].
+- **ECS engines (Bevy, EnTT, flecs).** No interfaces: marker components and queries. Bevy filters with `With<Player>`
+  and `Without<Enemy>`; `Option<&T>` matches entities with or without a component [web]
+  <https://bevy-cheatbook.github.io/programming/queries.html>. EnTT does not allocate per entity for empty tag types;
+  views take `entt::exclude<T>` [web] <https://github.com/skypjack/entt/wiki/Entity-Component-System>. In archetype
+  ECS, adding or removing a tag moves the entity to another table, so engines advise against tags that change every
+  frame [training].
+- **Sonic Mania (decompilation).** One `EntityPlayer` for all five characters. `Player_ChangeCharacter` sets
+  `characterID`, the sprite set, sensor offsets and `stateAbility` (a function pointer).
+  `Player_UpdatePhysicsState` picks a physics table per character, then a row by flags (underwater, super, speed
+  shoes). Other objects ask through shared functions (`Player_Hurt`, `Player_CheckAttacking`,
+  `Player_CheckValidState`), not by reading fields. Cost: those functions contain `switch (characterID)` (19
+  comparisons in `Player.c`). [web]
+  <https://github.com/RSDKModding/Sonic-Mania-Decompilation/blob/master/SonicMania/Objects/Global/Player.c>
+- **Sonic Robo Blast 2.** An `S_SKIN` record per character: `ability`, `ability2`, `normalspeed`, `actionspd`,
+  `jumpfactor`; unset values take defaults; ability enums select shared code [web]
+  <https://wiki.srb2.org/wiki/Custom_character_tutorial/S_SKIN>.
+- **Fighting games.** Every Smash fighter has the same attribute set (weight, walk speed, gravity, fall speed,
+  jumpsquat); moves differ per fighter [web] <https://www.ssbwiki.com/Template:Attributes>.
+- **Mega Man X6 (ideas only).** X and Zero share 32 step functions; a step calls the character's overlay after a test
+  of `mega+0x02`; Zero's extra steps are in his own overlay (`mmx-demake-tools/docs/players/map.md:12-25`,
+  `zero.md:1-40`).
+- **Component communication (Nystrom, "Component").** Three ways: shared state in the container (decoupled, but
+  depends on update order), direct references (fast, coupled), messages (decoupled, most complex) [web]
+  <https://gameprogrammingpatterns.com/component.html>.
+
+How these answer `MegaPlayer`'s questions:
+
+| Concern | Common pattern | Examples |
+|---|---|---|
+| Is this entity a player? | a tag or marker, not the type | Godot group `player`; Bevy `With<Player>` |
+| Can it be damaged now? | ask the target through one function; the target decides | Mania `Player_Hurt`; engine `IDamageable.canBeDamagedBy` |
+| Is it climbing or sliding? | a tag query or a read-only state query | GAS `HasTag(Movement.Mode.Climbing)`; Mania `player->state` |
+| Who writes facing, direction, body? | outsiders read; writes go through commands or effects | GAS effects; Unreal `TakeDamage` |
+| Health | an attribute that outsiders read; changes through damage or heal requests | GAS `AttributeSet` |
+| Optional features (light, gravity device, charge) | optional component or capability; absent means no effect | Unity `TryGetComponent`; Bevy `Option<&T>` |
+| Per-character values | one record of the same fields per character | Smash attributes; SRB2 `S_SKIN`; Mania physics table |
+| Per-character behavior | function pointers or ability lists selected per character | Mania `stateAbility`; SRB2 `CA_*`; X6 overlays |
+| Body shape | data per character (sensor offsets, hitboxes) | Mania `Player_ChangeCharacter` |
+
+State flags: the common fix for "last writer wins" booleans is counted reasons (GAS tag counts): `lock(reason)` and
+`unlock(reason)`; the flag is on while the count is above 0. Derived values (`canMove`) stay derived from counted
+inputs. Short effects that end by themselves (stun, invincibility frames) are timers or status effects with a
+duration, not flags someone must clear [training].
+
+Fit for this game: Mania, SRB2 and X6 are 2D games that run well on weak hardware, and all three use one shared
+motor, one values record per character and function hooks. Full GAS (effects, prediction, replication) is too large;
+string tags add hashing on hot paths (use an enum or a bit set); marker components that change often change system
+membership, which only `GameEngine.spawnNow` refreshes; Mania's `switch (characterID)` in shared functions is
+`is Megaman` with a new name; messages for per-frame queries add complexity and order depends on the events manager.
+
+### First recommendations (superseded in part by the owner's questions below)
+
+1. A thin view with `slot`, `entity` and the cached `body`.
+2. Reads through small read-only roles on the entity (`IReadFaceable`, `IReadDirectional`, `IHealthEntity`, optional
+   `IEmitsLight`, `IGravityDeviceUser`, a loadout interface); a missing role gives `null` or a default.
+3. Counted locks (`LockReason`) in one component that shared code honors (damage gating, shared movement behaviors,
+   the input edge builder), replacing `ready`, `canBeDamaged`, `movementAllowed` and `setAllBehaviorsAllowed`.
+4. Events only for notifications that nothing reads in the same frame.
+5. "Player side" to faction (`030`); `asPlayer` then means only "has a slot view".
+
+Proposed migration (each step "plays the same", each with a real caller): a `029` cleanup of 1-2-caller forwarders;
+read-only engine roles; counted locks (`012`); the damage notification as an event; faction (`030`); loadout (`024`);
+Proto Man with optional roles and typed fixtures (`060`); possession (`047` or a playable boss).
+
+### The owner's questions (2026-10-26)
+
+- **The body.** "Should we even require the cached body? It is not a guarantee that every player will have a body."
+  Answer: no. The view should hold only `slot` and `entity`; a caller that needs a body asks for the body component
+  and handles its absence.
+- **Interfaces.** "Is doing it via interfaces the approach that the other game engines do?" Answer: it is one pattern
+  among several. Unity mixes components and interfaces on components; ECS engines (Bevy, flecs, EnTT) use components,
+  queries and free functions with no interfaces; Godot uses groups and duck typing; GAS uses tags and attributes;
+  Mania uses shared functions over one entity struct.
+- **Functions instead of classes.** The owner is not a fan of OOP for this, because it makes every entity extend a
+  class. Why not functions and components, with global functions that reconcile, instead of tying things to class
+  instances? The counted-locks proposal is already a component, but its reader was `AbstractHealthEntity` (the OOP
+  part). A free function over the component (for example `canBeDamaged(entity)`) would serve any entity.
+- **Events.** What about direct, instantaneous event dispatch and reads, and static/global functions? How do other
+  engines do this?
+- The owner asked for an extensive record of how other engines handle these problems. A third research agent covers
+  functions and systems instead of methods, locks without base classes, immediate versus deferred events, querying a
+  player without an interface, and static/global functions. Its report goes in the next section.

@@ -699,3 +699,12 @@ newest entry at the bottom.
   with `git commit -am` and also took in two uncommitted edits from the main checkout (the owner's): a line wrap in
   `input/InputFrames.kt` and `MegaPlayers` passing the slot source as a trailing lambda
   (`MegaPlayer(slot, entity) { inputs[slot] }`, a SAM conversion to `InputSource`). Both are kept.
+
+## 2026-10-26 — master (docs)
+
+- Summary: item `029` `NOTES.md` gets "`MegaPlayer` review and engine patterns": two research reports (the member
+  inventory and smells of `MegaPlayer`; how other engines and games give characters a common interface) and the owner's
+  questions (no required body; interfaces versus components and functions; immediate events; global functions). A
+  proposal, not decided.
+- Contract check: not needed (docs only).
+- Follow-up: a third research report (functions, components and events instead of classes) goes in `029` `NOTES.md`.
