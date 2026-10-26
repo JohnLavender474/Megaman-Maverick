@@ -61,15 +61,14 @@ Answer to review item 30 (2026-10-22, verbatim):
 
 ## Open questions
 
-- Which inputs belong to which player, and what happens when a gamepad is unplugged or stops responding, in
-  single player and in co-op? The owner's cases (2026-10-25): one player on a gamepad and another on the keyboard
-  must not merge into player 1; a gamepad can be unplugged or stop responding in single player or in co-op, and
-  the game must handle all of these. Ideas from the owner: an input settings UI that the mouse can drive (the mouse
-  is not assigned to any player), and the keyboard as a trusted input that can always reach it. See `NOTES.md`,
-  "Input assignment: cases and options (2026-10-25)".
+- Input assignment: Option B is chosen in effect (auto mode in single player, one claimed device per player in
+  co-op; see the decisions above). Still open: in single player, when a gamepad is unplugged, keep today's behavior
+  (no pause, the keyboard keeps working) or pause with a reconnect prompt? In co-op, reconnect by "press `START` on
+  any free device" only? See `NOTES.md`, "Input assignment: cases and options (2026-10-25)", "Sub-choices".
 - What triggers a screenshot after the `TODO`?
-- The open binding questions 7 to 10 in `NOTES.md` (`--resetBindings`, bindable triggers, touch overlay layout,
-  `selectButtonAction` migration). Questions 5 (threshold) and 7 (revert timer) are answered.
+- The open binding questions in `NOTES.md`: a `--resetBindings` launcher flag (part of 7), bindable triggers (8),
+  the touch overlay layout (9), and which old file's `selectButtonAction` wins in the migration (10). Question 5
+  (threshold) and the revert timer (part of 7) are answered.
 
 ## Sources
 
