@@ -829,3 +829,10 @@ newest entry at the bottom.
   `docs/SCOPE.md`. `ITEMS.md` has the branch row.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the draft scope (4 open questions).
+
+## 2026-10-26 — master (docs)
+
+- Summary: `061c`: the owner chose to replace the player view class with a `PlayerComponent(slot)` and a slot → entity
+  registry (decision in item `061` `ITEM.md`); the draft scope is rewritten to include it.
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews the rewritten draft scope (4 open questions).

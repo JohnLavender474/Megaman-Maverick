@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`, `031`
 - Related: `012`, `024`, `030`, `047`, `048`, `053`, `057`, `060`
-- Branches: `mega-refactor-061a-thin-player` (merged), `mega-refactor-061b-play-phase-teleport` (merged); next: `061c` (callers ask the entity; `MegaPlayerAccess.kt` deleted)
+- Branches: `mega-refactor-061a-thin-player` (merged), `mega-refactor-061b-play-phase-teleport` (merged); next: `061c` (a player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go)
 
 ## Goal
 
@@ -65,6 +65,10 @@ more cleanup that's needed within the same item (branch)". After testing the tem
   null)`, not `TransportComponent`: its presence says the entity can be teleported (a teleporter fails without it),
   and `teleporter` is the current carrier (not an owner; `IOwnable.owner` means something else). Reads without the
   play phase or teleportable component give the default; writes require the component.
+- 2026-10-26 (owner, "Yes"): replace the view class with a component: a player is an entity with a
+  `PlayerComponent(slot)`, and the players registry maps each slot to its entity (as Bevy's `Player` component, Unity's
+  `PlayerInput` component and Godot's groups do; Unreal keeps a separate `PlayerController` only because it outlives
+  the body, which here the registry and the slot-keyed stores already do). Folded into `061c`.
 
 ## Open questions
 
