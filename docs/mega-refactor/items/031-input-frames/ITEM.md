@@ -58,14 +58,20 @@ Answer to review item 30 (2026-10-22, verbatim):
   co-op. In single player, the player can use any number of devices at the same time (auto mode).
 - 2026-10-25 (bindings): gamepads get no fixed aliases. Default codes come from the library mapping on connect, and
   the player customizes them, as today.
+- 2026-10-25: in single player, an unplugged gamepad keeps today's behavior: no pause, and the keyboard (and any
+  other device) keeps working. Co-op differs because there it is not safe to guess which device belongs to which
+  player as a fallback.
+- 2026-10-25: the co-op input flows are not built in `031`. They move to `047` (the shared-screen co-op branch):
+  the join step ("press `START`" claims a device), one claimed device per player, the pause and "press `START` on any
+  free device" prompt when a player's gamepad is unplugged, and reconnect. Reason: `MegaPlayers` has capacity 1
+  until `047`, so this code would have no production caller in `031` (rule "write code only when production code
+  calls it"). `031` builds what single player uses: `InputFrame` for slot 1, the device adapters (keyboard with the
+  reserved aliases, each gamepad, touch) in auto mode, and per-slot bindings for slot 1. Its design must not block the
+  `047` flows.
 
 ## Open questions
 
-- Input assignment: Option B is chosen in effect (auto mode in single player, one claimed device per player in
-  co-op; see the decisions above). Still open: in single player, when a gamepad is unplugged, keep today's behavior
-  (no pause, the keyboard keeps working) or pause with a reconnect prompt? In co-op, reconnect by "press `START` on
-  any free device" only? See `NOTES.md`, "Input assignment: cases and options (2026-10-25)", "Sub-choices".
-- What triggers a screenshot after the `TODO`?
+- What triggers a screenshot after the `TODO`? To be decided by the owner later.
 - The open binding questions in `NOTES.md`: a `--resetBindings` launcher flag (part of 7), bindable triggers (8),
   the touch overlay layout (9), and which old file's `selectButtonAction` wins in the migration (10). Question 5
   (threshold) and the revert timer (part of 7) are answered.

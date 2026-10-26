@@ -29,6 +29,11 @@ Item `029` research (2026-10-23, verbatim):
 
 - 2026-10-23: the target is 2 players; the design must scale to 4 or more.
 - 2026-10-23: one player is registered at boot. More players can join and leave during play. Saves do not depend on the player count.
+- 2026-10-25 (from `031`): the co-op input flows belong to `047`, not `031`: the join step ("press `START`" claims a
+  device), one device per player (two players never share a keyboard or a gamepad), the pause and "press `START` on
+  any free device" prompt when a player's gamepad is unplugged, and reconnect. `selectButtonAction` and bindings per
+  slot for slots 2 to 4. Profiles (a named copy of a slot's settings) come during or after co-op. See item `031`
+  `ITEM.md` "Decisions" and `NOTES.md`.
 
 ## Open questions
 

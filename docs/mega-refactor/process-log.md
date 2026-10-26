@@ -540,3 +540,12 @@ newest entry at the bottom.
   device per player in co-op, any number in single player; no fixed aliases for gamepads.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031`: single player keeps today's behavior when a gamepad is unplugged; the co-op input flows
+  (join, claims, disconnect prompt, reconnect) move to `047`, because they have no production caller while
+  `MegaPlayers` has capacity 1. The screenshot trigger stays to be decided. Item `047` `ITEM.md` records the moved
+  flows.
+- Contract check: not needed (docs only).
+- Follow-up: none.
