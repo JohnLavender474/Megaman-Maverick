@@ -4,8 +4,8 @@ What this branch changes and why. Write this file after the scan, before `CONTRA
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-25
 
 ## Goal
 
@@ -141,13 +141,11 @@ No branch is active in a worktree. Items that touch the same code later: `012` (
 store lives in the players service, not as a new `game` field), `010` (an immutable frame makes a later per-tick
 latch simple).
 
-## Open questions
+## Decisions on the open questions
 
-1. The form of `InputFrame`: a value class over one `Int` (no allocation; proposed), or a small immutable class
-   (one allocation per frame per slot)?
-2. Where the frame store lives: in `MegaPlayers` (proposed; input belongs to the slot, decided in `029`), or in a
-   separate input service that `MegaPlayers` reads?
-3. Verification: the item notes planned a temporary suite with a frozen copy of the poller. In this branch the
-   poller does not change, so the old code stays on `master` and the equivalence suite can compare the frame with
-   the live poller. Proposal: no frozen copy and no temporary suite in `031a`; the equivalence suite is permanent
-   while the poller exists. The temporary suite with a frozen copy comes in `031c`, which replaces the poller.
+Approved with the scope (owner, 2026-10-25), as proposed:
+
+1. `InputFrame` is a `@JvmInline value class` over one `Int` (2 bits per button). No allocation.
+2. The frame store lives in `MegaPlayers` (input belongs to the slot). `MegaPlayer.input` reads its slot's frame.
+3. No frozen copy and no temporary suite in `031a`. The equivalence suite compares the frame with the live poller
+   and stays while the poller exists. The temporary suite with a frozen copy comes in `031c`.
