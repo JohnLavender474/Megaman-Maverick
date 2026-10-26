@@ -579,3 +579,10 @@ newest entry at the bottom.
   devices with tests and overlaps), with options for the first branch, in its `NOTES.md`.
 - Contract check: not needed (docs only).
 - Follow-up: the owner picks the first-branch option; six bug candidates are listed in the notes.
+
+## 2026-10-25 — master (docs)
+
+- Summary: the owner chose Option 2 for the first `031` branch and asked to file four bug candidates from the scan.
+- Contract check: not needed (docs only).
+- Follow-up: filed `2026-10-25-gamepad-index-shift-keeps-old-codes.md`, `2026-10-25-reset-to-defaults-not-saved.md`,
+  `2026-10-25-capture-state-left-after-gamepad-disconnect.md` and `2026-10-25-jamepad-version-mismatch.md`.

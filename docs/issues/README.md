@@ -82,3 +82,7 @@ related-items: [<mega-refactor item IDs>]
 | [A gamepad model with no saved bindings gets code `0` on all 8 buttons after "LOAD SAVED SETTINGS"](2026-10-25-preferred-controller-code-zero.md) | yes | core | open |
 | [Leaving the keyboard or gamepad settings screen during a level restarts the level](2026-10-25-bindings-screen-restarts-level.md) | yes | core | open |
 | [Players cannot bind a button to the `P` key without causing screenshots](2026-10-25-p-key-binding-takes-screenshots.md) | yes | core | open |
+| [After gamepad 0 is unplugged while another gamepad stays, the game keeps the old gamepad's codes](2026-10-25-gamepad-index-shift-keeps-old-codes.md) | no | core | open |
+| ["RESET TO DEFAULTS" in the key and gamepad settings is not saved](2026-10-25-reset-to-defaults-not-saved.md) | yes | core | open |
+| [A gamepad disconnect during a button capture leaves the capture state and the listener behind](2026-10-25-capture-state-left-after-gamepad-disconnect.md) | yes | core | open |
+| [`jamepadVersion` in `gradle.properties` does not match the Jamepad version that the build uses](2026-10-25-jamepad-version-mismatch.md) | yes | build | open |

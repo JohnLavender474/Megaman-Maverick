@@ -816,6 +816,11 @@ so its factory must capture that service. Item `029` decided that input belongs 
    (for example during a room transition), the pause menu cannot be used, because it reads the same locked poller.
 6. `jamepadVersion` in `gradle.properties` does not match the resolved jar (build).
 
+Filed on 2026-10-25 (owner): 1 as `2026-10-25-gamepad-index-shift-keeps-old-codes.md`, 2 as
+`2026-10-25-reset-to-defaults-not-saved.md`, 3 as `2026-10-25-capture-state-left-after-gamepad-disconnect.md`, 6 as
+`2026-10-25-jamepad-version-mismatch.md` (the resolved version is confirmed: `2.0.14.2 -> 2.0.20.0`). 4 and 5 need a
+check in the game first.
+
 ## Options for the first branch (2026-10-25)
 
 All options keep the poller as the only source in the first branch, so the contract is "plays the same". The
