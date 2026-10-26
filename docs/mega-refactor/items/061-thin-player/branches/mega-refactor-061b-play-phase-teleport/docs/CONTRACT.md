@@ -1,11 +1,11 @@
-# Contract: mega-refactor-061b-play-phase-transport
+# Contract: mega-refactor-061b-play-phase-teleport
 
 The gameplay that this branch must not change, and how to check it. Written ahead of time on `master`.
 
 - Status: approved
 - Approved: 2026-10-26
 
-The player's `ready` becomes the play phase and `teleporting` becomes the transport state; both move from player
+The player's `ready` becomes the play phase and `teleporting` becomes the teleport state; both move from player
 state to entity state. Everything that waits for the player to be in play, or reacts to a teleport, must act as on
 `master`: the spawn beam-in, death and respawn, the level-end beam-out, the hazards that wait for the player, the
 dark rooms, rain, sand, pause, the checkpoint text, and the three teleporters (with the pipe animation, the hidden
@@ -21,7 +21,7 @@ sprite, and the air dash reset at a teleport start).
 - [ ] `contact-rule-selection.txt` is unchanged.
 - [ ] Play phase tests: an entity without the component reads `IN_PLAY` and `inPlay`; `setPlayPhase` changes it;
       `setPlayPhase` without the component fails; `reset()` keeps the value.
-- [ ] Transport tests: an entity without the component is not teleporting; `beginTeleport` calls the entity's start
+- [ ] Teleportable tests: an entity without the component is not teleporting; `beginTeleport` calls the entity's start
       hook first and then sets the teleporter (the hook sees `teleporting == false`); `endTeleport` calls the end hook
       first and then clears it (the hook sees `teleporting == true`); `reset()` clears it; an entity without hooks is
       still marked; `beginTeleport` on an entity without the component fails.

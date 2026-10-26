@@ -789,3 +789,11 @@ newest entry at the bottom.
   helpers instead of engine queries or a global helper; the owner decides (7 open questions in `ITEM.md`).
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews item `062`.
+
+## 2026-10-26 — master (docs)
+
+- Summary: `061b`: the owner chose `TeleportableComponent` (decision in item `061` `ITEM.md`) and approved the plan;
+  the folder is renamed to `mega-refactor-061b-play-phase-teleport`; branch start (the `ITEMS.md` row and `ITEM.md`
+  set to active).
+- Contract check: not needed (docs only).
+- Follow-up: the branch work in its worktree.

@@ -1,9 +1,9 @@
-# Plan: mega-refactor-061b-play-phase-transport
+# Plan: mega-refactor-061b-play-phase-teleport
 
 How to do the work in `SCOPE.md`. Written ahead of time on `master`.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 Build with `JAVA_HOME=~/.jdks/corretto-17.0.13`. Read the test counts from `build/test-results`. Smoke launches are
 short (about 20 seconds); the timeout with no exception is a pass. Each step is its own commit; after each code step,
@@ -17,7 +17,7 @@ the build and the tests pass and the game plays the same.
 
 - Changes: on `master`, docs only: the `061b` row to `active` with the start date; the `ITEM.md` branches line; the
   branch `process-log.md` to `active`. Then
-  `git worktree add -b mega-refactor-061b-play-phase-transport .worktrees/mega-refactor-061b-play-phase-transport master`.
+  `git worktree add -b mega-refactor-061b-play-phase-teleport .worktrees/mega-refactor-061b-play-phase-teleport master`.
 - Check: `git worktree list`.
 - Done: no
 
@@ -47,22 +47,22 @@ the build and the tests pass and the game plays the same.
   `INTRO_STAGE --room room12` show no exception.
 - Done: no
 
-### 4. Transport
+### 4. Teleportable
 
 - Changes:
-  - `C/entities/state/TransportComponent.kt` (`reset()` clears), the free functions `teleporter`, `teleporting`,
+  - `C/entities/state/TeleportableComponent.kt` (`reset()` clears), the free functions `teleporter`, `teleporting`,
     `beginTeleport(entity, teleporter)` (calls the entity's `ON_TELEPORT_START` hook, then sets the teleporter) and
     `endTeleport(entity)` (calls the `ON_TELEPORT_END` hook, then clears it). Both require the component.
   - `PipePortal`, `PortalHopper`, `CapsuleTeleporter` call `beginTeleport`/`endTeleport` in place of reading the
     hooks; `PipePortal`'s two `TELEPORTER` writes set the component's teleporter (players only, as today).
-  - `Megaman` adds `TransportComponent`; its hooks no longer set the flag or the property; `Megaman.teleporting`,
+  - `Megaman` adds `TeleportableComponent`; its hooks no longer set the flag or the property; `Megaman.teleporting`,
     `PlayerStateComponent` and `ConstKeys.TELEPORTER` go; `onSpawn`/`onDestroy` clear the teleporter where they
     removed the property (the component's `reset()` also clears it on destroy).
   - Readers: Megaman's 19 internal reads use the `teleporting` function; `SpritesComponent` and
     `MegamanAnimationKeySupplier` read `teleporter`; `PreciousGem` reads `(owner as? IGameEntity)?.teleporting`;
     `MegaPlayerAccess.kt` loses `teleporting`.
   - `AbstractEnemy` loses its two teleport hooks.
-  - Tests: transport defaults; the order (the start hook sees `teleporting == false`, the end hook sees `true`);
+  - Tests: teleportable defaults; the order (the start hook sees `teleporting == false`, the end hook sees `true`);
     `reset()` clears; no hooks still marks; `beginTeleport` without the component fails.
 - Check: build and tests pass; the one-for-one list for the `teleporting` reads; greps (no `ConstKeys.TELEPORTER`,
   no teleporter reads the hooks, no `PlayerStateComponent`). Short launches of `REFACTOR_TEST_031 --room pipe_portal`,

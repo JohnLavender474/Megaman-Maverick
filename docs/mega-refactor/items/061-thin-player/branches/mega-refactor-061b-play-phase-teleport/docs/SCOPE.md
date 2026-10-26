@@ -1,4 +1,4 @@
-# Scope: mega-refactor-061b-play-phase-transport
+# Scope: mega-refactor-061b-play-phase-teleport
 
 What this branch changes and why. Write this file after the scan, before `CONTRACT.md` and `PLAN.md`. The user
 approves it. If the scope changes later, update this file and get approval again.
@@ -9,14 +9,14 @@ approves it. If the scope changes later, update this file and get approval again
 ## Goal
 
 `ready` and `teleporting` stop being player state. They become entity state that any entity can have: a play phase
-and a transport state, each a small component read by free functions on `IGameEntity`. Callers ask the entity,
+and a teleport state, each a small component read by free functions on `IGameEntity`. Callers ask the entity,
 not a player view. The game plays the same.
 
 ## Item
 
 `061`. Decisions of 2026-10-26 in `ITEM.md`: a play phase component (renamed from the first proposal's
 `Lifecycle`: `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }`; an entity without it reads as `IN_PLAY`; `inPlay` is a pure
-phase check); `TransportComponent` holding the teleporter (`teleporting` means a teleporter is set); no player wrappers
+phase check); `TeleportableComponent` holding the teleporter (`teleporting` means a teleporter is set); no player wrappers
 for entity questions. Research: item `NOTES.md`, "`ready` and `teleporting` for any entity" and "'Lifecycle' versus
 spawning, spawned and dead".
 
@@ -41,7 +41,7 @@ Reads and writes are treated differently (owner, 2026-10-26). A read of an entit
 in play for its whole existence (this also keeps `Rain`, which treats non-players as ready today). A write
 (`setPlayPhase`) requires the component and fails without it, so a playable entity that goes through a sequence but
 lacks the component fails at its first write instead of being silently in play. The same holds for
-`TransportComponent`: a read without it is "not teleporting"; `beginTeleport` and `endTeleport` require it (only
+`TeleportableComponent`: a read without it is "not teleporting"; `beginTeleport` and `endTeleport` require it (only
 Megaman can reach a teleporter today, and he has it).
 
 ## Current state
@@ -91,7 +91,7 @@ Based on `master` at `447ae2b54`. `C/` = `core/src/main/kotlin/com/megaman/maver
    - Readers: every `ready` reader reads `inPlay` on the entity (`player.entity.inPlay` outside Megaman; `inPlay`
      inside). `Megaman.ready` and `MegaPlayer.ready` go. `Rain` reads the entity directly (a non-player without the
      component reads as in play, as `?: true` gives today).
-2. **Transport** (same package): `TransportComponent(var teleporter: ITeleporterEntity? = null)` with a `reset()`
+2. **Teleportable** (same package): `TeleportableComponent(var teleporter: ITeleporterEntity? = null)` with a `reset()`
    that clears it; free functions `IGameEntity.teleporter` and `IGameEntity.teleporting` (`teleporter != null`), and
    `beginTeleport(entity, teleporter)` / `endTeleport(entity)`, which call the entity's start or end hook and then set
    or clear the teleporter (the order above). The three teleporters call these functions in place of reading the
@@ -102,7 +102,7 @@ Based on `master` at `447ae2b54`. `C/` = `core/src/main/kotlin/com/megaman/maver
 3. `Megaman` adds both components; `PlayerStateComponent` goes.
 4. Dead code: the `players.ready` imports in `SigmaRatClaw` and `BigAssMaverickRobotHand`; the teleport hooks in
    `AbstractEnemy.kt:165-166`.
-5. Tests: the lifecycle and transport functions (defaults without the component, set and read, `reset()` behavior);
+5. Tests: the play phase and teleportable functions (defaults without the component, set and read, `reset()` behavior);
    `beginTeleport`/`endTeleport` order (the hook runs before the teleporter is set and before it is cleared);
    `MegaPlayersTest` loses its `ready`/`teleporting` cases.
 
@@ -111,7 +111,7 @@ New APIs and their first callers:
 | API | First callers |
 |---|---|
 | `PlayPhase`, `PlayPhaseComponent`, `playPhase`, `inPlay`, `setPlayPhase` | the three level handlers; the `ready` readers |
-| `TransportComponent`, `teleporter`, `teleporting` | Megaman's controller, behaviors and sprites; `PreciousGem` |
+| `TeleportableComponent`, `teleporter`, `teleporting` | Megaman's controller, behaviors and sprites; `PreciousGem` |
 | `beginTeleport`, `endTeleport` | `PipePortal`, `PortalHopper`, `CapsuleTeleporter` |
 
 ## Out of scope
@@ -154,3 +154,7 @@ None.
 - 2026-10-26 (owner): the package is `C/entities/state/`; the scope is approved.
 - 2026-10-26 (owner): reads without the component give the default (`IN_PLAY`, not teleporting); writes require
   the component ("Agreed").
+- 2026-10-26 (owner): the component is `TeleportableComponent(var teleporter: ITeleporterEntity? = null)`, not
+  `TransportComponent` (the name was general for one specific thing; `TeleporterComponent` would suggest the entity is a
+  teleporter, as `ITeleporterEntity` names the carrier); `teleporter` is the current carrier, not an owner. The branch
+  is `mega-refactor-061b-play-phase-teleport`.
