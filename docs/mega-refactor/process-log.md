@@ -593,3 +593,17 @@ newest entry at the bottom.
   with a draft `docs/SCOPE.md` for Option 2. `ITEMS.md` has the branch row.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the draft scope (3 open questions).
+
+## 2026-10-25 — mega-refactor-031a-input-frame
+
+- Summary: one `InputFrame` per player slot (a value class over one `Int`), stored in `MegaPlayers` and read through
+  `MegaPlayer.input`, written right after `controllerPoller.run()`. All gameplay input reads moved to it with the
+  same method and button: Megaman's 44 reads, `PipePortal` and `SpringBouncer` (contact player), `SpiderWeb` and
+  `GroundSlideBlocker` (`targetPlayer`), and pause. The poller stays the only source. At the owner's request,
+  `InputFrame` has only `getStatus`, `isPressed`, `isJustPressed` and `isJustReleased`. New test map
+  `RefactorTest031`. Squash commit `b73786742`.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` (clean build; 470 engine and 157 core tests,
+  0 failures; 114 warnings; jar; contact file unchanged; equivalence suite; no gameplay poller reads; the read
+  comparison). The owner played every manual check: "All tests pass".
+- Follow-up: item `031` stays active; the next branches are `031b`, `031c` and `031d` (item `NOTES.md`). No backlog
+  or bug candidates.

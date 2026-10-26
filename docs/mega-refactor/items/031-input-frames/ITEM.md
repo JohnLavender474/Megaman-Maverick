@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`
-- Branches: `mega-refactor-031a-input-frame` (active)
+- Branches: `mega-refactor-031a-input-frame` (merged); next: `031b` (frames drive `ControllerSystem` and the lock; menus on `UiInput`), `031c` (device adapters), `031d` (per-slot bindings), see `NOTES.md`
 
 ## Goal
 
