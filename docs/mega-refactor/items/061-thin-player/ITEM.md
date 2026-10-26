@@ -1,10 +1,10 @@
 # 061: Thin player view; locks and signals as components and functions
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: `029`, `031`
 - Related: `012`, `024`, `030`, `047`, `048`, `053`, `057`, `060`
-- Branches: `mega-refactor-061a-thin-player` (planned)
+- Branches: `mega-refactor-061a-thin-player` (active)
 
 ## Goal
 

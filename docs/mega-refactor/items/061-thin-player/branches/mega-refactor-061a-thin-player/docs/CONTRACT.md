@@ -2,8 +2,8 @@
 
 The gameplay that this branch must not change, and how to check it. Written ahead of time on `master`.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 Every control, damage reaction, spawn and death sequence, boss intro and defeat, level end, teleporter, gravity
 device, dark room and boss reaction must act as on `master`, except the overlap cases under "Intended changes".

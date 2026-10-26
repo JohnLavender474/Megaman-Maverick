@@ -2,8 +2,8 @@
 
 How to do the work in `SCOPE.md`. Written ahead of time on `master`.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 Build with `JAVA_HOME=~/.jdks/corretto-17.0.13`. Each step is its own commit; after each code step, the build and
 the tests pass.
@@ -19,7 +19,7 @@ New APIs and their first callers: see `SCOPE.md`.
   `git worktree add -b mega-refactor-061a-thin-player .worktrees/mega-refactor-061a-thin-player master`, and in it
   `git merge --no-ff temp-thin-player`.
 - Check: `git worktree list`; the merge has no conflict.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 

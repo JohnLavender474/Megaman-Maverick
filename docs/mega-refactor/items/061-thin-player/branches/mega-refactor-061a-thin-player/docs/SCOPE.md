@@ -3,8 +3,8 @@
 What this branch changes and why. Written after the experimental branch `temp-thin-player` was built and tested,
 because the owner asked for that order (item `061` `ITEM.md`, "Owner's input"). The owner approves it.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 ## Goal
 
