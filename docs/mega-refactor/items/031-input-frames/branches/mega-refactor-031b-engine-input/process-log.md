@@ -5,7 +5,7 @@
 - State: planned
 - Goal: input frames as an engine mechanism (`InputButton`, `InputFrame`, `InputSource`); `ControllerSystem` dispatches from each entity's own input source
 - Done: draft `docs/SCOPE.md`
-- Next: the owner reviews the draft scope and its open questions
+- Next: the owner approves `docs/SCOPE.md`; then the draft `docs/CONTRACT.md`
 - Blocked:
 
 ## Entries
@@ -19,3 +19,6 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   of `ControllerSystem`, `ControllerComponent`, `IButtonActuator`, `ButtonActuator`, `ControllerSystemTest`, the
   Megaman controller component, `InputFrame`, `PlayerInputs`, `InputSource`, `MegaPlayer(s)`, `MegamanInput.kt`,
   `MegaMenuScreen` and the frame builder in `MegamanMaverickGame.render`. Draft `docs/SCOPE.md` written.
+- The owner answered the four open questions in the draft scope, all as proposed. `docs/SCOPE.md` updated (in scope
+  item 6, out of scope, overlap, decisions); `docs/NOTES.md` has the decisions. The scope waits for the owner's
+  approval.

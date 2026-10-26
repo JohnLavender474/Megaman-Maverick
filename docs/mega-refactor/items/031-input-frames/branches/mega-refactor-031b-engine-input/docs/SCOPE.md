@@ -87,8 +87,10 @@ Based on `master` at `aa97e6c68`. `E` = `engine/src/main/kotlin/com/maverick/gam
 5. **`ControllerSystem`** takes no poller. Per entity it reads the source once per update, then dispatches per button
    with the same status-to-callback rule.
 6. **Actuators indexed by button:** `ControllerComponent` holds its actuators in an array indexed by
-   `InputButton.index`, and the system calls them in index order. The callbacks lose the `IControllerPoller`
-   parameter (`IButtonActuator`, `ButtonActuator`, Megaman's four actuators).
+   `InputButton.index`, and the system calls them in index order. It stores each actuator itself, not a supplier
+   (`() -> IButtonActuator?`), because every caller passes a constant. `putActuator` and `removeActuator` go (no
+   callers). The callbacks lose the `IControllerPoller` parameter (`IButtonActuator`, `ButtonActuator`, Megaman's
+   four actuators).
 7. **Tests:** `InputFrame` read-back for each status at each index including 31 (the high bits of the `Long`), the
    default frame, the button-set check; `ControllerSystemTest` on a source (each status calls the right callback; an
    entity with no source is skipped; the call order is the index order); the core equivalence with the poller stays
@@ -115,7 +117,8 @@ New APIs and their first callers:
 - **An AI, replay or network source**, the update step for sources that compute a frame, possession (moving a slot to
   another entity), the thin view, faction. They wait for their first caller (item `NOTES.md`, "Proposed order").
 - **`PlayerStateComponent`** changes (`029`/`012` follow-up).
-- **The menus and skip screens**, unless open question 1 adds them.
+- **The menus and skip screens.** They move later, with `Esc` and the back action, in one branch about menu input
+  (decision 1).
 
 ## Intended changes
 
@@ -142,21 +145,16 @@ New APIs and their first callers:
 
 ## Overlap with other branches
 
-No branch is active in a worktree. `012` (the lock) is not touched. `016` (narrow services): no new `game` field
-unless open question 1 adds one. `032` (platform-neutral engine): the new engine package has no device code.
+No branch is active in a worktree. `012` (the lock) is not touched. `016` (narrow services): no new `game` field.
+`032` (platform-neutral engine): the new engine package has no device code.
 
-## Open questions
+## Decisions on the open questions
 
-1. **Menus and skip screens in this branch?** Moving them to a frame is parity (the frame copies the poller, lock
-   included). But they need a source that is not a player: which slot drives the menus is a `047` question.
-   Proposal: leave them out of `031b`; they move with `Esc` and the back action in one menu branch, where the menu
-   input design is the topic. Other choice: move them now to a `uiInput: InputSource` that reads slot 0's frame (a
-   new field on `game`, with a `TODO` for `016`).
-2. **The actuator supplier.** `ControllerComponent` stores `() -> IButtonActuator?`, and every caller passes a
-   constant. Proposal: store the actuator itself (no supplier), and remove `putActuator` and `removeActuator`
-   (no callers).
-3. **Where the source lives:** on `ControllerComponent` (proposal: "this entity is driven by input"), or in its own
-   engine component (an entity could read input with no actuators). Proposal: `ControllerComponent`, because the only
-   entity with input has one; split when a real caller needs it.
-4. **Who binds the source:** the slot view when it is built (proposal: this is the start of possession, and
-   `unregister` can clear it later), or `Megaman` itself in `init()`.
+Owner, 2026-10-26, all as proposed:
+
+1. The menus and skip screens stay out of `031b`. They move later with `Esc` and the back action, in one branch about
+   menu input. Which slot drives the menus is a `047` question.
+2. `ControllerComponent` stores each actuator itself, not a supplier. `putActuator` and `removeActuator` go.
+3. The entity's source lives on `ControllerComponent`. A separate component waits for a real caller that reads input
+   with no actuators.
+4. The slot view binds the source when it is built (the start of possession). `unregister` can clear it later.
