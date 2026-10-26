@@ -96,3 +96,8 @@ Possible queries:
 - Does the faction change when the instigator changes (reflect), or does it stay from the snapshot?
 - Determinism: the order of entries must be stable (online lockstep, `047` step 3).
 - How does this meet `023` (damage profiles keyed by damage tags) and the golden damage test (`005`)?
+
+## Who drives an entity (2026-10-26)
+
+A proposal that touches this item (driver, thin slot view, faction; the owner's "boss becomes playable" case) is in
+`031` `NOTES.md`, "Who drives an entity: driver, slot view and side". Not decided.

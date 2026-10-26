@@ -620,3 +620,13 @@ newest entry at the bottom.
 - Contract check: build passes; 470 engine and 157 core tests, 0 failures; `lwjgl3:jar` builds; `javap` shows
   `InputSource.read-b3ISFDg()I` and no box or unbox in `MegaPlayer.getInput`.
 - Follow-up: `InputSource` is the input type that `031b` uses (see item `031` `NOTES.md`).
+
+## 2026-10-26 — master (docs)
+
+- Summary: the `031b` assessment. Item `031` `NOTES.md` has a new section, "Who drives an entity: driver, slot view
+  and side": the owner's "boss becomes playable" case, the three meanings of `asPlayer`, a proposed split (an
+  `InputSource` on the entity, a thin slot view, faction), why adding `PlayerStateComponent` to a boss does not work,
+  and a boss with two modes. Pointers in `029` and `030` `NOTES.md`. A proposal, not a decision.
+- Contract check: not needed (docs only).
+- Follow-up: the owner decides the `031b` split (the lock to `012`, `Esc` to a later branch) and the actuator map
+  order before the draft `docs/SCOPE.md`.

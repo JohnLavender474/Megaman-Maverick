@@ -1147,3 +1147,8 @@ into factory functions. `CharacterDef` waits for the Proto Man item, so that two
 6. A damage reaction and a damage negotiator per character.
 7. The remaining Mega-named APIs (`IHazard.getDamageToMegaman`, `MegaPlayer.megaman`) and `is Megaman` checks.
 8. Factories that a separate player class can use (they read `Megaman` fields today; `048`).
+
+## Who drives an entity (2026-10-26)
+
+A proposal that touches this item (driver, thin slot view, faction; the owner's "boss becomes playable" case) is in
+`031` `NOTES.md`, "Who drives an entity: driver, slot view and side". Not decided.

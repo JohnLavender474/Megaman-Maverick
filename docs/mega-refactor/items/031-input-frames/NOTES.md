@@ -883,3 +883,92 @@ turn `on` into a per-slot lock with the same release sequence.
 
 Option 2 for `031a`. Then `031b`, `031c` and `031d` as above. File the bug candidates 1, 2, 3 and 6 now; check 4 and
 5 in the game first.
+
+## Who drives an entity: driver, slot view and side (2026-10-26)
+
+Proposal from the `031b` assessment. Not decided. Based on `master` at `95d1fb48c`.
+
+### The owner's case
+
+A boss fights Mega Man. Wily captures Mega Man. The boss changes sides and becomes playable. So the thing that drives
+an entity can change: deterministic code (AI) or a player's input. The owner's model: the input driver changes from AI to
+the player, and the boss gets a player view and becomes the entity of the slot.
+
+### What the code does today
+
+- `asPlayer` (`players/PlayerExtensions.kt`) means "this entity has a `MegaPlayer` view in its properties". It has 154
+  uses in 65 files, with three meanings:
+  - Side: "is this shot from the player's side?" (`AbstractEnemy.kt:246,259`, `AbstractBoss.kt:198`, `Water.kt:151`,
+    `IceBomb`, `Snowhead`, `ReactorManProjectile`, ...). This is item `030`.
+  - Player-body rules: world gravity (`MegaContactRules.kt:53`, `PortalHopper`, `CapsuleTeleporter`), the camera
+    rotation check (`IBodyExtensions.kt:20`), items (`PlayerItemRule`).
+  - Input and player state: `SpringBouncer`, `PipePortal`, `Rain` (`ready`), `PreciousGem` (`teleporting`).
+  If a boss gets a view, all 154 checks change for it at the same time.
+- `MegaPlayer` requires about 11 parts (`MegaPlayer.kt:30-44`). Some only `Megaman` has: `PlayerStateComponent`, the
+  gravity-device switch, the light receiver, `IFocusable`.
+- `Players.register` throws if the slot has a player. `unregister` does not remove the view property from the entity
+  (`TODO` at `MegaPlayer.kt:47`).
+- Only `Megaman` has a `ControllerComponent`.
+
+### Common practice
+
+Unreal: a `PlayerController` or an `AIController` possesses the same `Pawn`; "controlled by a human" is not a property
+of the body. The slot lives longer than the body. See `029` `NOTES.md`, review 5 (`:850`, `:925-928`) and review 4
+(`:734`).
+
+### Proposed split into three concerns
+
+1. **Driver: input that belongs to the entity (`031`).** A controlled entity holds an `InputSource`
+   (`input/InputSource.kt`, a `fun interface` with a non-generic `read()`, so it does not box `InputFrame`). Readers
+   ask the entity, not `asPlayer`. `ControllerSystem` asks the entity's component for the status of each key; it does
+   not know about players. The engine needs only a status lookup by key that returns the enum. A slot source reads
+   `players.inputs[slot]`.
+2. **Slot binding: a thin view (`029`, `047`).** Possession is: unregister the old view (and clear its property),
+   register a view on the new entity. The view holds only what every slot needs (`029` review 4: slot, targeting
+   bounds, facing, health, focus), with capabilities for the optional parts. Today's `MegaPlayer` has Megaman's shape.
+3. **Side: faction (`030`).** "On the player's side" becomes a faction. The side checks among the `asPlayer` uses
+   move to faction; the player-body checks become capability checks.
+
+By the rule "write code only when production code calls it", `031b` builds only the slot source. An AI source and
+the possession API wait for the first entity that needs them.
+
+### Can a boss get `PlayerStateComponent` after it spawns, and lose it later?
+
+Mechanically yes; in meaning no.
+
+- Mechanically: `GameEntity.components` is an `OrderedMap` keyed by class, and `addComponent` and `removeComponent`
+  are map writes. No system mask contains `PlayerStateComponent`, so no `updateSystemMembershipsFor` call is needed.
+  The component must be on the entity before `register`, because `MegaPlayer` reads it once in its constructor
+  (`entity.require`). The view keeps that reference, so remove the component only after `unregister`.
+- In meaning it does not work. The component is passive data. Only `Megaman`'s code honors it:
+  - Its constructor takes `Megaman`'s `damageTimer` and `shootAnimTimer`. A boss needs its own timers that its own code
+    updates, or `damaged` and `shooting` give wrong values.
+  - The handlers write `ready`, `canBeDamaged`, `teleporting` and `movementAllowed` through the view. The boss's damage,
+    movement and spawn code does not read them, so these locks have no effect on the boss. No error shows.
+  - `damageListeners` fire only from `Megaman.kt:723`. `AbstractBoss.kt:135` adds each boss as a listener on the
+    players.
+  - The component has no `reset()` (the `IGameComponent` default does nothing), and `init()` runs only once. A pooled
+    boss that is destroyed with the component still on it keeps the stale state at its next spawn. Remove it in the
+    possession release or in `onDestroy`.
+- So the type check passes but the contract is broken in silence. The work is in the boss code that honors the fields,
+  not in the component.
+
+### A boss with two modes: state machine as an enemy, behaviors when playable
+
+The owner's variant: as an enemy, the boss runs today's state machine. When playable, it uses separate movement and
+behaviors (sharing private helpers with the state machine).
+
+- This is a mode switch on the boss, not a change of input source. In enemy mode the boss reads no input: the state
+  machine writes the body directly and the input source is empty (`ControllerSystem` skips the entity). In playable
+  mode the behaviors and actuators read the slot source. An AI source is needed only for a third mode: a CPU that
+  drives the playable behaviors (for example a CPU partner).
+- Two ways to switch:
+  - Build both sets in `init()` and gate them by the mode: the state machine updatable returns early, and
+    `setAllBehaviorsAllowed` and the actuators check the mode. No system membership changes. This is the safer way.
+  - Add and remove `ControllerComponent` and `BehaviorsComponent` at the switch. These are in system masks, so each
+    change must call `engine.updateSystemMembershipsFor(entity)`. Today only `GameEngine.spawnNow` (`:79`) calls it, so
+    this is easy to forget.
+- Shared private helpers (for example `fireShot()` and `jump()`), called both by state-machine states and by behaviors,
+  keep the moves the same.
+- On the switch, also: the faction (`030`), the slot view (thin, see above), the boss's health bar and the boss
+  defeat flow (`AbstractBoss` must not run its defeat sequence for a playable boss).
