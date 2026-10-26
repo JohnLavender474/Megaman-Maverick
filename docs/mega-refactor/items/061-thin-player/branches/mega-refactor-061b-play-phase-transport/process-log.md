@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: `ready` and `teleporting` become entity state (`PlayPhaseComponent`, `TransportComponent`) read by free functions; no player wrappers
-- Done: draft `docs/SCOPE.md`
-- Next: the owner approves `docs/SCOPE.md` (1 open question: the package)
+- Done: `docs/SCOPE.md` approved; draft `docs/CONTRACT.md`
+- Next: the owner approves `docs/CONTRACT.md`; then the draft `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -23,3 +23,6 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }` with `inPlay` as a pure phase check. `docs/SCOPE.md` updated (names,
   a "Three axes" section, the timing facts, the boss note for `048`, open question 1 closed). The folder and the
   branch name change from `061b-lifecycle-transport` to `061b-play-phase-transport` (no branch existed yet).
+- The owner approved `docs/SCOPE.md` with the package `C/entities/state/` ("Yes"). Draft `docs/CONTRACT.md` written;
+  the teleporter rooms come from a scan of the live maps: `MOON_MAN` `room11` (`PortalHopper`), `WILY_STAGE_3`
+  `room3` (`CapsuleTeleporter`), `PRECIOUS_WOMAN` `room2` (`LaserBeamer`), `INTRO_STAGE` `room3` (`BuilderKibbo`).

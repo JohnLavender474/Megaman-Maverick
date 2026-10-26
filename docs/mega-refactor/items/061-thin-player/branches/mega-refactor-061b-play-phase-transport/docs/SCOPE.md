@@ -3,8 +3,8 @@
 What this branch changes and why. Write this file after the scan, before `CONTRACT.md` and `PLAN.md`. The user
 approves it. If the scope changes later, update this file and get approval again.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 ## Goal
 
@@ -137,9 +137,10 @@ No branch is active in a worktree.
 
 ## Open questions
 
-1. **The package for the two components.** Proposal: `C/entities/state/`.
+None.
 
 ## Decisions
 
 - 2026-10-26 (owner): the name is `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }` with `inPlay` as a pure phase check
   (not `Lifecycle`, which is the engine's word for spawn and destroy; see the item `NOTES.md`).
+- 2026-10-26 (owner): the package is `C/entities/state/`; the scope is approved.
