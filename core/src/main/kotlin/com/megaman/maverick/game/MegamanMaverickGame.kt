@@ -37,7 +37,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.controller.ControllerSystem
-import com.maverick.game.engine.controller.ControllerUtils
+import com.megaman.maverick.game.controllers.ControllerUtils
 import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.cullables.CullablesSystem
@@ -78,7 +78,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.controllers.loadControllerButtons
@@ -94,9 +93,11 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
-import com.maverick.game.engine.input.InputFrame
+import com.maverick.game.engine.input.InputFrameBuilder
 import com.maverick.game.engine.input.checkInputButtons
-import com.megaman.maverick.game.input.of
+import com.megaman.maverick.game.input.FrameControllerPoller
+import com.megaman.maverick.game.input.GamepadInput
+import com.megaman.maverick.game.input.KeyboardInput
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.players.megaman
@@ -203,6 +204,9 @@ class MegamanMaverickGame(
 
     lateinit var buttons: ControllerButtons
     lateinit var controllerPoller: IControllerPoller
+    lateinit var gamepadInput: GamepadInput
+    private lateinit var keyboardInput: KeyboardInput
+    private val slot0FrameBuilder = InputFrameBuilder(MegaControllerButton.entries)
     lateinit var selectButtonAction: SelectButtonAction
 
     lateinit var assMan: AssetManager
@@ -288,7 +292,9 @@ class MegamanMaverickGame(
 
         checkInputButtons(MegaControllerButton.entries)
         buttons = ControllerUtils.loadControllerButtons()
-        controllerPoller = defineControllerPoller(buttons)
+        keyboardInput = KeyboardInput(buttons)
+        gamepadInput = GamepadInput(buttons)
+        controllerPoller = FrameControllerPoller { players.inputs[PlayerSlot(0)] }
         selectButtonAction = SelectButtonAction.NEXT_WEAPON
 
         eventsMan = EventsManager()
@@ -531,8 +537,7 @@ class MegamanMaverickGame(
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("controllerPoller")
-            controllerPoller.run()
-            players.inputs[PlayerSlot(0)] = InputFrame.of(controllerPoller)
+            players.inputs[PlayerSlot(0)] = slot0FrameBuilder.build(keyboardInput.held() or gamepadInput.held())
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("screenController")
@@ -639,7 +644,7 @@ class MegamanMaverickGame(
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.TURN_CONTROLLER_OFF -> {
-                controllerPoller.on = false
+                slot0FrameBuilder.locked = true
                 val turnSystemOff =
                     event.getOrDefaultProperty(
                         "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}", true, Boolean::class
@@ -648,7 +653,7 @@ class MegamanMaverickGame(
             }
 
             EventType.TURN_CONTROLLER_ON -> {
-                controllerPoller.on = true
+                slot0FrameBuilder.locked = false
                 val turnSystemOn =
                     event.getOrDefaultProperty(
                         "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.ON}", true, Boolean::class
@@ -847,7 +852,6 @@ class MegamanMaverickGame(
         return false
     }
 
-    private fun defineControllerPoller(buttons: ControllerButtons) = MegaControllerPoller(buttons)
 
     private fun queueAssets() {
         val assets = Array<IAsset>()

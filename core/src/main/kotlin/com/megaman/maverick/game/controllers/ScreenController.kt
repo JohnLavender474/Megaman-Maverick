@@ -18,7 +18,6 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.interfaces.Resizable
 import com.maverick.game.engine.common.interfaces.Updatable
-import com.maverick.game.engine.controller.buttons.ControllerButton
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.megaman.maverick.game.ConstKeys
@@ -143,8 +142,8 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
             })
             buttonImages.put(it, dpadImage)
 
-            val button = game.buttons[it] as ControllerButton
-            button.alternateActuators.put(ConstKeys.SCREEN) { pressedMap[it] }
+            // TODO: a touch press reaches no game button; the mobile build needs a touch device adapter that gives a
+            //  held mask from pressedMap, as KeyboardInput and GamepadInput do
         }
 
         val dpadTable = Table()

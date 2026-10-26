@@ -42,7 +42,7 @@ adapters with fake devices. Production passes the real devices.
 - Check: the build passes. Write the test counts (expected 481 engine, 161 core) and the warning count in the process
   log. Each screen opens with no exception (if one does not open directly, the contract gets another way to reach it,
   and the process log says so).
-- Done: no
+- Done: yes
 
 ### 3. Temporary suite harness
 
@@ -52,7 +52,7 @@ adapters with fake devices. Production passes the real devices.
   seeded script driver that changes the fake devices, `loadPrefsOnConnect` and the lock each tick. A first test runs
   the frozen copies against the live poller on the same fake devices and checks equal statuses, to prove the harness.
 - Check: build and tests pass. The harness test passes on every script.
-- Done: no
+- Done: yes
 
 ### 4. The new pipeline, the lock and the facade
 
@@ -68,7 +68,7 @@ adapters with fake devices. Production passes the real devices.
     with the named cases from `CONTRACT.md`. Edge builder tests. Facade tests.
 - Check: build and tests pass; the temporary suite passes. Short launches of `REFACTOR_TEST_029 --room movement` and
   of `./run-game-alpha.sh` (start screens to the main menu) show no exception.
-- Done: no
+- Done: yes
 
 ### 5. Removals and moves
 
@@ -79,23 +79,23 @@ adapters with fake devices. Production passes the real devices.
   comparison with the live poller; the harness test of step 3 goes (the live poller is gone).
 - Check: build and tests pass; the temporary suite passes. Greps: no `Gdx.input` and no `Controllers` in
   `engine/src/main`; none of the removed names left. Short launches as in step 4.
-- Done: no
+- Done: yes
 
 ### 6. Contract checks
 
 - Changes: none (fixes only if a check fails).
 - Check: every automated check in `docs/CONTRACT.md` on a clean build. Write the results in the process log. Then give
   the owner the manual checks as a list of commands, run from the worktree.
-- Done: no
+- Done: yes
 
 ### 7. Owner's play test
 
 - Changes: none, unless the play test finds a problem.
 - Check: the owner plays the manual checks in `docs/CONTRACT.md` and approves the merge.
-- Done: no
+- Done: yes
 
 ### 8. Remove the temporary suite and merge
 
 - Changes: the last commit before the merge deletes the frozen copies and the temporary suite.
 - Check: build and tests pass without them. Then follow "Branch merge" in `docs/mega-refactor/CLAUDE.md`.
-- Done: no
+- Done: yes

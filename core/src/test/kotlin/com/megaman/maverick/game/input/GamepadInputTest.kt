@@ -1,34 +1,29 @@
-package com.megaman.maverick.game.controllers
+package com.megaman.maverick.game.input
 
 import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.controllers.ControllerMapping
-import com.maverick.game.engine.controller.ControllerUtils
+import com.megaman.maverick.game.controllers.ControllerUtils
+import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.controllers.getMapping
+import com.megaman.maverick.game.controllers.getPreferredControllerCode
 import com.maverick.game.engine.controller.buttons.ControllerButton
 import com.maverick.game.engine.controller.buttons.ControllerButtons
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.*
 
-class MegaControllerPollerTest : DescribeSpec({
+class GamepadInputTest : DescribeSpec({
 
     fun buildButtons(): ControllerButtons {
         val buttons = ControllerButtons()
         MegaControllerButton.entries.forEach {
-            // start with no controller code, disabled so super.run() skips isPressed()
-            buttons.put(
-                it,
-                ControllerButton(
-                    it.defaultKeyboardKey,
-                    controllerCode = null,
-                    enabled = false
-                )
-            )
+            buttons.put(it, ControllerButton(it.defaultKeyboardKey))
         }
         return buttons
     }
 
     fun ControllerButtons.codeOf(button: MegaControllerButton): Int? =
-        (get(button) as ControllerButton).controllerCode
+        (get(button)).controllerCode
 
     val defaultMappingByButton = mapOf(
         MegaControllerButton.UP to 10,
@@ -57,6 +52,7 @@ class MegaControllerPollerTest : DescribeSpec({
 
     beforeEach {
         mockkObject(ControllerUtils)
+        every { ControllerUtils.isControllerKeyPressed(any<Int>()) } returns false
         mockkStatic("com.megaman.maverick.game.controllers.ControllerUtilsExtensionsKt")
         mockkStatic("com.megaman.maverick.game.controllers.ControllerMappingExtensionsKt")
     }
@@ -71,9 +67,9 @@ class MegaControllerPollerTest : DescribeSpec({
             every { ControllerUtils.getController() } returns controller
 
             val buttons = buildButtons()
-            val poller = MegaControllerPoller(buttons).apply { on = false }
+            val gamepad = GamepadInput(buttons)
 
-            poller.run()
+            gamepad.held()
 
             buttons.codeOf(MegaControllerButton.UP) shouldBe 10
             buttons.codeOf(MegaControllerButton.DOWN) shouldBe 11
@@ -95,12 +91,9 @@ class MegaControllerPollerTest : DescribeSpec({
             }
 
             val buttons = buildButtons()
-            val poller = MegaControllerPoller(buttons).apply {
-                on = false
-                loadPrefsOnConnect = true
-            }
+            val gamepad = GamepadInput(buttons).apply { loadPrefsOnConnect = true }
 
-            poller.run()
+            gamepad.held()
 
             MegaControllerButton.entries.forEach { btn ->
                 buttons.codeOf(btn) shouldBe (100 + btn.ordinal)
@@ -118,12 +111,9 @@ class MegaControllerPollerTest : DescribeSpec({
             }
 
             val buttons = buildButtons()
-            val poller = MegaControllerPoller(buttons).apply {
-                on = false
-                loadPrefsOnConnect = true
-            }
+            val gamepad = GamepadInput(buttons).apply { loadPrefsOnConnect = true }
 
-            poller.run()
+            gamepad.held()
 
             // matches the default-mapping case
             buttons.codeOf(MegaControllerButton.UP) shouldBe 10
@@ -139,17 +129,17 @@ class MegaControllerPollerTest : DescribeSpec({
             every { ControllerUtils.getController() } returns controller
 
             val buttons = buildButtons()
-            val poller = MegaControllerPoller(buttons).apply { on = false }
+            val gamepad = GamepadInput(buttons)
 
             // connect
-            poller.run()
+            gamepad.held()
             buttons.codeOf(MegaControllerButton.UP) shouldBe 10
 
             // disconnect
             every { ControllerUtils.isControllerConnected() } returns false
             every { ControllerUtils.getController() } returns null
 
-            poller.run()
+            gamepad.held()
 
             MegaControllerButton.entries.forEach { btn ->
                 buttons.codeOf(btn) shouldBe null
@@ -165,16 +155,40 @@ class MegaControllerPollerTest : DescribeSpec({
             every { ControllerUtils.getController() } returns controller
 
             val buttons = buildButtons()
-            val poller = MegaControllerPoller(buttons).apply { on = false }
+            val gamepad = GamepadInput(buttons)
 
-            poller.run()
+            gamepad.held()
 
             // simulate a user remap between frames
-            (buttons.get(MegaControllerButton.UP) as ControllerButton).controllerCode = 999
+            (buttons.get(MegaControllerButton.UP)).controllerCode = 999
 
-            poller.run()
+            gamepad.held()
 
             buttons.codeOf(MegaControllerButton.UP) shouldBe 999
+        }
+    }
+
+    describe("held") {
+        it("sets the bit of each button whose gamepad code is down, while connected") {
+            val controller = mockControllerWithMapping()
+            every { ControllerUtils.isControllerConnected() } returns true
+            every { ControllerUtils.getController() } returns controller
+            every { ControllerUtils.isControllerKeyPressed(21) } returns true
+            every { ControllerUtils.isControllerKeyPressed(13) } returns true
+
+            GamepadInput(buildButtons()).held() shouldBe
+                ((1L shl MegaControllerButton.A.index) or (1L shl MegaControllerButton.RIGHT.index))
+        }
+
+        it("gives no bits while disconnected") {
+            every { ControllerUtils.isControllerConnected() } returns false
+            every { ControllerUtils.getController() } returns null
+            every { ControllerUtils.isControllerKeyPressed(any<Int>()) } returns true
+
+            val buttons = buildButtons()
+            buttons.get(MegaControllerButton.A).controllerCode = 21
+
+            GamepadInput(buttons).held() shouldBe 0L
         }
     }
 
@@ -184,10 +198,10 @@ class MegaControllerPollerTest : DescribeSpec({
             every { ControllerUtils.getController() } returns null
 
             val buttons = buildButtons()
-            (buttons.get(MegaControllerButton.UP) as ControllerButton).controllerCode = 7
-            val poller = MegaControllerPoller(buttons).apply { on = false }
+            (buttons.get(MegaControllerButton.UP)).controllerCode = 7
+            val gamepad = GamepadInput(buttons)
 
-            poller.run()
+            gamepad.held()
 
             buttons.codeOf(MegaControllerButton.UP) shouldBe 7
         }

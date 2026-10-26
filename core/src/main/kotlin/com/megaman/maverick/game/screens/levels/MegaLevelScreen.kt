@@ -30,7 +30,6 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sorting.IComparableDrawable
@@ -163,8 +162,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         get() = game.eventsMan
     val audioMan: MegaAudioManager
         get() = game.audioMan
-    val controllerPoller: IControllerPoller
-        get() = game.controllerPoller
 
     var music: MusicAsset? = null
 

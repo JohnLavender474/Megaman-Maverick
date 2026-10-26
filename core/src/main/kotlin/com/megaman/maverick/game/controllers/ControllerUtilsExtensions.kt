@@ -3,7 +3,6 @@ package com.megaman.maverick.game.controllers
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.controllers.Controller
-import com.maverick.game.engine.controller.ControllerUtils
 import com.maverick.game.engine.controller.buttons.ControllerButton
 import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.megaman.maverick.game.PreferenceFiles
@@ -26,7 +25,7 @@ fun ControllerUtils.loadControllerButtons(): ControllerButtons {
     if (controller != null) {
         MegaControllerButton.entries.forEach {
             val controllerCode = controller.mapping.getMapping(it)
-            val button = buttons.get(it) as ControllerButton
+            val button = buttons.get(it)
             button.controllerCode = controllerCode
         }
     }
@@ -38,7 +37,7 @@ fun ControllerUtils.saveSettingsToPrefs(buttons: ControllerButtons, isKeyboardSe
     if (isKeyboardSettings) {
         val keyboardPrefs = getKeyboardPreferences()
         buttons.forEach {
-            val button = it.value as ControllerButton
+            val button = it.value
             keyboardPrefs.putInteger((it.key as MegaControllerButton).name, button.keyboardCode)
         }
         keyboardPrefs.flush()
@@ -46,7 +45,7 @@ fun ControllerUtils.saveSettingsToPrefs(buttons: ControllerButtons, isKeyboardSe
         val controller = getController() ?: throw IllegalStateException("No controller found")
         val controllerPrefs = getControllerPreferences(controller)
         buttons.forEach {
-            val button = it.value as ControllerButton
+            val button = it.value
             val code = button.controllerCode ?: controller.mapping.getMapping(it.key as MegaControllerButton)
             controllerPrefs.putInteger((it.key as MegaControllerButton).name, code)
         }
@@ -56,13 +55,13 @@ fun ControllerUtils.saveSettingsToPrefs(buttons: ControllerButtons, isKeyboardSe
 
 fun ControllerUtils.resetSettingsToDefaults(buttons: ControllerButtons, isKeyboardSettings: Boolean) {
     if (isKeyboardSettings) buttons.forEach {
-        val button = it.value as ControllerButton
+        val button = it.value
         val keyboardCode = (it.key as MegaControllerButton).defaultKeyboardKey
         button.keyboardCode = keyboardCode
     } else {
         val controller = getController() ?: return
         buttons.forEach {
-            val button = it.value as ControllerButton
+            val button = it.value
             val controllerCode = controller.mapping.getMapping(it.key as MegaControllerButton)
             button.controllerCode = controllerCode
         }

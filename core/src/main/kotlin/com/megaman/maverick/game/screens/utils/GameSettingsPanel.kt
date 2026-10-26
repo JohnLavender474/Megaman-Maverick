@@ -14,7 +14,7 @@ import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.controller.ControllerUtils
+import com.megaman.maverick.game.controllers.ControllerUtils
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.events.Event

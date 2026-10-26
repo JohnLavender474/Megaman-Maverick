@@ -1,4 +1,4 @@
-package com.maverick.game.engine.controller
+package com.megaman.maverick.game.controllers
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.controllers.Controller

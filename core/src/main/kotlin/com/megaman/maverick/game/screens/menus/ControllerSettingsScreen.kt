@@ -12,9 +12,8 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.controller.ControllerUtils
-import com.maverick.game.engine.controller.ControllerUtils.getController
-import com.maverick.game.engine.controller.buttons.ControllerButton
+import com.megaman.maverick.game.controllers.ControllerUtils
+import com.megaman.maverick.game.controllers.ControllerUtils.getController
 import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.maverick.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
@@ -71,7 +70,7 @@ class ControllerSettingsScreen(
             override fun keyDown(keycode: Int): Boolean {
                 if (selectedMegaButton == null) return true
 
-                val button = controllerButtons.get(selectedMegaButton!!) as ControllerButton
+                val button = controllerButtons.get(selectedMegaButton!!)
                 GameLogger.debug(
                     TAG,
                     "Setting [$selectedMegaButton] keycode from [${button.keyboardCode}] to [$keycode]"
@@ -79,7 +78,6 @@ class ControllerSettingsScreen(
 
                 // if any buttons match the keycode, then switch them
                 controllerButtons.values().forEach {
-                    it as ControllerButton
                     if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode
                 }
                 button.keyboardCode = keycode
@@ -108,7 +106,7 @@ class ControllerSettingsScreen(
                     return true
                 }
 
-                val button = controllerButtons.get(selectedMegaButton!!) as ControllerButton
+                val button = controllerButtons.get(selectedMegaButton!!)
                 GameLogger.debug(
                     TAG,
                     "Setting [$selectedMegaButton] controller code from [${button.controllerCode}] to [$buttonIndex]"
@@ -116,7 +114,6 @@ class ControllerSettingsScreen(
 
                 // if any buttons match the controller code, then switch them
                 controllerButtons.values().forEach {
-                    it as ControllerButton
                     if (it.controllerCode == buttonIndex) it.controllerCode = button.controllerCode
                 }
                 button.controllerCode = buttonIndex
@@ -186,8 +183,6 @@ class ControllerSettingsScreen(
 
                     MegaControllerButton.entries.forEach {
                         controllerButtons[it]?.let { controllerButton ->
-                            controllerButton as ControllerButton
-
                             val oldCode = controllerButton.keyboardCode
                             val newCode = keyboardPreferences.getInteger(it.name, oldCode)
 
@@ -206,8 +201,6 @@ class ControllerSettingsScreen(
 
                     MegaControllerButton.entries.forEach {
                         controllerButtons[it]?.let { controllerButton ->
-                            controllerButton as ControllerButton
-
                             var oldCode = controllerButton.controllerCode
                             if (oldCode == null) oldCode = controller!!.mapping.getMapping(it)
                             val newCode = controllerPreferences.getInteger(it.name, oldCode)
@@ -221,7 +214,7 @@ class ControllerSettingsScreen(
                         }
                     }
 
-                    (game.controllerPoller as? MegaControllerPoller)?.loadPrefsOnConnect = true
+                    game.gamepadInput.loadPrefsOnConnect = true
                 }
 
                 loadSelectButtonActionFromPrefs(isKeyboardSettings)?.let { game.selectButtonAction = it }
@@ -269,7 +262,7 @@ class ControllerSettingsScreen(
             row -= 1f
 
             val codeHintSupplier = {
-                val button = controllerButtons.get(b) as ControllerButton
+                val button = controllerButtons.get(b)
                 val code = if (isKeyboardSettings) button.keyboardCode else button.controllerCode
                 "${b.name}: $code"
             }

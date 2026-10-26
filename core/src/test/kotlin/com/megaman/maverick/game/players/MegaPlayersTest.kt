@@ -13,7 +13,6 @@ import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonStatus
-import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -25,7 +24,6 @@ import com.maverick.game.engine.points.Points
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.maverick.game.engine.input.InputFrame
-import com.megaman.maverick.game.input.of
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -289,10 +287,7 @@ class MegaPlayersTest : DescribeSpec({
             val players = MegaPlayers(2)
             val player0 = players.register(PlayerSlot(0), playerEntity())
             val player1 = players.register(PlayerSlot(1), playerEntity())
-            val poller = mockk<IControllerPoller>()
-            every { poller.getStatus(any()) } returns ButtonStatus.RELEASED
-            every { poller.getStatus(MegaControllerButton.A) } returns ButtonStatus.JUST_PRESSED
-            val frame = InputFrame.of(poller)
+            val frame = InputFrame.RELEASED.with(MegaControllerButton.A, ButtonStatus.JUST_PRESSED)
 
             player0.input shouldBe InputFrame.RELEASED
 
