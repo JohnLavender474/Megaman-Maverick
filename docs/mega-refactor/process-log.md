@@ -736,3 +736,21 @@ newest entry at the bottom.
   `ready` today, the concepts behind `ready`, other engines, options, a proposed `061b`). A proposal, not decided.
 - Contract check: not needed (docs only).
 - Follow-up: the owner decides whether `061b` takes the lifecycle and transport components.
+
+## 2026-10-26 — mega-refactor-061a-thin-player
+
+- Summary: a thin `MegaPlayer` (`slot`, `entity`, `input`; nothing required at registration) with its former members
+  as free functions read when called; player parts as components (`PlayerComponent`, `PlayerLightComponent`,
+  `GravityDeviceComponent`); engine locks (`LockGroup`, `LockReason`, `LocksComponent` with a change hook, free
+  functions; the game supplies `MegaLockGroup`, `MegaLockReason`, `behaviorsLockHook`) in place of `canBeDamaged`,
+  movement, `allowMovement` and `setAllBehaviorsAllowed`; an engine `Signal<T>` for the player-damaged notification.
+  Built first on the experimental branch `temp-thin-player` (owner's request), then merged into this branch with the
+  cleanup (locks to the engine, test leftovers, import order). Intended changes: lock overlaps only (damage, movement
+  with a spider web, behaviors at the level end). Squash commit `587a53f95`.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` (clean build; 501 engine and 159 core tests,
+  0 failures; 114 warnings; jar; contact file unchanged; lock, signal and player tests; greps). The owner played the
+  manual checks: "Play tests pass".
+- Follow-up: item `061` stays active; next `061b` (lifecycle and transport components, no player wrappers), then a
+  branch that moves the `MegaPlayerAccess.kt` callers to entity-level functions (decisions of 2026-10-26 in `ITEM.md`).
+  No backlog or bug candidates. `temp-thin-player` and its worktree are deleted. The double space in the item `061` row
+  of `ITEMS.md` is fixed.

@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`, `031`
 - Related: `012`, `024`, `030`, `047`, `048`, `053`, `057`, `060`
-- Branches: `mega-refactor-061a-thin-player` (active)
+- Branches: `mega-refactor-061a-thin-player` (merged); next: `061b` (lifecycle and transport components), then a branch that moves the `MegaPlayerAccess.kt` callers to entity-level functions
 
 ## Goal
 
@@ -47,6 +47,17 @@ more cleanup that's needed within the same item (branch)". After testing the tem
   features give `null` or a default at the call site. Not every player has a body.
 - 2026-10-26: locks are a set of reasons per group (a reason is held or not), not a count per reason. Reason: a count
   leaves `SpiderWeb` locked for good (each web locks; the release happens once).
+- 2026-10-26 (owner, "Sure"): `ready` and `teleporting` become entity state, not player state:
+  `LifecycleComponent` with `Lifecycle { ENTERING, ACTIVE, LEAVING }` (an entity without it reads as `ACTIVE`) and
+  `TransportComponent` holding the teleporter (`teleporting` means a teleporter is set), with free functions. Research
+  in `NOTES.md`, "`ready` and `teleporting` for any entity".
+- 2026-10-26 (owner, "Yes to all"): no player wrappers for entity questions. Engines ask the entity directly (Bevy
+  queries with a `Player` marker, Unity `GetComponent`, Unreal gameplay tags on any actor, Mania and X6 shared
+  functions); a player view only finds the entity. So `061b` moves the `ready` and `teleporting` callers to
+  `entity.isActive` and `entity.teleporting` with no `MegaPlayer` wrapper, and a later `061` branch moves the callers
+  of `MegaPlayerAccess.kt` (`player.body`, `player.facing`, ...) to entity-level functions and deletes the file. The
+  player view keeps `slot` and `input`. Reasons: one way to ask a question; no two defaults for the same entity (the
+  player wrapper gave `false` where an entity without a lifecycle reads `ACTIVE`); the view does not grow again.
 
 ## Open questions
 
