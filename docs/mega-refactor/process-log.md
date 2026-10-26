@@ -652,9 +652,21 @@ newest entry at the bottom.
   `46ad99b55`.
 - Contract check: all automated checks in the branch `docs/CONTRACT.md` (clean build; 481 engine and 161 core tests,
   0 failures; 114 warnings; jar; contact file unchanged; greps; `javap` shows no boxing in the read path; single
-  build point). The `javap` check found a `ClassReference` allocation per read in `Megaman.input`, fixed in the branch
-  by caching the component. The owner played the manual checks: "Branch tests pass".
+  build point). The branch caches `Megaman`'s `ControllerComponent` for `Megaman.input`. The branch log first gave the
+  reason as a `ClassReference` allocation per read; that was wrong (see the correction entry below). The owner played
+  the manual checks: "Branch tests pass".
 - Follow-up: item `031` stays active; next are `031c` (devices, one edge builder with the lock) and `031d`
   (bindings), and a later menu-input branch (`Esc`, back action, menus and skip screens on frames). No backlog or bug
-  candidates. A research agent is checking whether components should have keys other than `KClass` (the `ClassReference`
-  finding); the owner decides after its report whether that becomes an item.
+  candidates. A research agent checked whether components should have keys other than `KClass`; the owner decides
+  whether that becomes an item.
+
+## 2026-10-26 — master (docs)
+
+- Summary: correction to the `031b` record. `031b` step 6 said that `getComponent(X::class)` allocates a new
+  `ClassReference` on each call because the project has no `kotlin-reflect`. That is wrong: `engine/build.gradle:7`
+  declares `api "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"`, and the jar contains `ReflectionFactoryImpl`, so
+  `X::class` returns one cached `KClassImpl` with no allocation. Found by a research agent (a benchmark with and without
+  `kotlin-reflect`). The cache of `ControllerComponent` in `Megaman` stays: it saves one map lookup per input read
+  (`KClassImpl` hashing and `KClass.cast`), not an allocation. The branch process log has the same correction.
+- Contract check: not needed (docs only).
+- Follow-up: the owner decides whether the component-key research becomes an item.

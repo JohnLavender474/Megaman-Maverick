@@ -82,3 +82,10 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   `REFACTOR_TEST_029 --room movement` ran with no exception until the timeout. Waiting for the owner's play test.
 - Step 7, play test: the owner played the manual checks in `docs/CONTRACT.md` and reported "Branch tests pass". The
   owner approved the merge ("Merge into `master`").
+
+## 2026-10-26 (after the merge, on `master`)
+
+- Correction to step 6: the reason given for the `ControllerComponent` cache is wrong. The game has `kotlin-reflect`
+  (`engine/build.gradle:7`), so `X::class` returns one cached `KClassImpl` and does not allocate a `ClassReference`.
+  The cache still saves one map lookup per input read (`KClassImpl` hashing and `KClass.cast`). Found by a research
+  agent after the merge.
