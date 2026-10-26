@@ -1,26 +1,21 @@
 package com.maverick.game.engine.controller
 
-import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.components.IGameComponent
 import com.maverick.game.engine.controller.buttons.IButtonActuator
+import com.maverick.game.engine.input.InputButton
+import com.maverick.game.engine.input.InputSource
 
-class ControllerComponent(val actuators: ObjectMap<Any, () -> IButtonActuator?>) : IGameComponent {
+class ControllerComponent(vararg actuators: GamePair<out InputButton, out IButtonActuator>) : IGameComponent {
 
-    constructor(vararg _actuators: GamePair<Any, () -> IButtonActuator?>) : this(ObjectMap<Any, () -> IButtonActuator?>().apply {
-        _actuators.forEach { put(it.first, it.second) }
-    })
+    var input: InputSource? = null
 
-    fun putActuator(name: Any, actuator: () -> IButtonActuator?) {
-        actuators.put(name, actuator)
-    }
+    internal val buttons: Array<InputButton>
+    internal val actuators: Array<IButtonActuator>
 
-    fun putActuator(name: Any, actuator: IButtonActuator) {
-        actuators.put(name) { actuator }
-    }
-
-    fun removeActuator(name: Any) {
-        actuators.remove(name)
+    init {
+        val sorted = actuators.sortedBy { it.first.index }
+        buttons = Array(sorted.size) { sorted[it].first }
+        this.actuators = Array(sorted.size) { sorted[it].second }
     }
 }
-

@@ -3,7 +3,7 @@ package com.megaman.maverick.game.players
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.Players
 import com.megaman.maverick.game.entities.contracts.IMegaGameEntity
-import com.megaman.maverick.game.input.InputSource
+import com.maverick.game.engine.input.InputSource
 import com.megaman.maverick.game.input.PlayerInputs
 
 class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(capacity)) :

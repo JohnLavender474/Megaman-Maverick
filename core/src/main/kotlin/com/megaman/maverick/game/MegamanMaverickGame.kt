@@ -77,6 +77,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.MegaControllerPoller
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.SelectButtonAction
@@ -93,7 +94,9 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
-import com.megaman.maverick.game.input.InputFrame
+import com.maverick.game.engine.input.InputFrame
+import com.maverick.game.engine.input.checkInputButtons
+import com.megaman.maverick.game.input.of
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.players.megaman
@@ -283,6 +286,7 @@ class MegamanMaverickGame(
         shapeRenderer.setAutoShapeType(true)
         batch = SpriteBatch()
 
+        checkInputButtons(MegaControllerButton.entries)
         buttons = ControllerUtils.loadControllerButtons()
         controllerPoller = defineControllerPoller(buttons)
         selectButtonAction = SelectButtonAction.NEXT_WEAPON
@@ -870,7 +874,7 @@ class MegamanMaverickGame(
 
         val engine = GameEngine(
             systems = gdxArrayOf(
-                ControllerSystem(controllerPoller),
+                ControllerSystem(),
                 BehaviorsSystem(diagnostics),
                 WorldSystem(
                     ppm = ConstVals.PPM,

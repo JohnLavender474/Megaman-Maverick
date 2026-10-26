@@ -5,6 +5,7 @@ import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.maverick.game.engine.controller.buttons.IControllerButton
 import com.maverick.game.engine.controller.polling.ControllerPoller
 import com.maverick.game.engine.controller.polling.IControllerPoller
+import com.maverick.game.engine.input.InputFrame
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import io.kotest.core.spec.style.DescribeSpec

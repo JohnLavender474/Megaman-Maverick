@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.maverick.game.engine.controller.ControllerComponent
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.audio.AudioComponent
@@ -165,6 +166,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         EventType.END_GAME_CAM_ROTATION
     )
 
+    internal lateinit var controllerComponent: ControllerComponent
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
     internal lateinit var jetpackHandler: MegamanJetpackHandler
 
@@ -347,7 +349,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         addComponent(playerState)
         addComponent(defineBodyComponent())
         addComponent(defineBehaviorsComponent())
-        addComponent(defineControllerComponent())
+        controllerComponent = defineControllerComponent()
+        addComponent(controllerComponent)
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
 

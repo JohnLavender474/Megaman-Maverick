@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.maverick.game.engine.controller.ControllerComponent
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.behaviors.BehaviorsComponent
@@ -37,6 +38,7 @@ class MegamanStunTargetTest : DescribeSpec({
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(megaman.playerState)
+        megaman.addComponent(ControllerComponent())
         megaman.putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {}
         megaman.putProperty(PlayerKeys.LIGHT) { PlayerLight.STANDARD }
 

@@ -7,6 +7,7 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.components.require
+import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.players.PlayerSlot
@@ -17,8 +18,8 @@ import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.input.InputFrame
-import com.megaman.maverick.game.input.InputSource
+import com.maverick.game.engine.input.InputFrame
+import com.maverick.game.engine.input.InputSource
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 
 class MegaPlayer(
@@ -44,8 +45,9 @@ class MegaPlayer(
     val focus = entity as? IFocusable ?: throw IllegalArgumentException("$entity is not IFocusable")
 
     init {
-        // TODO: unregistering a player does not remove this view from its entity; players who drop out are a co-op
-        //  rule for item 047
+        entity.require(ControllerComponent::class).input = inputSource
+        // TODO: unregistering a player does not remove this view or its input source from its entity; players who
+        //  drop out are a co-op rule for item 047
         entity.putProperty(PlayerKeys.VIEW, this)
     }
 

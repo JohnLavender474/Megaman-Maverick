@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.input
+package com.maverick.game.engine.input
 
 fun interface InputSource {
 

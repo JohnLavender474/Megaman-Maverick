@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
-import com.megaman.maverick.game.input.InputFrame
-import com.megaman.maverick.game.players.asPlayer
+import com.maverick.game.engine.input.InputFrame
 
 internal val Megaman.input: InputFrame
-    get() = asPlayer!!.input
+    get() = controllerComponent.input!!.read()

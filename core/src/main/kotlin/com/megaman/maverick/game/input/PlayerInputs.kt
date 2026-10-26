@@ -1,10 +1,11 @@
 package com.megaman.maverick.game.input
 
+import com.maverick.game.engine.input.InputFrame
 import com.maverick.game.engine.players.PlayerSlot
 
 class PlayerInputs(capacity: Int) {
 
-    private val frames = IntArray(capacity) { InputFrame.RELEASED.bits }
+    private val frames = LongArray(capacity) { InputFrame.RELEASED.bits }
 
     operator fun get(slot: PlayerSlot) = InputFrame(frames[slot.index])
 

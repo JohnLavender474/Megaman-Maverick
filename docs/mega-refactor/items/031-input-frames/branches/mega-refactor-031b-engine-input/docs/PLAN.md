@@ -42,7 +42,7 @@ New APIs and their first callers in this branch:
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 470 engine, 157 core) and the warning count in the process
   log.
-- Done: no
+- Done: yes
 
 ### 3. Engine input types; core moves to them
 
@@ -68,7 +68,7 @@ New APIs and their first callers in this branch:
     core builder (same scripts and named cases).
 - Check: build and tests pass. A grep shows no `InputFrame` or `InputSource` left in `C/input/`. A short launch of
   `REFACTOR_TEST_029 --room movement` shows no exception.
-- Done: no
+- Done: yes
 
 ### 4. The entity's source, bound by the slot view
 
@@ -84,7 +84,7 @@ New APIs and their first callers in this branch:
     give the same frame.
 - Check: build and tests pass. `MegamanInput.kt` has no `asPlayer`. A short launch of
   `REFACTOR_TEST_029 --room movement` shows no exception.
-- Done: no
+- Done: yes
 
 ### 5. `ControllerSystem` on the entity's source; actuators by button
 
@@ -106,7 +106,7 @@ New APIs and their first callers in this branch:
   `IButtonActuator` and `ButtonActuator`, and no `putActuator` or `removeActuator`. A review of the diff shows that
   the four actuator bodies are the same. A short launch of `REFACTOR_TEST_029 --room movement` and
   `INTRO_STAGE --room room1` shows no exception.
-- Done: no
+- Done: yes
 
 ### 6. Contract checks
 
@@ -114,11 +114,11 @@ New APIs and their first callers in this branch:
 - Check: every automated check in `docs/CONTRACT.md` on a clean build (tests, jar, warnings, the contact file, the
   greps, `javap` for boxing, the single build point). Write the results in the process log. Then give the owner the
   manual checks as a list of commands, each with `--level` and `--room`, run from the worktree.
-- Done: no
+- Done: yes
 
 ### 7. Owner's play test and merge
 
 - Changes: none, unless the play test finds a problem.
 - Check: the owner plays the manual checks in `docs/CONTRACT.md` and approves the merge. Then follow "Branch merge"
   in `docs/mega-refactor/CLAUDE.md`.
-- Done: no
+- Done: yes

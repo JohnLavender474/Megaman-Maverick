@@ -26,33 +26,33 @@ const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val left = ButtonActuator(
-        onJustPressed = { _ -> GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed") },
-        onPressContinued = { _, delta -> runLeft(delta) },
-        onJustReleased = { _ ->
+        onJustPressed = { GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed") },
+        onPressContinued = { delta -> runLeft(delta) },
+        onJustReleased = {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
             if (!input.isPressed(MegaControllerButton.RIGHT)) {
                 onJustStopRunning()
                 onNotRunning()
             }
         },
-        onReleaseContinued = { _, _ -> if (!input.isPressed(MegaControllerButton.RIGHT)) onNotRunning() }
+        onReleaseContinued = { if (!input.isPressed(MegaControllerButton.RIGHT)) onNotRunning() }
     )
 
     val right = ButtonActuator(
-        onJustPressed = { _ -> GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed") },
-        onPressContinued = { _, delta -> runRight(delta) },
-        onJustReleased = { _ ->
+        onJustPressed = { GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed") },
+        onPressContinued = { delta -> runRight(delta) },
+        onJustReleased = {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
             if (!input.isPressed(MegaControllerButton.LEFT)) {
                 onJustStopRunning()
                 onNotRunning()
             }
         },
-        onReleaseContinued = { _, _ -> if (!input.isPressed(MegaControllerButton.LEFT)) onNotRunning() }
+        onReleaseContinued = { if (!input.isPressed(MegaControllerButton.LEFT)) onNotRunning() }
     )
 
     val attack = ButtonActuator(
-        onPressContinued = { _, delta ->
+        onPressContinued = { delta ->
             if (!ready || stunned || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JET ||
                 (!charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                 (charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
@@ -94,7 +94,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         }
     )
 
-    val select = ButtonActuator(onJustReleased = { _ ->
+    val select = ButtonActuator(onJustReleased = {
         when (game.selectButtonAction) {
             SelectButtonAction.NEXT_WEAPON -> {
                 if (!ready || damaged || teleporting) {
@@ -118,10 +118,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     })
 
     return ControllerComponent(
-        MegaControllerButton.B pairTo { attack },
-        MegaControllerButton.LEFT pairTo { left },
-        MegaControllerButton.RIGHT pairTo { right },
-        MegaControllerButton.SELECT pairTo { select }
+        MegaControllerButton.B pairTo attack,
+        MegaControllerButton.LEFT pairTo left,
+        MegaControllerButton.RIGHT pairTo right,
+        MegaControllerButton.SELECT pairTo select
     )
 }
 

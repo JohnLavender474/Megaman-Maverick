@@ -11,6 +11,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.MissingComponentException
 import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.entities.GameEntity
+import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonStatus
 import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.players.PlayerSlot
@@ -23,7 +24,8 @@ import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.points.Points
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.input.InputFrame
+import com.maverick.game.engine.input.InputFrame
+import com.megaman.maverick.game.input.of
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -86,6 +88,7 @@ class MegaPlayersTest : DescribeSpec({
         it.addComponent(BodyComponent(Body(BodyType.DYNAMIC, 0f, 0f, 2f, 2f)))
         it.addComponent(BehaviorsComponent())
         it.addComponent(PlayerStateComponent(damageTimer, shootAnimTimer))
+        it.addComponent(ControllerComponent())
         it.addComponent(PointsComponent().also { points -> points.putPoints(ConstKeys.HEALTH, Points(0, 10, 10)) })
     }
 
@@ -211,6 +214,7 @@ class MegaPlayersTest : DescribeSpec({
             megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
             megaman.addComponent(BehaviorsComponent())
             megaman.addComponent(megaman.playerState)
+            megaman.addComponent(ControllerComponent())
             megaman.putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {}
             megaman.putProperty(PlayerKeys.LIGHT) { PlayerLight.STANDARD }
 
@@ -296,6 +300,26 @@ class MegaPlayersTest : DescribeSpec({
 
             player1.input shouldBe frame
             player0.input shouldBe InputFrame.RELEASED
+        }
+
+        it("binds the slot's input source to the entity's controller component") {
+            val players = MegaPlayers(2)
+            val entity = playerEntity()
+            val player = players.register(PlayerSlot(1), entity)
+            val frame = InputFrame.RELEASED.with(MegaControllerButton.B, ButtonStatus.PRESSED)
+
+            players.inputs[PlayerSlot(1)] = frame
+
+            entity.getComponent(ControllerComponent::class)!!.input!!.read() shouldBe frame
+            player.input shouldBe frame
+        }
+
+        it("fails to register an entity without a controller component") {
+            val entity = playerEntity().also { it.removeComponent(ControllerComponent::class) }
+
+            val e = shouldThrow<MissingComponentException> { MegaPlayers().register(PlayerSlot(0), entity) }
+
+            e.type shouldBe ControllerComponent::class
         }
 
         it("targetFor gives the player in slot 0, also when it is not present") {
