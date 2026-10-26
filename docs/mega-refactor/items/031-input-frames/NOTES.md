@@ -589,3 +589,33 @@ A decision for the owner: Option 4 now (with Option 3 possible later), or profil
   nobody confirms within a few seconds, as in display settings. It protects a player who has made confirm
   impossible to press. Here `Esc`, `Enter` in the system screens and the mouse already give a way out, and every
   button always keeps one code. So the timer adds UI for a case that the other layers already cover.
+
+### Reserved keyboard keys and one device per player (2026-10-25)
+
+Owner's decisions, after a discussion of the `Enter` question above. They replace the `Enter` proposal and the
+"second keyboard key set" plan.
+
+- **Reserved keys on the keyboard: `Esc`, `Enter` (and numpad `Enter`), and the four arrow keys.** The bindings
+  screen refuses all of them and says why. The aim: back, `START` and the directions are always available on the
+  keyboard, whatever the bindings are.
+- **`Enter` and the arrows are fixed aliases, not bindings.** The bindings stay 1:1. `Enter` and numpad `Enter`
+  (LibGDX `Keys.ENTER` and `Keys.NUMPAD_ENTER`) always give `START`. The arrow keys always give the d-pad. The
+  default bindings stay `WASD` for the d-pad and `Enter` for `START`. If a player moves `START` to another key,
+  `Enter` still gives `START` too.
+- **Where the aliases are built: in the keyboard device adapter.** The adapter's held mask is the bound keys OR the
+  fixed aliases. This happens before the OR per slot and before the press and release edges. So every reader sees
+  one plain `START` or `UP` in the frame, and no gameplay or menu code reads `Enter` or the arrows directly. Example:
+  the player holds `W` and then presses the up arrow: no second "just pressed".
+- **`Esc` is a system key, not a game button.** In menus it means back. In gameplay it opens the pause screen. The
+  code that adds this gets a `TODO` to consider another action for `Esc` in gameplay later. In co-op it pauses for
+  both players (shared screen).
+- **One device per player in co-op.** Two players never share a keyboard or a gamepad. This drops keyboard-only
+  co-op and the "second keyboard key set" (`keyboard-2`) from the plans. The rule applies to co-op only. In single
+  player, slot 1 keeps every device (Option B's auto mode): the keyboard and any number of gamepads work at the same
+  time, and the keyboard stays the fallback when a gamepad is unplugged.
+- **Gamepads get no fixed aliases.** They keep today's model: the default codes come from the library's mapping
+  (`controller.mapping`) on connect, and the player changes them in the bindings screen. Reason: a fixed alias for
+  the d-pad or `START` would come from the same mapping. For a gamepad that the mapping gets wrong, the alias would
+  also be wrong, and the player could not fix it, because a fixed alias cannot be rebound. A binding that the player
+  can change is safer. The stick threshold also reads the stick axes from that mapping, so the stick has the same
+  limit.

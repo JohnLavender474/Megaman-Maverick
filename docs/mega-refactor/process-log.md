@@ -532,3 +532,11 @@ newest entry at the bottom.
   today's default `START` key).
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031` decisions: reserved keyboard keys (`Esc`, `Enter`, numpad `Enter`, arrows) with `Enter` and
+  the arrows as fixed aliases in the keyboard device adapter; `Esc` opens pause in gameplay (with a `TODO`); one
+  device per player in co-op, any number in single player; no fixed aliases for gamepads.
+- Contract check: not needed (docs only).
+- Follow-up: none.

@@ -50,6 +50,14 @@ Answer to review item 30 (2026-10-22, verbatim):
 - 2026-10-25 (bindings): `Esc` is a reserved system key and can never be bound.
 - 2026-10-25 (bindings): the stick uses one constant threshold (proposal `0.5` per axis; see `NOTES.md`). No
   revert timer.
+- 2026-10-25 (bindings): reserved keyboard keys: `Esc`, `Enter`, numpad `Enter` and the four arrow keys. The bindings
+  screen refuses them. `Enter` and numpad `Enter` always give `START`, and the arrows always give the d-pad, as fixed
+  aliases built in the keyboard device adapter (the bindings stay 1:1; defaults stay `WASD` and `Enter`). `Esc` is a
+  system key: back in menus, pause in gameplay (with a `TODO` to consider another action later).
+- 2026-10-25: one device per player in co-op; two players never share a keyboard or a gamepad. No keyboard-only
+  co-op. In single player, the player can use any number of devices at the same time (auto mode).
+- 2026-10-25 (bindings): gamepads get no fixed aliases. Default codes come from the library mapping on connect, and
+  the player customizes them, as today.
 
 ## Open questions
 
@@ -59,8 +67,6 @@ Answer to review item 30 (2026-10-22, verbatim):
   the game must handle all of these. Ideas from the owner: an input settings UI that the mouse can drive (the mouse
   is not assigned to any player), and the keyboard as a trusted input that can always reach it. See `NOTES.md`,
   "Input assignment: cases and options (2026-10-25)".
-- `Enter`: fully reserved, or a normal key in gameplay (default `START`) that always confirms in the system
-  screens? See `NOTES.md`, "More owner answers on bindings".
 - What triggers a screenshot after the `TODO`?
 - The open binding questions 7 to 10 in `NOTES.md` (`--resetBindings`, bindable triggers, touch overlay layout,
   `selectButtonAction` migration). Questions 5 (threshold) and 7 (revert timer) are answered.
