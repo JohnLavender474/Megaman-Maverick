@@ -3,35 +3,29 @@ package com.megaman.maverick.game.entities.megaman.behaviors
 import com.maverick.game.engine.behaviors.AbstractBehaviorImpl
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.enums.Direction
-import com.maverick.game.engine.common.extensions.gdxArrayOf
-import com.maverick.game.engine.common.extensions.objectMapOf
-import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.controller.buttons.ButtonStatus
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.input
 
 internal fun Megaman.jetpackBehavior(): IBehavior {
     return object : AbstractBehaviorImpl() {
 
         override fun evaluate(delta: Float): Boolean {
             if (dead || !ready || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JET ||
-                !game.controllerPoller.areAllPressed(gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP)) ||
+                !input.isPressed(MegaControllerButton.A) || !input.isPressed(MegaControllerButton.UP) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
                 weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) ||
                 game.isCameraRotating()
             ) return false
 
-            return if (isBehaviorActive(BehaviorType.JETPACKING)) game.controllerPoller.areAllPressed(
-                gdxArrayOf(MegaControllerButton.A, MegaControllerButton.UP)
-            ) else game.controllerPoller.allMatch(
-                objectMapOf(
-                    MegaControllerButton.UP pairTo ButtonStatus.PRESSED,
-                    MegaControllerButton.A pairTo ButtonStatus.JUST_PRESSED
-                )
-            )
+            return if (isBehaviorActive(BehaviorType.JETPACKING))
+                input.isPressed(MegaControllerButton.A) && input.isPressed(MegaControllerButton.UP)
+            else input.getStatus(MegaControllerButton.UP) == ButtonStatus.PRESSED &&
+                input.getStatus(MegaControllerButton.A) == ButtonStatus.JUST_PRESSED
         }
 
         override fun init(vararg params: Any) {

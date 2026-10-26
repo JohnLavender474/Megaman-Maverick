@@ -11,6 +11,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -30,7 +31,7 @@ internal fun Megaman.swimBehavior(): IBehavior {
 
             return when {
                 isBehaviorActive(BehaviorType.SWIMMING) -> return !timer.isFinished()
-                else -> game.controllerPoller.isJustPressed(MegaControllerButton.A) && aButtonTask == AButtonTask.SWIM
+                else -> input.isJustPressed(MegaControllerButton.A) && aButtonTask == AButtonTask.SWIM
             }
         }
 

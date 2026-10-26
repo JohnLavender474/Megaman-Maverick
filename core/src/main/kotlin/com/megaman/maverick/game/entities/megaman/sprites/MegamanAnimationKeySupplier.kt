@@ -12,6 +12,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -115,7 +116,7 @@ fun Megaman.amendKey(baseKey: String) = when {
         }
     }
     baseKey == "jump" &&
-        game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
+        input.isPressed(MegaControllerButton.DOWN) &&
         currentWeapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.REACTOR_SHOT) -> {
         if (fullyCharged) "jump_down_charge_full"
         else if (halfCharged) "jump_down_charge_half"

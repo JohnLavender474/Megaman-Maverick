@@ -26,6 +26,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -79,7 +80,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
     body.putProperty(BodyKeys.PASS_THROUGH_ONE_WAY) { isBehaviorActive(BehaviorType.CLIMBING) }
     body.putProperty(BodyKeys.FALL_THROUGH_PRESS_UP) {
-        isBehaviorActive(BehaviorType.CLIMBING) && game.controllerPoller.isJustPressed(MegaControllerButton.UP)
+        isBehaviorActive(BehaviorType.CLIMBING) && input.isJustPressed(MegaControllerButton.UP)
     }
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true

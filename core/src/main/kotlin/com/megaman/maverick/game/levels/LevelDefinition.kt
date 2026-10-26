@@ -134,6 +134,15 @@ enum class LevelDefinition(
             loadout = LoadoutOverride(weapons = setOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MOON_SCYTHES))
         )
     ),
+    REFACTOR_TEST_031(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "RefactorTest031.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
+        levelOverride = LevelOverride(
+            loadout = LoadoutOverride(weapons = setOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MOON_SCYTHES))
+        )
+    ),
     SMB3_1(
         type = LevelType.MARIO_LEVEL,
         tmxMapSource = "SMB3_1.tmx",

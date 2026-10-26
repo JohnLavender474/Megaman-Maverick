@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="60" height="18" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="34">
+ <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
+ <layer id="8" name="tiles" width="60" height="18">
+  <data encoding="csv">
+175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,
+175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,
+175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,
+175,0,0,0,0,0,0,0,0,0,175,175,175,175,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,175,175,175,175,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,175,175,175,175,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,175,175,175,175,0,0,0,0,0,175,0,0,175,0,0,0,175,175,0,0,0,0,0,0,0,0,175,175,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,175,175,175,175,0,0,0,0,0,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,175,175,175,175,0,0,0,0,0,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,175,175,0,0,0,0,0,0,0,0,175,175,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,175,0,0,175,0,0,0,0,0,0,0,175,0,0,0,0,0,0,175,
+175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,
+175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,
+175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,
+175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,0,0,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175,175
+</data>
+ </layer>
+ <objectgroup id="1" name="game_rooms">
+  <object id="1" name="spring_bouncer" x="0" y="64" width="640" height="448"/>
+  <object id="2" name="pipe_portal" x="704" y="64" width="640" height="448"/>
+  <object id="3" name="ground_slide_blocker" x="1408" y="64" width="512" height="448"/>
+ </objectgroup>
+ <objectgroup id="2" name="blocks">
+  <object id="4" x="0" y="448" width="640" height="128"/>
+  <object id="5" x="0" y="0" width="640" height="96"/>
+  <object id="6" x="0" y="96" width="32" height="352"/>
+  <object id="7" x="608" y="96" width="32" height="352"/>
+  <object id="8" x="704" y="448" width="640" height="128"/>
+  <object id="9" x="704" y="0" width="640" height="96"/>
+  <object id="10" x="704" y="96" width="32" height="352"/>
+  <object id="11" x="1312" y="96" width="32" height="352"/>
+  <object id="12" x="1408" y="448" width="512" height="128"/>
+  <object id="13" x="1408" y="0" width="512" height="96"/>
+  <object id="14" x="1408" y="96" width="32" height="352"/>
+  <object id="15" x="1888" y="96" width="32" height="352"/>
+  <object id="16" x="320" y="96" width="128" height="192"/>
+  <object id="17" x="736" y="224" width="576" height="64"/>
+  <object id="18" x="832" y="192" width="64" height="32"/>
+  <object id="19" x="1152" y="192" width="64" height="32"/>
+  <object id="20" x="832" y="288" width="64" height="32"/>
+  <object id="21" x="1152" y="288" width="64" height="32"/>
+  <object id="25" name="GroundSlideBlocker" x="1664" y="96" width="32" height="352"/>
+ </objectgroup>
+ <objectgroup id="3" name="player">
+  <object id="22" name="0" x="128" y="416" width="32" height="32"/>
+  <object id="23" name="1" x="768" y="192" width="32" height="32"/>
+  <object id="24" name="2" x="1504" y="416" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="4" name="enemies"/>
+ <objectgroup id="5" name="hazards"/>
+ <objectgroup id="6" name="TODO"/>
+ <objectgroup id="7" name="specials">
+  <object id="26" name="SpringBouncer" x="224" y="416" width="32" height="32">
+   <properties>
+    <property name="direction" value="up"/>
+   </properties>
+  </object>
+  <object id="27" name="SpringBouncer" x="352" y="288" width="64" height="32">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="28" name="SpringBouncer" x="576" y="384" width="32" height="64">
+   <properties>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="29" name="SpringBouncer" x="32" y="384" width="32" height="64">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="30" name="PipePortal" x="848" y="184" width="32" height="24">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="next_key" type="int" value="2"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="this_key" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="31" name="PipePortal" x="848" y="304" width="32" height="24">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="this_key" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="32" name="PipePortal" x="1168" y="304" width="32" height="24">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="next_key" type="int" value="4"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="this_key" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="33" name="PipePortal" x="1168" y="184" width="32" height="24">
+   <properties>
+    <property name="direction" value="up"/>
+    <property name="spawn_type" value="spawn_now"/>
+    <property name="this_key" type="int" value="4"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

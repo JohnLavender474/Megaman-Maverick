@@ -11,6 +11,8 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.MissingComponentException
 import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.entities.GameEntity
+import com.maverick.game.engine.controller.buttons.ButtonStatus
+import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -20,6 +22,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.points.Points
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.input.InputFrame
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -275,6 +279,23 @@ class MegaPlayersTest : DescribeSpec({
     describe("MegaPlayers") {
         it("has a capacity of 1 by default") {
             MegaPlayers().capacity shouldBe 1
+        }
+
+        it("gives each player the input frame of its slot") {
+            val players = MegaPlayers(2)
+            val player0 = players.register(PlayerSlot(0), playerEntity())
+            val player1 = players.register(PlayerSlot(1), playerEntity())
+            val poller = mockk<IControllerPoller>()
+            every { poller.getStatus(any()) } returns ButtonStatus.RELEASED
+            every { poller.getStatus(MegaControllerButton.A) } returns ButtonStatus.JUST_PRESSED
+            val frame = InputFrame.of(poller)
+
+            player0.input shouldBe InputFrame.RELEASED
+
+            players.inputs[PlayerSlot(1)] = frame
+
+            player1.input shouldBe frame
+            player0.input shouldBe InputFrame.RELEASED
         }
 
         it("targetFor gives the player in slot 0, also when it is not present") {

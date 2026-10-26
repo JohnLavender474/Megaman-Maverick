@@ -205,15 +205,16 @@ class SpringBouncer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesE
             Direction.LEFT -> impulse.forceX = -BOUNCE_IMPULSE * ConstVals.PPM
             Direction.RIGHT -> impulse.forceX = BOUNCE_IMPULSE * ConstVals.PPM
         }
-        if (fixture.getEntity().asPlayer != null) {
-            val controllerPoller = game.controllerPoller
+        val player = fixture.getEntity().asPlayer
+        if (player != null) {
+            val input = player.input
             when {
-                (direction == Direction.UP && controllerPoller.isPressed(MegaControllerButton.UP)) ||
-                    (direction == Direction.DOWN && controllerPoller.isPressed(MegaControllerButton.DOWN)) ->
+                (direction == Direction.UP && input.isPressed(MegaControllerButton.UP)) ||
+                    (direction == Direction.DOWN && input.isPressed(MegaControllerButton.DOWN)) ->
                     impulse.forceY *= 2f
 
-                (direction == Direction.LEFT && controllerPoller.isPressed(MegaControllerButton.LEFT)) ||
-                    (direction == Direction.RIGHT && controllerPoller.isPressed(MegaControllerButton.RIGHT)) ->
+                (direction == Direction.LEFT && input.isPressed(MegaControllerButton.LEFT)) ||
+                    (direction == Direction.RIGHT && input.isPressed(MegaControllerButton.RIGHT)) ->
                     impulse.forceX *= 2f
             }
         }

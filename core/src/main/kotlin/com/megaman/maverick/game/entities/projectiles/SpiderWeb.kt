@@ -58,7 +58,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         private const val BLINK_WHITE_DUR = 0.3f
         private const val START_SIZE = 0.75f
         private const val SIZE_INCREASE_PER_SECOND = 0.5f
-        private val BUTTONS_TO_GET_UNSTUCK = gdxArrayOf<Any>(
+        private val BUTTONS_TO_GET_UNSTUCK = gdxArrayOf(
             MegaControllerButton.UP,
             MegaControllerButton.DOWN,
             MegaControllerButton.LEFT,
@@ -182,7 +182,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
             stuckToMegaman -> {
                 body.setCenter(targetPlayer.body.getCenter())
-                if (game.controllerPoller.isAnyJustReleased(BUTTONS_TO_GET_UNSTUCK)) {
+                if (BUTTONS_TO_GET_UNSTUCK.any { targetPlayer.input.isJustReleased(it) }) {
                     presses++
                     blinkWhiteTimer.reset()
                     if (overlapsGameCamera()) requestToPlaySound(SoundAsset.THUMP_SOUND, false)

@@ -12,6 +12,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey
 
@@ -90,7 +91,7 @@ internal fun Megaman.shouldEqualAnimKeysTriggerChange(key: String?): Boolean {
     // be frozen still if the player rapid fires the SHOOT button.
     return key != null && currentWeapon == MegamanWeapon.RODENT_CLAWS &&
         weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.NOT_CHARGED) &&
-        game.controllerPoller.isPressed(MegaControllerButton.B) &&
+        input.isPressed(MegaControllerButton.B) &&
         key.contains("slash") && !key.contains("stand")
 }
 

@@ -8,6 +8,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
@@ -16,7 +17,7 @@ internal fun Megaman.crouchBehavior(): IBehavior {
 
         override fun evaluate(delta: Float): Boolean {
             when {
-                !game.controllerPoller.isPressed(MegaControllerButton.DOWN) -> buttonToCrouchDelay.reset()
+                !input.isPressed(MegaControllerButton.DOWN) -> buttonToCrouchDelay.reset()
                 else -> buttonToCrouchDelay.update(delta)
             }
 
@@ -30,7 +31,7 @@ internal fun Megaman.crouchBehavior(): IBehavior {
             if (dead || damaged || !ready || !canMove || game.isCameraRotating() ||
                 isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.JETPACKING) ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
-                !game.controllerPoller.isPressed(MegaControllerButton.DOWN) ||
+                !input.isPressed(MegaControllerButton.DOWN) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
                 when {
                     direction.isVertical() -> abs(body.physics.velocity.x)

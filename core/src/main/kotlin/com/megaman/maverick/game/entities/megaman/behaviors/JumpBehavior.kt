@@ -12,6 +12,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -24,8 +25,8 @@ internal fun Megaman.jumpBehavior(): IBehavior {
             if (dead || !ready || !canMove || damaged || teleporting ||
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
-                !game.controllerPoller.isPressed(MegaControllerButton.A) ||
-                (bodyOverGround && game.controllerPoller.isPressed(MegaControllerButton.DOWN)) ||
+                !input.isPressed(MegaControllerButton.A) ||
+                (bodyOverGround && input.isPressed(MegaControllerButton.DOWN)) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@FunctionalBehaviorImpl false
 
@@ -41,7 +42,7 @@ internal fun Megaman.jumpBehavior(): IBehavior {
 
             return@FunctionalBehaviorImpl (
                 aButtonTask == AButtonTask.JUMP &&
-                    game.controllerPoller.isJustPressed(MegaControllerButton.A) &&
+                    input.isJustPressed(MegaControllerButton.A) &&
                     (bodyOverGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
                 )
         },

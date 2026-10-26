@@ -112,7 +112,7 @@ object MegamanValues {
 
     const val HITS_TO_UNFREEZE = 3
     const val FROZEN_PUSH_DUR = 0.2f
-    val BUTTONS_TO_UNFREEZE = gdxArrayOf<Any>(MegaControllerButton.B)
+    val BUTTONS_TO_UNFREEZE = gdxArrayOf(MegaControllerButton.B)
 
     val NEEDLE_ANGLES = gdxArrayOf(90f, 70f, 45f, 15f, 0f, 345f, 315f, 290f, 270f)
     val NEEDLE_X_OFFSETS = gdxArrayOf(-0.2f, -0.15f, -0.1f, -0.05f, 0f, 0.05f, 0.1f, 0.15f, 0.2f)

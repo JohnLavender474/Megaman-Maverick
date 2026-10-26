@@ -905,8 +905,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
     }
 
-    private fun isPauseButtonRequested() = controllerPoller.isJustReleased(MegaControllerButton.START) ||
-        (game.selectButtonAction == SelectButtonAction.START && controllerPoller.isJustPressed(MegaControllerButton.SELECT))
+    private fun isPauseButtonRequested() = player.input.isJustReleased(MegaControllerButton.START) ||
+        (game.selectButtonAction == SelectButtonAction.START && player.input.isJustPressed(MegaControllerButton.SELECT))
 
     override fun render(delta: Float) {
         /*

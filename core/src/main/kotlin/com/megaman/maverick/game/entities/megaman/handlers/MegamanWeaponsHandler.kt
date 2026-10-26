@@ -41,6 +41,7 @@ import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -671,7 +672,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         // Set Megaman's "shoot_down" property to true/false based on "shootingDown"
         val shootingDown = (megaman.isBehaviorActive(BehaviorType.JUMPING) || !megaman.bodyOverGround) &&
             !megaman.isAnyBehaviorActive(BehaviorType.AIR_DASHING, BehaviorType.WALL_SLIDING) &&
-            game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+            megaman.input.isPressed(MegaControllerButton.DOWN)
 
         megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", shootingDown)
 

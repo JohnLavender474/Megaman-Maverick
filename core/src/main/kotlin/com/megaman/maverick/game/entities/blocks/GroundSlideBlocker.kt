@@ -41,5 +41,5 @@ class GroundSlideBlocker(game: MegamanMaverickGame): AbstractBlock(game) {
     }
 
     private fun isActive() = !targetPlayer.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) &&
-        !game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+        !targetPlayer.input.isPressed(MegaControllerButton.DOWN)
 }

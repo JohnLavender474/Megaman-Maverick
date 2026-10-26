@@ -67,7 +67,8 @@ The full scan is in the item `NOTES.md`, "Scan: the size of the work (2026-10-25
    `MegaControllerButton`. Proposed form: a `@JvmInline value class` over one `Int` (2 bits per button, 16 bits),
    so a frame is never allocated. The default frame has every button `RELEASED` (note: `RELEASED` is not ordinal 0
    in `ButtonStatus`). Its query methods are the ones the moved readers use, with the poller's meaning:
-   `getStatus`, `isPressed`, `isJustPressed`, `isJustReleased`, `isAnyJustReleased`, `areAllPressed`.
+   `getStatus`, `isPressed`, `isJustPressed`, `isJustReleased`. (`isAnyJustReleased` and `areAllPressed` were in the
+   approved scope; the owner removed them on 2026-10-25: the callers use Kotlin's `any` and plain `&&`.)
 2. **The frame store and the builder.** The players service keeps one frame per slot. Right after
    `controllerPoller.run()` at `MegamanMaverickGame.kt:529`, the game copies the poller's statuses into slot 0's
    frame, on every frame where the poller runs (also while paused). On a frame with no poll, the frame keeps its
@@ -92,7 +93,7 @@ New APIs and their first callers:
 
 | API | First callers |
 |---|---|
-| `InputFrame` and its query methods | the moved readers (each method has at least one caller: `getStatus` in `JetpackBehavior`, `isAnyJustReleased` in `Megaman.kt` and `SpiderWeb`, `areAllPressed` in `JetpackBehavior`, the others in the behaviors and pause) |
+| `InputFrame` and its query methods | the moved readers (each method has at least one caller: `getStatus` in `JetpackBehavior`, the others in the behaviors and pause) |
 | Building a frame from the poller | `MegamanMaverickGame.render` |
 | The per-slot frame store in the players service | the builder (write), `MegaPlayer.input` (read) |
 | `MegaPlayer.input` | `PipePortal`, `SpringBouncer`, `SpiderWeb`, `GroundSlideBlocker`, pause, Megaman's accessor |

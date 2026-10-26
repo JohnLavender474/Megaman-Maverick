@@ -12,6 +12,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: GroundSlideBehavior"
@@ -41,15 +42,15 @@ internal fun Megaman.groundSlideBehavior(): IBehavior {
             if (!bodyOverGround) return false
 
             if (damaged || maxTimer.isFinished() ||
-                (minTimer.isFinished() && !game.controllerPoller.isPressed(MegaControllerButton.DOWN))
+                (minTimer.isFinished() && !input.isPressed(MegaControllerButton.DOWN))
             ) return false
 
             return when {
                 isBehaviorActive(BehaviorType.GROUND_SLIDING) -> !minTimer.isFinished() ||
-                    (game.controllerPoller.isPressed(MegaControllerButton.A) && directionOnInit == direction)
+                    (input.isPressed(MegaControllerButton.A) && directionOnInit == direction)
                 else -> body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    game.controllerPoller.isPressed(MegaControllerButton.DOWN) &&
-                    game.controllerPoller.isJustPressed(MegaControllerButton.A)
+                    input.isPressed(MegaControllerButton.DOWN) &&
+                    input.isJustPressed(MegaControllerButton.A)
             }
         }
 

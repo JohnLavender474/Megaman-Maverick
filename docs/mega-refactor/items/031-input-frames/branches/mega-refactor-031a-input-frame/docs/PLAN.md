@@ -42,7 +42,7 @@ Each query method gets its first caller in steps 5 to 7. If a method has no call
 - Changes: none. In the worktree, run `./gradlew clean engine:test core:test lwjgl3:jar`.
 - Check: the build passes. Write the test counts (expected 470 engine, 144 core) and the warning count (expected
   114) in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Test map (subagent)
 
@@ -58,7 +58,7 @@ Each query method gets its first caller in steps 5 to 7. If a method has no call
   - `ground_slide_blocker`: a `GroundSlideBlocker` (in `blocks`) across a passage, with floor on both sides.
 - Check: a short launch of each room (`--level REFACTOR_TEST_031 --room <name>`) on the baseline code shows no
   exception.
-- Done: no
+- Done: yes
 
 ### 4. `InputFrame`, the store and the builder
 
@@ -77,7 +77,7 @@ Each query method gets its first caller in steps 5 to 7. If a method has no call
     tick, the disabled-button flip); a player's `input` returns its slot's frame.
 - Check: build and tests pass. No reader uses the frame yet, so the game is unchanged; a short launch of
   `REFACTOR_TEST_029 --room movement` shows no exception.
-- Done: no
+- Done: yes
 
 ### 5. Megaman's reads (group a)
 
@@ -90,7 +90,7 @@ Each query method gets its first caller in steps 5 to 7. If a method has no call
 - Check: build and tests pass. A script lists every changed read (file, method, button) before and after, and they
   match one for one. No `controllerPoller` and no `poller.` button read is left under `M/`. A short launch of
   `REFACTOR_TEST_029 --room movement` shows no exception.
-- Done: no
+- Done: yes
 
 ### 6. The special entities (group b)
 
@@ -99,7 +99,7 @@ Each query method gets its first caller in steps 5 to 7. If a method has no call
 - Check: build and tests pass; the one-for-one list matches; no `controllerPoller` under `C/entities/`,
   `C/world/` or `C/players/`. Short launches of `REFACTOR_TEST_031` `spring_bouncer`, `pipe_portal` and
   `ground_slide_blocker` show no exception.
-- Done: no
+- Done: yes
 
 ### 7. Pause (group c)
 
@@ -109,7 +109,7 @@ Each query method gets its first caller in steps 5 to 7. If a method has no call
   readers are only the frame builder, `ControllerSystem` and `onEvent` in `MegamanMaverickGame`, the menus and
   screens, the `controllers` package and the dead `ScreenController`. Every `InputFrame` query method has a
   caller. A short launch of `INTRO_STAGE --room room1` shows no exception.
-- Done: no
+- Done: yes
 
 ### 8. Contract checks
 
@@ -117,4 +117,4 @@ Each query method gets its first caller in steps 5 to 7. If a method has no call
 - Check: every automated check in `docs/CONTRACT.md` on a clean build (tests, jar, warnings, the contact file, the
   greps, the one-for-one list, the single build point). Write the results in the process log. Then give the owner
   the manual checks as a list of commands, each with `--level` and `--room`, run from the worktree.
-- Done: no
+- Done: yes

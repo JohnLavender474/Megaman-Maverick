@@ -6,7 +6,6 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonActuator
-import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -18,6 +17,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
@@ -27,28 +27,28 @@ const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val left = ButtonActuator(
         onJustPressed = { _ -> GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed") },
-        onPressContinued = { poller, delta -> runLeft(poller, delta) },
-        onJustReleased = { poller ->
+        onPressContinued = { _, delta -> runLeft(delta) },
+        onJustReleased = { _ ->
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
-            if (!poller.isPressed(MegaControllerButton.RIGHT)) {
+            if (!input.isPressed(MegaControllerButton.RIGHT)) {
                 onJustStopRunning()
                 onNotRunning()
             }
         },
-        onReleaseContinued = { poller, _ -> if (!poller.isPressed(MegaControllerButton.RIGHT)) onNotRunning() }
+        onReleaseContinued = { _, _ -> if (!input.isPressed(MegaControllerButton.RIGHT)) onNotRunning() }
     )
 
     val right = ButtonActuator(
         onJustPressed = { _ -> GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed") },
-        onPressContinued = { poller, delta -> runRight(poller, delta) },
-        onJustReleased = { poller ->
+        onPressContinued = { _, delta -> runRight(delta) },
+        onJustReleased = { _ ->
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
-            if (!poller.isPressed(MegaControllerButton.LEFT)) {
+            if (!input.isPressed(MegaControllerButton.LEFT)) {
                 onJustStopRunning()
                 onNotRunning()
             }
         },
-        onReleaseContinued = { poller, _ -> if (!poller.isPressed(MegaControllerButton.LEFT)) onNotRunning() }
+        onReleaseContinued = { _, _ -> if (!input.isPressed(MegaControllerButton.LEFT)) onNotRunning() }
     )
 
     val attack = ButtonActuator(
@@ -151,12 +151,12 @@ private fun Megaman.setToNextWeapon() {
     }
 }
 
-private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
+private fun Megaman.runLeft(delta: Float) {
     if (!ready || !canMove || damaged || teleporting ||
-        poller.isPressed(MegaControllerButton.RIGHT) ||
+        input.isPressed(MegaControllerButton.RIGHT) ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround)
     ) {
-        if (!poller.isPressed(MegaControllerButton.RIGHT)) {
+        if (!input.isPressed(MegaControllerButton.RIGHT)) {
             running = false
 
             if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting)
@@ -195,12 +195,12 @@ private fun Megaman.runLeft(poller: IControllerPoller, delta: Float) {
     }
 }
 
-private fun Megaman.runRight(poller: IControllerPoller, delta: Float) {
+private fun Megaman.runRight(delta: Float) {
     if (!ready || !canMove || damaged || teleporting ||
-        poller.isPressed(MegaControllerButton.LEFT) ||
+        input.isPressed(MegaControllerButton.LEFT) ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround)
     ) {
-        if (!poller.isPressed(MegaControllerButton.LEFT)) running = false
+        if (!input.isPressed(MegaControllerButton.LEFT)) running = false
 
         if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting)
             facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT

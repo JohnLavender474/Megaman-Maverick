@@ -8,6 +8,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
@@ -21,9 +22,9 @@ internal fun Megaman.wallSlideBehavior(): IBehavior {
             ) return@evaluate false
 
             if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
-                    game.controllerPoller.isPressed(MegaControllerButton.LEFT)) ||
+                    input.isPressed(MegaControllerButton.LEFT)) ||
                 (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) &&
-                    game.controllerPoller.isPressed(MegaControllerButton.RIGHT))
+                    input.isPressed(MegaControllerButton.RIGHT))
             ) {
                 if (damaged) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "damaged")

@@ -151,13 +151,13 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         return when (direction) {
             Direction.UP -> player.feetFixture.overlaps(body.getBounds()) &&
-                game.controllerPoller.isPressed(MegaControllerButton.DOWN)
+                player.input.isPressed(MegaControllerButton.DOWN)
             Direction.DOWN -> player.headFixture.overlaps(body.getBounds()) &&
-                game.controllerPoller.isPressed(MegaControllerButton.UP)
+                player.input.isPressed(MegaControllerButton.UP)
             Direction.LEFT -> player.rightSideFixture.overlaps(body.getBounds()) &&
-                game.controllerPoller.isPressed(MegaControllerButton.RIGHT)
+                player.input.isPressed(MegaControllerButton.RIGHT)
             Direction.RIGHT -> player.leftSideFixture.overlaps(body.getBounds()) &&
-                game.controllerPoller.isPressed(MegaControllerButton.LEFT)
+                player.input.isPressed(MegaControllerButton.LEFT)
         }
     }
 

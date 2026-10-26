@@ -14,6 +14,7 @@ import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -28,13 +29,13 @@ internal fun Megaman.airDashBehavior(): IBehavior {
         private var lastFacing = Facing.RIGHT
 
         private fun isAirDashButtonActivated() = when (game.selectButtonAction) {
-            SelectButtonAction.AIR_DASH -> game.controllerPoller.isPressed(MegaControllerButton.SELECT)
-            else -> game.controllerPoller.isPressed(MegaControllerButton.A)
+            SelectButtonAction.AIR_DASH -> input.isPressed(MegaControllerButton.SELECT)
+            else -> input.isPressed(MegaControllerButton.A)
         }
 
         private fun isAirDashButtonJustActivated() = when (game.selectButtonAction) {
-            SelectButtonAction.AIR_DASH -> game.controllerPoller.isJustPressed(MegaControllerButton.SELECT)
-            else -> game.controllerPoller.isJustPressed(MegaControllerButton.A)
+            SelectButtonAction.AIR_DASH -> input.isJustPressed(MegaControllerButton.SELECT)
+            else -> input.isJustPressed(MegaControllerButton.A)
         }
 
         override fun evaluate(delta: Float): Boolean {
@@ -48,7 +49,7 @@ internal fun Megaman.airDashBehavior(): IBehavior {
                 (currentWeapon != MegamanWeapon.RUSH_JET && bodyOverGround) ||
                 (currentWeapon == MegamanWeapon.RUSH_JET &&
                     (weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) ||
-                        game.controllerPoller.isPressed(MegaControllerButton.UP)))
+                        input.isPressed(MegaControllerButton.UP)))
             ) return false
 
             if (isBehaviorActive(BehaviorType.AIR_DASHING))

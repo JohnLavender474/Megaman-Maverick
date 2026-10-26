@@ -17,9 +17,15 @@ import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.input.InputFrame
+import com.megaman.maverick.game.input.PlayerInputs
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 
-class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity) : PlayerView {
+class MegaPlayer(
+    override val slot: PlayerSlot,
+    override val entity: IGameEntity,
+    private val inputs: PlayerInputs
+) : PlayerView {
 
     private val bodyComponent = entity.require(BodyComponent::class)
     private val behaviorsComponent = entity.require(BehaviorsComponent::class)
@@ -42,6 +48,9 @@ class MegaPlayer(override val slot: PlayerSlot, override val entity: IGameEntity
         //  rule for item 047
         entity.putProperty(PlayerKeys.VIEW, this)
     }
+
+    val input: InputFrame
+        get() = inputs[slot]
 
     val body: Body
         get() = bodyComponent.body

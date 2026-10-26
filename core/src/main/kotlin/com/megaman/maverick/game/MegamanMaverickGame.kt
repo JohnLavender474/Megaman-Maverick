@@ -93,6 +93,7 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
+import com.megaman.maverick.game.input.InputFrame
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.players.megaman
@@ -527,6 +528,7 @@ class MegamanMaverickGame(
 
             diagnostics?.beginEntry("controllerPoller")
             controllerPoller.run()
+            players.inputs[PlayerSlot(0)] = InputFrame.of(controllerPoller)
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("screenController")

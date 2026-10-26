@@ -830,7 +830,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             frozenPushTimer.update(delta)
             if (frozen) {
                 if (frozenPushTimer.isFinished() &&
-                    game.controllerPoller.isAnyJustReleased(MegamanValues.BUTTONS_TO_UNFREEZE)
+                    MegamanValues.BUTTONS_TO_UNFREEZE.any { input.isJustReleased(it) }
                 ) {
                     hitsToUnfreeze++
                     frozenPushTimer.reset()
