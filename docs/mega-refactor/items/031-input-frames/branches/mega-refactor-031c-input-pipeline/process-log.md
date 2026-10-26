@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: a new input pipeline with the same behavior: device adapters, one held mask per device, an engine edge builder with the lock; the poller goes
-- Done: `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`
-- Next: the owner approves `docs/PLAN.md`; then step 1 (branch start)
+- Done: planning (scope, contract, plan approved); step 1
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -27,3 +27,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written (8 steps: branch start, baseline with the
   `--screen` launches, the temporary suite harness, the new pipeline with the lock and the facade, removals and moves,
   contract checks, the play test, the suite's removal and the merge).
+- The owner approved `docs/PLAN.md`. Step 1 (branch start): `ITEMS.md` row and `ITEM.md` set to active; worktree
+  created.

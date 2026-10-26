@@ -2,8 +2,8 @@
 
 How to do the work in `SCOPE.md`. This was written ahead of time on `master`, before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 Build with the full JDK 17: `JAVA_HOME=~/.jdks/corretto-17.0.13`. Read the test counts from `build/test-results`.
 Smoke launches are short (about 20 seconds); a clean exit, or the timeout with no exception, is a pass. The owner
@@ -33,7 +33,7 @@ adapters with fake devices. Production passes the real devices.
   `031c` active in the `ITEM.md` branches line; set the branch `process-log.md` state to `active`. Then
   `git worktree add -b mega-refactor-031c-input-pipeline .worktrees/mega-refactor-031c-input-pipeline master`.
 - Check: `git worktree list` shows the worktree on the new branch.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
