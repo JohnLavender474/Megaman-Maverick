@@ -55,6 +55,17 @@ class PlayersTest : DescribeSpec({
             shouldThrow<IllegalStateException> { players.register(PlayerSlot(0), ScoredEntity()) }
         }
 
+        it("fails to register an entity that is already a player, and changes no slot") {
+            val players = players()
+            val entity = players.register(PlayerSlot(0), ScoredEntity())
+
+            shouldThrow<IllegalStateException> { players.register(PlayerSlot(1), entity) }
+
+            players.get(PlayerSlot(0)) shouldBeSameInstanceAs entity
+            players.get(PlayerSlot(1)) shouldBe null
+            entity.playerSlot shouldBe PlayerSlot(0)
+        }
+
         it("fails to register in a slot out of range") {
             shouldThrow<IllegalArgumentException> { players().register(PlayerSlot(3), ScoredEntity()) }
         }

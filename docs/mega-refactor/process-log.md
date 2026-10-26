@@ -847,3 +847,13 @@ newest entry at the bottom.
 - Contract check: clean build, 505 engine and 160 core tests pass, warnings unchanged (110), `contact-rule-selection.txt`
   unchanged, greps, `javap` and the one-for-one check pass; the owner's play test passes (all manual checks).
 - Follow-up: item `061` is done. No backlog or bug candidates. Next options: item `062`, `031d`.
+
+## 2026-10-26 — master (direct change)
+
+- Summary: `Players.register` rejects an entity that is already a player (before, a second `register` replaced its
+  `PlayerComponent` silently and left the entity in two slots), and the `PlayerComponent` constructor is `internal`, so
+  only the engine registry creates the component. A direct change to `master`, asked for by the owner: a small fix to a
+  smell in the code that `061c` just merged, with no gameplay change (the one caller registers Megaman once).
+- Contract check: build and tests on `master`: 506 engine and 160 core tests pass (one new `PlayersTest` case), jar
+  builds.
+- Follow-up: none. Other code can still call `removeComponent(PlayerComponent::class)`; not guarded.

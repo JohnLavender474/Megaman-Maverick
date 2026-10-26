@@ -3,7 +3,7 @@ package com.maverick.game.engine.players
 import com.maverick.game.engine.components.IGameComponent
 import com.maverick.game.engine.entities.IGameEntity
 
-class PlayerComponent(val slot: PlayerSlot) : IGameComponent
+class PlayerComponent internal constructor(val slot: PlayerSlot) : IGameComponent
 
 val IGameEntity.playerSlot: PlayerSlot?
     get() = getComponent(PlayerComponent::class)?.slot

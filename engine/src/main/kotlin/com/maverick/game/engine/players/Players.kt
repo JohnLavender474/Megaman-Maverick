@@ -13,6 +13,7 @@ open class Players<E : IGameEntity>(final override val capacity: Int) : IPlayers
     open fun register(slot: PlayerSlot, entity: E): E {
         checkInRange(slot)
         if (entities[slot.index] != null) throw IllegalStateException("$slot already has a player")
+        if (entity.isPlayer) throw IllegalStateException("The entity is already the player in ${entity.playerSlot}")
         entity.addComponent(PlayerComponent(slot))
         entities[slot.index] = entity
         return entity
