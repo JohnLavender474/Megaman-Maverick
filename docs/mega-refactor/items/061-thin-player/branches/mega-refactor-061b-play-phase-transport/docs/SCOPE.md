@@ -1,4 +1,4 @@
-# Scope: mega-refactor-061b-lifecycle-transport
+# Scope: mega-refactor-061b-play-phase-transport
 
 What this branch changes and why. Write this file after the scan, before `CONTRACT.md` and `PLAN.md`. The user
 approves it. If the scope changes later, update this file and get approval again.
@@ -8,16 +8,33 @@ approves it. If the scope changes later, update this file and get approval again
 
 ## Goal
 
-`ready` and `teleporting` stop being player state. They become entity state that any entity can have: a lifecycle
-phase and a transport state, each a small component read by free functions on `IGameEntity`. Callers ask the entity,
+`ready` and `teleporting` stop being player state. They become entity state that any entity can have: a play phase
+and a transport state, each a small component read by free functions on `IGameEntity`. Callers ask the entity,
 not a player view. The game plays the same.
 
 ## Item
 
-`061`. Decisions of 2026-10-26 in `ITEM.md`: `LifecycleComponent` with `Lifecycle { ENTERING, ACTIVE, LEAVING }` (an
-entity without it reads as `ACTIVE`); `TransportComponent` holding the teleporter (`teleporting` means a teleporter
-is set); no player wrappers for entity questions. Research: item `NOTES.md`, "`ready` and `teleporting` for any
-entity".
+`061`. Decisions of 2026-10-26 in `ITEM.md`: a play phase component (renamed from the first proposal's
+`Lifecycle`: `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }`; an entity without it reads as `IN_PLAY`; `inPlay` is a pure
+phase check); `TransportComponent` holding the teleporter (`teleporting` means a teleporter is set); no player wrappers
+for entity questions. Research: item `NOTES.md`, "`ready` and `teleporting` for any entity" and "'Lifecycle' versus
+spawning, spawned and dead".
+
+### Three axes
+
+An entity has three separate kinds of state, and this branch touches only the second:
+
+1. **Existence** (engine): queued to spawn, spawned, queued to destroy, destroyed (`IGameEntity.spawned`,
+   `MegaGameEntity.dead`). The root `CLAUDE.md` calls `init`/`onSpawn`/`onDestroy` the "Entity lifecycle".
+2. **Play phase** (this branch): the entity exists, but takes part in play only between its entrance and its exit.
+   `PRE_PLAY` and `POST_PLAY` are relative to play, not to the world: `POST_PLAY` is right both after death (the
+   entity is destroyed) and during the level-end beam-out (it is spawned).
+3. **Health death:** health used up, plus any defeat animation (`wasHealthDepleted`, the boss `defeated`).
+
+`inPlay` makes no claim about existence: it does not check `spawned` or `dead`. Readers that test both today keep
+both (`MegaLevelScreen.kt:927`, `BulletBillLauncher.kt:108`, `LaserBeamer.kt:248`, `Megaman.kt:117`); folding `!dead`
+into `inPlay` would change the readers that read `ready` alone (`FeetSandRule`, `Rain`, `Darkness*`, `TubeBeamer`,
+`BuilderKibbo`) for one or two frames at death.
 
 ## Current state
 
@@ -53,12 +70,16 @@ Based on `master` at `447ae2b54`. `C/` = `core/src/main/kotlin/com/megaman/maver
 
 ## In scope
 
-1. **Lifecycle** (core, a new package, for example `C/entities/state/`): `enum class Lifecycle { ENTERING, ACTIVE,
-   LEAVING }`; `LifecycleComponent(var phase = ENTERING)` with a `reset()` that keeps the value (as today); free
-   functions `IGameEntity.lifecycle` (`ACTIVE` without the component), `IGameEntity.inPlay` (`lifecycle == ACTIVE`;
-   name: see "Open questions") and `IGameEntity.setLifecycle(phase)`.
-   - Writers: the spawn sequence start → `ENTERING`, the end of the beam → `ACTIVE`, death → `LEAVING`, the level end
-     → `LEAVING`.
+1. **Play phase** (core, a new package, for example `C/entities/state/`): `enum class PlayPhase { PRE_PLAY, IN_PLAY,
+   POST_PLAY }`; `PlayPhaseComponent(var phase = PRE_PLAY)` with a `reset()` that keeps the value (as today); free
+   functions `IGameEntity.playPhase` (`IN_PLAY` without the component), `IGameEntity.inPlay`
+   (`playPhase == IN_PLAY`) and `IGameEntity.setPlayPhase(phase)`.
+   - Writers: the spawn sequence start → `PRE_PLAY`, the end of the beam → `IN_PLAY`, death → `POST_PLAY`, the level
+     end → `POST_PLAY`.
+   - Timing (unchanged from today's `ready` writes): `PRE_PLAY` is written before `engine.spawn` (the spawn handler's
+     `init`); `POST_PLAY` at death is written after `destroyNow` (when `PLAYER_JUST_DIED` arrives); at the level end,
+     `POST_PLAY` starts about 8 s after the `LEVEL_END` locks (at the end of the pre-beam); `reset()` keeps the value,
+     so the death value lasts until the next spawn sequence.
    - Readers: every `ready` reader reads `inPlay` on the entity (`player.entity.inPlay` outside Megaman; `inPlay`
      inside). `Megaman.ready` and `MegaPlayer.ready` go. `Rain` reads the entity directly (a non-player without the
      component reads as in play, as `?: true` gives today).
@@ -81,16 +102,18 @@ New APIs and their first callers:
 
 | API | First callers |
 |---|---|
-| `Lifecycle`, `LifecycleComponent`, `lifecycle`, `inPlay`, `setLifecycle` | the three level handlers; the `ready` readers |
+| `PlayPhase`, `PlayPhaseComponent`, `playPhase`, `inPlay`, `setPlayPhase` | the three level handlers; the `ready` readers |
 | `TransportComponent`, `teleporter`, `teleporting` | Megaman's controller, behaviors and sprites; `PreciousGem` |
 | `beginTeleport`, `endTeleport` | `PipePortal`, `PortalHopper`, `CapsuleTeleporter` |
 
 ## Out of scope
 
-- Boss `ready` and `betweenReadyAndEndBossSpawnEvent` (item `048`, where `AbstractBoss` is broken up).
+- Boss `ready` and `betweenReadyAndEndBossSpawnEvent` (item `048`, where `AbstractBoss` is broken up). For that work:
+  the boss intro is `PRE_PLAY`; the boss `defeated` is a dying state (spawned, health depleted), not `POST_PLAY` by
+  default (today `ready` stays `true` during the defeat, and mapping it would change `canDamage`).
 - The enemy spawn blink (until a reader outside `AbstractEnemy` needs it).
 - `ITeleporterEntity.isTeleporting` stays per teleporter (a global check in `shouldTeleport` would change play).
-- An engine move of `Lifecycle` (with item `012`, when an engine system reads it).
+- An engine move of `PlayPhase` (with item `012`, when an engine system reads it).
 - The other `MegaPlayerAccess.kt` functions (a later `061` branch).
 
 ## Intended changes
@@ -114,7 +137,9 @@ No branch is active in a worktree.
 
 ## Open questions
 
-1. **The name of "in the `ACTIVE` phase".** Proposal: `inPlay`. Reason: `isActive` already names methods on behaviors,
-   fixtures, `Death`, `InfernoDeath` and `GroundSlideBlocker`, so `entity.isActive` would be easy to misread. Other
-   choice: compare the phase (`entity.lifecycle == Lifecycle.ACTIVE`) at each call site.
-2. **The package for the two components.** Proposal: `C/entities/state/`.
+1. **The package for the two components.** Proposal: `C/entities/state/`.
+
+## Decisions
+
+- 2026-10-26 (owner): the name is `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }` with `inPlay` as a pure phase check
+  (not `Lifecycle`, which is the engine's word for spawn and destroy; see the item `NOTES.md`).

@@ -1,4 +1,4 @@
-# Plan: mega-refactor-061b-lifecycle-transport
+# Plan: mega-refactor-061b-play-phase-transport
 
 How to do the work in `SCOPE.md`. Write this file after `SCOPE.md` and `CONTRACT.md` are
 approved. The user approves it. When the plan changes, write the reason in the process log.

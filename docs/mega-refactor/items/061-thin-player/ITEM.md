@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`, `031`
 - Related: `012`, `024`, `030`, `047`, `048`, `053`, `057`, `060`
-- Branches: `mega-refactor-061a-thin-player` (merged); next: `061b` (lifecycle and transport components), then a branch that moves the `MegaPlayerAccess.kt` callers to entity-level functions
+- Branches: `mega-refactor-061a-thin-player` (merged); next: `061b` (play phase and transport components), then a branch that moves the `MegaPlayerAccess.kt` callers to entity-level functions
 
 ## Goal
 
@@ -58,6 +58,9 @@ more cleanup that's needed within the same item (branch)". After testing the tem
   of `MegaPlayerAccess.kt` (`player.body`, `player.facing`, ...) to entity-level functions and deletes the file. The
   player view keeps `slot` and `input`. Reasons: one way to ask a question; no two defaults for the same entity (the
   player wrapper gave `false` where an entity without a lifecycle reads `ACTIVE`); the view does not grow again.
+- 2026-10-26 (owner): the play state is named `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }` (`PlayPhaseComponent`,
+  `playPhase`, `inPlay`, `setPlayPhase`), not `Lifecycle`: existence (spawn, destroy), play phase and health death are
+  three separate axes, and `inPlay` checks only the phase (`NOTES.md`, "'Lifecycle' versus spawning, spawned and dead").
 
 ## Open questions
 

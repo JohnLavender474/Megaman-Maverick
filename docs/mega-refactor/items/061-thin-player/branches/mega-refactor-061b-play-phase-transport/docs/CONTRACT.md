@@ -1,4 +1,4 @@
-# Contract: mega-refactor-061b-lifecycle-transport
+# Contract: mega-refactor-061b-play-phase-transport
 
 The gameplay that this branch must not change, and how to check it. Write this file during
 planning, before you change code. Do the checks before the branch merges, and write the result

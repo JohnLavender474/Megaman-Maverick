@@ -757,7 +757,7 @@ newest entry at the bottom.
 
 ## 2026-10-26 — master (docs)
 
-- Summary: branch folder `mega-refactor-061b-lifecycle-transport` prepared ahead of time (status `planned`, no branch
+- Summary: branch folder `mega-refactor-061b-play-phase-transport` prepared ahead of time (status `planned`, no branch
   yet) with a draft `docs/SCOPE.md`. `ITEMS.md` has the branch row.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the draft scope (2 open questions: the name `inPlay`, the package).
@@ -771,3 +771,12 @@ newest entry at the bottom.
   proposal, not decided.
 - Contract check: not needed (docs only).
 - Follow-up: the owner decides the name and whether the `dead`/`spawned` disagreement becomes an item or an issue.
+
+## 2026-10-26 — master (docs)
+
+- Summary: the owner chose `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }` for `061b` (decision in item `061`
+  `ITEM.md`); the draft scope is updated, and the branch folder is renamed to `mega-refactor-061b-play-phase-transport`
+  (no branch existed yet; `ITEMS.md` follows).
+- Contract check: not needed (docs only).
+- Follow-up: the owner approves the `061b` scope (1 open question: the package). A review of removing the `spawned`
+  and `dead` flags is running.
