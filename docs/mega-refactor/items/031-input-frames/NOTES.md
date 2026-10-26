@@ -972,3 +972,61 @@ behaviors (sharing private helpers with the state machine).
   keep the moves the same.
 - On the switch, also: the faction (`030`), the slot view (thin, see above), the boss's health bar and the boss
   defeat flow (`AbstractBoss` must not run its defeat sequence for a playable boss).
+
+### Long-term shape (2026-10-26, discussion with the owner)
+
+Still a proposal, except where the owner agreed (marked "owner").
+
+**`PlayerStateComponent`.** The timers in its constructor are a symptom. The component mixes state it owns (`ready`,
+`canBeDamaged`, `teleporting`, `movementAllowed`, `damageListeners`) with state it borrows from `Megaman`'s timers
+(`damaged`, `shooting`). `damaged` is already generic: every `AbstractHealthEntity` has a `damageTimer`
+(`AbstractHealthEntity.kt:40`; `Megaman.kt:110` overrides it). `shooting` belongs to the loadout (`024`). A generic copy
+of the component does not help alone: the flags have an effect only where code reads them. The fix is to move the reads
+into shared code (`AbstractHealthEntity.canBeDamagedBy`, the shared movement behaviors, the damage pipeline), as `029`
+review 4 (`lock(reason)`) and `012` (freeze reasons) propose. The component is a transition step from `029`.
+
+**Two axes.** The owner's idea of a "driver" interface is `InputSource`. Keep two separate axes:
+
+| Axis | Question | Examples |
+|---|---|---|
+| Mode (what code runs) | state machine or input-driven behaviors | boss as an enemy; boss as a playable character |
+| Source (who presses the buttons) | who writes the frame | player slot, AI, replay, network, cutscene script, test script |
+
+"Gate by mode" (both sets built in `init()`) keeps both kinds of boss working (owner: a good idea). If a state machine
+later runs through input, the mode axis becomes one value and only the source changes.
+
+**Design points.**
+
+1. One edge machine for all sources. A source gives held bits only. One shared builder turns them into the four
+   statuses, so frames from AI and from a player have the same meaning. The lock goes on this builder, with today's
+   release sequence, for any source. This is the `031c` pipeline (devices give held bits; the poller goes), so the lock
+   goes there or with `012`, not into `031b`.
+2. Compute once per tick, read many times. `read()` returns the same value within a tick (Megaman reads about 44 times
+   per frame). An AI source needs an update step before the readers (for example a system before `Controller`) and
+   returns a cached frame.
+3. Determinism. AI sources use seeded random numbers (`011`) and do not iterate hash-ordered sets.
+4. Engine and core (owner): `InputFrame` and `InputSource` are engine mechanism; the game decides which buttons exist,
+   their names and their mapping. The engine adds `interface InputButton { val index: Int }`; core's
+   `MegaControllerButton` implements it with an explicit `index` (owner: matches the pattern used elsewhere). The
+   frame is a value class over a `Long` (owner: as many buttons as possible), 2 bits per button, so 32 buttons. An
+   explicit `index`, not `ordinal`, so a reordered enum cannot change the bit layout of replays (`055`) and online play.
+   Bindings, devices, aliases and `selectButtonAction` stay in core.
+5. Do not convert the existing bosses to input. An AI that plays through input gets only the character's physics;
+   today's state machines set exact velocities and positions. Input-driven AI is for entities designed as characters
+   (a playable boss, Proto Man as CPU, `060`).
+6. Name: `InputSource` for the data contract. An AI "driver" implements it.
+
+Side effect of point 4: with dispatch by index, `ControllerComponent` can hold its actuators in an array indexed by
+button. The dispatch order becomes the index order (for Megaman: LEFT, RIGHT, B, SELECT). Today it is the hash order
+of an `ObjectMap` with enum keys, which can differ between JVM runs.
+
+**Proposed order.**
+
+| Step | Content | First real caller |
+|---|---|---|
+| `031b` | `InputButton`, `InputFrame` (`Long`) and `InputSource` in the engine; the entity's source on `ControllerComponent`; `ControllerSystem` reads it; actuators indexed by button; menus on the slot-0 frame | Megaman with the slot-0 source |
+| `031c` | devices give held bits; one edge builder per source, with the lock; the poller goes | slot 0 |
+| `012` | lock reasons on the edge builder and the systems | the `TURN_CONTROLLER_*` submitters |
+| `029`/`012` follow-up | `PlayerStateComponent` splits into locks that shared code honors, plus capabilities | the handlers that write the flags |
+| `055` | replay source | contract checks |
+| `060` / playable boss | AI source, mode switch, possession (thin view), faction (`030`) | Proto Man CPU or the boss |

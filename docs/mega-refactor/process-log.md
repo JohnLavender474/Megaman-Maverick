@@ -630,3 +630,12 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the owner decides the `031b` split (the lock to `012`, `Esc` to a later branch) and the actuator map
   order before the draft `docs/SCOPE.md`.
+
+## 2026-10-26 — master (docs)
+
+- Summary: item `031` `NOTES.md` gets "Long-term shape": the `PlayerStateComponent` review, the two axes (mode and
+  source), six design points (with the owner's choices: engine `InputButton` with an explicit `index`, an `InputFrame`
+  over a `Long`), and a proposed order of steps. Branch folder `mega-refactor-031b-engine-input` prepared ahead of time
+  (status `planned`, no branch yet) with a draft `docs/SCOPE.md`. `ITEMS.md` has the branch row.
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews the draft scope (4 open questions).
