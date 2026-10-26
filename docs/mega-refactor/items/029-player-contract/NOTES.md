@@ -1761,3 +1761,37 @@ What needs engine changes:
 
 Gaps: not confirmed from a fetched page: that the Lyra message subsystem is synchronous, that Godot signal emission
 runs listeners in connection order, and what the Overwatch talk says about singleton components (marked [training]).
+
+### Correction: "or null" lookups versus query filters (2026-10-26)
+
+The owner asked if the "or null" form (`facingOrNull()`, `lightOrNull()`) matches other engines. It does, for one
+entity: most engines have an optional lookup that returns an empty result. But engines do not use it as the main tool
+for parts that a caller needs.
+
+| Engine | Optional lookup | Result when missing |
+|---|---|---|
+| Bevy | `world.get::<T>(entity)`; `Option<&T>` in a query; `Has<T>` | `None`; `false` for `Has` |
+| EnTT | `registry.try_get<T>(entity)`; `all_of<T>` | `nullptr`; `false` |
+| flecs | `entity.get<T>()` (newer versions: `try_get`) | `nullptr` |
+| Unity | `TryGetComponent<T>(out T)`; `GetComponent<T>()` | `false`; `null` |
+| Unreal | `FindComponentByClass<T>()` | `nullptr` |
+| Godot | `get_node_or_null(path)`; `has_method(name)` | `null`; `false` |
+
+Bevy `Option<&T>`/`Has<T>` and Unity `TryGetComponent` are [web] (sources in the section above); the other rows are
+[training].
+
+ECS engines handle a missing part mostly at the query level: a system asks for "entities that have a body and a
+facing", and an entity without them is not visited, so the loop body has no null checks. Nullable lookups are for
+truly optional parts. So the direction uses two forms:
+
+1. **Parts a caller needs** (an enemy that aims needs the player's body and facing): filter, do not null-check. For
+   example a loop over the players that have the part, or a function that skips players without it. A player with
+   no body is then "not targetable" in one place, not through `?.` at about 414 call sites.
+2. **Optional features** (light, gravity device, loadout): `lightOrNull()`; `null` means the feature does nothing
+   here. A default is `lightOrNull() ?: PlayerLight.STANDARD` at the call site; no separate API.
+
+Performance: a nullable enum (`Facing?`) does not box; a nullable value class (`InputFrame?`) does. So nullable
+returns do not suit input frames (this is why `ControllerSystem` checks the source first and then reads the frame).
+
+This corrects point 2 of the owner-facing summary ("free functions over components ... return null when the feature
+is missing").
