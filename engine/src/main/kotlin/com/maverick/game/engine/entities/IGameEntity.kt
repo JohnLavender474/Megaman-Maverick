@@ -11,8 +11,8 @@ import kotlin.reflect.KClass
 interface IGameEntity : IComponentBucket, IPropertizable, Initializable {
 
     val components: OrderedMap<KClass<out IGameComponent>, IGameComponent>
-    var initialized: Boolean
     val existenceState: EntityExistenceState
+    var initialized: Boolean
 
     val spawned: Boolean
         get() = existenceState == EntityExistenceState.LIVE || existenceState == EntityExistenceState.DESTROY_QUEUED
