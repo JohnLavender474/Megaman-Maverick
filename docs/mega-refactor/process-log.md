@@ -564,3 +564,11 @@ newest entry at the bottom.
   questions in `031` are answered.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031` is `planned` (owner). Its title changes from "Input intents per player (`InputFrame`), sources
+  and router" to "Input frames per player (`InputFrame`), devices and bindings", to match the decisions (button
+  names, no intents; the co-op router flows moved to `047`).
+- Contract check: not needed (docs only).
+- Follow-up: the multi-angle scan of `031` goes into its `NOTES.md`.

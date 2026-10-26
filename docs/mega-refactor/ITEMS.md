@@ -38,7 +38,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 028 | [Game-owned texture and animation cache](items/028-texture-cache/ITEM.md) | refactor | planned | none | | |
 | 029 | [`IPlayer` contract, players service and `CharacterDef`](items/029-player-contract/ITEM.md) | refactor | done | none | 2026-10-23 | 2026-10-25 |
 | 030 | [Faction and root owner instead of `owner == megaman`](items/030-faction/ITEM.md) | refactor | planned | `029`, `005` | | |
-| 031 | [Input intents per player (`InputFrame`), sources and router](items/031-input-frames/ITEM.md) | refactor | idea | `029` | | |
+| 031 | [Input frames per player (`InputFrame`), devices and bindings](items/031-input-frames/ITEM.md) | refactor | planned | `029` | | |
 | 032 | [Platform-neutral `engine` module](items/032-platform-neutral-engine/ITEM.md) | refactor | planned | none | | |
 | 033 | [Per-level asset manifests and texture budgets](items/033-per-level-assets/ITEM.md) | refactor | planned | `028` | | |
 | 034 | [Persisted settings file](items/034-persisted-settings/ITEM.md) | feature | planned | `007` | | |

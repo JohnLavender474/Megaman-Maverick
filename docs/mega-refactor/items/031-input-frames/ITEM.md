@@ -1,6 +1,6 @@
-# 031: Input intents per player (`InputFrame`), sources and router
+# 031: Input frames per player (`InputFrame`), devices and bindings
 
-- Status: idea
+- Status: planned
 - Type: refactor
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`
