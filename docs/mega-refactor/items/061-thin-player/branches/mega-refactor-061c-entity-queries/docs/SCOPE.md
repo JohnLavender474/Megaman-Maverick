@@ -3,8 +3,8 @@
 What this branch changes and why. Write this file after the scan, before `CONTRACT.md` and `PLAN.md`. The user
 approves it. If the scope changes later, update this file and get approval again.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 ## Goal
 
@@ -125,3 +125,9 @@ read from.
    Proposal: the engine.
 4. **One branch.** Removing the view and moving the callers cannot be split: the forwarding functions are extensions
    on the view, so they go with it. Proposal: one branch, with commits in batches.
+
+## Decisions
+
+- 2026-10-26 (owner, "Scope approved; go with your suggestions for all 4 questions"): `targetPlayer` and `asPlayer`
+  keep their names and return the player's entity; the `megaman` accessor becomes explicit `as Megaman` casts at its
+  uses; `PlayerComponent`, the registry and the engine-type queries go in the engine; one branch, commits in batches.

@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: a player is an entity with a `PlayerComponent(slot)`, not a view object; callers ask the entity through entity-level query functions; `MegaPlayer` and `MegaPlayerAccess.kt` go
-- Done: draft `docs/SCOPE.md`
-- Next: the owner reviews the rewritten draft scope (4 open questions)
+- Done: `docs/SCOPE.md` approved; draft `docs/CONTRACT.md`
+- Next: the owner approves `docs/CONTRACT.md`; then the draft `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -26,3 +26,7 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   return the entity (proposal). Extra scan: `PlayerView` is used only by the engine players package, `MegaPlayer` and
   `PlayersTest`; the view type appears in 25 core files; `asPlayer` has 150 uses in 64 files; `players.any` 70,
   `forEach` 28, `all` 11.
+- The owner approved `docs/SCOPE.md` with the four proposals (names kept, explicit `as Megaman` casts, engine, one
+  branch). Draft `docs/CONTRACT.md` written; most manual checks use the `REFACTOR_TEST_029` rooms (`movement`,
+  `enemy_aim`, `enemy_chase`, `enemy_drop`, `enemy_contact`, `enemy_magfly`, `pickups`, `heart`, `lives`,
+  `hit_by_player`, `push_flip`, `gravity_switch`, `player_death`, `stun`) and the three `REFACTOR_TEST_031` rooms.
