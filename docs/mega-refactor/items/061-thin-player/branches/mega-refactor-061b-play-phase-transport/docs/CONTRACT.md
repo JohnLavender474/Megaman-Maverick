@@ -2,8 +2,8 @@
 
 The gameplay that this branch must not change, and how to check it. Written ahead of time on `master`.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 The player's `ready` becomes the play phase and `teleporting` becomes the transport state; both move from player
 state to entity state. Everything that waits for the player to be in play, or reacts to a teleport, must act as on
@@ -24,7 +24,7 @@ sprite, and the air dash reset at a teleport start).
 - [ ] Transport tests: an entity without the component is not teleporting; `beginTeleport` calls the entity's start
       hook first and then sets the teleporter (the hook sees `teleporting == false`); `endTeleport` calls the end hook
       first and then clears it (the hook sees `teleporting == true`); `reset()` clears it; an entity without hooks is
-      still marked.
+      still marked; `beginTeleport` on an entity without the component fails.
 - [ ] Code checks (grep): no `PlayerStateComponent`, no `ConstKeys.TELEPORTER`, no `MegaPlayer.ready`/`teleporting`,
       no `Megaman.ready`/`teleporting` property; no teleporter reads `ON_TELEPORT_START`/`ON_TELEPORT_END` itself; no
       `players.ready` import; `AbstractEnemy` sets no teleport hooks.

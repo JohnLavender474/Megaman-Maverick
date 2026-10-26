@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: `ready` and `teleporting` become entity state (`PlayPhaseComponent`, `TransportComponent`) read by free functions; no player wrappers
-- Done: `docs/SCOPE.md` approved; draft `docs/CONTRACT.md`
-- Next: the owner approves `docs/CONTRACT.md`; then the draft `docs/PLAN.md`
+- Done: `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`
+- Next: the owner approves `docs/PLAN.md`; then step 1 (branch start)
 - Blocked:
 
 ## Entries
@@ -26,3 +26,7 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/SCOPE.md` with the package `C/entities/state/` ("Yes"). Draft `docs/CONTRACT.md` written;
   the teleporter rooms come from a scan of the live maps: `MOON_MAN` `room11` (`PortalHopper`), `WILY_STAGE_3`
   `room3` (`CapsuleTeleporter`), `PRECIOUS_WOMAN` `room2` (`LaserBeamer`), `INTRO_STAGE` `room3` (`BuilderKibbo`).
+- The owner agreed that reads without the component give the default and writes require it; `docs/SCOPE.md` gets a
+  paragraph on it (a clarification, not a scope change), and the transport writes require the component too. The
+  owner approved `docs/CONTRACT.md` (its transport check now includes "`beginTeleport` without the component fails").
+  Draft `docs/PLAN.md` written (6 steps).

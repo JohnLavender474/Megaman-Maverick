@@ -36,6 +36,14 @@ both (`MegaLevelScreen.kt:927`, `BulletBillLauncher.kt:108`, `LaserBeamer.kt:248
 into `inPlay` would change the readers that read `ready` alone (`FeetSandRule`, `Rain`, `Darkness*`, `TubeBeamer`,
 `BuilderKibbo`) for one or two frames at death.
 
+Reads and writes are treated differently (owner, 2026-10-26). A read of an entity without `PlayPhaseComponent` gives
+`IN_PLAY`: the component exists only for entities with an entrance or an exit sequence, and an entity without one is
+in play for its whole existence (this also keeps `Rain`, which treats non-players as ready today). A write
+(`setPlayPhase`) requires the component and fails without it, so a playable entity that goes through a sequence but
+lacks the component fails at its first write instead of being silently in play. The same holds for
+`TransportComponent`: a read without it is "not teleporting"; `beginTeleport` and `endTeleport` require it (only
+Megaman can reach a teleporter today, and he has it).
+
 ## Current state
 
 Based on `master` at `447ae2b54`. `C/` = `core/src/main/kotlin/com/megaman/maverick/game/`.
@@ -144,3 +152,5 @@ None.
 - 2026-10-26 (owner): the name is `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }` with `inPlay` as a pure phase check
   (not `Lifecycle`, which is the engine's word for spawn and destroy; see the item `NOTES.md`).
 - 2026-10-26 (owner): the package is `C/entities/state/`; the scope is approved.
+- 2026-10-26 (owner): reads without the component give the default (`IN_PLAY`, not teleporting); writes require
+  the component ("Agreed").
