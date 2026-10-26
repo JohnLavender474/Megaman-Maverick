@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: input frames as an engine mechanism (`InputButton`, `InputFrame`, `InputSource`); `ControllerSystem` dispatches from each entity's own input source
-- Done: `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`
-- Next: the owner approves `docs/PLAN.md`; then step 1 (branch start)
+- Done: planning (scope, contract, plan approved); step 1
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -28,3 +28,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written (7 steps: branch start, baseline, engine input
   types, the entity's source bound by the slot view, `ControllerSystem` on the source with actuators by button,
   contract checks, play test and merge).
+- The owner approved `docs/PLAN.md`. Step 1 (branch start): `ITEMS.md` row and `ITEM.md` set to active; worktree
+  created.
