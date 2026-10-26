@@ -503,3 +503,13 @@ newest entry at the bottom.
   Options A, B, C; sub-choices for disconnect, reconnect and the way out for an unresponsive gamepad).
 - Contract check: not needed (docs only).
 - Follow-up: the owner decides Option B or C, the single-player disconnect behavior, and the reconnect rule.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031` `NOTES.md` gets "Custom key bindings in the proposed setup" (from an agent probe) and the
+  owner's answers: per-player maps (also for two pads of the same model), `selectButtonAction` per player, one key
+  per button, and the bindings screen goes back to pause. The recommendation is now bindings per slot (Option 4),
+  with profiles possible later. `ITEM.md` gets the decisions and the remaining open questions.
+- Contract check: not needed (docs only).
+- Follow-up: filed `2026-10-25-preferred-controller-code-zero.md` and `2026-10-25-bindings-screen-restarts-level.md`.
+  The screenshot trigger change follows as a direct change to `master`.

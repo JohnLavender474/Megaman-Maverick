@@ -36,6 +36,15 @@ Answer to review item 30 (2026-10-22, verbatim):
   So `moveX` and `moveY` are not needed; the frame holds the four d-pad buttons like the other buttons.
 - 2026-10-25: shared-screen co-op has at most 2 players. Split screen and online may need 4. The input router and
   the frames must support 4 slots, even if the first co-op step uses 2.
+- 2026-10-25 (bindings): two players with the same gamepad model must be able to have different maps, so a binding
+  belongs to the player, not only to the device model.
+- 2026-10-25 (bindings): `selectButtonAction` is one setting per player.
+- 2026-10-25 (bindings): one key per button (1:1). The stick reaches the d-pad through the fixed threshold, not
+  through a binding.
+- 2026-10-25 (bindings): leaving the bindings screen during a level goes back to pause, with no restart (issue
+  `2026-10-25-bindings-screen-restarts-level.md`).
+- 2026-10-25: the screenshot logic takes a generic trigger, not the `P` key; the launcher gives the trigger for now,
+  with a `TODO` to update it later.
 
 ## Open questions
 
@@ -45,6 +54,11 @@ Answer to review item 30 (2026-10-22, verbatim):
   the game must handle all of these. Ideas from the owner: an input settings UI that the mouse can drive (the mouse
   is not assigned to any player), and the keyboard as a trusted input that can always reach it. See `NOTES.md`,
   "Input assignment: cases and options (2026-10-25)".
+- Bindings per slot (Option 4) now, with profiles (Option 3) possible later, or profiles from the start? See
+  `NOTES.md`, "Recommendation after the answers".
+- Which keys are system keys (`Esc`?), and what triggers a screenshot after the `TODO`?
+- The open binding questions 5 and 7 to 10 in `NOTES.md` (stick threshold setting, revert timer and
+  `--resetBindings`, bindable triggers, touch overlay layout, `selectButtonAction` migration).
 
 ## Sources
 
