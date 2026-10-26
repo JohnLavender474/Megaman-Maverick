@@ -814,3 +814,11 @@ newest entry at the bottom.
 - Follow-up: item `061` stays active; next, a branch that moves the `MegaPlayerAccess.kt` callers to entity-level
   functions and deletes the file. No backlog or bug candidates. Item `062` (entity existence state) waits for the
   owner's decisions.
+
+## 2026-10-26 — master (docs)
+
+- Summary: item `062`: the owner chose the engine-owned `EntityState` field (open question 1 closed); the item is
+  `planned`. The owner picked the next `061` branch (the `MegaPlayerAccess.kt` callers to entity-level functions) as
+  the next work.
+- Contract check: not needed (docs only).
+- Follow-up: the scan for that branch.

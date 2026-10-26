@@ -1,6 +1,6 @@
 # 062: One engine-owned entity existence state
 
-- Status: idea
+- Status: planned
 - Type: refactor
 - Depends on: none
 - Related: `019`, `021`, `038`, `047`, `048`, `061`
@@ -42,13 +42,13 @@ this idea, and if it seems like a solid idea, then make a new item for it."
 - 2026-10-26: the review found the goal solid, so this item exists (owner's condition). The review recommends a
   different mechanism from the owner's first idea (one engine-owned state field instead of no state and engine
   queries or a global helper); the owner decides (open question 1).
+- 2026-10-26 (owner, "engine-owned state field is fine"): the mechanism is the review's option (b): one
+  engine-owned `EntityState` field on each entity, written only by the engine in every path, read through read-only
+  helpers. Open question 1 is closed.
 
 ## Open questions
 
-1. The mechanism: the review's option (b) (one engine-owned state field, read-only helpers), or the owner's first
-   idea (no state; engine queries or a global helper)? The review's reasons against the first idea: set membership
-   cannot reproduce `dead` exactly when an entity is in both queues; `IGameEntity` and `PlayerView` have no engine
-   reference, so a global helper would add global state; hash lookups in per-contact and per-frame code.
+1. Closed (2026-10-26): the engine-owned state field (option (b)).
 2. The helper names: `inEngine` / `exists`, or others? Keep `dead` only on the player?
 3. The `reset`/`dispose` fix: an intended change in `062a`, or a separate bug in `000`?
 4. A spawn while `DESTROY_QUEUED`: reject it, or apply it after the destroy? (Today it fails without a sign;
