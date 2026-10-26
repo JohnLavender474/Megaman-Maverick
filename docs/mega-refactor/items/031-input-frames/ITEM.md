@@ -1,10 +1,10 @@
 # 031: Input frames per player (`InputFrame`), devices and bindings
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`
-- Branches: `mega-refactor-031a-input-frame` (planned)
+- Branches: `mega-refactor-031a-input-frame` (active)
 
 ## Goal
 

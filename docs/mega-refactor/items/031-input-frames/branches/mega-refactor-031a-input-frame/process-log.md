@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: one `InputFrame` per player slot, built from today's poller once per frame; all gameplay input reads move to it
-- Done: `docs/SCOPE.md` and `docs/CONTRACT.md` (approved); draft `docs/PLAN.md`
-- Next: the owner reviews `docs/PLAN.md`
+- Done: step 1
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -21,3 +21,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   `MegaPlayers`, no temporary suite in `031a`). Decisions in `docs/SCOPE.md` and `docs/NOTES.md`. Draft
   `docs/CONTRACT.md` written; `docs/NOTES.md` lists where each moved reader can be checked in the game.
 - The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written.
+- The owner approved `docs/PLAN.md`. Step 1 (branch start): `ITEMS.md` rows and `ITEM.md` set to active; worktree created.

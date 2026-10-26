@@ -38,7 +38,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 028 | [Game-owned texture and animation cache](items/028-texture-cache/ITEM.md) | refactor | planned | none | | |
 | 029 | [`IPlayer` contract, players service and `CharacterDef`](items/029-player-contract/ITEM.md) | refactor | done | none | 2026-10-23 | 2026-10-25 |
 | 030 | [Faction and root owner instead of `owner == megaman`](items/030-faction/ITEM.md) | refactor | planned | `029`, `005` | | |
-| 031 | [Input frames per player (`InputFrame`), devices and bindings](items/031-input-frames/ITEM.md) | refactor | planned | `029` | | |
+| 031 | [Input frames per player (`InputFrame`), devices and bindings](items/031-input-frames/ITEM.md) | refactor | active | `029` | 2026-10-25 | |
 | 032 | [Platform-neutral `engine` module](items/032-platform-neutral-engine/ITEM.md) | refactor | planned | none | | |
 | 033 | [Per-level asset manifests and texture budgets](items/033-per-level-assets/ITEM.md) | refactor | planned | `028` | | |
 | 034 | [Persisted settings file](items/034-persisted-settings/ITEM.md) | feature | planned | `007` | | |
@@ -86,7 +86,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-029e-player-profile`](items/029-player-contract/branches/mega-refactor-029e-player-profile/process-log.md) | 029 | Lives, tanks, enhancements and weapons owned in one session profile | merged | 2026-10-23 | 2026-10-24 |
 | [`mega-refactor-029f-level-players`](items/029-player-contract/branches/mega-refactor-029f-level-players/process-log.md) | 029 | Level screen, handlers and UI use the players service; remove `game.megaman` | merged | 2026-10-24 | 2026-10-24 |
 | `mega-refactor-029g-behavior-split` | 029 | Split the player behaviors into factory functions | merged | 2026-10-25 | 2026-10-25 |
-| [`mega-refactor-031a-input-frame`](items/031-input-frames/branches/mega-refactor-031a-input-frame/process-log.md) | 031 | One `InputFrame` per player slot; gameplay reads move to it | planned | | |
+| [`mega-refactor-031a-input-frame`](items/031-input-frames/branches/mega-refactor-031a-input-frame/process-log.md) | 031 | One `InputFrame` per player slot; gameplay reads move to it | active | 2026-10-25 | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |
