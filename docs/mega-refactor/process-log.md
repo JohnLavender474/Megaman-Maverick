@@ -822,3 +822,10 @@ newest entry at the bottom.
   the next work.
 - Contract check: not needed (docs only).
 - Follow-up: the scan for that branch.
+
+## 2026-10-26 — master (docs)
+
+- Summary: branch folder `mega-refactor-061c-entity-queries` prepared ahead of time (status `planned`) with a draft
+  `docs/SCOPE.md`. `ITEMS.md` has the branch row.
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews the draft scope (4 open questions).
