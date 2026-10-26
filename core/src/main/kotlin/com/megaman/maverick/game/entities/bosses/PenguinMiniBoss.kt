@@ -21,6 +21,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.GameEntity
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IParentEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -41,8 +42,6 @@ import com.megaman.maverick.game.entities.enemies.BabyPenguin
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.projectiles.Snowball
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.dead
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType

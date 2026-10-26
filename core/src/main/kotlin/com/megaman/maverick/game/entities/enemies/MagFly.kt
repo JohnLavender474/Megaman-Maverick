@@ -20,6 +20,8 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -33,10 +35,8 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.entities.damaged
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.damaged
-import com.megaman.maverick.game.players.isBehaviorActive
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getCenter

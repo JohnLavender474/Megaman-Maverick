@@ -100,7 +100,6 @@ import com.megaman.maverick.game.input.GamepadInput
 import com.megaman.maverick.game.input.KeyboardInput
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
-import com.megaman.maverick.game.players.megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -781,7 +780,7 @@ class MegamanMaverickGame(
         GameLogger.debug(TAG, "resetPlayerProgress()")
         state.reset()
         state.clearWeapons()
-        players.forEach { it.megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER }
+        players.forEach { (it as Megaman).currentWeapon = MegamanWeapon.MEGA_BUSTER }
         state.resetLives()
         removeProperty(ConstKeys.WEAPONS_ATTAINED)
     }

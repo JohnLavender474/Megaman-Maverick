@@ -28,6 +28,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
@@ -55,7 +56,6 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*

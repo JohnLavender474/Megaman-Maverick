@@ -11,6 +11,6 @@ class WorldGravity(private val players: MegaPlayers) {
 
     fun set(direction: Direction) {
         this.direction = direction
-        players.forEach { (it.entity as? IDirectional)?.direction = direction }
+        players.forEach { (it as? IDirectional)?.direction = direction }
     }
 }

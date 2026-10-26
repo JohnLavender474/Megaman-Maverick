@@ -15,13 +15,14 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.players.MegaPlayer
 
 class Life(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
@@ -46,10 +47,10 @@ class Life(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
         super.onSpawn(spawnProps)
     }
 
-    override fun contactWithPlayer(player: MegaPlayer) {
+    override fun contactWithPlayer(player: MegaGameEntity) {
         GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
         destroy()
-        if (game.state.addLife(player.slot)) requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
+        if (game.state.addLife(player.playerSlot!!)) requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

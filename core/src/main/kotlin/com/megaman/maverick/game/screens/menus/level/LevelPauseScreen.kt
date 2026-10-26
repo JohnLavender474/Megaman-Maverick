@@ -30,14 +30,14 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.currentHealth
+import com.megaman.maverick.game.entities.maxHealth
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.players.MegaPlayer
-import com.megaman.maverick.game.players.currentHealth
-import com.megaman.maverick.game.players.maxHealth
-import com.megaman.maverick.game.players.megaman
-import com.megaman.maverick.game.players.translateHealth
+import com.megaman.maverick.game.entities.translateHealth
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.Fade
@@ -107,7 +107,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     // TODO: the pause screen acts on the lead player in slot 0; which player the pause screen shows is a session
     //  policy (item 047)
-    private val player: MegaPlayer
+    private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
     private val state: GameState
         get() = game.state
@@ -283,7 +283,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                                 }
 
                                 else -> {
-                                    { player.megaman.weaponsHandler.getAmmo(element) }
+                                    { (player as Megaman).weaponsHandler.getAmmo(element) }
                                 }
                             }
                             val bitsBar = LevelPauseScreenBitsBar(
@@ -557,7 +557,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         override fun onSelect(delta: Float): Boolean {
             GameLogger.debug(TAG, "createWeaponButton(): onSelect(): weapon=$weapon")
-            player.megaman.currentWeapon = weapon
+            (player as Megaman).currentWeapon = weapon
             return true
         }
 

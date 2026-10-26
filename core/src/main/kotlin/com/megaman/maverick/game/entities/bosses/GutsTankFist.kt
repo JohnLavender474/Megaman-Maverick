@@ -28,6 +28,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IChildEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -55,7 +56,6 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator

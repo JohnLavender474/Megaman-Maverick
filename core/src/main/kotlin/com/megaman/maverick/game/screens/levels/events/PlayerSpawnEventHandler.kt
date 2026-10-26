@@ -20,16 +20,20 @@ import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.entities.facing
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
@@ -39,10 +43,6 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
-import com.megaman.maverick.game.players.MegaPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.facing
-import com.megaman.maverick.game.players.megaman
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -62,10 +62,10 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     }
 
     // TODO: the beam-in acts on the lead player in slot 0; with more players, each player needs its own (item 047)
-    private val player: MegaPlayer
+    private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
 
-    private fun playerSlot() = player.slot
+    private fun playerSlot() = player.playerSlot!!
 
     private val blinkTimer = Timer(BLINK_READY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
@@ -95,7 +95,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
             val priority = DrawingPriority()
-            beamSprite = GameSprite(beamRegion, player.megaman.getSpritePriority(priority))
+            beamSprite = GameSprite(beamRegion, (player as Megaman).getSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             beamLandAnimation = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false)
@@ -123,10 +123,10 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
 
-        player.entity.setPlayPhase(PlayPhase.PRE_PLAY)
-        player.entity.lock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
+        player.setPlayPhase(PlayPhase.PRE_PLAY)
+        player.lock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
         player.body.physics.gravityOn = false
-        player.entity.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
+        player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
 
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
@@ -206,9 +206,9 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             GameLogger.debug(TAG, "beamTrans(): just finished")
 
             player.body.physics.gravityOn = true
-            player.entity.unlock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
-            player.entity.setPlayPhase(PlayPhase.IN_PLAY)
-            player.entity.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
+            player.unlock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
+            player.setPlayPhase(PlayPhase.IN_PLAY)
+            player.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
 
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             game.eventsMan.submitEvent(Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo playerSlot())))

@@ -27,7 +27,7 @@ New APIs and their first callers: see `SCOPE.md`.
 
 - Changes: none. A clean build in the worktree.
 - Check: the test counts (expected 501 engine, 167 core) and 110 warnings, in the process log.
-- Done: no
+- Done: yes
 
 ### 3. Engine query functions and the player component
 
@@ -37,7 +37,7 @@ New APIs and their first callers: see `SCOPE.md`.
   empty).
 - Check: build and tests pass; `javap`: no `InputFrame.box-impl` in `input`. The new functions have their callers in
   step 5 (this branch).
-- Done: no
+- Done: yes
 
 ### 4. Core query functions
 
@@ -45,7 +45,7 @@ New APIs and their first callers: see `SCOPE.md`.
   the six fixture getters, `shooting`); `lightOrNull` and `onGravityDeviceSwitch` on `IGameEntity` next to their
   components in `C/players/`. Tests.
 - Check: build and tests pass. Callers in step 5.
-- Done: no
+- Done: yes
 
 ### 5. The switch: players are entities
 
@@ -66,14 +66,14 @@ New APIs and their first callers: see `SCOPE.md`.
 - Check: build and tests pass; warnings not above 110; the one-for-one read script; greps (no `MegaPlayer`,
   `PlayerView`, `viewOf`, `MegaPlayerAccess`, `megaman` accessor). Short launches of `REFACTOR_TEST_029` `movement`,
   `enemy_aim`, `pickups`, `INTRO_STAGE --room room12` and `REFACTOR_TEST_031 --room pipe_portal` show no exception.
-- Done: no
+- Done: yes
 
 ### 6. Contract checks
 
 - Changes: none (fixes only if a check fails).
 - Check: every automated check in `docs/CONTRACT.md` on a clean build; results in the process log; then the manual
   checks for the owner.
-- Done: no
+- Done: yes
 
 ### 7. Owner's play test and merge
 

@@ -5,12 +5,12 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.entities.direction
+import com.maverick.game.engine.entities.facing
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.direction
-import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.isSensing

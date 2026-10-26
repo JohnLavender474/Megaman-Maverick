@@ -22,6 +22,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
@@ -40,7 +41,6 @@ import com.megaman.maverick.game.entities.special.GrowingVine
 import com.megaman.maverick.game.entities.special.GrowingVine.GrowingVineState
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint

@@ -12,8 +12,10 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -27,10 +29,14 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.feetFixture
+import com.megaman.maverick.game.entities.headFixture
+import com.megaman.maverick.game.entities.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
 import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
+import com.megaman.maverick.game.entities.rightSideFixture
 import com.megaman.maverick.game.entities.state.TeleportableComponent
 import com.megaman.maverick.game.entities.state.beginTeleport
 import com.megaman.maverick.game.entities.state.endTeleport
@@ -38,12 +44,6 @@ import com.megaman.maverick.game.entities.state.teleporter
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.dead
-import com.megaman.maverick.game.players.feetFixture
-import com.megaman.maverick.game.players.headFixture
-import com.megaman.maverick.game.players.leftSideFixture
-import com.megaman.maverick.game.players.rightSideFixture
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 

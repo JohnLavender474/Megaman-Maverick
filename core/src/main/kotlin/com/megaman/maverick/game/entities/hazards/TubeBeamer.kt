@@ -16,6 +16,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
@@ -36,7 +37,6 @@ import com.megaman.maverick.game.entities.projectiles.TubeBeam
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -103,7 +103,7 @@ class TubeBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!targetPlayer.entity.inPlay) return@UpdatablesComponent
+        if (!targetPlayer.inPlay) return@UpdatablesComponent
 
         spawnTimer.update(delta)
         if (spawnTimer.isFinished()) {

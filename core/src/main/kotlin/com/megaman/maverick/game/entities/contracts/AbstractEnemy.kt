@@ -25,11 +25,15 @@ import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.damage.IDamageable
 import com.maverick.game.engine.damage.IDamager
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.entities.direction
+import com.maverick.game.engine.entities.facing
 import com.maverick.game.engine.players.any
+import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
@@ -45,20 +49,17 @@ import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPoi
 import com.megaman.maverick.game.entities.decorations.Whack
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.healthRatio
 import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
+import com.megaman.maverick.game.entities.shooting
 import com.megaman.maverick.game.entities.special.CartV2
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.direction
-import com.megaman.maverick.game.players.facing
-import com.megaman.maverick.game.players.healthRatio
-import com.megaman.maverick.game.players.shooting
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -100,7 +101,7 @@ abstract class AbstractEnemy(
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
             Life::class pairTo {
                 when {
-                    it.game.state.getLives(it.targetPlayer.slot) < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
+                    it.game.state.getLives(it.targetPlayer.playerSlot!!) < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
                     else -> LOW_LIFE_CHANCE
                 }
             },
@@ -329,7 +330,7 @@ abstract class AbstractEnemy(
         }
 
         // TODO: the one-up goes to the target player's slot; with more players, who gets it is a co-op rule (item 047)
-        if (floatingPointsType == FloatingPointsType.ONE_UP && game.state.addLife(targetPlayer.slot))
+        if (floatingPointsType == FloatingPointsType.ONE_UP && game.state.addLife(targetPlayer.playerSlot!!))
             requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
 
         val position = when (targetPlayer.direction) {

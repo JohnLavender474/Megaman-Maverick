@@ -23,10 +23,12 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.motion.MotionComponent
@@ -51,8 +53,6 @@ import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.direction
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getFirstLocalPoint
@@ -245,7 +245,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         if (!beaming) {
-            if (targetPlayer.present && targetPlayer.entity.inPlay && overlapsGameCamera()) {
+            if (targetPlayer.spawned && targetPlayer.inPlay && overlapsGameCamera()) {
                 beaming = true
                 laser?.on = true
                 requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)

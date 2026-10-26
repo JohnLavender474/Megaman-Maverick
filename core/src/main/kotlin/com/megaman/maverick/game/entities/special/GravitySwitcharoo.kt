@@ -34,7 +34,9 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.*
+import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.players.any
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -54,9 +56,6 @@ import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.dead
-import com.megaman.maverick.game.players.direction
 import com.megaman.maverick.game.players.onGravityDeviceSwitch
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -157,7 +156,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
 
     private fun isTriggerEntityInBounds(): Boolean {
         if (players.any {
-                !triggerEntities.contains(it.entity as IBodyEntity) && it.body.getBounds().overlaps(triggerArea)
+                !triggerEntities.contains(it as IBodyEntity) && it.body.getBounds().overlaps(triggerArea)
             }
         ) return true
 
@@ -184,7 +183,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun onFinishSwitchToDown() {
         GameLogger.debug(TAG, "onFinishSwitchToDown(): direction=$direction")
 
-        players.forEach { if (it.body.getBounds().overlaps(triggerArea)) triggerEntities.add(it.entity as IBodyEntity) }
+        players.forEach { if (it.body.getBounds().overlaps(triggerArea)) triggerEntities.add(it as IBodyEntity) }
 
         TRIGGER_ENTITY_TAGS.forEach { tag ->
             val entities = MegaGameEntities.getOfTag(tag)

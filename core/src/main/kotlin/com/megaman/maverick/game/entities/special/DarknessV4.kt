@@ -19,6 +19,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
@@ -48,7 +49,6 @@ import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.lightOrNull
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
@@ -529,7 +529,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         // Collect Megaman light source on main thread
         players.forEach { player ->
-            if (player.entity.inPlay && player.body.getBounds().overlaps(bounds)) {
+            if (player.inPlay && player.body.getBounds().overlaps(bounds)) {
                 val lightSourceDef = lightSourcePool.fetch()
                 lightSourceDef.center = player.body.getCenter()
 
@@ -548,7 +548,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                     }
                 }
 
-                lightSourceQueue.put(player.entity as MegaGameEntity, lightSourceDef)
+                lightSourceQueue.put(player, lightSourceDef)
             }
         }
 
@@ -561,7 +561,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.center = beamCenter
                 lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
-                lightSourceQueue.put(targetPlayer.entity as MegaGameEntity, lightSourceDef)
+                lightSourceQueue.put(targetPlayer, lightSourceDef)
             }
         }
 

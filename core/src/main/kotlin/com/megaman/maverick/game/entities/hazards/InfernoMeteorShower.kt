@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -29,7 +30,6 @@ import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelUtils
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle

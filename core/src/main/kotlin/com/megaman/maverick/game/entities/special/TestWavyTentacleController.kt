@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -24,7 +25,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.extensions.getCenter
 import kotlin.math.sqrt
 

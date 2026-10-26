@@ -7,6 +7,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.cullables.CullablesComponent
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
@@ -19,7 +20,6 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 

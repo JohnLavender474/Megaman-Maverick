@@ -37,7 +37,6 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.players.PlayerDamaged
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.HealthFillType
@@ -202,7 +201,7 @@ abstract class AbstractBoss(
         else -> baseDamage
     }
 
-    open fun onPlayerDamaged(damager: IDamager, player: MegaPlayer) {}
+    open fun onPlayerDamaged(damager: IDamager, player: MegaGameEntity) {}
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

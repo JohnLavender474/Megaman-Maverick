@@ -12,13 +12,14 @@ import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
-import com.megaman.maverick.game.players.MegaPlayer
 
 class WeaponEnergyBulb(game: MegamanMaverickGame): AbstractEnergyItem(game) {
 
@@ -45,7 +46,7 @@ class WeaponEnergyBulb(game: MegamanMaverickGame): AbstractEnergyItem(game) {
         addComponent(defineAnimationsComponent())
     }
 
-    override fun contactWithPlayer(player: MegaPlayer) {
+    override fun contactWithPlayer(player: MegaGameEntity) {
         GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
 
         destroy()
@@ -54,7 +55,7 @@ class WeaponEnergyBulb(game: MegamanMaverickGame): AbstractEnergyItem(game) {
             Event(
                 EventType.ADD_WEAPON_ENERGY, props(
                     ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT,
-                    PlayerEventKeys.SLOT pairTo player.slot
+                    PlayerEventKeys.SLOT pairTo player.playerSlot!!
                 )
             )
         )

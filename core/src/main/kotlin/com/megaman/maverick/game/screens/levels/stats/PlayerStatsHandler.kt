@@ -16,22 +16,23 @@ import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.ui.BitsBar
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.currentHealth
+import com.megaman.maverick.game.entities.maxHealth
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.translateHealth
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
-import com.megaman.maverick.game.players.MegaPlayer
-import com.megaman.maverick.game.players.currentHealth
-import com.megaman.maverick.game.players.maxHealth
-import com.megaman.maverick.game.players.megaman
-import com.megaman.maverick.game.players.translateHealth
 
 class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch> {
 
@@ -53,7 +54,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
     private val audioMan = game.audioMan
 
     // TODO: the HUD acts on the lead player in slot 0; which player the HUD shows is a session policy (item 047)
-    private val player: MegaPlayer
+    private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
 
     private val timerQueue = Queue<Timer>()
@@ -102,7 +103,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
                 bitSource,
                 ConstVals.WEAPON_BAR_X * ConstVals.PPM,
                 ConstVals.STATS_BAR_Y * ConstVals.PPM,
-                { player.megaman.ammo },
+                { (player as Megaman).ammo },
                 { MegamanValues.MAX_WEAPON_AMMO }
             )
 
@@ -111,7 +112,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         }
 
         weaponBarSupplier = {
-            val current = player.megaman.currentWeapon
+            val current = (player as Megaman).currentWeapon
             if (current == MegamanWeapon.MEGA_BUSTER) null else weaponBars.get(current)
         }
     }
@@ -145,7 +146,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
                     Event(
                         EventType.ADD_PLAYER_HEALTH, props(
                             ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP,
-                            PlayerEventKeys.SLOT pairTo player.slot
+                            PlayerEventKeys.SLOT pairTo player.playerSlot!!
                         )
                     )
                 )
@@ -187,7 +188,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             return
         }
 
-        val currentWeapon = player.megaman.currentWeapon
+        val currentWeapon = (player as Megaman).currentWeapon
         var remainingAmmo = ammo
 
         if (currentWeapon != MegamanWeapon.MEGA_BUSTER) {
@@ -201,7 +202,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
 
         val weapons = MegamanWeapon.entries.toOrderedSet()
         weapons.remove(MegamanWeapon.MEGA_BUSTER)
-        weapons.remove(player.megaman.currentWeapon)
+        weapons.remove((player as Megaman).currentWeapon)
 
         for (weapon in weapons) {
             if (remainingAmmo <= 0) {
@@ -229,10 +230,10 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
     private fun canAddWeaponEnergyTo(weapon: MegamanWeapon) =
         weapon != MegamanWeapon.MEGA_BUSTER &&
             state.containsWeapon(weapon) &&
-            player.megaman.weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
+            (player as Megaman).weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
 
     private fun addWeaponEnergyTo(weapon: MegamanWeapon, ammoToAdd: Int): Int {
-        val currentAmmo = player.megaman.weaponsHandler.getAmmo(weapon)
+        val currentAmmo = (player as Megaman).weaponsHandler.getAmmo(weapon)
         val maxAmmo = MegamanValues.MAX_WEAPON_AMMO
 
         GameLogger.debug(
@@ -246,10 +247,10 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             return ammoToAdd
         }
 
-        val remaining = player.megaman.translateAmmo(ammoToAdd, weapon)
+        val remaining = (player as Megaman).translateAmmo(ammoToAdd, weapon)
         GameLogger.debug(
             TAG, "addWeaponEnergyTo(): " +
-                "weapon energy now: ${player.megaman.weaponsHandler.getAmmo(weapon)}, remaining=$remaining"
+                "weapon energy now: ${(player as Megaman).weaponsHandler.getAmmo(weapon)}, remaining=$remaining"
         )
         return remaining
     }

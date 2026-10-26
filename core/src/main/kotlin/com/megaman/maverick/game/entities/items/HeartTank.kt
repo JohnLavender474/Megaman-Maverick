@@ -22,6 +22,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -45,7 +46,6 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setReceiver
-import com.megaman.maverick.game.players.MegaPlayer
 
 class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, ILightSource {
 
@@ -130,7 +130,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             body.physics.velocity.y = MIN_SAND_VEL_Y * ConstVals.PPM
     }
 
-    override fun contactWithPlayer(player: MegaPlayer) {
+    override fun contactWithPlayer(player: MegaGameEntity) {
         GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
 
         destroy()
@@ -147,7 +147,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
         game.eventsMan.submitEvent(Event(
                 EventType.ATTAIN_HEART_TANK,
-                props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo player.slot)
+                props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo player.playerSlot!!)
             ))
     }
 

@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -28,7 +29,6 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints.TentacleState
 import com.megaman.maverick.game.entities.utils.hardMode
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter

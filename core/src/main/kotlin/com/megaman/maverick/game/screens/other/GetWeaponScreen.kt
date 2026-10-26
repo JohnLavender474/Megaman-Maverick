@@ -31,9 +31,9 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.players.MegaPlayer
-import com.megaman.maverick.game.players.megaman
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
@@ -157,7 +157,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         eventQueue.addLast(GetWeaponEvent(GetWeaponEventType.MEGAMAN_MOVE))
         for (i in 0 until weaponsAttained.size) {
             val currentWeapon = weaponsAttained[i]
-            val previousWeapon = if (i == 0) player.megaman.currentWeapon else weaponsAttained[i - 1]
+            val previousWeapon = if (i == 0) (player as Megaman).currentWeapon else weaponsAttained[i - 1]
 
             eventQueue.addLast(
                 GetWeaponEvent(
@@ -199,7 +199,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                     GameObjectPools.fetch(Vector2::class)
                 )
 
-                val animKey = "${player.megaman.currentWeapon.name.lowercase()}_reversed"
+                val animKey = "${(player as Megaman).currentWeapon.name.lowercase()}_reversed"
                 val animator = megamanAnimators.get(animKey)
                 // Animator with 0f delta so that the sprite stays at the first animation region
                 animator.animate(megamanSprite, 0f)
@@ -320,6 +320,6 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
     // TODO: the animation starts from the weapon of the lead player in slot 0; with more players, whose weapon is a
     //  session policy (item 047)
-    private val player: MegaPlayer
+    private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
 }

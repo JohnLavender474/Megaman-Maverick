@@ -39,7 +39,9 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.drawables.sprites.setCenter
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.entities.facing
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.players.all
@@ -67,6 +69,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.entities.damaged
 import com.megaman.maverick.game.entities.decorations.WarningSign
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.GroundExplosion
@@ -85,10 +88,6 @@ import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.damaged
-import com.megaman.maverick.game.players.dead
-import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -303,8 +302,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             )
 
             players.forEach {
-                it.entity.lock(MegaLockGroup.DAMAGE, MegaLockReason.WILY_FINAL_BOSS)
-                (it.entity as? IFaceable)?.facing =
+                it.lock(MegaLockGroup.DAMAGE, MegaLockReason.WILY_FINAL_BOSS)
+                (it as? IFaceable)?.facing =
                     if (body.getCenter().x > it.body.getX()) Facing.RIGHT else Facing.LEFT
             }
 

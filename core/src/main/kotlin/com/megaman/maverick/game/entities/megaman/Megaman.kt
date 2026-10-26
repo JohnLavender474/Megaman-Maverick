@@ -29,7 +29,7 @@ import com.maverick.game.engine.locks.clearLocks
 import com.maverick.game.engine.locks.isLocked
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
-import com.maverick.game.engine.players.slotOf
+import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -507,7 +507,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         removeProperty(ConstKeys.FOCUS)
         game.setFocusSnappedAway(false)
 
-        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo players.slotOf(this)!!)))
+        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
     }
 
     override fun onDestroy() {
@@ -518,7 +518,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         val eventsMan = game.eventsMan
         eventsMan.removeListener(this)
-        eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo players.slotOf(this)!!)))
+        eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
 
         stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
@@ -605,7 +605,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER: called")
 
                 val targets = event.getProperty(PlayerEventKeys.SLOTS)
-                if (targets == null || !targets.contains(players.slotOf(this), false)) {
+                if (targets == null || !targets.contains(playerSlot, false)) {
                     GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER: Megaman is not a target: $targets")
                     return
                 }

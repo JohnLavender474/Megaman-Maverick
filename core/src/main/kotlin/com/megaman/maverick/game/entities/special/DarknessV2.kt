@@ -18,6 +18,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
@@ -46,7 +47,6 @@ import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.lightOrNull
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -346,7 +346,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
             entities.clear()
 
             players.forEach { player ->
-                if (player.entity.inPlay && player.body.getBounds().overlaps(bounds)) {
+                if (player.inPlay && player.body.getBounds().overlaps(bounds)) {
                     val lightSourceDef = lightSourcePool.fetch()
                     lightSourceDef.center.set(player.body.getCenter())
 

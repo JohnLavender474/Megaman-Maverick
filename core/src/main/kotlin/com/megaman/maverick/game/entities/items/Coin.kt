@@ -23,8 +23,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.players.MegaPlayer
 
 class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
@@ -72,7 +72,7 @@ class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
         } else doCullAfterTime = false
     }
 
-    override fun contactWithPlayer(player: MegaPlayer) {
+    override fun contactWithPlayer(player: MegaGameEntity) {
         if (!doContactWithPlayer) return
 
         val coins = game.getOrDefaultProperty(ConstKeys.COINS, 0, Int::class)

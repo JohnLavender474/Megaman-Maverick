@@ -2,14 +2,15 @@ package com.megaman.maverick.game.entities.blocks
 
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.isAnyBehaviorActive
 
 class GroundSlideBlocker(game: MegamanMaverickGame): AbstractBlock(game) {
 

@@ -34,7 +34,9 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -54,10 +56,7 @@ import com.megaman.maverick.game.entities.decorations.StarknerTrailSprite
 import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.explosions.StarExplosion
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.dead
-import com.megaman.maverick.game.players.direction
-import com.megaman.maverick.game.players.invincible
+import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils

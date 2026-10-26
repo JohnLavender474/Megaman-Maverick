@@ -34,7 +34,9 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -61,9 +63,6 @@ import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.SharpStar
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.levels.LevelDefinition
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.dead
-import com.megaman.maverick.game.players.direction
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter

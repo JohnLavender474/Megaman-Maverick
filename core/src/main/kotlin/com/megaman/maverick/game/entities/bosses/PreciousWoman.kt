@@ -30,6 +30,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
@@ -47,17 +48,15 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemColor
 import com.megaman.maverick.game.entities.projectiles.PreciousGemCluster
 import com.megaman.maverick.game.entities.projectiles.SlashWave
-import com.megaman.maverick.game.players.MegaPlayer
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.dead
-import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -305,7 +304,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         shieldGems.clear()
     }
 
-    override fun onPlayerDamaged(damager: IDamager, player: MegaPlayer) {
+    override fun onPlayerDamaged(damager: IDamager, player: MegaGameEntity) {
         GameLogger.debug(TAG, "onPlayerDamaged(): damager=$damager, player=$player")
         if (currentState == PreciousWomanState.STAND) laughTimer.reset()
     }

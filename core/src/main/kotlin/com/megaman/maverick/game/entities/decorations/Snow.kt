@@ -14,6 +14,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.motion.SineWave
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -25,7 +26,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.extensions.getCenter
 
 class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {

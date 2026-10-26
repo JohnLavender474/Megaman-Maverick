@@ -3,6 +3,7 @@ package com.megaman.maverick.game.world.contacts.rules
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.behaviors.BehaviorsComponent
+import com.maverick.game.engine.players.PlayerComponent
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -14,7 +15,6 @@ import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.players.MegaPlayers
-import com.megaman.maverick.game.players.PlayerComponent
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
@@ -62,7 +62,7 @@ class PlayerItemRuleTest : DescribeSpec({
 
         it("does nothing for an entity that is not a player") {
             val other = mockk<MegaGameEntity>(relaxed = true)
-            every { other.getComponent(PlayerComponent::class) } returns null
+            every { other.hasComponent(PlayerComponent::class) } returns false
             val item = mockk<MegaGameEntity>(relaxed = true, moreInterfaces = arrayOf(ItemEntity::class))
 
             PlayerItemRule.onBegin(fixture(FixtureType.PLAYER, other), fixture(FixtureType.ITEM, item), 0f)

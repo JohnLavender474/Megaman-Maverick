@@ -32,7 +32,9 @@ import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.*
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -56,13 +58,11 @@ import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.entities.projectiles.MagmaGoop
 import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
 import com.megaman.maverick.game.entities.projectiles.MagmaOrb
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
-import com.megaman.maverick.game.players.body
-import com.megaman.maverick.game.players.direction
-import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter

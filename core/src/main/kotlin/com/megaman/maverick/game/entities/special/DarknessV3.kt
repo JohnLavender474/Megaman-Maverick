@@ -22,6 +22,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setBounds
+import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
@@ -43,7 +44,6 @@ import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
-import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.players.lightOrNull
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
@@ -377,7 +377,7 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 lightSourceDef.center = player.body.getCenter()
                 lightSourceDef.radius = MEGAMAN_CHARGING_RADIUS
                 lightSourceDef.radiance = MEGAMAN_CHARGING_RADIANCE
-                queuedLightSourcesToAdd.addLast((player.entity as MegaGameEntity).id pairTo lightSourceDef)
+                queuedLightSourcesToAdd.addLast(player.id pairTo lightSourceDef)
             }
         }
 
