@@ -780,3 +780,12 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the owner approves the `061b` scope (1 open question: the package). A review of removing the `spawned`
   and `dead` flags is running.
+
+## 2026-10-26 — master (docs)
+
+- Summary: new item `062` (one engine-owned entity existence state), status `idea`. The owner asked to remove the
+  `spawned` and `dead` flags and make callers ask the engine, and to make an item if a review found it solid. The
+  review (item `NOTES.md`) found the goal solid and recommends one engine-owned `EntityState` field with read-only
+  helpers instead of engine queries or a global helper; the owner decides (7 open questions in `ITEM.md`).
+- Contract check: not needed (docs only).
+- Follow-up: the owner reviews item `062`.

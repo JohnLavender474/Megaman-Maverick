@@ -69,6 +69,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | idea | none | | |
 | 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | idea | `024` | | |
 | 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | active | `029`, `031` | 2026-10-26 | |
+| 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
