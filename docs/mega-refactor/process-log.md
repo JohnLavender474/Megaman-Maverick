@@ -524,3 +524,11 @@ newest entry at the bottom.
 - Contract check: build passes; 470 engine and 144 core tests, 0 failures; a launch of `TEST_1` with
   `--allowScreenshots` showed no exception.
 - Follow-up: the `TODO` in `DesktopLauncher.kt` points to item `031`.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031` gets more binding decisions: per-slot settings now with profiles after co-op, `Esc` reserved,
+  one constant stick threshold (proposal `0.5`), no revert timer. `Enter` stays an open question (pushback: it is
+  today's default `START` key).
+- Contract check: not needed (docs only).
+- Follow-up: none.

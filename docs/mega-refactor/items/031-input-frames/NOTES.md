@@ -560,3 +560,32 @@ The binding id from the earlier recommendation stays: inside a slot's settings, 
 `keyboard` or `pad:<name>`. The table lookup becomes (slot, binding id) instead of (binding id).
 
 A decision for the owner: Option 4 now (with Option 3 possible later), or profiles from the start.
+
+### More owner answers on bindings (2026-10-25)
+
+- **Bindings per slot now (Option 4), profiles later.** The owner agrees: per-slot settings move in the direction of
+  profiles. Keep each slot's settings in one object from the start, so a profile is later that object with a name.
+  Profiles wait for a feature branch during or after co-op (`047`).
+- **`Esc` is a reserved system key.** It can never be bound. It opens pause and, from there, the input menu and the
+  bindings screen, from any device state.
+- **`Enter`: proposed as reserved; pushback, not decided.** `Enter` is today's default keyboard key for `START`
+  (`MegaControllerButton.kt:13`). If `Enter` is fully reserved:
+  - `START` on the keyboard is either locked to `Enter` (a player cannot move it) or must move to another default
+    key, which changes the default controls;
+  - keyboard-only co-op later has one `Enter` for two players, so only one of them can have it as `START`.
+  The proposal instead: `Enter` stays a normal key in gameplay (default `START`, bindable), but in the system screens
+  (pause, input menu, bindings screen) it always means "confirm". When the bindings screen waits for a new key, a
+  press of `Enter` binds `Enter`, as with any other key. With `Esc` (back) and `Enter` (confirm) always working in
+  the system screens, a player with a broken map can still move out and reset.
+- **Stick threshold: one constant, the minimal common value.** Proposal: a stick axis presses its d-pad direction
+  when its value is at least `0.5` (of the range `-1` to `1`), checked for each axis on its own. A full diagonal
+  gives about `0.71` on both axes, so it presses both directions. Values used elsewhere: RetroArch converts an
+  analog axis to a digital press at `input_axis_threshold = 0.5` by default; XInput's suggested dead zones are
+  about `0.24` (left stick, `7849` of `32767`) and about `0.12` for the triggers (`30` of `255`). A dead zone of
+  `0.24` stops drift in analog games. For a digital press it is too low: a light touch would move Mega. Inference:
+  `0.5` is the usual value for a digital press. A release threshold a little lower than the press threshold (for
+  example `0.4`) stops flicker at the edge. It is optional; add it only if play tests show flicker.
+- **Revert timer: not needed.** It is a "Keep these bindings?" prompt after a change that reverts the change if
+  nobody confirms within a few seconds, as in display settings. It protects a player who has made confirm
+  impossible to press. Here `Esc`, `Enter` in the system screens and the mouse already give a way out, and every
+  button always keeps one code. So the timer adds UI for a case that the other layers already cover.

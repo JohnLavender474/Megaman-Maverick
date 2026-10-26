@@ -45,6 +45,11 @@ Answer to review item 30 (2026-10-22, verbatim):
   `2026-10-25-bindings-screen-restarts-level.md`).
 - 2026-10-25: the screenshot logic takes a generic trigger, not the `P` key; the launcher gives the trigger for now,
   with a `TODO` to update it later.
+- 2026-10-25 (bindings): bindings and `selectButtonAction` are per slot now, kept in one settings object per slot.
+  Profiles (a named copy of that object) wait for a feature branch during or after co-op (`047`).
+- 2026-10-25 (bindings): `Esc` is a reserved system key and can never be bound.
+- 2026-10-25 (bindings): the stick uses one constant threshold (proposal `0.5` per axis; see `NOTES.md`). No
+  revert timer.
 
 ## Open questions
 
@@ -54,11 +59,11 @@ Answer to review item 30 (2026-10-22, verbatim):
   the game must handle all of these. Ideas from the owner: an input settings UI that the mouse can drive (the mouse
   is not assigned to any player), and the keyboard as a trusted input that can always reach it. See `NOTES.md`,
   "Input assignment: cases and options (2026-10-25)".
-- Bindings per slot (Option 4) now, with profiles (Option 3) possible later, or profiles from the start? See
-  `NOTES.md`, "Recommendation after the answers".
-- Which keys are system keys (`Esc`?), and what triggers a screenshot after the `TODO`?
-- The open binding questions 5 and 7 to 10 in `NOTES.md` (stick threshold setting, revert timer and
-  `--resetBindings`, bindable triggers, touch overlay layout, `selectButtonAction` migration).
+- `Enter`: fully reserved, or a normal key in gameplay (default `START`) that always confirms in the system
+  screens? See `NOTES.md`, "More owner answers on bindings".
+- What triggers a screenshot after the `TODO`?
+- The open binding questions 7 to 10 in `NOTES.md` (`--resetBindings`, bindable triggers, touch overlay layout,
+  `selectButtonAction` migration). Questions 5 (threshold) and 7 (revert timer) are answered.
 
 ## Sources
 
