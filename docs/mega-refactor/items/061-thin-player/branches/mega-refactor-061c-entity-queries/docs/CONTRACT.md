@@ -2,8 +2,8 @@
 
 The gameplay that this branch must not change, and how to check it. Written ahead of time on `master`.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 The player view class goes: a player is an entity with a `PlayerComponent(slot)`, and every caller asks the entity.
 Every read is the same field or call as today, so everything that looks at the player must act as on `master`:
