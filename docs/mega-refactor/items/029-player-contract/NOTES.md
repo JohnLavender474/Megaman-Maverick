@@ -1333,3 +1333,431 @@ Proto Man with optional roles and typed fixtures (`060`); possession (`047` or a
 - The owner asked for an extensive record of how other engines handle these problems. A third research agent covers
   functions and systems instead of methods, locks without base classes, immediate versus deferred events, querying a
   player without an interface, and static/global functions. Its report goes in the next section.
+
+## Functions, components and events instead of classes (2026-10-26)
+
+The third research report, for the owner's questions at the end of the section above. Read-only research agent, on
+`master` at `4abf1ff7f`. A proposal for discussion, not decided. Tags: [web] = from a fetched page (URLs in
+"Sources" below), [code] = this repo, [training] = the agent's own knowledge, not checked. The claim about
+`EventsManager` order (below) was checked again in the code (`engine/.../events/EventsManager.kt:71-76`).
+
+### Summary
+
+- Every ECS engine checked writes logic as **free functions over component queries**: Bevy, flecs, EnTT, and the
+  C-style 2D games (Sonic Mania's `Player_*` functions). Methods on an entity class are the exception. This engine
+  already does it in part: `GameSystem` is a function over a component mask.
+- **Locks** come in four forms: a counted set of tags (Unreal GAS); an on/off bit on a component with no structural
+  cost (Unity `IEnableableComponent`); a tag or relationship pair per reason (flecs `(LockedBy, X)`); presence in a
+  table (Fabian). For this game the best fit is a small `LocksComponent` with a count per reason, read by free
+  functions such as `canBeDamaged(e)`.
+- **Events:** all major engines have both a buffered channel (Bevy `Messages`, EnTT `enqueue`/`update`, Godot
+  `call_deferred`, Unity ECB) and an immediate channel (Bevy observers, flecs `emit`, EnTT `trigger`/`sigh`, Godot
+  signals, Unreal delegates). Almost none guarantees the order of immediate listeners. Each one limits re-entrancy:
+  commands are queued inside handlers, and listeners must not connect or disconnect while dispatch runs.
+- The repo **already has immediate observers**: `damageListeners`, `onDamagedCallbacks`, `invinciblePredicates`,
+  `runnablesOnSpawn`. They are ad-hoc lambdas on the entity class. A typed synchronous registry would make them
+  uniform, with no engine change.
+- **Querying a player:** engines use a marker component plus a query or tracker (Bevy `With<Player>`, Celeste
+  `Tracker.GetEntity<Player>()`), or a shared struct plus global functions (Mania). Optional features are optional
+  components, not interface members.
+- **Static functions** are fine when they are stateless and take their data as parameters. Global *state* is the
+  risk. The repo's `game.players` service is a good middle form.
+- **Engine changes needed:** none for free functions, locks or a sync registry. A small change is useful if a system
+  should skip locked entities without a per-entity check, or to fix the delivery order of `EventsManager`.
+
+### Functions and systems instead of methods
+
+- **Bevy.** "Systems: normal Rust functions." The parameters declare the data:
+  `fn greet_people(query: Query<&Name, With<Person>>)` [web]. Global data is a `Res<T>`/`ResMut<T>` parameter, a typed
+  singleton that the scheduler injects, so a dependency shows in the signature [training]. Order comes from
+  `.before()`, `.after()` and `.chain()`; two systems that access the same data with no order are "ambiguous", and Bevy
+  can report them [web]. `run_if` gates a system with a condition that is "evaluated at most once (per schedule run)";
+  Bevy warns that "there is no guarantee that the condition is upheld after the first system has run" [web].
+
+  ```rust
+  fn hurt(mut q: Query<(&mut Health, &Locks), With<Damaged>>) { for (mut h, l) in &mut q { if l.is_empty() { h.0 -= 1 } } }
+  app.add_systems(Update, (move_sys, hurt).chain().run_if(in_state(Level::Playing)));
+  ```
+
+- **flecs.** "Systems are queries + a function". A pipeline runs the phases `OnStart, OnLoad, PostLoad, PreUpdate,
+  OnUpdate, OnValidate, PostUpdate, PreStore, OnStore`; inside a phase, systems run in entity-id order, which
+  "generally means that systems will be ran in the order they are declared" [web].
+  `world.system<Position, const Velocity>("Move").each([](Position& p, const Velocity& v){...})` [web].
+- **EnTT.** Systems are "plain functions, functors, lambdas", with no registration [web]; the call order is your code
+  [training].
+
+  ```cpp
+  void movement_system(entt::registry &r) { r.view<position, velocity>().each([](auto, auto &p, auto &v){ p.x += v.dx; }); }
+  ```
+
+- **Unity DOTS.** `ISystem` structs with `OnUpdate(ref SystemState)`, iterating
+  `SystemAPI.Query<RefRW<LocalTransform>, RefRO<Speed>>()`; order from `[UpdateInGroup]`, `[UpdateBefore]`,
+  `[UpdateAfter]` [training].
+- **Sonic Mania (decomp).** One shared `EntityPlayer` struct; all player logic is global C functions that take the
+  struct pointer: `Player_CheckCollisionTouch`, `Player_Hurt`, `Player_CheckBadnikTouch`, `Player_ProjectileHurt`
+  [web, `Player.c:2255-2684`]. A badnik loops `foreach_active(Player, player) { if (Player_CheckBadnikTouch(player,
+  self, &hitbox)) Player_CheckBadnikBreak(player, self, true); }` [web, `Motobug.c:92-95`]. Per-character differences
+  are branches on `player->characterID` (19 tests in `Player.c`). The state is a function pointer
+  (`StateMachine(state)`), and so is input (`StateMachine(stateInput)`) [web, `Player.h:368,441`]: the "driver" idea
+  of item `031` already exists there as a swappable function.
+- **Celeste/Monocle.** Classic OOP entities with `Component.Update()`; the `Tracker` adds lookups by type:
+  `GetEntity<T>()`, `GetEntities<T>()`, `GetComponents<T>()`, `GetNearestEntity<T>()` for `[Tracked]` types [web].
+- **Carmack, "Functional programming in C++".** "A pure function only looks at the parameters passed in to it."
+  "Pure functions are trivial to test." "Moving a function towards purity improves the code, even if it doesn't reach
+  full purity." Passing an all-globals pointer defeats the purpose [web].
+- **Acton (CppCon 2014).** "The purpose of all programs ... is to transform data"; "where there is one, there are
+  many": write functions for the batch, not the object [training].
+- **Overwatch (Ford, GDC 2017).** Systems hold no state; components hold no behavior; global state is in "singleton
+  components"; shared helpers are "utility functions" with few side effects and few call sites; side effects are
+  deferred to one place in the frame [talk exists: web; contents: training].
+- **This repo.** `GameSystem.process(on, entities, delta)` is already a function over a mask; most logic is still in
+  entity methods and in lambdas in `UpdatablesComponent` [code].
+
+### Locks and state flags without base classes
+
+- **Unreal GAS: tags with counts.** `FGameplayTagCountContainer` stores "the number of instances of that
+  GameplayTag"; `HasTag()` is false at count 0 [web]. Loose tags "are not replicated and must be managed manually"
+  [web]. An ability declares `ActivationBlockedTags` (blocked by **any**), `ActivationRequiredTags` (needs **all**),
+  `ActivationOwnedTags`, `BlockAbilitiesWithTag`, `CancelAbilitiesWithTag` [web]. A stun is `State.Debuff.Stun` for
+  its duration [web]. `RegisterGameplayTagEvent` fires on `NewOrRemoved` or `AnyCountChange` [web]. The rule is
+  declarative: the gate lists the tags that block it; the lock writer only adds a tag.
+
+  ```cpp
+  ASC->AddLooseGameplayTag(TAG_State_BossIntro);    // count 1
+  ASC->AddLooseGameplayTag(TAG_State_BossIntro);    // count 2 (two sources)
+  ASC->RemoveLooseGameplayTag(TAG_State_BossIntro); // count 1: still blocked
+  ```
+
+- **Unity DOTS: enableable components.** "An entity with component T disabled matches queries as if it doesn't have
+  component T at all." `SetComponentEnabled<T>(e, bool)` does not change the archetype or move data, so no ECB or sync
+  point is needed; "ideal for states that you expect to change often and unpredictably" [web]. It is one bit, not a
+  count [training].
+- **flecs: tags and relationship pairs.** A pair is "two elements encoded into a single 64-bit id", for example
+  `e.add(LockedBy, BossIntro)`; a query can use `(LockedBy, *)` [web]. Cost: each new combination makes a new table,
+  and table churn is expensive; `DontFragment` relationships reduce it [web]. A pair is a set of reasons, not a count
+  [training].
+- **EnTT: empty-type tags.** "When an empty type is detected, it is not instantiated"; tags filter views:
+  `registry.view<Health>(entt::exclude<Invulnerable>)` [web; `exclude` from training].
+- **Bevy: markers, States and run conditions.** `Without<Locked>` filters entities; insert and remove are structural
+  [training]. Game-wide locks use `States` with `OnEnter`/`OnExit` and `run_if(in_state(..))`; `SubStates` exist only
+  inside a parent state; `ComputedStates` are "fully derived from other states" [web]. In Bevy terms, item `012`'s
+  freeze table is global states that gate system sets, and per-entity locks are components.
+- **Fabian, existence-based processing.** A flag becomes "an implicit boolean hidden in the row existing in the
+  table"; a state change "is an insert into a table or a migration from one table to another". Costs: reading an
+  enum-like state needs a check of all tables, and moves between tables cost, so states that change very often may
+  stay plain values [web].
+- **Sonic Mania: a predicate over plain fields.** `Player_Hurt` returns false if
+  `state == Player_State_Hurt || state == Player_State_Death || ... || invincibleTimer || blinkTimer > 0`
+  [web, `Player.c:2392`]. No lock object: one function reads timers and state. Each new reason edits the function.
+- **X6 (repo notes).** 10 stop bytes per object class, a per-object exempt bit `0x08`, a separate input lock; no count
+  [code, `docs/mega-refactor/items/012-named-freezes/NOTES.md`].
+- **This repo today: last writer wins.** `canBeDamaged` is one `Boolean` in `PlayerStateComponent` [code,
+  `players/PlayerStateComponent.kt:11`]. Writers: teleport start and end (`Megaman.kt:507,516`), boss defeat
+  (`MegaLevelScreen.kt:808`), intermediate boss death (`:834`), player spawn (`PlayerSpawnEventHandler.kt:119,201`),
+  level end (`EndLevelEventHandler.kt:109`), `WilyFinalBoss.kt:298` [code]. A teleport that ends during a boss defeat
+  sets `canBeDamaged = true` and cancels the boss lock. `ready` (6 writers) and `movementAllowed`
+  (`SpiderWeb.kt:120,153`) have the same shape [code]. `AbstractHealthEntity.invinciblePredicates:
+  Array<() -> Boolean>` is already an "OR of sources" lock, but the sources have no names [code,
+  `AbstractHealthEntity.kt:31-35`].
+
+### Events: immediate and deferred
+
+- **Bevy.**
+  - *Messages* (buffered, pull): `Messages<T>` holds "the messages that occurred within the last two
+    `Messages::update` calls"; `MessageReader` "reads messages of type T in order and tracks which messages have
+    already been read" [web, Bevy 0.20]. A reader after the writer in the same frame sees the message that frame; a
+    reader before it sees it next frame; after two updates it is gone [training for the same-frame rule]. (Earlier
+    versions called these `Events<T>`/`EventReader` [training].)
+  - *Observers* (immediate, push): `World::trigger` runs observers "immediately"; `Commands::trigger` waits for the
+    next sync point; observer order "is considered to be arbitrary"; commands queued by observers apply after all
+    observers run, and nested triggers are "evaluated recursively until no commands remain" [web]. `EntityEvent`
+    targets one entity and can propagate up `ChildOf` or a custom `Traversal` [web].
+  - *Hooks*: one hook per kind per component (a second registration panics); they get a `DeferredWorld`, so
+    structural changes go through `.commands()`; `on_add` runs before `on_insert`, `on_discard` before `on_remove`
+    [web, 0.20 naming].
+  - Re-entrancy rule: a handler cannot change the world structure directly; it queues commands, flushed after it.
+- **flecs.** "Observers are always executed when the operation that triggered the observer happens"; in deferred mode
+  (inside systems) "invoking the observer will also be delayed", so most observers run at sync points [web]. Custom
+  events: `world.event<Synchronized>().id<Position>().entity(e).emit()`; "emit ... invokes observers directly, whereas
+  enqueue adds the event to the command queue" [web]. "Observer order is undefined"; OnSet delivery follows emit
+  order; hooks run before OnAdd/OnSet and after OnRemove; "Observers should never mutate a component" [web].
+- **EnTT.** `dispatcher.trigger(e)`: "Listeners are invoked immediately, order of execution is not guaranteed".
+  `enqueue` stores events "until the `update` member function is invoked"; per-type flush with `update<T>()` [web].
+  "connecting listeners within event handlers can result in undefined behavior" [web]. Registry signals
+  (`on_construct`, `on_update`, `on_destroy`): destroy listeners run "before components have been destroyed"; do not
+  remove the same component inside its construct or update listener; adding or removing components in a destroy
+  listener can be undefined behavior [web].
+- **Unity classic.** `UnityEvent.Invoke` and C# `event` are synchronous [training]. `SendMessage` "calls the
+  specified method on every MonoBehaviour attached to the GameObject"; reflection-based and slow [web; cost:
+  training]. ScriptableObject event channels: an asset with a delegate; "RaiseEvent ... invokes the delegate"; "the
+  event in the middle works like a buffer" [web]; synchronous, in subscription order [training].
+- **Godot.** `emit()` calls connected functions at once. `CONNECT_DEFERRED`: "Deferred connections trigger their
+  Callables on idle time (at the end of the frame)". `call_deferred` calls run "in the order in which [they were]
+  called", and calls deferred from deferred calls run in the same idle cycle; Godot warns about infinite recursion
+  [web]. `call_group` "acts immediately on all selected nodes at once"; `GROUP_CALL_DEFERRED` and `GROUP_CALL_UNIQUE`
+  give a deduplicated deferred call; `get_nodes_in_group` returns nodes "in scene hierarchy order" [web].
+- **Unreal.** Multicast `Broadcast()` is synchronous; "The execution order of bound functions ... is not defined"
+  [web]. The Lyra `GameplayMessageSubsystem` has gameplay-tag channels with `BroadcastMessage`/`RegisterListener` and
+  exact or partial matches; broadcasters "do not know which objects will receive their messages" [web for the API];
+  delivery is synchronous [training]. `FTimerManager::SetTimerForNextTick` is the usual deferral [training].
+- **Game Programming Patterns (Nystrom).** "With a synchronous notification, execution doesn't return to the sender
+  until all of the receivers have finished"; synchronous cycles "overflow the stack and crash your game"; rule: "avoid
+  sending events from within code that's handling one". For queues: "be careful not to assume the current state of the
+  world reflects how the world was" at send time; "You only need a queue when you want to decouple something in time"
+  [web].
+
+Comparison:
+
+| Mechanism | Sync or deferred | Order rule | Re-entrancy rule | Allocation |
+|---|---|---|---|---|
+| Bevy `Messages`/`MessageReader` | deferred; read same or next frame by system order | send order per type | 2-update lifetime | double buffer per type, reused [training] |
+| Bevy observer (`world.trigger`) | immediate | arbitrary | observer commands flushed after all observers; nested triggers recursive | cached lookup [web] |
+| Bevy `commands.trigger` | next sync point | order of the queuing systems | as above | command queue |
+| Bevy hooks | immediate, inside the structural change | `on_add` < `on_insert`; `on_discard` < `on_remove` | `DeferredWorld`: no direct structural change | none extra |
+| flecs `emit` / observers | immediate (delayed in deferred mode) | undefined; OnSet in emit order | observers must not mutate the component | event data copied when enqueued [web] |
+| flecs systems in deferred mode | merged at sync points | declaration order per phase | structure read-only | command queue |
+| EnTT `dispatcher.trigger` | immediate | not guaranteed | no connect inside a handler | none |
+| EnTT `enqueue`/`update` | deferred to `update()` | queue order per type [training] | same | queue per type |
+| EnTT `on_construct`/`on_destroy` | immediate | connection order [training] | no connect/disconnect in a listener; destroy listener only cleans up | none |
+| Unity DOTS ECB | deferred to playback | sort key in parallel jobs | one ECB per job | command buffer |
+| Unity `UnityEvent` / C# event | immediate | subscription order [training] | none built in | delegate list |
+| Unity `SendMessage` | immediate | component order [training] | none | reflection, slow [training] |
+| Godot signal | immediate | not stated | none; freed objects disconnect | none |
+| Godot `CONNECT_DEFERRED` / `call_deferred` | end of frame (idle) | call order | nested deferred calls in the same idle cycle | message queue |
+| Unreal multicast delegate | immediate | undefined | none built in | invocation list |
+| Lyra message subsystem | immediate [training] | registration order [training] | none | listener map by tag |
+| This repo `EventsManager` | deferred to after the screen render | listener order, then the listener's `eventKeyMask` order (see below) | events submitted during `run()` go to the next `run()` | `Array` per key; `Event` + `Properties` per submit |
+| This repo `damageListeners` | immediate | `OrderedSet` order | none | none |
+
+How engines choose:
+
+- **Immediate** when the reaction must see the exact state at the time of the cause and finish before the cause
+  continues: a damage negotiation that may cancel damage, a hook that keeps an index up to date, a "player was hit"
+  callback to a boss [training; Bevy documents hooks and observers for these uses, web].
+- **Deferred** when the reaction changes structure (spawn, destroy), crosses systems, must be batched, or the cause
+  runs inside an iteration that must not change. Bevy and flecs force this: structural changes inside systems become
+  commands [web].
+- No engine guarantees the order of immediate listeners (Bevy, flecs, EnTT, Unreal say so) [web]. An engine that
+  needs a fixed order makes it explicit: a chain of systems, or one handler that calls the steps in sequence.
+- Re-entrancy is limited by: (a) handlers queue structural changes instead of doing them; (b) no subscribe or
+  unsubscribe during dispatch; (c) a depth limit or a "no send from a handler" rule.
+
+A fact about this repo's `EventsManager` (checked in the code): `run()` loops over listeners, then over each
+listener's `eventKeyMask`, then over the events for that key (`EventsManager.kt:71-76`). So:
+
+- Within one key, events arrive in submit order.
+- Across keys, the order is the listener's `eventKeyMask` iteration order. That is an `ObjectSet`, so hash order, not
+  submit order. If a listener subscribes to `A` and `B`, and `B` is submitted first in the frame, the listener can
+  get `A` first. For enum keys the hash order is stable within one build, but a change to the mask set can change it
+  [code reading; not run].
+- An event submitted inside `onEvent` goes to `eventsToAdd` and is delivered at the next `run()`, one more frame
+  later (`EventsManager.kt:30`, `:61`).
+
+This explains part of the "fragile event ordering" in item `053`. A fix that keeps one global order (submit order,
+then listener order) is an engine change that can change behavior, so it needs its own contract check.
+
+### Querying a player without an interface
+
+- **Bevy:** `Query<(&Transform, &Health), With<Player>>`; one player: `single()`; optional parts: `Option<&Light>` or
+  `Has<Light>` [training]. "Player" is a marker component; no `IPlayer`.
+- **flecs/EnTT:** a `Player` tag; `registry.view<Position, Player>()`; optional parts: `registry.try_get<Light>(e)`
+  [training].
+- **Unity DOTS:** `SystemAPI.GetSingletonEntity<PlayerTag>()` or a query with `PlayerTag`; optional parts:
+  `HasComponent<T>` [training].
+- **Godot:** `get_tree().get_first_node_in_group("player")`, or a group loop in hierarchy order [web]; optional
+  features: `has_method` or a child node [training].
+- **Unreal:** `PlayerController` → `Pawn`; capabilities are components found with `FindComponentByClass<T>()`, or
+  gameplay tags on the ability system [training].
+- **Celeste:** `Scene.Tracker.GetEntity<Player>()`, `GetNearestEntity<T>(pos)` [web]; one concrete `Player` class.
+- **Sonic Mania:** `foreach_active(Player, player)` over a shared `EntityPlayer`; optional features are fields
+  (`shield`, `characterID`) read by global functions [web].
+
+The shared rule: the query asks for **data**. "Is a player" is a marker. A feature such as a light is an optional
+component, and the caller checks that it is there. This matches the `048` decision ("a capability lookup with
+`getComponent(X::class)`") and `029` review 4 (`capability(type)`).
+
+### Static/global functions: where engines use them, and the risks
+
+Where: stateless helpers over data (Mania `Player_*`, Bevy/EnTT systems, Overwatch "utility functions"); engine-wide
+services that are injected, not hidden (Bevy `Res<T>`, Overwatch singleton components, Godot autoloads)
+[web/training].
+
+Risks and how engines limit them:
+
+- **Hidden dependencies.** A function that reads a global does not show it in its signature. Bevy's answer: every
+  dependency is a parameter (`Res`, `Query`), so the scheduler knows the access and detects conflicts [web]. Nystrom:
+  "first consider passing the object to it instead" [web].
+- **Testability.** Pure functions are easy to test; a globals pointer "defeats the purpose" (Carmack) [web]. A Kotlin
+  top-level function that takes `(entity)` and reads only its components is testable with a fake entity
+  (`MegamanHeartTankTest` already builds entities with a relaxed MockK game) [code].
+- **Determinism.** The order of global calls is the order of the code; deterministic only if collections iterate in
+  a stable order. `029` review 4 warns against iterating `ObjectSet`/`ObjectMap` of players; `EventsManager` has the
+  same risk (above).
+- **Re-entrancy.** A global function that triggers immediate events can call back into itself. Use the Nystrom rule,
+  or queue structural changes as Bevy and flecs do.
+- **Mania's limit.** Per-character branches inside shared functions (`characterID == ID_MIGHTY`) grow with each
+  character [web]. The fix is data or optional components, not more branches.
+
+### Translation to this codebase (sketches, not decided)
+
+Free functions over components (no engine change). Kotlin top-level or extension functions in core, one file per
+concern; they take the entity and read components with `getComponent`/`require`:
+
+```kotlin
+// core/.../damage/DamageRules.kt
+fun canBeDamagedBy(e: IGameEntity, damager: IDamager): Boolean {
+    val h = e.getComponent(HealthComponent::class) ?: return false
+    val locks = e.getComponent(LocksComponent::class)
+    return h.alive && !h.recovering && (locks == null || !locks.blocks(LockGroup.DAMAGE)) && h.negotiator.get(damager) != 0
+}
+```
+
+- `IComponentBucket.require` already exists. `getComponent` is one `OrderedMap` lookup by `KClass` plus a cast; fine
+  at contact rate; for per-frame loops over many entities, cache the component in `init()`.
+- "Plays the same": first move the body of `AbstractHealthEntity.canBeDamagedBy` (`:73`) and the `Megaman.invincible`
+  getter (`Megaman.kt:110`) into the function unchanged, then switch the callers (`DamageRule.kt:27`).
+
+Counted locks with reasons (no engine change):
+
+```kotlin
+// engine (genre mechanism, no content)
+interface LockReason { val index: Int; val groups: Int }   // groups: bit mask of LockGroup
+class LocksComponent : IGameComponent {
+    private val counts = IntArray(MAX_REASONS)             // by reason.index, no boxing
+    private var blockedMask = 0                            // recomputed on change
+    fun lock(r: LockReason) { /* count++, update mask */ }
+    fun unlock(r: LockReason) { /* count--, never below 0 (log an error), update mask */ }
+    fun blocks(group: Int) = blockedMask and group != 0
+    override fun reset() { counts.fill(0); blockedMask = 0 }
+}
+fun lock(e: IGameEntity, r: LockReason) = e.require(LocksComponent::class).lock(r)
+```
+
+- The GAS model (a count per tag; the reason declares the groups it blocks) with the X6 groups from `012`.
+- An `IntArray` and a bit mask, not an `ObjectMap<Reason, Int>`: a check is one `and`, with no allocation and no hash
+  order.
+- `reset()` runs on destroy (the engine resets all components), which fixes the stale state for pooled entities.
+- Per-entity locks (`DAMAGE`, `MOVE`, `INPUT`, `BEHAVIORS`) go here. Game-wide freezes (pause, room transition) stay
+  in the `012` freeze controller: the Bevy split of global states versus per-entity components.
+- Not one tag component per reason: `addComponent`/`removeComponent` does not update system membership by itself
+  (only `GameEngine.spawnNow` calls `updateSystemMembershipsFor`), and it is easy to forget. A count inside one
+  component makes no structural change: the Unity enableable-component reason.
+- **"Plays the same" risk.** Today the last writer wins; with counts, the teleport end no longer cancels a boss-defeat
+  lock. That is a behavior change in an overlap case. Two ways: (1) port each writer pair 1:1 to `lock`/`unlock` with
+  its own reason, test the overlaps in play (teleport during a boss defeat, a spawn during a gate), and log each new
+  behavior in `docs/issues/`; or (2) start with an exact-copy mode: one `LEGACY` reason set or cleared like the
+  boolean, then move the writers to their own reasons one by one, with a contract check each time.
+- `invinciblePredicates` can stay for computed conditions (timers); give each one a name for a debug overlay.
+- The input lock (`InputFrameBuilder.locked`) can be driven by the `INPUT` group of the same component or of the
+  `012` controller.
+
+A synchronous observer registry next to the buffered one (no engine change; the engine can host it later):
+
+```kotlin
+class Signal<T> {                                          // generic
+    private val listeners = Array<(T) -> Unit>()           // fixed order = add order
+    private var dispatching = false
+    private val pendingAdd = Array<(T) -> Unit>()
+    private val pendingRemove = Array<(T) -> Unit>()
+    fun connect(l: (T) -> Unit) { if (dispatching) pendingAdd.add(l) else listeners.add(l) }
+    fun disconnect(l: (T) -> Unit) { if (dispatching) pendingRemove.add(l) else listeners.removeValue(l, true) }
+    fun emit(value: T) {
+        check(!dispatching) { "re-entrant emit" }         // Nystrom rule; or a depth limit
+        dispatching = true
+        for (i in 0 until listeners.size) listeners[i](value)
+        dispatching = false
+        // apply pendingAdd and pendingRemove
+    }
+}
+class PlayerDamaged(var player: IGameEntity? = null, var damager: IDamager? = null) // one reused payload
+```
+
+- Rules taken from the engines: a fixed, documented order (stronger than Bevy, EnTT or Unreal give); add and remove
+  deferred during dispatch; re-entrant emit forbidden or limited; handlers that spawn or destroy use `spawn`/`destroy`,
+  which the engine already queues.
+- Allocation: one reused payload per signal; a lambda that captures nothing is a singleton, and one that captures
+  `this` is allocated once at `connect`.
+- First real callers exist (not speculative): `PlayerStateComponent.damageListeners` (`Megaman.kt:726` →
+  `PreciousWoman.onPlayerDamaged`), `onDamagedCallbacks`, `onHealthDepletedCallbacks`. Moving them keeps the same
+  timing (immediate) and order (`OrderedSet` add order → `Array` add order).
+- Keep `EventsManager` for deferred, cross-system flow (level flow, room transitions). Moving a buffered event to a
+  `Signal` changes its timing by up to one frame (two for nested submits), and listeners in `MegaLevelScreen` depend
+  on that, so each move needs a contract check.
+- Item `057` (typed channels) can host both kinds: a channel declares `Deferred` or `Immediate`. That answers its open
+  question "let some channels deliver at once?".
+
+The player as a marker component, not a view interface:
+
+```kotlin
+class PlayerComponent(val slot: PlayerSlot) : IGameComponent       // marker + slot
+fun IGameEntity.center(): Vector2 = require(BodyComponent::class).body.getCenter()
+fun IGameEntity.facingOrNull(): Facing? = getComponent(FacingComponent::class)?.facing
+fun IGameEntity.lightOrNull(): PlayerLight? = getComponent(LightComponent::class)?.light
+fun IPlayers<*>.entities(): Sequence<IGameEntity>                   // slot order
+```
+
+- Outside code (enemies, hazards, HUD, camera) gets an entity from `game.players` in slot order and calls the free
+  functions; it never casts to `Megaman`. This is Bevy `With<Player>` plus `Option<&Light>`.
+- `MegaPlayer` can shrink step by step: each accessor becomes a free function over a component, and its required
+  parts drop to the ones a caller really uses. Facing and direction are interfaces on the entity today; moving them
+  into components is `048` work. Until then the free function reads the interface; only its body changes later, not
+  the callers.
+- Performance: 1-2 players, so a lookup per call is negligible; loop over the slot array, not a hash set. Note: the
+  sketch `fun center(): Vector2` allocates; the real form should take an output vector or return the body's cached
+  center.
+- "Plays the same": each step replaces `player.x` with `x(entity)` and reads the same field.
+
+What needs engine changes:
+
+| Piece | Engine change? |
+|---|---|
+| Free functions over components | no |
+| `LocksComponent` with counts | no (core first; the engine when a second game needs it) |
+| A system that skips locked entities without a per-entity check | optional: a mask filter or a predicate hook in `GameSystem.qualifies`; only if profiling shows the check matters |
+| `Signal<T>` immediate registry | no (engine if shared) |
+| Submit-order delivery in `EventsManager` | yes, with a contract check (it changes order) |
+| Hooks on component add/remove (Bevy-style) | yes, in `GameEntity.addComponent`/`removeComponent`; no current caller, so not now |
+| `PlayerComponent` marker | no (core); the engine already has `PlayerSlot` |
+
+### Sources
+
+- Bevy ECS quick start: <https://bevy.org/learn/quick-start/getting-started/ecs/>
+- Bevy observers: <https://docs.rs/bevy/latest/bevy/ecs/observer/index.html>,
+  <https://docs.rs/bevy/latest/bevy/ecs/observer/struct.Observer.html>
+- Bevy `EntityEvent`: <https://docs.rs/bevy/latest/bevy/ecs/event/trait.EntityEvent.html>
+- Bevy messages (0.20): <https://docs.rs/bevy/latest/bevy/ecs/message/index.html>
+- Bevy lifecycle and hooks: <https://docs.rs/bevy/latest/bevy/ecs/lifecycle/index.html>,
+  <https://docs.rs/bevy/latest/bevy/ecs/lifecycle/struct.ComponentHooks.html>
+- Bevy states: <https://docs.rs/bevy/latest/bevy/state/index.html>
+- Bevy `run_if` and ordering: <https://docs.rs/bevy/latest/bevy/ecs/schedule/trait.IntoScheduleConfigs.html>
+- flecs observers: <https://www.flecs.dev/flecs/ObserversManual.html>
+- flecs relationships: <https://www.flecs.dev/flecs/Relationships.html>
+- flecs systems: <https://www.flecs.dev/flecs/Systems.html>
+- EnTT events and signals: <https://github.com/skypjack/entt/wiki/Events,-signals-and-everything-in-between>
+- EnTT ECS: <https://github.com/skypjack/entt/wiki/Entity-Component-System>
+- Unity enableable components:
+  <https://docs.unity3d.com/Packages/com.unity.entities@1.3/manual/components-enableable-intro.html>,
+  <https://docs.unity3d.com/Packages/com.unity.entities@1.3/manual/components-enableable-use.html>
+- Unity ECB: <https://docs.unity3d.com/Packages/com.unity.entities@1.3/manual/systems-entity-command-buffers.html>
+- Unity `SendMessage`: <https://docs.unity3d.com/ScriptReference/GameObject.SendMessage.html>
+- Unity ScriptableObject event channels: <https://unity.com/how-to/scriptableobjects-event-channels-game-code>
+- Godot `Object` (signals, `CONNECT_DEFERRED`, `call_deferred`):
+  <https://docs.godotengine.org/en/stable/classes/class_object.html>
+- Godot signals tutorial: <https://docs.godotengine.org/en/stable/getting_started/step_by_step/signals.html>
+- Godot `SceneTree` (groups, `call_group`): <https://docs.godotengine.org/en/stable/classes/class_scenetree.html>
+- Unreal multicast delegates: <https://dev.epicgames.com/documentation/en-us/unreal-engine/multicast-delegates-in-unreal-engine>
+- GAS documentation (tranek): <https://github.com/tranek/GASDocumentation>
+- Gameplay Message System (community wiki): <https://unrealcommunity.wiki/gameplaymessagesystem-74b916>
+- Game Programming Patterns, Event Queue: <https://gameprogrammingpatterns.com/event-queue.html>
+- Fabian, Data-Oriented Design, existence-based processing: <https://www.dataorienteddesign.com/dodbook/node4.html>
+- Carmack, Functional programming in C++ (repost): <http://sevangelatos.com/john-carmack-on/>
+- Overwatch Gameplay Architecture and Netcode (GDC 2017):
+  <https://gdcvault.com/play/1024001/-Overwatch-Gameplay-Architecture-and>
+- Monocle `Tracker.cs`: <https://github.com/JamesMcMahon/monocle-engine/blob/master/Monocle/Util/Tracker.cs>
+- Sonic Mania decompilation (`Player.c`, `Player.h`, `Motobug.c`): <https://github.com/RSDKModding/Sonic-Mania-Decompilation>
+  (read for facts only; nothing copied)
+- Mike Acton, Data-Oriented Design and C++ (CppCon 2014): <https://www.youtube.com/watch?v=rX0ItVEVjHc> [training;
+  not fetched]
+
+Gaps: not confirmed from a fetched page: that the Lyra message subsystem is synchronous, that Godot signal emission
+runs listeners in connection order, and what the Overwatch talk says about singleton components (marked [training]).

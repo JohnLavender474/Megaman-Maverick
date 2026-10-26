@@ -708,3 +708,15 @@ newest entry at the bottom.
   proposal, not decided.
 - Contract check: not needed (docs only).
 - Follow-up: a third research report (functions, components and events instead of classes) goes in `029` `NOTES.md`.
+
+## 2026-10-26 — master (docs)
+
+- Summary: item `029` `NOTES.md` gets "Functions, components and events instead of classes": the third research
+  report (free functions and systems in Bevy, flecs, EnTT, Unity DOTS, Sonic Mania, Celeste; locks without base
+  classes; immediate versus deferred events with a comparison table; querying a player without an interface;
+  static/global functions and their risks; a translation to this codebase; sources). It also records a finding about
+  `EventsManager`: a listener gets events in the hash order of its `eventKeyMask`, not in submit order (checked in
+  `EventsManager.kt:71-76`). A proposal, not decided.
+- Contract check: not needed (docs only).
+- Follow-up: the owner decides the direction for `MegaPlayer` (thin view, free functions over components, counted
+  locks, a synchronous signal registry) and its order against `031d`.
