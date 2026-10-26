@@ -629,3 +629,12 @@ Owner's decisions, after a discussion of the `Enter` question above. They replac
   threshold is about `0.12`, but a digital press wants a firmer pull).
 - `selectButtonAction` defaults to `NEXT_WEAPON` for a slot (or later a profile) with no saved value. This is today's
   default.
+
+### Last binding answers (2026-10-25)
+
+- The touch overlay is `ScreenController`, the on-screen controller meant for a mobile build. It keeps a fixed
+  layout. No mobile build exists, so it is skipped for now; the branch that builds the touch device adapter adds a
+  `TODO` there.
+- No migration (owner): the plan in "Persistence and migration" to import the old prefs is dropped. The new settings
+  start from the defaults, and players set their bindings again once. Open question 10 (which old file's
+  `selectButtonAction` wins) no longer applies. Item `034` `ITEM.md` is updated to match.

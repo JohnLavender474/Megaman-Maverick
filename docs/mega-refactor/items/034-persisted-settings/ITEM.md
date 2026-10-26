@@ -16,7 +16,8 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 
 - `settings.json` with `version`, stored through the `SaveStorage` of `007`.
 - Order: defaults, then the file, then CLI flags (CLI values are not saved).
-- Import the legacy keyboard and controller prefs once. Leave the old files unchanged.
+- Do not import the legacy keyboard and controller prefs (owner, 2026-10-25, from `031`): bindings start from the
+  defaults, and players set them again once. Leave the old files unchanged.
 - Apply the saved bindings and select action at boot. Save volume changes. (Today they are not applied or not saved; see `000`.)
 
 ## Owner's input
@@ -24,6 +25,10 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 Answer to review item 33 (2026-10-22, verbatim):
 
 > yes
+
+## Decisions
+
+- 2026-10-25 (from `031`): no migration of the legacy binding prefs. Players set their bindings again once.
 
 ## Open questions
 

@@ -75,11 +75,15 @@ Answer to review item 30 (2026-10-22, verbatim):
   they are axes; see `NOTES.md`).
 - 2026-10-25 (bindings): `selectButtonAction` defaults to `NEXT_WEAPON` when a slot (or later a profile) has no
   saved value. This is today's default (`MegamanMaverickGame.kt:287`).
+- 2026-10-25 (bindings): the touch overlay (`ScreenController`, the on-screen controller meant for mobile) keeps a
+  fixed layout, with no rebinding. No mobile build exists yet, so it is out of scope: the branch that builds the
+  touch device adapter adds a `TODO` there for the mobile work.
+- 2026-10-25 (bindings): no migration of the old binding prefs. The new settings start from the defaults, and
+  players set their bindings again once. The old prefs files are left on disk, unused.
 
 ## Open questions
 
-- The open binding questions in `NOTES.md`: the touch overlay layout (9), and which old file's
-  `selectButtonAction` wins in the migration (10). The others are answered (see "Decisions").
+- None of the binding questions in `NOTES.md` is still open (see "Decisions").
 
 ## Sources
 

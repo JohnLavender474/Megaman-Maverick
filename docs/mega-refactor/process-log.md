@@ -556,3 +556,11 @@ newest entry at the bottom.
   triggers; `selectButtonAction` defaults to `NEXT_WEAPON` per slot.
 - Contract check: not needed (docs only).
 - Follow-up: filed `2026-10-25-p-key-binding-takes-screenshots.md`.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031`: the touch overlay keeps a fixed layout and is skipped until a mobile build (a `TODO` at the
+  touch adapter); no migration of the old binding prefs. Item `034` no longer imports the legacy prefs. All binding
+  questions in `031` are answered.
+- Contract check: not needed (docs only).
+- Follow-up: none.
