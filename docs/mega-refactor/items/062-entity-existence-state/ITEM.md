@@ -23,10 +23,11 @@ Not approved. The branch `SCOPE.md` decides the final scope. From the review in 
   `spawned` and `dead` become getters derived from it, with today's values on every path except the
   `reset`/`dispose` fix. The `dead` writes in `MegamanMaverickGame` go. Odd transitions keep today's behavior and are
   logged. Engine tests for each transition.
-- `062b`: move the readers in batches (bosses, enemies, special and blocks, Megaman, screens) to named read-only
+- `062b` (added 2026-10-26): engine guards for the odd paths, with the `062a` log as evidence (see "Decisions").
+- `062c`: move the readers in batches (bosses, enemies, special and blocks, Megaman, screens) to named read-only
   helpers (for example `inEngine` = today's `spawned`, `exists` = today's `!dead`), each reader mapped by the question
   it asks. Keep a player-level `dead` derived from the state where it means "the player died".
-- `062c`: remove the `spawned` `var`, `MegaGameEntity.dead`, and `engine.contains(..., containedIfQueuedToSpawn)` if
+- `062d`: remove the `spawned` `var`, `MegaGameEntity.dead`, and `engine.contains(..., containedIfQueuedToSpawn)` if
   the state replaces it; `PlayerView.present` reads the state.
 - Later, only with evidence: decide the odd transitions; a spawn generation (`EntityRef`) if the pooled-reuse (ABA)
   risk is confirmed.
@@ -45,18 +46,23 @@ this idea, and if it seems like a solid idea, then make a new item for it."
 - 2026-10-26 (owner, "engine-owned state field is fine"): the mechanism is the review's option (b): one
   engine-owned `EntityState` field on each entity, written only by the engine in every path, read through read-only
   helpers. Open question 1 is closed.
+- 2026-10-26 (owner): the state type is `EntityExistenceState` (property `existenceState`); on a spawn call while a
+  destroy is queued, `dead` gives the true value (`true`); the `reset`/`dispose` fix is an intended change of `062a`
+  (question 3); the pooled-reuse check waits for `019b`, and `062a` goes before `019b` (questions 6 and 7).
+- 2026-10-26 (owner, "Guards in new branch"): `062a` keeps the engine's actions on the odd paths and logs them. A new
+  branch `062b` adds the guards with that log as evidence: reject a spawn of a live entity, apply a same-tick respawn
+  after the destroy (the last call wins), reject a destroy of an unspawned entity (questions 4 and 5). The readers
+  move to `062c` and the removals to `062d`.
 
 ## Open questions
 
 1. Closed (2026-10-26): the engine-owned state field (option (b)).
 2. The helper names: `inEngine` / `exists`, or others? Keep `dead` only on the player?
-3. The `reset`/`dispose` fix: an intended change in `062a`, or a separate bug in `000`?
-4. A spawn while `DESTROY_QUEUED`: reject it, or apply it after the destroy? (Today it fails without a sign;
-   `FreezableEntityHandler` can hit it.)
-5. A `destroy()` of an `UNSPAWNED` entity: should the engine ignore it? (Today it runs `onDestroy` and the pool free
-   again.)
-6. Investigate the bullet-pool reuse risk now (a debug check in `cullAllDead`), or wait for `019b`?
-7. The order with `019b` (destroy notification), which also touches the spawn and destroy paths.
+3. Closed (2026-10-26): an intended change in `062a`.
+4. Closed (2026-10-26): `062b` applies it after the destroy (the last call wins); `062a` logs it.
+5. Closed (2026-10-26): `062b` rejects it; `062a` logs it.
+6. Closed (2026-10-26): wait for `019b`.
+7. Closed (2026-10-26): `062a` goes before `019b`.
 
 ## Sources
 

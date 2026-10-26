@@ -863,3 +863,11 @@ newest entry at the bottom.
 - Summary: branch start of `mega-refactor-062a-entity-state` (item `062` is `active`).
 - Contract check: not needed (docs only).
 - Follow-up: scan, then the draft scope.
+
+## 2026-10-26 — master (docs)
+
+- Summary: item `062` decisions from the `062a` scope review (the state name, the true `dead`, the reset fix, the order
+  with `019b`); a new branch `062b` for engine guards on the odd spawn and destroy paths, so the readers move to
+  `062c` and the removals to `062d`.
+- Contract check: not needed (docs only).
+- Follow-up: the owner approves the `062a` scope.
