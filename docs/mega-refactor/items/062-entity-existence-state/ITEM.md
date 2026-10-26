@@ -53,6 +53,9 @@ this idea, and if it seems like a solid idea, then make a new item for it."
   branch `062b` adds the guards with that log as evidence: reject a spawn of a live entity, apply a same-tick respawn
   after the destroy (the last call wins), reject a destroy of an unspawned entity (questions 4 and 5). The readers
   move to `062c` and the removals to `062d`.
+- 2026-10-26 (owner): the engine's real behavior is proved by tests (temporary old-versus-new suites and permanent
+  tests), not by guesses or by play only. Asked for `062b` (the guards on `onSpawn`/`onDestroy` order); `062a` applies
+  it too.
 
 ## Open questions
 
