@@ -761,3 +761,13 @@ newest entry at the bottom.
   yet) with a draft `docs/SCOPE.md`. `ITEMS.md` has the branch row.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the draft scope (2 open questions: the name `inPlay`, the package).
+
+## 2026-10-26 — master (docs)
+
+- Summary: item `061` `NOTES.md` gets "'Lifecycle' versus spawning, spawned and dead": a review of the draft
+  `Lifecycle` name for `061b` (three axes: existence, play participation, health death; timelines for the player, a
+  boss and an enemy; other engines; options). The review recommends a rename to `PlayPhase { PRE_PLAY, IN_PLAY,
+  POST_PLAY }` and no consolidation, and finds that `dead` stays `false` after `engine.reset()`/`dispose()`. A
+  proposal, not decided.
+- Contract check: not needed (docs only).
+- Follow-up: the owner decides the name and whether the `dead`/`spawned` disagreement becomes an item or an issue.
