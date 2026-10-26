@@ -1,10 +1,10 @@
 # 062: One engine-owned entity existence state
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `019`, `021`, `038`, `047`, `048`, `061`
-- Branches: none yet
+- Branches: `mega-refactor-062a-entity-state` (active: the engine-owned state; `spawned` and `dead` derived)
 
 ## Goal
 

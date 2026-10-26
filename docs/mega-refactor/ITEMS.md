@@ -69,7 +69,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | idea | none | | |
 | 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | idea | `024` | | |
 | 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
-| 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | planned | none | | |
+| 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | active | none | 2026-10-26 | |
 
 ## Branches
 
@@ -94,6 +94,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-061a-thin-player`](items/061-thin-player/branches/mega-refactor-061a-thin-player/process-log.md) | 061 | Thin `MegaPlayer`, free functions over the entity, engine locks, an immediate damage signal | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061b-play-phase-teleport`](items/061-thin-player/branches/mega-refactor-061b-play-phase-teleport/process-log.md) | 061 | `ready` and `teleporting` as entity state (play phase, teleportable); no player wrappers | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061c-entity-queries`](items/061-thin-player/branches/mega-refactor-061c-entity-queries/process-log.md) | 061 | A player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go | merged | 2026-10-26 | 2026-10-26 |
+| [`mega-refactor-062a-entity-state`](items/062-entity-existence-state/branches/mega-refactor-062a-entity-state/process-log.md) | 062 | One engine-owned `EntityState` on each entity, written only by the engine; `spawned` and `dead` derived from it | active | 2026-10-26 | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |

@@ -857,3 +857,9 @@ newest entry at the bottom.
 - Contract check: build and tests on `master`: 506 engine and 160 core tests pass (one new `PlayersTest` case), jar
   builds.
 - Follow-up: none. Other code can still call `removeComponent(PlayerComponent::class)`; not guarded.
+
+## 2026-10-26 — master (docs)
+
+- Summary: branch start of `mega-refactor-062a-entity-state` (item `062` is `active`).
+- Contract check: not needed (docs only).
+- Follow-up: scan, then the draft scope.
