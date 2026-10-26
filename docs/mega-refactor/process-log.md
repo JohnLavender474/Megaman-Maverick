@@ -679,3 +679,23 @@ newest entry at the bottom.
   prepared ahead of time (status `planned`, no branch yet) with a draft `docs/SCOPE.md`. `ITEMS.md` has the branch row.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the draft scope.
+
+## 2026-10-26 — mega-refactor-031c-input-pipeline
+
+- Summary: a new input pipeline with the same behavior. Core `KeyboardInput` and `GamepadInput` give held masks (the
+  gamepad adapter keeps `MegaControllerPoller`'s connect, disconnect and prefs logic); slot 0's frame is built from
+  their OR by the engine `InputFrameBuilder`, which holds the lock (`TURN_CONTROLLER_*`) with today's sequence. The
+  menus and skip screens read `FrameControllerPoller`, a facade over the slot-0 frame, until the menu-input branch.
+  The poller, `MegaControllerPoller`, `IControllerButton`, the device reads in `ControllerButton` and the unused
+  `enabled` flag are gone; `ControllerUtils` moved to core, so the engine reads no input device. Squash commit
+  `d1610c97f`. The squash had one conflict: `input/InputFrames.kt`, deleted on the branch (no caller left) and
+  reformatted on `master`; resolved by the deletion.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` (clean build; 489 engine and 165 core tests
+  with the temporary suite, 158 after its removal, 0 failures; 114 warnings; jar; contact file unchanged; the temporary
+  suite against frozen copies of the old poller on seeded scripts and 6 named cases; greps; `javap` shows no boxing
+  or allocation per tick). The owner played the manual checks: "All tests pass".
+- Follow-up: item `031` stays active; next are `031d` (devices) and `031e` (bindings), then the menu-input branch.
+  No backlog or bug candidates. Note on `629487ce0` ("031 ITEM.md: fix the branches line punctuation"): it was made
+  with `git commit -am` and also took in two uncommitted edits from the main checkout (the owner's): a line wrap in
+  `input/InputFrames.kt` and `MegaPlayers` passing the slot source as a trailing lambda
+  (`MegaPlayer(slot, entity) { inputs[slot] }`, a SAM conversion to `InputSource`). Both are kept.
