@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: one `InputFrame` per player slot, built from today's poller once per frame; all gameplay input reads move to it
-- Done: `docs/SCOPE.md` (approved); draft `docs/CONTRACT.md`
-- Next: the owner reviews `docs/CONTRACT.md`
+- Done: `docs/SCOPE.md` and `docs/CONTRACT.md` (approved); draft `docs/PLAN.md`
+- Next: the owner reviews `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -20,3 +20,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/SCOPE.md` with the proposals for the 3 open questions (value class, store in
   `MegaPlayers`, no temporary suite in `031a`). Decisions in `docs/SCOPE.md` and `docs/NOTES.md`. Draft
   `docs/CONTRACT.md` written; `docs/NOTES.md` lists where each moved reader can be checked in the game.
+- The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written.

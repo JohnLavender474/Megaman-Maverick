@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time on `master`,
 before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-25
 
 This branch adds one `InputFrame` per player slot, copied from the poller right after it polls, and moves every
 gameplay input read to it, with the same method and the same button. Every control must act as before: Megaman's
