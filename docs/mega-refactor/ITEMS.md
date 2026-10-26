@@ -68,7 +68,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | idea | none | | |
 | 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | idea | none | | |
 | 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | idea | `024` | | |
-| 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | active | `029`, `031` | 2026-10-26 | |
+| 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
 | 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | planned | none | | |
 
 ## Branches
@@ -93,7 +93,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-031c-input-pipeline`](items/031-input-frames/branches/mega-refactor-031c-input-pipeline/process-log.md) | 031 | A new input pipeline with the same behavior: device adapters, held masks, an engine edge builder with the lock; the poller goes | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061a-thin-player`](items/061-thin-player/branches/mega-refactor-061a-thin-player/process-log.md) | 061 | Thin `MegaPlayer`, free functions over the entity, engine locks, an immediate damage signal | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061b-play-phase-teleport`](items/061-thin-player/branches/mega-refactor-061b-play-phase-teleport/process-log.md) | 061 | `ready` and `teleporting` as entity state (play phase, teleportable); no player wrappers | merged | 2026-10-26 | 2026-10-26 |
-| [`mega-refactor-061c-entity-queries`](items/061-thin-player/branches/mega-refactor-061c-entity-queries/process-log.md) | 061 | A player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go | active | 2026-10-26 | |
+| [`mega-refactor-061c-entity-queries`](items/061-thin-player/branches/mega-refactor-061c-entity-queries/process-log.md) | 061 | A player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |

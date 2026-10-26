@@ -836,3 +836,14 @@ newest entry at the bottom.
   registry (decision in item `061` `ITEM.md`); the draft scope is rewritten to include it.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the rewritten draft scope (4 open questions).
+
+## 2026-10-26 — mega-refactor-061c-entity-queries
+
+- Summary: a player is an entity with an engine `PlayerComponent(slot)`; `Players` is a slot → entity registry, and
+  `MegaPlayers` binds the input source at registration. Callers ask the entity through query functions on
+  `IGameEntity` (engine: `body`, `facing`, `direction`, behaviors, `input`; core: health, damage, fixtures, light,
+  gravity device, `shooting`). `MegaPlayer`, `PlayerView`, `MegaPlayerAccess.kt` and the `megaman` accessor go (explicit
+  `as Megaman` casts remain for items `024`/`060`). Squash commit `a5dd1d99e`.
+- Contract check: clean build, 505 engine and 160 core tests pass, warnings unchanged (110), `contact-rule-selection.txt`
+  unchanged, greps, `javap` and the one-for-one check pass; the owner's play test passes (all manual checks).
+- Follow-up: item `061` is done. No backlog or bug candidates. Next options: item `062`, `031d`.
