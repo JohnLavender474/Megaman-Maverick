@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `019`, `021`, `038`, `047`, `048`, `061`
-- Branches: `mega-refactor-062a-entity-state` (active: the engine-owned state; `spawned` and `dead` derived)
+- Branches: `mega-refactor-062a-entity-state` (merged); next: `062b` (the guards)
 
 ## Goal
 

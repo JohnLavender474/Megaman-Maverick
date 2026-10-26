@@ -871,3 +871,18 @@ newest entry at the bottom.
   `062c` and the removals to `062d`.
 - Contract check: not needed (docs only).
 - Follow-up: the owner approves the `062a` scope.
+
+## 2026-10-26 — mega-refactor-062a-entity-state
+
+- Summary: one engine-owned `EntityExistenceState` on each entity, written only by `GameEngine` on every path;
+  `spawned` and `dead` are read-only values derived from it, and `dead` is the true value on every path. The
+  `onQueueToSpawn`/`onQueueToDestroy` callbacks go. The odd spawn and destroy paths keep their actions and log under
+  the `GameEngine` tag. Three intended changes (dead after `reset`/`dispose`; a spawn while a destroy is queued; a
+  spawn and then a destroy in the destroy phase). The `Met` in `RefactorTest029` `enemy_aim` moved left so it can
+  respawn. Squash commit `a30936fa4`.
+- Contract check: a temporary old-versus-new suite (deleted before the merge) showed the same actions, return values
+  and `spawned` on 10,000 random sequences, and the new `dead` true in 611,549 checks; the two core tests failed on the
+  baseline and pass after; 14 permanent engine tests; warnings unchanged (110); `contact-rule-selection.txt`
+  unchanged; the owner's play test passes (six checks, with `--logTags GameEngine`: no odd-path line).
+- Follow-up: `062b` (the guards) needs a wider search for callers of the odd paths (branch `docs/NOTES.md`). No
+  backlog or bug candidates.
