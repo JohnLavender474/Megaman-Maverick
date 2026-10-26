@@ -729,3 +729,10 @@ newest entry at the bottom.
   `PLAN.md` for one review. `ITEMS.md` has the item and branch rows.
 - Contract check: not needed (docs only).
 - Follow-up: the owner reviews the three drafts.
+
+## 2026-10-26 — master (docs)
+
+- Summary: item `061` `NOTES.md` gets "`ready` and `teleporting` for any entity": a research report (teleporting and
+  `ready` today, the concepts behind `ready`, other engines, options, a proposed `061b`). A proposal, not decided.
+- Contract check: not needed (docs only).
+- Follow-up: the owner decides whether `061b` takes the lifecycle and transport components.
