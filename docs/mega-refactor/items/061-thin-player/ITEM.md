@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`, `031`
 - Related: `012`, `024`, `030`, `047`, `048`, `053`, `057`, `060`
-- Branches: `mega-refactor-061a-thin-player` (merged), `mega-refactor-061b-play-phase-teleport` (merged); next: `061c` (a player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go)
+- Branches: `mega-refactor-061a-thin-player` (merged), `mega-refactor-061b-play-phase-teleport` (merged), `mega-refactor-061c-entity-queries` (active: players as entities with a `PlayerComponent`; callers ask the entity)
 
 ## Goal
 

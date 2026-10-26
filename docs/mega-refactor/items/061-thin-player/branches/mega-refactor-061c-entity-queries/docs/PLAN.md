@@ -2,8 +2,8 @@
 
 How to do the work in `SCOPE.md`. Written ahead of time on `master`.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 Build with `JAVA_HOME=~/.jdks/corretto-17.0.13`. Read the test counts from `build/test-results`. Smoke launches are
 short (about 20 seconds); the timeout with no exception is a pass. Each step is its own commit; after each code step,
@@ -21,7 +21,7 @@ New APIs and their first callers: see `SCOPE.md`.
   branch `process-log.md` to `active`. Then
   `git worktree add -b mega-refactor-061c-entity-queries .worktrees/mega-refactor-061c-entity-queries master`.
 - Check: `git worktree list`.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 

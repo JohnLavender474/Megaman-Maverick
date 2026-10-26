@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: a player is an entity with a `PlayerComponent(slot)`, not a view object; callers ask the entity through entity-level query functions; `MegaPlayer` and `MegaPlayerAccess.kt` go
-- Done: `docs/SCOPE.md` and `docs/CONTRACT.md` approved; draft `docs/PLAN.md`
-- Next: the owner approves `docs/PLAN.md`; then step 1 (branch start)
+- Done: planning (scope, contract, plan approved); step 1
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -32,3 +32,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   `hit_by_player`, `push_flip`, `gravity_switch`, `player_death`, `stun`) and the three `REFACTOR_TEST_031` rooms.
 - The owner approved `docs/CONTRACT.md`. Draft `docs/PLAN.md` written (7 steps; steps 3 and 4 only add the query
   functions, step 5 is the switch).
+- The owner approved `docs/PLAN.md`. Step 1 (branch start): `ITEMS.md` row and `ITEM.md` set to active; worktree
+  created.
