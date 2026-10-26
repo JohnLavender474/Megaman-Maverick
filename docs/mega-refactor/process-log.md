@@ -549,3 +549,10 @@ newest entry at the bottom.
   flows.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-25 — master (docs)
+
+- Summary: item `031` decisions: `P` stays the screenshot trigger for now; a `--resetBindings` flag; bindable gamepad
+  triggers; `selectButtonAction` defaults to `NEXT_WEAPON` per slot.
+- Contract check: not needed (docs only).
+- Follow-up: filed `2026-10-25-p-key-binding-takes-screenshots.md`.

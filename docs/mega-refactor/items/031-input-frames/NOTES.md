@@ -619,3 +619,13 @@ Owner's decisions, after a discussion of the `Enter` question above. They replac
   also be wrong, and the player could not fix it, because a fixed alias cannot be rebound. A binding that the player
   can change is safer. The stick threshold also reads the stick axes from that mapping, so the stick has the same
   limit.
+
+### More binding answers (2026-10-25)
+
+- The screenshot trigger stays `P` for now (owner). Filed: `docs/issues/2026-10-25-p-key-binding-takes-screenshots.md`.
+- A `--resetBindings` launcher flag is wanted (layer 5 of the escape hatch).
+- Gamepad triggers (`L2`, `R2`) can be bound, like any other button. They are axes, so the gamepad adapter turns
+  them into a press with a threshold. Proposal: the same `0.5` as the stick (inference: XInput's suggested trigger
+  threshold is about `0.12`, but a digital press wants a firmer pull).
+- `selectButtonAction` defaults to `NEXT_WEAPON` for a slot (or later a profile) with no saved value. This is today's
+  default.

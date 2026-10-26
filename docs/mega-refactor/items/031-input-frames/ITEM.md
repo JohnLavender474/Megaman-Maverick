@@ -68,13 +68,18 @@ Answer to review item 30 (2026-10-22, verbatim):
   calls it"). `031` builds what single player uses: `InputFrame` for slot 1, the device adapters (keyboard with the
   reserved aliases, each gamepad, touch) in auto mode, and per-slot bindings for slot 1. Its design must not block the
   `047` flows.
+- 2026-10-25: `P` stays the screenshot trigger for now (with `--allowScreenshots`). It can be changed or removed
+  later. The conflict with a player binding on `P` is filed as `docs/issues/2026-10-25-p-key-binding-takes-screenshots.md`.
+- 2026-10-25 (bindings): add a `--resetBindings` launcher flag (the last-resort escape hatch).
+- 2026-10-25 (bindings): gamepad triggers can be bound, and act like any other button (through a threshold, because
+  they are axes; see `NOTES.md`).
+- 2026-10-25 (bindings): `selectButtonAction` defaults to `NEXT_WEAPON` when a slot (or later a profile) has no
+  saved value. This is today's default (`MegamanMaverickGame.kt:287`).
 
 ## Open questions
 
-- What triggers a screenshot after the `TODO`? To be decided by the owner later.
-- The open binding questions in `NOTES.md`: a `--resetBindings` launcher flag (part of 7), bindable triggers (8),
-  the touch overlay layout (9), and which old file's `selectButtonAction` wins in the migration (10). Question 5
-  (threshold) and the revert timer (part of 7) are answered.
+- The open binding questions in `NOTES.md`: the touch overlay layout (9), and which old file's
+  `selectButtonAction` wins in the migration (10). The others are answered (see "Decisions").
 
 ## Sources
 
