@@ -7,6 +7,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 
 fun InputFrame.Companion.of(poller: IControllerPoller): InputFrame {
     var frame = RELEASED
-    for (button in MegaControllerButton.entries) frame = frame.with(button, poller.getStatus(button) ?: ButtonStatus.RELEASED)
+    for (button in MegaControllerButton.entries)
+        frame = frame.with(button, poller.getStatus(button) ?: ButtonStatus.RELEASED)
     return frame
 }
