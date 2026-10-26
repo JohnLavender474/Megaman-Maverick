@@ -6,7 +6,7 @@ import com.megaman.maverick.game.entities.contracts.IMegaGameEntity
 import com.megaman.maverick.game.input.PlayerInputs
 
 class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(capacity)) :
-    Players<MegaPlayer>(capacity, { slot, entity -> MegaPlayer(slot, entity, inputs) }) {
+    Players<MegaPlayer>(capacity, { slot, entity -> MegaPlayer(slot, entity) { inputs[slot] } }) {
 
     // TODO: always gives slot 0. Targeting should not be a service-wide function, and targetPlayer should not exist on
     //  every entity: not every entity needs a target player (blocks do not), and each entity that does has its own

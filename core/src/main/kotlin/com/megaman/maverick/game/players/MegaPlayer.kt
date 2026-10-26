@@ -18,13 +18,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.input.InputFrame
-import com.megaman.maverick.game.input.PlayerInputs
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
 
 class MegaPlayer(
     override val slot: PlayerSlot,
     override val entity: IGameEntity,
-    private val inputs: PlayerInputs
+    private val readInput: () -> InputFrame
 ) : PlayerView {
 
     private val bodyComponent = entity.require(BodyComponent::class)
@@ -50,7 +49,7 @@ class MegaPlayer(
     }
 
     val input: InputFrame
-        get() = inputs[slot]
+        get() = readInput()
 
     val body: Body
         get() = bodyComponent.body
