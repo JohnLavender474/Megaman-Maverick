@@ -3,8 +3,8 @@
 The gameplay that this branch must not change, and how to check it. This was written ahead of time on `master`,
 before the branch existed.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-26
 
 This branch replaces the poller with device adapters, held masks and an engine edge builder. Every button must feel
 the same on the keyboard and on a gamepad, alone and together: the press and release edges, the lock during room
