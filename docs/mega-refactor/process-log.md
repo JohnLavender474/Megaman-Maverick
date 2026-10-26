@@ -797,3 +797,20 @@ newest entry at the bottom.
   set to active).
 - Contract check: not needed (docs only).
 - Follow-up: the branch work in its worktree.
+
+## 2026-10-26 — mega-refactor-061b-play-phase-teleport
+
+- Summary: the player's `ready` and `teleporting` became entity state in `core/.../entities/state/`:
+  `PlayPhase { PRE_PLAY, IN_PLAY, POST_PLAY }` in `PlayPhaseComponent` (read by `playPhase`/`inPlay`, `IN_PLAY` without
+  the component; written by `setPlayPhase`, which requires it) and `TeleportableComponent` (the carrying teleporter;
+  `teleporter`/`teleporting`; `beginTeleport`/`endTeleport` call the entity's hooks first, then set or clear it). The
+  level handlers and the three teleporters write them; every reader asks the entity, with no player wrapper.
+  Removed: `Megaman.ready`/`teleporting`, `MegaPlayer.ready`/`teleporting`, `PlayerStateComponent`,
+  `ConstKeys.TELEPORTER`, `AbstractEnemy`'s unused teleport hooks and their helpers. No intended changes. Squash
+  commit `380acbdc9`.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` (clean build; 501 engine and 167 core tests, 0
+  failures; 110 warnings; jar; contact file unchanged; play phase and teleport tests including the hook order; greps;
+  the one-for-one read check). The owner played the manual checks: "Play tests pass".
+- Follow-up: item `061` stays active; next, a branch that moves the `MegaPlayerAccess.kt` callers to entity-level
+  functions and deletes the file. No backlog or bug candidates. Item `062` (entity existence state) waits for the
+  owner's decisions.
