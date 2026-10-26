@@ -52,6 +52,10 @@ import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.feetFixture
+import com.megaman.maverick.game.players.leftSideFixture
+import com.megaman.maverick.game.players.rightSideFixture
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
 

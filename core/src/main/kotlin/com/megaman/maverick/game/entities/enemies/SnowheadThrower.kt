@@ -41,6 +41,9 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.SnowballExplosion
 import com.megaman.maverick.game.entities.projectiles.Snowhead
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*

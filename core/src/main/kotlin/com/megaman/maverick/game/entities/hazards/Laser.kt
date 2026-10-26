@@ -62,6 +62,8 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShar
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.*

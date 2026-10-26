@@ -37,6 +37,9 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.BulletBill
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*

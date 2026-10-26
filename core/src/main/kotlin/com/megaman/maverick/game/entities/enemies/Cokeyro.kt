@@ -49,6 +49,8 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Cokonut
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter

@@ -34,6 +34,9 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.damaged
+import com.megaman.maverick.game.players.isBehaviorActive
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getCenter

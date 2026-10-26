@@ -46,6 +46,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.DustPuff
 import com.megaman.maverick.game.entities.utils.delayNextPossibleSpawn
 import com.megaman.maverick.game.entities.utils.isNextPossibleSpawnDelayed
+import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs

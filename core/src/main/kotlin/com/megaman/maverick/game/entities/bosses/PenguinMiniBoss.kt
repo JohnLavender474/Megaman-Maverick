@@ -41,6 +41,8 @@ import com.megaman.maverick.game.entities.enemies.BabyPenguin
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.EnemiesFactory
 import com.megaman.maverick.game.entities.projectiles.Snowball
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType

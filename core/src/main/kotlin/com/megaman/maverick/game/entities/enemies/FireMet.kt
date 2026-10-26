@@ -46,6 +46,8 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.FireMetFlame
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint

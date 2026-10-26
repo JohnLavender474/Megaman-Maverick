@@ -45,6 +45,9 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.lightOrNull
+import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
@@ -347,7 +350,7 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                     val lightSourceDef = lightSourcePool.fetch()
                     lightSourceDef.center.set(player.body.getCenter())
 
-                    when (player.light) {
+                    when (player.lightOrNull ?: PlayerLight.STANDARD) {
                         PlayerLight.FULL_CHARGE -> {
                             lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
                             lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE

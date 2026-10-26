@@ -8,6 +8,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.isAnyBehaviorActive
 
 class GroundSlideBlocker(game: MegamanMaverickGame): AbstractBlock(game) {
 

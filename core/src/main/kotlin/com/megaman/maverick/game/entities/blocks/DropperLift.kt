@@ -29,6 +29,8 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.feetFixture
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint

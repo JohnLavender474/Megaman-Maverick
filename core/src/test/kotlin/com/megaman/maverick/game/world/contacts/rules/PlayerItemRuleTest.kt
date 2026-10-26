@@ -14,8 +14,7 @@ import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.players.MegaPlayers
-import com.megaman.maverick.game.players.PlayerKeys
-import com.megaman.maverick.game.players.PlayerLight
+import com.megaman.maverick.game.players.PlayerComponent
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
@@ -45,8 +44,6 @@ class PlayerItemRuleTest : DescribeSpec({
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(megaman.playerState)
         megaman.addComponent(ControllerComponent())
-        megaman.putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {}
-        megaman.putProperty(PlayerKeys.LIGHT) { PlayerLight.STANDARD }
 
         players = MegaPlayers(1)
         players.register(PlayerSlot(0), megaman)
@@ -66,7 +63,7 @@ class PlayerItemRuleTest : DescribeSpec({
 
         it("does nothing for an entity that is not a player") {
             val other = mockk<MegaGameEntity>(relaxed = true)
-            every { other.getProperty(PlayerKeys.VIEW) } returns null
+            every { other.getComponent(PlayerComponent::class) } returns null
             val item = mockk<MegaGameEntity>(relaxed = true, moreInterfaces = arrayOf(ItemEntity::class))
 
             PlayerItemRule.onBegin(fixture(FixtureType.PLAYER, other), fixture(FixtureType.ITEM, item), 0f)

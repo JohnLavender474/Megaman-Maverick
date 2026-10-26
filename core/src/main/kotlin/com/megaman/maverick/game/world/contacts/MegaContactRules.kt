@@ -10,6 +10,9 @@ import com.maverick.game.engine.world.contacts.ContactRuleTable
 import com.maverick.game.engine.world.contacts.ContactRulesBuilder
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.direction
+import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.FixtureType.*
 import com.megaman.maverick.game.world.contacts.rules.*

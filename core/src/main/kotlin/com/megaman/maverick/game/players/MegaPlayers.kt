@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.players
 
+import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.events.Signal
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.Players
 import com.megaman.maverick.game.entities.contracts.IMegaGameEntity
@@ -13,5 +15,17 @@ class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(cap
     //  targeting behavior. It belongs to the entities that need it, as a component or policy that each one owns (see
     //  "Targeting design" in docs/mega-refactor/items/029-player-contract/NOTES.md); item 047, or the first entity
     //  with a rule of its own
-    fun targetFor(@Suppress("UNUSED_PARAMETER") seeker: IMegaGameEntity): MegaPlayer = get(PlayerSlot(0))!!
+    fun targetFor(@Suppress("UNUSED_PARAMETER") seeker: IMegaGameEntity): MegaPlayer {
+        for (i in 0 until capacity) get(PlayerSlot(i))?.let { if (it.hasBody) return it }
+        return get(PlayerSlot(0))!!
+    }
+
+    val playerDamaged = Signal<PlayerDamaged>()
+    private val playerDamagedPayload = PlayerDamaged()
+
+    fun onPlayerDamaged(player: MegaPlayer, damager: IDamager) {
+        playerDamagedPayload.player = player
+        playerDamagedPayload.damager = damager
+        playerDamaged.emit(playerDamagedPayload)
+    }
 }

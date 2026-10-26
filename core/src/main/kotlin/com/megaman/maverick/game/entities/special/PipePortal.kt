@@ -33,6 +33,12 @@ import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.feetFixture
+import com.megaman.maverick.game.players.headFixture
+import com.megaman.maverick.game.players.leftSideFixture
+import com.megaman.maverick.game.players.rightSideFixture
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 

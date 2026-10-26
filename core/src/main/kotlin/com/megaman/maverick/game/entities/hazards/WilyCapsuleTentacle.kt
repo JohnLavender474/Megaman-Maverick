@@ -28,6 +28,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints.TentacleState
 import com.megaman.maverick.game.entities.utils.hardMode
+import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter

@@ -60,6 +60,9 @@ import com.megaman.maverick.game.entities.projectiles.MagmaGoop
 import com.megaman.maverick.game.entities.projectiles.MagmaMeteor
 import com.megaman.maverick.game.entities.projectiles.MagmaOrb
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.direction
+import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter

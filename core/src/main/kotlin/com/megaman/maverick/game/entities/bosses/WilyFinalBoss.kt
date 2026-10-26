@@ -18,6 +18,7 @@ import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
+import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
@@ -40,6 +41,7 @@ import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.players.all
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.state.EnumStateMachineBuilder
@@ -81,6 +83,12 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.locks.MegaLockGroup
+import com.megaman.maverick.game.locks.MegaLockReason
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.damaged
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -295,8 +303,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             )
 
             players.forEach {
-                it.canBeDamaged = false
-                it.facing = if (body.getCenter().x > it.body.getX()) Facing.RIGHT else Facing.LEFT
+                it.entity.lock(MegaLockGroup.DAMAGE, MegaLockReason.WILY_FINAL_BOSS)
+                (it.entity as? IFaceable)?.facing =
+                    if (body.getCenter().x > it.body.getX()) Facing.RIGHT else Facing.LEFT
             }
 
             game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))

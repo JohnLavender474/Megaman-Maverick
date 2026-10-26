@@ -52,6 +52,10 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb.OrbColor
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.feetFixture
+import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*

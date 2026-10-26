@@ -43,6 +43,8 @@ import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.lightOrNull
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -368,7 +370,8 @@ class DarknessV3(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         MegaGameEntities.getOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
 
         players.forEach { player ->
-            val charging = player.light == PlayerLight.HALF_CHARGE || player.light == PlayerLight.FULL_CHARGE
+            val light = player.lightOrNull
+            val charging = light == PlayerLight.HALF_CHARGE || light == PlayerLight.FULL_CHARGE
             if (player.body.getBounds().overlaps(bounds) && charging) {
                 val lightSourceDef = lightSourcePool.fetch()
                 lightSourceDef.center = player.body.getCenter()

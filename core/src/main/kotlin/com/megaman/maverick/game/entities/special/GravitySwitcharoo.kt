@@ -54,6 +54,10 @@ import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.direction
+import com.megaman.maverick.game.players.onGravityDeviceSwitch
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator

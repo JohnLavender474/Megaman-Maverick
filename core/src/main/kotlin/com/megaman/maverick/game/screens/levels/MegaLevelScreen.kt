@@ -37,6 +37,8 @@ import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.EventsManager
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.locks.lock
+import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
@@ -72,9 +74,16 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelType
+import com.megaman.maverick.game.locks.MegaLockGroup
+import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.direction
+import com.megaman.maverick.game.players.focus
 import com.megaman.maverick.game.players.megaman
+import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
 import com.megaman.maverick.game.screens.levels.camera.CameraShaker
@@ -595,7 +604,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val spawnProps =
                     playerSpawnsMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
                 GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
-                player.spawn(spawnProps)
+                engine.spawn(player.entity, spawnProps)
 
                 if (!gameCameraShaker.isFinished) gameCameraShaker.stop()
 
@@ -805,7 +814,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                             )
                         )
                     )
-                    game.players.forEach { it.canBeDamaged = false }
+                    game.players.forEach { it.entity.lock(MegaLockGroup.DAMAGE, MegaLockReason.BOSS_DEFEATED) }
                     audioMan.unsetMusic()
                 }
 
@@ -831,7 +840,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.INTERMEDIATE_BOSS_DEAD -> {
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-                game.players.forEach { it.canBeDamaged = true }
+                game.players.forEach { it.entity.unlock(MegaLockGroup.DAMAGE, MegaLockReason.BOSS_DEFEATED) }
 
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.playMusic(music, true)

@@ -50,6 +50,8 @@ import com.megaman.maverick.game.entities.hazards.HoneyDrip
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter

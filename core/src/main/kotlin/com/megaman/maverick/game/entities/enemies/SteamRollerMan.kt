@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.entities.projectiles.Rock
 import com.megaman.maverick.game.entities.projectiles.Rock.RockSize
+import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle

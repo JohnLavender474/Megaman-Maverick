@@ -37,6 +37,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.AnimationUtils
 

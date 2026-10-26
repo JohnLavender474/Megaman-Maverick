@@ -47,6 +47,10 @@ import com.megaman.maverick.game.entities.megaman.components.headFixture
 import com.megaman.maverick.game.entities.utils.getStandardBodyDoUpdatePredicate
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.depleteHealth
+import com.megaman.maverick.game.players.direction
+import com.megaman.maverick.game.players.headFixture
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter

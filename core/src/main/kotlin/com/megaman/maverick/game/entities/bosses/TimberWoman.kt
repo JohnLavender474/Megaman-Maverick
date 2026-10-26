@@ -65,6 +65,9 @@ import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.damageableFixture
+import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint

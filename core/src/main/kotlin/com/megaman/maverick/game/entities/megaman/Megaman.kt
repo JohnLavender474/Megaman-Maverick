@@ -1,6 +1,5 @@
 package com.megaman.maverick.game.entities.megaman
 
-import com.maverick.game.engine.controller.ControllerComponent
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.audio.AudioComponent
@@ -19,10 +18,16 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.damage.IDamager
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.locks.LocksComponent
+import com.maverick.game.engine.locks.clearLocks
+import com.maverick.game.engine.locks.isLocked
+import com.maverick.game.engine.locks.lock
+import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.slotOf
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -54,8 +59,12 @@ import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelRewards
 import com.megaman.maverick.game.levels.LevelType
-import com.megaman.maverick.game.players.PlayerKeys
+import com.megaman.maverick.game.locks.MegaLockGroup
+import com.megaman.maverick.game.locks.MegaLockReason
+import com.megaman.maverick.game.locks.behaviorsLockHook
+import com.megaman.maverick.game.players.GravityDeviceComponent
 import com.megaman.maverick.game.players.PlayerLight
+import com.megaman.maverick.game.players.PlayerLightComponent
 import com.megaman.maverick.game.players.PlayerStateComponent
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.screens.levels.camera.IFocusable
@@ -101,30 +110,19 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     override val damageNegotiator = MegamanDamageNegotiator(this)
 
-    val damaged: Boolean
-        get() = !damageTimer.isFinished()
     val stunned: Boolean
         get() = !stunTimer.isFinished()
 
     override val invincible: Boolean
-        get() = damaged || !damageRecoveryTimer.isFinished() || !canBeDamaged || dead || !ready
+        get() = damaged || !damageRecoveryTimer.isFinished() || isLocked(MegaLockGroup.DAMAGE) || dead || !ready
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
-
-    var canBeDamaged: Boolean
-        get() = playerState.canBeDamaged
-        set(value) {
-            playerState.canBeDamaged = value
-        }
 
     override var frozen = false
     private var hitsToUnfreeze = 0
     internal var frozenPushTimer = Timer(MegamanValues.FROZEN_PUSH_DUR)
 
-    var canMove: Boolean
-        get() = playerState.movementAllowed && !stunned && !damaged && !frozen
-        set(value) {
-            playerState.movementAllowed = value
-        }
+    val canMove: Boolean
+        get() = !isLocked(MegaLockGroup.MOVEMENT) && !stunned && !damaged && !frozen
 
     internal val stunTimer = Timer(MegamanValues.STUN_DUR)
     internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
@@ -135,7 +133,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
 
-    val playerState = PlayerStateComponent(damageTimer, shootAnimTimer)
+    val playerState = PlayerStateComponent()
     internal val chargingTimer = Timer(
         MegamanValues.TIME_TO_FULLY_CHARGED,
         TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
@@ -185,7 +183,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     val fullyCharged: Boolean
         get() = canChargeCurrentWeapon && chargingTimer.isFinished()
     var shooting: Boolean
-        get() = playerState.shooting
+        get() = !shootAnimTimer.isFinished()
         set(value) {
             if (value) shootAnimTimer.reset() else shootAnimTimer.setToEnd()
         }
@@ -225,7 +223,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
                         )
                     )
 
-                    canMove = false
+                    lock(MegaLockGroup.MOVEMENT, MegaLockReason.CAMERA_ROTATION)
 
                     // the jetpacking behavior must be reset before the physics values are set below since
                     // ending that behavior turns gravity back on
@@ -347,6 +345,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         super.init()
 
         addComponent(playerState)
+        addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
         addComponent(defineBehaviorsComponent())
         controllerComponent = defineControllerComponent()
@@ -422,20 +421,20 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         aButtonTask = AButtonTask.JUMP
 
-        putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {
+        addComponent(GravityDeviceComponent {
             aButtonTask = when {
                 body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
                 else -> AButtonTask.AIR_DASH
             }
-        }
+        })
 
-        putProperty(PlayerKeys.LIGHT) {
+        addComponent(PlayerLightComponent {
             when {
                 charging -> if (fullyCharged) PlayerLight.FULL_CHARGE else PlayerLight.HALF_CHARGE
                 isBehaviorActive(BehaviorType.JETPACKING) -> PlayerLight.JETPACK
                 else -> PlayerLight.STANDARD
             }
-        }
+        })
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -468,9 +467,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
         running = false
 
-        canMove = true
+        clearLocks(MegaLockGroup.MOVEMENT)
         teleporting = false
-        canBeDamaged = true
+        clearLocks(MegaLockGroup.DAMAGE)
         recoveryFlash = false
         canMakeLandSound = false
 
@@ -504,7 +503,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             standardOnTeleportStart(this)
             if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
             teleporting = true
-            canBeDamaged = false
+            lock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
             putProperty(ConstKeys.TELEPORTER, teleporter)
         })
         setStandardOnTeleportContinueProp(this)
@@ -513,7 +512,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             standardOnTeleportEnd(this)
             aButtonTask = AButtonTask.AIR_DASH
             teleporting = false
-            canBeDamaged = true
+            unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
             game.setFocusSnappedAway(false)
             removeProperty(ConstKeys.TELEPORTER)
         })
@@ -660,7 +659,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             }
 
             EventType.END_GAME_CAM_ROTATION -> {
-                canMove = true
+                unlock(MegaLockGroup.MOVEMENT, MegaLockReason.CAMERA_ROTATION)
 
                 body.physics.gravityOn = true
             }
@@ -722,8 +721,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
 
-        val player = this.asPlayer!!
-        playerState.damageListeners.forEach { it.onPlayerDamaged(damager, player) }
+        players.onPlayerDamaged(this.asPlayer!!, damager)
 
         return true
     }

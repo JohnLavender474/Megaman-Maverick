@@ -30,6 +30,9 @@ abstract class AbstractHealthEntity(
     override val invincible: Boolean
         get() = !damageTimer.isFinished() || invinciblePredicates.any { it.invoke() }
 
+    val damaged: Boolean
+        get() = !damageTimer.isFinished()
+
     val onDamagedCallbacks = Array<(IDamager, Int) -> Unit>()
     val onHealthDepletedCallbacks = Array<() -> Unit>()
     val invinciblePredicates: Array<() -> Boolean> = Array()

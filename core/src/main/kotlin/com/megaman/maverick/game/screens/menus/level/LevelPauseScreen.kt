@@ -34,7 +34,10 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.currentHealth
+import com.megaman.maverick.game.players.maxHealth
 import com.megaman.maverick.game.players.megaman
+import com.megaman.maverick.game.players.translateHealth
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
 import com.megaman.maverick.game.screens.utils.Fade

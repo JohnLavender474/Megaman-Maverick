@@ -28,7 +28,10 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.currentHealth
+import com.megaman.maverick.game.players.maxHealth
 import com.megaman.maverick.game.players.megaman
+import com.megaman.maverick.game.players.translateHealth
 
 class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch> {
 

@@ -37,8 +37,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.players.IPlayerDamageListener
 import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.PlayerDamaged
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
@@ -50,7 +50,7 @@ abstract class AbstractBoss(
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR,
     defeatDur: Float = DEFAULT_DEFEAT_DURATION,
     size: Size = Size.MEDIUM
-) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IPlayerDamageListener, IEventListener {
+) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IEventListener {
 
     companion object {
         const val TAG = "AbstractBoss"
@@ -123,6 +123,8 @@ abstract class AbstractBoss(
 
     private var end = true
 
+    private val playerDamagedListener: (PlayerDamaged) -> Unit = { onPlayerDamaged(it.damager, it.player) }
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
@@ -130,9 +132,7 @@ abstract class AbstractBoss(
         body.forEachFixture { fixture -> fixture.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
         game.eventsMan.addListener(this)
-        // TODO: a player who registers during a boss fight is not listened to; joining players are a co-op rule
-        //  for item 047
-        players.forEach { it.addDamageListener(this) }
+        players.playerDamaged.connect(playerDamagedListener)
 
         bossKey = spawnProps.getOrDefault("${ConstKeys.BOSS}_${ConstKeys.KEY}", "NO_BOSS_KEY", String::class)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
@@ -161,7 +161,7 @@ abstract class AbstractBoss(
 
         ready = false
 
-        players.forEach { it.removeDamageListener(this) }
+        players.playerDamaged.disconnect(playerDamagedListener)
         game.eventsMan.removeListener(this)
         removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
 
@@ -202,7 +202,7 @@ abstract class AbstractBoss(
         else -> baseDamage
     }
 
-    override fun onPlayerDamaged(damager: IDamager, player: MegaPlayer) {}
+    open fun onPlayerDamaged(damager: IDamager, player: MegaPlayer) {}
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

@@ -12,6 +12,10 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.depleteHealth
+import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.world.body.getBounds
 
 // Unlike `Death`, the `PlayerDeath` entity is NOT added to the world system and applies ONLY to Mega Man.

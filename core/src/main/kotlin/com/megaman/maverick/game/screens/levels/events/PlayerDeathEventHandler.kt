@@ -19,6 +19,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle

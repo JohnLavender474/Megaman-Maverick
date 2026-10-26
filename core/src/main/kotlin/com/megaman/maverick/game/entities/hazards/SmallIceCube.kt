@@ -25,6 +25,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.locks.isLocked
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -41,7 +42,10 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
+import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -220,7 +224,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             if (entity != owner && entity is IDamageable && entity.invincible) shatterAndDie()
             else if (entity is IFireEntity) getHit(entity)
         }
-        bodyFixture.setReceiver(Receivers.HIT_BY_PLAYER) { if (!it.canBeDamaged) shatterAndDie() }
+        bodyFixture.setReceiver(Receivers.HIT_BY_PLAYER) { if (it.entity.isLocked(MegaLockGroup.DAMAGE)) shatterAndDie() }
         bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) {
             if (it !is SmallIceCube && it.owner != owner) getHit(it)
         }

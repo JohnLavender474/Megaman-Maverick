@@ -54,6 +54,10 @@ import com.megaman.maverick.game.entities.decorations.StarknerTrailSprite
 import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.explosions.StarExplosion
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.direction
+import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils

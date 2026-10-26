@@ -27,6 +27,8 @@ import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.locks.lock
+import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -44,6 +46,10 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.locks.MegaLockGroup
+import com.megaman.maverick.game.locks.MegaLockReason
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
@@ -117,8 +123,8 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             if (WEBS_STUCK_TO_MEGAMAN.isEmpty) {
                 stuckToMegaman = false
                 targetPlayer.let {
-                    it.allowMovement(true)
-                    it.setAllBehaviorsAllowed(true)
+                    it.entity.unlock(MegaLockGroup.MOVEMENT, MegaLockReason.SPIDER_WEB)
+                    it.entity.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPIDER_WEB)
                     it.body.physics.gravityOn = true
                 }
             }
@@ -147,10 +153,10 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         trajectory.setZero()
 
         targetPlayer.let {
-            it.setAllBehaviorsAllowed(false)
+            it.entity.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPIDER_WEB)
             it.body.physics.velocity.setZero()
             it.body.physics.gravityOn = false
-            it.allowMovement(false)
+            it.entity.lock(MegaLockGroup.MOVEMENT, MegaLockReason.SPIDER_WEB)
         }
 
         WEBS_STUCK_TO_MEGAMAN.add(this)

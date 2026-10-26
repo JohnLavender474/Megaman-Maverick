@@ -26,14 +26,14 @@ New APIs and their first callers: see `SCOPE.md`.
 - Changes: none. A clean build in the worktree.
 - Check: the test counts (expected 493 engine, 163 core, the temp branch's numbers) and 114 warnings, in the process
   log.
-- Done: no
+- Done: yes
 
 ### 3. Review notes into the branch folder
 
 - Changes: move `docs/temp-thin-player-review.md` to this folder's `docs/NOTES.md` (under "Decisions" and a section
   for the temp branch's notes).
 - Check: no review file left at the root of `docs/`.
-- Done: no
+- Done: yes
 
 ### 4. Locks to the engine
 
@@ -49,24 +49,24 @@ New APIs and their first callers: see `SCOPE.md`.
     hook (or a test entity with the same hook).
 - Check: build and tests pass; `core/.../locks/` holds only the two enums; a short launch of
   `REFACTOR_TEST_029 --room movement` and `INTRO_STAGE --room room12` shows no exception.
-- Done: no
+- Done: yes
 
 ### 5. Test leftovers and import order
 
 - Changes: `TestPlayerEntity` loses its unused `spawn` override and `spawnedWith`; imports in sorted order where the
   temp branch's script put them out of order.
 - Check: build and tests pass; warnings stay at 114.
-- Done: no
+- Done: yes
 
 ### 6. Contract checks
 
 - Changes: none (fixes only if a check fails).
 - Check: every automated check in `docs/CONTRACT.md` on a clean build; results in the process log; then the manual
   checks for the owner.
-- Done: no
+- Done: yes
 
 ### 7. Owner's play test and merge
 
 - Check: the owner plays the manual checks and approves the merge; then "Branch merge" in
   `docs/mega-refactor/CLAUDE.md`. After the merge, delete `temp-thin-player` and its worktree.
-- Done: no
+- Done: yes

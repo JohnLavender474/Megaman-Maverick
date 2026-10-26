@@ -17,8 +17,6 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.players.MegaPlayers
-import com.megaman.maverick.game.players.PlayerKeys
-import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.utils.misc.StunType
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -39,8 +37,6 @@ class MegamanStunTargetTest : DescribeSpec({
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(megaman.playerState)
         megaman.addComponent(ControllerComponent())
-        megaman.putProperty(PlayerKeys.GRAVITY_DEVICE_SWITCH) {}
-        megaman.putProperty(PlayerKeys.LIGHT) { PlayerLight.STANDARD }
 
         val players = MegaPlayers(2)
         players.register(PlayerSlot(0), megaman)
@@ -69,21 +65,13 @@ class MegamanStunTargetTest : DescribeSpec({
         }
     }
 
-    describe("canBeDamaged and shooting") {
-        it("canBeDamaged reads and writes the player state component") {
-            megaman.canBeDamaged = false
-            megaman.playerState.canBeDamaged shouldBe false
-
-            megaman.playerState.canBeDamaged = true
-            megaman.canBeDamaged shouldBe true
-        }
-
-        it("shooting reads the player state component, and the setter still drives the shoot timer") {
+    describe("shooting") {
+        it("reads the shoot animation timer that its setter drives") {
             megaman.shooting = true
-            megaman.playerState.shooting shouldBe true
+            megaman.shooting shouldBe true
 
             megaman.shooting = false
-            megaman.playerState.shooting shouldBe false
+            megaman.shooting shouldBe false
         }
     }
 

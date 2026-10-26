@@ -19,6 +19,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -33,8 +34,14 @@ import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.locks.MegaLockGroup
+import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.direction
+import com.megaman.maverick.game.players.facing
 import com.megaman.maverick.game.players.megaman
+import com.megaman.maverick.game.players.ready
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -106,8 +113,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamSprite.hidden = true
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * -ConstVals.PPM)
 
-        player.canBeDamaged = false
-        player.setAllBehaviorsAllowed(false)
+        player.entity.lock(MegaLockGroup.DAMAGE, MegaLockReason.LEVEL_END)
+        player.entity.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.LEVEL_END)
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
         game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)

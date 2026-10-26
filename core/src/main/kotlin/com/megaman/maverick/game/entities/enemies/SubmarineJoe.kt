@@ -59,6 +59,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.StateLoopHandler
 import com.megaman.maverick.game.entities.utils.moveTowards
 import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
+import com.megaman.maverick.game.players.body
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter

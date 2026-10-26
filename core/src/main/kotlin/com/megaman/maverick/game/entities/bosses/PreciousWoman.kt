@@ -55,6 +55,9 @@ import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemCol
 import com.megaman.maverick.game.entities.projectiles.PreciousGemCluster
 import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.players.MegaPlayer
+import com.megaman.maverick.game.players.body
+import com.megaman.maverick.game.players.dead
+import com.megaman.maverick.game.players.invincible
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
