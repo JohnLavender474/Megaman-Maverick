@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `019`, `021`, `038`, `047`, `048`, `061`
-- Branches: `mega-refactor-062a-entity-state` (merged), `mega-refactor-062b-spawn-order-guards` (merged); next: `062c` (the readers)
+- Branches: `mega-refactor-062a-entity-state` (merged), `mega-refactor-062b-spawn-order-guards` (merged), `mega-refactor-062c-existence-readers` (active)
 
 ## Goal
 
