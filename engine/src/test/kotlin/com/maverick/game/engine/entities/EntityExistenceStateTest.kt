@@ -7,6 +7,7 @@ import com.maverick.game.engine.common.LogReceiver
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.EntityExistenceState.DESTROY_QUEUED
 import com.maverick.game.engine.entities.EntityExistenceState.LIVE
+import com.maverick.game.engine.entities.EntityExistenceState.RESPAWN_QUEUED
 import com.maverick.game.engine.entities.EntityExistenceState.SPAWN_QUEUED
 import com.maverick.game.engine.entities.EntityExistenceState.UNSPAWNED
 import io.kotest.assertions.withClue
@@ -148,73 +149,170 @@ class EntityExistenceStateTest : DescribeSpec({
         }
     }
 
-    describe("the odd paths keep the engine's actions, give the true state and write a log line") {
-        it("a spawn of a live entity stays LIVE and runs onSpawn again") {
+    describe("rule 1: a spawn of a live entity is refused") {
+        it("returns false, keeps the entity LIVE, runs no onSpawn and writes a log line") {
             val e = entity()
             e.spawn(Properties())
             engine.update(0f)
 
-            e.spawn(Properties()) shouldBe true
+            e.spawn(Properties()) shouldBe false
             e.existenceState shouldBe LIVE
             engine.update(0f)
 
             e.existenceState shouldBe LIVE
-            log shouldBe listOf("onSpawn e", "onSpawn e")
+            log shouldBe listOf("onSpawn e")
             engineLog.size shouldBe 1
-            engineLog[0].startsWith("spawn(): the entity is live") shouldBe true
+            engineLog[0].startsWith("spawn(): refused") shouldBe true
         }
 
-        it("a spawn of a live entity while its destroy is queued stays DESTROY_QUEUED and ends UNSPAWNED") {
+        it("refuses a spawn of the entity inside its own onSpawn") {
+            val e = entity()
+            var result: Boolean? = null
+            e.onSpawnAction = { result = e.spawn(Properties()) }
+            e.spawn(Properties())
+
+            engine.update(0f)
+            engine.update(0f)
+
+            result shouldBe false
+            e.existenceState shouldBe LIVE
+            log shouldBe listOf("onSpawn e")
+        }
+    }
+
+    describe("rule 2: a spawn while a destroy is queued is a respawn") {
+        it("is RESPAWN_QUEUED, spawned and not dead, and the update runs onDestroy then onSpawn") {
             val e = entity()
             e.spawn(Properties())
             engine.update(0f)
 
             e.destroy()
             e.spawn(Properties()) shouldBe true
+            e.existenceState shouldBe RESPAWN_QUEUED
+            e.spawned shouldBe true
+            e.dead shouldBe false
+            e.spawn(Properties()) shouldBe false
+            engine.update(0f)
+
+            e.existenceState shouldBe LIVE
+            log shouldBe listOf("onSpawn e", "onDestroy e", "onSpawn e")
+            e.statesInOnDestroy shouldBe listOf(RESPAWN_QUEUED)
+            engineLog.size shouldBe 1
+            engineLog[0].startsWith("spawn(): a destroy is queued, so the entity respawns") shouldBe true
+        }
+
+        it("runs the respawn after the other spawns of the update") {
+            val e = entity("e")
+            val other = entity("other")
+            e.spawn(Properties())
+            engine.update(0f)
+
+            e.destroy()
+            e.spawn(Properties())
+            other.spawn(Properties())
+            engine.update(0f)
+
+            log shouldBe listOf("onSpawn e", "onSpawn other", "onDestroy e", "onSpawn e")
+        }
+
+        it("a destroy after the respawn cancels it: the last call wins") {
+            val e = entity()
+            e.spawn(Properties())
+            engine.update(0f)
+
+            e.destroy()
+            e.spawn(Properties())
+            e.destroy() shouldBe true
             e.existenceState shouldBe DESTROY_QUEUED
-            e.dead shouldBe true
-            engine.update(0f)
-
-            e.existenceState shouldBe UNSPAWNED
-            log shouldBe listOf("onSpawn e", "onSpawn e", "onDestroy e")
-            engineLog.size shouldBe 1
-            engineLog[0].startsWith("spawn(): a destroy is queued") shouldBe true
-        }
-
-        it("a spawn of an unspawned entity while its destroy is queued stays UNSPAWNED") {
-            val e = entity()
-            e.destroy()
-            e.spawn(Properties()) shouldBe true
-            e.existenceState shouldBe UNSPAWNED
             engine.update(0f)
 
             e.existenceState shouldBe UNSPAWNED
             log shouldBe listOf("onSpawn e", "onDestroy e")
-            engineLog.size shouldBe 2
-            engineLog[0].startsWith("destroy(): the entity is not spawned") shouldBe true
-            engineLog[1].startsWith("spawn(): a destroy is queued") shouldBe true
         }
 
-        it("a destroy of an unspawned entity stays UNSPAWNED and runs onDestroy again") {
+        it("a destroy inside the onSpawn of a respawn waits for the next update") {
+            val e = entity()
+            e.spawn(Properties())
+            engine.update(0f)
+            e.destroy()
+            e.spawn(Properties())
+            e.onSpawnAction = {
+                e.onSpawnAction = {}
+                e.destroy()
+            }
+
+            engine.update(0f)
+            e.existenceState shouldBe DESTROY_QUEUED
+            engine.update(0f)
+
+            e.existenceState shouldBe UNSPAWNED
+            log shouldBe listOf("onSpawn e", "onDestroy e", "onSpawn e", "onDestroy e")
+        }
+    }
+
+    describe("rule 3: a destroy of an unspawned entity is refused") {
+        it("returns false, runs no onDestroy and writes a log line") {
             val e = entity()
             e.spawn(Properties())
             engine.update(0f)
             e.destroy()
             engine.update(0f)
 
-            e.destroy() shouldBe true
+            e.destroy() shouldBe false
             e.existenceState shouldBe UNSPAWNED
             engine.update(0f)
 
-            e.existenceState shouldBe UNSPAWNED
-            log shouldBe listOf("onSpawn e", "onDestroy e", "onDestroy e")
+            log shouldBe listOf("onSpawn e", "onDestroy e")
             engineLog.size shouldBe 1
-            engineLog[0].startsWith("destroy(): the entity is not spawned") shouldBe true
+            engineLog[0].startsWith("destroy(): refused, the entity is not spawned") shouldBe true
+        }
+
+        it("refuses a destroy of a never spawned entity, so a later spawn is a normal spawn") {
+            val e = entity()
+
+            e.destroy() shouldBe false
+            e.spawn(Properties()) shouldBe true
+            e.existenceState shouldBe SPAWN_QUEUED
+            engine.update(0f)
+
+            e.existenceState shouldBe LIVE
+            log shouldBe listOf("onSpawn e")
+        }
+
+        it("refuses a destroy of the entity inside its own onDestroy") {
+            val e = entity()
+            var result: Boolean? = null
+            e.onDestroyAction = { result = e.destroy() }
+            e.spawn(Properties())
+            engine.update(0f)
+            e.destroy()
+
+            engine.update(0f)
+            engine.update(0f)
+
+            result shouldBe false
+            e.existenceState shouldBe UNSPAWNED
+            log shouldBe listOf("onSpawn e", "onDestroy e")
+        }
+
+        it("a child and its parent destroyed in one frame: the onDestroy of the child runs once") {
+            val parent = entity("parent")
+            val child = entity("child")
+            parent.onDestroyAction = { child.destroy() }
+            parent.spawn(Properties())
+            child.spawn(Properties())
+            engine.update(0f)
+
+            child.destroy()
+            parent.destroy()
+            engine.update(0f)
+
+            log shouldBe listOf("onSpawn parent", "onSpawn child", "onDestroy child", "onDestroy parent")
         }
     }
 
-    describe("a spawn and then a destroy in the destroy phase of an update") {
-        it("is SPAWN_QUEUED after the update and LIVE after the next one") {
+    describe("rule 4: a destroy of an entity whose spawn is still queued waits for the spawn") {
+        it("a spawn and then a destroy in the destroy phase: onSpawn then onDestroy at the next update") {
             val parent = entity("parent")
             val child = entity("child")
             parent.onDestroyAction = {
@@ -226,12 +324,24 @@ class EntityExistenceStateTest : DescribeSpec({
 
             parent.destroy()
             engine.update(0f)
-            child.existenceState shouldBe SPAWN_QUEUED
-            child.dead shouldBe false
+            child.existenceState shouldBe UNSPAWNED
+            child.dead shouldBe true
 
             engine.update(0f)
-            child.existenceState shouldBe LIVE
-            log shouldBe listOf("onSpawn parent", "onDestroy parent", "onDestroy child", "onSpawn child")
+            child.existenceState shouldBe UNSPAWNED
+            log shouldBe listOf("onSpawn parent", "onDestroy parent", "onSpawn child", "onDestroy child")
+        }
+
+        it("a destroy inside onSpawn is still the normal path") {
+            val e = entity()
+            e.onSpawnAction = { e.destroy() shouldBe true }
+            e.spawn(Properties())
+
+            engine.update(0f)
+
+            e.existenceState shouldBe UNSPAWNED
+            log shouldBe listOf("onSpawn e", "onDestroy e")
+            engineLog shouldBe emptyList()
         }
     }
 
@@ -284,22 +394,23 @@ class EntityExistenceStateTest : DescribeSpec({
     }
 
     describe("the invariant on seeded random call sequences") {
-        it("spawned is 'in the engine now', and not dead is 'in the engine after the next update'") {
+        it("onSpawn and onDestroy alternate, the last accepted call wins, and spawned and dead tell the truth") {
             var checks = 0
 
             repeat(2_000) { sequence ->
                 val random = Random(sequence.toLong())
                 val entities = (0 until random.nextInt(3, 7)).map { entity("e$it") }
                 val touched = HashSet<StateEntity>()
+                val lastAcceptedCall = HashMap<StateEntity, Boolean>()
 
                 fun spawn(e: StateEntity) {
                     touched.add(e)
-                    e.spawn(Properties())
+                    if (e.spawn(Properties())) lastAcceptedCall[e] = true
                 }
 
                 fun destroy(e: StateEntity) {
                     touched.add(e)
-                    e.destroy()
+                    if (e.destroy()) lastAcceptedCall[e] = false
                 }
 
                 fun nested() {
@@ -311,9 +422,11 @@ class EntityExistenceStateTest : DescribeSpec({
                     it.onSpawnAction = ::nested
                     it.onDestroyAction = ::nested
                 }
+                log.clear()
 
                 repeat(random.nextInt(20, 61)) { step ->
                     val liveAfterNextUpdate = entities.map { !it.dead }
+                    val liveBefore = entities.map { it.spawned }
                     touched.clear()
 
                     val roll = random.nextInt(100)
@@ -326,12 +439,16 @@ class EntityExistenceStateTest : DescribeSpec({
                             entities.forEachIndexed { index, e ->
                                 if (e !in touched) withClue("sequence $sequence, step $step, ${e.name}") {
                                     e.spawned shouldBe liveAfterNextUpdate[index]
+                                    e.spawned shouldBe (lastAcceptedCall.remove(e) ?: liveBefore[index])
                                     checks++
                                 }
                             }
                         }
 
-                        else -> engine.reset()
+                        else -> {
+                            engine.reset()
+                            lastAcceptedCall.clear()
+                        }
                     }
 
                     entities.forEach { e ->
@@ -340,6 +457,15 @@ class EntityExistenceStateTest : DescribeSpec({
                 }
 
                 engine.reset()
+
+                entities.forEach { e ->
+                    val events = log.filter { it == "onSpawn ${e.name}" || it == "onDestroy ${e.name}" }
+                    events.forEachIndexed { index, event ->
+                        val expected = if (index % 2 == 0) "onSpawn ${e.name}" else "onDestroy ${e.name}"
+                        withClue("sequence $sequence, ${e.name}, event $index") { event shouldBe expected }
+                    }
+                }
+                log.clear()
             }
 
             checks shouldBeGreaterThan 10_000

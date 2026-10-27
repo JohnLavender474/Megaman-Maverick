@@ -15,7 +15,9 @@ interface IGameEntity : IComponentBucket, IPropertizable, Initializable {
     var initialized: Boolean
 
     val spawned: Boolean
-        get() = existenceState == EntityExistenceState.LIVE || existenceState == EntityExistenceState.DESTROY_QUEUED
+        get() = existenceState == EntityExistenceState.LIVE ||
+            existenceState == EntityExistenceState.DESTROY_QUEUED ||
+            existenceState == EntityExistenceState.RESPAWN_QUEUED
 
     fun canSpawn(spawnProps: Properties): Boolean
 

@@ -45,7 +45,7 @@ class EntityExistenceTest : DescribeSpec({
     }
 
     describe("the ice shield of a FreezableEntityHandler") {
-        it("spawns at a later freeze after an unfreeze and a freeze in one frame") {
+        it("stays live through an unfreeze and a freeze in one frame and a later freeze") {
             val entity = TestExistenceEntity(game)
             val handler = FreezableEntityHandler(entity)
             val shield = FreezableEntityHandler::class.java.getDeclaredField("shieldEntity")
@@ -59,12 +59,37 @@ class EntityExistenceTest : DescribeSpec({
             handler.setFrozen(false)
             handler.setFrozen(true)
             engine.update(0f)
-            shield.spawned shouldBe false
+            shield.spawned shouldBe true
 
             handler.setFrozen(true)
             engine.update(0f)
 
             shield.spawned shouldBe true
+        }
+    }
+
+    describe("a child and its parent destroyed in one frame") {
+        it("runs the onDestroy of the child once") {
+            val child = TestExistenceEntity(game)
+            var childDestroys = 0
+            child.runnablesOnDestroy.put("count") { childDestroys++ }
+            val parent = object : MegaGameEntity(game) {
+                override fun getType() = EntityType.OTHER
+
+                override fun onDestroy() {
+                    super.onDestroy()
+                    child.destroy()
+                }
+            }
+            child.spawn(Properties())
+            parent.spawn(Properties())
+            engine.update(0f)
+
+            child.destroy()
+            parent.destroy()
+            engine.update(0f)
+
+            childDestroys shouldBe 1
         }
     }
 })
