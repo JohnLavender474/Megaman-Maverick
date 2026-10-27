@@ -88,4 +88,4 @@ related-items: [<mega-refactor item IDs>]
 | [`jamepadVersion` in `gradle.properties` does not match the Jamepad version that the build uses](2026-10-25-jamepad-version-mismatch.md) | yes | build | open |
 | [Five enemies in `DESERT_MAN` are on layers where they cannot spawn](2026-10-27-desert-man-enemies-on-wrong-layers.md) | question | content | open |
 | [A `DuoBallCanon` in `WILY_STAGE_1` is on the `blocks` layer and never spawns](2026-10-27-wily-stage-1-duoballcanon-on-blocks-layer.md) | question | content | open |
-| [`Starkner` clears its `ALIVE` entry only in its `destroy()` override](2026-10-27-starkner-alive-cleanup-only-in-destroy.md) | no | core | open |
+| [`Starkner` clears its `ALIVE` entry only in its `destroy()` override](2026-10-27-starkner-alive-cleanup-only-in-destroy.md) | yes | core | closed |

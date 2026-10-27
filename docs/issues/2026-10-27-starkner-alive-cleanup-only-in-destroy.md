@@ -1,6 +1,6 @@
 ---
-status: open
-verified: no
+status: closed
+verified: yes
 area: core
 gameplay-change: yes
 found-by: mega-refactor-062c-existence-readers (2026-10-27)
@@ -41,3 +41,11 @@ over, or the level end) while it is live; start the same level again in the same
 Found by a read-only review agent in `062c` (the question of `destroy()` on `IGameEntity`, item `063`), and checked in
 the code. Item `063` must not change the culler at `MegamanMaverickGame.kt:900` to `engine.destroy(entity)` before
 this is fixed, or a culled `Starkner` would keep its id in `ALIVE`.
+
+## Resolution
+
+Fixed by `fix/starkner-alive-cleanup` (squash `4eb2984be`). The id leaves `ALIVE` in `onDestroyQueued` (at once, on a
+normal destroy, as before) and in `onDestroy` (engine `reset()`/`dispose()`, which skip `onDestroyQueued`). A flag on
+the instance keeps a successor star that spawns with the same id from losing its entry. The `destroy()` override is
+gone. `StarknerAliveTest` (6 cases) failed in 4 cases before the fix, including a second leak (a destroy while the spawn
+is queued), and passes after it. The owner's play test in `MOON_MAN` `room12` passes (2026-10-27).
