@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.spawns
 
+import com.megaman.maverick.game.ConstKeys
+
 /**
  * Base class for spawners. [test] returns true only when a new spawn was made in that call, so that [SpawnsManager]
  * can take the spawn with [get]. A subclass implements [trySpawn] to decide when to make a new spawn.
@@ -19,16 +21,22 @@ abstract class Spawner(
         get() = spawn != null
     private var spawn: Spawn? = null
 
+    private val releaseOnDestroyQueued: () -> Unit = {
+        release()
+        onReleased()
+    }
+
     override fun get(): Spawn? = spawn
 
     override fun shouldTest(delta: Float) = this.shouldTestPred.invoke(delta)
 
     final override fun test(delta: Float): Boolean {
-        if (spawn?.entity?.dead == true) spawn = null
         if (spawned) return false
 
-        spawn = trySpawn(delta)
-        return spawned
+        val newSpawn = trySpawn(delta) ?: return false
+        spawn = newSpawn
+        newSpawn.entity.runnablesOnDestroyQueued.put(ConstKeys.SPAWNER, releaseOnDestroyQueued)
+        return true
     }
 
     /**
@@ -38,9 +46,22 @@ abstract class Spawner(
 
     override fun shouldBeCulled(delta: Float) = shouldBeCulled.invoke(delta)
 
-    override fun onSpawnRejected() {
+    /**
+     * Called when the entity of the held spawn gets a destroy call, after the spawner has let go of it.
+     */
+    protected open fun onReleased() {}
+
+    private fun release() {
+        val entity = spawn?.entity ?: return
+        if (entity.runnablesOnDestroyQueued[ConstKeys.SPAWNER] === releaseOnDestroyQueued)
+            entity.runnablesOnDestroyQueued.remove(ConstKeys.SPAWNER)
         spawn = null
     }
 
-    override fun reset() = onCull()
+    override fun onSpawnRejected() = release()
+
+    override fun reset() {
+        release()
+        onCull()
+    }
 }

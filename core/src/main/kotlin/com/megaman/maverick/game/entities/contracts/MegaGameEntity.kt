@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Pool
@@ -25,6 +26,8 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
     val runnablesOnDestroy = OrderedMap<String, () -> Unit>()
+    val runnablesOnDestroyQueued = OrderedMap<String, () -> Unit>()
+    private val runnablesToRun = Array<() -> Unit>()
 
     val dead: Boolean
         get() = existenceState == EntityExistenceState.UNSPAWNED ||
@@ -58,6 +61,12 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         MegaGameEntities.add(this)
         runnablesOnSpawn.values().forEach { it.invoke() }
         GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this")
+    }
+
+    override fun onDestroyQueued() {
+        runnablesOnDestroyQueued.values().forEach { runnablesToRun.add(it) }
+        runnablesToRun.forEach { it.invoke() }
+        runnablesToRun.clear()
     }
 
     override fun onDestroy() {

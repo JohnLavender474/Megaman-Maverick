@@ -25,6 +25,10 @@ class SpawnerForBoundsEntered(
         return if (shouldSpawn) spawnSupplier() else null
     }
 
+    override fun onReleased() {
+        isEntered = thisBounds().overlaps(otherBounds())
+    }
+
     override fun reset() {
         super.reset()
         isEntered = false

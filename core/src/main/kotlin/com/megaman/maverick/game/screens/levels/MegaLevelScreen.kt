@@ -29,6 +29,7 @@ import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -211,6 +212,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private var camerasSetToGameCamera = false
 
     private val spawns = Array<Spawn>()
+    private val spawnCameraBounds = GameRectangle()
 
     private val pauseScreen = LevelPauseScreen(game)
 
@@ -512,7 +514,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, 0f)
     }
 
-    override fun getLayerBuilders() = MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan))
+    override fun getLayerBuilders() =
+        MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan, spawnCameraBounds))
 
     override fun buildLevel(result: Properties) {
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
@@ -935,11 +938,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerStatsHandler.update(delta)
 
         if (!game.paused) {
-            // TODO: this is the only spawn pass per frame. Two rare cases differ from the old second pass after
-            //  engine.update: (1) a spawn_room entity that dies in engine.update in the same frame as an accepted event
-            //  for its own room misses that event and comes back only at the next room entry or respawn; (2) a
-            //  camera-spawned entity that dies off screen just before its spawn point scrolls into view respawns only
-            //  after the camera leaves its spawn area and comes back. The destroy notification in item 019b fixes both.
+            spawnCameraBounds.set(gameCamera.getRotatedBounds())
             spawnsMan.update(delta)
 
             val spawnsIter = spawns.iterator()

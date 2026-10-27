@@ -43,6 +43,7 @@ class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
     }
 
     override fun reset() {
+        spawners.forEach { it.reset() }
         spawners.clear()
         spawns.clear()
     }

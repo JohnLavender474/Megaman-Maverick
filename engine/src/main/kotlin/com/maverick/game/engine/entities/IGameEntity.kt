@@ -21,7 +21,11 @@ interface IGameEntity : IComponentBucket, IPropertizable, Initializable {
 
     fun canSpawn(spawnProps: Properties): Boolean
 
+    fun onSpawnQueued() {}
+
     fun onSpawn(spawnProps: Properties)
+
+    fun onDestroyQueued() {}
 
     fun onDestroy()
 }

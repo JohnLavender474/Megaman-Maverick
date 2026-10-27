@@ -176,7 +176,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                 else -> {
                     val spawner = SpawnerFactory.spawnerForWhenInCamera(
-                        camera = game.getGameCamera(),
+                        cameraBounds = params.spawnCameraBounds,
                         spawnShape = SpawnerShapeFactory.getSpawnShape(entityType, it),
                         respawnable = respawnable,
                         spawnSupplier = spawnSupplier,

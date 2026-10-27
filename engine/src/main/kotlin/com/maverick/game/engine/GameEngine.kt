@@ -90,6 +90,7 @@ class GameEngine(
             entitiesToRespawn.add(entity, spawnProps)
             setExistenceState(entity, EntityExistenceState.RESPAWN_QUEUED)
             GameLogger.debug(TAG, "spawn(): a destroy is queued, so the entity respawns after it: $entity")
+            entity.onSpawnQueued()
             return true
         }
 
@@ -102,10 +103,15 @@ class GameEngine(
             EntityExistenceState.UNSPAWNED -> {
                 entitiesToSpawn.add(entity, spawnProps)
                 setExistenceState(entity, EntityExistenceState.SPAWN_QUEUED)
+                entity.onSpawnQueued()
                 true
             }
 
-            EntityExistenceState.DESTROY_QUEUED -> entitiesToSpawn.add(entity, spawnProps)
+            EntityExistenceState.DESTROY_QUEUED -> {
+                val queued = entitiesToSpawn.add(entity, spawnProps)
+                if (queued) entity.onSpawnQueued()
+                queued
+            }
         }
     }
 
@@ -140,6 +146,7 @@ class GameEngine(
                 else EntityExistenceState.UNSPAWNED
             )
             GameLogger.debug(TAG, "destroy(): cancels the queued respawn: $entity")
+            entity.onDestroyQueued()
             return true
         }
 
@@ -149,16 +156,22 @@ class GameEngine(
             EntityExistenceState.LIVE -> {
                 entitiesToKill.add(entity)
                 setExistenceState(entity, EntityExistenceState.DESTROY_QUEUED)
+                entity.onDestroyQueued()
                 true
             }
 
             EntityExistenceState.SPAWN_QUEUED -> {
                 entitiesToKill.add(entity)
                 setExistenceState(entity, EntityExistenceState.UNSPAWNED)
+                entity.onDestroyQueued()
                 true
             }
 
-            EntityExistenceState.RESPAWN_QUEUED -> entitiesToKill.add(entity)
+            EntityExistenceState.RESPAWN_QUEUED -> {
+                entitiesToKill.add(entity)
+                entity.onDestroyQueued()
+                true
+            }
 
             EntityExistenceState.UNSPAWNED ->
                 if (entitiesToSpawn.contains(entity)) entitiesToKill.add(entity)

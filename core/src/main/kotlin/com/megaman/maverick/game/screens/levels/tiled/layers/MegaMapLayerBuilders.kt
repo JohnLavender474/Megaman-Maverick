@@ -7,13 +7,18 @@ import com.maverick.game.engine.common.extensions.indexOfKey
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.maverick.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilders
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.spawns.SpawnsManager
 
-data class MegaMapLayerBuildersParams(val game: MegamanMaverickGame, val spawnsManager: SpawnsManager)
+data class MegaMapLayerBuildersParams(
+    val game: MegamanMaverickGame,
+    val spawnsManager: SpawnsManager,
+    val spawnCameraBounds: GameRectangle
+)
 
 class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParams) : ITiledMapLayerBuilders {
 
