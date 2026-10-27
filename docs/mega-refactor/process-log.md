@@ -968,3 +968,18 @@ newest entry at the bottom.
   rejected spawns; six permanent tests; clean build, 546 engine and 172 core tests pass; warnings unchanged (110);
   `contact-rule-selection.txt` unchanged; the owner's play test passes (three checks).
 - Follow-up: none.
+
+## 2026-10-27 — mega-refactor-063a-contracts-are-entities
+
+- Summary: the core entity contracts (`IFreezableEntity`, `IFreezerEntity`, `IFireEntity`, `IFireableEntity`,
+  `IScalableGravityEntity`, `ILightSource`, `IOwnable`, `ITeleporterEntity`, `ItemEntity`, `IGateTrigger`,
+  `IBossListener`) extend `IMegaGameEntity`; `IDamageable`/`IDamager` extend `IGameEntity`; `IGameEntity` extends
+  `IDestroyable`. `existenceState` is a public `var` and `GameEngine.setExistenceState` (with its `GameEntity` cast and
+  throw) is gone, so the engine accepts any `IGameEntity` (owner decisions). 31 casts removed;
+  `IProjectileEntity.explodeAndDie` calls `destroy()`; `IUpsideDownable` deleted. Squash commit `65a8259bf`.
+- Contract check: a temporary suite (deleted before the merge) showed the new `explodeAndDie` destroy step equal to the
+  old one from all 5 existence states; new permanent tests `AnyGameEntityTest` (3) and `EntityContractsTest` (14);
+  clean build, 549 engine and 186 core tests pass; warnings unchanged (88 unique lines, JDK 17 Corretto); greps clean;
+  `contact-rule-selection.txt` unchanged; the owner's play test passes (five rooms).
+- Follow-up: backlog candidate `IChildEntity`/`IParentEntity : IGameEntity` folded into `063b` (`063` `ITEM.md`);
+  backlog candidate `id`/`group` on `IMegaGameEntity` is new item `064` (idea, owner question open).

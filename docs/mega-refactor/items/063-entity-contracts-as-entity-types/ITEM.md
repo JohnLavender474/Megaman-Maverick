@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `023`, `048`, `062`, `014`, `056`
-- Branches: `mega-refactor-063a-contracts-are-entities` (active, started 2026-10-27)
+- Branches: `mega-refactor-063a-contracts-are-entities` (merged 2026-10-27, squash `65a8259bf`); next: `063b`
 
 ## Goal
 
@@ -22,7 +22,8 @@ Not approved. The branch `SCOPE.md` decides the final scope. From the two review
   `(x as GameEntity).destroy()` casts); delete the unused `IUpsideDownable`; drop the redundant cast at
   `TimberWoman.kt:931`. No gameplay change.
 - Second branch (rename only): `IDamageable` → `IDamageableEntity`, `IDamager` → `IDamagerEntity` (about 470
-  references in about 190 files); a mechanical commit for `.git-blame-ignore-revs`.
+  references in about 190 files; 480 in 169 per the `063a` research); a mechanical commit for
+  `.git-blame-ignore-revs`. Also (from the `063a` backlog): `IChildEntity`/`IParentEntity` extend `IGameEntity`.
 - Not in this item: the state-only contracts as components (`IFreezableEntity` first, then `ILightSource`,
   `IScalableGravityEntity`, `IFireableEntity`) belong to item `048`; the markers `IFreezerEntity`/`IFireEntity` as
   damage tags belong to item `023`. The callback contracts (`IDamageable`, `IDamager`, `IHazard`, `IBossListener`,
