@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `021`, `022`, `048`, `063`
-- Branches: `mega-refactor-064a-instance-identity` (active, started 2026-10-27)
+- Branches: `mega-refactor-064a-instance-identity` (active, started 2026-10-27; groups); next: `064b` (`id`)
 
 ## Goal
 
@@ -39,6 +39,20 @@ concepts? If game concepts, then would props instead of fields be better? Or com
   - `group`: not a field. Only 3 reads; the registry (`MegaGameEntities`) already holds the group-to-entities map and
     also holds the entity-to-group side. If `048` later needs groups in queries, a marker component is the form.
   - Not spawn properties: an untyped bag with string keys and a map lookup per read; `022` moves to typed schemas.
+- 2026-10-27 (owner: "Why `IMegaGameEntity` and not `IGameEntity`? And could the group-registry logic be moved as a
+  first-class component into the engine? Maybe a \"groups component\"? I don't mind the component lookup if it leads
+  to better design"; then: "Would it still make sense to make core's concept of id be a component or prop as well?";
+  then "Yes to all"). This replaces the first decision above:
+  - `064a`: groups become an engine `GroupsComponent` (a set of group names) with an engine group query, kept up to
+    date on spawn and destroy. `MegaGameEntity` loses `group`; `MegaGameEntities` loses its group map; the 3 readers
+    use the engine. Groups are a genre-neutral engine feature (as in Godot); the group lookups must give the same
+    results at the same moments as today (proved by a temporary old-versus-new suite).
+  - `064b`: `id` becomes a `core` component (`MapObjectComponent`, name to confirm in scope) present only on entities
+    spawned from a map. `RANDOM_ID_POOL` goes; readers that use `id` as a key for runtime entities (`Laser` owner,
+    `DarknessV3` light sources) change to entity references. The 4 `(x as MegaGameEntity).id` casts go through
+    `getComponent` on `IGameEntity`. Reason: `id` is level data, not an instance identity; it is not unique
+    (`idToEntities` maps an id to a set; `Starkner` successors share an id) and it changes on each spawn of a pooled
+    entity. Not on `IGameEntity`: the engine identity is the object reference. Not a property: untyped, string keys.
 
 ## Open questions
 
