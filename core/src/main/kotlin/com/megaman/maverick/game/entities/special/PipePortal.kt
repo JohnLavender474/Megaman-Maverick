@@ -187,7 +187,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             val entity = entry.key as MegaGameEntity
             val timer = entry.value
 
-            if (entity.dead) {
+            if (!entity.existenceState.liveAfterUpdate) {
                 enteringIter.remove()
                 continue
             }
@@ -217,7 +217,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
             val entity = entry.key as MegaGameEntity
             val timer = entry.value
 
-            if (entity.dead) {
+            if (!entity.existenceState.liveAfterUpdate) {
                 exitingIter.remove()
                 continue
             }

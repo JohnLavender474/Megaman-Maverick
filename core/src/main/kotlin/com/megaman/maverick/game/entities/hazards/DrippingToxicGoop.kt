@@ -108,7 +108,7 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
             val entry = iter.next()
 
             val entity = entry.key
-            if (!entity.body.getBounds().overlaps(body.getBounds()) || (entity as MegaGameEntity).dead) {
+            if (!entity.body.getBounds().overlaps(body.getBounds()) || !entity.existenceState.liveAfterUpdate) {
                 iter.remove()
                 continue
             }

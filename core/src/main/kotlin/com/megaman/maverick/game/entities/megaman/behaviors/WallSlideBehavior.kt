@@ -17,7 +17,7 @@ const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSl
 internal fun Megaman.wallSlideBehavior(): IBehavior {
     return FunctionalBehaviorImpl(
         evaluate = evaluate@{
-            if (dead || !inPlay || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isBehaviorActive(BehaviorType.JETPACKING) || !wallSlideNotAllowedTimer.isFinished() ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@evaluate false

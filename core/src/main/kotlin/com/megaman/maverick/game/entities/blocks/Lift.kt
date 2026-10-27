@@ -116,7 +116,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        var megamanOverlapping = !targetPlayer.dead && targetPlayer.body.fixtures.values().any { set ->
+        var megamanOverlapping = targetPlayer.existenceState.liveAfterUpdate && targetPlayer.body.fixtures.values().any { set ->
             set.any { fixture ->
                 fixture.getType().equalsAny(FixtureType.SIDE, FixtureType.FEET) &&
                     fixture.getShape().overlaps(body.getBounds())

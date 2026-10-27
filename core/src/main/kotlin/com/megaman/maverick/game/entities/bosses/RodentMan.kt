@@ -359,7 +359,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
             val childIter = children.iterator()
             while (childIter.hasNext()) {
                 val next = childIter.next() as MegaGameEntity
-                if (next.dead) childIter.remove()
+                if (!next.existenceState.liveAfterUpdate) childIter.remove()
             }
 
             if (betweenReadyAndEndBossSpawnEvent) return@update

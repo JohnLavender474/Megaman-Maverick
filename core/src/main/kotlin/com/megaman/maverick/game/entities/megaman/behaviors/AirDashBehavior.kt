@@ -41,7 +41,7 @@ internal fun Megaman.airDashBehavior(): IBehavior {
         }
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !inPlay || !canMove || damaged || teleporting || maxTimer.isFinished() ||
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || damaged || teleporting || maxTimer.isFinished() ||
                 isAnyBehaviorActive(
                     BehaviorType.CLIMBING,
                     BehaviorType.JETPACKING,

@@ -262,7 +262,7 @@ class GameEngine(
         reset = when {
             updating -> true
             else -> {
-                entities.filter { it.spawned }.forEach { destroyNow(it) }
+                entities.filter { it.existenceState.liveNow }.forEach { destroyNow(it) }
                 entities.clear()
 
                 clearQueues()
@@ -275,7 +275,7 @@ class GameEngine(
     }
 
     override fun dispose() {
-        entities.filter { it.spawned }.forEach { destroyNow(it) }
+        entities.filter { it.existenceState.liveNow }.forEach { destroyNow(it) }
         entities.clear()
 
         clearQueues()

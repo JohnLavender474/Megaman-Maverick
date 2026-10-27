@@ -30,7 +30,7 @@ internal fun Megaman.groundSlideBehavior(): IBehavior {
         override fun evaluate(delta: Float): Boolean {
             cooldown.update(delta)
 
-            if (dead || !inPlay || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isBehaviorActive(BehaviorType.JETPACKING) || !cooldown.isFinished() ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false

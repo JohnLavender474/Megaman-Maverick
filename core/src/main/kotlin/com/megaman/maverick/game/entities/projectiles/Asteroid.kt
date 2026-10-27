@@ -77,7 +77,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
             val iter = set.iterator()
             while (iter.hasNext) {
                 val asteroid = iter.next() as Asteroid
-                if (asteroid.dead) continue
+                if (!asteroid.existenceState.liveAfterUpdate) continue
 
                 // nobody can see this one, so take it out silently: no explosion entity, no pop
                 if (!asteroid.body.overlapsGameCam()) {

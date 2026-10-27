@@ -149,7 +149,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        monkeyBall?.let { ball -> if (!ball.dead) ball.destroy() }
+        monkeyBall?.let { ball -> if (ball.existenceState.liveAfterUpdate) ball.destroy() }
         monkeyBall = null
 
         if (megaHeartTank != null && !game.state.containsHeartTank(megaHeartTank!!)) {

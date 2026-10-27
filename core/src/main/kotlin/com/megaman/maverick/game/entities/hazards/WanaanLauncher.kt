@@ -142,7 +142,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
                 newWanaanDelay.reset()
             }
 
-            if (wanaan?.dead == true) {
+            if (wanaan?.existenceState?.liveAfterUpdate == false) {
                 wanaan = null
                 newWanaanDelay.reset()
             }

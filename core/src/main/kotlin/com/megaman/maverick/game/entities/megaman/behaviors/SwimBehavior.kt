@@ -24,7 +24,7 @@ internal fun Megaman.swimBehavior(): IBehavior {
         private val timer = Timer(MegamanValues.SWIM_TIMER)
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !inPlay || !canMove) return false
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove) return false
 
             if (damaged || !body.isSensing(BodySense.IN_WATER) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)

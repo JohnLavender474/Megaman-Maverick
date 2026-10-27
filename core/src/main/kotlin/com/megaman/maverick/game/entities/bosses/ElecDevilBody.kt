@@ -218,5 +218,5 @@ class ElecDevilBody(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override fun getTag() = TAG
 
     override fun toString() =
-        "{ ElecDevilBody:[" + if (spawned) "facing=$facing, bounds=${body.getBounds()}] }" else "not spawned] }"
+        "{ ElecDevilBody:[" + if (existenceState.liveNow) "facing=$facing, bounds=${body.getBounds()}] }" else "not spawned] }"
 }

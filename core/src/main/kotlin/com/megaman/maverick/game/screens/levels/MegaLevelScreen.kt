@@ -802,7 +802,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss defeated")
 
-                if (player.dead) {
+                if (!player.existenceState.liveAfterUpdate) {
                     GameLogger.debug(TAG, "onEvent(): Megaman dead when boss defeated, doing nothing...")
                     return
                 }
@@ -831,7 +831,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.BOSS_DEAD -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss dead")
 
-                if (player.dead) {
+                if (!player.existenceState.liveAfterUpdate) {
                     GameLogger.debug(TAG, "onEvent(): Megaman dead when boss dead, doing nothing...")
                     return
                 }
@@ -927,13 +927,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
          */
 
         // do not allow pausing if Megaman is dead
-        if (!game.paused && !player.dead && player.inPlay && isPauseButtonRequested()) {
+        if (!game.paused && player.existenceState.liveAfterUpdate && player.inPlay && isPauseButtonRequested()) {
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }
 
         // force resume game if megaman is dead
-        if (game.paused && player.dead) game.runQueue.addLast { game.resume() }
+        if (game.paused && !player.existenceState.liveAfterUpdate) game.runQueue.addLast { game.resume() }
 
         playerStatsHandler.update(delta)
 
@@ -958,7 +958,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
             }
 
-            if (!player.dead) playerDeathEventHandler.setInactive()
+            if (player.existenceState.liveAfterUpdate) playerDeathEventHandler.setInactive()
         }
 
         engine.update(delta)
@@ -1054,7 +1054,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         if (!playerSpawnEventHandler.isFinished()) playerSpawnEventHandler.draw(drawer)
 
-        if (player.dead) playerDeathEventHandler.draw(drawer)
+        if (!player.existenceState.liveAfterUpdate) playerDeathEventHandler.draw(drawer)
 
         if (game.paused) pauseScreen.draw(drawer)
 

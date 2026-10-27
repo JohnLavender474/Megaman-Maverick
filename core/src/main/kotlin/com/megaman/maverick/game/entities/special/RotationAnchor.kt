@@ -107,11 +107,11 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     protected open fun defineUpdatablesComponent() = UpdatablesComponent({
         children = children.processAndFilter({ child ->
             child as MegaGameEntity
-            if (child.dead) {
+            if (!child.existenceState.liveAfterUpdate) {
                 val childKey = child.getProperty(ConstKeys.CHILD_KEY)!!
                 removeMotionDefinition(childKey)
             }
-        }, { child -> !(child as MegaGameEntity).dead })
+        }, { child -> child.existenceState.liveAfterUpdate })
     })
 
     protected open fun defineBodyComponent(): BodyComponent {

@@ -73,7 +73,7 @@ class SpawnerReleaseTest : DescribeSpec({
             frame(events = listOf(Event(ROOM_EVENT)), listener = spawner)
             frame()
             made.size shouldBe 1
-            made[0].spawned shouldBe true
+            made[0].existenceState.liveNow shouldBe true
 
             frame(duringUpdate = { made[0].destroy() }, events = listOf(Event(ROOM_EVENT)), listener = spawner)
             frame()
@@ -135,7 +135,7 @@ class SpawnerReleaseTest : DescribeSpec({
             frame(events = listOf(Event(ROOM_EVENT)), listener = spawner)
             frame()
 
-            entity.spawned shouldBe true
+            entity.existenceState.liveNow shouldBe true
             entity.runnablesOnDestroyQueued.containsKey(ConstKeys.SPAWNER) shouldBe false
         }
 

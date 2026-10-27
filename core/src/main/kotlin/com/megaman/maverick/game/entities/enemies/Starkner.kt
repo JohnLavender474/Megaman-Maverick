@@ -298,7 +298,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     }
                 }
                 StarknerState.BLUE, StarknerState.YELLOW, StarknerState.RED -> {
-                    if (targetPlayer.dead) moving = false
+                    if (!targetPlayer.existenceState.liveAfterUpdate) moving = false
 
                     if (moving) {
                         val speed = STATE_SPEEDS[state]
@@ -337,7 +337,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     body.physics.velocity.setZero()
 
                     stateTimer.update(delta)
-                    if (!targetPlayer.dead && stateTimer.isFinished()) {
+                    if (targetPlayer.existenceState.liveAfterUpdate && stateTimer.isFinished()) {
                         moving = true
                         targetTimer.reset()
                         target.set(targetPlayer.body.getCenter())
@@ -397,7 +397,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
             sprite.setOriginCenter()
             if (!game.paused) when {
-                moving && !targetPlayer.dead -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
+                moving && targetPlayer.existenceState.liveAfterUpdate -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
                 else -> rawRotation = direction.rotation
             }
             sprite.rotation = (rawRotation / 90f).toInt() * 90f

@@ -107,7 +107,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
             val iter = children.iterator()
             while (iter.hasNext()) {
                 val child = iter.next() as MegaGameEntity
-                if (child.dead) iter.remove()
+                if (!child.existenceState.liveAfterUpdate) iter.remove()
             }
 
             if (children.size >= MAX_CHILDREN) {

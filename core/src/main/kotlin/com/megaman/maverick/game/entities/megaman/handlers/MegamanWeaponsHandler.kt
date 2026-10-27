@@ -91,7 +91,7 @@ open class MegaWeaponHandler(
         val iter = set.iterator()
         while (iter.hasNext) {
             val entity = iter.next()
-            if (entity.dead) {
+            if (!entity.existenceState.liveAfterUpdate) {
                 iter.remove()
                 GameLogger.debug(TAG, "cullAllDead(): culled entity=$entity")
             }
@@ -338,7 +338,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                     while (iter.hasNext() && aliveCount > 4) {
                         val moonScythe = iter.next() as MoonScythe
 
-                        if (!moonScythe.fading && !moonScythe.dead) {
+                        if (!moonScythe.fading && moonScythe.existenceState.liveAfterUpdate) {
                             moonScythe.fading = true
                             --aliveCount
                         }
@@ -371,10 +371,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 val iter = cluster.gems.keys().iterator()
                 while (iter.hasNext) {
                     val gem = iter.next()
-                    if (gem.dead) iter.remove()
+                    if (!gem.existenceState.liveAfterUpdate) iter.remove()
                 }
 
-                if (!cluster.spawned) return@updateFunction
+                if (!cluster.existenceState.liveNow) return@updateFunction
 
                 cluster.origin.lerp(
                     megaman.getFocusPosition(),

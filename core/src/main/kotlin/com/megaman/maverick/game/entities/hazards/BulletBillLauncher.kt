@@ -104,7 +104,7 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!overlapsGameCamera() || targetPlayer.dead || !targetPlayer.inPlay) {
+        if (!overlapsGameCamera() || !targetPlayer.existenceState.liveAfterUpdate || !targetPlayer.inPlay) {
             launchTimer.reset()
             return@UpdatablesComponent
         }

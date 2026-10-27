@@ -180,7 +180,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
                 }
 
                 SnowheadThrowerState.SPAWN_HEAD -> {
-                    if (snowhead!!.dead == true) {
+                    if (!snowhead!!.existenceState.liveAfterUpdate) {
                         snowhead = null
                         spawnHeadTimer.reset()
                         state = SnowheadThrowerState.HEADLESS

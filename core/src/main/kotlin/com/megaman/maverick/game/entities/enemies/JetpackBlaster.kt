@@ -271,7 +271,7 @@ class JetpackBlaster(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (targetPlayer.dead) {
+            if (!targetPlayer.existenceState.liveAfterUpdate) {
                 body.physics.velocity.setZero()
                 return@add
             }

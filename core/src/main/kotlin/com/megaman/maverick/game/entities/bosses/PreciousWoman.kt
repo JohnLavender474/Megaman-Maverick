@@ -358,7 +358,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val shieldGemIter = shieldGems.iterator()
             while (shieldGemIter.hasNext) {
                 val shieldGemEntry = shieldGemIter.next()
-                if (shieldGemEntry.key.dead) shieldGemIter.remove()
+                if (!shieldGemEntry.key.existenceState.liveAfterUpdate) shieldGemIter.remove()
             }
 
             if (shieldGems.isEmpty) spawnShieldsDelay.update(delta)
@@ -466,7 +466,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
 
                 PreciousWomanState.THROW_SHIELD_GEMS ->
-                    if (shieldGems.isEmpty || shieldGems.keys().all { it.dead }) stateMachine.next()
+                    if (shieldGems.isEmpty || shieldGems.keys().all { !it.existenceState.liveAfterUpdate }) stateMachine.next()
 
                 else -> {}
             }

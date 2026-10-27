@@ -117,7 +117,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         get() = !stunTimer.isFinished()
 
     override val invincible: Boolean
-        get() = damaged || !damageRecoveryTimer.isFinished() || isLocked(MegaLockGroup.DAMAGE) || dead || !inPlay
+        get() = damaged || !damageRecoveryTimer.isFinished() || isLocked(MegaLockGroup.DAMAGE) || !existenceState.liveAfterUpdate || !inPlay
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
     override var frozen = false
@@ -650,7 +650,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
-        if (dead || !super.canBeDamagedBy(damager)) return false
+        if (!existenceState.liveAfterUpdate || !super.canBeDamagedBy(damager)) return false
         if (damager is IOwnable<*>) {
             if (damager.owner == this) return false
             if (damager.owner is IOwnable<*> && (damager.owner as IOwnable<*>).owner == this) return false

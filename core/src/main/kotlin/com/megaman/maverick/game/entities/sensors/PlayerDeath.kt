@@ -45,7 +45,7 @@ open class PlayerDeath(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyE
 
     override fun update(delta: Float) {
         players.forEach {
-            if (!it.dead && bounds.overlaps(it.body.getBounds()) && (instant || !it.invincible)) it.depleteHealth()
+            if (it.existenceState.liveAfterUpdate && bounds.overlaps(it.body.getBounds()) && (instant || !it.invincible)) it.depleteHealth()
         }
     }
 

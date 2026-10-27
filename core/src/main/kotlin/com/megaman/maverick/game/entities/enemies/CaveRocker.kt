@@ -132,7 +132,7 @@ class CaveRocker(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             newRock?.let {
-                if (throwing && it.dead) {
+                if (throwing && !it.existenceState.liveAfterUpdate) {
                     GameLogger.debug(TAG, "New rock died before reaching cave rocker, so spawning a new one")
                     spawnNewRock()
                 } else if (it.body.getBounds().overlaps(headFixture.getShape()) ||

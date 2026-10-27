@@ -226,7 +226,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        armOrbs.forEach { if (!it.dead) it.destroy() }
+        armOrbs.forEach { if (it.existenceState.liveAfterUpdate) it.destroy() }
         armOrbs.clear()
 
         block?.destroy()

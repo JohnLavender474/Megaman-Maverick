@@ -218,7 +218,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
             val childIter = children.iterator()
             while (childIter.hasNext()) {
                 val child = childIter.next()
-                if (child.dead) childIter.remove()
+                if (!child.existenceState.liveAfterUpdate) childIter.remove()
             }
 
             cullBounds.setCenter(body.getCenter())
@@ -301,7 +301,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         val beesToCycle = reusableBeeArray
 
         beesToCycle.clear()
-        for (child in children) if (!child.dead) beesToCycle.add(child)
+        for (child in children) if (child.existenceState.liveAfterUpdate) beesToCycle.add(child)
         beesToCycle.shuffle()
 
         val numBeesToCycle = UtilMethods.getRandom(MIN_BEES_TO_CYCLE, MAX_BEES_TO_CYCLE)

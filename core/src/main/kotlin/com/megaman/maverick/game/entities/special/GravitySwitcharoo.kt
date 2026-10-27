@@ -51,7 +51,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.bosses.InfernoMan
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -215,7 +214,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             val iter = triggerEntities.iterator()
             while (iter.hasNext) {
                 val entity = iter.next()
-                if ((entity as MegaGameEntity).dead) {
+                if (!entity.existenceState.liveAfterUpdate) {
                     iter.remove()
                     continue
                 }

@@ -241,11 +241,11 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                 return@add
             }
 
-            if (leftClaw != null && leftClaw!!.dead) {
+            if (leftClaw != null && !leftClaw!!.existenceState.liveAfterUpdate) {
                 leftClaw?.destroy()
                 leftClaw = null
             }
-            if (rightClaw != null && rightClaw!!.dead) {
+            if (rightClaw != null && !rightClaw!!.existenceState.liveAfterUpdate) {
                 rightClaw?.destroy()
                 rightClaw = null
             }

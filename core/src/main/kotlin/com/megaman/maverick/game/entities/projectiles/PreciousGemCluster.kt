@@ -134,7 +134,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         while (iter.hasNext) {
             val gem = iter.next().key
             when {
-                gem.dead -> {
+                !gem.existenceState.liveAfterUpdate -> {
                     GameLogger.debug(TAG, "defineUpdatablesComponent(): gem dead, removing: $gem")
                     iter.remove()
                 }
@@ -147,7 +147,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
             }
         }
 
-        if (gems.isEmpty && !dead) destroy()
+        if (gems.isEmpty && existenceState.liveAfterUpdate) destroy()
     })
 
     private fun defineBodyComponent(): BodyComponent {

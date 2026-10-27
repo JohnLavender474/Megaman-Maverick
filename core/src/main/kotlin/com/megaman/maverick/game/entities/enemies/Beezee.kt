@@ -145,7 +145,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         frozen = false
 
         val owner = spawnProps.get(ConstKeys.OWNER, CannoHoney::class)
-        if (owner == null || owner.dead) setToAttack() else this.owner = owner
+        if (owner == null || !owner.existenceState.liveAfterUpdate) setToAttack() else this.owner = owner
     }
 
     override fun onDestroy() {

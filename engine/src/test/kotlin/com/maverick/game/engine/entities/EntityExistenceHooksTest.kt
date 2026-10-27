@@ -35,8 +35,6 @@ private class HookEntity(engine: GameEngine) : GameEntity(engine) {
     override fun onDestroy() = onDestroyAction()
 }
 
-private val IGameEntity.dead get() = existenceState == UNSPAWNED || existenceState == DESTROY_QUEUED
-
 class EntityExistenceHooksTest : DescribeSpec({
 
     lateinit var engine: GameEngine
@@ -202,15 +200,15 @@ class EntityExistenceHooksTest : DescribeSpec({
                 }
 
                 fun destroy(e: HookEntity) {
-                    val deadBefore = e.dead
+                    val liveAfterUpdateBefore = e.existenceState.liveAfterUpdate
                     val spawnsBefore = e.spawnQueuedStates.size
                     val destroysBefore = e.destroyQueuedStates.size
                     val accepted = e.destroy()
                     withClue("sequence $sequence, destroy") {
-                        e.destroyQueuedStates.size shouldBe destroysBefore + if (accepted && !deadBefore) 1 else 0
+                        e.destroyQueuedStates.size shouldBe destroysBefore + if (accepted && liveAfterUpdateBefore) 1 else 0
                         e.spawnQueuedStates.size shouldBe spawnsBefore
                     }
-                    if (accepted && !deadBefore) expectedHooks[e] = (expectedHooks[e] ?: 0) + 1
+                    if (accepted && liveAfterUpdateBefore) expectedHooks[e] = (expectedHooks[e] ?: 0) + 1
                     checks++
                 }
 

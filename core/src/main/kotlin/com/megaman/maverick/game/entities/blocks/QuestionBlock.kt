@@ -124,7 +124,7 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
         if (event.key == EventType.PLAYER_DONE_DYIN) {
-            if (spawnedItem?.spawned == true) spawnedItem!!.destroy()
+            if (spawnedItem?.existenceState?.liveNow == true) spawnedItem!!.destroy()
             spawnedItem = null
             on = true
         }

@@ -138,7 +138,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (position.y <= target.y) {
                     position.set(target)
                     state = DrWilyState.LAND
-                    if (!targetPlayer.dead)
+                    if (targetPlayer.existenceState.liveAfterUpdate)
                         game.audioMan.playMusic(MusicAsset.MM3_ALL_CLEAR_MUSIC, false)
                 }
             }
@@ -148,7 +148,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (begTimer.isJustFinished()) stillTimer.reset()
                 if (begTimer.isFinished()) {
                     stillTimer.update(delta)
-                    if (stillTimer.isJustFinished() && !targetPlayer.dead)
+                    if (stillTimer.isJustFinished() && targetPlayer.existenceState.liveAfterUpdate)
                         game.setCurrentScreen(ScreenEnum.ENDING_SCREEN.name)
                 }
             }

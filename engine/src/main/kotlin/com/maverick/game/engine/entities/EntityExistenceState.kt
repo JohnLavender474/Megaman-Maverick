@@ -1,3 +1,9 @@
 package com.maverick.game.engine.entities
 
-enum class EntityExistenceState { UNSPAWNED, SPAWN_QUEUED, LIVE, DESTROY_QUEUED, RESPAWN_QUEUED }
+enum class EntityExistenceState(val liveNow: Boolean, val liveAfterUpdate: Boolean) {
+    UNSPAWNED(liveNow = false, liveAfterUpdate = false),
+    SPAWN_QUEUED(liveNow = false, liveAfterUpdate = true),
+    LIVE(liveNow = true, liveAfterUpdate = true),
+    DESTROY_QUEUED(liveNow = true, liveAfterUpdate = false),
+    RESPAWN_QUEUED(liveNow = true, liveAfterUpdate = true),
+}

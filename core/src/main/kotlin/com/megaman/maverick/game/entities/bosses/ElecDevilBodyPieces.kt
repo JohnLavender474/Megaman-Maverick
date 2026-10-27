@@ -315,7 +315,7 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     override fun toString() =
         "{ ElecDevilBodyPieces:[" + when {
-            spawned ->
+            existenceState.liveNow ->
                 "\n\t\tfacing=$facing," +
                     "\n\t\tbounds=${body.getBounds()}," +
                     "\n\t\tactivePieces=" + when {

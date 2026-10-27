@@ -289,7 +289,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
 
-        if (!targetPlayer.dead && isHealthDepleted() && currentPhase == WilyFinalBossPhase.PHASE_3) {
+        if (targetPlayer.existenceState.liveAfterUpdate && isHealthDepleted() && currentPhase == WilyFinalBossPhase.PHASE_3) {
             val wily = MegaEntityFactory.fetch(DrWily::class)!!
             val facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
             wily.spawn(
@@ -2573,8 +2573,8 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         private fun updateCannonOrbs(delta: Float) {
-            if (leftOrb != null && !leftOrb!!.spawned) leftOrb = null
-            if (rightOrb != null && !rightOrb!!.spawned) rightOrb = null
+            if (leftOrb != null && !leftOrb!!.existenceState.liveNow) leftOrb = null
+            if (rightOrb != null && !rightOrb!!.existenceState.liveNow) rightOrb = null
 
             when (cannonOrbPhase) {
                 CannonOrbPhase.IDLE -> {
@@ -3012,9 +3012,9 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         }
 
         fun update(delta: Float) {
-            if (leftOrb != null && leftOrb!!.dead) leftOrb = null
-            if (rightOrb != null && rightOrb!!.dead) rightOrb = null
-            if (bottomOrb != null && bottomOrb!!.dead) bottomOrb = null
+            if (leftOrb != null && !leftOrb!!.existenceState.liveAfterUpdate) leftOrb = null
+            if (rightOrb != null && !rightOrb!!.existenceState.liveAfterUpdate) rightOrb = null
+            if (bottomOrb != null && !bottomOrb!!.existenceState.liveAfterUpdate) bottomOrb = null
 
             val phase3StateMachine =
                 stateMachines.get(WilyFinalBossPhase.PHASE_3) as StateMachine<WilyPhase3State>

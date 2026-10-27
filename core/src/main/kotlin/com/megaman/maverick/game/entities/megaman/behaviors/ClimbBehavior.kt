@@ -31,7 +31,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
         private lateinit var ladder: IBodyEntity
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !inPlay || !canMove) return false
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove) return false
 
             if (damaged || !body.properties.containsKey(ConstKeys.LADDER) || isAnyBehaviorActive(
                     BehaviorType.JUMPING,

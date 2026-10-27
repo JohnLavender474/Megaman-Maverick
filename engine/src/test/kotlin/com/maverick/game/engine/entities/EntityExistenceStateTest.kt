@@ -40,8 +40,6 @@ private class StateEntity(engine: GameEngine, val name: String, private val log:
     }
 }
 
-private val IGameEntity.dead get() = existenceState == UNSPAWNED || existenceState == DESTROY_QUEUED
-
 class EntityExistenceStateTest : DescribeSpec({
 
     lateinit var engine: GameEngine
@@ -78,27 +76,39 @@ class EntityExistenceStateTest : DescribeSpec({
         GameLogger.setLogLevel(GameLogLevel.DEBUG, false)
     }
 
+    describe("the existence questions") {
+        it("give liveNow and liveAfterUpdate for each state") {
+            EntityExistenceState.entries.associateWith { it.liveNow to it.liveAfterUpdate } shouldBe mapOf(
+                UNSPAWNED to (false to false),
+                SPAWN_QUEUED to (false to true),
+                LIVE to (true to true),
+                DESTROY_QUEUED to (true to false),
+                RESPAWN_QUEUED to (true to true)
+            )
+        }
+    }
+
     describe("the normal life of an entity") {
         it("goes UNSPAWNED, SPAWN_QUEUED, LIVE, DESTROY_QUEUED, UNSPAWNED") {
             val e = entity()
             e.existenceState shouldBe UNSPAWNED
-            e.spawned shouldBe false
+            e.existenceState.liveNow shouldBe false
 
             e.spawn(Properties()) shouldBe true
             e.existenceState shouldBe SPAWN_QUEUED
-            e.spawned shouldBe false
+            e.existenceState.liveNow shouldBe false
 
             engine.update(0f)
             e.existenceState shouldBe LIVE
-            e.spawned shouldBe true
+            e.existenceState.liveNow shouldBe true
 
             e.destroy() shouldBe true
             e.existenceState shouldBe DESTROY_QUEUED
-            e.spawned shouldBe true
+            e.existenceState.liveNow shouldBe true
 
             engine.update(0f)
             e.existenceState shouldBe UNSPAWNED
-            e.spawned shouldBe false
+            e.existenceState.liveNow shouldBe false
             log shouldBe listOf("onSpawn e", "onDestroy e")
             engineLog shouldBe emptyList()
         }
@@ -181,7 +191,7 @@ class EntityExistenceStateTest : DescribeSpec({
     }
 
     describe("rule 2: a spawn while a destroy is queued is a respawn") {
-        it("is RESPAWN_QUEUED, spawned and not dead, and the update runs onDestroy then onSpawn") {
+        it("is RESPAWN_QUEUED, live now and live after the update, and the update runs onDestroy then onSpawn") {
             val e = entity()
             e.spawn(Properties())
             engine.update(0f)
@@ -189,8 +199,8 @@ class EntityExistenceStateTest : DescribeSpec({
             e.destroy()
             e.spawn(Properties()) shouldBe true
             e.existenceState shouldBe RESPAWN_QUEUED
-            e.spawned shouldBe true
-            e.dead shouldBe false
+            e.existenceState.liveNow shouldBe true
+            e.existenceState.liveAfterUpdate shouldBe true
             e.spawn(Properties()) shouldBe false
             engine.update(0f)
 
@@ -325,7 +335,7 @@ class EntityExistenceStateTest : DescribeSpec({
             parent.destroy()
             engine.update(0f)
             child.existenceState shouldBe UNSPAWNED
-            child.dead shouldBe true
+            child.existenceState.liveAfterUpdate shouldBe false
 
             engine.update(0f)
             child.existenceState shouldBe UNSPAWNED
@@ -394,7 +404,7 @@ class EntityExistenceStateTest : DescribeSpec({
     }
 
     describe("the invariant on seeded random call sequences") {
-        it("onSpawn and onDestroy alternate, the last accepted call wins, and spawned and dead tell the truth") {
+        it("onSpawn and onDestroy alternate, the last accepted call wins, and liveNow and liveAfterUpdate tell the truth") {
             var checks = 0
 
             repeat(2_000) { sequence ->
@@ -425,8 +435,8 @@ class EntityExistenceStateTest : DescribeSpec({
                 log.clear()
 
                 repeat(random.nextInt(20, 61)) { step ->
-                    val liveAfterNextUpdate = entities.map { !it.dead }
-                    val liveBefore = entities.map { it.spawned }
+                    val liveAfterNextUpdate = entities.map { it.existenceState.liveAfterUpdate }
+                    val liveBefore = entities.map { it.existenceState.liveNow }
                     touched.clear()
 
                     val roll = random.nextInt(100)
@@ -438,8 +448,8 @@ class EntityExistenceStateTest : DescribeSpec({
                             engine.update(0f)
                             entities.forEachIndexed { index, e ->
                                 if (e !in touched) withClue("sequence $sequence, step $step, ${e.name}") {
-                                    e.spawned shouldBe liveAfterNextUpdate[index]
-                                    e.spawned shouldBe (lastAcceptedCall.remove(e) ?: liveBefore[index])
+                                    e.existenceState.liveNow shouldBe liveAfterNextUpdate[index]
+                                    e.existenceState.liveNow shouldBe (lastAcceptedCall.remove(e) ?: liveBefore[index])
                                     checks++
                                 }
                             }
@@ -452,7 +462,7 @@ class EntityExistenceStateTest : DescribeSpec({
                     }
 
                     entities.forEach { e ->
-                        withClue("sequence $sequence, step $step, ${e.name}") { e.spawned shouldBe engine.contains(e) }
+                        withClue("sequence $sequence, step $step, ${e.name}") { e.existenceState.liveNow shouldBe engine.contains(e) }
                     }
                 }
 

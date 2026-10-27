@@ -94,7 +94,7 @@ class MegaPlayersTest : DescribeSpec({
             val players = MegaPlayers()
             val entity = players.register(PlayerSlot(0), playerEntity())
 
-            entity.spawned shouldBe false
+            entity.existenceState.liveNow shouldBe false
 
             players.targetFor(TestPlayerEntity(game)) shouldBeSameInstanceAs entity
         }

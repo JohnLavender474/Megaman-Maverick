@@ -283,7 +283,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val scytheIter = scythes.iterator()
             while (scytheIter.hasNext) {
                 val scythe = scytheIter.next()
-                if (scythe.dead) scytheIter.remove()
+                if (!scythe.existenceState.liveAfterUpdate) scytheIter.remove()
             }
 
             if (betweenReadyAndEndBossSpawnEvent) return@add
@@ -523,7 +523,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         currentGravityChangeDir = currentGravityChangeDir.getOpposite()
         // TODO: the swap changes the gravity only while the target player (always Megaman for now) is alive; with
         //  more players, the rule for dead players is for item 047
-        if (!targetPlayer.dead) game.gravity.set(currentGravityChangeDir)
+        if (targetPlayer.existenceState.liveAfterUpdate) game.gravity.set(currentGravityChangeDir)
 
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()

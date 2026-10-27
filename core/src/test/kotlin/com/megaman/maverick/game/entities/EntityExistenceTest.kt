@@ -32,15 +32,15 @@ class EntityExistenceTest : DescribeSpec({
     }
 
     describe("engine reset") {
-        it("leaves an entity that was live dead") {
+        it("leaves an entity that was live not live after the update") {
             val entity = TestExistenceEntity(game)
             entity.spawn(Properties())
             engine.update(0f)
 
             engine.reset()
 
-            entity.spawned shouldBe false
-            entity.dead shouldBe true
+            entity.existenceState.liveNow shouldBe false
+            entity.existenceState.liveAfterUpdate shouldBe false
         }
     }
 
@@ -54,17 +54,17 @@ class EntityExistenceTest : DescribeSpec({
 
             handler.setFrozen(true)
             engine.update(0f)
-            shield.spawned shouldBe true
+            shield.existenceState.liveNow shouldBe true
 
             handler.setFrozen(false)
             handler.setFrozen(true)
             engine.update(0f)
-            shield.spawned shouldBe true
+            shield.existenceState.liveNow shouldBe true
 
             handler.setFrozen(true)
             engine.update(0f)
 
-            shield.spawned shouldBe true
+            shield.existenceState.liveNow shouldBe true
         }
     }
 

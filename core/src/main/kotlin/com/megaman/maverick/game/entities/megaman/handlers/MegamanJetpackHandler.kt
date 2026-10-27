@@ -17,7 +17,7 @@ class MegamanJetpackHandler(private val megaman: Megaman) : Updatable, Resettabl
     val rushJetSoundTimer = Timer(SoundAsset.JETPACK_SOUND.seconds).setToEnd()
 
     private fun isActive(): Boolean {
-        if (megaman.dead) return false
+        if (!megaman.existenceState.liveAfterUpdate) return false
 
         if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) return true
 

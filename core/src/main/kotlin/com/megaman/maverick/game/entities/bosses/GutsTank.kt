@@ -340,7 +340,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
             while (runningMetIter.hasNext()) {
                 val met = runningMetIter.next()
                 when {
-                    met.dead -> runningMetIter.remove()
+                    !met.existenceState.liveAfterUpdate -> runningMetIter.remove()
                     met.body.getMaxX() <= killerWall.getX() -> {
                         met.destroy()
                         runningMetIter.remove()
@@ -351,7 +351,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
             val heliMetIter = heliMets.iterator()
             while (heliMetIter.hasNext()) {
                 val met = heliMetIter.next()
-                if (met.dead) heliMetIter.remove()
+                if (!met.existenceState.liveAfterUpdate) heliMetIter.remove()
             }
 
             if (!ready) return@add
@@ -384,7 +384,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                 }
             }
 
-            if (fist != null && fist!!.dead) fist = null
+            if (fist != null && !fist!!.existenceState.liveAfterUpdate) fist = null
 
             if (fist?.fistState == GutsTankFist.GutsTankFistState.ATTACHED) {
                 launchFistDelayTimer.update(delta)

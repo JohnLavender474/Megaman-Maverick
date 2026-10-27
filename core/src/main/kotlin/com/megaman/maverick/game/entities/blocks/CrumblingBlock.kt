@@ -101,7 +101,7 @@ class CrumblingBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity {
     private fun crumble() {
         GameLogger.debug(TAG, "crumble()")
 
-        if (dead) {
+        if (!existenceState.liveAfterUpdate) {
             GameLogger.debug(TAG, "crumble(): already dead, nothing to do")
             return
         }

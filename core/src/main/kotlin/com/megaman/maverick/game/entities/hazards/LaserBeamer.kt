@@ -245,7 +245,7 @@ class LaserBeamer(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         if (!beaming) {
-            if (targetPlayer.spawned && targetPlayer.inPlay && overlapsGameCamera()) {
+            if (targetPlayer.existenceState.liveNow && targetPlayer.inPlay && overlapsGameCamera()) {
                 beaming = true
                 laser?.on = true
                 requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)

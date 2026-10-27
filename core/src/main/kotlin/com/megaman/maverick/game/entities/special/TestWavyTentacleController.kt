@@ -166,7 +166,7 @@ class TestWavyTentacleController(game: MegamanMaverickGame) :
     // --- Per-frame update ---
 
     override fun update(delta: Float) {
-        if (!tentacleSpawned && tentacle!!.spawned) {
+        if (!tentacleSpawned && tentacle!!.existenceState.liveNow) {
             tentacleSpawned = true
 
             // Build drawables sized to match the child's joint count

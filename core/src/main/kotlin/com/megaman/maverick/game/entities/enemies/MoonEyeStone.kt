@@ -283,7 +283,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
             val entry = iter.next()
 
             val asteroid = entry.key
-            if (asteroid.dead) {
+            if (!asteroid.existenceState.liveAfterUpdate) {
                 iter.remove()
                 continue
             }

@@ -228,7 +228,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
 
             if (game.isCameraRotating()) return@add
 
-            if (flag?.dead == true) flag = null
+            if (flag?.existenceState?.liveAfterUpdate == false) flag = null
 
             if (currentState == AstroAssState.STAND) FacingUtils.setFacingOf(this)
 

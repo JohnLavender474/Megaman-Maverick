@@ -127,7 +127,7 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
             if (set.isEmpty) return@forEach
             set.forEach { block ->
                 block as BreakableBlock
-                if (block.dead) return@forEach
+                if (!block.existenceState.liveAfterUpdate) return@forEach
                 connectedBlocks.add(block)
             }
         }

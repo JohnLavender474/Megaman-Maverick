@@ -178,7 +178,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             val iter = children.iterator()
             while (iter.hasNext()) {
                 val child = iter.next() as MegaGameEntity
-                if (child.dead) iter.remove()
+                if (!child.existenceState.liveAfterUpdate) iter.remove()
             }
 
             facing = when (targetPlayer.direction) {
@@ -297,7 +297,7 @@ class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (parent == null || (parent as MegaGameEntity).dead) {
+            if (parent == null || !parent!!.existenceState.liveAfterUpdate) {
                 destroy()
                 return@add
             }

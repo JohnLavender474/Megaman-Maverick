@@ -65,7 +65,7 @@ class ShieldEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (owner != null && (owner as MegaGameEntity).dead) destroy()
+        if (owner != null && !(owner as MegaGameEntity).existenceState.liveAfterUpdate) destroy()
     })
 
     override fun getType() = EntityType.OTHER

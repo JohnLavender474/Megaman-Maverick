@@ -327,7 +327,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
     override fun update(delta: Float) {
         if (!on) return
 
-        if (!tentacleSpawned && tentacle!!.spawned) {
+        if (!tentacleSpawned && tentacle!!.existenceState.liveNow) {
             tentacleSpawned = true
 
             for (joint in jointEntities) joint.destroy()
@@ -377,7 +377,7 @@ class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDr
 
         if (!tentacleSpawned) return
 
-        if (jointEntities.any { !it.spawned })
+        if (jointEntities.any { !it.existenceState.liveNow })
             throw IllegalStateException("Joint entities should be spawned by this point")
 
         time += delta

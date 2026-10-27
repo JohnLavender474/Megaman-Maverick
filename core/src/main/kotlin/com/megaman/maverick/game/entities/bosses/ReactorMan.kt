@@ -409,10 +409,10 @@ class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 else -> {}
             }
 
-            if (projectiles.size >= 1 && projectiles[0].spawned)
+            if (projectiles.size >= 1 && projectiles[0].existenceState.liveNow)
                 projectiles[0].body.setCenter(getProjectilePosition1())
 
-            if (projectiles.size >= 2 && projectiles[1].spawned)
+            if (projectiles.size >= 2 && projectiles[1].existenceState.liveNow)
                 projectiles[1].body.setCenter(getProjectilePosition2())
         }
     }

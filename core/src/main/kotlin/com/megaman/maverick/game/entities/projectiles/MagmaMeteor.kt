@@ -111,7 +111,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
             val iter = meteors.iterator()
             while (iter.hasNext) {
                 val meteor = iter.next() as MagmaMeteor
-                if (meteor.dead) continue
+                if (!meteor.existenceState.liveAfterUpdate) continue
                 meteor.explodeAndDie()
                 break
             }

@@ -349,7 +349,7 @@ class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<Elec
             val launchedPieceIter = launchedPieces.iterator()
             while (launchedPieceIter.hasNext()) {
                 val launchedPiece = launchedPieceIter.next()
-                if (launchedPiece.dead) launchedPieceIter.remove()
+                if (!launchedPiece.existenceState.liveAfterUpdate) launchedPieceIter.remove()
             }
 
             when (getCurrentState()) {

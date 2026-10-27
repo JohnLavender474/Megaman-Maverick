@@ -224,7 +224,7 @@ class BunbyTank(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
             val turnAroundScannerPosition = body.getPositionPoint(position.opposite())
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
-            if (!targetPlayer.dead) {
+            if (targetPlayer.existenceState.liveAfterUpdate) {
                 if (body.getBounds().overlaps(game.getGameCamera().getRotatedBounds()) &&
                     targetPlayer.body.getBounds().overlaps(shootScanner)
                 ) {

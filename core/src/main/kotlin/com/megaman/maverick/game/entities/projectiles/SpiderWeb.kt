@@ -183,7 +183,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         blinkWhiteTimer.update(it)
         when {
-            !stuckToMegaman && !targetPlayer.dead && body.getBounds().overlaps(targetPlayer.body.getBounds()) ->
+            !stuckToMegaman && targetPlayer.existenceState.liveAfterUpdate && body.getBounds().overlaps(targetPlayer.body.getBounds()) ->
                 stickToMegaman()
 
             stuckToMegaman -> {

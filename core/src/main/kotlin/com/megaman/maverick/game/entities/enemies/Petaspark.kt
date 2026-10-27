@@ -120,7 +120,7 @@ class Petaspark(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntit
             onWall = (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
                 (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
-            if (!targetPlayer.dead && body.isSensing(BodySense.FEET_ON_GROUND)) when {
+            if (targetPlayer.existenceState.liveAfterUpdate && body.isSensing(BodySense.FEET_ON_GROUND)) when {
                 targetPlayer.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX() ->
                     facing = Facing.LEFT
 

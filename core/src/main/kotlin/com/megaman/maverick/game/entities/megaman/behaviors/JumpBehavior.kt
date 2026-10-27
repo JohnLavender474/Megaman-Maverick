@@ -24,7 +24,7 @@ const val MEGAMAN_JUMP_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: JumpBehavior
 internal fun Megaman.jumpBehavior(): IBehavior {
     return FunctionalBehaviorImpl(
         evaluate = {
-            if (dead || !inPlay || !canMove || damaged || teleporting ||
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || damaged || teleporting ||
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 !input.isPressed(MegaControllerButton.A) ||

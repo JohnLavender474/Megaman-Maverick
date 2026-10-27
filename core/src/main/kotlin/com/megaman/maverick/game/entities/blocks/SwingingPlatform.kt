@@ -210,7 +210,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
         val iter = children.iterator()
         while (iter.hasNext()) {
             val child = iter.next() as MegaGameEntity
-            if (child.dead) iter.remove()
+            if (!child.existenceState.liveAfterUpdate) iter.remove()
         }
     })
 

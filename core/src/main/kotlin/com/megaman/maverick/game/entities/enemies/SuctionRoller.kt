@@ -115,7 +115,7 @@ class SuctionRoller(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
             wasOnWall = onWall
             onWall = FacingUtils.isFacingBlock(this)
 
-            if (!targetPlayer.dead && body.isSensing(BodySense.FEET_ON_GROUND)) when {
+            if (targetPlayer.existenceState.liveAfterUpdate && body.isSensing(BodySense.FEET_ON_GROUND)) when {
                 targetPlayer.body.getBounds().getPositionPoint(Position.BOTTOM_RIGHT).x < body.getX() ->
                     facing = Facing.LEFT
 

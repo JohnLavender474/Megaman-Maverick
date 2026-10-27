@@ -56,12 +56,12 @@ class FreezableEntityHandler(
 
     fun setFrozen(value: Boolean) {
         if (value) {
-            if (shieldEntity.dead && doSpawnFrozenShield.invoke())
+            if (!shieldEntity.existenceState.liveAfterUpdate && doSpawnFrozenShield.invoke())
                 shieldEntity.spawn(props(ConstKeys.OWNER pairTo entity))
             timer.reset()
             onFrozen.invoke()
         } else {
-            if (shieldEntity.spawned) shieldEntity.destroy()
+            if (shieldEntity.existenceState.liveNow) shieldEntity.destroy()
             timer.setToEnd(false)
         }
     }
@@ -80,7 +80,7 @@ class FreezableEntityHandler(
             IceShard.spawn5((entity as IBodyEntity).body.getCenter(), forceSound = forceSound)
         }
 
-        if (isFrozen() && shieldEntity.spawned) {
+        if (isFrozen() && shieldEntity.existenceState.liveNow) {
             val bounds = frozenShieldBoundsSupplier?.invoke()
             if (bounds != null) {
                 shieldEntity.body.set(bounds)
@@ -90,6 +90,6 @@ class FreezableEntityHandler(
             }
         }
 
-        if ((entity as MegaGameEntity).dead || !entity.frozen) setFrozen(false)
+        if (!(entity as MegaGameEntity).existenceState.liveAfterUpdate || !entity.frozen) setFrozen(false)
     }
 }

@@ -17,7 +17,7 @@ internal fun Megaman.jetpackBehavior(): IBehavior {
     return object : AbstractBehaviorImpl() {
 
         override fun evaluate(delta: Float): Boolean {
-            if (dead || !inPlay || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JET ||
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || damaged || teleporting || currentWeapon != MegamanWeapon.RUSH_JET ||
                 !input.isPressed(MegaControllerButton.A) || !input.isPressed(MegaControllerButton.UP) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
                 weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) ||

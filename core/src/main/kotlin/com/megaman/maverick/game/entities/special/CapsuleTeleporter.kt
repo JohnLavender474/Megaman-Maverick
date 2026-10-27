@@ -216,7 +216,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             val entity = entry.key as MegaGameEntity
             val timer = entry.value
 
-            if (entity.dead) {
+            if (!entity.existenceState.liveAfterUpdate) {
                 sendIter.remove()
                 continue
             }
@@ -242,7 +242,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             val entity = entry.key
             val timer = entry.value
 
-            if ((entity as MegaGameEntity).dead) {
+            if (!entity.existenceState.liveAfterUpdate) {
                 receiveIter.remove()
                 continue
             }
@@ -267,7 +267,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         val ignoredBodiesIter = ignoredBodies.iterator()
         while (ignoredBodiesIter.hasNext) {
             val entity = ignoredBodiesIter.next()
-            if ((entity as MegaGameEntity).dead || !body.getBounds().overlaps(entity.body.getBounds())) {
+            if (!entity.existenceState.liveAfterUpdate || !body.getBounds().overlaps(entity.body.getBounds())) {
                 GameLogger.debug(TAG, "update(): remove ignored body; thisKey=$thisKey, entity=${body.getEntity()}")
                 ignoredBodiesIter.remove()
             }

@@ -250,7 +250,7 @@ abstract class AbstractEnemy(
         else -> baseDamage
     }
 
-    override fun canDamage(damageable: IDamageable) = !dead && canDamagePredicates.all { it.invoke(damageable) }
+    override fun canDamage(damageable: IDamageable) = existenceState.liveAfterUpdate && canDamagePredicates.all { it.invoke(damageable) }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
         val canBeDamaged = super.canBeDamagedBy(damager)

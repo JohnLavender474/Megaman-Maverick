@@ -217,6 +217,6 @@ class ElecDevilBodyPiece(game: MegamanMaverickGame) : AbstractProjectile(game), 
             "\tbounds=${body.getBounds()},\n" +
             "\tstart=$start,\n" +
             "\ttarget=$target,\n" +
-            (if (spawned) "\tprocessState=$processState" else "\tnot spawned") +
+            (if (existenceState.liveNow) "\tprocessState=$processState" else "\tnot spawned") +
             "\n] }"
 }
