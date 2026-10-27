@@ -75,8 +75,10 @@ class GameEngine(
     private var reset = false
     private var disposed = false
 
-    fun contains(entity: IGameEntity, containedIfQueuedToSpawn: Boolean = false) =
-        entities.contains(entity) || (containedIfQueuedToSpawn && entitiesToSpawn.contains(entity))
+    internal fun contains(entity: IGameEntity) = entities.contains(entity)
+
+    fun hasClaimOn(entity: IGameEntity) =
+        entity.existenceState.liveNow || entities.contains(entity) || entitiesToSpawn.contains(entity)
 
     fun spawn(entity: IGameEntity, spawnProps: Properties = Properties()): Boolean {
         if (!entity.canSpawn(spawnProps)) {

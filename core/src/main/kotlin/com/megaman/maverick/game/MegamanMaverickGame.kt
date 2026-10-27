@@ -928,8 +928,7 @@ class MegamanMaverickGame(
                 // return a rejected pooled entity to its pool; never free an entity that is spawned or queued to
                 // spawn, and do nothing for an entity that is not pooled (it has no pool runnable)
                 val entity = it as MegaGameEntity
-                if (!entity.existenceState.liveNow && !entity.engine.contains(entity, containedIfQueuedToSpawn = true))
-                    entity.runnablesOnDestroy[ConstKeys.POOL]?.invoke()
+                if (!entity.engine.hasClaimOn(entity)) entity.runnablesOnDestroy[ConstKeys.POOL]?.invoke()
             }
         )
 

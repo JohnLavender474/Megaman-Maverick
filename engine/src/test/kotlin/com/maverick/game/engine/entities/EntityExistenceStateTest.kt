@@ -88,6 +88,84 @@ class EntityExistenceStateTest : DescribeSpec({
         }
     }
 
+    describe("hasClaimOn") {
+        it("is false for a never spawned entity and true while the spawn is queued and the entity is live") {
+            val e = entity()
+            engine.hasClaimOn(e) shouldBe false
+
+            e.spawn(Properties())
+            engine.hasClaimOn(e) shouldBe true
+
+            engine.update(0f)
+            engine.hasClaimOn(e) shouldBe true
+        }
+
+        it("is true while the destroy is queued and false after the destroy") {
+            val e = entity()
+            e.spawn(Properties())
+            engine.update(0f)
+
+            e.destroy()
+            engine.hasClaimOn(e) shouldBe true
+
+            engine.update(0f)
+            engine.hasClaimOn(e) shouldBe false
+        }
+
+        it("is true while a respawn is queued") {
+            val e = entity()
+            e.spawn(Properties())
+            engine.update(0f)
+            e.destroy()
+            e.spawn(Properties())
+
+            e.existenceState shouldBe RESPAWN_QUEUED
+            engine.hasClaimOn(e) shouldBe true
+        }
+
+        it("is true inside the entity's own onSpawn and onDestroy") {
+            val e = entity()
+            val inOnSpawn = ArrayList<Boolean>()
+            val inOnDestroy = ArrayList<Boolean>()
+            e.onSpawnAction = { inOnSpawn.add(engine.hasClaimOn(e)) }
+            e.onDestroyAction = { inOnDestroy.add(engine.hasClaimOn(e)) }
+
+            e.spawn(Properties())
+            engine.update(0f)
+            e.destroy()
+            engine.update(0f)
+
+            inOnSpawn shouldBe listOf(true)
+            inOnDestroy shouldBe listOf(true)
+        }
+
+        it("is true for a spawn and then a destroy before the update, until the destroy runs") {
+            val e = entity()
+            e.spawn(Properties())
+            e.destroy()
+
+            e.existenceState shouldBe UNSPAWNED
+            engine.hasClaimOn(e) shouldBe true
+
+            engine.update(0f)
+            engine.hasClaimOn(e) shouldBe false
+            log shouldBe listOf("onSpawn e", "onDestroy e")
+        }
+
+        it("is false after reset for live and queued entities") {
+            val live = entity("live")
+            val queued = entity("queued")
+            live.spawn(Properties())
+            engine.update(0f)
+            queued.spawn(Properties())
+
+            engine.reset()
+
+            engine.hasClaimOn(live) shouldBe false
+            engine.hasClaimOn(queued) shouldBe false
+        }
+    }
+
     describe("the normal life of an entity") {
         it("goes UNSPAWNED, SPAWN_QUEUED, LIVE, DESTROY_QUEUED, UNSPAWNED") {
             val e = entity()
