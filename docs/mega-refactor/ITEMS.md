@@ -72,6 +72,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | done | none | 2026-10-26 | 2026-10-27 |
 | 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | active | none | 2026-10-27 | |
 | 064 | [Entity instance identity: `id` and `group`](items/064-entity-instance-identity/ITEM.md) | refactor | active | none | 2026-10-27 | |
+| 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | planned | none | | |
 
 ## Branches
 

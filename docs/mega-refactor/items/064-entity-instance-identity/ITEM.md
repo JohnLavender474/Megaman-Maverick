@@ -53,6 +53,15 @@ concepts? If game concepts, then would props instead of fields be better? Or com
     `getComponent` on `IGameEntity`. Reason: `id` is level data, not an instance identity; it is not unique
     (`idToEntities` maps an id to a set; `Starkner` successors share an id) and it changes on each spawn of a pooled
     entity. Not on `IGameEntity`: the engine identity is the object reference. Not a property: untyped, string keys.
+- 2026-10-27 (owner, about the `064a` scope draft): "I'm not sure the engine should be responsible for handling
+  groups. That seems more like it should be a separate system (literally a system)." and "I think having an index like
+  today's `MegaGameEntities.kt` is preferable. We can open up `GameSystem`'s funcs and/or add hooks as needed." So
+  `064a` adds a `GroupsSystem` (mask `GroupsComponent`) that keeps a group-to-entities index and owns the query;
+  `GameEngine` does not get a group index. `GameSystem` may get join/leave hooks or open functions for it. The engine
+  already updates system membership right after `onSpawn` and before the component `reset()` at destroy.
+- 2026-10-27 (owner, "Agreed"): `SpiderWeb.onDestroy` skips `super.onDestroy()` (the `064a` bug candidate). A
+  `fix/` branch after `064a` adds the call; then a permanent test checks that every `onDestroy()` override calls
+  `super.onDestroy()`. `init()` and `super.init()` go to new item `065`.
 
 ## Open questions
 
