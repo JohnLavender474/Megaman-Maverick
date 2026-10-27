@@ -130,6 +130,8 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private var rawRotation = 0f
 
+    private var holdsAliveId = false
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -184,15 +186,27 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         FacingUtils.setFacingOf(this)
 
         ALIVE.add(id)
-        GameLogger.debug(TAG, "destroy(): added mapObjectId=$id from ALIVE: $ALIVE")
+        holdsAliveId = true
+        GameLogger.debug(TAG, "onSpawn(): added mapObjectId=$id to ALIVE: $ALIVE")
 
         rawRotation = 0f
     }
 
-    override fun destroy(): Boolean {
+    override fun onDestroyQueued() {
+        releaseAliveId()
+        super<AbstractEnemy>.onDestroyQueued()
+    }
+
+    override fun onDestroy() {
+        releaseAliveId()
+        super.onDestroy()
+    }
+
+    private fun releaseAliveId() {
+        if (!holdsAliveId) return
         ALIVE.remove(id)
-        GameLogger.debug(TAG, "destroy(): removed mapObjectId=$id from ALIVE: $ALIVE")
-        return super.destroy()
+        holdsAliveId = false
+        GameLogger.debug(TAG, "releaseAliveId(): removed mapObjectId=$id from ALIVE: $ALIVE")
     }
 
     override fun canBeDamagedBy(damager: IDamager): Boolean {
