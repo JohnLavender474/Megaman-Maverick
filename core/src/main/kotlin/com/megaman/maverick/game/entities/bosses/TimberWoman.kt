@@ -928,7 +928,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
             val projectile = fixture.getEntity() as IProjectileEntity
 
-            val tag = (projectile as MegaGameEntity).getTag()
+            val tag = projectile.getTag()
 
             val type = when {
                 DEFLECTABLE_PROJECTILES.contains(tag) -> VicinityProjectileType.DEFLECTABLE

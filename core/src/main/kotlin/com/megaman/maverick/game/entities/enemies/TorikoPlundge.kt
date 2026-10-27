@@ -46,7 +46,6 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion.SpreadExplosionColor
@@ -188,7 +187,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        children.forEach { (it as MegaGameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
 
         crumblingBlockIds.clear()

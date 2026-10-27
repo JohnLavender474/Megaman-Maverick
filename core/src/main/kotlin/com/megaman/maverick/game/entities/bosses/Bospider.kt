@@ -28,7 +28,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
-import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IParentEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -226,7 +225,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
 
         paths.clear()
@@ -257,7 +256,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
 
             val childIter = children.iterator()
             while (childIter.hasNext()) {
-                val child = childIter.next() as MegaGameEntity
+                val child = childIter.next()
                 if (!child.existenceState.liveAfterUpdate) childIter.remove()
             }
 
@@ -366,7 +365,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
 
         super.triggerDefeat()
 
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 

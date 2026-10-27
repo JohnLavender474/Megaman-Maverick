@@ -2,7 +2,7 @@ package com.megaman.maverick.game.entities.contracts
 
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 
-interface ITeleporterEntity {
+interface ITeleporterEntity : IMegaGameEntity {
 
     fun shouldTeleport(entity: IBodyEntity) = !isTeleporting(entity)
 

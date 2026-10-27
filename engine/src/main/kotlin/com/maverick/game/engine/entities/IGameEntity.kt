@@ -6,12 +6,13 @@ import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.components.IComponentBucket
 import com.maverick.game.engine.components.IGameComponent
+import com.maverick.game.engine.entities.contracts.IDestroyable
 import kotlin.reflect.KClass
 
-interface IGameEntity : IComponentBucket, IPropertizable, Initializable {
+interface IGameEntity : IComponentBucket, IPropertizable, Initializable, IDestroyable {
 
     val components: OrderedMap<KClass<out IGameComponent>, IGameComponent>
-    val existenceState: EntityExistenceState
+    var existenceState: EntityExistenceState
     var initialized: Boolean
 
     fun canSpawn(spawnProps: Properties): Boolean

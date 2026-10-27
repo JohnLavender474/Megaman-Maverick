@@ -131,7 +131,7 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - `GameLogger.filterByTag` is `true`. Debug and log messages print only if the tag is in `MegamanMaverickGame.TAGS_TO_LOG`. Errors always print.
 - `runQueue` is drained with `removeLast()`, so the last runnable added runs first.
 - Pooled entities are reused. Reset all per-spawn state in `onSpawn`, not in the constructor or `init()`.
-- After `destroy()`, the entity stays in the engine and its systems until the next `engine.update()`. Its `existenceState` changes at once (only the engine writes it): `existenceState.liveNow` = in the engine now, `existenceState.liveAfterUpdate` = in the engine after the next update.
+- After `destroy()`, the entity stays in the engine and its systems until the next `engine.update()`. Its `existenceState` changes at once. The setter is public, but only the engine should write it: `existenceState.liveNow` = in the engine now, `existenceState.liveAfterUpdate` = in the engine after the next update.
 - The `Megaman` player is created, initialized and registered manually in `postCreate()`. Do not fetch it from a factory.
 - Tiled entity names must match the Kotlin class name and the package for the layer exactly. A wrong name logs an error and skips the spawner.
 

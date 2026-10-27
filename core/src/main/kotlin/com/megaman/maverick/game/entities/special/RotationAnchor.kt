@@ -99,14 +99,13 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
         clearMotionDefinitions()
     }
 
     protected open fun defineUpdatablesComponent() = UpdatablesComponent({
         children = children.processAndFilter({ child ->
-            child as MegaGameEntity
             if (!child.existenceState.liveAfterUpdate) {
                 val childKey = child.getProperty(ConstKeys.CHILD_KEY)!!
                 removeMotionDefinition(childKey)

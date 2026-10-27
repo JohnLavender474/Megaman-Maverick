@@ -18,7 +18,6 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.*
-import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.contracts.IMotionEntity
 import com.maverick.game.engine.entities.contracts.IParentEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
@@ -125,7 +124,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
 
         clearMotionDefinitions()
 
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
 
         enemyToSpawn = null
@@ -209,7 +208,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
 
         val iter = children.iterator()
         while (iter.hasNext()) {
-            val child = iter.next() as MegaGameEntity
+            val child = iter.next()
             if (!child.existenceState.liveAfterUpdate) iter.remove()
         }
     })

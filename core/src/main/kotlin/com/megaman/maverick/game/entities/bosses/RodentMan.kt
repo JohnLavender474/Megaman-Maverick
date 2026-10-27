@@ -49,7 +49,6 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.SlashDissipation
 import com.megaman.maverick.game.entities.enemies.RatRobot
@@ -349,7 +348,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         ratSpawns.forEach { GameObjectPools.free(it) }
         ratSpawns.clear()
 
-        children.forEach { (it as MegaGameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
@@ -358,7 +357,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         updatablesComponent.add update@{ delta ->
             val childIter = children.iterator()
             while (childIter.hasNext()) {
-                val next = childIter.next() as MegaGameEntity
+                val next = childIter.next()
                 if (!next.existenceState.liveAfterUpdate) childIter.remove()
             }
 

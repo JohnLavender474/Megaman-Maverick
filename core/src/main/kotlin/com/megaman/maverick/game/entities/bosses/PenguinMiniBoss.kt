@@ -20,7 +20,6 @@ import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
-import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IParentEntity
@@ -36,7 +35,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.BabyPenguin
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -103,13 +101,13 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
     override fun triggerDefeat() {
         super.triggerDefeat()
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
@@ -124,7 +122,7 @@ class PenguinMiniBoss(game: MegamanMaverickGame) : AbstractBoss(game), IParentEn
 
             val iter = children.iterator()
             while (iter.hasNext()) {
-                val child = iter.next() as MegaGameEntity
+                val child = iter.next()
                 if (!child.existenceState.liveAfterUpdate) iter.remove()
             }
 

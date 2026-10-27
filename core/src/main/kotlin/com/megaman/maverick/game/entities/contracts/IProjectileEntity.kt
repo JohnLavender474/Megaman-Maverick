@@ -66,8 +66,7 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
     override fun canDamage(damageable: IDamageable) = damageable != owner
 
     fun explodeAndDie(vararg params: Any?) {
-        // can't access "destroy" since it's defined in the abstract class, so manually call "engine.destroy" instead
-        game.engine.destroy(this)
+        destroy()
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         val props = props(

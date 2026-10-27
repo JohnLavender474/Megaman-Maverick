@@ -38,7 +38,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.enemies.CactusLauncher.CactusLauncherState.*
 import com.megaman.maverick.game.entities.projectiles.CactusMissile
@@ -106,7 +105,7 @@ class CactusLauncher(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
         updatablesComponent.add { delta ->
             val iter = children.iterator()
             while (iter.hasNext()) {
-                val child = iter.next() as MegaGameEntity
+                val child = iter.next()
                 if (!child.existenceState.liveAfterUpdate) iter.remove()
             }
 

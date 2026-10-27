@@ -42,7 +42,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -144,8 +143,8 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
             )
         )
         children.forEach {
-            if (isHealthDepleted()) (it as PetitDevilChild).disintegrateAndDie()
-            else (it as GameEntity).destroy()
+            if (isHealthDepleted()) it.disintegrateAndDie()
+            else it.destroy()
         }
         children.clear()
     }
@@ -177,7 +176,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
 
             val iter = children.iterator()
             while (iter.hasNext()) {
-                val child = iter.next() as MegaGameEntity
+                val child = iter.next()
                 if (!child.existenceState.liveAfterUpdate) iter.remove()
             }
 

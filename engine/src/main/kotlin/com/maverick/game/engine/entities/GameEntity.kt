@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.components.IGameComponent
-import com.maverick.game.engine.entities.contracts.IDestroyable
 import com.maverick.game.engine.entities.contracts.ISpawnable
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
@@ -13,7 +12,7 @@ abstract class GameEntity(
     val engine: GameEngine,
     override val components: OrderedMap<KClass<out IGameComponent>, IGameComponent> = OrderedMap(),
     override val properties: Properties = Properties()
-) : IGameEntity, ISpawnable, IDestroyable {
+) : IGameEntity, ISpawnable {
 
     companion object {
         const val TAG = "GameEntity"
@@ -21,7 +20,6 @@ abstract class GameEntity(
 
     override var initialized = false
     final override var existenceState = EntityExistenceState.UNSPAWNED
-        internal set
 
     override fun init(vararg params: Any) {}
 

@@ -17,7 +17,6 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
-import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.contracts.IChildEntity
 import com.maverick.game.engine.entities.contracts.IMotionEntity
 import com.maverick.game.engine.entities.contracts.IParentEntity
@@ -120,7 +119,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<Meg
     override fun onDestroy() {
         super.onDestroy()
         game.eventsMan.removeListener(this)
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 

@@ -50,7 +50,6 @@ import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sorting.IComparableDrawable
 import com.maverick.game.engine.drawables.sprites.SpritesSystem
-import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.EventsManager
@@ -897,7 +896,7 @@ class MegamanMaverickGame(
                 ),
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {
-                        (entity as GameEntity).destroy()
+                        entity.destroy()
                     }
                 }, diagnostics = diagnostics),
                 MotionSystem(diagnostics),

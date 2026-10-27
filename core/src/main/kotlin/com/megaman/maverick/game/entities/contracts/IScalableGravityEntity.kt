@@ -5,6 +5,6 @@ import com.maverick.game.engine.world.collisions.*;
 import com.maverick.game.engine.world.contacts.*;
 import com.maverick.game.engine.world.pathfinding.*;
 
-interface IScalableGravityEntity {
+interface IScalableGravityEntity : IMegaGameEntity {
     var gravityScalar: Float
 }

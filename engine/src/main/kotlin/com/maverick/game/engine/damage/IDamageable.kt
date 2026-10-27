@@ -1,6 +1,8 @@
 package com.maverick.game.engine.damage
 
-interface IDamageable {
+import com.maverick.game.engine.entities.IGameEntity
+
+interface IDamageable : IGameEntity {
 
     val invincible: Boolean
 

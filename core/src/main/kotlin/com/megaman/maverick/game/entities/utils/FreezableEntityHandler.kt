@@ -50,7 +50,7 @@ class FreezableEntityHandler(
         if (noDamageOnFrozen && entity is AbstractEnemy) entity.canDamagePredicates.add { !entity.frozen }
     }
 
-    private val shieldEntity = ShieldEntity((entity as MegaGameEntity).game)
+    private val shieldEntity = ShieldEntity(entity.game)
 
     val timer = Timer(duration).setToEnd()
 
@@ -90,6 +90,6 @@ class FreezableEntityHandler(
             }
         }
 
-        if (!(entity as MegaGameEntity).existenceState.liveAfterUpdate || !entity.frozen) setFrozen(false)
+        if (!entity.existenceState.liveAfterUpdate || !entity.frozen) setFrozen(false)
     }
 }

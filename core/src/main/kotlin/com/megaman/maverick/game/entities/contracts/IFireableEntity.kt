@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
-interface IFireableEntity {
+interface IFireableEntity : IMegaGameEntity {
 
     var burning: Boolean
 }

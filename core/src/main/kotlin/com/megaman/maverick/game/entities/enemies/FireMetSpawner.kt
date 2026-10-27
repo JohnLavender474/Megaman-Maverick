@@ -26,7 +26,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
-import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
@@ -100,7 +99,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
 
     override fun onDestroy() {
         super.onDestroy()
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
     }
 
@@ -113,7 +112,7 @@ class FireMetSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), IParentE
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val iter = children.iterator()
         while (iter.hasNext()) {
-            val child = iter.next() as MegaGameEntity
+            val child = iter.next()
             if (!child.existenceState.liveAfterUpdate) iter.remove()
         }
 

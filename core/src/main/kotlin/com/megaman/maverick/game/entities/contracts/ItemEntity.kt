@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.contracts
 
 
-interface ItemEntity {
+interface ItemEntity : IMegaGameEntity {
 
     fun contactWithPlayer(player: MegaGameEntity)
 }

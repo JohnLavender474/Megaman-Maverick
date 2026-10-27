@@ -30,7 +30,6 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
-import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
@@ -190,7 +189,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
         game.eventsMan.removeListener(this)
 
-        children.forEach { (it as GameEntity).destroy() }
+        children.forEach { it.destroy() }
         children.clear()
 
         offEntitySuppliers.clear()
@@ -212,7 +211,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     private fun spawnEntities(on: Boolean) {
         children.forEach {
             if (it is Lava && it.moveBeforeKill && !it.movingBeforeKill) it.moveBeforeKill()
-            else (it as GameEntity).destroy()
+            else it.destroy()
         }
         children.clear()
 

@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities.contracts
 
-interface IFreezableEntity {
+interface IFreezableEntity : IMegaGameEntity {
 
     var frozen: Boolean
 }

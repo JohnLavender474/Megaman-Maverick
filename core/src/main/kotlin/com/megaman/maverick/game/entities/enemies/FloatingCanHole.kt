@@ -91,7 +91,7 @@ class FloatingCanHole(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val iter = children.iterator()
         while (iter.hasNext()) {
-            val child = iter.next() as MegaGameEntity
+            val child = iter.next()
             if (!child.existenceState.liveAfterUpdate) iter.remove()
         }
 
