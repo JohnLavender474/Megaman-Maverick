@@ -913,3 +913,18 @@ newest entry at the bottom.
   `contact-rule-selection.txt` unchanged; the owner's play test passes (eight checks, no `GameEngine` log line).
 - Follow-up: bug filed: `docs/issues/2026-10-27-desert-man-enemies-on-wrong-layers.md`. `019b` (active) can now do its
   engine change on the new spawn and destroy paths (overlap in the `062b` `docs/NOTES.md`). Item `062` next: `062c`.
+
+## 2026-10-27 — mega-refactor-019b-destroy-notification
+
+- Summary: engine hooks `onSpawnQueued()`/`onDestroyQueued()` on the entity, called when a `spawn`/`destroy` call
+  changes "live after the next update" (`onSpawnQueued` has no game caller, by the owner's decision). Spawners put a
+  release runnable on their entity (`runnablesOnDestroyQueued`) and no longer poll `dead`; bounds spawners record the
+  camera overlap at the destroy call; one shared spawn camera rectangle per frame; `SpawnsManager.reset` resets its
+  spawners; the `019a` `TODO` goes. Intended changes: the two rare `019a` respawn cases and the pooled-reuse hold.
+  Squash commit `7a30c8982`.
+- Contract check: a temporary old-versus-new engine suite (deleted before the merge) showed no change in engine
+  actions, return values or states on 10,000 sequences; 12 hook tests and 9 spawner tests (the three intended-change
+  tests failed on the baseline and pass after); warnings unchanged (110); `contact-rule-selection.txt` unchanged; the
+  owner's play test passes (six checks).
+- Follow-up: `019c` (merge the four spawn queues) recorded in item `019` as its next branch. Bug filed:
+  `docs/issues/2026-10-27-wily-stage-1-duoballcanon-on-blocks-layer.md`.
