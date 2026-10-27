@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `023`, `048`, `062`, `014`, `056`
-- Branches: `mega-refactor-063a-contracts-are-entities` (merged 2026-10-27, squash `65a8259bf`); next: `063b`
+- Branches: `mega-refactor-063a-contracts-are-entities` (merged 2026-10-27, squash `65a8259bf`), `mega-refactor-063b-damage-entity-rename` (active, started 2026-10-27)
 
 ## Goal
 

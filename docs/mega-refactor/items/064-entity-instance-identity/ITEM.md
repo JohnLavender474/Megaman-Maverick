@@ -1,10 +1,10 @@
 # 064: Entity instance identity: `id` and `group`
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `021`, `022`, `048`, `063`
-- Branches: none yet
+- Branches: `mega-refactor-064a-instance-identity` (active, started 2026-10-27)
 
 ## Goal
 
