@@ -886,3 +886,9 @@ newest entry at the bottom.
   unchanged; the owner's play test passes (six checks, with `--logTags GameEngine`: no odd-path line).
 - Follow-up: `062b` (the guards) needs a wider search for callers of the odd paths (branch `docs/NOTES.md`). No
   backlog or bug candidates.
+
+## 2026-10-27 — master (docs)
+
+- Summary: branch start of `mega-refactor-062b-spawn-order-guards`.
+- Contract check: not needed (docs only).
+- Follow-up: scan, then the draft scope.
