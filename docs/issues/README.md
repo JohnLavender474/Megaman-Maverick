@@ -86,3 +86,4 @@ related-items: [<mega-refactor item IDs>]
 | ["RESET TO DEFAULTS" in the key and gamepad settings is not saved](2026-10-25-reset-to-defaults-not-saved.md) | yes | core | open |
 | [A gamepad disconnect during a button capture leaves the capture state and the listener behind](2026-10-25-capture-state-left-after-gamepad-disconnect.md) | yes | core | open |
 | [`jamepadVersion` in `gradle.properties` does not match the Jamepad version that the build uses](2026-10-25-jamepad-version-mismatch.md) | yes | build | open |
+| [Five enemies in `DESERT_MAN` are on layers where they cannot spawn](2026-10-27-desert-man-enemies-on-wrong-layers.md) | question | content | open |

@@ -899,3 +899,17 @@ newest entry at the bottom.
   overlap goes in the branch `docs/NOTES.md`).
 - Contract check: not needed (docs only).
 - Follow-up: scan, then the draft scope.
+
+## 2026-10-27 — mega-refactor-062b-spawn-order-guards
+
+- Summary: engine guards on the order of spawn and destroy calls: `onSpawn` and `onDestroy` alternate, and the last
+  accepted call wins. A spawn of a live entity and a destroy of an unspawned entity are refused; a spawn while a
+  destroy is queued is a respawn (new state `RESPAWN_QUEUED`, run after the destroy phase); a destroy waits for a
+  queued spawn. Intended changes: the ice shield after a same-frame thaw and freeze; a child's `onDestroy` runs once
+  when it and its parent die in the same frame. Squash commit `bcbc42c48`.
+- Contract check: a temporary old-versus-new suite with a rules oracle (deleted before the merge): 4,490 clean
+  sequences the same as before; 742,744 checks of the last accepted call on the four odd paths, no alternation break,
+  no exception; the two core tests failed on the baseline and pass after; warnings unchanged (110);
+  `contact-rule-selection.txt` unchanged; the owner's play test passes (eight checks, no `GameEngine` log line).
+- Follow-up: bug filed: `docs/issues/2026-10-27-desert-man-enemies-on-wrong-layers.md`. `019b` (active) can now do its
+  engine change on the new spawn and destroy paths (overlap in the `062b` `docs/NOTES.md`). Item `062` next: `062c`.
