@@ -69,7 +69,7 @@ Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` 
 
 ### Entity base classes (`core/.../entities/contracts/`)
 
-- `MegaGameEntity`: base for all game entities. Handles `id`, `group`, `dead`, `runnablesOnSpawn`/`runnablesOnDestroy`, difficulty spawn flags (`ConstKeys.HARD_MODE_ONLY`, `ConstKeys.NORMAL_MODE_ONLY`) and registration in `MegaGameEntities` (lookup by tag, type or id).
+- `MegaGameEntity`: base for all game entities. Handles `id`, `group`, `runnablesOnSpawn`/`runnablesOnDestroy`, difficulty spawn flags (`ConstKeys.HARD_MODE_ONLY`, `ConstKeys.NORMAL_MODE_ONLY`) and registration in `MegaGameEntities` (lookup by tag, type or id).
 - `AbstractHealthEntity`: health, damage timers, damage blink, `damageNegotiator`, `onHealthDepleted()`.
 - `AbstractEnemy`: adds Audio, Cullables, Body and Sprites components in `init()`. Subclasses implement `defineBodyComponent()` and `defineSpritesComponent()`. Handles item drops and spawn blink.
 - `AbstractBoss`: boss intro, health fill, defeat sequence. Registers as an event listener in `onSpawn` and removes itself in `onDestroy`.
@@ -131,7 +131,7 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - `GameLogger.filterByTag` is `true`. Debug and log messages print only if the tag is in `MegamanMaverickGame.TAGS_TO_LOG`. Errors always print.
 - `runQueue` is drained with `removeLast()`, so the last runnable added runs first.
 - Pooled entities are reused. Reset all per-spawn state in `onSpawn`, not in the constructor or `init()`.
-- After `destroy()`, the entity stays in the engine and its systems until the next `engine.update()`. Its `dead` flag is set to `true` at once.
+- After `destroy()`, the entity stays in the engine and its systems until the next `engine.update()`. Its `existenceState` changes at once (only the engine writes it): `existenceState.liveNow` = in the engine now, `existenceState.liveAfterUpdate` = in the engine after the next update.
 - The `Megaman` player is created, initialized and registered manually in `postCreate()`. Do not fetch it from a factory.
 - Tiled entity names must match the Kotlin class name and the package for the layer exactly. A wrong name logs an error and skips the spawner.
 

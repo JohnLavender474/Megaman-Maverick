@@ -939,3 +939,20 @@ newest entry at the bottom.
   builds.
 - Follow-up: code that holds an `IMegaGameEntity` can drop casts to `MegaGameEntity` for engine members (for example
   `overlapsGameCamera`); not done here.
+
+## 2026-10-27 — mega-refactor-062c-existence-readers
+
+- Summary: the existence questions are properties of the state type, `EntityExistenceState(liveNow,
+  liveAfterUpdate)` with one constructor value per state (owner decision: no more flags on the entity). Every reader
+  of `IGameEntity.spawned` and `MegaGameEntity.dead` (about 110 reads in `engine` and `core`) moved to
+  `existenceState.liveNow` / `!existenceState.liveAfterUpdate` with the same value on every path; no player-level
+  `dead`; both old getters removed; five casts that existed only for `dead` removed. The root `CLAUDE.md` no longer
+  names `dead`. Squash commit `32c0a23d3`.
+- Contract check: a temporary suite (deleted before the merge) showed the new values equal the old flags in all five
+  states; a substitution check script matched 99 renamed lines and listed 25 expected ones (the enum, the removed
+  getters, `toString`, two imports, the cast sites), each reviewed; the compiler proves no reader was left; clean
+  build, 540 engine and 172 core tests pass; warnings unchanged (110); `contact-rule-selection.txt` unchanged; the
+  owner's play test passes (nine checks).
+- Follow-up: new item `063` (entity contracts are entity types; `destroy()` on `IGameEntity`) from the backlog
+  candidate and two review agents. Bug filed: `docs/issues/2026-10-27-starkner-alive-cleanup-only-in-destroy.md`.
+  Item `062` next: `062d` (`engine.contains(..., containedIfQueuedToSpawn)` and the pool return).

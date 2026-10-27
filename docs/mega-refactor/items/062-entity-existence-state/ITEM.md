@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `019`, `021`, `038`, `047`, `048`, `061`
-- Branches: `mega-refactor-062a-entity-state` (merged), `mega-refactor-062b-spawn-order-guards` (merged), `mega-refactor-062c-existence-readers` (active)
+- Branches: `mega-refactor-062a-entity-state` (merged), `mega-refactor-062b-spawn-order-guards` (merged), `mega-refactor-062c-existence-readers` (merged); next: `062d`
 
 ## Goal
 
@@ -27,8 +27,10 @@ Not approved. The branch `SCOPE.md` decides the final scope. From the review in 
 - `062c`: move the readers in batches (bosses, enemies, special and blocks, Megaman, screens) to named read-only
   helpers (for example `inEngine` = today's `spawned`, `exists` = today's `!dead`), each reader mapped by the question
   it asks. Keep a player-level `dead` derived from the state where it means "the player died".
-- `062d`: remove the `spawned` `var`, `MegaGameEntity.dead`, and `engine.contains(..., containedIfQueuedToSpawn)` if
-  the state replaces it; `PlayerView.present` reads the state.
+- `062d`: remove `engine.contains(..., containedIfQueuedToSpawn)` if the state replaces it, and the pool return of a
+  rejected spawn (`MegamanMaverickGame`) that calls it. A plain state check there is not equal: an entity whose spawn
+  is queued and then destroyed is `UNSPAWNED` but still in the spawn queue. (`062c` already removed `spawned` and
+  `dead`; `PlayerView` no longer exists.)
 - Later, only with evidence: decide the odd transitions; a spawn generation (`EntityRef`) if the pooled-reuse (ABA)
   risk is confirmed.
 
@@ -56,11 +58,14 @@ this idea, and if it seems like a solid idea, then make a new item for it."
 - 2026-10-26 (owner): the engine's real behavior is proved by tests (temporary old-versus-new suites and permanent
   tests), not by guesses or by play only. Asked for `062b` (the guards on `onSpawn`/`onDestroy` order); `062a` applies
   it too.
+- 2026-10-27 (owner, in `062c`): the questions are properties of `EntityExistenceState` (`liveNow`,
+  `liveAfterUpdate`, one constructor value per state), not members of the entity or queries on the engine; no
+  player-level `dead`; `062c` removes `spawned` and `dead`. Reasons in the `062c` `docs/NOTES.md`.
 
 ## Open questions
 
 1. Closed (2026-10-26): the engine-owned state field (option (b)).
-2. The helper names: `inEngine` / `exists`, or others? Keep `dead` only on the player?
+2. Closed (2026-10-27): `liveNow` / `liveAfterUpdate` on `EntityExistenceState`; no player-level `dead`.
 3. Closed (2026-10-26): an intended change in `062a`.
 4. Closed (2026-10-26): `062b` applies it after the destroy (the last call wins); `062a` logs it.
 5. Closed (2026-10-26): `062b` rejects it; `062a` logs it.
