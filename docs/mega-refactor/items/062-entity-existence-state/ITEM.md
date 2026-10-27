@@ -1,10 +1,10 @@
 # 062: One engine-owned entity existence state
 
-- Status: active
+- Status: done
 - Type: refactor
 - Depends on: none
 - Related: `019`, `021`, `038`, `047`, `048`, `061`
-- Branches: `mega-refactor-062a-entity-state` (merged), `mega-refactor-062b-spawn-order-guards` (merged), `mega-refactor-062c-existence-readers` (merged), `mega-refactor-062d-queued-spawn-query` (active)
+- Branches: `mega-refactor-062a-entity-state` (merged), `mega-refactor-062b-spawn-order-guards` (merged), `mega-refactor-062c-existence-readers` (merged), `mega-refactor-062d-queued-spawn-query` (merged)
 
 ## Goal
 
@@ -27,7 +27,8 @@ Not approved. The branch `SCOPE.md` decides the final scope. From the review in 
 - `062c`: move the readers in batches (bosses, enemies, special and blocks, Megaman, screens) to named read-only
   helpers (for example `inEngine` = today's `spawned`, `exists` = today's `!dead`), each reader mapped by the question
   it asks. Keep a player-level `dead` derived from the state where it means "the player died".
-- `062d`: remove `engine.contains(..., containedIfQueuedToSpawn)` if the state replaces it, and the pool return of a
+- `062d` (done as `GameEngine.hasClaimOn`, owner decision 2026-10-27): remove `engine.contains(...,
+  containedIfQueuedToSpawn)` if the state replaces it, and the pool return of a
   rejected spawn (`MegamanMaverickGame`) that calls it. A plain state check there is not equal: an entity whose spawn
   is queued and then destroyed is `UNSPAWNED` but still in the spawn queue. (`062c` already removed `spawned` and
   `dead`; `PlayerView` no longer exists.)
@@ -61,6 +62,10 @@ this idea, and if it seems like a solid idea, then make a new item for it."
 - 2026-10-27 (owner, in `062c`): the questions are properties of `EntityExistenceState` (`liveNow`,
   `liveAfterUpdate`, one constructor value per state), not members of the entity or queries on the engine; no
   player-level `dead`; `062c` removes `spawned` and `dead`. Reasons in the `062c` `docs/NOTES.md`.
+- 2026-10-27 (owner, in `062d`): the pool return asks a named engine query, `GameEngine.hasClaimOn`, not a sixth
+  state ("Since it's only one spot in the code, I think this is a case where the func option is better");
+  `GameEngine.contains` becomes `internal`. The item is done; the later work (the odd transitions, a spawn
+  generation for pooled reuse) waits for evidence.
 
 ## Open questions
 

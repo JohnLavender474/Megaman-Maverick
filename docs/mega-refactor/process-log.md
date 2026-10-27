@@ -956,3 +956,15 @@ newest entry at the bottom.
 - Follow-up: new item `063` (entity contracts are entity types; `destroy()` on `IGameEntity`) from the backlog
   candidate and two review agents. Bug filed: `docs/issues/2026-10-27-starkner-alive-cleanup-only-in-destroy.md`.
   Item `062` next: `062d` (`engine.contains(..., containedIfQueuedToSpawn)` and the pool return).
+
+## 2026-10-27 — mega-refactor-062d-queued-spawn-query
+
+- Summary: the pool return of a rejected spawn asks one named engine query, `GameEngine.hasClaimOn(entity)` (live now,
+  in the entity set, or in the spawn queue), in place of `!liveNow && !engine.contains(entity,
+  containedIfQueuedToSpawn = true)`. The flag goes and `contains` becomes `internal`. A sixth state was not added
+  (owner decision: one call site). No state or engine action changes. Item `062` is done. Squash commit `5a725afd8`.
+- Contract check: a temporary suite (deleted before the merge) showed `hasClaimOn` equal to the old condition in
+  2,329,776 checks on 10,000 random sequences, before every call, including inside `onSpawn`/`onDestroy` and with
+  rejected spawns; six permanent tests; clean build, 546 engine and 172 core tests pass; warnings unchanged (110);
+  `contact-rule-selection.txt` unchanged; the owner's play test passes (three checks).
+- Follow-up: none.
