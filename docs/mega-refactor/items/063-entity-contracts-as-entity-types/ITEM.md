@@ -1,10 +1,10 @@
 # 063: Entity contracts are entity types
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `023`, `048`, `062`, `014`, `056`
-- Branches: none yet
+- Branches: `mega-refactor-063a-contracts-are-entities` (active, started 2026-10-27)
 
 ## Goal
 
