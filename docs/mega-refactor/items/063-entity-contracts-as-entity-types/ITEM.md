@@ -41,13 +41,24 @@ the interface, too. Or would some or all of these behaviors be better suited as 
 want to enforce that entities handle their own spawning. However, I'm wondering what other engines do in this regard
 and if it's advisable to go ahead and add these new funcs to the contract."
 
+## Decisions
+
+- 2026-10-27 (owner, "Okay, you've convinced me that this is the best approach"): `IGameEntity : IDestroyable`, with
+  the existing `engine/.../entities/contracts/IDestroyable.kt`. Not LibGDX `Disposable`: in this repo `dispose()` is
+  the final shutdown, it returns `Unit` (the `062b` accept/refuse result is a `Boolean`), and entities are pooled and
+  spawned again.
+- 2026-10-27 (owner, "Go with your recommendations on the damage-focused work"): `063a` keeps `IDamageable`/`IDamager`
+  in `engine` and adds `: IGameEntity`. `063b` decides the module; a move to `core` goes in the same mechanical commit
+  as the rename, so the types move at most once.
+- 2026-10-27 (owner, verbatim): "The game engine should always accept any `IGameEntity`. Otherwise, the interface is a
+  lie." `GameEngine.spawn`/`destroy` are not narrowed to `GameEntity`. The runtime throw in
+  `GameEngine.setExistenceState` (`GameEngine.kt:211-214`) breaks the same rule, so the engine must be able to write
+  the state of any `IGameEntity` (open question 1).
+
 ## Open questions
 
-1. `destroy()` on `IGameEntity` directly, or `IGameEntity : IDestroyable`? (The review prefers `IDestroyable`.)
-2. Move `IDamageable`/`IDamager` to `core`, or keep them in the engine? (Only their own files reference them in the
-   engine.)
-3. Narrow `GameEngine.spawn`/`destroy` to `GameEntity` (the engine already throws for anything else in
-   `setExistenceState`)?
+1. How does the engine write `existenceState` on any `IGameEntity` (today only `GameEntity` has the `internal set`)?
+   In `063a` or in its own branch?
 
 ## Sources
 
