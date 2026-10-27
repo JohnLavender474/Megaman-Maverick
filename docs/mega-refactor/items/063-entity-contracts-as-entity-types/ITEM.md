@@ -53,12 +53,16 @@ and if it's advisable to go ahead and add these new funcs to the contract."
 - 2026-10-27 (owner, verbatim): "The game engine should always accept any `IGameEntity`. Otherwise, the interface is a
   lie." `GameEngine.spawn`/`destroy` are not narrowed to `GameEntity`. The runtime throw in
   `GameEngine.setExistenceState` (`GameEngine.kt:211-214`) breaks the same rule, so the engine must be able to write
-  the state of any `IGameEntity` (open question 1).
+  the state of any `IGameEntity`.
+- 2026-10-27 (owner, verbatim): "Let's just make `existenceState` be a var. Callers will need to be smart and not
+  accidentally overwrite it." `IGameEntity.existenceState` becomes a `var` with a public setter, and the throw in
+  `GameEngine.setExistenceState` goes. This replaces the `062` rule that only the engine can write the state: only the
+  engine should write it, but the compiler does not enforce that. Not chosen: a write key with an `internal`
+  constructor, and an engine-owned map. Root `CLAUDE.md` changes its wording ("only the engine writes it") in `063a`.
 
 ## Open questions
 
-1. How does the engine write `existenceState` on any `IGameEntity` (today only `GameEntity` has the `internal set`)?
-   In `063a` or in its own branch?
+None.
 
 ## Sources
 
