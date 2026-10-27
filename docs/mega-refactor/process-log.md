@@ -892,3 +892,10 @@ newest entry at the bottom.
 - Summary: branch start of `mega-refactor-062b-spawn-order-guards`.
 - Contract check: not needed (docs only).
 - Follow-up: scan, then the draft scope.
+
+## 2026-10-27 — master (docs)
+
+- Summary: branch start of `mega-refactor-019b-destroy-notification`, in parallel with `062b` (both change the engine spawn and destroy paths; the
+  overlap goes in the branch `docs/NOTES.md`).
+- Contract check: not needed (docs only).
+- Follow-up: scan, then the draft scope.
