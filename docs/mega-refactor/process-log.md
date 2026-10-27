@@ -928,3 +928,14 @@ newest entry at the bottom.
   owner's play test passes (six checks).
 - Follow-up: `019c` (merge the four spawn queues) recorded in item `019` as its next branch. Bug filed:
   `docs/issues/2026-10-27-wily-stage-1-duoballcanon-on-blocks-layer.md`.
+
+## 2026-10-27 — master (direct change)
+
+- Summary: `IMegaGameEntity` extends the engine `IGameEntity`, so the game entity contract inherits the engine entity
+  contract. Both implementers (`MegaGameEntity`, `IProjectileEntity`) were already engine entities, so this only states
+  a fact the compiler did not know; no runtime change. A direct change to `master`, asked for by the owner: one line and
+  one import, no gameplay change, and it belongs to no active branch.
+- Contract check: clean build and tests on `master`: 539 engine and 172 core tests pass, 110 warnings (as before), jar
+  builds.
+- Follow-up: code that holds an `IMegaGameEntity` can drop casts to `MegaGameEntity` for engine members (for example
+  `overlapsGameCamera`); not done here.
