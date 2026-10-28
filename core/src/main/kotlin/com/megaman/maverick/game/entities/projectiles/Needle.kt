@@ -15,8 +15,8 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -44,13 +44,13 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamageable {
+class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "Needle"
         private const val DAMAGE_DURATION = 0.1f
         private const val OWNER_COLLISION_DELAY = 0.5f
-        private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+        private val damageNegotiations = objectMapOf<KClass<out IDamagerEntity>, Int>(
             Bullet::class pairTo 15,
             Fireball::class pairTo ConstVals.MAX_HEALTH,
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
@@ -129,7 +129,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
         if (isHealthDepleted()) explode()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = blockFixture.getEntity()
@@ -145,10 +145,10 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
         explodeAndDie()
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
         !invincible && damageNegotiations.containsKey(damager::class)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damagerKey = damager::class
         if (!damageNegotiations.containsKey(damagerKey)) return false
 

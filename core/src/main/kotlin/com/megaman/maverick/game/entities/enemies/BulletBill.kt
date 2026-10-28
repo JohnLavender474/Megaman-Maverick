@@ -14,7 +14,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
@@ -90,7 +90,7 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
         collisionIdsToIgnore.clear()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (knockedToDeath) return
@@ -99,7 +99,7 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
         if (!collisionIdsToIgnore.contains(block.id)) explodeAndDie()
     }
 
-    override fun canDamage(damageable: IDamageable) =
+    override fun canDamage(damageable: IDamageableEntity) =
         !knockedToDeath &&
             super<AbstractEnemy>.canDamage(damageable) &&
             super<IProjectileEntity>.canDamage(damageable)

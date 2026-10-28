@@ -22,7 +22,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -116,7 +116,7 @@ class TankBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
         damageOverrides.put(DrippingToxicGoop::class, dmgNeg(10))
     }
 
-    override fun getDamageDuration(damager: IDamager) = when (damager) {
+    override fun getDamageDuration(damager: IDamagerEntity) = when (damager) {
         is DrippingToxicGoop -> TOXIC_GOOP_DMG_DUR
         else -> super.getDamageDuration(damager)
     }

@@ -12,8 +12,8 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -108,7 +108,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
         super.onDestroy()
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return super.takeDamageFrom(damager)
@@ -116,7 +116,7 @@ class GroundPebble(game: MegamanMaverickGame) : AbstractHealthEntity(game, dmgDu
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         if (damageable is DeadlyLeaf) return
         explodeAndDie()
     }

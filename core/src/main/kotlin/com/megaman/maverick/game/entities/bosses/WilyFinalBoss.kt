@@ -30,7 +30,7 @@ import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -168,7 +168,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     override var damageNegotiator = object : BossDamageNegotiator() {
 
-        override fun get(damager: IDamager): Int {
+        override fun get(damager: IDamagerEntity): Int {
             if (damager is Bullet) return 1
             val actualDamage = super.get(damager)
             return if (actualDamage == 1) 2 else actualDamage
@@ -332,7 +332,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
     override fun playBossMusic() = game.audioMan.getCurrentMusicAsset() == null
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
+    override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (phaseTransitionHandler.active) return false
         if (!super.canBeDamagedBy(damager)) return false
         return damager !is Explosion

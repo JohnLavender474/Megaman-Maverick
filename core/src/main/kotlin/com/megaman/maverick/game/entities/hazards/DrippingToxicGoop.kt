@@ -23,8 +23,8 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -53,7 +53,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.floor
 
 class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
-    IAnimatedEntity, IAudioEntity, IDamager, IHazard {
+    IAnimatedEntity, IAudioEntity, IDamagerEntity, IHazard {
 
     companion object {
         const val TAG = "DrippingToxicGoop"
@@ -91,7 +91,7 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         smokinBodies.clear()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         val bodyEntity = damageable as IBodyEntity
 
         if (!smokinBodies.containsKey(bodyEntity)) {
@@ -127,7 +127,7 @@ class DrippingToxicGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
         val consumerFixture = Fixture(body, FixtureType.CONSUMER, GameRectangle())
         consumerFixture.setReceiver(Receivers.FILTER) { fixture ->
-            fixture.getType() == FixtureType.BODY && fixture.getEntity() is IDamageable
+            fixture.getType() == FixtureType.BODY && fixture.getEntity() is IDamageableEntity
         }
         consumerFixture.setReceiver(Receivers.CONSUMER) { processState, fixture ->
             when (processState) {

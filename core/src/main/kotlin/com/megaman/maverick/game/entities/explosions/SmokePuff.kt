@@ -14,8 +14,8 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.isAny
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamager, IOwnable<IGameEntity>,
+class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamagerEntity, IOwnable<IGameEntity>,
     IBodyEntity, ISpritesEntity, IDirectional {
 
     companion object {
@@ -85,7 +85,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
         animation.reset()
     }
 
-    override fun canDamage(damageable: IDamageable) =
+    override fun canDamage(damageable: IDamageableEntity) =
         (damageable.asPlayer != null && owner?.isAny(AbstractEnemy::class, IHazard::class) == true) ||
                 (damageable.isAny(AbstractEnemy::class, IHazard::class) && owner.asPlayer != null)
 

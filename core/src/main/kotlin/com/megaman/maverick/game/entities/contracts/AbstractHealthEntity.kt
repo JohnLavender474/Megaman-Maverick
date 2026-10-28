@@ -4,8 +4,8 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -20,7 +20,7 @@ abstract class AbstractHealthEntity(
     game: MegamanMaverickGame,
     protected var dmgDuration: Float = DEFAULT_DMG_DURATION,
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
-) : MegaGameEntity(game), IHealthEntity, IDamageable {
+) : MegaGameEntity(game), IHealthEntity, IDamageableEntity {
 
     companion object {
         const val DEFAULT_DMG_DURATION = 0.1f
@@ -33,17 +33,17 @@ abstract class AbstractHealthEntity(
     val damaged: Boolean
         get() = !damageTimer.isFinished()
 
-    val onDamagedCallbacks = Array<(IDamager, Int) -> Unit>()
+    val onDamagedCallbacks = Array<(IDamagerEntity, Int) -> Unit>()
     val onHealthDepletedCallbacks = Array<() -> Unit>()
     val invinciblePredicates: Array<() -> Boolean> = Array()
 
     protected abstract val damageNegotiator: IDamageNegotiator?
-    protected open val damageOverrides = ObjectMap<KClass<out IDamager>, DamageNegotiation?>()
+    protected open val damageOverrides = ObjectMap<KClass<out IDamagerEntity>, DamageNegotiation?>()
 
     protected open val damageTimer = Timer(dmgDuration)
     protected open val damageBlinkTimer = Timer(dmgBlinkDur)
 
-    protected var lastDamager: IDamager? = null
+    protected var lastDamager: IDamagerEntity? = null
 
     open var damageBlink = false
         protected set
@@ -73,11 +73,11 @@ abstract class AbstractHealthEntity(
         lastDamager = null
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = existenceState.liveAfterUpdate && !invincible &&
+    override fun canBeDamagedBy(damager: IDamagerEntity) = existenceState.liveAfterUpdate && !invincible &&
         (damageOverrides.containsKey(damager::class) ||
             (damageNegotiator != null && damageNegotiator!!.get(damager) != 0))
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val negotiation = when {
             damageOverrides.containsKey(damager::class) -> damageOverrides[damager::class]?.get(damager) ?: 0
             else -> damageNegotiator?.get(damager) ?: 0
@@ -100,13 +100,13 @@ abstract class AbstractHealthEntity(
         return true
     }
 
-    protected open fun onDamaged(damager: IDamager, damage: Int) {
+    protected open fun onDamaged(damager: IDamagerEntity, damage: Int) {
         onDamagedCallbacks.forEach { it.invoke(damager, damage) }
     }
 
-    protected open fun getDamageDuration(damager: IDamager) = dmgDuration
+    protected open fun getDamageDuration(damager: IDamagerEntity) = dmgDuration
 
-    protected open fun editDamageFrom(damager: IDamager, baseDamage: Int) = baseDamage
+    protected open fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int) = baseDamage
 
     protected open fun onDamageFinished() {}
 

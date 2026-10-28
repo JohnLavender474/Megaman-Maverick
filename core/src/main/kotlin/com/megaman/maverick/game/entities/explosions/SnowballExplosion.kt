@@ -11,8 +11,8 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
@@ -38,7 +38,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard,
-    IDamager {
+    IDamagerEntity {
 
     companion object {
         const val TAG = "SnowballExplosion"
@@ -46,7 +46,7 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
         private var region: TextureRegion? = null
     }
 
-    private lateinit var damageMask: ObjectSet<KClass<out IDamageable>>
+    private lateinit var damageMask: ObjectSet<KClass<out IDamageableEntity>>
     private val timer = Timer(DURATION)
 
     override fun getType() = EntityType.EXPLOSION
@@ -67,13 +67,13 @@ class SnowballExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBody
 
         damageMask = spawnProps.getOrDefault(
             ConstKeys.MASK,
-            ObjectSet<KClass<out IDamageable>>()
-        ) as ObjectSet<KClass<out IDamageable>>
+            ObjectSet<KClass<out IDamageableEntity>>()
+        ) as ObjectSet<KClass<out IDamageableEntity>>
 
         timer.reset()
     }
 
-    override fun canDamage(damageable: IDamageable) = damageMask.contains(damageable::class)
+    override fun canDamage(damageable: IDamageableEntity) = damageMask.contains(damageable::class)
 
     private fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)

@@ -18,7 +18,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -181,7 +181,7 @@ class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game)
 
     fun setTrajectory(trajectory: Vector2): Vector2 = body.physics.velocity.set(trajectory)
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         if (big) try {
             val shape = (damageable as IBodyEntity)
                 .body.fixtures.get(FixtureType.DAMAGEABLE).first().getShape()

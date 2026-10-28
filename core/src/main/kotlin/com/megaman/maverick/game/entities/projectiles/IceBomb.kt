@@ -12,7 +12,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.IGameShape2D
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
@@ -64,7 +64,7 @@ class IceBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IFreezerEnt
         super.onDestroy()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         super.onDamageInflictedTo(damageable)
         explodeAndDie()
     }

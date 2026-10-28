@@ -24,7 +24,7 @@ import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -194,7 +194,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         frozen = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = !frozen && super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamagerEntity) = !frozen && super.canBeDamagedBy(damager)
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")

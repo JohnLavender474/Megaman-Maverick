@@ -19,8 +19,8 @@ import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -51,7 +51,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageable {
+class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "CactusMissile"
@@ -64,7 +64,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         private const val LIFE_DUR = 3f
         private const val BLINK_TIME = 2.5f
 
-        private val damageNegotiations = objectMapOf<KClass<out IDamager>, Int>(
+        private val damageNegotiations = objectMapOf<KClass<out IDamagerEntity>, Int>(
             Bullet::class pairTo 10,
             Fireball::class pairTo ConstVals.MAX_HEALTH,
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
@@ -119,7 +119,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         explode()
@@ -137,10 +137,10 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
         )
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
         !invincible && damageNegotiations.containsKey(damager::class)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damagerKey = damager::class
         if (!damageNegotiations.containsKey(damagerKey)) return false
 

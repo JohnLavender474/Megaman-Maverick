@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.players
 
 import com.maverick.game.engine.controller.ControllerComponent
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.hasBody
 import com.maverick.game.engine.events.Signal
 import com.maverick.game.engine.input.InputSource
@@ -35,7 +35,7 @@ class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(cap
     val playerDamaged = Signal<PlayerDamaged>()
     private val playerDamagedPayload = PlayerDamaged()
 
-    fun onPlayerDamaged(player: MegaGameEntity, damager: IDamager) {
+    fun onPlayerDamaged(player: MegaGameEntity, damager: IDamagerEntity) {
         playerDamagedPayload.player = player
         playerDamagedPayload.damager = damager
         playerDamaged.emit(playerDamagedPayload)

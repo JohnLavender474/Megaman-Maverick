@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.world.contacts.rules
 
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
@@ -25,7 +25,7 @@ object DeathRule : IContactRule {
 
         val instant = deathFixture.isProperty(ConstKeys.INSTANT, true)
         when {
-            entity is IDamageable && (instant || !entity.invincible) -> otherFixture.depleteHealth()
+            entity is IDamageableEntity && (instant || !entity.invincible) -> otherFixture.depleteHealth()
             entity is IProjectileEntity -> entity.explodeAndDie()
             deathShouldDestroy(entity) -> entity.destroy()
         }

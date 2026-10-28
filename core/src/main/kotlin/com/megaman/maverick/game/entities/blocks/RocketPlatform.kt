@@ -11,7 +11,7 @@ import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
 class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity,
-    IMotionEntity, IEventListener, IDamager, IDirectional {
+    IMotionEntity, IEventListener, IDamagerEntity, IDirectional {
 
     companion object {
         const val TAG = "RocketPlatform"

@@ -17,8 +17,8 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -59,7 +59,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     }
 
     override val damageNegotiator = object : IDamageNegotiator {
-        override fun get(damager: IDamager) =
+        override fun get(damager: IDamagerEntity) =
             if (damager is SlashWave) 1 * damager.getDissipation() else 0
     }
 
@@ -144,7 +144,7 @@ class BigFishNeo(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         }
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         if (damageable.asPlayer != null) laughTimer.reset()
     }
 

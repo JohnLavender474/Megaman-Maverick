@@ -18,7 +18,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -132,14 +132,14 @@ class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional
         residual.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.ROTATION pairTo residualRotation))
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         if (!shouldCollide) return
 
         val entity = bodyFixture.getEntity()
         if (entity is AbstractEnemy && owner is AbstractEnemy) return
-        if (entity != owner && entity is IDamageable && !entity.canBeDamagedBy(this)) explodeAndDie()
+        if (entity != owner && entity is IDamageableEntity && !entity.canBeDamagedBy(this)) explodeAndDie()
     }
 
     override fun hitSand(sandFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {

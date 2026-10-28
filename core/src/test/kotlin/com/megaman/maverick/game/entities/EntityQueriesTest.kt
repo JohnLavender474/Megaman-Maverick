@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.points.PointsComponent
@@ -30,7 +30,7 @@ private class BareEntity : GameEntity(mockk(relaxed = true)) {
     override fun onDestroy() {}
 }
 
-private class PartsEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDamageable, IHealthEntity, IFocusable {
+private class PartsEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDamageableEntity, IHealthEntity, IFocusable {
     private val bounds = GameRectangle(0f, 0f, 2f, 2f)
     override fun getFocusBounds() = bounds
     override fun getFocusPosition(): Vector2 = bounds.getCenter(Vector2())

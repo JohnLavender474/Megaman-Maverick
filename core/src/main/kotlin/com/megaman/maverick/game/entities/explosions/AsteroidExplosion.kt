@@ -13,7 +13,7 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class AsteroidExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IDamager, IOwnable<IGameEntity> {
+    IAudioEntity, IDamagerEntity, IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "AsteroidExplosion"

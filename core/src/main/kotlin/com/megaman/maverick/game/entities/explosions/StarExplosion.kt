@@ -14,7 +14,7 @@ import com.maverick.game.engine.common.interfaces.IActivatable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class StarExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IDamager, IHazard, IOwnable<IGameEntity>, IActivatable {
+    IAudioEntity, IDamagerEntity, IHazard, IOwnable<IGameEntity>, IActivatable {
 
     companion object {
         const val TAG = "StarExplosion"

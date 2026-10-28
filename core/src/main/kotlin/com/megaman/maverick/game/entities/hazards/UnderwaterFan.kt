@@ -24,7 +24,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -62,7 +62,7 @@ import kotlin.math.max
 import kotlin.reflect.KClass
 
 class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    ICullableEntity, IDamager, IHazard, IDirectional {
+    ICullableEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
         const val TAG = "UnderwaterFan"

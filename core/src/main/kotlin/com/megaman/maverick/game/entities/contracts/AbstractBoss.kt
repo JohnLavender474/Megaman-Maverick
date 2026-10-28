@@ -12,8 +12,8 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.players.forEach
@@ -70,7 +70,7 @@ abstract class AbstractBoss(
             Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
         )
 
-        protected val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        protected val BOSS_DMG_NEG = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(1),
             Fireball::class pairTo dmgNeg(1),
             MagmaFlame::class pairTo dmgNeg(1),
@@ -99,7 +99,7 @@ abstract class AbstractBoss(
 
     protected open class BossDamageNegotiator : IDamageNegotiator {
 
-        override fun get(damager: IDamager) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
+        override fun get(damager: IDamagerEntity) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
     }
 
     override val damageNegotiator: IDamageNegotiator = BossDamageNegotiator()
@@ -189,11 +189,11 @@ abstract class AbstractBoss(
         }
     }
 
-    override fun canDamage(damageable: IDamageable) = !defeated && ready && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageableEntity) = !defeated && ready && super.canDamage(damageable)
 
-    override fun canBeDamagedBy(damager: IDamager) = !defeated && super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamagerEntity) = !defeated && super.canBeDamagedBy(damager)
 
-    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
+    override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner.asPlayer != null &&
             game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
@@ -201,7 +201,7 @@ abstract class AbstractBoss(
         else -> baseDamage
     }
 
-    open fun onPlayerDamaged(damager: IDamager, player: MegaGameEntity) {}
+    open fun onPlayerDamaged(damager: IDamagerEntity, player: MegaGameEntity) {}
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

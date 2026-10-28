@@ -3,7 +3,7 @@ package com.megaman.maverick.game.entities.contracts
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.interfaces.ISizable
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.IEventListener
@@ -18,7 +18,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
     open val canMove: Boolean
         get() = !game.isCameraRotating()
 
-    protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
+    protected var onDamageInflictedTo: ((IDamageableEntity) -> Unit)? = null
     protected var movementScalar = 1f
 
     override fun init(vararg params: Any) {
@@ -32,7 +32,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
         super.onSpawn(spawnProps)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
-        onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
+        onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageableEntity) -> Unit)?
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
@@ -67,7 +67,7 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
         owner = null
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         onDamageInflictedTo?.invoke(damageable)
     }
 }

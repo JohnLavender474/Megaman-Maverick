@@ -20,7 +20,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -136,14 +136,14 @@ class ChargedShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
         )
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         if (damageable !is IHealthEntity || !damageable.isHealthDepleted()) explodeAndDie()
     }
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
         if (entity != owner &&
-            entity is IDamageable && !entity.canBeDamagedBy(this) &&
+            entity is IDamageableEntity && !entity.canBeDamagedBy(this) &&
             (entity !is IHealthEntity || !entity.isHealthDepleted())
         ) explodeAndDie()
     }

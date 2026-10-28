@@ -12,7 +12,7 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.SmoothOscillationTimer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
 class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IHazard, IDamager {
+    IAudioEntity, IHazard, IDamagerEntity {
 
     companion object {
         const val TAG = "DeadlyLeaf"
@@ -57,7 +57,7 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
 
         private const val DEFAULT_MIN_Y_OFFSET = 15f
 
-        private val FULL_DMG_NEGS = objectSetOf<KClass<out IDamager>>(
+        private val FULL_DMG_NEGS = objectSetOf<KClass<out IDamagerEntity>>(
             ChargedShot::class,
             ChargedShotExplosion::class,
 
@@ -74,7 +74,7 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
 
     override val damageNegotiator = object : IDamageNegotiator {
 
-        override fun get(damager: IDamager) =
+        override fun get(damager: IDamagerEntity) =
             if (FULL_DMG_NEGS.contains(damager::class)) ConstVals.MAX_HEALTH
             else ConstVals.MAX_HEALTH / 2
     }
@@ -114,11 +114,11 @@ class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyE
         )
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
         (damager is IProjectileEntity && damager.owner.asPlayer != null) ||
             FULL_DMG_NEGS.contains(damager::class)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damaged = super.takeDamageFrom(damager)
         if (damaged && overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return damaged

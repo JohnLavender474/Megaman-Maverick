@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.contracts
 
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.IGameEntity
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -28,7 +28,7 @@ class EntityContractsTest : DescribeSpec({
             }
         }
 
-        listOf(IDamageable::class, IDamager::class).forEach { contract ->
+        listOf(IDamageableEntity::class, IDamagerEntity::class).forEach { contract ->
             it("${contract.simpleName} is an IGameEntity") {
                 IGameEntity::class.java.isAssignableFrom(contract.java) shouldBe true
             }

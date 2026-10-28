@@ -19,7 +19,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -88,7 +88,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
 
         private const val DEBUG_TIMER = 1f
 
-        private val BOSS_DMG_NEG = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        private val BOSS_DMG_NEG = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(2),
             Fireball::class pairTo dmgNeg(8),
             MagmaWave::class pairTo dmgNeg(8),
@@ -119,7 +119,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     private enum class BospiderState { SPAWN, CLIMB, OPEN_EYE, CLOSE_EYE, RETREAT }
 
     override val damageNegotiator = object : IDamageNegotiator {
-        override fun get(damager: IDamager) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
+        override fun get(damager: IDamagerEntity) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
     }
     override var children = Array<BabySpider>()
     override var burning: Boolean
@@ -202,7 +202,7 @@ class Bospider(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         if (!mini) game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damaged = super.takeDamageFrom(damager)
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager, damaged=$damaged")
         if (damaged) when {

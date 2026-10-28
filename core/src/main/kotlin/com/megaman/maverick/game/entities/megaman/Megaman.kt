@@ -20,7 +20,7 @@ import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
 import com.maverick.game.engine.controller.ControllerComponent
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
@@ -86,7 +86,7 @@ import kotlin.math.abs
 
 class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
     IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
-    IEventListener, IFaceable, IDirectional, IFocusable, IDamager, IGateTrigger, ICartRider {
+    IEventListener, IFaceable, IDirectional, IFocusable, IDamagerEntity, IGateTrigger, ICartRider {
 
     companion object {
         const val TAG = "Megaman"
@@ -649,7 +649,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         }
     }
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
+    override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (!existenceState.liveAfterUpdate || !super.canBeDamagedBy(damager)) return false
         if (damager is IOwnable<*>) {
             if (damager.owner == this) return false
@@ -658,9 +658,9 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         return true
     }
 
-    override fun getDamageDuration(damager: IDamager) = MegamanValues.DAMAGE_DURATION
+    override fun getDamageDuration(damager: IDamagerEntity) = MegamanValues.DAMAGE_DURATION
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val oldHealth = getCurrentHealth()
 
         if (!super.takeDamageFrom(damager)) return false
@@ -709,7 +709,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         return true
     }
 
-    override fun editDamageFrom(damager: IDamager, baseDamage: Int): Int {
+    override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int): Int {
         var damage = when {
             game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
                 baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR

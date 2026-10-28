@@ -26,7 +26,7 @@ import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -381,9 +381,9 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
 
     override fun isReady(delta: Float) = stateTimers[TimberWomanState.INIT].isFinished()
 
-    override fun canBeDamagedBy(damager: IDamager) = super.canBeDamagedBy(damager) && !burning
+    override fun canBeDamagedBy(damager: IDamagerEntity) = super.canBeDamagedBy(damager) && !burning
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
         if (damaged && damager is IFireEntity) {

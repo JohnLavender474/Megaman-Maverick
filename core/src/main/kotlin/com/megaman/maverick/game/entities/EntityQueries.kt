@@ -1,6 +1,6 @@
 package com.megaman.maverick.game.entities
 
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.world.body.Fixture
@@ -16,7 +16,7 @@ val IGameEntity.focus: IFocusable
     get() = this as? IFocusable ?: missing("camera focus")
 
 val IGameEntity.invincible: Boolean
-    get() = (this as? IDamageable)?.invincible ?: true
+    get() = (this as? IDamageableEntity)?.invincible ?: true
 
 val IGameEntity.damaged: Boolean
     get() = (this as? AbstractHealthEntity)?.damaged == true

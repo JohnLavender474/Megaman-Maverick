@@ -21,7 +21,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.ICullable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -155,7 +155,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         frozen = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
         DAMAGERS.contains(damager::class) || super.canBeDamagedBy(damager)
 
     override fun shouldBeCulled(delta: Float) = cullTimer.isFinished()

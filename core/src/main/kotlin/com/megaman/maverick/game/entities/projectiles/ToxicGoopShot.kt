@@ -15,7 +15,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.IGameShape2D
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -67,7 +67,7 @@ class ToxicGoopShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
         body.physics.velocity.set(impulse)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie(
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie(
         getOverlapPushDirection(body.getBounds(), (damageable as IBodyEntity).body.getBounds())
     )
 

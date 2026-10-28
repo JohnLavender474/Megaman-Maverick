@@ -20,7 +20,7 @@ import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -125,7 +125,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         )
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = damager !is RodentMan && super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamagerEntity) = damager !is RodentMan && super.canBeDamagedBy(damager)
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")

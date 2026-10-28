@@ -8,7 +8,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.IGameShape2D
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -60,7 +60,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         body.physics.gravity.set(spawnProps.getOrDefault(ConstKeys.GRAVITY, Vector2.Zero, Vector2::class))
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         super.onDamageInflictedTo(damageable)
         explodeAndDie()
     }
@@ -87,7 +87,7 @@ class Snowball(game: MegamanMaverickGame) : AbstractProjectile(game) {
         explosion.spawn(
             props(
                 ConstKeys.POSITION pairTo body.getCenter(),
-                ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(
+                ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageableEntity>>(
                     if (owner.asPlayer != null) AbstractEnemy::class else Megaman::class
                 )
             )

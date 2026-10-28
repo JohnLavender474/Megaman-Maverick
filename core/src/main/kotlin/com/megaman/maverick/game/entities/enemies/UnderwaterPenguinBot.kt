@@ -20,7 +20,7 @@ import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -91,7 +91,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size
         facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
     }
 
-    override fun canDamage(damageable: IDamageable) = state != UnderwaterPenguinBotState.WAIT
+    override fun canDamage(damageable: IDamageableEntity) = state != UnderwaterPenguinBotState.WAIT
 
     private fun startSwim() {
         state = UnderwaterPenguinBotState.SWIM

@@ -12,7 +12,7 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDamager, IBodyEntity, IAudioEntity,
+class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDamagerEntity, IBodyEntity, IAudioEntity,
     ISpritesEntity, IAnimatedEntity {
 
     companion object {

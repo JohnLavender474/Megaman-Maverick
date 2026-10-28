@@ -30,7 +30,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.common.utils.OrbitUtils
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -197,7 +197,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
         frozen = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = super.canBeDamagedBy(damager) && damager !is Asteroid
+    override fun canBeDamagedBy(damager: IDamagerEntity) = super.canBeDamagedBy(damager) && damager !is Asteroid
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")

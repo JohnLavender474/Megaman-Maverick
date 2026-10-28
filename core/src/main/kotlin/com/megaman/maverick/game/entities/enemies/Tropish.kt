@@ -21,7 +21,7 @@ import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -108,7 +108,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         frozen = false
     }
 
-    override fun canDamage(damageable: IDamageable) = state != TropishState.WAIT
+    override fun canDamage(damageable: IDamageableEntity) = state != TropishState.WAIT
 
     private fun startSwim() {
         state = TropishState.SWIM

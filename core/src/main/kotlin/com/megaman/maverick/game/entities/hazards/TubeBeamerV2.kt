@@ -24,7 +24,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.ShapeUtils
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
 class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, IAudioEntity,
-    ISpritesEntity, IAnimatedEntity, ILaserEntity, IDirectional, IHazard, IDamager {
+    ISpritesEntity, IAnimatedEntity, ILaserEntity, IDirectional, IHazard, IDamagerEntity {
 
     companion object {
         const val TAG = "TubeBeamerV2"

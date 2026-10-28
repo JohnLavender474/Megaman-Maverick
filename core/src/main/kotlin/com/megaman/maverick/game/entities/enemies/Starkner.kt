@@ -25,7 +25,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -209,7 +209,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         GameLogger.debug(TAG, "releaseAliveId(): removed mapObjectId=$id from ALIVE: $ALIVE")
     }
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
+    override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         val result = when {
             !super.canBeDamagedBy(damager) -> false
             damager is IOwnable<*> -> {

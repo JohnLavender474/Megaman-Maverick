@@ -22,8 +22,8 @@ import com.maverick.game.engine.common.shapes.ShapeUtils
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullableOnEvent
 import com.maverick.game.engine.cullables.CullablesComponent
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAudioEntity
@@ -74,7 +74,7 @@ abstract class AbstractEnemy(
     dmgDuration: Float = DEFAULT_DMG_DURATION,
     dmgBlinkBlur: Float = DEFAULT_DMG_BLINK_DUR,
     override var size: Size = Size.MEDIUM
-) : AbstractHealthEntity(game, dmgDuration, dmgBlinkBlur), IDamager, IBodyEntity, IAudioEntity, ISpritesEntity,
+) : AbstractHealthEntity(game, dmgDuration, dmgBlinkBlur), IDamagerEntity, IBodyEntity, IAudioEntity, ISpritesEntity,
     ICullableEntity, ISizable {
 
     companion object {
@@ -114,13 +114,13 @@ abstract class AbstractEnemy(
         )
     }
 
-    val canDamagePredicates = Array<(IDamageable) -> Boolean>()
+    val canDamagePredicates = Array<(IDamageableEntity) -> Boolean>()
 
     override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this)
 
     protected var movementScalar = 1f
     protected var dropItemOnDeath = true
-    protected var onDamageInflictedTo: ((IDamageable) -> Unit)? = null
+    protected var onDamageInflictedTo: ((IDamageableEntity) -> Unit)? = null
 
     private val spawnBlinkTimer = Timer(0f)
     private val spawnBlinkIntervalTimer = Timer(SPAWN_BLINK_INTERVAL)
@@ -198,7 +198,7 @@ abstract class AbstractEnemy(
         } else spawnBlinkTimer.setToEnd()
         spawnBlinkHidden = false
 
-        onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageable) -> Unit)?
+        onDamageInflictedTo = spawnProps.get(ConstKeys.ON_DAMAGE_INFLICTED_TO) as ((IDamageableEntity) -> Unit)?
         dropItemOnDeath = spawnProps.getOrDefault(ConstKeys.DROP_ITEM_ON_DEATH, true, Boolean::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
 
@@ -243,16 +243,16 @@ abstract class AbstractEnemy(
 
     protected abstract fun defineSpritesComponent(): SpritesComponent
 
-    override fun editDamageFrom(damager: IDamager, baseDamage: Int) = when {
+    override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner.asPlayer != null &&
             game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
         else -> baseDamage
     }
 
-    override fun canDamage(damageable: IDamageable) = existenceState.liveAfterUpdate && canDamagePredicates.all { it.invoke(damageable) }
+    override fun canDamage(damageable: IDamageableEntity) = existenceState.liveAfterUpdate && canDamagePredicates.all { it.invoke(damageable) }
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
+    override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         val canBeDamaged = super.canBeDamagedBy(damager)
         if (!canBeDamaged) return false
 
@@ -262,13 +262,13 @@ abstract class AbstractEnemy(
         return true
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damaged = super.takeDamageFrom(damager)
         if (damaged && overlapsGameCamera()) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         return damaged
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         onDamageInflictedTo?.invoke(damageable)
     }
 

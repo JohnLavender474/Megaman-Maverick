@@ -2,8 +2,8 @@ package com.megaman.maverick.game.world.contacts.rules
 
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.ProcessState
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.world.body.*
@@ -19,8 +19,8 @@ class DamageRule(private val debugFilter: (IFixture, IFixture) -> Boolean) : ICo
     override fun onContinue(a: IFixture, b: IFixture, delta: Float) = continueContact(a, b)
 
     private fun begin(damagerFixture: IFixture, damageableFixture: IFixture) {
-        val damager = damagerFixture.getEntity() as IDamager
-        val damageable = damageableFixture.getEntity() as IDamageable
+        val damager = damagerFixture.getEntity() as IDamagerEntity
+        val damageable = damageableFixture.getEntity() as IDamageableEntity
 
         damagerFixture.receiver(Receivers.HIT_BY_DAMAGEABLE)?.invoke(damageable, ProcessState.BEGIN)
 
@@ -37,8 +37,8 @@ class DamageRule(private val debugFilter: (IFixture, IFixture) -> Boolean) : ICo
     }
 
     private fun continueContact(damagerFixture: IFixture, damageableFixture: IFixture) {
-        val damager = damagerFixture.getEntity() as IDamager
-        val damageable = damageableFixture.getEntity() as IDamageable
+        val damager = damagerFixture.getEntity() as IDamagerEntity
+        val damageable = damageableFixture.getEntity() as IDamageableEntity
 
         damagerFixture.receiver(Receivers.HIT_BY_DAMAGEABLE)?.invoke(damageable, ProcessState.CONTINUE)
 

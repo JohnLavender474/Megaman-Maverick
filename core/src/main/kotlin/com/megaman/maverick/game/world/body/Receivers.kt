@@ -3,7 +3,7 @@ package com.megaman.maverick.game.world.body
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.objects.PhasedPropertyKey
 import com.maverick.game.engine.common.objects.PropertyKey
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
@@ -46,7 +46,7 @@ object Receivers {
     val HIT_BY_FEET = PhasedPropertyKey<(feet: IFixture, delta: Float) -> Unit>(ConstKeys.HIT_BY_FEET)
 
     val HIT_BY_DAMAGEABLE =
-        PropertyKey<(damageable: IDamageable, state: ProcessState) -> Unit>(ConstKeys.HIT_BY_DAMAGEABLE)
+        PropertyKey<(damageable: IDamageableEntity, state: ProcessState) -> Unit>(ConstKeys.HIT_BY_DAMAGEABLE)
 
     val STICK_TO_BLOCK = PropertyKey<(state: ProcessState, blockFixture: IFixture) -> Boolean>(ConstKeys.STICK_TO_BLOCK)
 

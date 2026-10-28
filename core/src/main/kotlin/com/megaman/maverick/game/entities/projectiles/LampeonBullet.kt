@@ -106,7 +106,7 @@ class LampeonBullet(game: MegamanMaverickGame) : AbstractProjectile(game), IFace
         super.onDestroy()
     }
 
-    // override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    // override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 

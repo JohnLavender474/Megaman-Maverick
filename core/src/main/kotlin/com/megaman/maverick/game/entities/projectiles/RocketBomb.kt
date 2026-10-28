@@ -16,7 +16,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
@@ -75,11 +75,11 @@ class RocketBomb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimate
         body.physics.velocity.set(velocity)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if (entity is IDamageable /* && entity.canBeDamagedBy(this) && this.canDamage(entity) */) return
+        if (entity is IDamageableEntity /* && entity.canBeDamagedBy(this) && this.canDamage(entity) */) return
         explodeAndDie()
     }
 

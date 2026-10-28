@@ -5,7 +5,7 @@ import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.ISizable
 import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.EntityType
@@ -32,7 +32,7 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
     )
     private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION)
 
-    override fun get(damager: IDamager): Int {
+    override fun get(damager: IDamagerEntity): Int {
         val entity = damager as MegaGameEntity
         if (entity is IOwnable<*> && entity.owner == megaman) return 0
 

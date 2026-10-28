@@ -5,7 +5,7 @@ import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.interfaces.ISizable
 import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
@@ -17,11 +17,11 @@ import com.megaman.maverick.game.entities.projectiles.*
 import kotlin.math.ceil
 import kotlin.reflect.KClass
 
-class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, DamageNegotiation?> = ObjectMap()) :
+class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamagerEntity>, DamageNegotiation?> = ObjectMap()) :
     IDamageNegotiator {
 
     companion object {
-        private val LARGE_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        private val LARGE_DMG_NEGS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(3),
             Fireball::class pairTo dmgNeg(5),
             MagmaFlame::class pairTo dmgNeg(5),
@@ -60,7 +60,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             ReactorExplosion::class pairTo dmgNeg(8)
         )
 
-        private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(5),
             Fireball::class pairTo dmgNeg(15),
             MagmaFlame::class pairTo dmgNeg(15),
@@ -99,7 +99,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
             ReactorExplosion::class pairTo dmgNeg(15)
         )
 
-        private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(15),
             Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MagmaFlame::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
@@ -139,7 +139,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
         )
 
         // damage is determined by the damageable's size instead of the damager's size
-        fun get(size: Size, damager: IDamager): Int {
+        fun get(size: Size, damager: IDamagerEntity): Int {
             val negotiations = when (size) {
                 Size.LARGE -> LARGE_DMG_NEGS
                 Size.MEDIUM -> MEDIUM_DMG_NEGS
@@ -149,7 +149,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamager>, Da
         }
     }
 
-    override fun get(damager: IDamager): Int {
+    override fun get(damager: IDamagerEntity): Int {
         val key = damager::class
         return when {
             overrides.containsKey(key) -> overrides[key]?.get(damager) ?: 0

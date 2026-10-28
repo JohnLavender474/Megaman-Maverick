@@ -22,7 +22,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -85,7 +85,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         private val angles = gdxArrayOf(80f, 45f, 0f, 315f, 280f)
         private val xOffsets = gdxArrayOf(-0.2f, -0.1f, 0f, 0.1f, 0.2f)
 
-        private val damagers = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        private val damagers = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(10),
             ArigockBall::class pairTo dmgNeg(10),
             CactusMissile::class pairTo dmgNeg(10),
@@ -127,7 +127,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
 
     override val damageNegotiator: IDamageNegotiator = object : IDamageNegotiator {
 
-        override fun get(damager: IDamager) = damagers[damager::class]?.get(damager) ?: 0
+        override fun get(damager: IDamagerEntity) = damagers[damager::class]?.get(damager) ?: 0
     }
 
     override lateinit var facing: Facing
@@ -197,7 +197,7 @@ class Cactus(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, 
         FacingUtils.setFacingOf(this)
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
         damagers.containsKey(damager::class) || super.canBeDamagedBy(damager)
 
     override fun onDestroy() {

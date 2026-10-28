@@ -13,7 +13,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -48,7 +48,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class WilyCapsuleTentacleScissor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
-    IAnimatedEntity, IDamager, IHazard, IOwnable<WilyCapsuleTentacle> {
+    IAnimatedEntity, IDamagerEntity, IHazard, IOwnable<WilyCapsuleTentacle> {
 
     companion object {
         const val TAG = "WilyCapsuleTentacleScissor"

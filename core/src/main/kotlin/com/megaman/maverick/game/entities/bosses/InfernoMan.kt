@@ -25,8 +25,8 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -254,11 +254,11 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
         body.physics.gravityOn = true
     }
 
-    override fun canDamage(damageable: IDamageable) = !frozen && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageableEntity) = !frozen && super.canDamage(damageable)
 
-    override fun canBeDamagedBy(damager: IDamager) = damager !is IFireEntity && super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamagerEntity) = damager !is IFireEntity && super.canBeDamagedBy(damager)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
         val damaged = super.takeDamageFrom(damager)
         if (damager is IFreezerEntity && !isHealthDepleted() && !frozen) {

@@ -19,7 +19,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
@@ -84,7 +84,7 @@ class WoodCrate(game: MegamanMaverickGame) : Block(game), IFireableEntity, ISpri
         private const val FLAME_MIN_IMPULSE_Y = 3f
         private const val FLAME_MAX_IMPULSE_Y = 5f
 
-        private val DAMAGERS = objectMapOf<KClass<out IDamager>, DamageNegotiation>(
+        private val DAMAGERS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(5),
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot

@@ -20,7 +20,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -159,7 +159,7 @@ class LampeonBandito(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezabl
         frozen = false
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
         (damager is Explosion && damager.owner is DeathBomb) || super.canBeDamagedBy(damager)
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

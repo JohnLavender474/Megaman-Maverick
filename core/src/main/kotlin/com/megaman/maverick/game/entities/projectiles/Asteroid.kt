@@ -15,7 +15,7 @@ import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -190,7 +190,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         }
     })
 
-    override fun canDamage(damageable: IDamageable) = super.canDamage(damageable) &&
+    override fun canDamage(damageable: IDamageableEntity) = super.canDamage(damageable) &&
         !damageable.isAny(MoonHead::class, MoonEyeStone::class)
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
@@ -199,7 +199,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         if (other == owner ||
             (other is Asteroid && !other.hard && hard) ||
             (other is IOwnable<*> && other.owner == owner) ||
-            (other is IDamageable && canDamage(other))
+            (other is IDamageableEntity && canDamage(other))
         ) return
 
         explodeAndDie()
@@ -222,7 +222,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         }
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")

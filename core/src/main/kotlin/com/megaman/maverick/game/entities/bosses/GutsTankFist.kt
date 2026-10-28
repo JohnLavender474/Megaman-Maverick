@@ -18,8 +18,8 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -92,7 +92,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
 
     override val damageNegotiator = object : IDamageNegotiator {
 
-        override fun get(damager: IDamager): Int {
+        override fun get(damager: IDamagerEntity): Int {
             if (damager !is IProjectileEntity || damager.owner.asPlayer == null) return 0
             return when (damager) {
                 is ChargedShot -> if (damager.fullyCharged) 2 else 1
@@ -149,7 +149,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         }
     }
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
+    override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (damager is AbstractProjectile) {
             damager.owner?.let { damagerOwner ->
                 if (damagerOwner == this ||
@@ -163,7 +163,7 @@ class GutsTankFist(game: MegamanMaverickGame) : AbstractEnemy(game, dmgDuration 
         return super.canBeDamagedBy(damager)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) {
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
         if (damageable.asPlayer != null) (parent as GutsTank).laugh()
     }
 

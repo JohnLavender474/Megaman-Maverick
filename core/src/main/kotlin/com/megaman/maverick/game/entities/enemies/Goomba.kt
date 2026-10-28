@@ -19,8 +19,8 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
@@ -118,9 +118,9 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         tempOut.clear()
     }
 
-    override fun canDamage(damageable: IDamageable) = !smashed && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageableEntity) = !smashed && super.canDamage(damageable)
 
-    override fun canBeDamagedBy(damager: IDamager) = !smashed && super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamagerEntity) = !smashed && super.canBeDamagedBy(damager)
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")

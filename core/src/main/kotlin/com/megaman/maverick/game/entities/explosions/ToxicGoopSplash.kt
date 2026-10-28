@@ -14,8 +14,8 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
 class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
-    IAudioEntity, IDirectional, IOwnable<IGameEntity>, IDamager {
+    IAudioEntity, IDirectional, IOwnable<IGameEntity>, IDamagerEntity {
 
     companion object {
         const val TAG = "ToxicGoopSplash"
@@ -91,7 +91,7 @@ class ToxicGoopSplash(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         requestToPlaySound(SoundAsset.SPLASH_SOUND, false)
     }
 
-    override fun canDamage(damageable: IDamageable) = damageable != owner
+    override fun canDamage(damageable: IDamageableEntity) = damageable != owner
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         splashTimer.update(delta)

@@ -11,8 +11,8 @@ import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.components.IGameComponent
 import com.maverick.game.engine.cullables.CullableOnEvent
 import com.maverick.game.engine.cullables.CullablesComponent
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.IAudioEntity
@@ -32,7 +32,7 @@ import com.megaman.maverick.game.world.body.getCenter
 const val PROJECTILE_DEFAULT_CULL_TIME = 0.05f
 
 interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICullableEntity, IOwnable<IGameEntity>,
-    IDamager, ISizable {
+    IDamagerEntity, ISizable {
 
     override fun getType() = EntityType.PROJECTILE
 
@@ -63,7 +63,7 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
     fun getCullOnOutOfGameCam(outOfBoundsCullTime: Float = PROJECTILE_DEFAULT_CULL_TIME) =
         getGameCameraCullingLogic(this, outOfBoundsCullTime)
 
-    override fun canDamage(damageable: IDamageable) = damageable != owner
+    override fun canDamage(damageable: IDamageableEntity) = damageable != owner
 
     fun explodeAndDie(vararg params: Any?) {
         destroy()

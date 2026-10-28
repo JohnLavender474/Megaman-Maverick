@@ -116,7 +116,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     }
 
     // Uncomment the following to make it so that the flame wave does not damage entities when disintegrating
-    // override fun canDamage(damageable: IDamageable) = !disintegrating
+    // override fun canDamage(damageable: IDamageableEntity) = !disintegrating
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         disintegrating = true

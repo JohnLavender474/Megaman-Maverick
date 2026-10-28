@@ -16,7 +16,7 @@ import com.maverick.game.engine.common.extensions.*
 import com.maverick.game.engine.common.objects.*
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -120,7 +120,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
     }
 
     override val damageNegotiator = object: IDamageNegotiator {
-        override fun get(damager: IDamager) = if (damager is ChargedShot && damager.fullyCharged) 1 else 0
+        override fun get(damager: IDamagerEntity) = if (damager is ChargedShot && damager.fullyCharged) 1 else 0
     }
 
     private val weightedAttackSelector = WeightedRandomSelector(

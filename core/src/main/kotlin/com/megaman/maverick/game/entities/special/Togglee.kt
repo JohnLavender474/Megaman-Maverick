@@ -21,8 +21,8 @@ import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.fonts.FontsComponent
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
@@ -56,7 +56,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
 class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity<IGameEntity>,
-    ISpritesEntity, IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectional, IDamager, IEventListener {
+    ISpritesEntity, IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectional, IDamagerEntity, IEventListener {
 
     enum class ToggleeState {
         TOGGLED_ON, TOGGLED_OFF, TOGGLING_TO_ON, TOGGLING_TO_OFF;
@@ -206,7 +206,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
         }
     }
 
-    override fun canDamage(damageable: IDamageable) = type == ENEMY_TYPE
+    override fun canDamage(damageable: IDamageableEntity) = type == ENEMY_TYPE
 
     private fun spawnEntities(on: Boolean) {
         children.forEach {

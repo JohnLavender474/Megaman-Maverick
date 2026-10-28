@@ -19,8 +19,8 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
@@ -116,9 +116,9 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         bumpedNoDmgTimer.setToEnd()
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = damager is Fireball || super.canBeDamagedBy(damager)
+    override fun canBeDamagedBy(damager: IDamagerEntity) = damager is Fireball || super.canBeDamagedBy(damager)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         if (damager is Fireball) {
             val damagerBounds = damager.body.fixtures
                 .get(FixtureType.DAMAGER)
@@ -146,7 +146,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         spawnFloatingPoints()
     }
 
-    override fun canDamage(damageable: IDamageable) = bumpedNoDmgTimer.isFinished() && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageableEntity) = bumpedNoDmgTimer.isFinished() && super.canDamage(damageable)
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

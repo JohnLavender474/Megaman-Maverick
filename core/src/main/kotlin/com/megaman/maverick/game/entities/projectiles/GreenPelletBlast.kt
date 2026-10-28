@@ -17,7 +17,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -83,7 +83,7 @@ class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, siz
         if (entity.asPlayer != null) burst()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = burst()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = burst()
 
     private fun burst() {
         if (!burst) requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)

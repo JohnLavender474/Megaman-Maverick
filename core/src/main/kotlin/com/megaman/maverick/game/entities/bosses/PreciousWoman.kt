@@ -23,7 +23,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.common.utils.OrbitUtils
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -304,12 +304,12 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         shieldGems.clear()
     }
 
-    override fun onPlayerDamaged(damager: IDamager, player: MegaGameEntity) {
+    override fun onPlayerDamaged(damager: IDamagerEntity, player: MegaGameEntity) {
         GameLogger.debug(TAG, "onPlayerDamaged(): damager=$damager, player=$player")
         if (currentState == PreciousWomanState.STAND) laughTimer.reset()
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         GameLogger.debug(TAG, "takeDamageFrom(): damager=$damager")
 
         val damaged = super.takeDamageFrom(damager)

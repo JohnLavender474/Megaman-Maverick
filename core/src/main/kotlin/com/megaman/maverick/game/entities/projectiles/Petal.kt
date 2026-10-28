@@ -14,8 +14,8 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamager, IDamageable {
+class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamagerEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "Petal"
@@ -57,7 +57,7 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         get() = !damageTimer.isFinished()
 
     private val damageNegotiations =
-        objectMapOf<KClass<out IDamager>, Int>(
+        objectMapOf<KClass<out IDamagerEntity>, Int>(
             Bullet::class pairTo 10,
             Fireball::class pairTo ConstVals.MAX_HEALTH,
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
@@ -93,10 +93,10 @@ class Petal(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity
         GameLogger.debug(TAG, "Petal destroyed")
     }
 
-    override fun canBeDamagedBy(damager: IDamager) =
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
         !invincible && damageNegotiations.containsKey(damager::class)
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damagerKey = damager::class
         if (!damageNegotiations.containsKey(damagerKey)) return false
 

@@ -21,7 +21,7 @@ import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -145,7 +145,7 @@ class Cokeyro(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity
         frozen = false
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damaged = super.takeDamageFrom(damager)
         GameLogger.debug(TAG, "takeDamageFrom(): damaged=$damaged, damager=$damager")
         if (damaged) startShaking()

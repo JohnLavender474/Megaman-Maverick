@@ -3,8 +3,8 @@ package com.megaman.maverick.game.entities.blocks
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
@@ -19,7 +19,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
+class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageableEntity {
 
     override val invincible = false
 
@@ -33,9 +33,9 @@ class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageable {
         heartTankBlock = spawnProps.getOrDefault(ConstKeys.HEART, false, Boolean::class)
     }
 
-    override fun canBeDamagedBy(damager: IDamager) = damager is Laser && damager.owner.asPlayer != null
+    override fun canBeDamagedBy(damager: IDamagerEntity) = damager is Laser && damager.owner.asPlayer != null
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         explodeAndDie()
         return true
     }

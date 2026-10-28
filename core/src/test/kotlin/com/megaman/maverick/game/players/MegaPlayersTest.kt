@@ -5,7 +5,7 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonStatus
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.input.InputFrame
 import com.maverick.game.engine.players.PlayerSlot
@@ -102,7 +102,7 @@ class MegaPlayersTest : DescribeSpec({
         it("tells the damage signal's listeners in the order they connected, with the player and the damager") {
             val players = MegaPlayers()
             val player = players.register(PlayerSlot(0), playerEntity())
-            val damager = mockk<IDamager>()
+            val damager = mockk<IDamagerEntity>()
             val calls = ArrayList<String>()
             val first: (PlayerDamaged) -> Unit = {
                 calls.add("first")

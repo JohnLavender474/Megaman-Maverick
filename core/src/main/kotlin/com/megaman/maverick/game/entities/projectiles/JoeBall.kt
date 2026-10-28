@@ -14,7 +14,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -73,7 +73,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
         body.physics.velocity.set(trajectory)
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = explodeAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
 
@@ -147,7 +147,7 @@ class JoeBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
                 ConstKeys.OWNER pairTo owner,
                 ConstKeys.SOUND pairTo soundAsset,
                 ConstKeys.POSITION pairTo body.getCenter(),
-                ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageable>>(
+                ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageableEntity>>(
                     if (owner.asPlayer != null) AbstractEnemy::class else Megaman::class
                 )
             )

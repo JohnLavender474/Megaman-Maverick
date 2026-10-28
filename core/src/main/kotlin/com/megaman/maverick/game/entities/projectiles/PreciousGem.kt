@@ -25,7 +25,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -76,7 +76,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         private const val SIZE_DELAY_DUR = 0.1f
         private const val DEFAULT_PAUSE_DUR = 0.5f
         private val BODY_SIZES = gdxArrayOf(0.25f, 0.5f, 0.75f, 1f)
-        private val IGNORE_DMG = objectSetOf<KClass<out IDamager>>(
+        private val IGNORE_DMG = objectSetOf<KClass<out IDamagerEntity>>(
             MoonScythe::class, Asteroid::class, PropellerPlatform::class
         )
         private val regions = ObjectMap<PreciousGemColor, TextureRegion>()
@@ -92,7 +92,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
 
     override val damageNegotiator = object : IDamageNegotiator {
 
-        override fun get(damager: IDamager) = when {
+        override fun get(damager: IDamagerEntity) = when {
             IGNORE_DMG.contains(damager::class) -> 0
             owner.asPlayer != null -> 6
             else -> 0
@@ -203,7 +203,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
+    override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (!super.canBeDamagedBy(damager)) return false
         if (damager is IProjectileEntity) return damager.owner != owner
         return true
@@ -215,7 +215,7 @@ class PreciousGem(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         if (owner.asPlayer == null && event.key.equalsAny(EventType.BEGIN_ROOM_TRANS, EventType.BOSS_DEFEATED)) destroy()
     }
 
-    override fun takeDamageFrom(damager: IDamager): Boolean {
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         val damaged = super.takeDamageFrom(damager)
         if (damaged) requestToPlaySound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         if (isHealthDepleted()) {

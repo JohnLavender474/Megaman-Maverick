@@ -9,7 +9,7 @@ import com.maverick.game.engine.common.interfaces.IActivatable
 import com.maverick.game.engine.common.interfaces.UpdateFunction
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -34,7 +34,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
 class WilyDeathPlaneLazor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
-    IHazard, IDamager, IOwnable<WilyFinalBoss>, IActivatable {
+    IHazard, IDamagerEntity, IOwnable<WilyFinalBoss>, IActivatable {
 
     companion object {
         const val TAG = "WilyDeathPlaneLazor"

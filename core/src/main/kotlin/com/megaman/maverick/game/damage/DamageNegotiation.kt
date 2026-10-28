@@ -1,14 +1,14 @@
 package com.megaman.maverick.game.damage
 
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamagerEntity
 
-class DamageNegotiation(var negotation: (IDamager) -> Int) {
+class DamageNegotiation(var negotation: (IDamagerEntity) -> Int) {
 
     constructor(damage: Int) : this({ damage })
 
-    fun get(damager: IDamager) = negotation(damager)
+    fun get(damager: IDamagerEntity) = negotation(damager)
 }
 
-fun dmgNeg(negotation: (IDamager) -> Int) = DamageNegotiation(negotation)
+fun dmgNeg(negotation: (IDamagerEntity) -> Int) = DamageNegotiation(negotation)
 
 fun dmgNeg(damage: Int) = DamageNegotiation(damage)

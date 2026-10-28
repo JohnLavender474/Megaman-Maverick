@@ -12,8 +12,8 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwnable<IGameEntity>, IBodyEntity,
-    ISpritesEntity, IAudioEntity, IDamager {
+    ISpritesEntity, IAudioEntity, IDamagerEntity {
 
     companion object {
         const val TAG = "Explosion"
@@ -88,7 +88,7 @@ class Explosion(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IOwn
         }
     }
 
-    override fun canDamage(damageable: IDamageable) = damager && damageable != owner
+    override fun canDamage(damageable: IDamageableEntity) = damager && damageable != owner
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         durationTimer.update(it)

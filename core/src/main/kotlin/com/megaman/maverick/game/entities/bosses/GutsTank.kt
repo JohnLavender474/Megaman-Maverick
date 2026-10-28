@@ -23,8 +23,8 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.damage.IDamageable
-import com.maverick.game.engine.damage.IDamager
+import com.maverick.game.engine.damage.IDamageableEntity
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -314,7 +314,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         tankBlock = null
     }
 
-    override fun canBeDamagedBy(damager: IDamager): Boolean {
+    override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (damager is AbstractProjectile) {
             val it = damager.owner
             if (it == this || it == fist || it == tankBlock ||
@@ -422,7 +422,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.IMPULSE pairTo impulse,
                                     ConstKeys.GRAVITY pairTo gravity,
                                     ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
-                                    ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
+                                    ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageableEntity ->
                                         if (damageable.asPlayer != null) laugh()
                                     }
                                 )
@@ -484,7 +484,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     Met.RUN_ONLY pairTo true,
                                     ConstKeys.POSITION pairTo metSpawn,
                                     ConstKeys.RIGHT pairTo false,
-                                    ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
+                                    ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageableEntity ->
                                         if (damageable.asPlayer != null) laugh()
                                     },
                                     ConstKeys.DROP_ITEM_ON_DEATH pairTo false,
@@ -516,7 +516,7 @@ class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
                                     ConstKeys.POSITION pairTo metSpawn,
                                     ConstKeys.FACING pairTo Facing.LEFT,
                                     ConstKeys.TARGET pairTo target,
-                                    ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageable ->
+                                    ConstKeys.ON_DAMAGE_INFLICTED_TO pairTo { damageable: IDamageableEntity ->
                                         if (damageable.asPlayer != null) laugh()
                                     },
                                     ConstKeys.DROP_ITEM_ON_DEATH pairTo false,

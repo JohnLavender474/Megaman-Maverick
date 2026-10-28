@@ -10,7 +10,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -41,7 +41,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
 class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
-    IDamageable {
+    IDamageableEntity {
 
     companion object {
         const val TAG = "SealionBall"
@@ -76,7 +76,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
         catchBall()
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = (owner as Sealion).onBallDamagedInflicted()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = (owner as Sealion).onBallDamagedInflicted()
 
     fun throwBall() {
         ballInHand = false

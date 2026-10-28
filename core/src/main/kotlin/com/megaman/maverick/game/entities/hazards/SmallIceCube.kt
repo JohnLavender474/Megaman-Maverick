@@ -17,7 +17,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import com.maverick.game.engine.cullables.CullablesComponent
-import com.maverick.game.engine.damage.IDamageable
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -150,7 +150,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         blockIds.forEach { ignoreHitsFromIds.add(it) }
     }
 
-    override fun onDamageInflictedTo(damageable: IDamageable) = shatterAndDie()
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) = shatterAndDie()
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         playSoundNow(SoundAsset.DINK_SOUND, false)
@@ -221,7 +221,7 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
         }
         bodyFixture.setReceiver(Receivers.HIT_BY_BODY) { entity, state ->
             if (state != ProcessState.BEGIN) return@setReceiver
-            if (entity != owner && entity is IDamageable && entity.invincible) shatterAndDie()
+            if (entity != owner && entity is IDamageableEntity && entity.invincible) shatterAndDie()
             else if (entity is IFireEntity) getHit(entity)
         }
         bodyFixture.setReceiver(Receivers.HIT_BY_PLAYER) { if (it.isLocked(MegaLockGroup.DAMAGE)) shatterAndDie() }
