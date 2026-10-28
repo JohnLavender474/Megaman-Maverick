@@ -57,6 +57,7 @@ import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.explosions.StarExplosion
 import com.megaman.maverick.game.entities.invincible
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -185,9 +186,9 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
         FacingUtils.setFacingOf(this)
 
-        ALIVE.add(id)
+        ALIVE.add(mapObjectId!!)
         holdsAliveId = true
-        GameLogger.debug(TAG, "onSpawn(): added mapObjectId=$id to ALIVE: $ALIVE")
+        GameLogger.debug(TAG, "onSpawn(): added mapObjectId=$mapObjectId to ALIVE: $ALIVE")
 
         rawRotation = 0f
     }
@@ -204,9 +205,9 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
     private fun releaseAliveId() {
         if (!holdsAliveId) return
-        ALIVE.remove(id)
+        ALIVE.remove(mapObjectId!!)
         holdsAliveId = false
-        GameLogger.debug(TAG, "releaseAliveId(): removed mapObjectId=$id from ALIVE: $ALIVE")
+        GameLogger.debug(TAG, "releaseAliveId(): removed mapObjectId=$mapObjectId from ALIVE: $ALIVE")
     }
 
     override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
@@ -236,7 +237,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 val yellowStar = MegaEntityFactory.fetch(Starkner::class)!!
                 yellowStar.spawn(
                     props(
-                        ConstKeys.ID pairTo id,
+                        ConstKeys.ID pairTo mapObjectId!!,
                         ConstKeys.POSITION pairTo body.getCenter(),
                         ConstKeys.STATE pairTo StarknerState.YELLOW
                     )
@@ -255,7 +256,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 val redStar = MegaEntityFactory.fetch(Starkner::class)!!
                 redStar.spawn(
                     props(
-                        ConstKeys.ID pairTo id,
+                        ConstKeys.ID pairTo mapObjectId!!,
                         ConstKeys.STATE pairTo StarknerState.RED,
                         ConstKeys.POSITION pairTo body.getCenter()
                     )
@@ -274,7 +275,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                 val blackhole = MegaEntityFactory.fetch(Starkner::class)!!
                 blackhole.spawn(
                     props(
-                        ConstKeys.ID pairTo id,
+                        ConstKeys.ID pairTo mapObjectId!!,
                         ConstKeys.POSITION pairTo body.getCenter(),
                         ConstKeys.STATE pairTo StarknerState.BLACKHOLE
                     )

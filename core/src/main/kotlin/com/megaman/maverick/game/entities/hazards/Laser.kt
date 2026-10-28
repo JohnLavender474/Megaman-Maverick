@@ -63,6 +63,7 @@ import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardColor
 import com.megaman.maverick.game.entities.projectiles.PreciousShard.PreciousShardSize
 import com.megaman.maverick.game.entities.special.DarknessV2
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
@@ -143,6 +144,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private val obstacles = Array<GameRectangle>()
     private val ignoring = ObjectSet<Int>()
+    private val ignoringEntities = ObjectSet<IGameEntity>()
 
     private var lightSourceKeyString = ""
     private val lightSourceKeys = ObjectSet<Int>()
@@ -200,7 +202,10 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         body.set(line.getBoundingRectangle())
 
         owner = spawnProps.get(ConstKeys.OWNER, MegaGameEntity::class)
-        owner?.let { ignoring.add(it.id) }
+        owner?.let { owner ->
+            ignoringEntities.add(owner)
+            owner.mapObjectId?.let { ignoring.add(it) }
+        }
 
         // cast to "Laser" here to enforce strict type for "parent"
         parent = spawnProps.get(ConstKeys.PARENT, Laser::class)
@@ -257,6 +262,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
         obstacles.clear()
 
         ignoring.clear()
+        ignoringEntities.clear()
 
         hitShieldFixture = null
 
@@ -446,6 +452,7 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             it.setSecondLocalPoint(Vector2.Zero)
 
             it.ignoring.clear()
+            it.ignoringEntities.clear()
         }
     }
 
@@ -582,15 +589,22 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
             }
         }
 
-        reflectingLaser!!.ignoring.clear()
-        reflectingLaser!!.ignoring.addAll(ignoring)
-        reflectingLaser!!.ignoring.add(reflector.id)
-
-        reflectingLaser!!.on = true
-        reflectingLaser!!.owner = reflector
+        reflectingLaser!!.setReflector(reflector, this)
         reflectingLaser!!.setFirstLocalPoint(newFirstPoint)
         reflectingLaser!!.setSecondLocalPoint(newSecondPoint)
     })
+
+    internal fun setReflector(reflector: MegaGameEntity, parent: Laser) {
+        ignoring.clear()
+        ignoring.addAll(parent.ignoring)
+        ignoringEntities.clear()
+        ignoringEntities.addAll(parent.ignoringEntities)
+        ignoringEntities.add(reflector)
+        reflector.mapObjectId?.let { ignoring.add(it) }
+
+        on = true
+        owner = reflector
+    }
 
     private fun shouldSendLightSourceEvents() = MegaGameEntities.getOfTag(DarknessV2.TAG).any {
         (it as DarknessV2).overlaps(damagerFixture.getShape())
@@ -674,7 +688,9 @@ class Laser(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpr
     }
 
     override fun isLaserIgnoring(entity: IGameEntity): Boolean {
-        if (ignoring.contains((entity as MegaGameEntity).id)) return true
+        if (ignoringEntities.contains(entity)) return true
+        val mapObjectId = entity.mapObjectId
+        if (mapObjectId != null && ignoring.contains(mapObjectId)) return true
 
         if (entity.isAny(
                 Axe::class,

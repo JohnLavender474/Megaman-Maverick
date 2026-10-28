@@ -38,6 +38,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.world.body.*
 
 class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
@@ -96,7 +97,8 @@ class FireWall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = blockFixture.getEntity() as Block
-        if (ignoreBlockSet.contains(entity.id)) return
+        val id = entity.mapObjectId
+        if (id != null && ignoreBlockSet.contains(id)) return
         explodeAndDie()
     }
 

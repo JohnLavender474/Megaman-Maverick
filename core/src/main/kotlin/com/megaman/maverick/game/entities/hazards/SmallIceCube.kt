@@ -42,6 +42,7 @@ import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.locks.MegaLockGroup
@@ -192,8 +193,8 @@ class SmallIceCube(game: MegamanMaverickGame) : AbstractProjectile(game), IFreez
             return
         }
 
-        val id = (entity as MegaGameEntity).id
-        if (ignoreHitsFromIds.contains(id)) {
+        val id = entity.mapObjectId
+        if (id != null && ignoreHitsFromIds.contains(id)) {
             GameLogger.debug(TAG, "getHit(): ignoring hit from id=$id")
             return
         }

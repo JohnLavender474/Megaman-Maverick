@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.projectiles.SuperCoolActionStarWarsSpaceLazer
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -171,7 +172,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
         frozen = false
     }
 
-    private fun canThrowFlag() = !frozen && !FLAGS.containsKey(id) &&
+    private fun canThrowFlag() = !frozen && !FLAGS.containsKey(mapObjectId!!) &&
         ((isFacing(Facing.LEFT) && canThrowFlagLeft) || (isFacing(Facing.RIGHT) && canThrowFlagRight))
 
     private fun throwFlag() {
@@ -190,13 +191,13 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
-                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo id,
+                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo mapObjectId!!,
                 "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_GRAVITY_SCALAR,
                 "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR
             )
         )
 
-        FLAGS.put(id, flag)
+        FLAGS.put(mapObjectId!!, flag)
     }
 
     private fun shootLazer() {

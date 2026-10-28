@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.DustPuff
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.delayNextPossibleSpawn
 import com.megaman.maverick.game.entities.utils.isNextPossibleSpawnDelayed
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -129,7 +130,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         if (overlapsGameCamera() && isHealthDepleted()) explode()
 
-        delayNextPossibleSpawn(game, TAG, id, NEXT_POSSIBLE_SPAWN_DELAY)
+        delayNextPossibleSpawn(game, TAG, mapObjectId!!, NEXT_POSSIBLE_SPAWN_DELAY)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

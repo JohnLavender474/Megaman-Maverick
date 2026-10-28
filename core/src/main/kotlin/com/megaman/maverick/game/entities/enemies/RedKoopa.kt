@@ -46,6 +46,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
@@ -176,7 +177,7 @@ class RedKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
         val shell = MegaEntityFactory.fetch(RedKoopaShell::class)!!
         shell.spawn(
             props(
-                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo id,
+                "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo mapObjectId!!,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )

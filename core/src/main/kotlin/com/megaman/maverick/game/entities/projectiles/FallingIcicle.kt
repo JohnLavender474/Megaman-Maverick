@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.Snow
 import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
@@ -133,8 +134,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val id = blockFixture.getEntity().id
-        if (ignore.contains(id)) return
+        val id = blockFixture.getEntity().mapObjectId
+        if (id != null && ignore.contains(id)) return
         explodeAndDie()
     }
 
@@ -145,8 +146,8 @@ class FallingIcicle(game: MegamanMaverickGame) : AbstractProjectile(game), IAnim
     }
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val id = shieldFixture.getEntity().id
-        if (ignore.contains(id)) return
+        val id = shieldFixture.getEntity().mapObjectId
+        if (id != null && ignore.contains(id)) return
         explodeAndDie()
     }
 

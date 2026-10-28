@@ -40,6 +40,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -86,8 +87,8 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        val id = blockFixture.getEntity().id
-        if (blockIds.isEmpty || blockIds.contains(id)) {
+        val id = blockFixture.getEntity().mapObjectId
+        if (blockIds.isEmpty || (id != null && blockIds.contains(id))) {
             GameLogger.debug(TAG, "hitBlock(): id=$id, blockIds=$blockIds")
             explodeAndDie(thisShape, otherShape)
         } else GameLogger.debug(TAG, "hitBlock(): ignore hit by block: id=$id, blockIds=$blockIds")

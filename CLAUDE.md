@@ -70,7 +70,8 @@ Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` 
 
 ### Entity base classes (`core/.../entities/contracts/`)
 
-- `MegaGameEntity`: base for all game entities. Handles `id`, `runnablesOnSpawn`/`runnablesOnDestroy`, difficulty spawn flags (`ConstKeys.HARD_MODE_ONLY`, `ConstKeys.NORMAL_MODE_ONLY`) and registration in `MegaGameEntities` (lookup by tag, type or id).
+- `MegaGameEntity`: base for all game entities. Handles `runnablesOnSpawn`/`runnablesOnDestroy`, difficulty spawn flags (`ConstKeys.HARD_MODE_ONLY`, `ConstKeys.NORMAL_MODE_ONLY`) and registration in `MegaGameEntities` (lookup by tag, type or map object id).
+- Map object id: an entity spawned with `ConstKeys.ID` (every map spawn, and code that passes an id on) has a `MapObjectComponent` (`entities/state/`); read it with `entity.mapObjectId` (`null` for a runtime entity). It is level data and not unique (successors and children can share it). `MegaGameEntities.getOfId(id)` finds the entities of a map object. Use an entity reference, not an id, to remember a runtime entity.
 - `AbstractHealthEntity`: health, damage timers, damage blink, `damageNegotiator`, `onHealthDepleted()`.
 - `AbstractEnemy`: adds Audio, Cullables, Body and Sprites components in `init()`. Subclasses implement `defineBodyComponent()` and `defineSpritesComponent()`. Handles item drops and spawn blink.
 - `AbstractBoss`: boss intro, health fill, defeat sequence. Registers as an event listener in `onSpawn` and removes itself in `onDestroy`.

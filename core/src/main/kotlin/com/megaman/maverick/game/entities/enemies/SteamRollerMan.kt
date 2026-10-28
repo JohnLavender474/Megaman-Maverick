@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.explosions.AsteroidExplosion
 import com.megaman.maverick.game.entities.projectiles.Rock
 import com.megaman.maverick.game.entities.projectiles.Rock.RockSize
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -136,7 +137,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         if (!super.canSpawn(spawnProps)) return false
 
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
-        return MegaGameEntities.getOfTag(SteamRoller.TAG).none { it.id == id }
+        return MegaGameEntities.getOfTag(SteamRoller.TAG).none { it.mapObjectId == id }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -186,7 +187,7 @@ class SteamRollerMan(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimated
         steamRoller.spawn(
             props(
                 ConstKeys.FACING pairTo facing,
-                ConstKeys.ID pairTo id,
+                ConstKeys.ID pairTo mapObjectId!!,
                 ConstKeys.STATE pairTo steamRollerState,
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER),
                 ConstKeys.BLOCKS pairTo gdxArrayOf(smashAreaBlockBound, shieldAreaBlockBound)

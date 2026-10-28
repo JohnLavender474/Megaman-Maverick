@@ -54,6 +54,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.ILaserEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.TubeBeamExplosion
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -204,8 +205,11 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         actualClampEnd.setZero()
     }
 
-    override fun isLaserIgnoring(entity: IGameEntity) =
-        entity is ReactorMan || ignoreIds.contains((entity as MegaGameEntity).id)
+    override fun isLaserIgnoring(entity: IGameEntity): Boolean {
+        if (entity is ReactorMan) return true
+        val id = entity.mapObjectId
+        return id != null && ignoreIds.contains(id)
+    }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when {

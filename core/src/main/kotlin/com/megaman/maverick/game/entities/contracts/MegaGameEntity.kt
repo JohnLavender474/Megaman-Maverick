@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.contracts
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.objects.Pool
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.groups.GroupsComponent
@@ -11,17 +10,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.state.MapObjectComponent
+import com.megaman.maverick.game.entities.state.mapObjectId
 
 abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
 
     companion object {
         const val TAG = "MegaGameEntity"
-
-        private var CURRENT_NEW_ID = -1
-        private val RANDOM_ID_POOL = Pool(
-            supplier = { CURRENT_NEW_ID },
-            onSupplyNew = { --CURRENT_NEW_ID }
-        )
     }
 
     val runnablesOnSpawn = OrderedMap<String, () -> Unit>()
@@ -29,8 +24,6 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     val runnablesOnDestroyQueued = OrderedMap<String, () -> Unit>()
     private val runnablesToRun = Array<() -> Unit>()
 
-    var id = 0
-        private set
     var timeSpawned = 0L
         private set
 
@@ -50,7 +43,13 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        id = spawnProps.getOrDefault(ConstKeys.ID, RANDOM_ID_POOL.fetch(), Int::class)
+        when (val id = spawnProps.get(ConstKeys.ID, Int::class)) {
+            null -> removeComponent(MapObjectComponent::class)
+            else -> {
+                val component = getComponent(MapObjectComponent::class)
+                if (component != null) component.id = id else addComponent(MapObjectComponent(id))
+            }
+        }
         spawnProps.get(ConstKeys.GROUP, String::class)?.let { group ->
             val groups = getComponent(GroupsComponent::class) ?: GroupsComponent().also { addComponent(it) }
             groups.groups.add(group)
@@ -70,12 +69,11 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     override fun onDestroy() {
         MegaGameEntities.remove(this)
         runnablesOnDestroy.values().forEach { it.invoke() }
-        if (id < 0) RANDOM_ID_POOL.free(id)
         GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
     }
 
     override fun getTag() = this::class.simpleName ?: "?"
 
     override fun toString() = "{ ${this::class.simpleName}:[" +
-        "id=$id, existenceState=$existenceState, hashCode=${hashCode()}] }"
+        "mapObjectId=$mapObjectId, existenceState=$existenceState, hashCode=${hashCode()}] }"
 }

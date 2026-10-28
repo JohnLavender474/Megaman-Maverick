@@ -23,6 +23,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.convertToProps
 import com.megaman.maverick.game.world.body.getCenter
@@ -133,7 +134,7 @@ class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventLi
             if (value !is RectangleMapObject) {
                 val childId = if (value is MapObject) value.properties.get(ConstKeys.ID) else value
                 throw IllegalStateException(
-                    "Gauntlet $key (map object id=$id): prop $propKey must be an object ref to a rectangle " +
+                    "Gauntlet $key (map object id=$mapObjectId): prop $propKey must be an object ref to a rectangle " +
                         "object, but the ref is to child id=$childId (type=${value?.javaClass?.simpleName}). " +
                         "Check that the child object exists and is a rectangle."
                 )

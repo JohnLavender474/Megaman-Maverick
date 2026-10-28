@@ -46,6 +46,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.RainDrop.RainDropType
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
@@ -194,12 +195,13 @@ class RainDrop(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
 
         val bodyFixture = Fixture(body, FixtureType.BODY, GameRectangle(body))
         bodyFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { block, _ ->
-            if (!ignoreIds.contains(block.id)) splash()
+            val id = block.mapObjectId
+            if (id == null || !ignoreIds.contains(id)) splash()
         }
         bodyFixture.setReceiver(Receivers.HIT_BY_BODY) receiver@{ it, state ->
-            val mapObjId = (it as MegaGameEntity).id
+            val mapObjId = it.mapObjectId
             if (state == ProcessState.BEGIN &&
-                !ignoreIds.contains(mapObjId) &&
+                (mapObjId == null || !ignoreIds.contains(mapObjId)) &&
                 it.inPlay &&
                 !it.isAny(RainFall::class, RainDrop::class)
             ) splash()

@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.DeathBomb
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.delayNextPossibleSpawn
 import com.megaman.maverick.game.entities.utils.isNextPossibleSpawnDelayed
@@ -181,7 +182,7 @@ class Jetto(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, 
 
         if (overlapsGameCamera() && isHealthDepleted()) explode()
 
-        delayNextPossibleSpawn(game, TAG, id, NEXT_POSSIBLE_SPAWN_DELAY)
+        delayNextPossibleSpawn(game, TAG, mapObjectId!!, NEXT_POSSIBLE_SPAWN_DELAY)
 
         frozen = false
     }

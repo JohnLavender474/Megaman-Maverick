@@ -24,6 +24,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardBodyDoUpdatePredicate
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -63,7 +64,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         super.onSpawn(spawnProps)
         GameLogger.debug(
             TAG,
-            "onSpawn(): mapObjectId=$id, " +
+            "onSpawn(): mapObjectId=$mapObjectId, " +
                 "blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size} " +
                 "tag=${getTag()}, " +
                 "spawnProps=$spawnProps"
@@ -237,7 +238,7 @@ open class Block(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         GameLogger.debug(
             TAG,
-            "onDestroy(): mapObjectId=$id, blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size}"
+            "onDestroy(): mapObjectId=$mapObjectId, blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size}"
         )
     }
 

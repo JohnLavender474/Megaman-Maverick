@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.enemies.ShieldAttacker
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.hazards.FireballBar
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -163,7 +164,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = shieldFixture.getEntity()
-        if (collisionsToIgnore.contains(entity.id)) return
+        val id = entity.mapObjectId
+        if (id != null && collisionsToIgnore.contains(id)) return
         if (owner != FireballBar || entity !is ShieldAttacker) {
             body.physics.velocity.x *= -1f
             requestToPlaySound(SoundAsset.DINK_SOUND, false)
@@ -226,7 +228,8 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.35f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { block, _ ->
-            if (block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || collisionsToIgnore.contains(block.id))
+            val id = block.mapObjectId
+            if (block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || (id != null && collisionsToIgnore.contains(id)))
                 return@setReceiver
 
             if (burstOnHitBlock) explodeAndDie(

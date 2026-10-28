@@ -17,6 +17,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -60,7 +61,7 @@ class FallingLeaves(game: MegamanMaverickGame) : MegaGameEntity(game), ICullable
                 try {
                     CullBoundsType.valueOf(key!!.uppercase())
                 } catch (e: Exception) {
-                    throw Exception("Exception in tag=$TAG mapObjectId=$id key=$key", e)
+                    throw Exception("Exception in tag=$TAG mapObjectId=$mapObjectId key=$key", e)
                 }
             }
             else -> CullBoundsType.BODY

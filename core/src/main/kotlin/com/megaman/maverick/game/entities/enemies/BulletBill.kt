@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
@@ -96,7 +97,8 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
         if (knockedToDeath) return
 
         val block = blockFixture.getEntity()
-        if (!collisionIdsToIgnore.contains(block.id)) explodeAndDie()
+        val id = block.mapObjectId
+        if (id == null || !collisionIdsToIgnore.contains(id)) explodeAndDie()
     }
 
     override fun canDamage(damageable: IDamageableEntity) =

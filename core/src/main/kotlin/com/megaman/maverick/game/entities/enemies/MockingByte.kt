@@ -57,6 +57,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.MockingByteNest
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.MockingByteEgg
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -557,7 +558,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
                 GameLogger.debug(
                     TAG,
-                    "onChangeState(): startPos=$startPosition, targetPos=$targetPosition, nest=${nest.id}"
+                    "onChangeState(): startPos=$startPosition, targetPos=$targetPosition, nest=${nest.mapObjectId}"
                 )
             }
             else -> {}
@@ -592,7 +593,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
         sortedNests.sort { a, b ->
             (a.position.dst2(targetPlayer.body.getCenter()) - b.position.dst2(targetPlayer.body.getCenter())).toInt()
         }
-        nestId = sortedNests[0].id
+        nestId = sortedNests[0].mapObjectId!!
 
         return true
     }

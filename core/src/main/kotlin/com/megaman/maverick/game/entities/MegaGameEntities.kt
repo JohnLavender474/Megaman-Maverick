@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.common.extensions.putIfAbsentAndGet
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.mapObjectId
 
 object MegaGameEntities {
 
@@ -15,7 +16,7 @@ object MegaGameEntities {
 
     fun add(entity: MegaGameEntity) {
         entities.add(entity)
-        idToEntities.putIfAbsentAndGet(entity.id) { OrderedSet() }.add(entity)
+        entity.mapObjectId?.let { id -> idToEntities.putIfAbsentAndGet(id) { OrderedSet() }.add(entity) }
         entityTagToEntities.putIfAbsentAndGet(entity.getTag()) { OrderedSet() }.add(entity)
         entityTypeToEntities.putIfAbsentAndGet(entity.getType()) { OrderedSet() }.add(entity)
     }
@@ -24,10 +25,11 @@ object MegaGameEntities {
         entities.remove(entity)
         entityTagToEntities.get(entity.getTag())?.remove(entity)
         entityTypeToEntities.get(entity.getType())?.remove(entity)
-        if (idToEntities.containsKey(entity.id)) {
-            val set = idToEntities.get(entity.id)
+        val id = entity.mapObjectId ?: return
+        if (idToEntities.containsKey(id)) {
+            val set = idToEntities.get(id)
             set.remove(entity)
-            if (set.isEmpty) idToEntities.remove(entity.id)
+            if (set.isEmpty) idToEntities.remove(id)
         }
     }
 

@@ -56,6 +56,7 @@ import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.events.EventType
@@ -293,8 +294,8 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         val hitHeadOnBlock: (Block) -> Unit = hit@{ block ->
             if (state != BatState.FLYING_TO_RETREAT) return@hit
 
-            val id = block.id
-            if (blocksToIgnore.contains(id)) return@hit
+            val id = block.mapObjectId
+            if (id != null && blocksToIgnore.contains(id)) return@hit
 
             state = BatState.HANGING
         }
