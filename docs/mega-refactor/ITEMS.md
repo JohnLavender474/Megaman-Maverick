@@ -79,6 +79,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | planned | `031` | | |
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | idea | `031` | | |
 | 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | idea | none | | |
+| 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | planned | `016` | | |
 
 ## Branches
 
