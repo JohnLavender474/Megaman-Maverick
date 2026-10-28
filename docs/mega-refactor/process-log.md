@@ -983,3 +983,15 @@ newest entry at the bottom.
   `contact-rule-selection.txt` unchanged; the owner's play test passes (five rooms).
 - Follow-up: backlog candidate `IChildEntity`/`IParentEntity : IGameEntity` folded into `063b` (`063` `ITEM.md`);
   backlog candidate `id`/`group` on `IMegaGameEntity` is new item `064` (idea, owner question open).
+
+## 2026-10-28 — mega-refactor-063b-damage-entity-rename
+
+- Summary: `IDamageable`/`IDamager` renamed to `IDamageableEntity`/`IDamagerEntity` in one mechanical commit (170 files,
+  484 replacements); they stay in `engine/.../damage/` (owner decision: item `023` decides their module).
+  `IChildEntity`/`IParentEntity` extend `IGameEntity`. Squash commit `550d67569`; `.git-blame-ignore-revs` lists it
+  (`bc2908a25`). Item `063` is done. The branch ran in parallel with `064a` (no shared file).
+- Contract check: a check script showed each changed file equal to its old content with only the two word
+  replacements; the rename commit built and passed the tests alone; clean build, 551 engine and 192 core tests pass;
+  warnings unchanged (88, with the old names mapped); no old name left; `git blame` with the ignore file skips the
+  rename; `contact-rule-selection.txt` unchanged; the owner's play test passes (three rooms).
+- Follow-up: none.
