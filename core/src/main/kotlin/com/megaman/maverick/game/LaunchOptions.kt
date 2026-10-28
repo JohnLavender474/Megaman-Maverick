@@ -5,5 +5,6 @@ data class LaunchOptions(
     val level: String? = null,
     val room: String? = null,
     val logTags: String? = null,
+    val weapons: String? = null,
     val autoPerf: Boolean = true
 )

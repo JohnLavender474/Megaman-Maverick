@@ -80,6 +80,7 @@ object DesktopLauncher {
             level = level,
             room = appArgs.room,
             logTags = appArgs.logTags,
+            weapons = appArgs.weapons,
             autoPerf = appArgs.autoPerf
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
@@ -96,6 +97,7 @@ object DesktopLauncher {
         println("- Level: " + launchOptions.level)
         println("- Room: " + appArgs.room)
         println("- Log Tags: " + appArgs.logTags)
+        println("- Weapons: " + appArgs.weapons)
         println("- Auto Perf: " + appArgs.autoPerf)
         println("- Performance: " + appArgs.performance)
         println("- Width: " + appArgs.width)
@@ -370,6 +372,13 @@ object DesktopLauncher {
             description = "Comma-separated log tags to print, or 'all' to print every tag."
         )
         var logTags: String? = null
+
+        @Parameter(
+            names = ["--weapons"],
+            description = "Comma-separated weapons to give Megaman at start, for example MOON_SCYTHES, or 'all'. " +
+                "The weapons are not written to the save file."
+        )
+        var weapons: String? = null
 
         @Parameter(
             names = ["--autoPerf"],

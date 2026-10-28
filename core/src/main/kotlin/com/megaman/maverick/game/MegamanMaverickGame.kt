@@ -437,16 +437,17 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
         screens.put(ScreenEnum.EXTRAS_SCREEN.name, ExtrasScreen(this))
 
-        when (val start = launch.start) {
+        val start = launch.start
+        if (start is LaunchStart.StartLevel) start.level.levelOverride?.let { applyLevelOverride(it) }
+        launch.weapons.forEach { state.addWeapon(it) }
+
+        when (start) {
             LaunchStart.Default -> when (params.runType) {
                 RunType.GAME -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
                 RunType.TEST -> startLevel(LevelDefinition.TEST_1)
             }
 
-            is LaunchStart.StartLevel -> {
-                start.level.levelOverride?.let { applyLevelOverride(it) }
-                startLevel(start.level)
-            }
+            is LaunchStart.StartLevel -> startLevel(start.level)
 
             is LaunchStart.OpenScreen -> {
                 if (!screens.containsKey(start.screen.name))

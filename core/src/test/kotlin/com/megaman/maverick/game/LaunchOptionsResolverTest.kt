@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import io.kotest.core.spec.style.DescribeSpec
@@ -97,6 +98,35 @@ class LaunchOptionsResolverTest : DescribeSpec({
             val resolved = resolve(LaunchOptions(logTags = "ALL")).resolved!!
             resolved.logAllTags shouldBe true
             resolved.logTags shouldBe emptySet()
+        }
+    }
+
+    describe("--weapons") {
+        it("gives no weapon when the option is not given") {
+            resolve(LaunchOptions()).resolved!!.weapons shouldBe emptySet()
+        }
+
+        it("splits, trims and parses the weapons, case-insensitively") {
+            val result = resolve(LaunchOptions(weapons = "moon_scythes, RUSH_JET ,"))
+            result.isValid shouldBe true
+            result.resolved!!.weapons shouldBe setOf(MegamanWeapon.MOON_SCYTHES, MegamanWeapon.RUSH_JET)
+        }
+
+        it("gives every weapon with 'all'") {
+            resolve(LaunchOptions(weapons = "ALL")).resolved!!.weapons shouldBe MegamanWeapon.entries.toSet()
+        }
+
+        it("rejects an unknown weapon and suggests the nearest name") {
+            val result = resolve(LaunchOptions(weapons = "MOON_SCYTHE,RUSH_JET"))
+            result.isValid shouldBe false
+            result.errors.size shouldBe 1
+            result.errors[0] shouldContain "Invalid --weapons 'MOON_SCYTHE'"
+            result.errors[0] shouldContain "Did you mean MOON_SCYTHES?"
+            result.errors[0] shouldContain "Allowed:"
+        }
+
+        it("rejects an unknown weapon also when 'all' is given") {
+            resolve(LaunchOptions(weapons = "all,NOPE")).isValid shouldBe false
         }
     }
 
