@@ -1014,3 +1014,12 @@ newest entry at the bottom.
 - Follow-up: bug filed `docs/issues/2026-10-27-spider-web-skips-super-on-destroy.md` (a `fix/` branch is agreed);
   backlog candidate is new item `066` (`GameSystem.reset()` clears pending removes); the `retainAll` note points to the
   existing issue `2026-10-22-mutable-ordered-set-retain-all.md`.
+
+## 2026-10-28 — master (direct change)
+
+- Summary: the `RUMBLECADE_FACTORY` entry in `LevelDefinition.kt` is commented out, so the unfinished Rumblecade level
+  (its tileset is not scaled to 32-pixel tiles yet) leaves the Extras menu. The owner asked for this directly on
+  `master` (2026-10-28: "Comment it out directly on master"); it is a one-entry change, not part of an active branch.
+  Visible change: the Extras menu lists one level fewer. Item `067` counts only art that the game uses.
+- Contract check: clean build passes; 571 engine and 200 core tests pass; warnings unchanged (88).
+- Follow-up: none.

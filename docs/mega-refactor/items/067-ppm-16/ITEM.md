@@ -50,14 +50,23 @@ basis (or set by set where each set is of artwork that matches in specs). I know
 images with \"none\" instead of \"linear\" or \"cubic\" which results in \"lossless\" scaled images. Worst case scenario,
 art has to be scaled back down at runtime which isn't too bad."
 
+2026-10-28 (verbatim): "I should also mention that certain tilesets actually haven't been scaled yet to match the
+32px requirement. For example, you referenced the Rumblecade tileset; that tileset needs to be scaled 2x, but I haven't
+done that yet. Ideally, we should focus only on art that is used in the game already. The Rumblecade level isn't used in
+the game (its extra-level entry should be commented out), so it doesn't count"
+
 ## Decisions
 
+- 2026-10-28 (owner): the item covers only art that the game uses. `RUMBLECADE_FACTORY` is commented out on `master`
+  (direct change), so `RumblecadeFactory` and its tileset are out. Without it, 12 used tiles do not halve without loss
+  (`MoonManTiles` 5, `Gravity Man Stage` 5 (only `Test1`), `mm9jewel` 1, `UnderwaterFanPillar_Gray` 1), plus the 20
+  atlas regions at an odd offset or size.
 - 2026-10-28 (owner): phase 1 is option C (`067a` to `067e`). Phase 2 then makes the source art and the maps 1x, after
   phase 1. Not chosen: option A (halve all art at once; the 1x art cannot halve) as the first step.
 
 ## Open questions
 
-1. The 290 tiles (278 in `RumblecadeFactory`) and the 20 atlas regions that do not halve without loss: decided case by
+1. The 12 tiles and the 20 atlas regions that do not halve without loss: decided case by
    case, or set by set (art with the same specs). Fallback (owner): keep the 2x art and scale it down at runtime. Note:
    a 0.5x scale with no interpolation (GIMP "None", nearest neighbor) is lossless only where every aligned 2x2 block
    has one color; in a mixed block it keeps one of the four pixels and drops the others. A phase 2 branch checks each

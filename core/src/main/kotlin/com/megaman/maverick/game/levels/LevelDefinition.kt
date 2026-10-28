@@ -181,24 +181,25 @@ enum class LevelDefinition(
                 tag != Life.TAG && tag != WeaponEnergyBulb.TAG
             }
         ),
-    ),
-    RUMBLECADE_FACTORY(
-        type = LevelType.EXTRA_LEVEL,
-        tmxMapSource = "RumblecadeFactory.tmx",
-        music = MusicAsset.MMX5_VOLT_KRAKEN_MUSIC,
-        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
-        levelOverride = LevelOverride(
-            loadout = LoadoutOverride(
-                heartTanks = MegaHeartTank.entries.toSet(),
-                healthTanks = MegaHealthTank.entries.associateWith { ConstVals.MAX_HEALTH }
-            ),
-            difficultyMode = DifficultyMode.HARD,
-            canSpawn = {
-                val tag = it.getTag()
-                tag != Life.TAG && tag != WeaponEnergyBulb.TAG
-            }
-        ),
     );
+
+    // RUMBLECADE_FACTORY(
+    //     type = LevelType.EXTRA_LEVEL,
+    //     tmxMapSource = "RumblecadeFactory.tmx",
+    //     music = MusicAsset.MMX5_VOLT_KRAKEN_MUSIC,
+    //     screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
+    //     levelOverride = LevelOverride(
+    //         loadout = LoadoutOverride(
+    //             heartTanks = MegaHeartTank.entries.toSet(),
+    //             healthTanks = MegaHealthTank.entries.associateWith { ConstVals.MAX_HEALTH }
+    //         ),
+    //         difficultyMode = DifficultyMode.HARD,
+    //         canSpawn = {
+    //             val tag = it.getTag()
+    //             tag != Life.TAG && tag != WeaponEnergyBulb.TAG
+    //         }
+    //     ),
+    // ),
 
     companion object {
         const val TMX_SOURCE_PREFIX = "tiled_maps/tmx/"
