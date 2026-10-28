@@ -1056,3 +1056,15 @@ newest entry at the bottom.
   each item start, Claude should offer the choice and make a recommendation").
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-28 — mega-refactor-016a-typed-level-state (into `mega-refactor-016-master`)
+
+- Summary: first branch merged into the parent `mega-refactor-016-master` (not into `master`). A typed `LevelState` on
+  `MegamanMaverickGame.levelState` and typed game members (`weaponsAttained`, private camera flags and collectors)
+  replace the property bag; the 58 bag calls use the fields; the game no longer implements `IPropertizable`; 11 unused
+  `ConstKeys` removed. Squash commit on the parent `07a4a3297`.
+- Contract check: a temporary suite (deleted before the merge; 200 seeds x 200 write moments on a real game, with a
+  hand mutation check) showed every read equal to a frozen copy of the old bag code; new permanent `LevelStateTest`
+  (6); clean build, 571 engine and 225 core tests pass; warnings 81 (no new one; 6 unchecked casts gone); greps clean;
+  the owner's play test passes (10 checks; an earlier run on the old code was logged as a baseline run).
+- Follow-up: bug filed `docs/issues/2026-10-28-end-level-beam-flag-left-true.md`; no backlog candidates.
