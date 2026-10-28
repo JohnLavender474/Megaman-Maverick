@@ -1,6 +1,6 @@
 # 068: Floor slopes for extra levels
 
-- Status: idea
+- Status: planned
 - Type: feature
 - Depends on: none
 - Related: `003`, `010`, `017`, `051`, `058`, `060`, `067`, `069`

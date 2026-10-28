@@ -75,8 +75,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | planned | none | | |
 | 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | idea | none | | |
 | 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | planned | none | | |
-| 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | idea | none | | |
-| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | idea | `031` | | |
+| 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | planned | none | | |
+| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | planned | `031` | | |
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | idea | `031` | | |
 
 ## Branches

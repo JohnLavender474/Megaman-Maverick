@@ -1,6 +1,6 @@
 # 069: A dash button for X
 
-- Status: idea
+- Status: planned
 - Type: feature
 - Depends on: `031`
 - Related: `010`, `024`, `029`, `034`, `047`, `055`, `060`, `068`, `070`
