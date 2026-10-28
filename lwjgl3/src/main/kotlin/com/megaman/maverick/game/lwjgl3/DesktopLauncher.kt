@@ -38,6 +38,7 @@ object DesktopLauncher {
     private const val DEFAULT_RESUME_ON_FOCUS_GAINED = false
     private const val DEFAULT_DEBUG_WINDOW = false
     private const val DEFAULT_DEBUG_SHAPES = false
+    private const val DEFAULT_DEBUG_PATHFINDING = false
     private const val DEFAULT_DEBUG_TEXT = false
     private const val DEFAULT_LOG_LEVELS = ""
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
@@ -104,6 +105,7 @@ object DesktopLauncher {
         println("- Height: " + appArgs.height)
         println("- Fullscreen: " + appArgs.fullScreen)
         println("- Debug Shapes: " + appArgs.debugShapes)
+        println("- Debug Pathfinding: " + appArgs.debugPathfinding)
         println("- Debug Text: " + appArgs.debugText)
         println("- Log Level: " + appArgs.logLevels)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
@@ -133,6 +135,7 @@ object DesktopLauncher {
         params.debugText = appArgs.debugText
         params.debugWindow = appArgs.debugWindow
         params.debugShapes = appArgs.debugShapes
+        params.debugPathfinding = appArgs.debugPathfinding
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
         params.pixelPerfect = appArgs.pixelPerfect
@@ -270,6 +273,13 @@ object DesktopLauncher {
             description = ("Enable debugging shapes. Default value = $DEFAULT_DEBUG_SHAPES.")
         )
         var debugShapes = DEFAULT_DEBUG_SHAPES
+
+        @Parameter(
+            names = ["--debugPathfinding"],
+            description = ("Draw the current path of each pathfinding entity as lines. Default value = " +
+                "$DEFAULT_DEBUG_PATHFINDING.")
+        )
+        var debugPathfinding = DEFAULT_DEBUG_PATHFINDING
 
         @Parameter(
             names = ["--debugText"],

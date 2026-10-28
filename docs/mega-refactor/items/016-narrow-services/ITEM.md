@@ -59,13 +59,38 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
      the interface); they move to `MegaGameEntity`, so no call site changes. This answers the open question of `072`.
   7. Random and the texture cache are out of scope.
   8. Screens keep the host.
-  9. `DrWily`'s screen switch becomes a `LevelState` callback, not an event, so it stays at the same point in the frame.
+  9. (replaced by decision 12) `DrWily`'s screen switch becomes a `LevelState` callback, not an event, so it stays at
+     the same point in the frame.
   10. `WEAPONS_ATTAINED` becomes a typed field that is not saved, outside `GameState` (the saved profile).
 
 - 2026-10-28 (owner, verbatim): "Since this is a major change, instead of merging each branch directly to master, can
   we merge to `016-master`?" The branches of `016` squash-merge into the parent branch `mega-refactor-016-master`
   (named by the pattern in `docs/mega-refactor/CLAUDE.md`, "Parent branches"); the parent merges into `master` with
   `--no-ff` when the owner agrees.
+
+- 2026-10-28 (owner, about a `016b` scope proposal to keep `game.paused` and `game.selectButtonAction` as forwards,
+  verbatim): "I'm not sure I agree with this. Forwarding patterns like this can obfuscate the actual source/target of
+  things." Then "approved" for the rule: 11. No forwarding members. Callers read the real home (for example
+  `game.clock.paused`, `game.players.selectButtonAction`). The forwards that `016a` kept under decision 4
+  (`getCurrentLevel()`, `getRooms()`, `isCameraRotating()` and the other functions that now read `levelState` or private
+  fields) are replaced by direct reads in `016c`, when the holder gets its real fields.
+- 2026-10-28 (owner): the pathfinding debug shapes (`Bat`, `SubmarineJoe`, `DEBUG_PATHFINDING`) are used now and then,
+  so `016b` keeps that path; a research agent looks for a better approach (a new item or `fix/` if there is one).
+
+- 2026-10-28 (owner, about the `016b` plan step that added `LevelState.showEndingScreen`, verbatim): "It doesn't seem
+  like good design to tightly couple a flag for the game's ending screen to the level state. Is there a better approach
+  to this?" After a research pass (the `016b` branch `docs/NOTES.md`), the owner chose option (c): "I like option c
+  since it reuses the existing global events manager". 12. This replaces decision 9: `DrWily` submits a new
+  `EventType.GAME_COMPLETE`, and `MegaLevelScreen.onEvent` switches to `ENDING_SCREEN`, like `END_LEVEL` does. The
+  switch moves from inside `engine.update` to `eventsMan.run()` later in the same frame; the other level exits already
+  switch there, and the research found no visible difference. `016b` also removes the dead `VICTORY_EVENT` `END`
+  ("endGame") flag (owner: "016b can remove the dead flag"). Left for `013`: one owner for level exits; whether the
+  ending becomes the `screenOnCompletion` of `WILY_STAGE_3` and that level is marked defeated; the typed event (`057`).
+
+- 2026-10-28 (owner, "The pathfinding debug fix works" and "approved to all"): the pathfinding debug drawing moved out
+  of `Bat` and `SubmarineJoe` into an optional hook of the pathfinding systems, behind the new `--debugPathfinding` flag
+  (`fix/pathfinding-debug-flag`, merged into `master` as `1d6dda6cc`). The 2 `game.getShapes()` reads in entities
+  are gone before `016c`.
 
 ## Open questions
 

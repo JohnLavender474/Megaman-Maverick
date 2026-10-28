@@ -87,7 +87,6 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
         private const val AIM_LINE_LENGTH = 10f
 
         private const val PATHFINDING_UPDATE_INTERVAL = 0.1f
-        private const val DEBUG_PATHFINDING = false
 
         private val animDefs = orderedMapOf(
             "move" pairTo AnimationDef(2, 1, 0.1f, true),
@@ -277,8 +276,7 @@ class SubmarineJoe(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEn
                     trajectoryConsumer = { trajectory ->
                         body.physics.velocity.lerp(trajectory, MOVE_LERP_SCALAR * Gdx.graphics.deltaTime)
                     },
-                    stopOnTargetNull = false,
-                    shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
+                    stopOnTargetNull = false
                 )
             },
             {

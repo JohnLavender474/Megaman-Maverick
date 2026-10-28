@@ -1068,3 +1068,11 @@ newest entry at the bottom.
   (6); clean build, 571 engine and 225 core tests pass; warnings 81 (no new one; 6 unchecked casts gone); greps clean;
   the owner's play test passes (10 checks; an earlier run on the old code was logged as a baseline run).
 - Follow-up: bug filed `docs/issues/2026-10-28-end-level-beam-flag-left-true.md`; no backlog candidates.
+
+## 2026-10-28 — master (docs)
+
+- Summary: `docs/mega-refactor/CLAUDE.md`, "Test maps": a request to run checks starts with the absolute path of the
+  worktree as a `cd` command, also for checks shown from a draft `CONTRACT.md` (owner: "For the sake of convenience,
+  please provide the path to the worktree being referred to. Add this instruction to the mega-refactor CLAUDE.md").
+- Contract check: not needed (docs only).
+- Follow-up: none.

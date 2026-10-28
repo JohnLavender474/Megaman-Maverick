@@ -34,6 +34,7 @@ import com.maverick.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.controller.ControllerSystem
 import com.megaman.maverick.game.controllers.ControllerUtils
@@ -56,6 +57,7 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.groups.GroupsSystem
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
+import com.maverick.game.engine.pathfinding.PathfinderResult
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.forEach
@@ -130,6 +132,7 @@ class MegamanMaverickGameParams {
     var writeLogsToFile: Boolean = false
     var debugWindow: Boolean = false
     var debugShapes: Boolean = false
+    var debugPathfinding: Boolean = false
     var debugText: Boolean = false
     var fixedStepScalar: Float = 1f
     var pixelPerfect: Boolean = false
@@ -885,6 +888,25 @@ class MegamanMaverickGame(
         val shapes = Array<IDrawableShape>()
         this.shapes = shapes
 
+        fun addPathDebugLines(result: PathfinderResult) {
+            val path = result.path ?: return
+            val halfTile = ConstVals.PPM / 2f
+            for (i in 0 until path.size - 1) {
+                val node1 = path[i]
+                val node2 = path[i + 1]
+                shapes.add(
+                    GameLine(
+                        node1.x * ConstVals.PPM + halfTile,
+                        node1.y * ConstVals.PPM + halfTile,
+                        node2.x * ConstVals.PPM + halfTile,
+                        node2.y * ConstVals.PPM + halfTile
+                    )
+                )
+            }
+        }
+
+        val pathDebugConsumer = if (params.debugPathfinding) ::addPathDebugLines else null
+
         val engine = GameEngine(
             systems = gdxArrayOf(
                 ControllerSystem(),
@@ -912,8 +934,18 @@ class MegamanMaverickGame(
                 }, diagnostics = diagnostics),
                 MotionSystem(diagnostics),
                 when (params.pathfinding) {
-                    "async" -> AsyncPathfindingSystem(MegaPathfinderFactory(this), diagnostics = diagnostics)
-                    "sync" -> SimplePathfindingSystem(MegaPathfinderFactory(this), diagnostics = diagnostics)
+                    "async" -> AsyncPathfindingSystem(
+                        MegaPathfinderFactory(this),
+                        diagnostics = diagnostics,
+                        pathDebugConsumer = pathDebugConsumer
+                    )
+
+                    "sync" -> SimplePathfindingSystem(
+                        MegaPathfinderFactory(this),
+                        diagnostics = diagnostics,
+                        pathDebugConsumer = pathDebugConsumer
+                    )
+
                     else -> throw IllegalArgumentException("Invalid pathfinding value: ${params.pathfinding}")
                 },
                 PointsSystem(diagnostics),

@@ -75,7 +75,6 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
         const val TAG = "Bat"
         private var atlas: TextureAtlas? = null
         private const val MAX_ALLOWED = 3
-        private const val DEBUG_PATHFINDING = false
         private const val HANG_DURATION = 0.75f
         private const val RELEASE_FROM_PERCH_DURATION = 0.25f
         private const val DEFAULT_FLY_TO_ATTACK_SPEED = 3f
@@ -401,8 +400,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
                     speed = { flyToAttackSpeed * ConstVals.PPM },
                     stopOnTargetReached = false,
                     stopOnTargetNull = false,
-                    onTargetNull = { directlyChaseMegaman() },
-                    shapes = if (DEBUG_PATHFINDING) game.getShapes() else null
+                    onTargetNull = { directlyChaseMegaman() }
                 )
             },
             { canMove && state == BatState.FLYING_TO_ATTACK }

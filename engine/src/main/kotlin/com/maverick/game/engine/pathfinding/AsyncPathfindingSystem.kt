@@ -16,8 +16,9 @@ class AsyncPathfindingSystem(
         DEFAULT_TIMEOUT,
         DEFAULT_TIMEOUT_UNIT
     ),
-    diagnostics: RuntimeDiagnostics? = null
-) : AbstractPathfindingSystem(factory, diagnostics) {
+    diagnostics: RuntimeDiagnostics? = null,
+    pathDebugConsumer: ((PathfinderResult) -> Unit)? = null
+) : AbstractPathfindingSystem(factory, diagnostics, pathDebugConsumer) {
 
     companion object {
         const val TAG = "PathfindingSystem"

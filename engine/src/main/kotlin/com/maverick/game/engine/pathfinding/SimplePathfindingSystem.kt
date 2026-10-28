@@ -5,8 +5,9 @@ import com.maverick.game.engine.diagnostics.RuntimeDiagnostics
 
 class SimplePathfindingSystem(
     factory: IPathfinderFactory,
-    diagnostics: RuntimeDiagnostics? = null
-) : AbstractPathfindingSystem(factory, diagnostics) {
+    diagnostics: RuntimeDiagnostics? = null,
+    pathDebugConsumer: ((PathfinderResult) -> Unit)? = null
+) : AbstractPathfindingSystem(factory, diagnostics, pathDebugConsumer) {
 
     override fun handleEntries(entries: OrderedMap<PathfindingComponent, IPathfinder>) {
         diagnostics?.beginEntry("SimplePathfindingSystem.handleEntries")
