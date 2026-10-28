@@ -324,8 +324,12 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   a room that another contract uses without a note in its process log.
 - The contract lists each check with its `--level` and `--room`.
 - When you ask the owner to run checks, give them as a list, not a table, so the commands are easy
-  to copy. Put each full command (from the worktree, with `--level` and `--room`) in its own
-  inline code span on its own line, followed by what to look at. Example:
+  to copy. Before the list, give the absolute path of the worktree that the commands run from, as a
+  `cd` command in its own inline code span (for example
+  `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-029a-player-contract`). This also
+  applies to checks listed in a draft `CONTRACT.md` that you show to the owner. Put each full command (from the
+  worktree, with `--level` and `--room`) in its own inline code span on its own line, followed by what to look at.
+  Example:
   - `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_aim`: `Met` and `SniperJoe` face
     Megaman on both sides, aim and fire.
 - Give a `--room` for every check, also in real levels, so the owner never has to play a level from
