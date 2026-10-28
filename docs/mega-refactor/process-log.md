@@ -1043,3 +1043,16 @@ newest entry at the bottom.
   are fixed by this branch, so no issue file: each map spawn leaked one random id (the pool is gone), and the
   `FireFlower` in `SMB3_1` (object `117`) could ignore the entity that held random id `-1`. Note: the branch folder
   files were empty on `master` after the branch start (a script error at the branch start); the squash restores them.
+
+## 2026-10-28 — master (docs)
+
+- Summary: `docs/mega-refactor/CLAUDE.md` gets two rules. "Item start: merge target": before the first branch of an
+  item, Claude offers the choice between merging each branch directly into `master` and merging into a parent branch,
+  with a recommendation. "Parent branches": the name `mega-refactor-<id>-master`, its worktree, how a branch merges
+  into the parent (squash in the parent's worktree; docs still on `master`), how the parent stays current, and how the
+  parent merges into `master` (`--no-ff`, after a combined play test and the owner's approval). Item `016` is the first
+  item with a parent branch, `mega-refactor-016-master` (owner request: "Since this is a major change, instead of
+  merging each branch directly to master, can we merge to `016-master`? Put in the mega-refactor CLAUDE.md that on
+  each item start, Claude should offer the choice and make a recommendation").
+- Contract check: not needed (docs only).
+- Follow-up: none.

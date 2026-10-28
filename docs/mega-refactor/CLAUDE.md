@@ -121,6 +121,18 @@ on `master`:
 
 A draft `SCOPE.md` written ahead of time still needs the user's approval (see "Planning").
 
+### Item start: merge target
+
+Before the first branch of an item starts, offer the user a choice and give a recommendation:
+
+- **Directly into `master`:** each branch squash-merges into `master` (see "Branch merge"). Recommend this for a small
+  item, or for an item whose branches are each safe to ship alone.
+- **Into a parent branch:** each branch squash-merges into the item's parent branch, and the parent merges into
+  `master` when the item (or an agreed set of its branches) is done (see "Parent branches"). Recommend this for a major
+  item: many files, an intermediate state that must not ship, or branches that only make sense together.
+
+Write the user's choice in the "Decisions" section of the `ITEM.md`.
+
 ### Branch start
 
 Do these steps in a docs-only commit directly on `master`:
@@ -131,7 +143,8 @@ Do these steps in a docs-only commit directly on `master`:
    item's first branch, set the item to `active` and fill in its start date.
 3. In `ITEM.md`, list the branch under "Branches".
 
-Then create the branch from `master` in its own worktree (see "Worktrees").
+Then create the branch from `master` in its own worktree (see "Worktrees"). If the item uses a parent branch, create
+the branch from the parent branch instead.
 
 ### Planning
 
@@ -226,6 +239,36 @@ alone does not need a new approval, but write the reason in the process log.
    fail, fix `master` at once, before any other merge.
 
 Do not delete the branch folder after the merge. It stays on `master` as history.
+
+### Parent branches
+
+An item that uses a parent branch (see "Item start: merge target") collects its branches there before they reach
+`master`.
+
+- **Name and worktree:** `mega-refactor-<id>-master`, for example `mega-refactor-016-master`, in
+  `.worktrees/mega-refactor-<id>-master/`. Create it from `master` when the item starts, in the same docs-only commit
+  as the first branch start. Add a row for it in the branches table of `ITEMS.md` and list it under "Branches" in
+  `ITEM.md`. It has no branch folder of its own; its history is in the folders of its branches and in `process-log.md`.
+- **A branch of the item** starts from the parent and does all of "Planning" and "During the branch" as usual.
+- **Merge a branch into the parent:** do "Branch merge" with these changes. The target is the parent, and the squash
+  happens in the parent's worktree (`git merge --squash <branch>` there), not in the main checkout. Step 2 compares
+  with the parent, not with `master`. Steps 5 to 7 (`process-log.md`, `ITEMS.md`, new items and bugs) still happen on
+  `master`, in a docs-only commit. Step 9 runs the automated checks in the parent's worktree.
+- **Keep the parent current:** after a code change reaches `master`, merge `master` into the parent (`git merge
+  master` in the parent's worktree) and run the automated checks there. Then merge the parent into each active branch
+  of the item that needs the change.
+- **Merge the parent into `master`:** when the item, or a set of its branches that the user agrees on, is done:
+  1. Merge `master` into the parent and run the automated checks.
+  2. The user plays the combined result. Use the manual checks of the merged branches; the user may choose a subset.
+     Write the result in `process-log.md`.
+  3. Get the user's explicit approval for this parent merge.
+  4. From the main checkout: `git merge --no-ff mega-refactor-<id>-master`, with a message that lists the merged
+     branches. Do not squash: each branch keeps its own squash commit on `master`, and the SHAs in
+     `.git-blame-ignore-revs` stay valid.
+  5. Run the automated checks on `master`, add an entry to `process-log.md`, and update `ITEMS.md`.
+  6. If the item has more branches to come, keep the parent and go on. Otherwise remove its worktree and delete it.
+- **Merge order:** a branch of the item never merges directly into `master`. A `fix/` branch or a branch of another
+  item still merges into `master` as usual.
 
 ### Small ad-hoc changes on `master`
 

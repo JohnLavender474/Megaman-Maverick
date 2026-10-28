@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `001`, `011`, `012`, `013`, `021`, `028`, `029`, `031`, `047`, `049`, `053`, `057`, `064`, `072`
-- Branches: `mega-refactor-016a-typed-level-state` (active, started 2026-10-28)
+- Branches: parent `mega-refactor-016-master` (active, started 2026-10-28); `mega-refactor-016a-typed-level-state` (active, started 2026-10-28, merges into the parent)
 
 ## Goal
 
@@ -61,6 +61,11 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
   8. Screens keep the host.
   9. `DrWily`'s screen switch becomes a `LevelState` callback, not an event, so it stays at the same point in the frame.
   10. `WEAPONS_ATTAINED` becomes a typed field that is not saved, outside `GameState` (the saved profile).
+
+- 2026-10-28 (owner, verbatim): "Since this is a major change, instead of merging each branch directly to master, can
+  we merge to `016-master`?" The branches of `016` squash-merge into the parent branch `mega-refactor-016-master`
+  (named by the pattern in `docs/mega-refactor/CLAUDE.md`, "Parent branches"); the parent merges into `master` with
+  `--no-ff` when the owner agrees.
 
 ## Open questions
 
