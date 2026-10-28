@@ -27,6 +27,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.special.CartV2
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -147,6 +148,8 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         feetFixture.drawingColor = Color.GREEN
         debugShapes.add { feetFixture }
 
+        body.addBlockFilter { block, _ -> isBelowCartTop(block) }
+
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.gravity
                 .setToDirection(direction.getOpposite())
@@ -165,13 +168,18 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
             
             feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
             val shouldStick = !body.isSensing(BodySense.FEET_ON_SAND)
-            feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> shouldStick }
+            feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, blockFixture ->
+                shouldStick && !isBelowCartTop(blockFixture.getEntity())
+            }
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(this, body)
     }
+
+    private fun isBelowCartTop(block: MegaGameEntity) =
+        block is CartV2 && body.getY() < block.body.getY() + block.body.getHeight() / 2f
 
     open fun defineUpdatablesComponent(component: UpdatablesComponent) {
         component.add { direction = game.gravity.direction }
