@@ -45,6 +45,11 @@ is 16px. This will require scaling all pixel art by 0.5x. The scaling cannot be 
 used in Tiled and in the game's assets also match what is expected. Therefore, I think 067 should be expanded with more
 branches that do this work after the branches you proposed."
 
+2026-10-28 (verbatim): "I agree that we will need to be cautious about certain artwork and do things on a case by case
+basis (or set by set where each set is of artwork that matches in specs). I know that in GIMP, there is a way to scale
+images with \"none\" instead of \"linear\" or \"cubic\" which results in \"lossless\" scaled images. Worst case scenario,
+art has to be scaled back down at runtime which isn't too bad."
+
 ## Decisions
 
 - 2026-10-28 (owner): phase 1 is option C (`067a` to `067e`). Phase 2 then makes the source art and the maps 1x, after
@@ -52,8 +57,11 @@ branches that do this work after the branches you proposed."
 
 ## Open questions
 
-1. The 290 tiles (278 in `RumblecadeFactory`) and the 20 atlas regions that do not halve without loss: redraw them at
-   1x, keep a 2x copy with a scale, or another option?
+1. The 290 tiles (278 in `RumblecadeFactory`) and the 20 atlas regions that do not halve without loss: decided case by
+   case, or set by set (art with the same specs). Fallback (owner): keep the 2x art and scale it down at runtime. Note:
+   a 0.5x scale with no interpolation (GIMP "None", nearest neighbor) is lossless only where every aligned 2x2 block
+   has one color; in a mixed block it keeps one of the four pixels and drops the others. A phase 2 branch checks each
+   image with the 2x2 test from the research scripts before and after.
 2. Phase 2 branch letters and order (tilesets and maps together, or tilesets first).
 
 ## Sources
