@@ -59,7 +59,8 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
      the interface); they move to `MegaGameEntity`, so no call site changes. This answers the open question of `072`.
   7. Random and the texture cache are out of scope.
   8. Screens keep the host.
-  9. `DrWily`'s screen switch becomes a `LevelState` callback, not an event, so it stays at the same point in the frame.
+  9. (replaced by decision 12) `DrWily`'s screen switch becomes a `LevelState` callback, not an event, so it stays at
+     the same point in the frame.
   10. `WEAPONS_ATTAINED` becomes a typed field that is not saved, outside `GameState` (the saved profile).
 
 - 2026-10-28 (owner, verbatim): "Since this is a major change, instead of merging each branch directly to master, can
@@ -75,6 +76,16 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
   fields) are replaced by direct reads in `016c`, when the holder gets its real fields.
 - 2026-10-28 (owner): the pathfinding debug shapes (`Bat`, `SubmarineJoe`, `DEBUG_PATHFINDING`) are used now and then,
   so `016b` keeps that path; a research agent looks for a better approach (a new item or `fix/` if there is one).
+
+- 2026-10-28 (owner, about the `016b` plan step that added `LevelState.showEndingScreen`, verbatim): "It doesn't seem
+  like good design to tightly couple a flag for the game's ending screen to the level state. Is there a better approach
+  to this?" After a research pass (the `016b` branch `docs/NOTES.md`), the owner chose option (c): "I like option c
+  since it reuses the existing global events manager". 12. This replaces decision 9: `DrWily` submits a new
+  `EventType.GAME_COMPLETE`, and `MegaLevelScreen.onEvent` switches to `ENDING_SCREEN`, like `END_LEVEL` does. The
+  switch moves from inside `engine.update` to `eventsMan.run()` later in the same frame; the other level exits already
+  switch there, and the research found no visible difference. `016b` also removes the dead `VICTORY_EVENT` `END`
+  ("endGame") flag (owner: "016b can remove the dead flag"). Left for `013`: one owner for level exits; whether the
+  ending becomes the `screenOnCompletion` of `WILY_STAGE_3` and that level is marked defeated; the typed event (`057`).
 
 ## Open questions
 
