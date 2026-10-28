@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `021`, `022`, `048`, `063`
-- Branches: `mega-refactor-064a-instance-identity` (active, started 2026-10-27; groups); next: `064b` (`id`)
+- Branches: `mega-refactor-064a-instance-identity` (merged 2026-10-28, squash `c86d67421`; groups); next: `064b` (`id`)
 
 ## Goal
 

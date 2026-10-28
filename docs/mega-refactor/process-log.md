@@ -995,3 +995,22 @@ newest entry at the bottom.
   warnings unchanged (88, with the old names mapped); no old name left; `git blame` with the ignore file skips the
   rename; `contact-rule-selection.txt` unchanged; the owner's play test passes (three rooms).
 - Follow-up: none.
+
+## 2026-10-28 — mega-refactor-064a-instance-identity
+
+- Summary: groups move out of `MegaGameEntity`/`MegaGameEntities` into an engine `GroupsSystem` (an ordered group
+  index; `getEntitiesInGroup`) with a `GroupsComponent` (owner decisions: a system, not `GameEngine`; an index like
+  `MegaGameEntities`). `GameSystem` gets `onEntityJoined`/`onEntityLeft` hooks. `MegaGameEntity.onSpawn` writes the
+  component when the spawn has a group; `GameEntityUtils` loses its cast. Intended change with no effect on current
+  content: an entity that skips `super.onDestroy()` and has a group leaves its group. `id` moves to `064b`. Squash
+  commit `c86d67421`. The branch ran in parallel with `063b`; `master` (with `063b`) was merged into it before the
+  squash, with no conflict.
+- Contract check: a temporary suite (deleted before the merge; 200 seeds x 300 operations, 168,925 non-empty
+  comparisons, 32,122 lookups from inside a system's update) showed the same ordered group members as the old
+  registry, first against the real old code, then against `GroupsSystem`; new permanent tests `GameSystemHooksTest`
+  (7), `GroupsSystemTest` (13), `EntityGroupsTest` (4); clean build after the merge of `master`, 571 engine and 196
+  core tests pass; warnings unchanged (88); greps clean; `contact-rule-selection.txt` unchanged; the owner's play test
+  passes (`MOON_MAN` `room10` and `room6` to `room10`, `WILY_STAGE_3` `room5`).
+- Follow-up: bug filed `docs/issues/2026-10-27-spider-web-skips-super-on-destroy.md` (a `fix/` branch is agreed);
+  backlog candidate is new item `066` (`GameSystem.reset()` clears pending removes); the `retainAll` note points to the
+  existing issue `2026-10-22-mutable-ordered-set-retain-all.md`.
