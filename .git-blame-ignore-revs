@@ -1,4 +1,4 @@
 # Engine package rename to com.maverick.game.engine (squash of mega-refactor-001a-package-rename)
 1a61734b5969944ff6565a400a27149e086de7b2
-# Rename IDamageable/IDamager to IDamageableEntity/IDamagerEntity (mega-refactor-063b; replace with the squash SHA at the merge)
-f555536eb54adfb2cf674cbfec7deaa7b7ef0cac
+# Rename IDamageable/IDamager to IDamageableEntity/IDamagerEntity (squash of mega-refactor-063b-damage-entity-rename)
+550d67569e64426ea1631b4480320150ddee13a9
