@@ -129,6 +129,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
                 }
             }
         }
+        super.onDestroy()
     }
 
     override fun onEvent(event: Event) {
