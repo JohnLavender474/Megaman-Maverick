@@ -74,7 +74,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 064 | [Entity instance identity: `id` and `group`](items/064-entity-instance-identity/ITEM.md) | refactor | active | none | 2026-10-27 | |
 | 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | planned | none | | |
 | 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | idea | none | | |
-| 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | idea | none | | |
+| 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | planned | none | | |
 
 ## Branches
 
