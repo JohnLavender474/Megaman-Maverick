@@ -8,7 +8,8 @@ import com.maverick.game.engine.systems.GameSystem
 
 abstract class AbstractPathfindingSystem(
     private val factory: IPathfinderFactory,
-    protected val diagnostics: RuntimeDiagnostics? = null
+    protected val diagnostics: RuntimeDiagnostics? = null,
+    private val pathDebugConsumer: ((PathfinderResult) -> Unit)? = null
 ): GameSystem(PathfindingComponent::class) {
 
     companion object {
@@ -32,7 +33,10 @@ abstract class AbstractPathfindingSystem(
                 val component = entity.getComponent(PathfindingComponent::class) ?: return@forEach
 
                 val currentPath = component.currentPath
-                if (currentPath != null) component.consumer(currentPath)
+                if (currentPath != null) {
+                    component.consumer(currentPath)
+                    pathDebugConsumer?.invoke(currentPath)
+                }
 
                 val updateIntervalTimer = component.intervalTimer
                 updateIntervalTimer.update(delta)
