@@ -49,6 +49,7 @@ abstract class GameSystem(
             2
         } else {
             entities.remove(e)
+            onEntityLeft(e)
             1
         }
     } else 0
@@ -58,29 +59,47 @@ abstract class GameSystem(
             entitiesToAdd.add(e)
             2
         } else {
-            entities.add(e)
+            if (entities.add(e)) onEntityJoined(e)
             1
         }
     } else 0
+
+    protected open fun onEntityJoined(entity: IGameEntity) {}
+
+    protected open fun onEntityLeft(entity: IGameEntity) {}
 
     fun qualifies(e: IGameEntity) = componentMask.all { e.hasComponent(it) }
 
     final override fun update(delta: Float) {
         updating = true
 
-        entities.addAll(entitiesToAdd)
+        for (i in 0 until entitiesToAdd.size) {
+            val e = entitiesToAdd[i]
+            if (entities.add(e)) onEntityJoined(e)
+        }
         entitiesToAdd.clear()
 
-        entities.removeAll(entitiesToRemove)
+        for (i in 0 until entitiesToRemove.size) {
+            val e = entitiesToRemove[i]
+            if (entities.remove(e)) onEntityLeft(e)
+        }
         entitiesToRemove.clear()
 
-        entities.removeAll { !qualifies(it) }
+        val iter = entities.iterator()
+        while (iter.hasNext()) {
+            val e = iter.next()
+            if (!qualifies(e)) {
+                iter.remove()
+                onEntityLeft(e)
+            }
+        }
         process(on, ImmutableCollection(entities), delta)
 
         updating = false
     }
 
     override fun reset() {
+        entities.forEach { onEntityLeft(it) }
         entities.clear()
         entitiesToAdd.clear()
     }

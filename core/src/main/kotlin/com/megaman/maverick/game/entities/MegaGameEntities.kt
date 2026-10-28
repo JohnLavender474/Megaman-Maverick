@@ -10,14 +10,12 @@ object MegaGameEntities {
 
     private val entities = OrderedSet<MegaGameEntity>()
     private val idToEntities = OrderedMap<Int, OrderedSet<MegaGameEntity>>()
-    private val groupToEntities = OrderedMap<String, OrderedSet<MegaGameEntity>>()
     private val entityTagToEntities = OrderedMap<String, OrderedSet<MegaGameEntity>>()
     private val entityTypeToEntities = OrderedMap<EntityType, OrderedSet<MegaGameEntity>>()
 
     fun add(entity: MegaGameEntity) {
         entities.add(entity)
         idToEntities.putIfAbsentAndGet(entity.id) { OrderedSet() }.add(entity)
-        entity.group?.let { groupToEntities.putIfAbsentAndGet(it) { OrderedSet() }.add(entity) }
         entityTagToEntities.putIfAbsentAndGet(entity.getTag()) { OrderedSet() }.add(entity)
         entityTypeToEntities.putIfAbsentAndGet(entity.getType()) { OrderedSet() }.add(entity)
     }
@@ -30,13 +28,6 @@ object MegaGameEntities {
             val set = idToEntities.get(entity.id)
             set.remove(entity)
             if (set.isEmpty) idToEntities.remove(entity.id)
-        }
-        entity.group?.let { group ->
-            if (groupToEntities.containsKey(group)) {
-                val set = groupToEntities.get(group)
-                set.remove(entity)
-                if (set.isEmpty) groupToEntities.remove(group)
-            }
         }
     }
 
@@ -69,8 +60,6 @@ object MegaGameEntities {
     fun existsAnyOfId(id: Int) = !getOfId(id).isEmpty
 
     fun getOfId(id: Int): OrderedSet<MegaGameEntity> = idToEntities.get(id, OrderedSet())
-
-    fun getOfGroup(group: String): OrderedSet<MegaGameEntity> = groupToEntities.get(group, OrderedSet())
 
     fun forEach(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }
 }

@@ -6,6 +6,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Pool
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.GameEntity
+import com.maverick.game.engine.groups.GroupsComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -30,8 +31,6 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     var id = 0
         private set
-    var group: String? = null
-        private set
     var timeSpawned = 0L
         private set
 
@@ -52,7 +51,10 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
 
     override fun onSpawn(spawnProps: Properties) {
         id = spawnProps.getOrDefault(ConstKeys.ID, RANDOM_ID_POOL.fetch(), Int::class)
-        group = spawnProps.get(ConstKeys.GROUP, String::class)
+        spawnProps.get(ConstKeys.GROUP, String::class)?.let { group ->
+            val groups = getComponent(GroupsComponent::class) ?: GroupsComponent().also { addComponent(it) }
+            groups.groups.add(group)
+        }
         timeSpawned = System.currentTimeMillis()
         MegaGameEntities.add(this)
         runnablesOnSpawn.values().forEach { it.invoke() }
@@ -69,7 +71,6 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
         MegaGameEntities.remove(this)
         runnablesOnDestroy.values().forEach { it.invoke() }
         if (id < 0) RANDOM_ID_POOL.free(id)
-        group = null
         GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
     }
 

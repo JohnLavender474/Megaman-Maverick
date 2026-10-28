@@ -54,6 +54,7 @@ import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.EventsManager
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.groups.GroupsSystem
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
@@ -921,7 +922,8 @@ class MegamanMaverickGame(
                     { audioMan.stopSound(it) },
                     { audioMan.stopMusic(it) },
                     diagnostics = diagnostics
-                )
+                ),
+                GroupsSystem()
             ),
             onSpawnRejected = {
                 // return a rejected pooled entity to its pool; never free an entity that is spawned or queued to

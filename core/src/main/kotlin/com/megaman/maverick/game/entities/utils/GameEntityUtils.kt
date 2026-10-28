@@ -19,6 +19,8 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.groups.GroupsComponent
+import com.maverick.game.engine.groups.GroupsSystem
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -69,17 +71,25 @@ fun getUpdateWhenNearCameraPredicate(entity: IBodyEntity, buffer: Float): () -> 
     }
 }
 
-fun getUpdateWhenGroupNearCameraPredicate(entity: IBodyEntity, group: String, buffer: Float): () -> Boolean {
-    val camera = (entity as MegaGameEntity).getGameCamera()
+fun getUpdateWhenGroupNearCameraPredicate(
+    entity: IBodyEntity,
+    groups: Array<String>,
+    buffer: Float
+): () -> Boolean {
+    val game = (entity as MegaGameEntity).game
+    val camera = game.getGameCamera()
+    val groupsSystem = game.getSystem(GroupsSystem::class)!!
     return predicate@{
         val window = GameObjectPools.fetch(GameRectangle::class)
             .set(camera.getRotatedBounds())
             .translate(-buffer, -buffer)
             .translateSize(2f * buffer, 2f * buffer)
-        val members = MegaGameEntities.getOfGroup(group)
-        for (member in members)
-            if (member is IBodyEntity && window.overlaps(member.body.getBounds()))
-                return@predicate true
+        for (i in 0 until groups.size) {
+            val members = groupsSystem.getEntitiesInGroup(groups[i])
+            for (member in members)
+                if (member is IBodyEntity && window.overlaps(member.body.getBounds()))
+                    return@predicate true
+        }
         return@predicate false
     }
 }
@@ -88,9 +98,14 @@ fun getStandardBodyDoUpdatePredicate(entity: IBodyEntity, spawnProps: Properties
     val updateDistance = spawnProps.get("${ConstKeys.UPDATE}_${ConstKeys.DISTANCE}", Float::class)
         ?: return ConstVals.ALWAYS_UPDATE
     val buffer = updateDistance * ConstVals.PPM
-    val group = (entity as MegaGameEntity).group
+    val groups = entity.getComponent(GroupsComponent::class)?.groups
     return when {
-        group != null -> getUpdateWhenGroupNearCameraPredicate(entity, group, buffer)
+        groups != null && groups.notEmpty() -> {
+            val names = Array<String>(groups.size)
+            groups.forEach { names.add(it) }
+            getUpdateWhenGroupNearCameraPredicate(entity, names, buffer)
+        }
+
         else -> getUpdateWhenNearCameraPredicate(entity, buffer)
     }
 }

@@ -49,14 +49,15 @@ Python tools in `utils/` (`level_analyzer`, `level_builder`, `diagnostics`) each
 - `engine: GameEngine`, `eventsMan: EventsManager`, `assMan: AssetManager`, `audioMan: MegaAudioManager`, `state: GameState`.
 - `players: MegaPlayers` (the players service; capacity 1) and `gravity: WorldGravity`. `postCreate()` makes the one `Megaman` once (not pooled) and registers it in slot 0. Code reaches a player through `game.players` (for example `targetPlayer`, `players.forEach`, `x.asPlayer`), not through a global.
 - `screens` (keyed by `ScreenEnum.name`), `viewports` (keys `ConstKeys.GAME` and `ConstKeys.UI`), and `runQueue`.
-- `createGameEngine()` sets the system order: Controller, Behaviors, World, Cullables, Motion, Pathfinding, Points, Updatables, Fonts, Animations, Sprites, DrawableShapes, Audio.
+- `createGameEngine()` sets the system order: Controller, Behaviors, World, Cullables, Motion, Pathfinding, Points, Updatables, Fonts, Animations, Sprites, DrawableShapes, Audio, Groups.
 
 Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` (the level screen calls `engine.update(delta)`), then `eventsMan.run()`.
 
 ### Engine ECS (`engine/`)
 
 - `GameEngine` queues spawns and destroys. It processes them at the start of `update()`, then updates each `GameSystem`.
-- `GameSystem` takes a component mask. An entity joins a system only if it has all components in the mask.
+- `GameSystem` takes a component mask. An entity joins a system only if it has all components in the mask. A system can override `onEntityJoined`/`onEntityLeft`; they fire when an entity really joins or leaves (in the engine, right after `onSpawn` and before the component `reset()` at destroy).
+- Entity groups: a `GroupsComponent` holds an entity's group names; `GroupsSystem` keeps the group index. Look up with `game.getSystem(GroupsSystem::class)!!.getEntitiesInGroup(name)`. `MegaGameEntity` puts the `ConstKeys.GROUP` spawn property into the component.
 - `GameEntity` stores components in a map keyed by `KClass`. Add them with `addComponent(...)`.
 - Components: `BodyComponent`, `SpritesComponent`, `AnimationsComponent`, `UpdatablesComponent`, `BehaviorsComponent`, `ControllerComponent`, `CullablesComponent`, `PointsComponent`, `DrawableShapesComponent`, `FontsComponent`, `PathfindingComponent`, and others.
 - Physics is custom (not Box2D): `engine/.../world/` (`Body`, `Fixture`, `WorldSystem`). Game rules for contacts are in `core/.../world/contacts/MegaContactRules.kt` (a table of fixture-type pairs, dispatched by the engine `ContactRuleDispatcher`; one rule class per pair in `world/contacts/rules/`) and `world/collisions/MegaCollisionHandler.kt`. `ContactRuleSelectionTest` checks the table against `core/src/test/resources/contact-rule-selection.txt`.
@@ -69,7 +70,7 @@ Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` 
 
 ### Entity base classes (`core/.../entities/contracts/`)
 
-- `MegaGameEntity`: base for all game entities. Handles `id`, `group`, `runnablesOnSpawn`/`runnablesOnDestroy`, difficulty spawn flags (`ConstKeys.HARD_MODE_ONLY`, `ConstKeys.NORMAL_MODE_ONLY`) and registration in `MegaGameEntities` (lookup by tag, type or id).
+- `MegaGameEntity`: base for all game entities. Handles `id`, `runnablesOnSpawn`/`runnablesOnDestroy`, difficulty spawn flags (`ConstKeys.HARD_MODE_ONLY`, `ConstKeys.NORMAL_MODE_ONLY`) and registration in `MegaGameEntities` (lookup by tag, type or id).
 - `AbstractHealthEntity`: health, damage timers, damage blink, `damageNegotiator`, `onHealthDepleted()`.
 - `AbstractEnemy`: adds Audio, Cullables, Body and Sprites components in `init()`. Subclasses implement `defineBodyComponent()` and `defineSpritesComponent()`. Handles item drops and spawn blink.
 - `AbstractBoss`: boss intro, health fill, defeat sequence. Registers as an event listener in `onSpawn` and removes itself in `onDestroy`.
