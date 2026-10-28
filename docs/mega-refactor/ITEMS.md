@@ -77,6 +77,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | planned | none | | |
 | 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | idea | none | | |
 | 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | idea | `031` | | |
+| 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | idea | `031` | | |
 
 ## Branches
 

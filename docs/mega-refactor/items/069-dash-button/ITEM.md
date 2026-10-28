@@ -3,7 +3,7 @@
 - Status: idea
 - Type: feature
 - Depends on: `031`
-- Related: `010`, `024`, `029`, `034`, `047`, `055`, `060`, `068`
+- Related: `010`, `024`, `029`, `034`, `047`, `055`, `060`, `068`, `070`
 - Branches: none yet
 
 ## Goal
@@ -63,7 +63,8 @@ Megaman's controls must not change.
 ## Open questions
 
 1. In an `X_LEVEL`, `SELECT` loses its usual action (`NEXT_WEAPON` or `START`). Is weapon switching from the pause
-   menu enough for X?
+   menu enough for X? (2026-10-28: the owner opened item `070` for dedicated buttons such as a weapon switch; this
+   question waits for it.)
 2. What does the controls screen show for "SELECT ACTION" while the override is on (for example during pause in an
    `X_LEVEL`): the saved value, or "DASH" with the row locked?
 3. Does the controls screen show the new row always, or only when X is available? Always is simpler; a hidden row
