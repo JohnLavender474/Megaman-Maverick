@@ -23,7 +23,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 013 | [Level flow state machine; pause as an overlay](items/013-level-flow-fsm/ITEM.md) | refactor | planned | `015` | | |
 | 014 | [Table-driven contact and collision rules](items/014-contact-rules-table/ITEM.md) | refactor | done | none | 2026-10-22 | 2026-10-22 |
 | 015 | [One entity state machine (enter/update/exit, state-owned timers)](items/015-entity-fsm/ITEM.md) | refactor | planned | none | | |
-| 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | planned | none | | |
+| 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | active | none | 2026-10-28 | |
 | 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | planned | none | | |
 | 018 | [Event-driven system membership; component IDs when needed](items/018-ecs-membership/ITEM.md) | refactor | idea | none | | |
 | 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | active | none | 2026-10-22 | |
@@ -112,6 +112,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-063b-damage-entity-rename`](items/063-entity-contracts-as-entity-types/branches/mega-refactor-063b-damage-entity-rename/process-log.md) | 063 | Rename `IDamageable`/`IDamager` to `IDamageableEntity`/`IDamagerEntity` (and decide their module); `IChildEntity`/`IParentEntity` extend `IGameEntity` | merged | 2026-10-27 | 2026-10-28 |
 | [`mega-refactor-064a-instance-identity`](items/064-entity-instance-identity/branches/mega-refactor-064a-instance-identity/process-log.md) | 064 | Groups as an engine `GroupsComponent` with an engine group query; `group` leaves `MegaGameEntity` and `MegaGameEntities` | merged | 2026-10-27 | 2026-10-28 |
 | [`mega-refactor-064b-map-object-id`](items/064-entity-instance-identity/branches/mega-refactor-064b-map-object-id/process-log.md) | 064 | `id` becomes a `core` component present only on entities spawned from a map; `RANDOM_ID_POOL` goes; runtime readers use entity references | merged | 2026-10-28 | 2026-10-28 |
+| [`mega-refactor-016a-typed-level-state`](items/016-narrow-services/branches/mega-refactor-016a-typed-level-state/process-log.md) | 016 | Typed `LevelState` fields and camera flags replace the `game` property bag | active | 2026-10-28 | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |

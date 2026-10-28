@@ -1,10 +1,10 @@
 # 016: Narrow services instead of `game` everywhere
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `001`, `011`, `012`, `013`, `021`, `028`, `029`, `031`, `047`, `049`, `053`, `057`, `064`, `072`
-- Branches: none yet
+- Branches: `mega-refactor-016a-typed-level-state` (active, started 2026-10-28)
 
 ## Goal
 
