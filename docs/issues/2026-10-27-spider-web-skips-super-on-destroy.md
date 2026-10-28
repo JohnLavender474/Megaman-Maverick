@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -37,3 +37,12 @@ files) and watch whether old webs keep effects that depend on the registry.
 
 Owner decision (2026-10-27): a `fix/` branch adds the call, then a permanent test checks that every `onDestroy()`
 override calls `super.onDestroy()`. `064a` kept the old behavior (a `SpiderWeb` never has a group).
+
+## Resolution
+
+Fixed by `fix/spider-web-super-on-destroy` (squash `9d3f67fc5`). `SpiderWeb.onDestroy` calls `super.onDestroy()` as its
+last statement. `SpiderWebDestroyTest` (3 cases) failed before the fix and passes after it. `OnDestroySuperCallTest`
+checks that every `onDestroy()` override in `core` calls `super.onDestroy()` (`MegaGameEntity` is the only
+exception). No effect in play: no code fetches the `SpiderWeb` pool and no live map places one (`Bospider` lost its
+web shot in `f4feeabcb`), so no play test was possible; the owner approved the merge on that basis (2026-10-28).
+`SpiderWeb` is dead code; removing it belongs to item `039`.
