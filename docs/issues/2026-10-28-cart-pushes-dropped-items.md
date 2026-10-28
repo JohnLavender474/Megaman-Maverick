@@ -1,6 +1,6 @@
 ---
-status: open
-verified: no
+status: closed
+verified: yes
 area: core
 gameplay-change: yes
 found-by: owner (2026-10-28)
@@ -47,3 +47,13 @@ Also put an item on top of a cart (an enemy dies above it) and check that the it
   the cart from above. The fix branch decides this in its short contract.
 - The fix goes in its own branch `fix/<slug>` (see the rules above), with a test for both cases (an item in front of
   the cart stays still; an item on the cart rides with it) and the manual check above.
+
+## Resolution
+
+Fixed by `fix/cart-pushes-dropped-items` (squash `b55f4ee23`). Cause (proved by `CartV2ItemTest`): two paths moved the item.
+The collision handler pushed it out to the side while the cart's front edge overlapped it, and once the cart was over
+it, `FeetBlockRule` carried it by the cart's position change (`STICK_TO_BLOCK`). Each path alone moved the item. Fix
+in `AbstractItem`: when the block is a `CartV2` and the item's bottom is below the cart's vertical center, a block
+filter skips the collision and the feet do not stick. An item on top of the cart still rides it. It applies to every
+item (also `Coin`, `Screw`, `HealthTank`, `HeartTank`). The owner's play test in `DESERT_MAN` `room9` and `room10`
+passes (2026-10-28).

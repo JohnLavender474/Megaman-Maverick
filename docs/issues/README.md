@@ -90,4 +90,4 @@ related-items: [<mega-refactor item IDs>]
 | [A `DuoBallCanon` in `WILY_STAGE_1` is on the `blocks` layer and never spawns](2026-10-27-wily-stage-1-duoballcanon-on-blocks-layer.md) | question | content | open |
 | [`Starkner` clears its `ALIVE` entry only in its `destroy()` override](2026-10-27-starkner-alive-cleanup-only-in-destroy.md) | yes | core | closed |
 | [`SpiderWeb.onDestroy` does not call `super.onDestroy()`](2026-10-27-spider-web-skips-super-on-destroy.md) | yes | core | closed |
-| [A moving `CartV2` pushes dropped items that lie on the ground in front of it](2026-10-28-cart-pushes-dropped-items.md) | no | core | open |
+| [A moving `CartV2` pushes dropped items that lie on the ground in front of it](2026-10-28-cart-pushes-dropped-items.md) | yes | core | closed |
