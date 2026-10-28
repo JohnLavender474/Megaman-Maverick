@@ -206,13 +206,13 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = when {
-                game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> 0f
+                game.levelState.roomTransition -> 0f
                 body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY
                 else -> GRAVITY
             }
             body.physics.gravity.y = -gravity * ConstVals.PPM
 
-            if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) body.physics.velocity.setZero()
+            if (game.levelState.roomTransition) body.physics.velocity.setZero()
 
             val velocity = body.physics.velocity
             if (players.any {

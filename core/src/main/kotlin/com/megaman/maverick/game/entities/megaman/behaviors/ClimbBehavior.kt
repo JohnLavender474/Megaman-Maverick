@@ -157,7 +157,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
 
             body.physics.gravityOn = false
 
-            if (shooting || game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
+            if (shooting || game.levelState.roomTransition) {
                 GameLogger.debug(MEGAMAN_CLIMB_BEHAVIOR_TAG, "shooting or room transition")
                 body.physics.velocity.setZero()
                 return

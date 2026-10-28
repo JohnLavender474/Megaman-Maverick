@@ -660,7 +660,7 @@ class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             }
             sprite.translate(offsetX * ConstVals.PPM, 0f)
 
-            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = damageBlink || game.levelState.roomTransition
         }
         .build()
 

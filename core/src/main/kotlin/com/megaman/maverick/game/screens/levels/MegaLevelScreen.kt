@@ -316,7 +316,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             game.getSystem(BehaviorsSystem::class)?.on = false
-            game.putProperty(ConstKeys.ROOM_TRANSITION, true)
+            game.levelState.roomTransition = true
 
             tryToPlayCurrentRoomMusic()
         }
@@ -338,7 +338,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     "player.body.getCenter=${player.body.getCenter()}"
             )
 
-            game.putProperty(ConstKeys.ROOM_TRANSITION, true)
+            game.levelState.roomTransition = true
         }
         cameraManagerForRooms.endTransition = {
             GameLogger.debug(
@@ -390,7 +390,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             game.getSystem(BehaviorsSystem::class)?.on = true
-            game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+            game.levelState.roomTransition = false
 
             game.players.forEach { (it as Megaman).running = false }
         }
@@ -412,14 +412,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EntityFactories.init()
 
         levelPointsText = MegaFontHandle(
-            { "POINTS: " + game.getProperty(ConstKeys.LEVEL_POINTS, Int::class).toString() },
+            { "POINTS: " + game.levelState.levelPoints.toString() },
             positionX = (ConstVals.VIEW_WIDTH - 0.5f) * ConstVals.PPM,
             positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
         levelPointsText.attachment = Position.TOP_RIGHT
 
         coinsText = MegaFontHandle(
-            { "COINS: " + game.getProperty(ConstKeys.COINS, Int::class).toString() },
+            { "COINS: " + game.levelState.coins.toString() },
             positionX = 0.5f * ConstVals.PPM,
             positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
@@ -509,9 +509,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
          */
 
-        game.putProperty(ConstKeys.COINS, 0)
-        game.putProperty(ConstKeys.LEVEL_POINTS, 0)
-        game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, 0f)
+        game.levelState.coins = 0
+        game.levelState.levelPoints = 0
+        game.levelState.timeSinceLastFloatingPoints = 0f
     }
 
     override fun getLayerBuilders() =
@@ -600,7 +600,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 engine.systems.forEach { it.on = true }
 
                 game.setFocusSnappedAway(false)
-                game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+                game.levelState.roomTransition = false
 
                 MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
 
@@ -986,9 +986,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 ) game.setFocusSnappedAway(false)
             }
 
-            val timeSinceLastFloatingPoints =
-                game.getProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, Float::class)!!
-            game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, timeSinceLastFloatingPoints + delta)
+            val timeSinceLastFloatingPoints = game.levelState.timeSinceLastFloatingPoints
+            game.levelState.timeSinceLastFloatingPoints = timeSinceLastFloatingPoints + delta
         }
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
@@ -1127,7 +1126,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         audioMan.unsetMusic()
 
-        game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+        game.levelState.roomTransition = false
         eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
         game.setFocusSnappedAway(false)

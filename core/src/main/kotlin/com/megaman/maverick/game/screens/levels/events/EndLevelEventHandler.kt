@@ -117,13 +117,13 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.LEVEL_END)
 
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+        game.levelState.megamanBeam = true
         game.audioMan.stopMusic()
     }
 
     override fun update(delta: Float) {
         beamCenter.set(beamSprite.boundingRectangle.getCenter())
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
+        game.levelState.megamanBeamCenter = beamCenter
 
         game.addDrawable(beamSprite)
 
@@ -224,7 +224,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             game.audioMan.stopMusic()
             val level = game.getCurrentLevel()
             game.eventsMan.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
-            game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+            game.levelState.megamanBeam = true
         }
     }
 }

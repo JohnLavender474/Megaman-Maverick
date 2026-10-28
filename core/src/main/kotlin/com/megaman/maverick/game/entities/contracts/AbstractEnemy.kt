@@ -308,25 +308,23 @@ abstract class AbstractEnemy(
     open fun spawnFloatingPoints() {
         var floatingPointsType = FloatingPointsType.POINTS100
 
-        val timeSinceLastFloatingPoints =
-            game.getProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, Float::class)!!
+        val timeSinceLastFloatingPoints = game.levelState.timeSinceLastFloatingPoints
 
         if (timeSinceLastFloatingPoints < ConstVals.AGGREGATE_FLOATING_POINTS_DUR) {
-            val previousFloatingPointsType =
-                game.getProperty(ConstKeys.LAST_FLOATING_POINTS_TYPE, FloatingPointsType::class)
+            val previousFloatingPointsType = game.levelState.lastFloatingPointsType
 
             if (previousFloatingPointsType != null &&
                 previousFloatingPointsType.ordinal < FloatingPointsType.entries.size - 1
             ) floatingPointsType = FloatingPointsType.entries[previousFloatingPointsType.ordinal + 1]
         }
 
-        game.putProperty(ConstKeys.LAST_FLOATING_POINTS_TYPE, floatingPointsType)
-        game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, 0f)
+        game.levelState.lastFloatingPointsType = floatingPointsType
+        game.levelState.timeSinceLastFloatingPoints = 0f
 
         val pointsToAdd = floatingPointsType.points
         if (pointsToAdd != null) {
-            val currentPoints = game.getOrDefaultProperty(ConstKeys.LEVEL_POINTS, 0, Int::class)
-            game.putProperty(ConstKeys.LEVEL_POINTS, currentPoints + pointsToAdd)
+            val currentPoints = game.levelState.levelPoints
+            game.levelState.levelPoints = currentPoints + pointsToAdd
         }
 
         // TODO: the one-up goes to the target player's slot; with more players, who gets it is a co-op rule (item 047)

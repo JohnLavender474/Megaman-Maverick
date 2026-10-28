@@ -127,7 +127,7 @@ class AsteroidsSpawner(game: MegamanMaverickGame) : MegaGameEntity(game), ICulla
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
-        if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) return@update
+        if (game.levelState.roomTransition) return@update
 
         val camBounds = game.getGameCamera().getRotatedBounds()
         spawners.forEach spawner@{ entry ->

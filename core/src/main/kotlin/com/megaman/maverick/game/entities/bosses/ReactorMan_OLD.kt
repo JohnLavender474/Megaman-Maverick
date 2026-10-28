@@ -351,7 +351,7 @@ package com.megaman.maverick.game.entities.bosses
 //
 //             sprite.setFlip(isFacing(Facing.RIGHT), false)
 //
-//             sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+//             sprite.hidden = damageBlink || game.levelState.roomTransition
 //         }
 //         .build()
 //

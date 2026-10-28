@@ -918,7 +918,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     }
 
     override fun onAddLevelDefeated(level: LevelDefinition) {
-        game.putProperty(ConstKeys.WEAPONS_ATTAINED, LevelRewards.weaponsFor(level))
+        game.weaponsAttained = LevelRewards.weaponsFor(level)
     }
 
     override fun onAddHeartTank(heartTank: MegaHeartTank) = setMaxHealthFromHeartTanks()

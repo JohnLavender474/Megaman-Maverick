@@ -189,8 +189,8 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
                     )
                 )
 
-                val coins = game.getOrDefaultProperty(ConstKeys.COINS, 0, Int::class)
-                game.putProperty(ConstKeys.COINS, coins + 1)
+                val coins = game.levelState.coins
+                game.levelState.coins = coins + 1
 
                 playSoundNow(SoundAsset.SMB3_COIN_SOUND, false)
 

@@ -29,7 +29,6 @@ import com.maverick.game.engine.common.LogReceiver
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectSetOf
-import com.maverick.game.engine.common.interfaces.IPropertizable
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.maverick.game.engine.common.objects.Properties
@@ -91,6 +90,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.maverick.game.engine.input.InputFrameBuilder
@@ -147,7 +147,7 @@ class MegamanMaverickGameParams {
 
 class MegamanMaverickGame(
     val params: MegamanMaverickGameParams = MegamanMaverickGameParams()
-) : Game(), IEventListener, IPropertizable {
+) : Game(), IEventListener {
 
     enum class Performance(val fps: Int, val fixedStep: Float) {
         VERY_LOW(30, 1f / 75f),
@@ -186,7 +186,14 @@ class MegamanMaverickGame(
         EventType.TURN_CONTROLLER_OFF,
         EventType.TOGGLE_PIXEL_PERFECT
     )
-    override val properties = Properties()
+    val levelState = LevelState()
+
+    private var cameraRotating = false
+    private var focusSnappedAway = false
+
+    private lateinit var drawables: ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>
+    private lateinit var shapes: Array<IDrawableShape>
+    private lateinit var systems: ObjectMap<String, GameSystem>
 
     val viewports = ObjectMap<String, Viewport>()
     val screens = ObjectMap<String, IScreen>()
@@ -214,6 +221,7 @@ class MegamanMaverickGame(
 
     lateinit var engine: GameEngine
     lateinit var state: GameState
+    var weaponsAttained: OrderedSet<MegamanWeapon>? = null
 
     lateinit var players: MegaPlayers
     lateinit var gravity: WorldGravity
@@ -766,16 +774,17 @@ class MegamanMaverickGame(
         return room
     }
 
-    fun setCurrentLevel(levelDef: LevelDefinition) = putProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", levelDef)
+    fun setCurrentLevel(levelDef: LevelDefinition) {
+        levelState.currentLevel = levelDef
+    }
 
-    fun getCurrentLevel() = getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)!!
+    fun getCurrentLevel() = levelState.currentLevel!!
 
-    fun isInExtraLevel() = getProperty("${ConstKeys.LEVEL}_${ConstKeys.DEF}", LevelDefinition::class)
-        ?.type == LevelType.EXTRA_LEVEL
+    fun isInExtraLevel() = levelState.currentLevel?.type == LevelType.EXTRA_LEVEL
 
     /**
      * Removes all the player's progress from memory: the game state, the weapons, the lives, and the
-     * weapons-attained property. The save file does not change.
+     * weapons attained (`weaponsAttained`). The save file does not change.
      */
     fun resetPlayerProgress() {
         GameLogger.debug(TAG, "resetPlayerProgress()")
@@ -783,7 +792,7 @@ class MegamanMaverickGame(
         state.clearWeapons()
         players.forEach { (it as Megaman).currentWeapon = MegamanWeapon.MEGA_BUSTER }
         state.resetLives()
-        removeProperty(ConstKeys.WEAPONS_ATTAINED)
+        weaponsAttained = null
     }
 
     /**
@@ -869,12 +878,12 @@ class MegamanMaverickGame(
     }
 
     private fun createGameEngine(): GameEngine {
-        val drawables = ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>()
+        val drawables = ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>()
         DrawingSection.entries.forEach { section -> drawables.put(section, InsertionOrderPriorityQueue()) }
-        properties.put(ConstKeys.DRAWABLES, drawables)
+        this.drawables = drawables
 
         val shapes = Array<IDrawableShape>()
-        properties.put(ConstKeys.SHAPES, shapes)
+        this.shapes = shapes
 
         val engine = GameEngine(
             systems = gdxArrayOf(
@@ -936,7 +945,7 @@ class MegamanMaverickGame(
 
         val systems = ObjectMap<String, GameSystem>()
         engine.systems.forEach { systems.put(it::class.simpleName, it) }
-        properties.put(ConstKeys.SYSTEMS, systems)
+        this.systems = systems
 
         return engine
     }
@@ -971,14 +980,15 @@ class MegamanMaverickGame(
 
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
 
-    fun setCameraRotating(value: Boolean) = putProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", value)
+    fun setCameraRotating(value: Boolean) {
+        cameraRotating = value
+    }
 
-    fun isCameraRotating() = getOrDefaultProperty("${ConstKeys.CAM}_${ConstKeys.ROTATION}", false, Boolean::class)
+    fun isCameraRotating() = cameraRotating
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-    fun getDrawables() =
-        properties.get(ConstKeys.DRAWABLES) as ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>
+    fun getDrawables() = drawables
 
     fun addDrawable(drawable: IComparableDrawable<Batch>) {
         val section = drawable.priority.section
@@ -986,10 +996,9 @@ class MegamanMaverickGame(
         queue.add(drawable)
     }
 
-    fun getShapes() = properties.get(ConstKeys.SHAPES) as Array<IDrawableShape>
+    fun getShapes() = shapes
 
-    fun getSystems(): ObjectMap<String, GameSystem> =
-        properties.get(ConstKeys.SYSTEMS) as ObjectMap<String, GameSystem>
+    fun getSystems(): ObjectMap<String, GameSystem> = systems
 
     fun <T : GameSystem> getSystem(clazz: KClass<T>): T? {
         val systems = getSystems()
@@ -997,41 +1006,33 @@ class MegamanMaverickGame(
         return clazz.cast(systems[clazz.simpleName]!!)
     }
 
-    fun setRoomsSupplier(supplier: () -> Array<RectangleMapObject>?) =
-        properties.put("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}", supplier)
+    fun setRoomsSupplier(supplier: () -> Array<RectangleMapObject>?) {
+        levelState.roomsSupplier = supplier
+    }
 
     fun getRooms(out: Array<RectangleMapObject>): Array<RectangleMapObject> {
-        if (properties.containsKey("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}")) {
-            val supplier =
-                properties.get("${ConstKeys.ROOMS}_${ConstKeys.SUPPLIER}") as () -> Array<RectangleMapObject>?
-
-            val rooms = supplier.invoke()
-
-            if (rooms != null) out.addAll(rooms)
-        }
+        val rooms = levelState.roomsSupplier?.invoke()
+        if (rooms != null) out.addAll(rooms)
         return out
     }
 
-    fun setCurrentRoomSupplier(supplier: () -> RectangleMapObject?) =
-        properties.put("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}", supplier)
-
-    fun getCurrentRoom(): RectangleMapObject? {
-        if (properties.containsKey("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}")) {
-            val supplier = properties.get("${ConstKeys.ROOM}_${ConstKeys.SUPPLIER}") as () -> RectangleMapObject?
-            return supplier.invoke()
-        }
-
-        return null
+    fun setCurrentRoomSupplier(supplier: () -> RectangleMapObject?) {
+        levelState.currentRoomSupplier = supplier
     }
 
-    fun setWorldContainer(worldContainer: IWorldContainer) = properties.put(ConstKeys.WORLD_CONTAINER, worldContainer)
+    fun getCurrentRoom(): RectangleMapObject? = levelState.currentRoomSupplier?.invoke()
 
-    fun getWorldContainer(): IWorldContainer? = properties.get(ConstKeys.WORLD_CONTAINER) as IWorldContainer?
+    fun setWorldContainer(worldContainer: IWorldContainer) {
+        levelState.worldContainer = worldContainer
+    }
 
-    fun setTiledMapLoadResult(tiledMapLoadResult: TiledMapLoadResult) =
-        properties.put(ConstKeys.TILED_MAP_LOAD_RESULT, tiledMapLoadResult)
+    fun getWorldContainer(): IWorldContainer? = levelState.worldContainer
 
-    fun getTiledMapLoadResult() = properties.get(ConstKeys.TILED_MAP_LOAD_RESULT) as TiledMapLoadResult
+    fun setTiledMapLoadResult(tiledMapLoadResult: TiledMapLoadResult) {
+        levelState.tiledMapLoadResult = tiledMapLoadResult
+    }
+
+    fun getTiledMapLoadResult() = levelState.tiledMapLoadResult!!
 
     fun showNotification(text: String, color: Color = Color.WHITE) {
         showNotification = true
@@ -1047,9 +1048,11 @@ class MegamanMaverickGame(
     // This is set to true when the camera focus on Megaman has (potentially) been snapped away suddenly, and so
     // the camera should be interpolated to Megaman's current position to prevent a jarring camera experience. This
     // is reset back to false once the camera reaches Megaman's true position again.
-    fun setFocusSnappedAway(value: Boolean) = putProperty("focus_snapped_away", value)
+    fun setFocusSnappedAway(value: Boolean) {
+        focusSnappedAway = value
+    }
 
-    fun isFocusSnappedAway() = getOrDefaultProperty("focus_snapped_away", false, Boolean::class)
+    fun isFocusSnappedAway() = focusSnappedAway
 
     fun isPixelPerfect() = pixelPerfect
 

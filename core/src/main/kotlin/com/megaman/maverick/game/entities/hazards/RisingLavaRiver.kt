@@ -307,7 +307,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
                     }
                 }
 
-                if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
+                if (!game.levelState.roomTransition) {
                     shakeDelay.update(delta)
                     if (shakeDelay.isFinished()) {
                         game.eventsMan.submitEvent(

@@ -490,7 +490,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val flipX = if (direction == Direction.UP) isFacing(Facing.LEFT) else isFacing(Facing.RIGHT)
             sprite.setFlip(flipX, false)
 
-            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = damageBlink || game.levelState.roomTransition
         }
         return component
     }

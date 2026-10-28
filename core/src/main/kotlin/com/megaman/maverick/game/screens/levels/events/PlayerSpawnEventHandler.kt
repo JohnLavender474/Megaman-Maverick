@@ -131,7 +131,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
         game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+        game.levelState.megamanBeam = true
 
         fadein.init()
 
@@ -140,7 +140,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
     override fun update(delta: Float) {
         beamCenter.set(beamSprite.boundingRectangle.getCenter())
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
+        game.levelState.megamanBeamCenter = beamCenter
 
         when {
             !fadein.isFinished() -> {
@@ -215,7 +215,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
             game.audioMan.playSound(SoundAsset.BEAM_SOUND)
 
-            game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", false)
+            game.levelState.megamanBeam = false
 
             showReadyText = false
 

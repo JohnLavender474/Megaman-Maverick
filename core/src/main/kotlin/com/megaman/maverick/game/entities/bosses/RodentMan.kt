@@ -620,7 +620,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
             sprite.setOriginCenter()
             sprite.rotation = if (stunned) 0f else direction.rotation
 
-            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = damageBlink || game.levelState.roomTransition
         }
         .build()
 

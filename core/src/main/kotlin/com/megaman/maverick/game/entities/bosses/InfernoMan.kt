@@ -438,7 +438,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 else -> isFacing(Facing.LEFT)
             }
             sprite.setFlip(flipX, false)
-            sprite.hidden = !frozen && (damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true))
+            sprite.hidden = !frozen && (damageBlink || game.levelState.roomTransition)
         }
         return component
     }

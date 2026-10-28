@@ -502,7 +502,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 if (currentState == DesertManState.WALL_SLIDE) body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
                 else isFacing(Facing.RIGHT)
             sprite.setFlip(flipX, false)
-            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = damageBlink || game.levelState.roomTransition
         }
 
         for (i in 1..ARM_EXTENSIONS_COUNT) {

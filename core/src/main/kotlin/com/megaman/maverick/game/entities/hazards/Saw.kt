@@ -130,7 +130,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         )
 
         for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
-            sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = game.levelState.roomTransition
             val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
             val center = pendulum.getPointFromAnchor(distance)
             sprite.setCenter(center)
@@ -171,7 +171,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         )
 
         for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
-            sprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = game.levelState.roomTransition
             val scale = i.toFloat() / RING_COUNT.toFloat()
             val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
             sprite.setCenter(center)
@@ -256,7 +256,7 @@ class Saw(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISprit
         sawSprite.setSize(2.5f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
         spritesComponent.putPreProcess("saw") { _, _ ->
-            sawSprite.hidden = game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sawSprite.hidden = game.levelState.roomTransition
             sawSprite.setPosition(body.getCenter(), Position.CENTER)
             sawSprite.setFlip(isFacing(Facing.LEFT), false)
         }

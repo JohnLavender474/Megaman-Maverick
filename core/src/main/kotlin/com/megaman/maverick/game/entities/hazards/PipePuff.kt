@@ -151,7 +151,7 @@ class PipePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
                 }
             }
             PipePuffState.DELAY -> {
-                if (!game.isProperty(ConstKeys.ROOM_TRANSITION, true)) delayTimer.update(delta)
+                if (!game.levelState.roomTransition) delayTimer.update(delta)
 
                 if (delayTimer.isFinished()) {
                     if (overlapsGameCamera()) requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)

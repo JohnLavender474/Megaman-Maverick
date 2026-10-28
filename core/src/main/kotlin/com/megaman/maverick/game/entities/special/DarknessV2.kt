@@ -369,10 +369,10 @@ class DarknessV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                 }
             }
 
-            val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+            val beaming = game.levelState.megamanBeam
             if (beaming) {
                 val beamCenter =
-                    game.getProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", Vector2::class)
+                    game.levelState.megamanBeamCenter
 
                 if (beamCenter != null) {
                     val lightSourceDef = lightSourcePool.fetch()

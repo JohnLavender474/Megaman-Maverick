@@ -31,7 +31,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         private val ALWAYS_TRUE_PRED: (Float) -> Boolean = { true }
 
         private fun predBasedOnRoomTrans(game: MegamanMaverickGame): (Float) -> Boolean {
-            return { !game.isProperty(ConstKeys.ROOM_TRANSITION, true) }
+            return { !game.levelState.roomTransition }
         }
     }
 

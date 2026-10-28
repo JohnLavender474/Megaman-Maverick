@@ -6,7 +6,6 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonActuator
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -73,7 +72,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
         onJustReleased = {
             if (stunned || damaged || game.isCameraRotating() || teleporting || !inPlay ||
                 !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
-                game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+                game.levelState.roomTransition
             ) {
                 GameLogger.debug(
                     MEGAMAN_CONTROLLER_COMPONENT_TAG,

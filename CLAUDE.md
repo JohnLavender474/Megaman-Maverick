@@ -48,6 +48,9 @@ Python tools in `utils/` (`level_analyzer`, `level_builder`, `diagnostics`) each
 
 - `engine: GameEngine`, `eventsMan: EventsManager`, `assMan: AssetManager`, `audioMan: MegaAudioManager`, `state: GameState`.
 - `players: MegaPlayers` (the players service; capacity 1) and `gravity: WorldGravity`. `postCreate()` makes the one `Megaman` once (not pooled) and registers it in slot 0. Code reaches a player through `game.players` (for example `targetPlayer`, `players.forEach`, `x.asPlayer`), not through a global.
+- `levelState: LevelState` (`levels/LevelState.kt`): the level values, typed. It lives for the session (pooled entities outlive a level); the level screen sets the values at level start and during play, and callers read them when used: current level, rooms and current-room suppliers, world container, map load result, `roomTransition`, the beam flag and center, `coins`, `levelPoints` and the floating-points state. The game functions `getCurrentLevel()`, `getCurrentRoom()`, `getRooms()`, `getWorldContainer()` and `getTiledMapLoadResult()` read it. `isCameraRotating()` and `isFocusSnappedAway()` are typed flags of the game.
+- `weaponsAttained`: the reward weapons of the last level that was newly defeated, for the get-weapon screen, which clears it. A save load and `resetPlayerProgress()` also clear it. Not saved.
+- The game has no property bag (it is not an `IPropertizable`). Add a typed field, not a string key.
 - `screens` (keyed by `ScreenEnum.name`), `viewports` (keys `ConstKeys.GAME` and `ConstKeys.UI`), and `runQueue`.
 - `createGameEngine()` sets the system order: Controller, Behaviors, World, Cullables, Motion, Pathfinding, Points, Updatables, Fonts, Animations, Sprites, DrawableShapes, Audio, Groups.
 

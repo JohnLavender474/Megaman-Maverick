@@ -75,8 +75,8 @@ class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
     override fun contactWithPlayer(player: MegaGameEntity) {
         if (!doContactWithPlayer) return
 
-        val coins = game.getOrDefaultProperty(ConstKeys.COINS, 0, Int::class)
-        game.putProperty(ConstKeys.COINS, coins + 1)
+        val coins = game.levelState.coins
+        game.levelState.coins = coins + 1
 
         playSoundNow(SoundAsset.SMB3_COIN_SOUND, false)
 

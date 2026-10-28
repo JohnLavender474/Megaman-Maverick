@@ -25,7 +25,7 @@ const val MEGAMAN_ANIM_KEY_SUPPLIER_TAG = "MEGA_MAN_ANIM_KEY_SUPPLIER"
 fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     !roomTransPauseTimer.isFinished() -> null
 
-    priorAnimKey != null && game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> {
+    priorAnimKey != null && game.levelState.roomTransition -> {
         var key = priorAnimKey
         if (key.contains("stand")) key = key.replace("stand", "run")
         if (key.contains("slip")) key = key.replace("slip", "run")

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
-import com.badlogic.gdx.utils.OrderedSet
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.Animator
@@ -143,14 +142,14 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         game.getUiCamera().setToDefaultPosition()
 
-        val weaponsAttained = (game.getProperty(ConstKeys.WEAPONS_ATTAINED) as OrderedSet<MegamanWeapon>?)?.toGdxArray()
+        val weaponsAttained = game.weaponsAttained?.toGdxArray()
         if (weaponsAttained == null || weaponsAttained.isEmpty) {
             GameLogger.error(TAG, "show(): failed to load weapons attained")
             game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
             return
         }
 
-        game.removeProperty(ConstKeys.WEAPONS_ATTAINED)
+        game.weaponsAttained = null
         GameLogger.debug(TAG, "show(): remove weapons attained prop from global game object")
 
         eventQueue.clear()
