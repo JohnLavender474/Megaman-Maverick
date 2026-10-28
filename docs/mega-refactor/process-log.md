@@ -1023,3 +1023,23 @@ newest entry at the bottom.
   Visible change: the Extras menu lists one level fewer. Item `067` counts only art that the game uses.
 - Contract check: clean build passes; 571 engine and 200 core tests pass; warnings unchanged (88).
 - Follow-up: none.
+
+## 2026-10-28 — mega-refactor-064b-map-object-id
+
+- Summary: the map object id moves from `MegaGameEntity.id` into a `core` `MapObjectComponent`, present only on
+  entities spawned with `ConstKeys.ID` (owner decision: `id` is level data, not an instance identity). Readers use
+  `IGameEntity.mapObjectId`; `RANDOM_ID_POOL` goes; `MegaGameEntities` indexes only map entities; the 4 casts go;
+  `Laser` ignores its owner and reflector by reference and by map id; `DarknessV3` (dead) is deleted. Intended changes
+  (accepted by the owner): the `FireFlower` `-1` sentinel matches no entity; a short `Laser` window after its owner or
+  reflector is destroyed. Squash commit `897d87f27`. Item `064` is done. The `RODENT_MAN` play test needed the Moon
+  Scythe, so the `--weapons` dev option was added first (`fix/weapons-launch-option`, `6ff8437b0`) and `master` was
+  merged into the branch.
+- Contract check: temporary suites (deleted before the merge) showed the new registry equal to a frozen copy of the
+  old id logic in 166,119 comparisons, and `Laser` equal in all 304,906 live comparisons (11,326 differences, all in
+  the accepted window); new permanent tests `MapObjectComponentTest` (7) and `LaserIgnoreTest` (4); clean build after
+  the merge of `master`, 571 engine and 216 core tests pass; warnings 87 (one fewer: `DarknessV3` deleted); greps
+  clean; `contact-rule-selection.txt` unchanged; the owner's play test passes (21 rooms).
+- Follow-up: backlog candidate is new item `071` (`getEntity()` casts to `MegaGameEntity`). Two bugs found in the scan
+  are fixed by this branch, so no issue file: each map spawn leaked one random id (the pool is gone), and the
+  `FireFlower` in `SMB3_1` (object `117`) could ignore the entity that held random id `-1`. Note: the branch folder
+  files were empty on `master` after the branch start (a script error at the branch start); the squash restores them.

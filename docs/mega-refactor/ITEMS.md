@@ -71,13 +71,14 @@ statuses and column meanings are in `CLAUDE.md`.
 | 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
 | 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | done | none | 2026-10-26 | 2026-10-27 |
 | 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | done | none | 2026-10-27 | 2026-10-28 |
-| 064 | [Entity instance identity: `id` and `group`](items/064-entity-instance-identity/ITEM.md) | refactor | active | none | 2026-10-27 | |
+| 064 | [Entity instance identity: `id` and `group`](items/064-entity-instance-identity/ITEM.md) | refactor | done | none | 2026-10-27 | 2026-10-28 |
 | 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | planned | none | | |
 | 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | idea | none | | |
 | 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | planned | none | | |
 | 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | planned | none | | |
 | 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | planned | `031` | | |
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | idea | `031` | | |
+| 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
@@ -109,7 +110,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-063a-contracts-are-entities`](items/063-entity-contracts-as-entity-types/branches/mega-refactor-063a-contracts-are-entities/process-log.md) | 063 | Entity contracts extend `IGameEntity`/`IMegaGameEntity`; casts that existed only for entity members go | merged | 2026-10-27 | 2026-10-27 |
 | [`mega-refactor-063b-damage-entity-rename`](items/063-entity-contracts-as-entity-types/branches/mega-refactor-063b-damage-entity-rename/process-log.md) | 063 | Rename `IDamageable`/`IDamager` to `IDamageableEntity`/`IDamagerEntity` (and decide their module); `IChildEntity`/`IParentEntity` extend `IGameEntity` | merged | 2026-10-27 | 2026-10-28 |
 | [`mega-refactor-064a-instance-identity`](items/064-entity-instance-identity/branches/mega-refactor-064a-instance-identity/process-log.md) | 064 | Groups as an engine `GroupsComponent` with an engine group query; `group` leaves `MegaGameEntity` and `MegaGameEntities` | merged | 2026-10-27 | 2026-10-28 |
-| [`mega-refactor-064b-map-object-id`](items/064-entity-instance-identity/branches/mega-refactor-064b-map-object-id/process-log.md) | 064 | `id` becomes a `core` component present only on entities spawned from a map; `RANDOM_ID_POOL` goes; runtime readers use entity references | active | 2026-10-28 | |
+| [`mega-refactor-064b-map-object-id`](items/064-entity-instance-identity/branches/mega-refactor-064b-map-object-id/process-log.md) | 064 | `id` becomes a `core` component present only on entities spawned from a map; `RANDOM_ID_POOL` goes; runtime readers use entity references | merged | 2026-10-28 | 2026-10-28 |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |

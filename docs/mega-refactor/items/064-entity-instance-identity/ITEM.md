@@ -1,10 +1,10 @@
 # 064: Entity instance identity: `id` and `group`
 
-- Status: active
+- Status: done
 - Type: refactor
 - Depends on: none
 - Related: `021`, `022`, `048`, `063`
-- Branches: `mega-refactor-064a-instance-identity` (merged 2026-10-28, squash `c86d67421`; groups), `mega-refactor-064b-map-object-id` (active, started 2026-10-28; `id`)
+- Branches: `mega-refactor-064a-instance-identity` (merged 2026-10-28, squash `c86d67421`; groups), `mega-refactor-064b-map-object-id` (merged 2026-10-28, squash `897d87f27`; `id`)
 
 ## Goal
 
