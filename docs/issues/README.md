@@ -91,3 +91,4 @@ related-items: [<mega-refactor item IDs>]
 | [`Starkner` clears its `ALIVE` entry only in its `destroy()` override](2026-10-27-starkner-alive-cleanup-only-in-destroy.md) | yes | core | closed |
 | [`SpiderWeb.onDestroy` does not call `super.onDestroy()`](2026-10-27-spider-web-skips-super-on-destroy.md) | yes | core | closed |
 | [A moving `CartV2` pushes dropped items that lie on the ground in front of it](2026-10-28-cart-pushes-dropped-items.md) | yes | core | closed |
+| [The end-level beam sets the Megaman beam flag to `true` when the beam ends](2026-10-28-end-level-beam-flag-left-true.md) | question | core | open |
