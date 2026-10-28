@@ -42,9 +42,12 @@ item."
   to keep `IMegaGameEntity` until `016` is done, then delete it (option (c)); not chosen: moving its parts to
   `IGameEntity` or to components and services now (option (b)), or deleting it before `016` (casts come back).
 
+- 2026-10-28 (owner, decision 6 in `016`): the 3 default methods (`getGameCamera`, `playSoundNow`, `stopSoundNow`) and
+  `game` leave `IMegaGameEntity` in `016c`, not in this item.
+
 ## Open questions
 
-1. Do the 3 default methods go in `016`, or in this item?
+None.
 
 ## Sources
 
