@@ -67,6 +67,15 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
   (named by the pattern in `docs/mega-refactor/CLAUDE.md`, "Parent branches"); the parent merges into `master` with
   `--no-ff` when the owner agrees.
 
+- 2026-10-28 (owner, about a `016b` scope proposal to keep `game.paused` and `game.selectButtonAction` as forwards,
+  verbatim): "I'm not sure I agree with this. Forwarding patterns like this can obfuscate the actual source/target of
+  things." Then "approved" for the rule: 11. No forwarding members. Callers read the real home (for example
+  `game.clock.paused`, `game.players.selectButtonAction`). The forwards that `016a` kept under decision 4
+  (`getCurrentLevel()`, `getRooms()`, `isCameraRotating()` and the other functions that now read `levelState` or private
+  fields) are replaced by direct reads in `016c`, when the holder gets its real fields.
+- 2026-10-28 (owner): the pathfinding debug shapes (`Bat`, `SubmarineJoe`, `DEBUG_PATHFINDING`) are used now and then,
+  so `016b` keeps that path; a research agent looks for a better approach (a new item or `fix/` if there is one).
+
 ## Open questions
 
 The smaller questions in `NOTES.md` (for example the debug shapes, and whether the constructor test goes in `016c` or
