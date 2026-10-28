@@ -87,6 +87,11 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
   ("endGame") flag (owner: "016b can remove the dead flag"). Left for `013`: one owner for level exits; whether the
   ending becomes the `screenOnCompletion` of `WILY_STAGE_3` and that level is marked defeated; the typed event (`057`).
 
+- 2026-10-28 (owner, "The pathfinding debug fix works" and "approved to all"): the pathfinding debug drawing moved out
+  of `Bat` and `SubmarineJoe` into an optional hook of the pathfinding systems, behind the new `--debugPathfinding` flag
+  (`fix/pathfinding-debug-flag`, merged into `master` as `1d6dda6cc`). The 2 `game.getShapes()` reads in entities
+  are gone before `016c`.
+
 ## Open questions
 
 The smaller questions in `NOTES.md` (for example the debug shapes, and whether the constructor test goes in `016c` or
