@@ -99,8 +99,8 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 - **Talk zone:** a Tiled object (in a layer to decide, see "Open questions") with a scene id and a mode:
   - forced: when the player is inside and on the ground, the scene starts;
-  - optional: a HUD hint shows while the player is inside, and a button starts the scene (X6 uses Select). The
-    button is open question 4.
+  - optional: a HUD hint shows while the player is inside, and Up starts the scene (decision 3). Gameplay wins over
+    dialogue: the talk opens only if the Up press did not start another action (see decision 3).
 - **Boss pre-fight talk:** an optional scene between `ENTER_BOSS_ROOM` and the health fill. The boss waits until the
   scene ends before `BOSS_READY`. The boss music starts after the scene, as in X6.
 - **Events:** any `EventType` (and later the typed channels of `057`) can start a scene, for example a room entry.
@@ -132,6 +132,8 @@ locked.
    - **`RefactorTest082.tmx`**, one room for each case:
      - `forced_intro`: radio talk after Megaman spawns, before he is playable (forced, `WORLD`).
      - `optional_hint`: an optional talk zone with the HUD hint, as the X6 talk zones (`mmx-demake-tools` `docs/engine.md`, "Talk zones").
+     - `optional_ladder_overlap`: an optional talk zone that overlaps a ladder. Up at the ladder climbs and does not
+       open the talk; Up on open ground in the same zone opens it (decision 3).
      - `boss_walk`: a test boss spawns; then Megaman runs, jumps over a block and stops on a marker (a scripted move
        with the no-stuck rules); then the boss talks (`PLAYER` freeze, the boss animates).
      - `passive_chatter`: a `NONE` box that plays while the player moves and shoots.
@@ -179,14 +181,28 @@ our game now."
 - Q4 (port the screens): "Ideally, yes. We can start with just the opening screen one, but ideally by the end of the
   item, all pre-existing screens that need it have been ported over"
 
+2026-10-29, on Up as the optional talk button and on a talk zone that overlaps a ladder (verbatim): "I think that's a
+good plan. The onus is on the level designer to be smart, and if there is overlap, then gameplay always wins over
+dialogue. Yes, write it as decision 3"
+
 ## Decisions
 
 1. 2026-10-29: `082a` has two first callers: `OpeningScreen` on the new runner (caption lines with fade in and out),
    and the test map `RefactorTest082.tmx` with one room per dialogue case (see "Proposed branches"). A scripted move
    must never leave the player stuck (see "Rules for a scene").
 2. 2026-10-29: `012` comes before `082a`. `082` keeps `012` in "Depends on".
-3. 2026-10-29: the optional talk button is a button combo that is free and always present. Not chosen yet; see open
-   question 4.
+3. 2026-10-29: an optional talk opens with **Up** while the player is in the zone. No two-button combo is free in
+   every setting (`NOTES.md`, "Free buttons for an optional talk"). **Gameplay always wins over dialogue:**
+   - An Up press opens the talk only if the player is on the ground and the press did not start another action: a
+     climb, a `PipePortal`, a `SpringBouncer`, or any later object that uses Up.
+   - The zone checks one tick after the press. If the player is still on the ground, not climbing and not in a pipe,
+     the talk opens. Else the press belonged to the other action, and the talk ignores it.
+   - The HUD hint stays on. The player steps away from the other object (and stays in the zone) and presses Up again.
+   - The reason: if the talk took the press, the player could hang on a ladder and the talk would wait forever for
+     the ground (`ClimbBehavior.kt:95-106`: the player stays on a ladder until A, the ladder end, or a side exit).
+   - The level designer must keep talk zones clear of Up objects. The level validator (`003`) gives a warning, not an
+     error, for an overlap, because the overlap still works.
+   - Forced zones do not use Up and are not affected.
 4. 2026-10-29: by the end of the item, every existing screen that needs the box uses it. `082a` starts with
    `OpeningScreen`.
 
@@ -197,12 +213,9 @@ our game now."
    (no sound exists for it today).
 3. Where do talk zones go in Tiled: the `triggers` layer (its builder does nothing today, and no TMX has the layer) or
    the `specials` layer as an entity (like `EventTrigger`)?
-4. The optional talk button. The scan of 2026-10-29 (`NOTES.md`, "Free buttons for an optional talk") found no free
-   two-button combo on the 8-button pad. The candidates are: Up while standing in the zone (contextual, as ladders and
-   `PipePortal` use Up), an entry in the pause menu, or a "talk" binding after `070`.
-5. Can the player turn off optional dialogue (a setting, as the X5 navigator-mute ROM hack shows players want)?
-6. Saved seen flags need `007` (save slots). Until then, are story seen flags per session only?
-7. `RobotMasterIntroScreenV2` is not registered. Delete it, or port it with the others?
+4. Can the player turn off optional dialogue (a setting, as the X5 navigator-mute ROM hack shows players want)?
+5. Saved seen flags need `007` (save slots). Until then, are story seen flags per session only?
+6. `RobotMasterIntroScreenV2` is not registered. Delete it, or port it with the others?
 
 ## Sources
 
