@@ -178,7 +178,16 @@ class GameState : Resettable {
         )
     }
 
-    fun hasAnyHealthTanks() = MegaHealthTank.entries.any { containsHealthTank(it) }
+    fun fillHealthTank(healthTank: MegaHealthTank) {
+        if (!containsHealthTank(healthTank)) {
+            putHealthTank(healthTank, ConstVals.MAX_HEALTH)
+            return
+        }
+        val missing = ConstVals.MAX_HEALTH - getHealthTankValue(healthTank)
+        if (missing > 0) addHealthToHealthTank(healthTank, missing)
+    }
+
+    fun hasAnyHealthTanks() =MegaHealthTank.entries.any { containsHealthTank(it) }
 
     fun addToHealthTanks(health: Int): Boolean {
         check(health >= 0) { "Cannot add negative amount of health" }
