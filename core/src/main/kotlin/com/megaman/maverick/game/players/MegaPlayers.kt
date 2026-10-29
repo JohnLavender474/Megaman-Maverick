@@ -7,12 +7,15 @@ import com.maverick.game.engine.events.Signal
 import com.maverick.game.engine.input.InputSource
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.Players
+import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.contracts.IMegaGameEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.input.PlayerInputs
 
 class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(capacity)) :
     Players<MegaGameEntity>(capacity) {
+
+    var selectButtonAction = SelectButtonAction.NEXT_WEAPON
 
     override fun register(slot: PlayerSlot, entity: MegaGameEntity): MegaGameEntity {
         super.register(slot, entity)

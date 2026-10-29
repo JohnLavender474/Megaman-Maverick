@@ -38,7 +38,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.AnimationUtils
 
 class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
@@ -149,7 +148,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (begTimer.isFinished()) {
                     stillTimer.update(delta)
                     if (stillTimer.isJustFinished() && targetPlayer.existenceState.liveAfterUpdate)
-                        game.setCurrentScreen(ScreenEnum.ENDING_SCREEN.name)
+                        game.eventsMan.submitEvent(Event(EventType.GAME_COMPLETE))
                 }
             }
         }

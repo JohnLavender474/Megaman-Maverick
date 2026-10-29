@@ -242,7 +242,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
     override fun render(delta: Float) {
         super.render(delta)
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             if (outro) outroTimer.update(delta)
             if (outroTimer.isJustFinished()) {
                 game.setCurrentLevel(selectedLevelDef!!)

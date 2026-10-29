@@ -411,7 +411,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()
-            if (!game.paused) when {
+            if (!game.clock.paused) when {
                 moving && targetPlayer.existenceState.liveAfterUpdate -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
                 else -> rawRotation = direction.rotation
             }

@@ -80,7 +80,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.ScreenController
-import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.controllers.loadControllerButtons
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -109,6 +108,7 @@ import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreenV2
 import com.megaman.maverick.game.screens.other.*
+import com.megaman.maverick.game.state.GameClock
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.utils.AsyncFileWriter
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -190,11 +190,12 @@ class MegamanMaverickGame(
         EventType.TOGGLE_PIXEL_PERFECT
     )
     val levelState = LevelState()
+    val clock = GameClock()
 
     private var cameraRotating = false
     private var focusSnappedAway = false
 
-    private lateinit var drawables: ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>
+    private lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: Array<IDrawableShape>
     private lateinit var systems: ObjectMap<String, GameSystem>
 
@@ -216,7 +217,6 @@ class MegamanMaverickGame(
     lateinit var gamepadInput: GamepadInput
     private lateinit var keyboardInput: KeyboardInput
     private val slot0FrameBuilder = InputFrameBuilder(MegaControllerButton.entries)
-    lateinit var selectButtonAction: SelectButtonAction
 
     lateinit var assMan: AssetManager
     lateinit var eventsMan: EventsManager
@@ -228,9 +228,6 @@ class MegamanMaverickGame(
 
     lateinit var players: MegaPlayers
     lateinit var gravity: WorldGravity
-
-    var paused = false
-        private set
 
     private var currentScreenKey: String? = null
     private var screenController: ScreenController? = null
@@ -305,7 +302,6 @@ class MegamanMaverickGame(
         keyboardInput = KeyboardInput(buttons)
         gamepadInput = GamepadInput(buttons)
         controllerPoller = FrameControllerPoller { players.inputs[PlayerSlot(0)] }
-        selectButtonAction = SelectButtonAction.NEXT_WEAPON
 
         eventsMan = EventsManager()
         eventsMan.addListener(this)
@@ -719,15 +715,15 @@ class MegamanMaverickGame(
 
     override fun pause() {
         GameLogger.log(TAG, "pause()")
-        if (paused) return
-        paused = true
+        if (clock.paused) return
+        clock.paused = true
         currentScreen?.pause()
     }
 
     override fun resume() {
         GameLogger.log(TAG, "resume()")
-        if (!paused) return
-        paused = false
+        if (!clock.paused) return
+        clock.paused = false
         currentScreen?.resume()
     }
 
@@ -888,7 +884,7 @@ class MegamanMaverickGame(
     }
 
     private fun createGameEngine(): GameEngine {
-        val drawables = ObjectMap<DrawingSection, java.util.Queue<IComparableDrawable<Batch>>>()
+        val drawables = ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>()
         DrawingSection.entries.forEach { section -> drawables.put(section, InsertionOrderPriorityQueue()) }
         this.drawables = drawables
 
@@ -1000,7 +996,7 @@ class MegamanMaverickGame(
             it.show(props)
             it.resize(Gdx.graphics.width, Gdx.graphics.height)
         }
-        if (paused) resume()
+        if (clock.paused) resume()
     }
 
     fun startLevel(level: LevelDefinition? = null) {
@@ -1027,7 +1023,7 @@ class MegamanMaverickGame(
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 
-    fun getDrawables() = drawables
+    fun getDrawables(): ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>> = drawables
 
     fun addDrawable(drawable: IComparableDrawable<Batch>) {
         val section = drawable.priority.section

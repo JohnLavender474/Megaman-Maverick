@@ -96,7 +96,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     )
 
     val select = ButtonActuator(onJustReleased = {
-        when (game.selectButtonAction) {
+        when (game.players.selectButtonAction) {
             SelectButtonAction.NEXT_WEAPON -> {
                 if (!inPlay || damaged || teleporting) {
                     GameLogger.debug(

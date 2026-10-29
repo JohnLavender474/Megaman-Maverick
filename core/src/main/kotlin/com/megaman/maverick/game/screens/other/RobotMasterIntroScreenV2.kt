@@ -237,7 +237,7 @@ class RobotMasterIntroScreenV2(private val game: MegamanMaverickGame) : BaseScre
             return
         }
 
-        if (game.paused) return
+        if (game.clock.paused) return
 
         totalTimer.update(delta)
 

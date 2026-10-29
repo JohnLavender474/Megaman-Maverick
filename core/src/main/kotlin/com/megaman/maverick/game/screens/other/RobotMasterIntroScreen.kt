@@ -223,7 +223,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             return
         }
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             totalTimer.update(delta)
 
             scrollingStars.update(delta)

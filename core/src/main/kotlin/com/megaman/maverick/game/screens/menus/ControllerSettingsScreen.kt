@@ -217,7 +217,7 @@ class ControllerSettingsScreen(
                     game.gamepadInput.loadPrefsOnConnect = true
                 }
 
-                loadSelectButtonActionFromPrefs(isKeyboardSettings)?.let { game.selectButtonAction = it }
+                loadSelectButtonActionFromPrefs(isKeyboardSettings)?.let { game.players.selectButtonAction = it }
 
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
@@ -245,7 +245,7 @@ class ControllerSettingsScreen(
 
             override fun onSelect(delta: Float): Boolean {
                 ControllerUtils.resetSettingsToDefaults(controllerButtons, isKeyboardSettings)
-                game.selectButtonAction = SelectButtonAction.NEXT_WEAPON
+                game.players.selectButtonAction = SelectButtonAction.NEXT_WEAPON
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
@@ -316,7 +316,7 @@ class ControllerSettingsScreen(
         row -= 1f
 
         val selectActionTextSupplier = {
-            "${SELECT_ACTION}: ${game.selectButtonAction.text}"
+            "${SELECT_ACTION}: ${game.players.selectButtonAction.text}"
         }
         val selectActionFontHandle = MegaFontHandle(
             selectActionTextSupplier,
@@ -338,14 +338,14 @@ class ControllerSettingsScreen(
                 Direction.UP -> MegaControllerButton.SELECT.name
                 Direction.DOWN -> BACK
                 Direction.LEFT -> {
-                    game.selectButtonAction = game.selectButtonAction.previous()
-                    saveSelectButtonActionToPrefs(game.selectButtonAction, isKeyboardSettings)
+                    game.players.selectButtonAction = game.players.selectButtonAction.previous()
+                    saveSelectButtonActionToPrefs(game.players.selectButtonAction, isKeyboardSettings)
                     SELECT_ACTION
                 }
 
                 Direction.RIGHT -> {
-                    game.selectButtonAction = game.selectButtonAction.next()
-                    saveSelectButtonActionToPrefs(game.selectButtonAction, isKeyboardSettings)
+                    game.players.selectButtonAction = game.players.selectButtonAction.next()
+                    saveSelectButtonActionToPrefs(game.players.selectButtonAction, isKeyboardSettings)
                     SELECT_ACTION
                 }
             }

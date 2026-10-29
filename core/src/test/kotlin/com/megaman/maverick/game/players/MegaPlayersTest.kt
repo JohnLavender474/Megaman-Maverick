@@ -15,6 +15,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import io.kotest.assertions.throwables.shouldThrow
@@ -117,6 +118,19 @@ class MegaPlayersTest : DescribeSpec({
             players.onPlayerDamaged(player, damager)
 
             calls shouldBe listOf("first", "second", "second")
+        }
+    }
+
+    describe("MegaPlayers.selectButtonAction") {
+        it("starts as NEXT_WEAPON and keeps a value that is set") {
+            val players = MegaPlayers()
+            players.selectButtonAction shouldBe SelectButtonAction.NEXT_WEAPON
+
+            players.selectButtonAction = SelectButtonAction.AIR_DASH
+            players.selectButtonAction shouldBe SelectButtonAction.AIR_DASH
+
+            players.selectButtonAction = SelectButtonAction.START
+            players.selectButtonAction shouldBe SelectButtonAction.START
         }
     }
 

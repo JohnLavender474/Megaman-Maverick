@@ -246,7 +246,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     override fun render(delta: Float) {
         super.render(delta)
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             screenSlide.update(delta)
             if (screenSlide.justFinished) screenSlide.reverse()
 

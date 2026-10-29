@@ -26,6 +26,7 @@ import com.maverick.game.engine.common.extensions.isAny
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -107,7 +108,6 @@ import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
-import java.util.*
 
 class MegaLevelScreen(private val game: MegamanMaverickGame) :
     TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, IShapeDebuggable,
@@ -151,6 +151,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
+        EventType.GAME_COMPLETE,
 
         EventType.EDIT_TILED_MAP,
 
@@ -192,7 +193,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
-    private lateinit var drawables: ObjectMap<DrawingSection, Queue<IComparableDrawable<Batch>>>
+    private lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: Array<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
     private lateinit var backgroundsToHide: ObjectSet<String>
@@ -640,7 +641,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 playerDeathEventHandler.init()
 
-                if (game.paused) {
+                if (game.clock.paused) {
                     GameLogger.debug(
                         MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                         "onEvent(): force resume game when Megaman dies"
@@ -852,8 +853,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.VICTORY_EVENT -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): victory event")
 
-                val endGame = event.getOrDefaultProperty(ConstKeys.END, false, Boolean::class)
-                if (!endGame) endLevelEventHandler.init()
+                endLevelEventHandler.init()
             }
 
             EventType.SHAKE_CAM -> {
@@ -877,6 +877,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 val nextScreen = screenOnCompletion.invoke(game)
                 game.setCurrentScreen(nextScreen.name)
+            }
+
+            EventType.GAME_COMPLETE -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): game complete")
+
+                game.setCurrentScreen(ScreenEnum.ENDING_SCREEN.name)
             }
 
             EventType.EDIT_TILED_MAP -> {
@@ -915,7 +921,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     private fun isPauseButtonRequested() = player.input.isJustReleased(MegaControllerButton.START) ||
-        (game.selectButtonAction == SelectButtonAction.START && player.input.isJustPressed(MegaControllerButton.SELECT))
+        (game.players.selectButtonAction == SelectButtonAction.START && player.input.isJustPressed(MegaControllerButton.SELECT))
 
     override fun render(delta: Float) {
         /*
@@ -927,17 +933,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
          */
 
         // do not allow pausing if Megaman is dead
-        if (!game.paused && player.existenceState.liveAfterUpdate && player.inPlay && isPauseButtonRequested()) {
+        if (!game.clock.paused && player.existenceState.liveAfterUpdate && player.inPlay && isPauseButtonRequested()) {
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }
 
         // force resume game if megaman is dead
-        if (game.paused && !player.existenceState.liveAfterUpdate) game.runQueue.addLast { game.resume() }
+        if (game.clock.paused && !player.existenceState.liveAfterUpdate) game.runQueue.addLast { game.resume() }
 
         playerStatsHandler.update(delta)
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             spawnCameraBounds.set(gameCamera.getRotatedBounds())
             spawnsMan.update(delta)
 
@@ -963,7 +969,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         engine.update(delta)
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             playerSpawnsMan.run()
 
             val spawnsIter = spawns.iterator()
@@ -1002,7 +1008,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             camera.position.y = (camera.position.y * ConstVals.PPM) / ConstVals.PPM
         }
 
-        if (game.paused) pauseScreen.render(delta)
+        if (game.clock.paused) pauseScreen.render(delta)
 
         // sort backgrounds in drawing order before calling draw()
         backgrounds.sort()
@@ -1022,7 +1028,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
         while (!backgroundSprites.isEmpty()) {
-            val backgroundSprite = backgroundSprites.poll()
+            val backgroundSprite = backgroundSprites.poll()!!
             backgroundSprite.draw(drawer)
         }
 
@@ -1030,13 +1036,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         val playgroundSprites = drawables.get(DrawingSection.PLAYGROUND)
         while (!playgroundSprites.isEmpty()) {
-            val playgroundSprite = playgroundSprites.poll()
+            val playgroundSprite = playgroundSprites.poll()!!
             playgroundSprite.draw(drawer)
         }
 
         val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
         while (!foregroundSprites.isEmpty()) {
-            val foregroundSprite = foregroundSprites.poll()
+            val foregroundSprite = foregroundSprites.poll()!!
             foregroundSprite.draw(drawer)
         }
 
@@ -1055,7 +1061,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         if (!player.existenceState.liveAfterUpdate) playerDeathEventHandler.draw(drawer)
 
-        if (game.paused) pauseScreen.draw(drawer)
+        if (game.clock.paused) pauseScreen.draw(drawer)
 
         if (!checkpointTimer.isFinished()) {
             val alpha = when {
