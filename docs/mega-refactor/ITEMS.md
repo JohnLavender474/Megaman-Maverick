@@ -80,6 +80,15 @@ statuses and column meanings are in `CLAUDE.md`.
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | idea | `031` | | |
 | 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | idea | none | | |
 | 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | planned | `016` | | |
+| 073 | [More gravity-block puzzles in Moon Man's stage](items/073-moon-man-gravity-puzzles/ITEM.md) | feature | idea | none | | |
+| 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | idea | none | | |
+| 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | idea | none | | |
+| 076 | [A new tileset for the final stage](items/076-final-stage-tileset/ITEM.md) | feature | idea | none | | |
+| 077 | [New attacks and a panic attack for each robot master](items/077-robot-master-attacks/ITEM.md) | feature | idea | none | | |
+| 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | idea | none | | |
+| 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | idea | none | | |
+| 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | idea | none | | |
+| 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | idea | `024`, `069` | | |
 
 ## Branches
 
@@ -115,7 +124,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | `mega-refactor-016-master` | 016 | Parent branch of `016`: collects the `016` branches before they merge into `master` | active | 2026-10-28 | |
 | [`mega-refactor-016a-typed-level-state`](items/016-narrow-services/branches/mega-refactor-016a-typed-level-state/process-log.md) | 016 | Typed `LevelState` fields and camera flags replace the `game` property bag | merged | 2026-10-28 | 2026-10-28 |
 | [`mega-refactor-016b-entity-host-reads`](items/016-narrow-services/branches/mega-refactor-016b-entity-host-reads/process-log.md) | 016 | The host-only reads in entities get a home (`DrWily` screen switch, `Starkner` `paused`, `selectButtonAction`, debug shapes, `weaponsAttained`) | merged | 2026-10-28 | 2026-10-29 |
-| [`mega-refactor-016c-entity-services`](items/016-narrow-services/branches/mega-refactor-016c-entity-services/process-log.md) | 016 | Entities take `MegaServices` in place of `MegamanMaverickGame`; factory, test helper, `IMegaGameEntity` cleanup; the `016a` forwards become direct reads | active | 2026-10-29 | |
+| [`mega-refactor-016c-entity-services`](items/016-narrow-services/branches/mega-refactor-016c-entity-services/process-log.md) | 016 | Entities take `MegaServices` in place of `MegamanMaverickGame`; factory, test helper, `IMegaGameEntity` cleanup; the `016a` forwards become direct reads | merged | 2026-10-29 | 2026-10-29 |
+| [`mega-refactor-016d-system-services`](items/016-narrow-services/branches/mega-refactor-016d-system-services/process-log.md) | 016 | Contact rules and the pathfinder factory take narrow services in place of `MegamanMaverickGame`; the creation order in `create()` allows it | active | 2026-10-29 | |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |

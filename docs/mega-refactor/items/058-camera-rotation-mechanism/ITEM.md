@@ -27,6 +27,19 @@ From `029d` (2026-10-23, verbatim):
 
 > This also deserves its own TODO since, ideally, camera rotation is driven by its own mechanism instead of forcing the game gravity and camera rotation to be in sync. I might want to get very whacky with camera/gravity configuration across entities/levels, so having the ability to mix and match as I please would be ideal. This is a TODO item; nothing to change here.
 
+2026-10-29 (verbatim, about the `016c` camera state): "Do these changes play nicely with the item that exists for
+support X-style "camera zones"? Ideally, the game camera's behavior is built in a composable and easy-to-modify
+manner, i.e. a raw camera with components attached to it that affect is behavior and rules." Then "yes" to recording it
+here.
+
+## Decisions
+
+- 2026-10-29 (owner): the camera is a raw camera with behavior components attached (room bounds, X-style bounds from
+  stage objects, auto-scroll, rotation, focus), each with its own rules. `016c` adds `GameCameraState` (the flags
+  `rotating` and `focusSnappedAway`; game and holder field `camera`) as the read side that entities use (39 reads).
+  Here, those flags become values that the rotation and focus behaviors expose; the entity reads stay; the writers
+  (today in `MegaLevelScreen` and the game reset) move into the behaviors.
+
 ## Open questions
 
 - Who owns the rotation: the camera manager (`CameraManagerForRooms`), a level flow object (`013`), or `WorldGravity` with a separate rotation policy?

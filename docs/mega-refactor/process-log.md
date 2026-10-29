@@ -1092,3 +1092,20 @@ newest entry at the bottom.
   owner's play test passes (8 checks; the final boss needed `--heartTanks`/`--healthTanks`, added by
   `fix/tanks-launch-options`; the pause-exit check runs in `GAUNTLET_1` because exit needs a beaten or extra level).
 - Follow-up: none (the one bug candidate was already filed).
+
+## 2026-10-29 — mega-refactor-016c-entity-services (into `mega-refactor-016-master`)
+
+- Summary: entities take `MegaServices` (core) in place of `MegamanMaverickGame`: the holder is built in `postCreate`
+  before Megaman and the entity pools and passed by both factories; 452 entity files and `MegaUtilMethods` swap the
+  constructor type (mechanical, proved by a check script). Real homes replace the game forwards (decision 11):
+  `GameCameraState` (state only until `051`), `GameSettings` with a top-level `Performance` enum, new `LevelState`
+  members. `IMegaGameEntity` loses `game` and the 3 default methods (decision 15). `players` and `gravity` are built
+  before the pools. The run scripts no longer pass `--performance medium`. Squash commit on the parent `4097749fa`;
+  `.git-blame-ignore-revs` lists it (`d6bb042cb`, owner: "Keep doing what you're doing", one squash listed, not split).
+- Contract check: a temporary suite (deleted before the merge; 200 seeded write sequences) showed each new direct read
+  equal to a frozen copy of the old game forwards; check scripts proved the 3 rewrite steps (0 problems); new permanent
+  tests `EntityConstructorsTest` (more than 400 classes), `MegaEntityFactoryTest`, `GameCameraStateTest`,
+  `GameSettingsTest`, and the `testServices()` helper; clean build, 575 engine and 259 core tests pass; warnings 81 (no
+  new one); greps clean (no code line in `entities/` names `MegamanMaverickGame`); the owner's play test passes (16
+  checks).
+- Follow-up: none.

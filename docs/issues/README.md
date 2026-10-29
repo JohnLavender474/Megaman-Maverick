@@ -93,3 +93,4 @@ related-items: [<mega-refactor item IDs>]
 | [A moving `CartV2` pushes dropped items that lie on the ground in front of it](2026-10-28-cart-pushes-dropped-items.md) | yes | core | closed |
 | [The end-level beam sets the Megaman beam flag to `true` when the beam ends](2026-10-28-end-level-beam-flag-left-true.md) | question | core | open |
 | [`PathfindingComponent` keeps its old path through a destroy and a new spawn](2026-10-28-pathfinding-component-keeps-old-path.md) | no | engine | open |
+| [Refine the final Dr. Wily boss fight](2026-10-29-refine-wily-final-boss-fight.md) | question | core, content | open |
