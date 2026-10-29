@@ -1076,3 +1076,19 @@ newest entry at the bottom.
   please provide the path to the worktree being referred to. Add this instruction to the mega-refactor CLAUDE.md").
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-10-29 — mega-refactor-016b-entity-host-reads (into `mega-refactor-016-master`)
+
+- Summary: the host-only reads in entities get a home. `GameClock` (`game.clock.paused`) replaces `game.paused`;
+  `MegaPlayers.selectButtonAction` replaces `game.selectButtonAction`; `DrWily` submits the new `GAME_COMPLETE` event and
+  `MegaLevelScreen` switches to `ENDING_SCREEN` (owner decision 12, replacing the planned `LevelState` callback); the
+  dead `endGame` read is removed; the drawables map is typed with `InsertionOrderPriorityQueue`. No forwarding members
+  (decision 11). The pathfinding debug reads were moved first by `fix/pathfinding-debug-flag` on `master`. Squash
+  commit on the parent `dcb5db93e`.
+- Contract check: a temporary suite (deleted before the merge; 200 seeded sequences) showed the new `DrWily` equal to a
+  frozen copy of the old one, with `GAME_COMPLETE` submits in place of `setCurrentScreen` calls; new permanent tests
+  `GameClockTest`, `StarknerPausedTest`, `DrWilyTest`, `MegaLevelScreenEventsTest`, a `MegaPlayersTest` case; clean
+  build after the merges of the parent, 575 engine and 249 core tests pass; warnings 81 (no new one); greps clean; the
+  owner's play test passes (8 checks; the final boss needed `--heartTanks`/`--healthTanks`, added by
+  `fix/tanks-launch-options`; the pause-exit check runs in `GAUNTLET_1` because exit needs a beaten or extra level).
+- Follow-up: none (the one bug candidate was already filed).
