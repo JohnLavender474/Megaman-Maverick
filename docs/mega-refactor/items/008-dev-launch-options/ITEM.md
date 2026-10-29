@@ -4,7 +4,7 @@
 - Type: tooling
 - Depends on: none
 - Related: `003`, `007`, `011`, `032`, `034`, `036`, `044`
-- Branches: `mega-refactor-008a-dev-launch-options` (merged 2026-10-22, squash `c731cf9ab`). `fix/weapons-launch-option` (merged 2026-10-28, squash `6ff8437b0`): `--weapons` (owner decision: a quick `fix/` branch so a play test can get the Moon Scythe). Later branches: `--tmx`, `--checkpoint`, `--slot`/`--state`, `--seed`, `--strictErrors`, hot reload
+- Branches: `mega-refactor-008a-dev-launch-options` (merged 2026-10-22, squash `c731cf9ab`). `fix/weapons-launch-option` (merged 2026-10-28, squash `6ff8437b0`): `--weapons` (owner decision: a quick `fix/` branch so a play test can get the Moon Scythe). `fix/tanks-launch-options` (merged 2026-10-29, squash `9180fe46b`): `--heartTanks`, `--healthTanks`; a run with either flag does not write the save file (owner: no fill value, no save-screen feedback). Later branches: `--tmx`, `--checkpoint`, `--slot`/`--state`, `--seed`, `--strictErrors`, hot reload
 
 ## Goal
 
