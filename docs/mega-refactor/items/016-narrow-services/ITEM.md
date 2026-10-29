@@ -94,7 +94,7 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
 
 - 2026-10-29 (owner, on the `016c` scope; the branch `docs/SCOPE.md` has all 12 questions and answers):
   13. The camera flags (`cameraRotating`, `focusSnappedAway`) do not go into `LevelState`. They describe the camera.
-      Owner (verbatim): "it might be best for a \"camera service/component/helper/manager\" to handle things like these
+      Owner (verbatim): "it might be best for a "camera service/component/helper/manager" to handle things like these
       fields instead of directly tying them to the camera itself." So a small camera state or manager object next to the
       camera (not fields of the camera class) holds them; the holder field `camera` reaches it.
   14. Performance is a setting, not time: a small settings object on the holder holds the performance value
