@@ -283,7 +283,9 @@ The layer builders are in `C/screens/levels/tiled/layers/MegaMapLayerBuilders.kt
 
 - **`sensors` (existing, recommended).** `SensorsLayerBuilder` (`SensorsLayerBuilder.kt`) spawns every rectangle
   object once, at level load, as the entity class `entities/sensors/<name>`, with the rectangle as `ConstKeys.BOUNDS`.
-  The sensors are not culled and not spawned again by the camera. Today the package holds `Death`, `Gate`,
+  The builder spawns them directly, not through a camera spawner, so no spawner spawns them again; whether one is
+  culled depends only on its own components (a `TalkZone` needs no cull component; not checked for the existing
+  sensors). Today the package holds `Death`, `Gate`,
   `InstantDeath`, `InfernoDeath`, `PlayerDeath` and `FixtureTypeOverlapSpawn`: rectangles that act when the player is
   inside. A `TalkZone` is the same kind of object, and a talk zone needs exactly this: it exists for the whole level,
   keeps its state (the hint, "player inside"), and needs no new builder and no new layer key. The level designer sets
