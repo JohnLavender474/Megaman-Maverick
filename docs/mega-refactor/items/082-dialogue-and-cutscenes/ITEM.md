@@ -38,8 +38,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   - A press at the end of a page goes to the next page. A guard stops one press from doing both (as in X6).
   - Holding the button types faster (Cave Story and Megamix do this).
   - Start skips the whole scene if the scene is skippable (see "Skip").
-- **Layout:** the box is at the top or the bottom of the UI viewport, set per line. A portrait (with talk frames while
-  the text types) and a speaker name are optional, set per line.
+- **Layout:** the box is at the top or the bottom of the UI viewport, set per line. In a level the default is the
+  bottom, as in the classic Mega Man games (decision 6). A portrait (with talk frames while the text types) and a
+  speaker name are optional, set per line.
+- **Art for now** (decision 6): the box is a plain black rectangle with the text on it. Custom box sprites,
+  portraits and animations can come later. The level designer makes sure that the box does not cover the player.
 - **Text style, per line:** a boxed line (the dialogue box) or a caption (no box, centred text, as in
   `OpeningScreen`). **Reveal and exit, per line:** typewriter, all at once, or a fade in; close at once or fade out.
   An auto-advance time is optional. These options let `OpeningScreen` (fade in, show, fade out, no input but Start)
@@ -62,10 +65,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   |---|---|---|---|---|
   | `NONE` | runs | runs | run | chatter that plays while you play (a passive box) |
   | `PLAYER` | locked | held (stand) | run | X6 boss pre-fight talk, a talk where the world keeps moving |
-  | `WORLD` | locked | held | frozen; they stay drawn | X6 navigator talk zone, most in-level scenes |
+  | `WORLD` | locked | held | frozen and not animated; they stay drawn | X6 navigator talk zone, most in-level scenes |
 
-  Each level is one named freeze reason in `012` (`DIALOGUE_PLAYER`, `DIALOGUE_WORLD`). An entity that must run
-  during a `WORLD` freeze (the speaker, an actor of the scene) is exempt, as with the X6 `0x08` flag.
+  Each level is one named freeze reason in `012` (`DIALOGUE_PLAYER`, `DIALOGUE_WORLD`). In a `WORLD` freeze, enemies,
+  hazards, platforms and all other objects stop in place and do not animate. The player and the other speakers and
+  actors of the scene keep their animations; they are exempt, as with the X6 `0x08` flag (decision 5).
 - **Input:** the box reads its own buttons while gameplay input is locked. Today the lock also blinds
   `game.controllerPoller`; `031` must split "gameplay input locked" from "UI input" before this item.
 - **Actors:** a scene moves the real player through a scripted input source (`031` lists "cutscene script" as a source)
@@ -91,7 +95,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   the level resets during the scene (`038`). Today `WilyFinalBoss` turns the controller off and nothing turns it on
   again on that path.
 - **Play once:** a scene can have a seen flag. A seen scene does not play again. The flag scope is per scene: per level
-  attempt (X6 boss talk: first time only, a retry gets a short wait), or saved (story scenes; needs `007`).
+  attempt (X6 boss talk: first time only, a retry gets a short wait), or per game session. For now all seen flags are
+  in memory only (decision 8). `082a` puts a `TODO` at the seen-flag store: saved seen flags come later, in a new item
+  or a later branch of `082`, and need `007`.
 - **Per character:** a scene can have lines for each player character (X6 has a text bank per X and Zero). Needed
   when `060` or `081` adds a second character.
 
@@ -100,7 +106,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - **Talk zone:** a Tiled object (in a layer to decide, see "Open questions") with a scene id and a mode:
   - forced: when the player is inside and on the ground, the scene starts;
   - optional: a HUD hint shows while the player is inside, and Up starts the scene (decision 3). Gameplay wins over
-    dialogue: the talk opens only if the Up press did not start another action (see decision 3).
+    dialogue: the talk opens only if the Up press did not start another action (see decision 3). The hint is a small
+    "!" icon in the lower right corner of the screen, as in X6, with one blip sound when it appears (decision 7). A
+    placeholder sprite is enough for now.
 - **Boss pre-fight talk:** an optional scene between `ENTER_BOSS_ROOM` and the health fill. The boss waits until the
   scene ends before `BOSS_READY`. The boss music starts after the scene, as in X6.
 - **Events:** any `EventType` (and later the typed channels of `057`) can start a scene, for example a room entry.
@@ -147,8 +155,8 @@ locked.
 2. `082b`: the boss pre-fight talk hook in `AbstractBoss`, with a first real boss talk.
 3. `082c`: `CutsceneScreen`; `EndingScreen` moved onto it.
 4. `082d`: the other screens with sequenced or typed text moved onto the box: `RobotMasterIntroScreen`,
-   `GetWeaponScreen`, and `CreditsScreen` if it fits. `RobotMasterIntroScreenV2` is not registered; it is deleted or
-   moved, as the owner decides.
+   `GetWeaponScreen`, and `CreditsScreen` if it fits. `RobotMasterIntroScreenV2` stays as it is
+   (decision 9).
 
 ## Owner's input
 
@@ -185,6 +193,23 @@ our game now."
 good plan. The onus is on the level designer to be smart, and if there is overlap, then gameplay always wins over
 dialogue. Yes, write it as decision 3"
 
+2026-10-29, answers to open questions 1–6 (verbatim):
+
+- a (animations in a `WORLD` freeze): "yes, this matches the gameplay in X where X and the other interlocutors will be
+  animated, but enemies (as well as hazards, platforms, and other objects) will be unanimated and frozen in place."
+- b (box style): "for now, let's just use simplistic art: draw a black sprite with dialogue spread over it; later on,
+  we may refine this with custom sprites, animations, etc.; the onus is on the level designer to make sure the black
+  text box doesn't overlap the player; text box in levels appears by default at bottom part of screen which is what it
+  does in the classic Mega Man games"
+- c (Tiled layer): "a new layer, I imagine; or is there argument to use an existing layer?"
+- d (mute optional dialogue): "possible, but not at the moment; in X6, optional dialogue is signaled by a small
+  exclamation icon sprite in the lower right corner of the screen; a placeholder sprite will be fine for now as the
+  signal; a single blip sound when the sprite appears will be fine"
+- e (seen flags): "seen flags can be stored in memory for now, with a TODO (both in code and in the item docs) to
+  expand on this later, either in a new item or as a future branch of the item"
+- f (`RobotMasterIntroScreenV2`): "can we leave it as is? or does it need to be ported over in order to be compatible?
+  worst case, let's comment the file out instead of deleting it"
+
 ## Decisions
 
 1. 2026-10-29: `082a` has two first callers: `OpeningScreen` on the new runner (caption lines with fade in and out),
@@ -206,16 +231,24 @@ dialogue. Yes, write it as decision 3"
 4. 2026-10-29: by the end of the item, every existing screen that needs the box uses it. `082a` starts with
    `OpeningScreen`.
 
+5. 2026-10-29: in a `WORLD` freeze, enemies, hazards, platforms and all other objects stop in place and do not
+   animate. The player and the other speakers and actors of the scene keep their animations. This also affects
+   `012`: the `DIALOGUE_WORLD` reason stops the animations too, with the scene actors exempt.
+6. 2026-10-29: simple art for now: a plain black box with the text on it. Custom sprites and animations come later.
+   In a level the box is at the bottom by default. The level designer makes sure that it does not cover the player.
+7. 2026-10-29: no setting to mute optional dialogue for now. The hint for an optional talk is a small "!" icon in the
+   lower right corner (a placeholder sprite for now), with one blip sound when it appears.
+8. 2026-10-29: seen flags are in memory only for now. A `TODO` at the seen-flag store in the code, and this decision
+   in the docs, say that saved seen flags come later, in a new item or a later branch of `082` (they need `007`).
+9. 2026-10-29: `RobotMasterIntroScreenV2` stays as it is. It is not registered and has its own typewriter copy, so
+   the port does not need to change it. If a later change stops it from compiling, it is commented out, not deleted.
+
 ## Open questions
 
-1. In a `WORLD` freeze, do enemy animations stop (X6: frozen objects stay drawn, but do not animate) or keep running?
-2. The box style: portrait size, box size, font (`Megaman10Font` at 16 px or a new bitmap font), and the blip sound
-   (no sound exists for it today).
-3. Where do talk zones go in Tiled: the `triggers` layer (its builder does nothing today, and no TMX has the layer) or
-   the `specials` layer as an entity (like `EventTrigger`)?
-4. Can the player turn off optional dialogue (a setting, as the X5 navigator-mute ROM hack shows players want)?
-5. Saved seen flags need `007` (save slots). Until then, are story seen flags per session only?
-6. `RobotMasterIntroScreenV2` is not registered. Delete it, or port it with the others?
+1. Which Tiled layer holds talk zones? A new layer is possible, but an existing layer fits well; see the
+   recommendation in `NOTES.md`, "Tiled layer for talk zones".
+2. The typing sound: a blip on each typed character needs a sound. Use an existing sound as a placeholder (for example
+   `CURSOR_MOVE_BLOOP_SOUND`), or no typing sound for now?
 
 ## Sources
 

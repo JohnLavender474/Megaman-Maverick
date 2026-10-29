@@ -276,3 +276,28 @@ Options that are free and always present:
    conflict, but slower to use and less visible.
 3. **A new "talk" binding** after `070` (flexible controls). Not always present on an 8-button pad, so only as an
    extra to option 1.
+
+## 2026-10-29: Tiled layer for talk zones (`master` at `8d564e4dc`)
+
+The layer builders are in `C/screens/levels/tiled/layers/MegaMapLayerBuilders.kt:37-50`. The candidates:
+
+- **`sensors` (existing, recommended).** `SensorsLayerBuilder` (`SensorsLayerBuilder.kt`) spawns every rectangle
+  object once, at level load, as the entity class `entities/sensors/<name>`, with the rectangle as `ConstKeys.BOUNDS`.
+  The sensors are not culled and not spawned again by the camera. Today the package holds `Death`, `Gate`,
+  `InstantDeath`, `InfernoDeath`, `PlayerDeath` and `FixtureTypeOverlapSpawn`: rectangles that act when the player is
+  inside. A `TalkZone` is the same kind of object, and a talk zone needs exactly this: it exists for the whole level,
+  keeps its state (the hint, "player inside"), and needs no new builder and no new layer key. The level designer sets
+  the object name `TalkZone` and the properties (scene id, forced or optional).
+- **`triggers` (existing, empty).** `ConstKeys.TRIGGERS` (`Constants.kt:447`) and `TriggersLayerBuilder`, whose
+  `build` does nothing (`TriggersLayerBuilder.kt:9`). No TMX file has the layer. The name fits, but the builder must
+  be written; it would do the same as `SensorsLayerBuilder`.
+- **`specials` (existing).** `SpawnersLayerBuilder`: an entity like `EventTrigger`. Spawners are spawned when they come
+  into the camera (or on a room or an event) and can be culled, so a zone could lose its state. A poorer fit.
+- **A new layer (for example `dialogue`).** A new `ConstKeys` key and one line in `builderFactories` that reuses
+  `SensorsLayerBuilder` (with the package of talk zones). The gain: a level designer can show or hide only the talk
+  zones in Tiled, and the validator (`003`) finds them by layer. The cost: one more layer name for the same kind of
+  object as the `sensors` layer.
+
+Recommendation: the `sensors` layer, with the entity `entities/sensors/TalkZone`. Tiled can select the talk zones by
+the object name. If the owner wants talk zones in their own layer, a `dialogue` layer that reuses
+`SensorsLayerBuilder` is a one-line change in `builderFactories`.
