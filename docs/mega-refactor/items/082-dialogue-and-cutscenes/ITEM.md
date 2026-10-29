@@ -40,9 +40,12 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   - Start skips the whole scene if the scene is skippable (see "Skip").
 - **Layout:** the box is at the top or the bottom of the UI viewport, set per line. A portrait (with talk frames while
   the text types) and a speaker name are optional, set per line.
-- **One box component** that both the level screen and the cutscene screen draw. It replaces the 3 hand-written
-  typewriter copies (`RobotMasterIntroScreen`, `RobotMasterIntroScreenV2`, `GetWeaponScreen`) only if the owner
-  agrees (see "Open questions"); else they stay as they are.
+- **Text style, per line:** a boxed line (the dialogue box) or a caption (no box, centred text, as in
+  `OpeningScreen`). **Reveal and exit, per line:** typewriter, all at once, or a fade in; close at once or fade out.
+  An auto-advance time is optional. These options let `OpeningScreen` (fade in, show, fade out, no input but Start)
+  and a dialogue exchange (typewriter, wait for a press) use the same box.
+- **One box component** that both the level screen and the cutscene screen draw. By the end of the item, every
+  existing screen that shows sequenced or typed text uses it (decision 4).
 
 ### Rules for a scene
 
@@ -68,6 +71,18 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - **Actors:** a scene moves the real player through a scripted input source (`031` lists "cutscene script" as a source)
   or a held state. Other actors are normal entities, spawned by the scene or found by map object id. Move targets are
   named markers in Tiled.
+- **A scripted move can never leave the player stuck** (decision 1). Rules:
+  - The level designer gives the route as named markers and actions (run to `a`, jump at `a`, run to `b`), not as a
+    target that a pathfinder must solve. The scripted input presses the same buttons as a person, so the player
+    moves with the normal physics.
+  - During the move the player cannot take damage, and the world is frozen (`WORLD`) unless the scene says otherwise,
+    so no enemy or projectile can push the player off the route.
+  - Each move step has a time limit from the route length and a "no progress" check (the distance to the next marker
+    does not get smaller for a set number of ticks).
+  - If the limit or the check fails, the step puts the player on the marker, logs an error, and the scene goes on.
+    The scene never waits forever.
+  - A test checks each scripted route of the test map: from the start, the player gets to the end marker within the
+    limit with no fallback.
 - **All players:** a scene locks and releases every player through `game.players` (`029`, and `047` later).
 - **Skip:** a scene is skippable or not. A skip stops the steps and runs the scene's `onEnd(skipped = true)`, which
   must put every actor, flag, music and the camera into the end state (the Celeste rule). A boss pre-fight talk is
@@ -84,7 +99,8 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 - **Talk zone:** a Tiled object (in a layer to decide, see "Open questions") with a scene id and a mode:
   - forced: when the player is inside and on the ground, the scene starts;
-  - optional: a HUD hint shows while the player is inside, and a button starts the scene (X6 uses Select).
+  - optional: a HUD hint shows while the player is inside, and a button starts the scene (X6 uses Select). The
+    button is open question 4.
 - **Boss pre-fight talk:** an optional scene between `ENTER_BOSS_ROOM` and the health fill. The boss waits until the
   scene ends before `BOSS_READY`. The boss music starts after the scene, as in X6.
 - **Events:** any `EventType` (and later the typed channels of `057`) can start a scene, for example a room entry.
@@ -107,10 +123,30 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ### Proposed branches
 
-1. `082a`: the dialogue box, the string table and the scene runner, with one in-level talk zone in
-   `RefactorTest082.tmx` and one real caller (to decide; for example the `DrWily` end scene).
-2. `082b`: the boss pre-fight talk hook in `AbstractBoss`, with a first boss talk.
-3. `082c`: `CutsceneScreen`, and `OpeningScreen`/`EndingScreen` moved onto it.
+`082a` starts after `012` (decision 2) and after the `031` change that lets UI code read input while gameplay input is
+locked.
+
+1. `082a`: the dialogue box, the string table and the scene runner. Two first callers (decision 1):
+   - **`OpeningScreen`** moves onto the runner, with caption lines that fade in and out. It must look and time the
+     same as now; Start still skips it.
+   - **`RefactorTest082.tmx`**, one room for each case:
+     - `forced_intro`: radio talk after Megaman spawns, before he is playable (forced, `WORLD`).
+     - `optional_hint`: an optional talk zone with the HUD hint, as the X6 talk zones (`mmx-demake-tools` `docs/engine.md`, "Talk zones").
+     - `boss_walk`: a test boss spawns; then Megaman runs, jumps over a block and stops on a marker (a scripted move
+       with the no-stuck rules); then the boss talks (`PLAYER` freeze, the boss animates).
+     - `passive_chatter`: a `NONE` box that plays while the player moves and shoots.
+     - `death_during_scene`: a hazard kills the player during a `PLAYER` scene; after the respawn every lock and
+       freeze is released and the scene does not leave the player stuck.
+     - `skip`: a skippable scene; Start skips it, and the end state (actor positions, flags, music) is the same as
+       when it plays to the end.
+     - `play_once`: walking back into a seen forced zone does not play it again.
+     - `mid_line_event`: an actor moves while a line types (the `{event=name}` token).
+     - `pause_in_scene`: Start during a scene that cannot be skipped does nothing; pause works again after the scene.
+2. `082b`: the boss pre-fight talk hook in `AbstractBoss`, with a first real boss talk.
+3. `082c`: `CutsceneScreen`; `EndingScreen` moved onto it.
+4. `082d`: the other screens with sequenced or typed text moved onto the box: `RobotMasterIntroScreen`,
+   `GetWeaponScreen`, and `CreditsScreen` if it fits. `RobotMasterIntroScreenV2` is not registered; it is deleted or
+   moved, as the owner decides.
 
 ## Owner's input
 
@@ -123,23 +159,50 @@ Research how other popular open-source games (specifically X/Megaman games, but 
 sure every game will be different in many ways, so let's make the rules/logic flexible and tuned to be appropriate for
 our game now."
 
+2026-10-29, answers to the first open questions (verbatim):
+
+- Q1 (first scene): "I figure we should do two things at once as a first pass to prove the setup:
+  - Refactor the existing opening screen to use it. The screen is super simplistic; it just shows a series of text
+    that fades in and out. Most text won't fade in/out in dialogue exchanges, but having the setup be flexible enough
+    to handle text fade ins/outs is preferable if possible. This proves one of the simplest setups is possible.
+  - Create a new test map which has a series of different dialogue events:
+    - a "forced" one at the beginning (e.g. radio chatter to Mega Man after his spawns in and before he becomes
+      playable)
+    - optional dialogue (e.g. the optional alerts that exist in X6; see @~/IdeaProjects/mmx-x6/)
+    - dialogue scene that occurs after a "boss" or other entity spawns in which entails having Mega Man run and jump
+      over a block to get to a predetermined spot; it must be guaranteed that Mega Man does not become stuck while
+      being automated to move to the spot
+    - any other cases you can think of"
+- Q2 (`012` first): "Ideally, 012 will come first"
+- Q3 (optional talk button): "Probably a button combo that is not already taken and is always present. Do you see any
+  viable combos available?"
+- Q4 (port the screens): "Ideally, yes. We can start with just the opening screen one, but ideally by the end of the
+  item, all pre-existing screens that need it have been ported over"
+
+## Decisions
+
+1. 2026-10-29: `082a` has two first callers: `OpeningScreen` on the new runner (caption lines with fade in and out),
+   and the test map `RefactorTest082.tmx` with one room per dialogue case (see "Proposed branches"). A scripted move
+   must never leave the player stuck (see "Rules for a scene").
+2. 2026-10-29: `012` comes before `082a`. `082` keeps `012` in "Depends on".
+3. 2026-10-29: the optional talk button is a button combo that is free and always present. Not chosen yet; see open
+   question 4.
+4. 2026-10-29: by the end of the item, every existing screen that needs the box uses it. `082a` starts with
+   `OpeningScreen`.
+
 ## Open questions
 
-1. Which scenes does the game need first? (A navigator, a boss pre-fight talk, the final Wily scene, the opening?)
-   The first real caller decides the scope of `082a`.
-2. Must `012` be done first, or can `082a` use the current `TURN_CONTROLLER_*` events and `system.on` writes, and move
-   to `012` later? The current writers are "last writer wins", so a scene that overlaps a gate or a pause can leave
-   systems in the wrong state.
-3. In a `WORLD` freeze, do enemy animations stop (X6: frozen objects stay drawn, but do not animate) or keep running?
-4. The optional talk zone button: Select is the weapon switch or the pause button today (`selectButtonAction`). Which
-   button opens an optional talk? Or no optional talk zones at all?
-5. The box style: portrait size, box size, font (`Megaman10Font` at 16 px or a new bitmap font), and the blip sound
+1. In a `WORLD` freeze, do enemy animations stop (X6: frozen objects stay drawn, but do not animate) or keep running?
+2. The box style: portrait size, box size, font (`Megaman10Font` at 16 px or a new bitmap font), and the blip sound
    (no sound exists for it today).
-6. Do `OpeningScreen`, `EndingScreen` and the 3 typewriter copies move onto the new box, or stay as they are?
-7. Where do talk zones go in Tiled: the `triggers` layer (its builder does nothing today, and no TMX has the layer) or
+3. Where do talk zones go in Tiled: the `triggers` layer (its builder does nothing today, and no TMX has the layer) or
    the `specials` layer as an entity (like `EventTrigger`)?
-8. Can the player turn off optional dialogue (a setting, as the X5 navigator-mute ROM hack shows players want)?
-9. Saved seen flags need `007` (save slots). Until then, are story seen flags per session only?
+4. The optional talk button. The scan of 2026-10-29 (`NOTES.md`, "Free buttons for an optional talk") found no free
+   two-button combo on the 8-button pad. The candidates are: Up while standing in the zone (contextual, as ladders and
+   `PipePortal` use Up), an entry in the pause menu, or a "talk" binding after `070`.
+5. Can the player turn off optional dialogue (a setting, as the X5 navigator-mute ROM hack shows players want)?
+6. Saved seen flags need `007` (save slots). Until then, are story seen flags per session only?
+7. `RobotMasterIntroScreenV2` is not registered. Delete it, or port it with the others?
 
 ## Sources
 

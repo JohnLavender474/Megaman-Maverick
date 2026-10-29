@@ -240,3 +240,39 @@ Where they differ, and the choice proposed in `ITEM.md`:
   Proposed: an `{event=name}` token, because it is cheap once tokens exist; drop it if no first scene needs it.
 - **Out-of-level:** a special level (SuperTux) or a separate screen (most others). Proposed: a `CutsceneScreen` that
   shares the runtime and the box.
+
+## 2026-10-29: free buttons for an optional talk (`master` at `27b9c71d7`)
+
+The pad has 8 buttons (`C/controllers/MegaControllerButton.kt:7-15`): `UP`, `DOWN`, `LEFT`, `RIGHT`, `A` (jump), `B`
+(shoot), `START`, `SELECT`. What each one does in a level:
+
+- `B`: shoot and charge (`C/entities/megaman/components/ControllerComponent.kt`, `attack`). `B` with any direction
+  shoots.
+- `A`: jump. `DOWN` + `A`: slide (`GroundSlideBehavior.kt:53`) or drop through a platform (`JumpBehavior.kt:31`).
+  `UP` + `A`: jetpack (`JetpackBehavior.kt:28`) and the air dash direction (`AirDashBehavior.kt:54`).
+- `DOWN` alone on the ground: crouch after a delay (`CrouchBehavior.kt:21`). `DOWN` also enters a `PipePortal`
+  (`PipePortal.kt:161`) and a `SpringBouncer` (`SpringBouncer.kt:214`), and moves down a ladder.
+- `UP` alone: only near an object: a ladder (`ClimbBehavior.kt:116`), a `PipePortal` (`:163`), a `SpringBouncer`
+  (`:213`). `UP` alone on open ground does nothing.
+- `START`: pause on release (`MegaLevelScreen.kt:917`).
+- `SELECT`: one of three actions by the setting `selectButtonAction` (`SelectButtonAction.kt:5`): next weapon on release
+  (`ControllerComponent.kt:100`), air dash on press (`AirDashBehavior.kt:34-39`), or pause on press
+  (`MegaLevelScreen.kt:918`).
+
+Result: **no two-button combo is free in every setting.**
+
+- Any combo with `SELECT` also does the `SELECT` action: a weapon change, an air dash or a pause.
+- `START` + any button also pauses.
+- `UP` + `A` and `DOWN` + `A` are taken; `B` + any button shoots; `UP` + `DOWN` and `LEFT` + `RIGHT` cannot be pressed
+  together on a d-pad.
+
+Options that are free and always present:
+
+1. **`UP` (just pressed) while the player stands on the ground inside the zone.** `UP` on open ground does nothing
+   today. Ladders, pipe portals and spring bouncers also use `UP`, so a talk zone must not overlap one of them; the
+   level validator (`003`) can check this. Many games use a direction to interact (Cave Story uses Down). This is the
+   recommended option.
+2. **An entry in the pause menu** ("talk") that shows only while the player is in an optional zone. No button
+   conflict, but slower to use and less visible.
+3. **A new "talk" binding** after `070` (flexible controls). Not always present on an 8-button pad, so only as an
+   extra to option 1.
