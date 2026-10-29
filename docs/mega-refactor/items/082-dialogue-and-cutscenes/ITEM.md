@@ -32,7 +32,7 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   (`{event=name}`) that lets the scene act in the middle of a line. Unknown tokens are a load error.
 - **Pages:** the box splits a line into pages by pixel width and a maximum line count. At the end of a page it shows a
   blinking arrow and waits for a press. A token can make a page advance by itself (for timed lines in a cutscene).
-- **Typewriter:** a fixed number of characters per tick, a blip sound on each typed character (not on spaces).
+- **Typewriter:** a fixed number of characters per tick, with no typing sound (decision 11).
 - **Buttons:**
   - A press while the page types prints the rest of the page.
   - A press at the end of a page goes to the next page. A guard stops one press from doing both (as in X6).
@@ -103,11 +103,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ### In-level triggers
 
-- **Talk zone:** a Tiled object (in a layer to decide, see "Open questions") with a scene id and a mode:
+- **Talk zone:** a `TalkZone` rectangle in the `sensors` layer (decision 10) with a scene id and a mode:
   - forced: when the player is inside and on the ground, the scene starts;
   - optional: a HUD hint shows while the player is inside, and Up starts the scene (decision 3). Gameplay wins over
     dialogue: the talk opens only if the Up press did not start another action (see decision 3). The hint is a small
-    "!" icon in the lower right corner of the screen, as in X6, with one blip sound when it appears (decision 7). A
+    "!" icon in the lower right corner of the screen, as in X6, with one `CURSOR_MOVE_BLOOP_SOUND` when it first appears (decisions 7, 11). A
     placeholder sprite is enough for now.
 - **Boss pre-fight talk:** an optional scene between `ENTER_BOSS_ROOM` and the health fill. The boss waits until the
   scene ends before `BOSS_READY`. The boss music starts after the scene, as in X6.
@@ -210,6 +210,9 @@ dialogue. Yes, write it as decision 3"
 - f (`RobotMasterIntroScreenV2`): "can we leave it as is? or does it need to be ported over in order to be compatible?
   worst case, let's comment the file out instead of deleting it"
 
+2026-10-29, on the layer and the typing sound (verbatim): "1. existing layer `sensors` 2. no typing sound, just a
+"cursor move bloop" when the icon for the optional dialogue first appears"
+
 ## Decisions
 
 1. 2026-10-29: `082a` has two first callers: `OpeningScreen` on the new runner (caption lines with fade in and out),
@@ -230,25 +233,26 @@ dialogue. Yes, write it as decision 3"
    - Forced zones do not use Up and are not affected.
 4. 2026-10-29: by the end of the item, every existing screen that needs the box uses it. `082a` starts with
    `OpeningScreen`.
-
 5. 2026-10-29: in a `WORLD` freeze, enemies, hazards, platforms and all other objects stop in place and do not
    animate. The player and the other speakers and actors of the scene keep their animations. This also affects
    `012`: the `DIALOGUE_WORLD` reason stops the animations too, with the scene actors exempt.
 6. 2026-10-29: simple art for now: a plain black box with the text on it. Custom sprites and animations come later.
    In a level the box is at the bottom by default. The level designer makes sure that it does not cover the player.
 7. 2026-10-29: no setting to mute optional dialogue for now. The hint for an optional talk is a small "!" icon in the
-   lower right corner (a placeholder sprite for now), with one blip sound when it appears.
+   lower right corner (a placeholder sprite for now), with one `CURSOR_MOVE_BLOOP_SOUND` when it appears (decision
+   11).
 8. 2026-10-29: seen flags are in memory only for now. A `TODO` at the seen-flag store in the code, and this decision
    in the docs, say that saved seen flags come later, in a new item or a later branch of `082` (they need `007`).
 9. 2026-10-29: `RobotMasterIntroScreenV2` stays as it is. It is not registered and has its own typewriter copy, so
    the port does not need to change it. If a later change stops it from compiling, it is commented out, not deleted.
+10. 2026-10-29: talk zones go in the existing `sensors` layer, as the entity `entities/sensors/TalkZone`. No new layer
+    and no new builder (`NOTES.md`, "Tiled layer for talk zones").
+11. 2026-10-29: no typing sound. The only dialogue sound for now is one `CURSOR_MOVE_BLOOP_SOUND` when the "!" icon of
+    an optional talk first appears.
 
 ## Open questions
 
-1. Which Tiled layer holds talk zones? A new layer is possible, but an existing layer fits well; see the
-   recommendation in `NOTES.md`, "Tiled layer for talk zones".
-2. The typing sound: a blip on each typed character needs a sound. Use an existing sound as a placeholder (for example
-   `CURSOR_MOVE_BLOOP_SOUND`), or no typing sound for now?
+None now.
 
 ## Sources
 
