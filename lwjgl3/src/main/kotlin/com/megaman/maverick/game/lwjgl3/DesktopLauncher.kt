@@ -82,6 +82,8 @@ object DesktopLauncher {
             room = appArgs.room,
             logTags = appArgs.logTags,
             weapons = appArgs.weapons,
+            heartTanks = appArgs.heartTanks,
+            healthTanks = appArgs.healthTanks,
             autoPerf = appArgs.autoPerf
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
@@ -99,6 +101,8 @@ object DesktopLauncher {
         println("- Room: " + appArgs.room)
         println("- Log Tags: " + appArgs.logTags)
         println("- Weapons: " + appArgs.weapons)
+        println("- Heart Tanks: " + appArgs.heartTanks)
+        println("- Health Tanks: " + appArgs.healthTanks)
         println("- Auto Perf: " + appArgs.autoPerf)
         println("- Performance: " + appArgs.performance)
         println("- Width: " + appArgs.width)
@@ -389,6 +393,20 @@ object DesktopLauncher {
                 "The weapons are not written to the save file."
         )
         var weapons: String? = null
+
+        @Parameter(
+            names = ["--heartTanks"],
+            description = "Comma-separated heart tanks to give Megaman at start, for example A,B, or 'all'. " +
+                "When given, the game does not write the save file."
+        )
+        var heartTanks: String? = null
+
+        @Parameter(
+            names = ["--healthTanks"],
+            description = "Comma-separated health tanks to give Megaman at start, full, for example A,B, or 'all'. " +
+                "When given, the game does not write the save file."
+        )
+        var healthTanks: String? = null
 
         @Parameter(
             names = ["--autoPerf"],

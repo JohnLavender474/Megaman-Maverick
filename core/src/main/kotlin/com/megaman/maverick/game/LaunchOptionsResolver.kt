@@ -1,5 +1,7 @@
 package com.megaman.maverick.game
 
+import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
+import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -19,8 +21,14 @@ data class ResolvedLaunch(
     val logTags: Set<String>,
     val logAllTags: Boolean,
     val autoPerf: Boolean,
-    val weapons: Set<MegamanWeapon>
-)
+    val weapons: Set<MegamanWeapon>,
+    val heartTanks: Set<MegaHeartTank>,
+    val healthTanks: Set<MegaHealthTank>
+) {
+
+    val savesAllowed: Boolean
+        get() = heartTanks.isEmpty() && healthTanks.isEmpty()
+}
 
 class LaunchResult(val resolved: ResolvedLaunch?, val errors: List<String>) {
 
@@ -30,7 +38,7 @@ class LaunchResult(val resolved: ResolvedLaunch?, val errors: List<String>) {
 
 private const val LOG_ALL_TAGS = "all"
 
-private const val ALL_WEAPONS = "all"
+private const val ALL_ENTRIES = "all"
 
 private val SCREENS_THAT_NEED_A_LEVEL = setOf(ScreenEnum.LEVEL_SCREEN, ScreenEnum.ROBOT_MASTER_INTRO_SCREEN)
 
@@ -47,11 +55,9 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     if (room != null && !levelGiven) errors.add("--room '$room' needs --level.")
     if (screen in SCREENS_THAT_NEED_A_LEVEL && !levelGiven) errors.add("--screen $screen needs --level.")
 
-    val weaponNames = options.weapons?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-    val namedWeapons = weaponNames.filterNot { it.equals(ALL_WEAPONS, ignoreCase = true) }
-        .mapNotNull { parseEnumOption<MegamanWeapon>("--weapons", it, errors) }
-    val weapons = if (weaponNames.any { it.equals(ALL_WEAPONS, ignoreCase = true) }) MegamanWeapon.entries.toSet()
-    else namedWeapons.toSet()
+    val weapons = parseEnumListOption<MegamanWeapon>("--weapons", options.weapons, errors)
+    val heartTanks = parseEnumListOption<MegaHeartTank>("--heartTanks", options.heartTanks, errors)
+    val healthTanks = parseEnumListOption<MegaHealthTank>("--healthTanks", options.healthTanks, errors)
 
     if (errors.isNotEmpty()) return LaunchResult(null, errors)
 
@@ -65,7 +71,21 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val logAllTags = tags.any { it.equals(LOG_ALL_TAGS, ignoreCase = true) }
     val logTags = tags.filterNot { it.equals(LOG_ALL_TAGS, ignoreCase = true) }.toSet()
 
-    return LaunchResult(ResolvedLaunch(start, room, logTags, logAllTags, options.autoPerf, weapons), errors)
+    return LaunchResult(
+        ResolvedLaunch(start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks),
+        errors
+    )
+}
+
+private inline fun <reified E : Enum<E>> parseEnumListOption(
+    optionName: String,
+    value: String?,
+    errors: MutableList<String>
+): Set<E> {
+    val names = value?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+    val named = names.filterNot { it.equals(ALL_ENTRIES, ignoreCase = true) }
+        .mapNotNull { parseEnumOption<E>(optionName, it, errors) }
+    return if (names.any { it.equals(ALL_ENTRIES, ignoreCase = true) }) enumValues<E>().toSet() else named.toSet()
 }
 
 inline fun <reified E : Enum<E>> parseEnumOption(optionName: String, value: String, errors: MutableList<String>): E? {

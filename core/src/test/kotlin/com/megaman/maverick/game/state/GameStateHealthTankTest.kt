@@ -97,6 +97,31 @@ class GameStateHealthTankTest : DescribeSpec({
         }
     }
 
+    describe("fillHealthTank") {
+        it("puts a missing tank as full") {
+            state.fillHealthTank(MegaHealthTank.B)
+
+            state.containsHealthTank(MegaHealthTank.B) shouldBe true
+            state.getHealthTankValue(MegaHealthTank.B) shouldBe ConstVals.MAX_HEALTH
+        }
+
+        it("fills a partially filled tank to full") {
+            state.putHealthTank(MegaHealthTank.A, 3)
+
+            state.fillHealthTank(MegaHealthTank.A)
+
+            state.getHealthTankValue(MegaHealthTank.A) shouldBe ConstVals.MAX_HEALTH
+        }
+
+        it("keeps a full tank full") {
+            state.putHealthTank(MegaHealthTank.D, ConstVals.MAX_HEALTH)
+
+            state.fillHealthTank(MegaHealthTank.D)
+
+            state.getHealthTankValue(MegaHealthTank.D) shouldBe ConstVals.MAX_HEALTH
+        }
+    }
+
     describe("hasAnyHealthTanks") {
         it("is false with no tanks and true with one") {
             state.hasAnyHealthTanks() shouldBe false

@@ -443,6 +443,8 @@ class MegamanMaverickGame(
         val start = launch.start
         if (start is LaunchStart.StartLevel) start.level.levelOverride?.let { applyLevelOverride(it) }
         launch.weapons.forEach { state.addWeapon(it) }
+        launch.heartTanks.forEach { state.addHeartTank(it) }
+        launch.healthTanks.forEach { state.fillHealthTank(it) }
 
         when (start) {
             LaunchStart.Default -> when (params.runType) {
@@ -816,6 +818,11 @@ class MegamanMaverickGame(
     }
 
     fun saveState() {
+        if (!launch.savesAllowed) {
+            GameLogger.error(TAG, "saveState(): not saved, because --heartTanks or --healthTanks was given")
+            return
+        }
+
         val state = this.state.toString()
         GameLogger.debug(TAG, "saveState(): state=$state")
 
