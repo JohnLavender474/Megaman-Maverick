@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectMapOf
@@ -68,10 +69,17 @@ class GravityChange(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICu
 
     private fun setGravityDirection(direction: Direction) {
         gravityChangeFixture.putProperty(ConstKeys.DIRECTION, direction)
+        body.drawingColor = when (direction) {
+            Direction.UP -> Color.GREEN
+            Direction.DOWN -> Color.RED
+            Direction.LEFT -> Color.YELLOW
+            Direction.RIGHT -> Color.CYAN
+        }
     }
 
     private fun removeGravityDirection() {
         gravityChangeFixture.removeProperty(ConstKeys.DIRECTION)
+        body.drawingColor = Color.WHITE
     }
 
     private fun defineBodyComponent(): BodyComponent {

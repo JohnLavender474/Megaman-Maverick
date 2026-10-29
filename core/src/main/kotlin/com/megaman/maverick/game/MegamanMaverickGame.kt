@@ -217,8 +217,8 @@ class MegamanMaverickGame(
     lateinit var engine: GameEngine
     lateinit var state: GameState
 
-    lateinit var players: MegaPlayers
-    lateinit var gravity: WorldGravity
+    val players = MegaPlayers()
+    val gravity = WorldGravity(players)
 
     private var currentScreenKey: String? = null
     private var screenController: ScreenController? = null
@@ -397,9 +397,6 @@ class MegamanMaverickGame(
         audioMan = MegaAudioManager(assMan.getSounds(sounds), assMan.getMusics(music))
         audioMan.musicVolume = params.musicVolume
         audioMan.soundVolume = params.soundVolume
-
-        players = MegaPlayers()
-        gravity = WorldGravity(players)
 
         val services = MegaServices(
             engine,
@@ -923,7 +920,7 @@ class MegamanMaverickGame(
                     fixedStep = settings.performance.fixedStep,
                     worldContainerSupplier = { levelState.worldContainer },
                     contactListener = ContactRuleDispatcher(
-                        megaContactRules(this, CONTACT_LISTENER_DEBUG_FILTER),
+                        megaContactRules(players, gravity, CONTACT_LISTENER_DEBUG_FILTER),
                         CONTACT_LISTENER_DEBUG_FILTER
                     ),
                     collisionHandler = MegaCollisionHandler(),
@@ -942,13 +939,13 @@ class MegamanMaverickGame(
                 MotionSystem(diagnostics),
                 when (params.pathfinding) {
                     "async" -> AsyncPathfindingSystem(
-                        MegaPathfinderFactory(this),
+                        MegaPathfinderFactory(levelState),
                         diagnostics = diagnostics,
                         pathDebugConsumer = pathDebugConsumer
                     )
 
                     "sync" -> SimplePathfindingSystem(
-                        MegaPathfinderFactory(this),
+                        MegaPathfinderFactory(levelState),
                         diagnostics = diagnostics,
                         pathDebugConsumer = pathDebugConsumer
                     )

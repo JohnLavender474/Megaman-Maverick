@@ -82,6 +82,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
@@ -176,7 +177,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     var music: MusicAsset? = null
 
-    lateinit var screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum
+    lateinit var screenOnCompletion: (LevelState) -> ScreenEnum
 
     private lateinit var spawnsMan: SpawnsManager
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
@@ -875,7 +876,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val level = game.levelState.currentLevel!!
                 if (level.type != LevelType.EXTRA_LEVEL) game.state.addLevelDefeated(level)
 
-                val nextScreen = screenOnCompletion.invoke(game)
+                val nextScreen = screenOnCompletion.invoke(game.levelState)
                 game.setCurrentScreen(nextScreen.name)
             }
 

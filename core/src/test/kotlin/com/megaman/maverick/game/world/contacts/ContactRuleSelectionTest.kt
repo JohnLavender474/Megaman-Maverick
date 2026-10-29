@@ -6,11 +6,11 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.maverick.game.engine.world.body.FixtureTypeSet
 import com.maverick.game.engine.world.body.IFixture
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
 import java.io.File
 
 class ContactRuleSelectionTest : DescribeSpec({
@@ -51,7 +51,8 @@ private fun interface Selector {
 }
 
 private fun tableSelector(): Selector {
-    val table = megaContactRules(mockk<MegamanMaverickGame>(relaxed = true)) { _, _ -> false }
+    val players = MegaPlayers()
+    val table = megaContactRules(players, WorldGravity(players)) { _, _ -> false }
     return Selector { phase, fixture1, fixture2 ->
         table.select(ProcessState.valueOf(phase), fixture1, fixture2)?.let { Selection(it.ruleId, it.roleA) }
     }

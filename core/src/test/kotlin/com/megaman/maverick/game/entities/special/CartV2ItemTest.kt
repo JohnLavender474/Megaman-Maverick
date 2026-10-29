@@ -22,7 +22,6 @@ import com.maverick.game.engine.world.contacts.ContactRuleDispatcher
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -34,6 +33,8 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.megaContactRules
+import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.players.WorldGravity
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.floats.shouldBeGreaterThan
@@ -76,17 +77,19 @@ class CartV2ItemTest : DescribeSpec({
     }
 
     beforeEach {
+        val players = MegaPlayers()
+        val gravity = WorldGravity(players)
         val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
         val worldSystem = WorldSystem(
             ppm = ConstVals.PPM,
             fixedStep = STEP,
             worldContainerSupplier = { worldContainer },
-            contactListener = ContactRuleDispatcher(megaContactRules(mockk<MegamanMaverickGame>(relaxed = true)) { _, _ -> false }),
+            contactListener = ContactRuleDispatcher(megaContactRules(players, gravity) { _, _ -> false }),
             collisionHandler = MegaCollisionHandler(),
             contactFilter = MegaContactFilter()
         )
         engine = GameEngine(Array<GameSystem>().apply { add(worldSystem) })
-        game = testServices(engine = engine)
+        game = testServices(engine = engine, players = players, gravity = gravity)
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
         every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
