@@ -94,3 +94,4 @@ related-items: [<mega-refactor item IDs>]
 | [The end-level beam sets the Megaman beam flag to `true` when the beam ends](2026-10-28-end-level-beam-flag-left-true.md) | question | core | open |
 | [`PathfindingComponent` keeps its old path through a destroy and a new spawn](2026-10-28-pathfinding-component-keeps-old-path.md) | no | engine | open |
 | [Refine the final Dr. Wily boss fight](2026-10-29-refine-wily-final-boss-fight.md) | question | core, content | open |
+| [Question: a `down` gravity area turns the camera upside down, so the level shows upside down](2026-10-29-gravity-change-turns-camera-upside-down.md) | question | core | open |
