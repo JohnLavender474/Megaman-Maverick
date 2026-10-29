@@ -55,7 +55,7 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
   4. The old `LevelContext<out P : IPlayers<out PlayerView>>` question is dropped (`PlayerView` is gone, `IPlayers` is
      now `IPlayers<out E : IGameEntity>`); no engine context in `016`; `001b` decides what the engine host exposes.
   5. Keep the name `game` and the old member names during the swap; rename later (`016e`).
-  6. `getGameCamera`, `playSoundNow` and `stopSoundNow` leave `IMegaGameEntity` in `016c` (they read `game` through
+  6. (changed by decision 15) `getGameCamera`, `playSoundNow` and `stopSoundNow` leave `IMegaGameEntity` in `016c` (they read `game` through
      the interface); they move to `MegaGameEntity`, so no call site changes. This answers the open question of `072`.
   7. Random and the texture cache are out of scope.
   8. Screens keep the host.
@@ -91,6 +91,16 @@ exists)" and, about the new scan, "Yes, commit the notes and go with your recomm
   of `Bat` and `SubmarineJoe` into an optional hook of the pathfinding systems, behind the new `--debugPathfinding` flag
   (`fix/pathfinding-debug-flag`, merged into `master` as `1d6dda6cc`). The 2 `game.getShapes()` reads in entities
   are gone before `016c`.
+
+- 2026-10-29 (owner, on the `016c` scope; the branch `docs/SCOPE.md` has all 12 questions and answers):
+  13. The camera flags (`cameraRotating`, `focusSnappedAway`) do not go into `LevelState`. They describe the camera.
+      Owner (verbatim): "it might be best for a \"camera service/component/helper/manager\" to handle things like these
+      fields instead of directly tying them to the camera itself." So a small camera state or manager object next to the
+      camera (not fields of the camera class) holds them; the holder field `camera` reaches it.
+  14. Performance is a setting, not time: a small settings object on the holder holds the performance value
+      (`setPerformance` stays as an action; read when used). Not `GameClock`.
+  15. Decision 6 is replaced for the default methods: `getGameCamera`, `playSoundNow` and `stopSoundNow` are removed
+      from `IMegaGameEntity` and not moved to `MegaGameEntity`; their callers read the real home (decision 11).
 
 ## Open questions
 
