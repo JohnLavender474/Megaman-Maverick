@@ -20,7 +20,7 @@ import com.maverick.game.engine.motion.SineWave
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
+class Snow(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "Snow"

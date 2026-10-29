@@ -41,7 +41,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -58,7 +58,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 
-class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IDamagerEntity,
+class BigAssMaverickRobotHand(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IDamagerEntity,
     IHazard, IOwnable<BigAssMaverickRobot>, IAudioEntity {
 
     companion object {
@@ -381,7 +381,7 @@ class BigAssMaverickRobotHand(game: MegamanMaverickGame) : MegaGameEntity(game),
                 block.body.physics.velocity
                     .set(blockTarget)
                     .sub(block.body.getPositionPoint(BLOCK_POSITION))
-                    .scl(1f / game.getPerformance().fixedStep)
+                    .scl(1f / game.settings.performance.fixedStep)
             }
 
             val blockActive = !defeated && state == BigAssMaverickRobotHandState.ROTATE

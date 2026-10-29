@@ -17,14 +17,14 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getPosition
 
-class Tree(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, ICullableEntity {
+class Tree(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "Tree1"

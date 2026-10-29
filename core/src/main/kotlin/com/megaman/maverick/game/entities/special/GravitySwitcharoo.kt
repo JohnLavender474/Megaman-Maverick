@@ -45,7 +45,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -61,7 +61,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 
-class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class GravitySwitcharoo(game: MegaServices) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity, IDirectional, IActivatable {
 
     companion object {
@@ -206,7 +206,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         component.put(ConstKeys.TRIGGER) update@{ delta ->
             triggerArea.setCenter(body.getCenter())
 
-            if (game.isCameraRotating()) {
+            if (game.camera.rotating) {
                 if (hasActiveDelay) on = false
                 return@update
             }
@@ -279,7 +279,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (!on || game.isCameraRotating() || game.gravity.direction == direction) ConstKeys.DEACTIVATED
+                    if (!on || game.camera.rotating || game.gravity.direction == direction) ConstKeys.DEACTIVATED
                     else ConstKeys.ARROW
                 }
                 .applyToAnimations { animations ->

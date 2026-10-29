@@ -44,7 +44,7 @@ import com.megaman.maverick.game.ConstKeys.CAN
 import com.megaman.maverick.game.ConstKeys.END
 import com.megaman.maverick.game.ConstKeys.ON
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -68,7 +68,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.math.min
 
-class ReactorMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class ReactorMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "ReactorMan"

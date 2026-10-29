@@ -14,13 +14,13 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class SpaceSatellite(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
+class SpaceSatellite(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "SpaceSatellite"

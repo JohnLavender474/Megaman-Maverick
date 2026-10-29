@@ -36,7 +36,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable,
+class DragonFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable,
     IDirectional {
 
     enum class DragonFlyBehavior { MOVE_UP, MOVE_DOWN, MOVE_HORIZONTAL }
@@ -161,7 +161,7 @@ class DragonFly(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMA
         body.addFixture(oobScannerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            behaviorTimer.update(game.getPerformance().fixedStep)
+            behaviorTimer.update(game.settings.performance.fixedStep)
 
             if (!behaviorTimer.isFinished() || frozen) {
                 body.physics.velocity.setZero()

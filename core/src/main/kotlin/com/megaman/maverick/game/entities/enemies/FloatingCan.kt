@@ -40,8 +40,8 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.MegamanMaverickGame.Performance
+import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -62,7 +62,7 @@ import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after each Reactor Monkey is defeated
-class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IBossListener,
+class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IBossListener,
     IAnimatedEntity, IEventListener {
 
     companion object {

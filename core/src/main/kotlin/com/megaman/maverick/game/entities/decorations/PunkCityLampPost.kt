@@ -27,7 +27,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.addFixtureLabel
 import com.megaman.maverick.game.world.body.getCenter
 
-class PunkCityLampPost(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+class PunkCityLampPost(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     IFaceable {
 
     companion object {
@@ -156,7 +156,7 @@ class PunkCityLampPost(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
     override fun getTag() = TAG
 }
 
-class PunkCityLampPostBlock(game: MegamanMaverickGame) : Block(game), IOwnable<PunkCityLampPost> {
+class PunkCityLampPostBlock(game: MegaServices) : Block(game), IOwnable<PunkCityLampPost> {
 
     companion object {
         const val TAG = "PunkCityLampPostBlock"

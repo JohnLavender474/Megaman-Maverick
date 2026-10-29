@@ -37,7 +37,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IMotionEntity,
+class TellySaucer(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IMotionEntity,
     IDirectional {
 
     companion object {
@@ -148,7 +148,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         updatablesComponent.add update@{ delta ->
             direction = targetPlayer.direction
 
-            if (game.isCameraRotating()) {
+            if (game.camera.rotating) {
                 body.physics.velocity.setZero()
 
                 rayTimer.setToEnd()
@@ -218,7 +218,7 @@ class TellySaucer(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (game.isCameraRotating()) "collapsed" else if (raying) "flash" else "spin" }
+                .setKeySupplier { if (game.camera.rotating) "collapsed" else if (raying) "flash" else "spin" }
                 .addAnimations(
                     "flash" pairTo Animation(regions["flash"], 2, 1, 0.1f, true),
                     "spin" pairTo Animation(regions["spin"], 3, 2, 0.1f, true)

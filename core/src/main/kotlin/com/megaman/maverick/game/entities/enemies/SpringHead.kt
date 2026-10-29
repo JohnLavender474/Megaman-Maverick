@@ -29,7 +29,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class SpringHead(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class SpringHead(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
 
     companion object {
         const val TAG = "SpringHead"

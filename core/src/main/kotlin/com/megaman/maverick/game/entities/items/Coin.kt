@@ -20,13 +20,13 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.getCenter
 
-class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class Coin(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         const val TAG = "Coin"
@@ -78,7 +78,7 @@ class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
         val coins = game.levelState.coins
         game.levelState.coins = coins + 1
 
-        playSoundNow(SoundAsset.SMB3_COIN_SOUND, false)
+        game.audioMan.playSound(SoundAsset.SMB3_COIN_SOUND, false)
 
         destroy()
     }

@@ -30,7 +30,7 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.AnimationUtils
 
-class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
+class DrWily(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
     IEventListener {
 
     companion object {

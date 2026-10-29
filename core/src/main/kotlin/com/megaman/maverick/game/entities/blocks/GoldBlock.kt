@@ -6,12 +6,12 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 
-class GoldBlock(game: MegamanMaverickGame) : AnimatedBlock(game), ILightSource {
+class GoldBlock(game: MegaServices) : AnimatedBlock(game), ILightSource {
 
     companion object {
         const val TAG = "GoldBlock"

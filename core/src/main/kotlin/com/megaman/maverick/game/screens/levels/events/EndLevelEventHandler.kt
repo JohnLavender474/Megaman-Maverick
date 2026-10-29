@@ -222,7 +222,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         if (beamEndTimer.isFinished()) {
             GameLogger.debug(TAG, "beam end timer just finished")
             game.audioMan.stopMusic()
-            val level = game.getCurrentLevel()
+            val level = game.levelState.currentLevel!!
             game.eventsMan.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
             game.levelState.megamanBeam = true
         }

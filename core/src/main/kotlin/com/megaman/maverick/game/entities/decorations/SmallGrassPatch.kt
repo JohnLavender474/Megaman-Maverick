@@ -11,7 +11,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -19,7 +19,7 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 
-class SmallGrassPatch(game: MegamanMaverickGame) : MegaGameEntity(game) {
+class SmallGrassPatch(game: MegaServices) : MegaGameEntity(game) {
 
     companion object {
         const val TAG = "SmallGrassPatch"

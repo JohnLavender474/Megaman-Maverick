@@ -26,7 +26,7 @@ import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setReceiver
 
-class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, ILightSource {
+class HeartTank(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, ILightSource {
 
     companion object {
         const val TAG = "HeartTank"
@@ -154,7 +154,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
         super.defineUpdatablesComponent(component)
         component.add {
-            if (game.getCurrentLevel() == LevelDefinition.DESERT_MAN)
+            if (game.levelState.currentLevel!! == LevelDefinition.DESERT_MAN)
                 LightSourceUtils.sendLightSourceEvent(this)
         }
     }

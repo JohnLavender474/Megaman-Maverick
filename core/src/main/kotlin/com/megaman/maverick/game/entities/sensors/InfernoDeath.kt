@@ -3,11 +3,11 @@ package com.megaman.maverick.game.entities.sensors
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.world.body.getBounds
 
-class InfernoDeath(game: MegamanMaverickGame) : Death(game) {
+class InfernoDeath(game: MegaServices) : Death(game) {
 
     companion object {
         const val TAG = "InfernoDeath"

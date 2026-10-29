@@ -15,7 +15,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -23,7 +23,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
+class GravityChange(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
 
     private lateinit var gravityChangeFixture: Fixture
 

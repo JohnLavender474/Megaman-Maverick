@@ -70,14 +70,14 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             chargingTimer.update(delta * scalar)
         },
         onJustReleased = {
-            if (stunned || damaged || game.isCameraRotating() || teleporting || !inPlay ||
+            if (stunned || damaged || game.camera.rotating || teleporting || !inPlay ||
                 !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
                 game.levelState.roomTransition
             ) {
                 GameLogger.debug(
                     MEGAMAN_CONTROLLER_COMPONENT_TAG,
                     "attack actuator just released, do not shoot: " +
-                        "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.isCameraRotating()}, " +
+                        "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.camera.rotating}, " +
                         "teleporting=$teleporting, inPlay=$inPlay, " +
                         "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
                 )

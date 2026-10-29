@@ -14,7 +14,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -22,7 +22,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class ShieldEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IOwnable<IFreezableEntity> {
+class ShieldEntity(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IOwnable<IFreezableEntity> {
 
     companion object {
         const val TAG = "FrozenEntityBlock"

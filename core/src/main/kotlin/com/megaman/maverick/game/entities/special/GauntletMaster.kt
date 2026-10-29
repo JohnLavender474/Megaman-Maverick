@@ -18,7 +18,7 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -43,7 +43,7 @@ import kotlin.reflect.KClass
  * - `start_delay` (optional): seconds before wave 1 after the player enters the room
  * - `wave_delay` (optional): seconds between waves
  */
-class GauntletMaster(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListener, IAudioEntity {
+class GauntletMaster(game: MegaServices) : MegaGameEntity(game), IEventListener, IAudioEntity {
 
     companion object {
         const val TAG = "GauntletMaster"

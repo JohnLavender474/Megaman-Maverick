@@ -32,7 +32,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamagerEntity, IOwnable<IGameEntity>,
+class SmokePuff(game: MegaServices) : MegaGameEntity(game), IHazard, IDamagerEntity, IOwnable<IGameEntity>,
     IBodyEntity, ISpritesEntity, IDirectional {
 
     companion object {

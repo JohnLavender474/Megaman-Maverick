@@ -33,7 +33,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
 
-class SigmaRatElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class SigmaRatElectricBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "SigmaRatElectricBall"

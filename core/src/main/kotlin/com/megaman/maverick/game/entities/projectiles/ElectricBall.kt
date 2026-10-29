@@ -23,7 +23,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -31,7 +31,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class ElectricBall(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class ElectricBall(game: MegaServices) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "ElectricBall"

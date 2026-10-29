@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.special
 
+import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
@@ -15,10 +17,11 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.ints.shouldBeGreaterThan
@@ -26,12 +29,11 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 
 class DrWilyTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegamanMaverickGame
+    lateinit var game: MegaServices
     lateinit var submitted: MutableList<Int>
     var step = 0
     var alive = true
@@ -41,10 +43,11 @@ class DrWilyTest : DescribeSpec({
         submitted = mutableListOf()
         step = 0
         alive = true
-        game = mockk(relaxed = true)
-        every { game.engine } returns engine
-        every { game.state } returns GameState()
-        every { game.getCurrentLevel() } returns LevelDefinition.TEST_1
+        val eventsMan = mockk<EventsManager>(relaxed = true)
+        every { eventsMan.submitEvent(any()) } answers {
+            if (firstArg<Event>().key == EventType.GAME_COMPLETE) submitted.add(step)
+        }
+        game = testServices(engine = engine, eventsMan = eventsMan, players = mockk<MegaPlayers>(relaxed = true))
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
         every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
@@ -54,11 +57,6 @@ class DrWilyTest : DescribeSpec({
             if (alive) EntityExistenceState.LIVE else EntityExistenceState.DESTROY_QUEUED
         }
         every { game.players.targetFor(any()) } returns target
-        val eventsMan = mockk<EventsManager>(relaxed = true)
-        every { eventsMan.submitEvent(any()) } answers {
-            if (firstArg<Event>().key == EventType.GAME_COMPLETE) submitted.add(step)
-        }
-        every { game.eventsMan } returns eventsMan
     }
 
     afterEach { engine.reset() }
@@ -87,7 +85,6 @@ class DrWilyTest : DescribeSpec({
 
             submitted.size shouldBe 1
             submitted.first() shouldBeGreaterThan 7.0.div(0.05).toInt() - 1
-            verify(exactly = 0) { game.setCurrentScreen(any(), any()) }
         }
 
         it("never submits GAME_COMPLETE when the target player is dead when the still timer finishes") {

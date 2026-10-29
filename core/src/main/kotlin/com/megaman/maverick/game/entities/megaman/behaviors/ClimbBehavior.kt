@@ -139,7 +139,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
             body.physics.gravityOn = false
             body.physics.velocity.setZero()
 
-            game.setFocusSnappedAway(true)
+            game.camera.focusSnappedAway = true
 
             aButtonTask = when {
                 body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
@@ -212,7 +212,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
         }
 
         override fun end() {
-            game.setFocusSnappedAway(false)
+            game.camera.focusSnappedAway = false
 
             body.physics.gravityOn = true
             body.physics.velocity.setZero()

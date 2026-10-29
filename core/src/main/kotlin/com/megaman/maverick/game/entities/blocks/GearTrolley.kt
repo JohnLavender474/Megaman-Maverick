@@ -24,13 +24,13 @@ import com.maverick.game.engine.motion.MotionComponent.MotionDefinition
 import com.maverick.game.engine.motion.Trajectory
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 
-class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpritesEntity, IEventListener {
+class GearTrolley(game: MegaServices) : Block(game), IMotionEntity, ISpritesEntity, IEventListener {
 
     companion object {
         private var region: TextureRegion? = null

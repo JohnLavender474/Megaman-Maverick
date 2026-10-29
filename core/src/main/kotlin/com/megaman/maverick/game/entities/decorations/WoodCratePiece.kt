@@ -21,14 +21,14 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class WoodCratePiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class WoodCratePiece(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "WoodCratePiece"

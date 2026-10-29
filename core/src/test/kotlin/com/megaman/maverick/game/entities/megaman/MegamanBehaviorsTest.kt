@@ -1,7 +1,8 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.GameEngine
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.components.defineBehaviorsComponent
 import com.megaman.maverick.game.state.GameState
@@ -15,9 +16,7 @@ import io.mockk.unmockkAll
 class MegamanBehaviorsTest : DescribeSpec({
 
     fun newMegaman(): Megaman {
-        val game = mockk<MegamanMaverickGame>(relaxed = true)
-        every { game.engine } returns mockk<GameEngine>(relaxed = true)
-        every { game.state } returns GameState()
+        val game = testServices(engine = mockk<GameEngine>(relaxed = true))
         return Megaman(game)
     }
 

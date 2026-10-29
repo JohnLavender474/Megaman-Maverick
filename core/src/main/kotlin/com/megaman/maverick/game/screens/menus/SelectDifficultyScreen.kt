@@ -88,7 +88,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
             override fun onSelect(delta: Float): Boolean {
                 game.state.setDifficultyMode(DifficultyMode.NORMAL)
 
-                game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
                 game.startLevel()
 
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
@@ -108,7 +108,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
             override fun onSelect(delta: Float): Boolean {
                 game.state.setDifficultyMode(DifficultyMode.HARD)
 
-                game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
                 game.startLevel()
 
                 game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)

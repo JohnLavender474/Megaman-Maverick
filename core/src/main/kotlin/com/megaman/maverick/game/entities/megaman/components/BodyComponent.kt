@@ -188,7 +188,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     val headFixture =
         Fixture(body, FixtureType.HEAD, GameRectangle().setSize(0.75f * ConstVals.PPM, 0.25f * ConstVals.PPM))
     headFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) { _, _ ->
-        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) {
+        if (game.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL) {
             val shouldMakeBumpSound = when (direction) {
                 Direction.UP -> body.physics.velocity.y >= 0f
                 Direction.DOWN -> body.physics.velocity.y <= 0f
@@ -448,6 +448,6 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 fun Megaman.getMaxRunSpeed(): Float {
     var threshold = MegamanValues.RUN_MAX_SPEED * ConstVals.PPM
     if (body.isSensing(BodySense.IN_WATER)) threshold *= MegamanValues.WATER_RUN_MAX_SPEED_SCALAR
-    else if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) threshold *= MegamanValues.MOON_RUN_MAX_SPEED_SCALAR
+    else if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN) threshold *= MegamanValues.MOON_RUN_MAX_SPEED_SCALAR
     return threshold
 }

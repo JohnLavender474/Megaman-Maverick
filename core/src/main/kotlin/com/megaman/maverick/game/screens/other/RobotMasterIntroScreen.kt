@@ -185,7 +185,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
 
         GameLogger.debug(TAG, "show()")
 
-        val level = game.getCurrentLevel()
+        val level = game.levelState.currentLevel!!
         val (fullText, spriteSize, animQueue, startPosition, endPosition) = buildRobotMasterAnimDef(level)
 
         animQueue.forEach { bossAnimQ.addLast(it) }

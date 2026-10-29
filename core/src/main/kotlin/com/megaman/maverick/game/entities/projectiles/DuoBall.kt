@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.*
 
-class DuoBall(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class DuoBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "DuoBall"

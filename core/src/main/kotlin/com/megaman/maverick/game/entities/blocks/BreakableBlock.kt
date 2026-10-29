@@ -24,7 +24,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+open class BreakableBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
 
@@ -135,8 +135,8 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
         connectedBlocks.forEach { block -> block.explodeAndDie() }
         connectedBlocks.clear()
 
-        if (game.audioMan.isSoundPlaying(SoundAsset.THUMP_SOUND)) stopSoundNow(SoundAsset.THUMP_SOUND)
-        playSoundNow(SoundAsset.THUMP_SOUND, false)
+        if (game.audioMan.isSoundPlaying(SoundAsset.THUMP_SOUND)) game.audioMan.stopSound(SoundAsset.THUMP_SOUND)
+        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun hitByProjectile(projectileFixture: IFixture) {

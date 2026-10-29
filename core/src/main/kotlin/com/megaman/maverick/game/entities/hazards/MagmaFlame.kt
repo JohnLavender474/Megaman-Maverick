@@ -39,7 +39,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.GravityUtils
 import com.megaman.maverick.game.world.body.*
 
-class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity, IBodyEntity, ISpritesEntity,
+class MagmaFlame(game: MegaServices) : MegaGameEntity(game), IFireEntity, IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IOwnable<IGameEntity>, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -170,7 +170,7 @@ class MagmaFlame(game: MegamanMaverickGame) : MegaGameEntity(game), IFireEntity,
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
         waterListenerFixture.setReceiver(Receivers.HIT_BY_WATER) {
             destroy()
-            playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+            game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
         }
         body.addFixture(waterListenerFixture)
 

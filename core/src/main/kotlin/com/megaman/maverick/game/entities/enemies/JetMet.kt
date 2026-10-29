@@ -41,7 +41,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 
-class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+class JetMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
     IDirectional, IFaceable {
 
     companion object {
@@ -86,7 +86,7 @@ class JetMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     private val shootTimer = Timer(SHOOT_DELAY)
 
     private val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !game.camera.rotating
 
     private lateinit var animations: ObjectMap<String, IAnimation>
     private lateinit var jetMetState: JetMetState

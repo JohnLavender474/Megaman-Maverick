@@ -14,7 +14,7 @@ import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IParentEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.AnimatedBlock
@@ -26,7 +26,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
-class DisappearingBlocks(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity<Block>, IAudioEntity {
+class DisappearingBlocks(game: MegaServices) : MegaGameEntity(game), IParentEntity<Block>, IAudioEntity {
 
     companion object {
         const val TAG = "DisappearingBlocks"

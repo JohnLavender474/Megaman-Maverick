@@ -44,7 +44,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -71,7 +71,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class InfernoMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "InfernoMan"
@@ -281,7 +281,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 return@add
             }
 
-            if (game.isCameraRotating()) {
+            if (game.camera.rotating) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
             } else body.physics.gravityOn = !frozen

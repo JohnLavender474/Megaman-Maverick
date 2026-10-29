@@ -30,7 +30,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -43,7 +43,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.floor
 
-class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAnimatedEntity {
+class FallingLeaf(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "FallingLeaf"
@@ -163,7 +163,7 @@ class FallingLeaf(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEn
         maxTtlTimer.reset()
     }
 
-    private fun maxAllowedSpawned() = game.getPerformance().fps.floorDiv(3)
+    private fun maxAllowedSpawned() = game.settings.performance.fps.floorDiv(3)
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")

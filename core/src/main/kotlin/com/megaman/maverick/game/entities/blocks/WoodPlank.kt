@@ -22,7 +22,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -31,7 +31,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-class WoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+class WoodPlank(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "WoodPlank"

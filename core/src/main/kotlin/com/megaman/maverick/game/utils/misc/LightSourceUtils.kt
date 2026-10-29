@@ -10,9 +10,8 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.ILightSource
-import com.megaman.maverick.game.entities.contracts.IMegaGameEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
 object LightSourceUtils {
@@ -39,7 +38,7 @@ object LightSourceUtils {
         keys?.let { lightSource.lightSourceKeys.addAll(it) }
     }
 
-    fun sendLightSourceEvent(lightSource: ILightSource) = sendLightSourceEvent(
+    fun <T> sendLightSourceEvent(lightSource: T) where T : MegaGameEntity, T : ILightSource = sendLightSourceEvent(
         lightSource,
         lightSource.lightSourceKeys,
         lightSource.lightSourceCenter,
@@ -48,7 +47,7 @@ object LightSourceUtils {
     )
 
     fun sendLightSourceEvent(
-        entity: IMegaGameEntity,
+        entity: MegaGameEntity,
         keys: ObjectSet<Int>,
         center: Vector2,
         radiance: Float,

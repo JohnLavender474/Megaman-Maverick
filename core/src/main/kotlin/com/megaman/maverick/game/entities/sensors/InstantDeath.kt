@@ -3,9 +3,9 @@ package com.megaman.maverick.game.entities.sensors
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 
-class InstantDeath(game: MegamanMaverickGame): Death(game) {
+class InstantDeath(game: MegaServices): Death(game) {
 
     companion object {
         const val TAG = "InstantDeath"

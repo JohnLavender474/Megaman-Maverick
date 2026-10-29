@@ -5,12 +5,12 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
-class EventTrigger(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
+class EventTrigger(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
 
     companion object {
         const val TAG = "EventTrigger"

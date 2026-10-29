@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.players
 
+import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.IDirectional
@@ -13,7 +14,7 @@ import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.EntityType
@@ -25,18 +26,17 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 
-private class TestPlayerEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectional {
+private class TestPlayerEntity(game: MegaServices) : MegaGameEntity(game), IDirectional {
     override var direction = Direction.UP
     override fun getType() = EntityType.MEGAMAN
 }
 
 class MegaPlayersTest : DescribeSpec({
 
-    lateinit var game: MegamanMaverickGame
+    lateinit var game: MegaServices
 
     beforeEach {
-        game = mockk(relaxed = true)
-        every { game.engine } returns mockk<GameEngine>(relaxed = true)
+        game = testServices(engine = mockk<GameEngine>(relaxed = true))
     }
 
     fun playerEntity(withBody: Boolean = true) = TestPlayerEntity(game).also {

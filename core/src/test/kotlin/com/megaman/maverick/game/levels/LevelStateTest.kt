@@ -38,57 +38,62 @@ class LevelStateTest : DescribeSpec({
         }
     }
 
-    describe("the game functions before the first write") {
-        val game = MegamanMaverickGame()
+    describe("the LevelState reads before the first write") {
+        val state = LevelState()
 
-        it("getCurrentLevel and getTiledMapLoadResult throw") {
-            shouldThrow<NullPointerException> { game.getCurrentLevel() }
-            shouldThrow<NullPointerException> { game.getTiledMapLoadResult() }
+        it("currentLevel and tiledMapLoadResult throw when read with !!") {
+            shouldThrow<NullPointerException> { state.currentLevel!! }
+            shouldThrow<NullPointerException> { state.tiledMapLoadResult!! }
         }
 
         it("the other reads give the empty values") {
-            game.isInExtraLevel() shouldBe false
+            state.isInExtraLevel shouldBe false
             val out = Array<RectangleMapObject>()
-            game.getRooms(out) shouldBeSameInstanceAs out
+            state.getRooms(out) shouldBeSameInstanceAs out
             out.size shouldBe 0
-            game.getCurrentRoom().shouldBeNull()
-            game.getWorldContainer().shouldBeNull()
-            game.isCameraRotating() shouldBe false
-            game.isFocusSnappedAway() shouldBe false
-            game.weaponsAttained.shouldBeNull()
+            state.currentRoom.shouldBeNull()
+            state.worldContainer.shouldBeNull()
+            state.weaponsAttained.shouldBeNull()
         }
     }
 
-    describe("the game functions after a write") {
+    describe("the LevelState reads after a write") {
         it("call the room suppliers at each read and do not copy the rooms") {
-            val game = MegamanMaverickGame()
+            val state = LevelState()
             val rooms = Array<RectangleMapObject>()
             var current: RectangleMapObject? = null
-            game.setRoomsSupplier { rooms }
-            game.setCurrentRoomSupplier { current }
+            state.roomsSupplier = { rooms }
+            state.currentRoomSupplier = { current }
 
-            game.getRooms(Array()).size shouldBe 0
-            game.getCurrentRoom().shouldBeNull()
+            state.getRooms(Array()).size shouldBe 0
+            state.currentRoom.shouldBeNull()
 
             val room = RectangleMapObject()
             rooms.add(room)
             current = room
 
-            game.getRooms(Array()).first() shouldBeSameInstanceAs room
-            game.getCurrentRoom() shouldBeSameInstanceAs room
+            state.getRooms(Array()).first() shouldBeSameInstanceAs room
+            state.currentRoom shouldBeSameInstanceAs room
         }
 
         it("keep the level values when a new level is set") {
-            val game = MegamanMaverickGame()
+            val state = LevelState()
             val rooms = Array<RectangleMapObject>().apply { add(RectangleMapObject()) }
-            game.setCurrentLevel(LevelDefinition.TEST_1)
-            game.setRoomsSupplier { rooms }
+            state.currentLevel = LevelDefinition.TEST_1
+            state.roomsSupplier = { rooms }
 
-            game.setCurrentLevel(LevelDefinition.GAUNTLET_1)
+            state.currentLevel = LevelDefinition.GAUNTLET_1
 
-            game.getCurrentLevel() shouldBe LevelDefinition.GAUNTLET_1
-            game.isInExtraLevel() shouldBe true
-            game.getRooms(Array()).size shouldBe 1
+            state.currentLevel shouldBe LevelDefinition.GAUNTLET_1
+            state.isInExtraLevel shouldBe true
+            state.getRooms(Array()).size shouldBe 1
+        }
+    }
+
+    describe("the game") {
+        it("holds one LevelState for the session") {
+            val game = MegamanMaverickGame()
+            game.levelState shouldBeSameInstanceAs game.levelState
         }
     }
 })

@@ -18,7 +18,7 @@ import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -166,7 +166,7 @@ import kotlin.math.sqrt
  * | `wave_amplitude` | Float              | 0.5                      | Wave amplitude scalar              |
  * | `wave_phase_offset` | Float           | 1.25                     | Per-joint phase offset (radians)   |
  */
-class TestTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableShapesEntity, Updatable {
+class TestTentacle(game: MegaServices) : MegaGameEntity(game), IDrawableShapesEntity, Updatable {
 
     companion object {
         const val TAG = "TestTentacle"

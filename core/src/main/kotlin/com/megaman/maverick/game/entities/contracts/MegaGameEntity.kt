@@ -7,13 +7,13 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.groups.GroupsComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.state.MapObjectComponent
 import com.megaman.maverick.game.entities.state.mapObjectId
 
-abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEntity(game.engine), IMegaGameEntity {
+abstract class MegaGameEntity(val game: MegaServices) : GameEntity(game.engine), IMegaGameEntity {
 
     companion object {
         const val TAG = "MegaGameEntity"
@@ -30,7 +30,7 @@ abstract class MegaGameEntity(override val game: MegamanMaverickGame) : GameEnti
     override fun canSpawn(spawnProps: Properties): Boolean {
         if (!super.canSpawn(spawnProps)) return false
 
-        val canSpawnInLevel = game.getCurrentLevel().levelOverride?.canSpawn
+        val canSpawnInLevel = game.levelState.currentLevel!!.levelOverride?.canSpawn
         if (canSpawnInLevel != null && !canSpawnInLevel.invoke(this)) return false
 
         val difficultyMode = game.state.getDifficultyMode()

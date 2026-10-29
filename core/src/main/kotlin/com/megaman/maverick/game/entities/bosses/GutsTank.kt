@@ -43,7 +43,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -73,7 +73,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class GutsTank(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity {
+class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity {
 
     enum class GutsTankMoveState { PAUSE, MOVE, }
     enum class GutsTankAttackState { LAUNCH_FIST, LAUNCH_RUNNING_METS, LAUNCH_HELI_METS, CHUNK_ORBS, SHOOT_BLASTS }

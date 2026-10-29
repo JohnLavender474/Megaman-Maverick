@@ -13,7 +13,7 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -23,7 +23,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.CullBoundsType
 
-class FallingLeaves(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
+class FallingLeaves(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
 
     companion object {
         const val TAG = "FallingLeaves"
@@ -114,7 +114,7 @@ class FallingLeaves(game: MegamanMaverickGame) : MegaGameEntity(game), ICullable
         spawnTimer.update(delta)
         if (shouldSpawnLeaf() &&
             spawnTimer.isFinished() &&
-            (spawnRoom == null || game.getCurrentRoom()?.name == spawnRoom)
+            (spawnRoom == null || game.levelState.currentRoom?.name == spawnRoom)
         ) {
             spawnLeaf()
 

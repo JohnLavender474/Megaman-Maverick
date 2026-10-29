@@ -19,7 +19,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_MAX_DIST_FROM_ORIGIN
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
@@ -33,7 +33,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IEventListener,
+class PreciousGemCluster(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IEventListener,
     IOwnable<IGameEntity> {
 
     companion object {

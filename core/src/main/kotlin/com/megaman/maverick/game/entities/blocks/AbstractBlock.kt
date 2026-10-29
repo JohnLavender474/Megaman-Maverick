@@ -4,7 +4,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.players.asPlayer
@@ -13,7 +13,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-open class AbstractBlock(game: MegamanMaverickGame) : Block(game) {
+open class AbstractBlock(game: MegaServices) : Block(game) {
 
     companion object {
         const val TAG = "AbstractBlock"

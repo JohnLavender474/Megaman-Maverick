@@ -20,7 +20,7 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IDirectional {
+class WhiteArrowPool(game: MegaServices) : MegaGameEntity(game), ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "WhiteArrowPool"
@@ -128,7 +128,7 @@ class WhiteArrowPool(game: MegamanMaverickGame) : MegaGameEntity(game), ICullabl
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cull = getGameCameraCullingLogic(getGameCamera(), { bounds })
+        val cull = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cull))
     }
 

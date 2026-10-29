@@ -31,7 +31,7 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class FireMetFlame(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FireMetFlame"
@@ -89,7 +89,7 @@ class FireMetFlame(game: MegamanMaverickGame) : AbstractProjectile(game), IAnima
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     internal fun launch(impulse: Vector2) = body.physics.velocity.set(impulse)

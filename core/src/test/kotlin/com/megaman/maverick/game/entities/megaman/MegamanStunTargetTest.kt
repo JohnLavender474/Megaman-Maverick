@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.controller.ControllerComponent
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.GameEngine
@@ -13,7 +14,7 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.players.MegaPlayers
@@ -29,17 +30,15 @@ class MegamanStunTargetTest : DescribeSpec({
     lateinit var megaman: Megaman
 
     beforeEach {
-        val game = mockk<MegamanMaverickGame>(relaxed = true)
-        every { game.engine } returns mockk<GameEngine>(relaxed = true)
+        val players = MegaPlayers(2)
+        val game = testServices(engine = mockk<GameEngine>(relaxed = true), players = players)
 
         megaman = Megaman(game)
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(ControllerComponent())
 
-        val players = MegaPlayers(2)
         players.register(PlayerSlot(0), megaman)
-        every { game.players } returns players
 
         megaman.stunTimer.setToEnd()
     }

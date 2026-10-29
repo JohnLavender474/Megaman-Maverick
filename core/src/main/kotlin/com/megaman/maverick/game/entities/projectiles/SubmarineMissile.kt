@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.*
 
-class SubmarineMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class SubmarineMissile(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "SubmarineMissile"
@@ -74,7 +74,7 @@ class SubmarineMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IA
         destroy()
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

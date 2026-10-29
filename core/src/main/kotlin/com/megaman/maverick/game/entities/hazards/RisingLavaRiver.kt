@@ -41,7 +41,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -60,7 +60,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.defaultDoUpdate
 import com.megaman.maverick.game.world.body.getBounds
 
-class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IEventListener {
 
     companion object {
@@ -162,7 +162,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         val canSpawn = super.canSpawn(spawnProps) &&
-            (game.getCurrentLevel() != LevelDefinition.INFERNO_MAN ||
+            (game.levelState.currentLevel!! != LevelDefinition.INFERNO_MAN ||
                 !LevelUtils.isInfernoManLevelFrozen(game.state))
 
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
@@ -219,18 +219,18 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
 
         when (key) {
             EventType.PLAYER_READY -> {
-                val room = game.getCurrentRoom()!!.name
+                val room = game.levelState.currentRoom!!.name
                 if (room == riseRoom) setLavaToRising() else setLavaToDormant()
             }
             EventType.PLAYER_DONE_DYIN -> setLavaToDormant()
             EventType.BEGIN_ROOM_TRANS ->
                 if (state == RisingLavaRiverState.RISING) {
-                    val room = game.getCurrentRoom()!!.name
+                    val room = game.levelState.currentRoom!!.name
                     if (room != riseRoom) setLavaToStopped()
                 }
             EventType.GATE_INIT_OPENING -> setLavaToStopped()
             EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS -> {
-                val room = game.getCurrentRoom()!!.name
+                val room = game.levelState.currentRoom!!.name
                 if (room == riseRoom) setLavaToRising() else setLavaToDormant()
             }
         }
@@ -360,7 +360,7 @@ class RisingLavaRiver(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             velocity.y * delta
         )
         val overlap = Intersector.intersectRectangles(
-            getGameCamera().getRotatedBounds().toGdxRectangle(),
+            game.getGameCamera().getRotatedBounds().toGdxRectangle(),
             fullBounds.toGdxRectangle(),
             tempRect
         )

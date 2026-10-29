@@ -37,7 +37,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -56,7 +56,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getSize
 
-class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IEventListener {
+class SpiderWeb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IEventListener {
 
     companion object {
         const val TAG = "SpiderWeb"
@@ -172,7 +172,7 @@ class SpiderWeb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
             body.physics.velocity.set(trajectory)
             if (!stuckToMegaman) {
                 val oldCenter = body.getCenter()
-                val sizeIncrease = SIZE_INCREASE_PER_SECOND * game.getPerformance().fixedStep * ConstVals.PPM
+                val sizeIncrease = SIZE_INCREASE_PER_SECOND * game.settings.performance.fixedStep * ConstVals.PPM
                 body.setSize(body.getWidth() + sizeIncrease, body.getHeight() + sizeIncrease)
                 body.setCenter(oldCenter)
             }

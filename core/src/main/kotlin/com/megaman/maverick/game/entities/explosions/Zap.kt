@@ -5,6 +5,6 @@ import com.maverick.game.engine.world.collisions.*;
 import com.maverick.game.engine.world.contacts.*;
 import com.maverick.game.engine.world.pathfinding.*;
 
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 
-class Zap(game: MegamanMaverickGame)
+class Zap(game: MegaServices)

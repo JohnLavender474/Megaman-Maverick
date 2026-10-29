@@ -30,7 +30,7 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IActivatable,
+class QuestionBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IActivatable,
     IDirectional, IEventListener {
 
     companion object {
@@ -192,7 +192,7 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
                 val coins = game.levelState.coins
                 game.levelState.coins = coins + 1
 
-                playSoundNow(SoundAsset.SMB3_COIN_SOUND, false)
+                game.audioMan.playSound(SoundAsset.SMB3_COIN_SOUND, false)
 
                 return coin
             }

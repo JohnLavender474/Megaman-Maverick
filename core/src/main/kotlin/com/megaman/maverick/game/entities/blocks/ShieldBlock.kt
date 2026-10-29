@@ -8,11 +8,11 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setEntity
 
-open class ShieldBlock(game: MegamanMaverickGame): Block(game) {
+open class ShieldBlock(game: MegaServices): Block(game) {
 
     private lateinit var shieldFixture: IFixture
 

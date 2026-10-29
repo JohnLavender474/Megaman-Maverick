@@ -18,7 +18,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -26,7 +26,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.getSize
 
-class BigAssMaverickRobotBody(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener {
+class BigAssMaverickRobotBody(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEventListener {
 
     companion object {
         const val TAG = "BigAssMaverickRobotBody"

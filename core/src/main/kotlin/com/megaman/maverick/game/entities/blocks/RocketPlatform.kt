@@ -30,7 +30,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
@@ -42,7 +42,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
-class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity,
+class RocketPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity,
     IMotionEntity, IEventListener, IDamagerEntity, IDirectional {
 
     companion object {
@@ -62,7 +62,7 @@ class RocketPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<Meg
     override var children = Array<MegaGameEntity>()
 
     private val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !game.camera.rotating
     private var hidden = false
 
     override fun init(vararg params: Any) {

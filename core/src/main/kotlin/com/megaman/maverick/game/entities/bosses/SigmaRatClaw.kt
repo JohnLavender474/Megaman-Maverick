@@ -39,7 +39,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 
-class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntity, IAnimatedEntity {
+class SigmaRatClaw(game: MegaServices) : AbstractEnemy(game), IChildEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "SigmaRatClaw"
@@ -309,7 +309,7 @@ class SigmaRatClaw(game: MegamanMaverickGame) : AbstractEnemy(game), IChildEntit
             val velocity = GameObjectPools.fetch(Vector2::class)
                 .set(body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.1f * ConstVals.PPM))
                 .sub(block!!.body.getPositionPoint(Position.TOP_CENTER))
-                .scl(1f / game.getPerformance().fixedStep)
+                .scl(1f / game.settings.performance.fixedStep)
             block!!.body.physics.velocity.set(velocity)
 
             val swiping = clawState == SigmaRatClawState.LAUNCH

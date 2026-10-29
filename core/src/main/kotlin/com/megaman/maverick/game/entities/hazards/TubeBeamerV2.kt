@@ -43,7 +43,7 @@ import com.megaman.maverick.game.ConstKeys.CAN
 import com.megaman.maverick.game.ConstKeys.END
 import com.megaman.maverick.game.ConstKeys.ON
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
-class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, IAudioEntity,
+class TubeBeamerV2(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity, IAudioEntity,
     ISpritesEntity, IAnimatedEntity, ILaserEntity, IDirectional, IHazard, IDamagerEntity {
 
     companion object {

@@ -26,7 +26,7 @@ import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.levels.LevelUtils
 import com.megaman.maverick.game.utils.extensions.splitIntoGameRectanglesBasedOnCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 
-class LavaFall(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
+class LavaFall(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IDrawableShapesEntity {
 
     companion object {

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities
 
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.objects.Properties
@@ -9,7 +10,7 @@ import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.points.Points
 import com.maverick.game.engine.points.PointsComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.players.GravityDeviceComponent
@@ -30,7 +31,7 @@ private class BareEntity : GameEntity(mockk(relaxed = true)) {
     override fun onDestroy() {}
 }
 
-private class PartsEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDamageableEntity, IHealthEntity, IFocusable {
+private class PartsEntity(game: MegaServices) : MegaGameEntity(game), IDamageableEntity, IHealthEntity, IFocusable {
     private val bounds = GameRectangle(0f, 0f, 2f, 2f)
     override fun getFocusBounds() = bounds
     override fun getFocusPosition(): Vector2 = bounds.getCenter(Vector2())
@@ -62,8 +63,7 @@ class EntityQueriesTest : DescribeSpec({
 
     describe("core entity queries on an entity with the parts") {
         it("read the focus, invincibility, health, light and gravity device") {
-            val game = mockk<MegamanMaverickGame>(relaxed = true)
-            every { game.engine } returns mockk<GameEngine>(relaxed = true)
+            val game = testServices(engine = mockk<GameEngine>(relaxed = true))
             var switches = 0
             val entity = PartsEntity(game)
             entity.addComponent(PointsComponent().also { it.putPoints(ConstKeys.HEALTH, Points(0, 10, 10)) })

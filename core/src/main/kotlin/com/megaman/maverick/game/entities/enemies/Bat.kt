@@ -43,8 +43,8 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.MegamanMaverickGame.Performance
+import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
@@ -68,7 +68,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 
-class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
+class Bat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
     IDirectional, IEventListener {
 
     companion object {
@@ -115,7 +115,7 @@ class Bat(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), I
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
 
     private val canMove: Boolean
-        get() = !game.isCameraRotating() && !frozen
+        get() = !game.camera.rotating && !frozen
 
     private lateinit var type: String
     private lateinit var state: BatState

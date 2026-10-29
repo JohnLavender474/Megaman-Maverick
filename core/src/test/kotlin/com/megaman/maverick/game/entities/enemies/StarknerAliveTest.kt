@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
@@ -12,9 +14,10 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -24,15 +27,12 @@ import io.mockk.mockk
 class StarknerAliveTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegamanMaverickGame
+    lateinit var game: MegaServices
     lateinit var probe: Starkner
 
     beforeEach {
         engine = GameEngine()
-        game = mockk(relaxed = true)
-        every { game.engine } returns engine
-        every { game.state } returns GameState()
-        every { game.getCurrentLevel() } returns LevelDefinition.TEST_1
+        game = testServices(engine = engine, players = mockk<MegaPlayers>(relaxed = true))
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
         every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas

@@ -30,7 +30,7 @@ import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -51,7 +51,7 @@ import java.util.*
 import kotlin.math.ceil
 import kotlin.reflect.KClass
 
-class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener {
+class Darkness(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEventListener {
 
     companion object {
         const val TAG = "Darkness"
@@ -265,7 +265,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        val currentRoom = game.getCurrentRoom()
+        val currentRoom = game.levelState.currentRoom
         if (currentRoom != null) {
             MegaGameEntities.getOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntities.getOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }

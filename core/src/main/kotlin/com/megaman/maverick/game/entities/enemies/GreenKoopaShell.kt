@@ -34,7 +34,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -58,7 +58,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
 
-class GreenKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class GreenKoopaShell(game: MegaServices) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "GreenKoopaShell"

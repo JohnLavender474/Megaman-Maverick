@@ -10,14 +10,14 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import kotlin.math.sqrt
 
-class WavyTentacleOfJoints(game: MegamanMaverickGame) : MegaGameEntity(game), Updatable {
+class WavyTentacleOfJoints(game: MegaServices) : MegaGameEntity(game), Updatable {
 
     companion object {
         const val TAG = "WavyTentacleOfJoints"

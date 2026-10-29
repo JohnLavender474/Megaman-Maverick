@@ -30,7 +30,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -52,7 +52,7 @@ import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.max
 import kotlin.math.min
 
-class ElecDevil(game: MegamanMaverickGame) : AbstractBoss(game), IStateable<ElecDevilState> {
+class ElecDevil(game: MegaServices) : AbstractBoss(game), IStateable<ElecDevilState> {
 
     companion object {
         const val TAG = "ElecDevil"

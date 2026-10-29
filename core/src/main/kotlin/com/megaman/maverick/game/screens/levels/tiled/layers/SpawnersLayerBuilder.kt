@@ -121,7 +121,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                                 )
                             if (!eventsToAccept.contains(event.key)) return@predicate false
 
-                            val currentRoomName = game.getCurrentRoom()?.name
+                            val currentRoomName = game.levelState.currentRoom?.name
                             val shouldSpawn = roomNames.contains(currentRoomName)
 
                             GameLogger.debug(

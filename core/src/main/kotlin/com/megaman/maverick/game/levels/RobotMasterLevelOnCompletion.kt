@@ -6,6 +6,6 @@ import com.megaman.maverick.game.screens.ScreenEnum
 object RobotMasterLevelOnCompletion : (MegamanMaverickGame) -> ScreenEnum {
 
     override fun invoke(game: MegamanMaverickGame) =
-        if (game.weaponsAttained != null) ScreenEnum.GET_WEAPONS_SCREEN
+        if (game.levelState.weaponsAttained != null) ScreenEnum.GET_WEAPONS_SCREEN
         else ScreenEnum.SAVE_GAME_SCREEN
 }

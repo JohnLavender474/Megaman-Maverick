@@ -50,7 +50,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -69,7 +69,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity,
+class MoonEyeStone(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity,
     IDrawableShapesEntity, IFaceable, IDirectional {
 
     companion object {
@@ -217,7 +217,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
 
             direction = targetPlayer.body.direction
 
-            if (game.isCameraRotating()) return@update
+            if (game.camera.rotating) return@update
 
             if (currentState != MoonEyeStoneState.SEEK || !throwing) processAsteroids(delta)
 

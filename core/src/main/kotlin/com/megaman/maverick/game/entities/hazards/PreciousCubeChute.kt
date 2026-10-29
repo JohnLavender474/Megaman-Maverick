@@ -23,7 +23,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -34,7 +34,7 @@ import com.megaman.maverick.game.entities.enemies.PreciousCube.PreciousCubeColor
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class PreciousCubeChute(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
+class PreciousCubeChute(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "PreciousCubeChute"

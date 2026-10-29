@@ -32,7 +32,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         key
     }
 
-    game.isCameraRotating() -> amendKey(if (damaged) "damaged" else "jump")
+    game.camera.rotating -> amendKey(if (damaged) "damaged" else "jump")
 
     !inPlay -> "spawn"
 

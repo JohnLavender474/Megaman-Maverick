@@ -26,7 +26,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.blocks.BreakableBlock
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class Picket(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "Picket"
@@ -75,7 +75,7 @@ class Picket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEnt
         val position = thisShape.getCenter().add(0.5f * ConstVals.PPM, direction.getOpposite())
         BreakableBlock.breakApart(position, BlockPieceColor.BROWN)
 
-        playSoundNow(SoundAsset.THUMP_SOUND, false)
+        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

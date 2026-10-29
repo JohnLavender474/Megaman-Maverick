@@ -24,13 +24,13 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import kotlin.math.floor
 
-class UnderWaterBubble(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity,
+class UnderWaterBubble(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity,
     IDirectional {
 
     companion object {

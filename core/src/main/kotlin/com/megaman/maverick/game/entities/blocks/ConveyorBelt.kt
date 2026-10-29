@@ -29,7 +29,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.VelocityAlteration
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.getBody
 import com.megaman.maverick.game.world.body.setEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-class ConveyorBelt(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity,
+class ConveyorBelt(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity,
     IDirectional {
 
     companion object {

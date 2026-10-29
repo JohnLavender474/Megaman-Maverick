@@ -1,15 +1,17 @@
 package com.megaman.maverick.game.spawns
 
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -17,7 +19,7 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 
-private class SpawnedEntity(game: MegamanMaverickGame) : MegaGameEntity(game) {
+private class SpawnedEntity(game: MegaServices) : MegaGameEntity(game) {
     var allowSpawn = true
     override fun canSpawn(spawnProps: Properties) = allowSpawn && super.canSpawn(spawnProps)
     override fun getType() = EntityType.OTHER
@@ -28,16 +30,13 @@ private const val ROOM_EVENT = "room_event"
 class SpawnerReleaseTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegamanMaverickGame
+    lateinit var game: MegaServices
     lateinit var spawns: Array<Spawn>
     lateinit var spawnsMan: SpawnsManager
 
     beforeEach {
         engine = GameEngine()
-        game = mockk(relaxed = true)
-        every { game.engine } returns engine
-        every { game.state } returns GameState()
-        every { game.getCurrentLevel() } returns LevelDefinition.TEST_1
+        game = testServices(engine = engine)
         spawns = Array()
         spawnsMan = SpawnsManager(spawns)
     }

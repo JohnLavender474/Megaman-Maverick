@@ -34,7 +34,7 @@ import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -84,7 +84,7 @@ import com.megaman.maverick.game.world.body.getContactWater
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
-class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
+class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
     IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
     IEventListener, IFaceable, IDirectional, IFocusable, IDamagerEntity, IGateTrigger, ICartRider {
 
@@ -208,7 +208,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
 
                 body.direction = value
 
-                game.setFocusSnappedAway(true)
+                game.camera.focusSnappedAway = true
 
                 val camDir = if (value.isVertical()) value else value.getOpposite()
                 if (game.getGameCamera().direction != camDir) {
@@ -501,11 +501,11 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             standardOnTeleportEnd(this)
             aButtonTask = AButtonTask.AIR_DASH
             unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-            game.setFocusSnappedAway(false)
+            game.camera.focusSnappedAway = false
         })
 
         removeProperty(ConstKeys.FOCUS)
-        game.setFocusSnappedAway(false)
+        game.camera.focusSnappedAway = false
 
         game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
     }
@@ -520,7 +520,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         eventsMan.removeListener(this)
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
 
-        stopSoundNow(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+        game.audioMan.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
 
     override fun onHealthDepleted() {
@@ -537,8 +537,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
             )
         }
 
-        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL)
-            playSoundNow(SoundAsset.SMB3_PLAYER_DOWN_SOUND, false)
+        if (game.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
+            game.audioMan.playSound(SoundAsset.SMB3_PLAYER_DOWN_SOUND, false)
     }
 
     override fun onEvent(event: Event) {
@@ -736,8 +736,8 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
-                body.getMaxX() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
-                body.getMaxY() > (game.getTiledMapLoadResult().map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
+                body.getMaxX() > (game.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
+                body.getMaxY() > (game.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
             ) {
                 GameLogger.error(TAG, "Megaman is below game bounds, kill him")
                 destroy()
@@ -918,7 +918,7 @@ class Megaman(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEnti
     }
 
     override fun onAddLevelDefeated(level: LevelDefinition) {
-        game.weaponsAttained = LevelRewards.weaponsFor(level)
+        game.levelState.weaponsAttained = LevelRewards.weaponsFor(level)
     }
 
     override fun onAddHeartTank(heartTank: MegaHeartTank) = setMaxHealthFromHeartTanks()

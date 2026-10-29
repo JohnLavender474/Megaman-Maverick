@@ -28,7 +28,7 @@ import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
@@ -58,7 +58,7 @@ import kotlin.math.ceil
 import kotlin.math.min
 import kotlin.reflect.KClass
 
-class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener,
+class DarknessV4(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEventListener,
     IGameShapeOverlappable {
 
     companion object {
@@ -330,7 +330,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         when (event.key) {
             EventType.PLAYER_READY -> {
-                val room = game.getCurrentRoom()?.name
+                val room = game.levelState.currentRoom?.name
                 darkMode = if (room == null) false else rooms.contains(room)
                 GameLogger.debug(TAG, "onEvent(): PLAYER_READY: darkMode=$darkMode")
             }

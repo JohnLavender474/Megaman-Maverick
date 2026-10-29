@@ -22,7 +22,7 @@ import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -38,7 +38,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class PipiEgg(game: MegaServices) : AbstractProjectile(game) {
 
     companion object {
         const val TAG = "PipiEgg"
@@ -80,7 +80,7 @@ class PipiEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.THUMP_SOUND, false)
+        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
         spawnBabyBirdies()
         spawnEggShatters()
         destroy()

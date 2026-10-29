@@ -13,7 +13,7 @@ import com.megaman.maverick.game.LaunchOptions
 import com.megaman.maverick.game.parseEnumOption
 import com.megaman.maverick.game.resolveLaunchOptions
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.MegamanMaverickGame.Performance
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.MegamanMaverickGame.RunType
 import com.megaman.maverick.game.MegamanMaverickGameParams
 import com.megaman.maverick.game.levels.LevelDefinition

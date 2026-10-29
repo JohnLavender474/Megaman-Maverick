@@ -32,7 +32,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class ReactorManProjectile(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
+class ReactorManProjectile(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "ReactorManProjectile"

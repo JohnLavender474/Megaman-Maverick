@@ -22,14 +22,14 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class AirConditioner(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity,
+class AirConditioner(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity,
     IAnimatedEntity {
 
     companion object {

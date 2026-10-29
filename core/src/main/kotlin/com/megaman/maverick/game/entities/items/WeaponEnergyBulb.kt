@@ -14,14 +14,14 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 
-class WeaponEnergyBulb(game: MegamanMaverickGame): AbstractEnergyItem(game) {
+class WeaponEnergyBulb(game: MegaServices): AbstractEnergyItem(game) {
 
     companion object {
         const val TAG = "WeaponEnergyBulb"

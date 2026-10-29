@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
 
 object MegaUtilMethods {
 
-    fun delayRun(game: MegamanMaverickGame, delay: Float, action: () -> Unit): String {
+    fun delayRun(game: MegaServices, delay: Float, action: () -> Unit): String {
         if (delay <= 0f) throw IllegalArgumentException("Delay must be greater than 0: $delay")
 
         val id = UUID.randomUUID().toString()

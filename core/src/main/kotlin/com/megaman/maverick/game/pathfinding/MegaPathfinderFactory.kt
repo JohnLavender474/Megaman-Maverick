@@ -23,9 +23,9 @@ class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderF
 
     private fun getWorldContainerSnapshot(): IWorldContainer? {
         val frameId = Gdx.graphics.frameId
-        val source = game.getWorldContainer()
+        val source = game.levelState.worldContainer
         if (frameId != snapshotFrameId || source !== snapshotSource) {
-            val container = game.getWorldContainer()
+            val container = game.levelState.worldContainer
             snapshot = container?.copy()
             snapshotSource = container
             snapshotFrameId = frameId
@@ -39,7 +39,7 @@ class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderF
         val heuristic = params.getOrDefaultProperty(ConstKeys.HEURISTIC, defaultHeuristic, IHeuristic::class)
         if (heuristic is DynamicBodyHeuristic) heuristic.worldContainer = worldContainer
 
-        val tiledMapResult = game.getTiledMapLoadResult()
+        val tiledMapResult = game.levelState.tiledMapLoadResult!!
 
         return WorldPathfinder(
             start = params.startCoordinateSupplier(),

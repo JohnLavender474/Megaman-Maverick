@@ -84,11 +84,11 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
             override fun onSelect(delta: Float): Boolean {
                 when {
-                    game.isInExtraLevel() -> game.startExtraLevel(game.getCurrentLevel())
+                    game.levelState.isInExtraLevel -> game.startExtraLevel(game.levelState.currentLevel!!)
                     game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
                         game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                     else -> {
-                        game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                        game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
                         game.startLevel()
                     }
                 }
@@ -112,7 +112,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             override fun onNavigate(direction: Direction, delta: Float) = navigate(MAIN_MENU, direction)
 
             override fun onSelect(delta: Float): Boolean {
-                if (game.isInExtraLevel()) game.resetPlayerProgress()
+                if (game.levelState.isInExtraLevel) game.resetPlayerProgress()
                 game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
                 return true
             }
@@ -132,7 +132,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         if (!initialized) init()
         GameLogger.debug(TAG, "show()")
 
-        activeKeys = if (game.isInExtraLevel()) extrasKeys else mainlineKeys
+        activeKeys = if (game.levelState.isInExtraLevel) extrasKeys else mainlineKeys
         firstButtonKey = activeKeys.first()
 
         var row = TEXT_ROW_START

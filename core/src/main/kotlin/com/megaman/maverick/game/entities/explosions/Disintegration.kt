@@ -26,14 +26,14 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+class Disintegration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     IDirectional {
 
     companion object {
@@ -69,7 +69,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val sound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
         if (sound) {
             reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
-            if (reusableRect.overlaps(getGameCamera().toGameRectangle()))
+            if (reusableRect.overlaps(game.getGameCamera().toGameRectangle()))
                 requestToPlaySound(SoundAsset.THUMP_SOUND, false)
         }
 

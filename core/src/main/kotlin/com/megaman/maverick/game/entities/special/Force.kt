@@ -12,7 +12,7 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -20,7 +20,7 @@ import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.body.*
 
-class Force(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
+class Force(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
 
     companion object {
         const val TAG = "Force"

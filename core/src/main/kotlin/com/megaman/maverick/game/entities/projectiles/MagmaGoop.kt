@@ -30,7 +30,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class MagmaGoop(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "MagmaGoop"
@@ -85,14 +85,14 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
-        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity()
         if (projectile is SmallIceCube) {
             destroy()
-            playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+            game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
         }
     }
 
@@ -134,7 +134,7 @@ class MagmaGoop(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (game.isCameraRotating()) body.physics.velocity.setZero()
+            if (game.camera.rotating) body.physics.velocity.setZero()
             else body.physics.velocity.set(trajectory)
         }
 

@@ -2,14 +2,14 @@ package com.megaman.maverick.game.entities.special
 
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 // I was kinda dumb when writing the code for PreciousGemCluster, and I ended up writing a lot of the logic so that it
 // is tightly coupled to Precious Woman. Rather than try to refactor that class to be more reusable, instead I've opted
 // to write this new class which will be used by Megaman.
-class MegaPreciousCluster(game: MegamanMaverickGame): MegaGameEntity(game) {
+class MegaPreciousCluster(game: MegaServices): MegaGameEntity(game) {
 
     companion object {
         const val TAG = "PreciousCluster"

@@ -15,14 +15,14 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 
-class HealthBulb(game: MegamanMaverickGame) : AbstractEnergyItem(game), IAnimatedEntity {
+class HealthBulb(game: MegaServices) : AbstractEnergyItem(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "HealthBulb"

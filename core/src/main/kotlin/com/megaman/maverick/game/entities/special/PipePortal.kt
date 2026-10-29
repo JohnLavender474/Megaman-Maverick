@@ -23,7 +23,7 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.EntityType
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ITeleporterEntity, IAudioEntity,
+class PipePortal(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ITeleporterEntity, IAudioEntity,
     IEventListener, IDirectional {
 
     companion object {
@@ -125,7 +125,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
         exiting.put(entity, Timer(TELEPORT_DUR))
 
         if (entity.asPlayer != null) {
-            game.setFocusSnappedAway(false)
+            game.camera.focusSnappedAway = false
             entity.require(TeleportableComponent::class).teleporter = this
         }
 
@@ -147,7 +147,7 @@ class PipePortal(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
 
         entity.beginTeleport(this)
 
-        if (entity.asPlayer != null) game.setFocusSnappedAway(true)
+        if (entity.asPlayer != null) game.camera.focusSnappedAway = true
 
         requestToPlaySound(SoundAsset.SMB3_PIPE_SOUND, false)
     }

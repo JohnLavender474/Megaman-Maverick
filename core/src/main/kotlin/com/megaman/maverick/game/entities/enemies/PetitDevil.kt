@@ -37,7 +37,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -53,7 +53,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
+class PetitDevil(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
     IParentEntity<PetitDevilChild>, IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -226,7 +226,7 @@ class PetitDevil(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SM
     }
 }
 
-class PetitDevilChild(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
+class PetitDevilChild(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
     IDrawableShapesEntity, IChildEntity, IFaceable {
 
     companion object {

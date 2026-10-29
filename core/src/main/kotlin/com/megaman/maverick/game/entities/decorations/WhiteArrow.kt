@@ -18,14 +18,14 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
 import kotlin.math.max
 
-class WhiteArrow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IDirectional {
+class WhiteArrow(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IDirectional {
 
     companion object {
         const val TAG = "WhiteArrow"

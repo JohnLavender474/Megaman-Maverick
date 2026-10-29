@@ -14,7 +14,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
+class MegamanTrailSpriteV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
 
     companion object {
         const val TAG = "MegamanTrailingSprite_v2"
@@ -85,7 +85,7 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.isCameraRotating()) {
+        if (game.camera.rotating) {
             destroy()
             return@UpdatablesComponent
         }
@@ -102,7 +102,7 @@ class MegamanTrailSpriteV2(game: MegamanMaverickGame) : MegaGameEntity(game), IS
             val alpha = 1f - fadeTimer.getRatio()
             sprite.setAlpha(alpha)
             sprite.setFlip(flipX, flipY)
-            sprite.hidden = game.isCameraRotating()
+            sprite.hidden = game.camera.rotating
         }
         return component
     }

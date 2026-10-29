@@ -20,7 +20,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.Explosion
 
-class WilySkullHead(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity, ISpritesEntity {
+class WilySkullHead(game: MegaServices) : MegaGameEntity(game), IAudioEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "WilySkullHead"

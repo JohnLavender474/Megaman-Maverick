@@ -153,12 +153,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                             game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
 
                         else -> {
-                            game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                            game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
                             game.startLevel()
                         }
                     }
                     game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-                    game.weaponsAttained = null
+                    game.levelState.weaponsAttained = null
                     return true
                 } else {
                     GameLogger.error(TAG, "Failed to load saved state")

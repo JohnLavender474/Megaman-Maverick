@@ -30,7 +30,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class CartV2(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IFaceable {
+class CartV2(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "CartV2"

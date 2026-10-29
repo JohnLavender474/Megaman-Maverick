@@ -34,7 +34,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -54,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class GreenKoopa(game: MegaServices) : AbstractEnemy(game), IFaceable {
 
     companion object {
         const val TAG = "GreenKoopa"
@@ -214,7 +214,7 @@ class GreenKoopa(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
                 // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for the
                 //  second playable character (Proto Man item)
                 player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
-                playSoundNow(SoundAsset.SWIM_SOUND, false)
+                game.audioMan.playSound(SoundAsset.SWIM_SOUND, false)
 
                 bumpedNoDmgTimer.reset()
             }

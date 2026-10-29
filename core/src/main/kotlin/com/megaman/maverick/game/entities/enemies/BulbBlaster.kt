@@ -33,7 +33,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IBossListener
@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after 2nd Desert Man fight
-class BulbBlaster(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, ILightSource, IAnimatedEntity, IMotionEntity,
+class BulbBlaster(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, ILightSource, IAnimatedEntity, IMotionEntity,
     IBossListener, IEventListener {
 
     companion object {

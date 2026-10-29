@@ -11,13 +11,13 @@ import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.damage.DamageNegotiation
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import kotlin.reflect.KClass
 
 abstract class AbstractHealthEntity(
-    game: MegamanMaverickGame,
+    game: MegaServices,
     protected var dmgDuration: Float = DEFAULT_DMG_DURATION,
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
 ) : MegaGameEntity(game), IHealthEntity, IDamageableEntity {

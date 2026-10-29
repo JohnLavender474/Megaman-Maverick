@@ -3,7 +3,7 @@ package com.megaman.maverick.game.entities.factories
 import com.maverick.game.engine.common.interfaces.IClearable
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.factories.Factories
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.impl.*
@@ -11,7 +11,7 @@ import com.megaman.maverick.game.entities.factories.impl.*
 // TODO: This is deprecated by the MegaEntityFactory object.
 object EntityFactories : Factories<Any?, MegaGameEntity>(), Initializable, IClearable {
 
-    fun initialize(game: MegamanMaverickGame) {
+    fun initialize(game: MegaServices) {
         factories.put(EntityType.BLOCK, BlocksFactory(game))
         factories.put(EntityType.PROJECTILE, ProjectilesFactory(game))
         factories.put(EntityType.EXPLOSION, ExplosionsFactory(game))

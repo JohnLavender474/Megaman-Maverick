@@ -14,13 +14,13 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
-class RoomShaker(game: MegamanMaverickGame) : MegaGameEntity(game), IEventListener, IAudioEntity {
+class RoomShaker(game: MegaServices) : MegaGameEntity(game), IEventListener, IAudioEntity {
 
     companion object {
         const val TAG = "RoomShaker"

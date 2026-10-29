@@ -20,7 +20,7 @@ import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -34,7 +34,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.sqrt
 
-class WilyCapsuleTentacle(game: MegamanMaverickGame) : MegaGameEntity(game), IDrawableShapesEntity, Updatable,
+class WilyCapsuleTentacle(game: MegaServices) : MegaGameEntity(game), IDrawableShapesEntity, Updatable,
     IActivatable {
 
     companion object {

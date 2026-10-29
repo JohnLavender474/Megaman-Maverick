@@ -4,11 +4,11 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
 
-class LadderTop(game: MegamanMaverickGame) : Block(game) {
+class LadderTop(game: MegaServices) : Block(game) {
 
     companion object {
         const val TAG = "LadderTop"

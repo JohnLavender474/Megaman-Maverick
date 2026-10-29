@@ -16,7 +16,7 @@ import com.maverick.game.engine.world.body.Fixture
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -30,7 +30,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class FrozenBlock(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity {
+class FrozenBlock(game: MegaServices) : IceBlock(game), ISpritesEntity {
 
     companion object {
         const val TAG = "FrozenBlock"
@@ -43,7 +43,7 @@ class FrozenBlock(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity {
         addComponent(defineSpritesComponent())
     }
 
-    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) && when (game.getCurrentLevel()) {
+    override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) && when (game.levelState.currentLevel!!) {
         LevelDefinition.INFERNO_MAN -> LevelUtils.isInfernoManLevelFrozen(game.state)
         else -> true
     }
@@ -93,7 +93,7 @@ class FrozenBlock(game: MegamanMaverickGame) : IceBlock(game), ISpritesEntity {
         val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
         puff.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
 
-        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

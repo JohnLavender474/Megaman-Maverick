@@ -38,7 +38,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
@@ -70,7 +70,7 @@ import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
-    game: MegamanMaverickGame,
+    game: MegaServices,
     dmgDuration: Float = DEFAULT_DMG_DURATION,
     dmgBlinkBlur: Float = DEFAULT_DMG_BLINK_DUR,
     override var size: Size = Size.MEDIUM
@@ -273,7 +273,7 @@ abstract class AbstractEnemy(
     }
 
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
 
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         val props = disintegrationProps ?: props(ConstKeys.POSITION pairTo body.getCenter())
@@ -281,7 +281,7 @@ abstract class AbstractEnemy(
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         val props = explosionProps ?: props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter())
@@ -302,7 +302,7 @@ abstract class AbstractEnemy(
         val whack = MegaEntityFactory.fetch(Whack::class)!!
         whack.spawn(props(ConstKeys.POSITION pairTo position))
 
-        playSoundNow(SoundAsset.SMB3_KICK_SOUND, false)
+        game.audioMan.playSound(SoundAsset.SMB3_KICK_SOUND, false)
     }
 
     open fun spawnFloatingPoints() {

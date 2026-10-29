@@ -11,7 +11,7 @@ import com.maverick.game.engine.players.registeredSlots
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
@@ -19,7 +19,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.utils.misc.StunType
 
-class TestStunPulser(game: MegamanMaverickGame) : MegaGameEntity(game) {
+class TestStunPulser(game: MegaServices) : MegaGameEntity(game) {
 
     companion object {
         const val TAG = "TestStunPulser"

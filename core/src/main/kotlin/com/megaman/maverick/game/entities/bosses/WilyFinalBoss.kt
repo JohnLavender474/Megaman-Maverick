@@ -55,7 +55,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -99,7 +99,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 import kotlin.math.min
 
-class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFreezableEntity {
+class WilyFinalBoss(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFreezableEntity {
 
     companion object {
         const val TAG = "WilyFinalBoss"
@@ -374,7 +374,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             )
         )
 
-        playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+        game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun isReady(delta: Float) = !initSequence

@@ -24,7 +24,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
+class SealionBall(game: MegaServices) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
     IDamageableEntity {
 
     companion object {
@@ -103,7 +103,7 @@ class SealionBall(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProj
     override fun onDestroy() {
         super.onDestroy()
 
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
 
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))

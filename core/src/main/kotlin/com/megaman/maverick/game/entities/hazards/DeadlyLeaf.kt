@@ -31,7 +31,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
@@ -43,7 +43,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class DeadlyLeaf(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class DeadlyLeaf(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IHazard, IDamagerEntity {
 
     companion object {

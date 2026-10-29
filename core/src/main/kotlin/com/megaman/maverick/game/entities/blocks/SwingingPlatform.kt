@@ -29,7 +29,7 @@ import com.maverick.game.engine.motion.Pendulum
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.math.PI
 
-class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity, IMotionEntity,
+class SwingingPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity, IMotionEntity,
     IEventListener {
 
     companion object {
@@ -112,7 +112,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
             target?.let {
                 body.physics.velocity.set(it)
                     .sub(body.getPositionPoint(Position.TOP_CENTER))
-                    .scl(1f / game.getPerformance().fixedStep)
+                    .scl(1f / game.settings.performance.fixedStep)
             }
         }
 

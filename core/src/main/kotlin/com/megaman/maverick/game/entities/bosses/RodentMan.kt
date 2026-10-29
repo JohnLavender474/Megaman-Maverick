@@ -41,7 +41,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<RatRobot>, IAnimatedEntity, IFaceable,
+class RodentMan(game: MegaServices) : AbstractBoss(game), IParentEntity<RatRobot>, IAnimatedEntity, IFaceable,
     IDirectional {
 
     companion object {

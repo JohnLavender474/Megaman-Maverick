@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.world.contacts.rules
 
+import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.behaviors.BehaviorsComponent
@@ -10,7 +11,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.ItemEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -36,17 +37,15 @@ class PlayerItemRuleTest : DescribeSpec({
     lateinit var megaman: Megaman
 
     beforeEach {
-        val game = mockk<MegamanMaverickGame>(relaxed = true)
-        every { game.engine } returns mockk<GameEngine>(relaxed = true)
+        players = MegaPlayers(1)
+        val game = testServices(engine = mockk<GameEngine>(relaxed = true), players = players)
 
         megaman = Megaman(game)
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(ControllerComponent())
 
-        players = MegaPlayers(1)
         players.register(PlayerSlot(0), megaman)
-        every { game.players } returns players
     }
 
     afterEach { unmockkAll() }

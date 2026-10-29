@@ -8,15 +8,15 @@ import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 
-abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: Size = Size.MEDIUM) :
+abstract class AbstractProjectile(game: MegaServices, override var size: Size = Size.MEDIUM) :
     MegaGameEntity(game), IProjectileEntity, ISpritesEntity, IBossListener, ISizable {
 
     override var owner: IGameEntity? = null
 
     open val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !game.camera.rotating
 
     protected var onDamageInflictedTo: ((IDamageableEntity) -> Unit)? = null
     protected var movementScalar = 1f

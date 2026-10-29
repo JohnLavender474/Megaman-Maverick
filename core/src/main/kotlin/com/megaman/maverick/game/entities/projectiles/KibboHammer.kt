@@ -21,12 +21,12 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
-class KibboHammer(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class KibboHammer(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
 
     companion object {
         const val TAG = "KibboHammer"

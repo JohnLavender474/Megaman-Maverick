@@ -23,7 +23,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -34,7 +34,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getPosition
 import com.megaman.maverick.game.world.body.setReceiver
 
-class SmallGrass(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class SmallGrass(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "SmallGrass"

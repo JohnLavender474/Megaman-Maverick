@@ -20,10 +20,9 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.groups.GroupsComponent
-import com.maverick.game.engine.groups.GroupsSystem
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -55,13 +54,13 @@ fun getStandardEventCullingLogic(
 }
 
 fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
-    getGameCameraCullingLogic((entity as MegaGameEntity).getGameCamera(), { entity.body.getBounds() }, timeToCull)
+    getGameCameraCullingLogic((entity as MegaGameEntity).game.getGameCamera(), { entity.body.getBounds() }, timeToCull)
 
 fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
     CullableOnUncontained({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
 
 fun getUpdateWhenNearCameraPredicate(entity: IBodyEntity, buffer: Float): () -> Boolean {
-    val camera = (entity as MegaGameEntity).getGameCamera()
+    val camera = (entity as MegaGameEntity).game.getGameCamera()
     return predicate@{
         val window = GameObjectPools.fetch(GameRectangle::class)
             .set(camera.getRotatedBounds())
@@ -78,7 +77,7 @@ fun getUpdateWhenGroupNearCameraPredicate(
 ): () -> Boolean {
     val game = (entity as MegaGameEntity).game
     val camera = game.getGameCamera()
-    val groupsSystem = game.getSystem(GroupsSystem::class)!!
+    val groupsSystem = game.groups
     return predicate@{
         val window = GameObjectPools.fetch(GameRectangle::class)
             .set(camera.getRotatedBounds())
@@ -176,7 +175,7 @@ fun IBodyEntity.moveTowards(target: Vector2, speed: Float, lerp: Boolean = false
     else body.physics.velocity.set(velocity)
 }
 
-fun delayNextPossibleSpawn(game: MegamanMaverickGame, tag: String, mapObjectId: Int, delay: Float) {
+fun delayNextPossibleSpawn(game: MegaServices, tag: String, mapObjectId: Int, delay: Float) {
     val key = "$tag/$mapObjectId"
     val timer = Timer(delay).setRunOnFinished {
         game.runQueue.addLast {
@@ -186,7 +185,7 @@ fun delayNextPossibleSpawn(game: MegamanMaverickGame, tag: String, mapObjectId: 
     game.updatables.put(key, timer)
 }
 
-fun isNextPossibleSpawnDelayed(game: MegamanMaverickGame, tag: String, mapObjectId: Int): Boolean {
+fun isNextPossibleSpawnDelayed(game: MegaServices, tag: String, mapObjectId: Int): Boolean {
     val key = "$tag/$mapObjectId"
     val timer = game.updatables.get(key) as Timer?
     return timer != null && !timer.isFinished()

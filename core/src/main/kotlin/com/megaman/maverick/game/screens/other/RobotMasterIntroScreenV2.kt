@@ -190,7 +190,7 @@ class RobotMasterIntroScreenV2(private val game: MegamanMaverickGame) : BaseScre
 
         GameLogger.debug(TAG, "show()")
 
-        val level = game.getCurrentLevel()
+        val level = game.levelState.currentLevel!!
         val (fullText, spriteSize, animQueue, shadowRegion, _, endPos) = buildRobotMasterAnimDef(level)
 
         // Populate boss anim queue

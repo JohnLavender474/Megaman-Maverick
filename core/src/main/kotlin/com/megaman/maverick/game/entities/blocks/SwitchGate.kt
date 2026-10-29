@@ -33,7 +33,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.sensors.Gate.GateType
@@ -42,7 +42,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IEventListener,
+class SwitchGate(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IEventListener,
     IAudioEntity, IDirectional {
 
     companion object {
@@ -97,7 +97,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
         state = SwitchGateState.CLOSED
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
 
-        val rooms = game.getRooms(reusableRoomsArray)
+        val rooms = game.levelState.getRooms(reusableRoomsArray)
         rooms.forEach {
             if (it.rectangle.toGameRectangle().overlaps(body.getBounds())) {
                 val room = it.name
@@ -138,7 +138,7 @@ class SwitchGate(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnim
     }
 
     private fun requestToPlaySwitchSound() {
-        val room = game.getCurrentRoom()?.name
+        val room = game.levelState.currentRoom?.name
         if (overlapRooms.contains(room)) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
     }
 

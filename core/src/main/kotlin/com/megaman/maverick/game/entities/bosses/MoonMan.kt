@@ -46,7 +46,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -74,7 +74,7 @@ import kotlin.math.abs
 
 // In game, Moon Man's name has been changed to Lunar Man. Keeping his class name here as Moon Man to avoid having to
 // make many changes throughout existing code & maps.
-class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IScalableGravityEntity, IFaceable,
+class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalableGravityEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -245,7 +245,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         this.direction = direction
         currentGravityChangeDir = direction
 
-        gravityScalar = if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
+        gravityScalar = if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
             spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", DEFAULT_GRAVITY_SCALAR, Float::class)
         else 1f
 
@@ -321,7 +321,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
                         .sub(asteroid.body.getCenter())
                         .nor().scl(speed * ConstVals.PPM)
 
-                    if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
+                    if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
                         impulse.scl(ASTEROID_SCALAR)
 
                     asteroid.impulse.set(impulse)
@@ -665,7 +665,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
             val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
             trajectory.rotateDeg(rotation)
 
-            val scytheScalar = if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
+            val scytheScalar = if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
                 MOON_SCYTHE_MOVEMENT_SCALAR else 1f
 
             val scythe = MegaEntityFactory.fetch(MoonScythe::class)!!
@@ -694,7 +694,7 @@ class MoonMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, 
         val trajectory =
             targetPlayer.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(speed * ConstVals.PPM)
 
-        val starScalar = if (game.getCurrentLevel() == LevelDefinition.MOON_MAN)
+        val starScalar = if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
             SHARP_STAR_MOVEMENT_SCALAR else 1f
 
         val sharpStar = MegaEntityFactory.fetch(SharpStar::class)!!

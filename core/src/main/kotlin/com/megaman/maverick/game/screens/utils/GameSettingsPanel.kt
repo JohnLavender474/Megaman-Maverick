@@ -27,6 +27,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.state.Performance
 
 class GameSettingsPanel(
     private val game: MegamanMaverickGame,
@@ -87,7 +88,7 @@ class GameSettingsPanel(
                 }
 
                 PERFORMANCE_KEY -> {
-                    { "$PERFORMANCE_KEY: ${game.getPerformance().name.replace("_", " ")}" }
+                    { "$PERFORMANCE_KEY: ${game.settings.performance.name.replace("_", " ")}" }
                 }
 
                 else -> {
@@ -294,15 +295,15 @@ class GameSettingsPanel(
                 }
 
                 Direction.LEFT -> {
-                    val entries = MegamanMaverickGame.Performance.entries
-                    val idx = entries.indexOf(game.getPerformance())
+                    val entries = Performance.entries
+                    val idx = entries.indexOf(game.settings.performance)
                     game.setPerformance(if (idx <= 0) entries.last() else entries[idx - 1])
                     currentKey
                 }
 
                 Direction.RIGHT -> {
-                    val entries = MegamanMaverickGame.Performance.entries
-                    val idx = entries.indexOf(game.getPerformance())
+                    val entries = Performance.entries
+                    val idx = entries.indexOf(game.settings.performance)
                     game.setPerformance(if (idx >= entries.lastIndex) entries.first() else entries[idx + 1])
                     currentKey
                 }

@@ -38,7 +38,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -57,7 +57,7 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFireEntity {
+class Fireball(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFireEntity {
 
     companion object {
         const val TAG = "Fireball"
@@ -177,7 +177,7 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val spawn = GameObjectPools.fetch(Vector2::class).set(body.getCenter().x, waterFixture.getShape().getMaxY())
         val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
         puff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
-        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({

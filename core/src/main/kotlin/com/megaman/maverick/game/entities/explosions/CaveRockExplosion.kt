@@ -30,7 +30,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class CaveRockExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IDamagerEntity, IBodyEntity, IAudioEntity,
+class CaveRockExplosion(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IBodyEntity, IAudioEntity,
     ISpritesEntity, IAnimatedEntity {
 
     companion object {

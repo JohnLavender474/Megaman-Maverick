@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
@@ -20,12 +21,14 @@ import com.maverick.game.engine.world.container.SimpleGridWorldContainer
 import com.maverick.game.engine.world.contacts.ContactRuleDispatcher
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.items.HealthBulb
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
@@ -45,10 +48,10 @@ private const val CART_SPEED = 4f * PPM
 class CartV2ItemTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegamanMaverickGame
+    lateinit var game: MegaServices
     lateinit var cart: CartV2
 
-    class Crate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
+    class Crate(game: MegaServices) : MegaGameEntity(game), IBodyEntity {
 
         override fun init(vararg params: Any) {
             super.init()
@@ -73,20 +76,17 @@ class CartV2ItemTest : DescribeSpec({
     }
 
     beforeEach {
-        game = mockk(relaxed = true)
         val worldContainer = SimpleGridWorldContainer(ConstVals.PPM)
         val worldSystem = WorldSystem(
             ppm = ConstVals.PPM,
             fixedStep = STEP,
             worldContainerSupplier = { worldContainer },
-            contactListener = ContactRuleDispatcher(megaContactRules(game) { _, _ -> false }),
+            contactListener = ContactRuleDispatcher(megaContactRules(mockk<MegamanMaverickGame>(relaxed = true)) { _, _ -> false }),
             collisionHandler = MegaCollisionHandler(),
             contactFilter = MegaContactFilter()
         )
         engine = GameEngine(Array<GameSystem>().apply { add(worldSystem) })
-        every { game.engine } returns engine
-        every { game.state } returns GameState()
-        every { game.getCurrentLevel() } returns LevelDefinition.TEST_1
+        game = testServices(engine = engine)
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
         every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas

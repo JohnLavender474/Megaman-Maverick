@@ -28,7 +28,7 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
-private class ToxicWaterWaveAnimator(private val game: MegamanMaverickGame) : IAnimator, Initializable, Updatable {
+private class ToxicWaterWaveAnimator(private val game: MegaServices) : IAnimator, Initializable, Updatable {
 
     companion object {
         const val TAG = "ToxicWaterWaveAnimator"
@@ -67,7 +67,7 @@ private class ToxicWaterWaveAnimator(private val game: MegamanMaverickGame) : IA
     override fun reset() = animation.reset()
 }
 
-class ToxicWater(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
+class ToxicWater(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
         const val TAG = "ToxicWater"

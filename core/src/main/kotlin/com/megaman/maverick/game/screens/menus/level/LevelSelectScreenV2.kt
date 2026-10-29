@@ -245,7 +245,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         if (!game.clock.paused) {
             if (outro) outroTimer.update(delta)
             if (outroTimer.isJustFinished()) {
-                game.setCurrentLevel(selectedLevelDef!!)
+                game.levelState.currentLevel = selectedLevelDef!!
 
                 if (selectedLevelDef!!.type != LevelType.ROBOT_MASTER_LEVEL ||
                     game.state.isLevelDefeated(selectedLevelDef!!)

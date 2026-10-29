@@ -142,14 +142,14 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         game.getUiCamera().setToDefaultPosition()
 
-        val weaponsAttained = game.weaponsAttained?.toGdxArray()
+        val weaponsAttained = game.levelState.weaponsAttained?.toGdxArray()
         if (weaponsAttained == null || weaponsAttained.isEmpty) {
             GameLogger.error(TAG, "show(): failed to load weapons attained")
             game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
             return
         }
 
-        game.weaponsAttained = null
+        game.levelState.weaponsAttained = null
         GameLogger.debug(TAG, "show(): remove weapons attained prop from global game object")
 
         eventQueue.clear()

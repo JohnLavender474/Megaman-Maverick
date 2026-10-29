@@ -29,7 +29,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -45,7 +45,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
-class Bullet(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
+class Bullet(game: MegaServices) : AbstractProjectile(game), IDirectional {
 
     companion object {
         const val TAG = "Bullet"

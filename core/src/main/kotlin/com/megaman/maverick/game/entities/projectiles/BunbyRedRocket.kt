@@ -32,7 +32,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional,
+class BunbyRedRocket(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IDirectional,
     IFaceable {
 
     companion object {
@@ -107,7 +107,7 @@ class BunbyRedRocket(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (game.isCameraRotating()) body.physics.velocity.setZero()
+        if (game.camera.rotating) body.physics.velocity.setZero()
         else body.physics.velocity.set(trajectory)
     })
 

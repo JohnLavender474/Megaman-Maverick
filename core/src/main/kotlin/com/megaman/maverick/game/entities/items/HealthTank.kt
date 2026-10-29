@@ -21,7 +21,7 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
@@ -30,7 +30,7 @@ import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class HealthTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity {
+class HealthTank(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "HealthTank"

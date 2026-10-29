@@ -41,7 +41,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class PreciousWoman(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class PreciousWoman(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PreciousWoman"

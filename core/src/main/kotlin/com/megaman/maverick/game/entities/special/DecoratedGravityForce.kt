@@ -13,7 +13,7 @@ import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.ForceDecoration
@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 
 // convenience implementation that joins `GravityChange`, `Force`, and `ForceDecoration` into one entity
-class DecoratedGravityForce(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity {
+class DecoratedGravityForce(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
 
     companion object {
         const val TAG = "GravityForce"

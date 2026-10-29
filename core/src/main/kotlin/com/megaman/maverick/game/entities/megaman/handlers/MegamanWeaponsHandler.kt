@@ -21,7 +21,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.common.utils.OrbitUtils
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -139,7 +139,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         const val TAG = "MegamanWeaponsHandler"
     }
 
-    private val game: MegamanMaverickGame
+    private val game: MegaServices
         get() = megaman.game
 
     private val weaponHandlers = ObjectMap<MegamanWeapon, MegaWeaponHandler>()
@@ -831,7 +831,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
 
             return
-        } else if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
+        } else if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN) {
             GameLogger.debug(TAG, "shootMagmaWave(): in Moon Man's stage")
 
             val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
@@ -1025,7 +1025,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
         impulse.scl(ConstVals.PPM.toFloat())
 
-        if (game.getCurrentLevel() == LevelDefinition.MOON_MAN || megaman.body.isSensing(BodySense.IN_WATER))
+        if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN || megaman.body.isSensing(BodySense.IN_WATER))
             impulse.scl(MegamanValues.AXE_SLOW_SCALAR)
 
         val spawn = megaman.body.getCenter()

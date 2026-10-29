@@ -27,7 +27,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
+class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "PushableBlock"
@@ -68,7 +68,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private class InnerBlock(game: MegamanMaverickGame, private val pushableBody: Body) : Block(game) {
+    private class InnerBlock(game: MegaServices, private val pushableBody: Body) : Block(game) {
 
         override fun hitByProjectile(projectileFixture: IFixture) {
             val projectile = projectileFixture.getEntity()
@@ -112,7 +112,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        val currentRoom = game.getCurrentRoom()?.name
+        val currentRoom = game.levelState.currentRoom?.name
         GameLogger.debug(TAG, "onSpawn(): currentRoom=$currentRoom, spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
@@ -152,7 +152,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this, objectSetOf(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS), cull@{ event ->
-                    val room = game.getCurrentRoom()?.name
+                    val room = game.levelState.currentRoom?.name
                     val cull = room != spawnRoom
                     GameLogger.debug(
                         TAG,

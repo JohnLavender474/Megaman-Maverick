@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 import com.megaman.maverick.game.entities.projectiles.*
 
-class ProjectilesFactory(private val game: MegamanMaverickGame) : EntityFactory() {
+class ProjectilesFactory(private val game: MegaServices) : EntityFactory() {
 
     companion object {
         const val TAG = "ProjectileFactory"

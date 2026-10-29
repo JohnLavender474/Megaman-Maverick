@@ -25,7 +25,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEntity, IFaceable {
+class BulletBill(game: MegaServices) : AbstractEnemy(game), IProjectileEntity, IFaceable {
 
     companion object {
         const val TAG = "BulletBill"
@@ -138,7 +138,7 @@ class BulletBill(game: MegamanMaverickGame) : AbstractEnemy(game), IProjectileEn
                 // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for the
                 //  second playable character (Proto Man item)
                 player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
-                playSoundNow(SoundAsset.SWIM_SOUND, false)
+                game.audioMan.playSound(SoundAsset.SWIM_SOUND, false)
             }
         }
         body.addFixture(headFixture)

@@ -44,7 +44,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL, dmgDuration = DMG_DUR),
+class Starkner(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL, dmgDuration = DMG_DUR),
     IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
@@ -299,7 +299,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         updatablesComponent.add update@{ delta ->
             direction = targetPlayer.direction
 
-            if (game.isCameraRotating()) {
+            if (game.camera.rotating) {
                 body.physics.velocity.setZero()
                 return@update
             }

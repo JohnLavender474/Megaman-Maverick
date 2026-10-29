@@ -111,7 +111,7 @@ internal fun Megaman.jumpBehavior(): IBehavior {
                 }
             }
 
-            if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL)
+            if (game.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
                 requestToPlaySound(SoundAsset.SMB3_JUMP_SOUND, false)
             canMakeLandSound = true
 

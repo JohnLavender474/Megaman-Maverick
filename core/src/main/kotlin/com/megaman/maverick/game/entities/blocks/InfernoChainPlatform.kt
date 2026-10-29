@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.players
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game), ICullableEntity, ISpritesEntity {
+class InfernoChainPlatform(game: MegaServices) : FeetRiseSinkBlock(game), ICullableEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "InfernoChainPlatform"

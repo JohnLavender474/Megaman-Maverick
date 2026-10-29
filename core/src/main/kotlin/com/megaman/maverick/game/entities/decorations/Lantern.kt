@@ -17,11 +17,11 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class Lantern(game: MegamanMaverickGame) : LightSourceEntity(game), ISpritesEntity, IAnimatedEntity {
+class Lantern(game: MegaServices) : LightSourceEntity(game), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Lantern"

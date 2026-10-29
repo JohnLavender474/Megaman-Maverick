@@ -15,8 +15,8 @@ import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class FreezableEntityHandler(
-    private val entity: IFreezableEntity,
+class FreezableEntityHandler<T>(
+    private val entity: T,
     private val onFrozen: () -> Unit = {},
     private val canBeFrozen: () -> Boolean = { true },
     private val onJustFinished: () -> Unit = {},
@@ -27,7 +27,7 @@ class FreezableEntityHandler(
     duration: Float = ConstVals.STANDARD_FROZEN_DUR,
     private val forceSound: Boolean = false,
     noDamageOnFrozen: Boolean = true
-) : Updatable {
+) : Updatable where T : MegaGameEntity, T : IFreezableEntity {
 
     companion object {
         const val TAG = "FreezableEntityHandler"

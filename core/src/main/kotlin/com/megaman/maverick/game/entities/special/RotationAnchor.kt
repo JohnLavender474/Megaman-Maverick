@@ -26,7 +26,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity<IGameEntity>,
+open class RotationAnchor(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IParentEntity<IGameEntity>,
     IMotionEntity, IDrawableShapesEntity {
 
     companion object {
@@ -120,7 +120,7 @@ open class RotationAnchor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
                 child as IBodyEntity
                 val target = childTargets[child as GameEntity] ?: return@forEach
                 val velocity = target.cpy().sub(child.body.getCenter())
-                child.body.physics.velocity.set(velocity.scl(1f / game.getPerformance().fixedStep))
+                child.body.physics.velocity.set(velocity.scl(1f / game.settings.performance.fixedStep))
             }
         }
         return BodyComponentCreator.create(this, body)

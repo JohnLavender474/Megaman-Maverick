@@ -9,7 +9,7 @@ import com.maverick.game.engine.common.interfaces.ArgsInitializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.objects.Pool
 import com.maverick.game.engine.common.objects.pairTo
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
@@ -19,19 +19,19 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.cast
 import kotlin.reflect.full.primaryConstructor
 
-object MegaEntityFactory : ArgsInitializable<MegamanMaverickGame>, Resettable {
+object MegaEntityFactory : ArgsInitializable<MegaServices>, Resettable {
 
     private val constructors = ObjectMap<KClass<out MegaGameEntity>, KFunction<MegaGameEntity>>()
     private val pools = OrderedMap<KClass<out MegaGameEntity>, Pool<MegaGameEntity>>()
 
-    private lateinit var game: MegamanMaverickGame
+    private lateinit var game: MegaServices
     private var initialized = false
 
     private val ENTITIES_TO_PRELOAD = orderedMapOf<KClass<out MegaGameEntity>, Int>(
         Bullet::class pairTo 25, Block::class pairTo 25
     )
 
-    override fun init(game: MegamanMaverickGame) {
+    override fun init(game: MegaServices) {
         this.game = game
         initialized = true
         ENTITIES_TO_PRELOAD.forEach { entry ->

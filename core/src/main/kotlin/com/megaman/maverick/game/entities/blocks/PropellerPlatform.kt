@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -36,7 +36,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
-class PropellerPlatform(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpritesEntity, IAnimatedEntity,
+class PropellerPlatform(game: MegaServices) : Block(game), IMotionEntity, ISpritesEntity, IAnimatedEntity,
     IDamagerEntity, IEventListener, IDirectional {
 
     companion object {

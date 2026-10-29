@@ -20,7 +20,7 @@ import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -40,7 +40,7 @@ import kotlin.math.sqrt
  * 3. Running the lunge state machine and calling [WavyTentacleOfJoints.setState].
  * 4. Reading joint positions from the child and drawing line segments + joint circles.
  */
-class TestWavyTentacleController(game: MegamanMaverickGame) :
+class TestWavyTentacleController(game: MegaServices) :
     MegaGameEntity(game), IDrawableShapesEntity, Updatable {
 
     companion object {

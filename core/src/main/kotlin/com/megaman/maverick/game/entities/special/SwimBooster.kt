@@ -13,7 +13,7 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -23,7 +23,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
-class SwimBooster(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IEventListener {
+class SwimBooster(game: MegaServices) : MegaGameEntity(game), ICullableEntity, IEventListener {
 
     companion object {
         const val TAG = "SwimBooster"

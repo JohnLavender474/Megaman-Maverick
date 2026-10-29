@@ -26,7 +26,7 @@ import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.feetFixture
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+class DropperLift(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity {
 
     enum class DropperLiftState {
         CLOSED, OPENING, OPEN, CLOSING

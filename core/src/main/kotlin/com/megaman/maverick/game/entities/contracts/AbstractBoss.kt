@@ -21,7 +21,7 @@ import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 abstract class AbstractBoss(
-    game: MegamanMaverickGame,
+    game: MegaServices,
     dmgDuration: Float = DEFAULT_BOSS_DMG_DURATION,
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR,
     defeatDur: Float = DEFAULT_DEFEAT_DURATION,
@@ -168,7 +168,7 @@ abstract class AbstractBoss(
     }
 
     protected open fun spawnExplosionOrbs(spawn: Vector2) {
-        playSoundNow(SoundAsset.DEFEAT_SOUND, false)
+        game.audioMan.playSound(SoundAsset.DEFEAT_SOUND, false)
 
         EXPLOSION_ORB_TRAJS.forEach { trajectory ->
             val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!

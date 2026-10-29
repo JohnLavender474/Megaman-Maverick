@@ -13,7 +13,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -24,7 +24,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
+class Snowfall(game: MegaServices) : MegaGameEntity(game) {
 
     companion object {
         const val TAG = "Snowfall"
@@ -98,7 +98,7 @@ class Snowfall(game: MegamanMaverickGame) : MegaGameEntity(game) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.getCurrentRoom()?.name != spawnRoom || !game.getGameCamera().overlaps(trigger))
+        if (game.levelState.currentRoom?.name != spawnRoom || !game.getGameCamera().overlaps(trigger))
             return@UpdatablesComponent
 
         spawnDelay.update(delta)

@@ -30,7 +30,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<IGameEntity> {
+class Asteroid(game: MegaServices) : AbstractProjectile(game), IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "Asteroid"
@@ -256,7 +256,7 @@ class Asteroid(game: MegamanMaverickGame) : AbstractProjectile(game), IOwnable<I
         debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.IMPULSE) {
-            if (game.isCameraRotating()) body.physics.velocity.setZero() else body.physics.velocity.set(impulse)
+            if (game.camera.rotating) body.physics.velocity.setZero() else body.physics.velocity.set(impulse)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

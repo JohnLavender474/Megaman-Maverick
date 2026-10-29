@@ -22,7 +22,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ItemEntity
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), ItemEntity, IBodyEntity,
+abstract class AbstractItem(game: MegaServices) : MegaGameEntity(game), ItemEntity, IBodyEntity,
     IScalableGravityEntity, ICullableEntity, IDirectional {
 
     companion object {
@@ -110,7 +110,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
         gravity = spawnProps.getOrDefault(
             ConstKeys.GRAVITY,
             when (LevelDefinition.MOON_MAN) {
-                game.getCurrentLevel() -> MOON_GRAVITY
+                game.levelState.currentLevel!! -> MOON_GRAVITY
                 else -> GRAVITY
             },
             Float::class
@@ -156,7 +156,7 @@ abstract class AbstractItem(game: MegamanMaverickGame) : MegaGameEntity(game), I
                 .scl(if (body.isSensing(BodySense.FEET_ON_GROUND)) GROUND_GRAV else gravity)
                 .scl(gravityScalar * ConstVals.PPM.toFloat())
 
-            if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) velClamp = MOON_VEL_CLAMP
+            if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN) velClamp = MOON_VEL_CLAMP
             body.physics.velocityClamp.set(velClamp * ConstVals.PPM)
 
             if (body.isSensing(BodySense.FEET_ON_SAND)) whenFeetOnSand()

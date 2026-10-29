@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
-import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.MathUtils
@@ -63,15 +62,12 @@ import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.points.PointsSystem
 import com.maverick.game.engine.screens.IScreen
-import com.maverick.game.engine.screens.levels.tiledmap.TiledMapLoadResult
 import com.maverick.game.engine.screens.viewports.PixelPerfectFitViewport
 import com.maverick.game.engine.systems.GameSystem
 import com.maverick.game.engine.updatables.UpdatablesSystem
 import com.maverick.game.engine.world.WorldSystem
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.ContactRuleDispatcher
-import com.maverick.game.engine.world.container.IWorldContainer
-import com.megaman.maverick.game.MegamanMaverickGame.Performance
 import com.megaman.maverick.game.MegamanMaverickGame.RunType
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
@@ -92,7 +88,6 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelState
-import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.maverick.game.engine.input.InputFrameBuilder
 import com.maverick.game.engine.input.checkInputButtons
@@ -108,7 +103,10 @@ import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreenV2
 import com.megaman.maverick.game.screens.other.*
+import com.megaman.maverick.game.screens.levels.camera.GameCameraState
 import com.megaman.maverick.game.state.GameClock
+import com.megaman.maverick.game.state.GameSettings
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.utils.AsyncFileWriter
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -152,13 +150,6 @@ class MegamanMaverickGame(
     val params: MegamanMaverickGameParams = MegamanMaverickGameParams()
 ) : Game(), IEventListener {
 
-    enum class Performance(val fps: Int, val fixedStep: Float) {
-        VERY_LOW(30, 1f / 75f),
-        LOW(45, 1f / 112.5f),
-        MEDIUM(60, 1f / 150f),
-        HIGH(90, 1f / 225f)
-    }
-
     enum class RunType { GAME, TEST }
 
     companion object {
@@ -191,12 +182,13 @@ class MegamanMaverickGame(
     )
     val levelState = LevelState()
     val clock = GameClock()
+    val camera = GameCameraState()
+    val settings = GameSettings()
 
-    private var cameraRotating = false
-    private var focusSnappedAway = false
-
-    private lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
-    private lateinit var shapes: Array<IDrawableShape>
+    lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
+        private set
+    lateinit var shapes: Array<IDrawableShape>
+        private set
     private lateinit var systems: ObjectMap<String, GameSystem>
 
     val viewports = ObjectMap<String, Viewport>()
@@ -224,7 +216,6 @@ class MegamanMaverickGame(
 
     lateinit var engine: GameEngine
     lateinit var state: GameState
-    var weaponsAttained: OrderedSet<MegamanWeapon>? = null
 
     lateinit var players: MegaPlayers
     lateinit var gravity: WorldGravity
@@ -259,6 +250,8 @@ class MegamanMaverickGame(
     private var launchRoomLevel: LevelDefinition? = null
 
     override fun create() {
+        settings.performance = params.performance
+
         val launchResult = resolveLaunchOptions(params.launchOptions)
         if (!launchResult.isValid)
             throw IllegalArgumentException("Invalid launch options: ${launchResult.errors.joinToString("; ")}")
@@ -318,8 +311,8 @@ class MegamanMaverickGame(
         val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         val gameCamera = RotatableCamera(onJustFinishedRotating = {
-            setCameraRotating(false)
-            setFocusSnappedAway(false)
+            camera.rotating = false
+            camera.focusSnappedAway = false
             eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
         })
         gameCamera.setToDefaultPosition()
@@ -405,23 +398,42 @@ class MegamanMaverickGame(
         audioMan.musicVolume = params.musicVolume
         audioMan.soundVolume = params.soundVolume
 
-        MegaEntityFactory.init(this)
+        players = MegaPlayers()
+        gravity = WorldGravity(players)
+
+        val services = MegaServices(
+            engine,
+            eventsMan,
+            assMan,
+            audioMan,
+            state,
+            players,
+            gravity,
+            levelState,
+            clock,
+            camera,
+            settings,
+            updatables,
+            runQueue,
+            getSystem(GroupsSystem::class)!!,
+            getGameCamera()
+        )
+
+        MegaEntityFactory.init(services)
 
         // TODO: should replace EntityFactories with MegaEntityFactory
-        EntityFactories.initialize(this)
+        EntityFactories.initialize(services)
 
-        val megaman = Megaman(this)
+        val megaman = Megaman(services)
         // manually call init and set initialized to true before megaman is spawned
         megaman.init()
         megaman.initialized = true
         // add megaman as a game state listener
         state.addListener(megaman)
 
-        players = MegaPlayers()
         // TODO: a player that registers after progress exists keeps the base max health, because the heart tank
         //  max health is set only when a heart tank changes; a late join must set it from the game state (item 047)
         players.register(PlayerSlot(0), megaman)
-        gravity = WorldGravity(players)
 
         val levelScreen = MegaLevelScreen(this)
         levelScreen.init()
@@ -461,7 +473,7 @@ class MegamanMaverickGame(
             is LaunchStart.OpenScreen -> {
                 if (!screens.containsKey(start.screen.name))
                     throw IllegalStateException("Launch option --screen: screen ${start.screen.name} is not registered")
-                start.stagedLevel?.let { setCurrentLevel(it) }
+                start.stagedLevel?.let { levelState.currentLevel = it }
                 setCurrentScreen(start.screen.name)
             }
         }
@@ -517,7 +529,7 @@ class MegamanMaverickGame(
 
             if (launch.autoPerf) autoPerfGraceTimer.update(delta)
             if (launch.autoPerf && autoPerfGraceTimer.isFinished()) {
-                val performance = getPerformance()
+                val performance = settings.performance
                 val currentFps = Gdx.graphics.framesPerSecond
                 if (performance != Performance.VERY_LOW && currentFps < performance.fps) {
                     val deficit = performance.fps - currentFps
@@ -771,17 +783,9 @@ class MegamanMaverickGame(
         val level = launchRoomLevel
         launchRoom = null
         launchRoomLevel = null
-        if (room == null || level != getCurrentLevel()) return null
+        if (room == null || level != levelState.currentLevel!!) return null
         return room
     }
-
-    fun setCurrentLevel(levelDef: LevelDefinition) {
-        levelState.currentLevel = levelDef
-    }
-
-    fun getCurrentLevel() = levelState.currentLevel!!
-
-    fun isInExtraLevel() = levelState.currentLevel?.type == LevelType.EXTRA_LEVEL
 
     /**
      * Removes all the player's progress from memory: the game state, the weapons, the lives, and the
@@ -793,7 +797,7 @@ class MegamanMaverickGame(
         state.clearWeapons()
         players.forEach { (it as Megaman).currentWeapon = MegamanWeapon.MEGA_BUSTER }
         state.resetLives()
-        weaponsAttained = null
+        levelState.weaponsAttained = null
     }
 
     /**
@@ -916,8 +920,8 @@ class MegamanMaverickGame(
                 BehaviorsSystem(diagnostics),
                 WorldSystem(
                     ppm = ConstVals.PPM,
-                    fixedStep = getPerformance().fixedStep,
-                    worldContainerSupplier = { getWorldContainer() },
+                    fixedStep = settings.performance.fixedStep,
+                    worldContainerSupplier = { levelState.worldContainer },
                     contactListener = ContactRuleDispatcher(
                         megaContactRules(this, CONTACT_LISTENER_DEBUG_FILTER),
                         CONTACT_LISTENER_DEBUG_FILTER
@@ -926,7 +930,7 @@ class MegamanMaverickGame(
                     contactFilter = MegaContactFilter(),
                     fixedStepScalar = params.fixedStepScalar,
                     maxIterations = 2 * MathUtils.ceil(
-                        params.fixedStepScalar / (getPerformance().fixedStep * getPerformance().fps)
+                        params.fixedStepScalar / (settings.performance.fixedStep * settings.performance.fps)
                     ),
                     diagnostics = diagnostics,
                 ),
@@ -1000,74 +1004,33 @@ class MegamanMaverickGame(
     }
 
     fun startLevel(level: LevelDefinition? = null) {
-        if (level != null) setCurrentLevel(level)
+        if (level != null) levelState.currentLevel = level
 
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
-        val currentLevel = getCurrentLevel()
+        val currentLevel = levelState.currentLevel!!
         levelScreen.music = currentLevel.music
         levelScreen.screenOnCompletion = currentLevel.screenOnCompletion
         levelScreen.start(currentLevel.source)
-        setCurrentLevel(currentLevel)
+        levelState.currentLevel = currentLevel
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
 
     fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
 
-    fun setCameraRotating(value: Boolean) {
-        cameraRotating = value
-    }
-
-    fun isCameraRotating() = cameraRotating
-
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
-
-    fun getDrawables(): ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>> = drawables
 
     fun addDrawable(drawable: IComparableDrawable<Batch>) {
         val section = drawable.priority.section
-        val queue = getDrawables().get(section)
+        val queue = drawables.get(section)
         queue.add(drawable)
     }
 
-    fun getShapes() = shapes
-
-    fun getSystems(): ObjectMap<String, GameSystem> = systems
-
     fun <T : GameSystem> getSystem(clazz: KClass<T>): T? {
-        val systems = getSystems()
         if (!systems.containsKey(clazz.simpleName)) return null
         return clazz.cast(systems[clazz.simpleName]!!)
     }
-
-    fun setRoomsSupplier(supplier: () -> Array<RectangleMapObject>?) {
-        levelState.roomsSupplier = supplier
-    }
-
-    fun getRooms(out: Array<RectangleMapObject>): Array<RectangleMapObject> {
-        val rooms = levelState.roomsSupplier?.invoke()
-        if (rooms != null) out.addAll(rooms)
-        return out
-    }
-
-    fun setCurrentRoomSupplier(supplier: () -> RectangleMapObject?) {
-        levelState.currentRoomSupplier = supplier
-    }
-
-    fun getCurrentRoom(): RectangleMapObject? = levelState.currentRoomSupplier?.invoke()
-
-    fun setWorldContainer(worldContainer: IWorldContainer) {
-        levelState.worldContainer = worldContainer
-    }
-
-    fun getWorldContainer(): IWorldContainer? = levelState.worldContainer
-
-    fun setTiledMapLoadResult(tiledMapLoadResult: TiledMapLoadResult) {
-        levelState.tiledMapLoadResult = tiledMapLoadResult
-    }
-
-    fun getTiledMapLoadResult() = levelState.tiledMapLoadResult!!
 
     fun showNotification(text: String, color: Color = Color.WHITE) {
         showNotification = true
@@ -1080,15 +1043,6 @@ class MegamanMaverickGame(
 
     fun setDebugTextSupplier(supplier: () -> String) = debugText.setTextSupplier(supplier)
 
-    // This is set to true when the camera focus on Megaman has (potentially) been snapped away suddenly, and so
-    // the camera should be interpolated to Megaman's current position to prevent a jarring camera experience. This
-    // is reset back to false once the camera reaches Megaman's true position again.
-    fun setFocusSnappedAway(value: Boolean) {
-        focusSnappedAway = value
-    }
-
-    fun isFocusSnappedAway() = focusSnappedAway
-
     fun isPixelPerfect() = pixelPerfect
 
     fun isVsync() = vsync
@@ -1099,11 +1053,9 @@ class MegamanMaverickGame(
         Gdx.graphics.setVSync(value)
     }
 
-    fun getPerformance() = params.performance
-
     fun setPerformance(performance: Performance) {
-        if (params.performance == performance) return
-        params.performance = performance
+        if (settings.performance == performance) return
+        settings.performance = performance
         Gdx.graphics.setForegroundFPS(performance.fps)
         getSystem(WorldSystem::class)?.fixedStep = performance.fixedStep
         eventsMan.submitEvent(Event(EventType.CHANGE_PERFORMANCE_MODE, props(ConstKeys.MODE pairTo performance)))
@@ -1111,7 +1063,7 @@ class MegamanMaverickGame(
         autoPerfTimer.reset()
     }
 
-    fun isPerformanceSubpar() = getPerformance().ordinal > Performance.LOW.ordinal
+    fun isPerformanceSubpar() = settings.performance.ordinal > Performance.LOW.ordinal
 
     fun resetAutoPerfGracePeriod() = autoPerfGraceTimer.reset()
 }

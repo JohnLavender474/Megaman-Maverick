@@ -17,7 +17,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 
 fun IBody.defaultDoUpdate(): Boolean {
     val game = getEntity().game
-    if (getEntity().asPlayer == null && game.isCameraRotating()) return false
+    if (getEntity().asPlayer == null && game.camera.rotating) return false
     return when (type) {
         // NOTE: an ABSTRACT body that can be spawned OUTSIDE the camera must have its velocity set in
         // `onSpawn`, not only in `body.preProcess`. The `preProcess` function runs only for bodies the
