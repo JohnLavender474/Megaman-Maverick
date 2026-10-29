@@ -1109,3 +1109,18 @@ newest entry at the bottom.
   new one); greps clean (no code line in `entities/` names `MegamanMaverickGame`); the owner's play test passes (16
   checks).
 - Follow-up: none.
+
+## 2026-10-29 — mega-refactor-016d-system-services (into `mega-refactor-016-master`)
+
+- Summary: systems code takes narrow services. `players` and `gravity` are `val` fields built with the game object;
+  `megaContactRules(players, gravity, debugFilter)` and `MegaPathfinderFactory(levelState)` replace the game;
+  `LevelDefinition.screenOnCompletion` is `(LevelState) -> ScreenEnum` (owner: "I see no harm in continuing with the
+  original recommendation"). New test map `RefactorTest016.tmx`; `GravityChange` debug outlines are colored by direction
+  (owner request). After it, only the host, 32 screen files, 13 backgrounds, `ScreenController` and the launcher name
+  `MegamanMaverickGame` in code (the input for `001b`). Squash commit on the parent `ffb8741a0`.
+- Contract check: new permanent tests `GamePlayersFieldsTest`, `MegaContactRulesTest`, `MegaPathfinderFactoryTest`,
+  `LevelCompletionScreensTest` (first run against the old code through an uncommitted test adapter); clean build, 575
+  engine and 272 core tests pass; warnings 81 (no new one); `contact-rule-selection.txt` unchanged; greps clean; the
+  owner's play test passes (check 2 in the new room replaced by the `GravitySwitcharoo` checks; the upside-down view
+  there is filed as the question `docs/issues/2026-10-29-gravity-change-turns-camera-upside-down.md`).
+- Follow-up: backlog candidate is new item `083` (`PathfinderResult.targetReached`).

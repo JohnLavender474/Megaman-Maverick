@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `001`, `011`, `012`, `013`, `021`, `028`, `029`, `031`, `047`, `049`, `053`, `057`, `064`, `072`
-- Branches: parent `mega-refactor-016-master` (active, started 2026-10-28); `mega-refactor-016a-typed-level-state` (merged into the parent 2026-10-28, squash `07a4a3297`), `mega-refactor-016b-entity-host-reads` (merged into the parent 2026-10-29, squash `dcb5db93e`), `mega-refactor-016c-entity-services` (merged into the parent 2026-10-29, squash `4097749fa`), `mega-refactor-016d-system-services` (active, started 2026-10-29, merges into the parent)
+- Branches: parent `mega-refactor-016-master` (active, started 2026-10-28); `mega-refactor-016a-typed-level-state` (merged into the parent 2026-10-28, squash `07a4a3297`), `mega-refactor-016b-entity-host-reads` (merged into the parent 2026-10-29, squash `dcb5db93e`), `mega-refactor-016c-entity-services` (merged into the parent 2026-10-29, squash `4097749fa`), `mega-refactor-016d-system-services` (merged into the parent 2026-10-29, squash `ffb8741a0`); next: optional `016e`, then the parent merge into `master`
 
 ## Goal
 
