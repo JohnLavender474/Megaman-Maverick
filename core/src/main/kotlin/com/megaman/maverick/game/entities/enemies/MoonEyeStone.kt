@@ -50,7 +50,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -69,7 +69,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity,
+class MoonEyeStone(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity,
     IDrawableShapesEntity, IFaceable, IDirectional {
 
     companion object {
@@ -149,7 +149,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -217,7 +217,7 @@ class MoonEyeStone(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableE
 
             direction = targetPlayer.body.direction
 
-            if (game.isCameraRotating()) return@update
+            if (services.camera.rotating) return@update
 
             if (currentState != MoonEyeStoneState.SEEK || !throwing) processAsteroids(delta)
 

@@ -11,7 +11,7 @@ class WindyClouds(
 ) : ScrollingBackground(
     game,
     "WindyClouds",
-    game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_2.source, "BKG04"),
+    game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_2.source, "BKG04"),
     start,
     start.cpy().sub(width, 0f),
     DUR,

@@ -91,7 +91,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         GameLogger.debug(TAG, "init()")
 
         if (!initialized) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
             val priority = DrawingPriority()
@@ -107,7 +107,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
                 priority = DrawingPriority(DrawingSection.FOREGROUND, 15)
             )
 
-            val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+            val black = game.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
             fadein.setRegion(black)
 
             initialized = true
@@ -128,10 +128,10 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         player.body.physics.gravityOn = false
         player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
 
-        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
-        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+        game.events.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
+        game.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+        game.levelState.megamanBeam = true
 
         fadein.init()
 
@@ -140,7 +140,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
     override fun update(delta: Float) {
         beamCenter.set(beamSprite.boundingRectangle.getCenter())
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
+        game.levelState.megamanBeamCenter = beamCenter
 
         when {
             !fadein.isFinished() -> {
@@ -210,12 +210,12 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
             player.setPlayPhase(PlayPhase.IN_PLAY)
             player.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
 
-            game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-            game.eventsMan.submitEvent(Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo playerSlot())))
+            game.events.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+            game.events.submitEvent(Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo playerSlot())))
 
-            game.audioMan.playSound(SoundAsset.BEAM_SOUND)
+            game.audio.playSound(SoundAsset.BEAM_SOUND)
 
-            game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", false)
+            game.levelState.megamanBeam = false
 
             showReadyText = false
 

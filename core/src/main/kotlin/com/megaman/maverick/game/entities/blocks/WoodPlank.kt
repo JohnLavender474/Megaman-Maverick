@@ -22,7 +22,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.projectiles.Fireball
@@ -31,7 +31,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-class WoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+class WoodPlank(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "WoodPlank"
@@ -53,7 +53,7 @@ class WoodPlank(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnima
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

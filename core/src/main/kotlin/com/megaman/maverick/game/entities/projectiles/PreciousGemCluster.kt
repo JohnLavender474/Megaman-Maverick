@@ -19,7 +19,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.Companion.SHIELD_GEM_MAX_DIST_FROM_ORIGIN
 import com.megaman.maverick.game.entities.bosses.PreciousWoman.ShieldGemDef
@@ -33,7 +33,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IEventListener,
+class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IEventListener,
     IOwnable<IGameEntity> {
 
     companion object {
@@ -63,7 +63,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
 
@@ -98,7 +98,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         gems.keys().forEach { it.destroy() }
         gems.clear()
@@ -138,7 +138,7 @@ class PreciousGemCluster(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
                     GameLogger.debug(TAG, "defineUpdatablesComponent(): gem dead, removing: $gem")
                     iter.remove()
                 }
-                !game.getGameCamera().overlaps(gem.body.getBounds()) &&
+                !services.getGameCamera().overlaps(gem.body.getBounds()) &&
                     gem.body.getCenter().dst(origin) > maxDistFromOrigin -> {
                     GameLogger.debug(TAG, "defineUpdatablesComponent(): gem out of cam bounds: $gem")
                     gem.destroy()

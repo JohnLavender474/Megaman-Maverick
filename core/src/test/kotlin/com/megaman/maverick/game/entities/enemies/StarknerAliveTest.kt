@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
@@ -12,9 +14,10 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -24,22 +27,19 @@ import io.mockk.mockk
 class StarknerAliveTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegamanMaverickGame
+    lateinit var services: MegaServices
     lateinit var probe: Starkner
 
     beforeEach {
         engine = GameEngine()
-        game = mockk(relaxed = true)
-        every { game.engine } returns engine
-        every { game.state } returns GameState()
-        every { game.getCurrentLevel() } returns LevelDefinition.TEST_1
+        services = testServices(engine = engine, players = mockk<MegaPlayers>(relaxed = true))
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-        every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
+        every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
         val target = mockk<MegaGameEntity>(relaxed = true)
         every { target.getComponent(BodyComponent::class) } returns BodyComponent(Body(BodyType.ABSTRACT))
-        every { game.players.targetFor(any()) } returns target
-        probe = Starkner(game)
+        every { services.players.targetFor(any()) } returns target
+        probe = Starkner(services)
     }
 
     afterEach { engine.reset() }
@@ -47,7 +47,7 @@ class StarknerAliveTest : DescribeSpec({
     fun spawnProps(id: Int): Properties = props(ConstKeys.ID pairTo id, ConstKeys.POSITION pairTo Vector2())
 
     fun spawnLive(id: Int): Starkner {
-        val starkner = Starkner(game)
+        val starkner = Starkner(services)
         starkner.spawn(spawnProps(id)) shouldBe true
         engine.update(0f)
         probe.canSpawn(spawnProps(id)) shouldBe false
@@ -92,14 +92,14 @@ class StarknerAliveTest : DescribeSpec({
             val starkner = spawnLive(105)
 
             starkner.destroy()
-            Starkner(game).spawn(spawnProps(105)) shouldBe true
+            Starkner(services).spawn(spawnProps(105)) shouldBe true
             engine.update(0f)
 
             probe.canSpawn(spawnProps(105)) shouldBe false
         }
 
         it("is removed when a Starkner is destroyed while its spawn is queued") {
-            val starkner = Starkner(game)
+            val starkner = Starkner(services)
             starkner.spawn(spawnProps(106)) shouldBe true
 
             starkner.destroy()

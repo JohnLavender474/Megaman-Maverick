@@ -30,7 +30,7 @@ internal fun Megaman.groundSlideBehavior(): IBehavior {
         override fun evaluate(delta: Float): Boolean {
             cooldown.update(delta)
 
-            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || game.isCameraRotating() || body.isSensing(BodySense.FEET_ON_SAND) ||
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || services.camera.rotating || body.isSensing(BodySense.FEET_ON_SAND) ||
                 isBehaviorActive(BehaviorType.JETPACKING) || !cooldown.isFinished() ||
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return false
@@ -93,7 +93,7 @@ internal fun Megaman.groundSlideBehavior(): IBehavior {
                 else -> MegamanValues.GROUND_SLIDE_VEL
             }) * ConstVals.PPM * movementScalar
 
-            if (game.state.containsEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) vel *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
+            if (services.gameState.containsEnhancement(MegaEnhancement.GROUND_SLIDE_BOOST)) vel *= MegaEnhancement.GROUND_SLIDE_BOOST_SCALAR
 
             when (direction) {
                 Direction.UP -> body.physics.velocity.x = vel * facing.value

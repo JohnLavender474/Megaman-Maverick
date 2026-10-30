@@ -4,7 +4,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
@@ -12,7 +12,7 @@ import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setReceiver
 
-class AsteroidSpawnersBlock(game: MegamanMaverickGame) : Block(game) {
+class AsteroidSpawnersBlock(services: MegaServices) : Block(services) {
 
     companion object {
         const val TAG = "AsteroidSpawnersBlock"

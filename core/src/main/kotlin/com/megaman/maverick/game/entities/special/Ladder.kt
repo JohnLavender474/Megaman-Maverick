@@ -14,7 +14,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.LadderTop
@@ -23,7 +23,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class Ladder(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity {
+class Ladder(services: MegaServices) : MegaGameEntity(services), IBodyEntity {
 
     companion object {
         const val TAG = "Ladder"

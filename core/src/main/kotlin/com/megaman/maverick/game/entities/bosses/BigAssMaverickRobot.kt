@@ -42,7 +42,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -75,7 +75,7 @@ import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 import kotlin.math.abs
 
-class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "BigAssMaverickRobot"
@@ -200,7 +200,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
             headAnimDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$HEAD/$key")) }
         }
         super.init()
@@ -233,19 +233,19 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
         launchedHand = null
 
-        val shootOrbsDelayDur = when (game.state.getDifficultyMode()) {
+        val shootOrbsDelayDur = when (services.gameState.getDifficultyMode()) {
             DifficultyMode.HARD -> SHOOT_ORBS_DELAY_HARD
             else -> SHOOT_ORBS_DELAY
         }
         shootOrbsDelay.resetDuration(shootOrbsDelayDur)
 
-        val launchHandDelayDur = when (game.state.getDifficultyMode()) {
+        val launchHandDelayDur = when (services.gameState.getDifficultyMode()) {
             DifficultyMode.NORMAL -> LAUNCH_HAND_DELAY
             DifficultyMode.HARD -> LAUNCH_HAND_DELAY_HARD
         }
         launchHandDelay.resetDuration(launchHandDelayDur)
 
-        if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+        if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
             shootOrbsTimer = Timer(SHOOT_ORBS_DUR).also { timer ->
                 for (i in 1..ORBS_COUNT) {
                     val time = i * DELAY_BETWEEN_ORBS
@@ -305,7 +305,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
     private fun shakeRoom() {
         GameLogger.debug(TAG, "shakeRoom()")
 
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.SHAKE_CAM, props(
                     ConstKeys.DURATION pairTo SHAKE_DUR,
@@ -329,7 +329,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val leftLaunchSpeedSupplier: () -> Float = speed@{
             val minSpeed: Float
             val maxSpeed: Float
-            if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+            if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
                 minSpeed = HAND_LAUNCH_MIN_SPEED
                 maxSpeed = HAND_LAUNCH_MAX_SPEED
             } else {
@@ -365,7 +365,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
         val rightLaunchSpeedSupplier: () -> Float = speed@{
             val minSpeed: Float
             val maxSpeed: Float
-            if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+            if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
                 minSpeed = HAND_LAUNCH_MIN_SPEED
                 maxSpeed = HAND_LAUNCH_MAX_SPEED
             } else {
@@ -612,7 +612,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
         val minSpeed: Float
         val maxSpeed: Float
-        if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+        if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
             minSpeed = ORB_MIN_SPEED
             maxSpeed = ORB_MAX_SPEED
         } else {
@@ -625,7 +625,7 @@ class BigAssMaverickRobot(game: MegamanMaverickGame) : AbstractBoss(game), IAnim
 
         val minDelay: Float
         val maxDelay: Float
-        if (game.state.getDifficultyMode() == DifficultyMode.NORMAL) {
+        if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
             minDelay = ORB_MIN_MOVE_DELAY
             maxDelay = ORB_MAX_MOVE_DELAY
         } else {

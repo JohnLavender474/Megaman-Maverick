@@ -35,7 +35,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable, IAnimatedEntity,
+class Gachappan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFaceable, IAnimatedEntity,
     IDrawableShapesEntity {
 
     companion object {
@@ -78,7 +78,7 @@ class Gachappan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MED
 
     override fun init(vararg params: Any) {
         if (waitRegion == null || shootRegion == null || openRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             waitRegion = atlas.findRegion("Gachappan/Wait")
             shootRegion = atlas.findRegion("Gachappan/Shoot")
             openRegion = atlas.findRegion("Gachappan/Open")

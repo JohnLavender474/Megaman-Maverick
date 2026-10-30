@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
@@ -9,36 +10,34 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-private class LaserIgnoreTestEntity(game: MegamanMaverickGame) : MegaGameEntity(game) {
+private class LaserIgnoreTestEntity(services: MegaServices) : MegaGameEntity(services) {
     override fun getType() = EntityType.OTHER
 }
 
 class LaserIgnoreTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegamanMaverickGame
+    lateinit var services: MegaServices
 
     beforeEach {
         engine = GameEngine()
-        game = mockk(relaxed = true)
-        every { game.engine } returns engine
-        every { game.state } returns GameState()
-        every { game.getCurrentLevel() } returns LevelDefinition.TEST_1
+        services = testServices(engine = engine)
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-        every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
-        MegaEntityFactory.init(game)
+        every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
+        MegaEntityFactory.init(services)
     }
 
     afterEach {
@@ -47,7 +46,7 @@ class LaserIgnoreTest : DescribeSpec({
     }
 
     fun entity(props: Properties = Properties()): LaserIgnoreTestEntity {
-        val entity = LaserIgnoreTestEntity(game)
+        val entity = LaserIgnoreTestEntity(services)
         entity.spawn(props)
         engine.update(0f)
         return entity
@@ -56,7 +55,7 @@ class LaserIgnoreTest : DescribeSpec({
     fun ignoreObject(id: Int) = RectangleMapObject().also { it.properties.put(ConstKeys.ID, id) }
 
     fun laser(owner: MegaGameEntity, vararg ignoreIds: Int): Laser {
-        val laser = Laser(game)
+        val laser = Laser(services)
         val laserProps = props(ConstKeys.OWNER pairTo owner, ConstKeys.RADIUS pairTo 1f)
         ignoreIds.forEachIndexed { i, id -> laserProps.put("${ConstKeys.IGNORE}_$i", ignoreObject(id)) }
         laser.spawn(laserProps)
@@ -65,7 +64,7 @@ class LaserIgnoreTest : DescribeSpec({
     }
 
     fun reflectingLaser(parent: Laser, reflector: MegaGameEntity): Laser {
-        val laser = Laser(game)
+        val laser = Laser(services)
         laser.spawn(props(ConstKeys.PARENT pairTo parent, ConstKeys.ACTIVE pairTo false, ConstKeys.RADIUS pairTo 1f))
         engine.update(0f)
         laser.setReflector(reflector, parent)

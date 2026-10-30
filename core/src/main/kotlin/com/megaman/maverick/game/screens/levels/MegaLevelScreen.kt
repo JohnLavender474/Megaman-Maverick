@@ -26,6 +26,7 @@ import com.maverick.game.engine.common.extensions.isAny
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
+import com.maverick.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -81,6 +82,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
@@ -107,10 +109,9 @@ import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
-import java.util.*
 
 class MegaLevelScreen(private val game: MegamanMaverickGame) :
-    TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, IShapeDebuggable,
+    TiledMapLevelScreen(game.batch, TiledMapLoader(game.assets)), Initializable, IEventListener, IShapeDebuggable,
     Resettable {
 
     companion object {
@@ -151,6 +152,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
+        EventType.GAME_COMPLETE,
 
         EventType.EDIT_TILED_MAP,
 
@@ -169,13 +171,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
     val eventsMan: EventsManager
-        get() = game.eventsMan
+        get() = game.events
     val audioMan: MegaAudioManager
-        get() = game.audioMan
+        get() = game.audio
 
     var music: MusicAsset? = null
 
-    lateinit var screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum
+    lateinit var screenOnCompletion: (LevelState) -> ScreenEnum
 
     private lateinit var spawnsMan: SpawnsManager
     private lateinit var playerSpawnsMan: PlayerSpawnsManager
@@ -192,7 +194,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
-    private lateinit var drawables: ObjectMap<DrawingSection, Queue<IComparableDrawable<Batch>>>
+    private lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: Array<IDrawableShape>
     private lateinit var backgrounds: Array<Background>
     private lateinit var backgroundsToHide: ObjectSet<String>
@@ -228,8 +230,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         endLevelEventHandler = EndLevelEventHandler(game)
 
-        drawables = game.getDrawables()
-        shapes = game.getShapes()
+        drawables = game.drawables
+        shapes = game.shapes
 
         gameCamera = game.getGameCamera()
         uiCamera = game.getUiCamera()
@@ -276,7 +278,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             ),
             transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
             transDuration = ConstVals.ROOM_TRANS_DURATION,
-            shouldInterpolate = { game.isFocusSnappedAway() },
+            shouldInterpolate = { game.camera.focusSnappedAway },
             interpolationValue = { 20f * Gdx.graphics.deltaTime }
         )
         cameraManagerForRooms.focus = player.focus
@@ -316,7 +318,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             game.getSystem(BehaviorsSystem::class)?.on = false
-            game.putProperty(ConstKeys.ROOM_TRANSITION, true)
+            game.levelState.roomTransition = true
 
             tryToPlayCurrentRoomMusic()
         }
@@ -338,7 +340,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     "player.body.getCenter=${player.body.getCenter()}"
             )
 
-            game.putProperty(ConstKeys.ROOM_TRANSITION, true)
+            game.levelState.roomTransition = true
         }
         cameraManagerForRooms.endTransition = {
             GameLogger.debug(
@@ -390,7 +392,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             game.getSystem(BehaviorsSystem::class)?.on = true
-            game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+            game.levelState.roomTransition = false
 
             game.players.forEach { (it as Megaman).running = false }
         }
@@ -412,14 +414,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EntityFactories.init()
 
         levelPointsText = MegaFontHandle(
-            { "POINTS: " + game.getProperty(ConstKeys.LEVEL_POINTS, Int::class).toString() },
+            { "POINTS: " + game.levelState.levelPoints.toString() },
             positionX = (ConstVals.VIEW_WIDTH - 0.5f) * ConstVals.PPM,
             positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
         levelPointsText.attachment = Position.TOP_RIGHT
 
         coinsText = MegaFontHandle(
-            { "COINS: " + game.getProperty(ConstKeys.COINS, Int::class).toString() },
+            { "COINS: " + game.levelState.coins.toString() },
             positionX = 0.5f * ConstVals.PPM,
             positionY = ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
@@ -436,12 +438,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         engine.systems.forEach { it.on = true }
         music?.let { audioMan.playMusic(it, it.loop) }
 
-        game.setCameraRotating(false)
-        game.setRoomsSupplier { cameraManagerForRooms.gameRooms }
-        game.setCurrentRoomSupplier { cameraManagerForRooms.currentGameRoom }
+        game.camera.rotating = false
+        game.levelState.roomsSupplier = { cameraManagerForRooms.gameRooms }
+        game.levelState.currentRoomSupplier = { cameraManagerForRooms.currentGameRoom }
 
         if (tiledMapLoadResult == null) throw IllegalStateException("no tiled map load result found in level screen")
-        game.setTiledMapLoadResult(tiledMapLoadResult!!)
+        game.levelState.tiledMapLoadResult = tiledMapLoadResult!!
 
         val worldContainer: IWorldContainer
 
@@ -477,14 +479,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             else -> throw IllegalArgumentException("Invalid world container type: ${game.params.worldContainer}")
         }
 
-        game.setWorldContainer(worldContainer)
+        game.levelState.worldContainer = worldContainer
 
         playerSpawnEventHandler.init()
         playerDeathEventHandler.setToEnd()
 
         endLevelEventHandler.reset()
 
-        game.setFocusSnappedAway(false)
+        game.camera.focusSnappedAway = false
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
         gameCamera.position.set(ConstFuncs.getGameCamInitPos())
@@ -509,9 +511,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
          */
 
-        game.putProperty(ConstKeys.COINS, 0)
-        game.putProperty(ConstKeys.LEVEL_POINTS, 0)
-        game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, 0f)
+        game.levelState.coins = 0
+        game.levelState.levelPoints = 0
+        game.levelState.timeSinceLastFloatingPoints = 0f
     }
 
     override fun getLayerBuilders() =
@@ -520,8 +522,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     override fun buildLevel(result: Properties) {
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
         backgrounds.forEach {
-            game.eventsMan.addListener(it)
-            disposables.add { game.eventsMan.removeListener(it) }
+            game.events.addListener(it)
+            disposables.add { game.events.removeListener(it) }
         }
         backgroundsToHide =
             result.get("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}") as ObjectSet<String>? ?: ObjectSet()
@@ -599,8 +601,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 engine.systems.forEach { it.on = true }
 
-                game.setFocusSnappedAway(false)
-                game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+                game.camera.focusSnappedAway = false
+                game.levelState.roomTransition = false
 
                 MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
 
@@ -636,11 +638,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
 
-                game.state.removeLife(event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!)
+                game.gameState.removeLife(event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!)
 
                 playerDeathEventHandler.init()
 
-                if (game.paused) {
+                if (game.clock.paused) {
                     GameLogger.debug(
                         MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
                         "onEvent(): force resume game when Megaman dies"
@@ -656,9 +658,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 music?.let { audioMan.playMusic(it, it.loop) }
 
-                if (game.state.livesExhausted()) {
+                if (game.gameState.livesExhausted()) {
                     game.setCurrentScreen(ScreenEnum.GAME_OVER_SCREEN.name)
-                    game.state.resetLives()
+                    game.gameState.resetLives()
                     return
                 }
 
@@ -678,7 +680,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.ADD_CURRENCY -> {
                 val currency = event.getProperty(ConstKeys.VALUE, Int::class)!!
-                game.state.addCurrency(currency)
+                game.gameState.addCurrency(currency)
             }
 
             EventType.ATTAIN_HEART_TANK -> {
@@ -748,8 +750,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 // if this is NOT a mini-boss AND this is the end of the level, then check if the
                 // victory event should be triggered (when the boss is already defeated)
                 if (!mini && end) {
-                    val levelDef = game.getCurrentLevel()
-                    if (game.state.isLevelDefeated(levelDef)) {
+                    val levelDef = game.levelState.currentLevel!!
+                    if (game.gameState.isLevelDefeated(levelDef)) {
                         eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
                         return
                     }
@@ -773,7 +775,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                         val runOnFirstUpdate: (() -> Unit)? = when (type) {
                             HealthFillType.BIT_BY_BIT -> {
-                                { game.audioMan.pauseMusic() }
+                                { game.audio.pauseMusic() }
                             }
 
                             else -> null
@@ -781,7 +783,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                         val runOnFinished = {
                             eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                            if (type == HealthFillType.BIT_BY_BIT) game.audioMan.playMusic()
+                            if (type == HealthFillType.BIT_BY_BIT) game.audio.playMusic()
                         }
 
                         bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
@@ -852,8 +854,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.VICTORY_EVENT -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): victory event")
 
-                val endGame = event.getOrDefaultProperty(ConstKeys.END, false, Boolean::class)
-                if (!endGame) endLevelEventHandler.init()
+                endLevelEventHandler.init()
             }
 
             EventType.SHAKE_CAM -> {
@@ -872,11 +873,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
-                val level = game.getCurrentLevel()
-                if (level.type != LevelType.EXTRA_LEVEL) game.state.addLevelDefeated(level)
+                val level = game.levelState.currentLevel!!
+                if (level.type != LevelType.EXTRA_LEVEL) game.gameState.addLevelDefeated(level)
 
-                val nextScreen = screenOnCompletion.invoke(game)
+                val nextScreen = screenOnCompletion.invoke(game.levelState)
                 game.setCurrentScreen(nextScreen.name)
+            }
+
+            EventType.GAME_COMPLETE -> {
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): game complete")
+
+                game.setCurrentScreen(ScreenEnum.ENDING_SCREEN.name)
             }
 
             EventType.EDIT_TILED_MAP -> {
@@ -909,13 +916,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                         ConstVals.GAME_CAM_ROTATE_TIME
                     )
                 }
-                game.setCameraRotating(true)
+                game.camera.rotating = true
             }
         }
     }
 
     private fun isPauseButtonRequested() = player.input.isJustReleased(MegaControllerButton.START) ||
-        (game.selectButtonAction == SelectButtonAction.START && player.input.isJustPressed(MegaControllerButton.SELECT))
+        (game.players.selectButtonAction == SelectButtonAction.START && player.input.isJustPressed(MegaControllerButton.SELECT))
 
     override fun render(delta: Float) {
         /*
@@ -927,17 +934,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
          */
 
         // do not allow pausing if Megaman is dead
-        if (!game.paused && player.existenceState.liveAfterUpdate && player.inPlay && isPauseButtonRequested()) {
+        if (!game.clock.paused && player.existenceState.liveAfterUpdate && player.inPlay && isPauseButtonRequested()) {
             GameLogger.debug(TAG, "render(): pause game")
             game.runQueue.addLast { game.pause() }
         }
 
         // force resume game if megaman is dead
-        if (game.paused && !player.existenceState.liveAfterUpdate) game.runQueue.addLast { game.resume() }
+        if (game.clock.paused && !player.existenceState.liveAfterUpdate) game.runQueue.addLast { game.resume() }
 
         playerStatsHandler.update(delta)
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             spawnCameraBounds.set(gameCamera.getRotatedBounds())
             spawnsMan.update(delta)
 
@@ -963,7 +970,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         engine.update(delta)
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             playerSpawnsMan.run()
 
             val spawnsIter = spawns.iterator()
@@ -979,16 +986,15 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
 
-            if (game.isFocusSnappedAway()) {
+            if (game.camera.focusSnappedAway) {
                 val focus = player.focus.getFocusPosition()
                 if (focus.x.epsilonEquals(gameCamera.position.x, 0.25f * ConstVals.PPM) &&
                     focus.y.epsilonEquals(gameCamera.position.y, 0.25f * ConstVals.PPM)
-                ) game.setFocusSnappedAway(false)
+                ) game.camera.focusSnappedAway = false
             }
 
-            val timeSinceLastFloatingPoints =
-                game.getProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, Float::class)!!
-            game.putProperty(ConstKeys.TIME_SINCE_LAST_FLOATING_POINTS, timeSinceLastFloatingPoints + delta)
+            val timeSinceLastFloatingPoints = game.levelState.timeSinceLastFloatingPoints
+            game.levelState.timeSinceLastFloatingPoints = timeSinceLastFloatingPoints + delta
         }
 
         val gameCamDeltaX = gameCamera.position.x - gameCameraPriorPosition.x
@@ -1003,7 +1009,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             camera.position.y = (camera.position.y * ConstVals.PPM) / ConstVals.PPM
         }
 
-        if (game.paused) pauseScreen.render(delta)
+        if (game.clock.paused) pauseScreen.render(delta)
 
         // sort backgrounds in drawing order before calling draw()
         backgrounds.sort()
@@ -1023,7 +1029,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         val backgroundSprites = drawables.get(DrawingSection.BACKGROUND)
         while (!backgroundSprites.isEmpty()) {
-            val backgroundSprite = backgroundSprites.poll()
+            val backgroundSprite = backgroundSprites.poll()!!
             backgroundSprite.draw(drawer)
         }
 
@@ -1031,20 +1037,20 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         val playgroundSprites = drawables.get(DrawingSection.PLAYGROUND)
         while (!playgroundSprites.isEmpty()) {
-            val playgroundSprite = playgroundSprites.poll()
+            val playgroundSprite = playgroundSprites.poll()!!
             playgroundSprite.draw(drawer)
         }
 
         val foregroundSprites = drawables.get(DrawingSection.FOREGROUND)
         while (!foregroundSprites.isEmpty()) {
-            val foregroundSprite = foregroundSprites.poll()
+            val foregroundSprite = foregroundSprites.poll()!!
             foregroundSprite.draw(drawer)
         }
 
         game.viewports.get(ConstKeys.UI).apply()
         drawer.projectionMatrix = uiCamera.combined
 
-        if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL) {
+        if (game.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL) {
             levelPointsText.draw(batch)
             coinsText.draw(batch)
         }
@@ -1056,7 +1062,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         if (!player.existenceState.liveAfterUpdate) playerDeathEventHandler.draw(drawer)
 
-        if (game.paused) pauseScreen.draw(drawer)
+        if (game.clock.paused) pauseScreen.draw(drawer)
 
         if (!checkpointTimer.isFinished()) {
             val alpha = when {
@@ -1127,10 +1133,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         audioMan.unsetMusic()
 
-        game.putProperty(ConstKeys.ROOM_TRANSITION, false)
+        game.levelState.roomTransition = false
         eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
-        game.setFocusSnappedAway(false)
+        game.camera.focusSnappedAway = false
     }
 
     override fun dispose() {

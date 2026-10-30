@@ -21,7 +21,7 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
 
-class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, IDirectional {
+class InfernoMeteorShower(services: MegaServices) : MegaGameEntity(services), ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "InfernoMeteorShower"
@@ -78,7 +78,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     }
 
     override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
-        !LevelUtils.isInfernoManLevelFrozen(game.state)
+        !LevelUtils.isInfernoManLevelFrozen(services.gameState)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
@@ -123,7 +123,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
 
     private fun shakeRoom() {
         GameLogger.debug(TAG, "shakeRoom()")
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.SHAKE_CAM, props(
                     ConstKeys.INTERVAL pairTo SHAKE_INTERVAL,
@@ -142,7 +142,7 @@ class InfernoMeteorShower(game: MegamanMaverickGame) : MegaGameEntity(game), ICu
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) return@UpdatablesComponent
+        if (services.levelState.roomTransition) return@UpdatablesComponent
 
         val cooldown = timers["cooldown"]
         when {

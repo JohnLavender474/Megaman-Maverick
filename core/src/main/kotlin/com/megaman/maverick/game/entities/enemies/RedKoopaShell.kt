@@ -35,7 +35,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -59,7 +59,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
 
-class RedKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable {
+class RedKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceable {
 
     companion object {
         const val TAG = "RedKoopaShell"
@@ -96,7 +96,7 @@ class RedKoopaShell(game: MegamanMaverickGame) : AbstractEnemy(game), IFaceable 
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         addComponent(defineAnimationsComponent())

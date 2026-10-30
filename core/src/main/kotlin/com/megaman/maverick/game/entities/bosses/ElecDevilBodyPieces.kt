@@ -42,7 +42,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_FACING_LEFT_OFFSET_X
@@ -56,7 +56,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class ElecDevilBodyPieces(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDrawableShapesEntity, IOwnable<ElecDevilBody>, IFaceable, IActivatable, IDamagerEntity, IHazard {
 
     companion object {
@@ -90,7 +90,7 @@ class ElecDevilBodyPieces(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
             ElecDevilConstants.forEachCell { row, column ->
                 val rowColumnKey = ElecDevilConstants.getRowColumnKey(row, column)
                 colors.forEach { color ->

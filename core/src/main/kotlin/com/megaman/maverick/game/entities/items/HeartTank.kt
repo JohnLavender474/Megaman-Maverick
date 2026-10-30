@@ -26,7 +26,7 @@ import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setReceiver
 
-class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, ILightSource {
+class HeartTank(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAnimatedEntity, ILightSource {
 
     companion object {
         const val TAG = "HeartTank"
@@ -76,7 +76,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         super.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -93,7 +93,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             else -> throw IllegalArgumentException("Invalid value: $value")
         }
 
-        val canSpawn = !game.state.containsHeartTank(heartTank)
+        val canSpawn = !services.gameState.containsHeartTank(heartTank)
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
 
         return canSpawn
@@ -145,7 +145,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
             entity.spawn(props)
         }
 
-        game.eventsMan.submitEvent(Event(
+        services.events.submitEvent(Event(
                 EventType.ATTAIN_HEART_TANK,
                 props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo player.playerSlot!!)
             ))
@@ -154,7 +154,7 @@ class HeartTank(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity,
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
         super.defineUpdatablesComponent(component)
         component.add {
-            if (game.getCurrentLevel() == LevelDefinition.DESERT_MAN)
+            if (services.levelState.currentLevel!! == LevelDefinition.DESERT_MAN)
                 LightSourceUtils.sendLightSourceEvent(this)
         }
     }

@@ -4,11 +4,11 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
 
-class CollideDownOnlyBlock(game: MegamanMaverickGame): Block(game) {
+class CollideDownOnlyBlock(services: MegaServices): Block(services) {
 
     companion object {
         const val TAG = "CollideDownOnlyBlock"

@@ -26,7 +26,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import kotlin.math.floor
 
-class PreciousSpike(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, IAnimatedEntity,
+class PreciousSpike(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, IAnimatedEntity,
     ISpritesEntity, IHazard, IDirectional {
 
     companion object {
@@ -50,7 +50,7 @@ class PreciousSpike(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override lateinit var direction: Direction
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(SpritesComponent())

@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -61,7 +61,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "DrillHead"
@@ -128,7 +128,7 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -153,7 +153,7 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
         super.onSpawn(spawnProps)
 
         stateTimers = orderedMapOf(
-            DrillHeadState.IDLE pairTo Timer(if (game.state.hardMode) HARD_IDLE_DUR else IDLE_DUR),
+            DrillHeadState.IDLE pairTo Timer(if (services.gameState.hardMode) HARD_IDLE_DUR else IDLE_DUR),
             DrillHeadState.DRILL pairTo Timer(DRILL_DUR).also { drillTimer ->
                 val debrisRunnable: () -> Unit = {
                     if (Gdx.graphics.framesPerSecond >= FPS_GUARD) spawnDrillDebris()
@@ -252,7 +252,7 @@ class DrillHead(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnti
                 }
                 DrillHeadState.DRILL -> body.physics.velocity.setZero()
                 DrillHeadState.HOVER -> {
-                    val hoverSpeed = if (game.state.hardMode) HARD_HOVER_SPEED else HOVER_SPEED
+                    val hoverSpeed = if (services.gameState.hardMode) HARD_HOVER_SPEED else HOVER_SPEED
                     val velocity = GameObjectPools.fetch(Vector2::class)
                         .set(currentHoverSpot)
                         .sub(body.getCenter())

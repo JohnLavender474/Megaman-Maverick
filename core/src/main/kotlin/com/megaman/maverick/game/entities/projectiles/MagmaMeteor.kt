@@ -33,7 +33,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
+class MagmaMeteor(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "MagmaMeteor"
@@ -75,7 +75,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
@@ -136,7 +136,7 @@ class MagmaMeteor(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimat
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (game.isCameraRotating()) body.physics.velocity.setZero()
+        if (services.camera.rotating) body.physics.velocity.setZero()
         else body.physics.velocity.set(0f, METEOR_SPEED * ConstVals.PPM).rotateDeg(rotation)
     })
 

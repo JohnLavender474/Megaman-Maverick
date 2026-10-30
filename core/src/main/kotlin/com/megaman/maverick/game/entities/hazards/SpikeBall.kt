@@ -29,7 +29,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
+class SpikeBall(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IMotionEntity,
     IDrawableShapesEntity, IDamagerEntity, IHazard {
 
     companion object {
@@ -53,7 +53,7 @@ class SpikeBall(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, 
 
     override fun init(vararg params: Any) {
         if (spikeRegion == null || chainRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             spikeRegion = atlas.findRegion("SpikeBall/SpikeBall")
             chainRegion = atlas.findRegion("SpikeBall/Chain")
         }

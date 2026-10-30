@@ -30,7 +30,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHazard, IDamagerEntity, ISpritesEntity,
+class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHazard, IDamagerEntity, ISpritesEntity,
     IAnimatedEntity, ICullableEntity, IChildEntity, IDirectional {
 
     companion object {
@@ -60,7 +60,7 @@ class Bolt(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IHaza
     var scale = 1f
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Bolt")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "Bolt")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())

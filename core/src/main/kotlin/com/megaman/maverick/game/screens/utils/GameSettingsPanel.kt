@@ -27,6 +27,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.state.Performance
 
 class GameSettingsPanel(
     private val game: MegamanMaverickGame,
@@ -87,7 +88,7 @@ class GameSettingsPanel(
                 }
 
                 PERFORMANCE_KEY -> {
-                    { "$PERFORMANCE_KEY: ${game.getPerformance().name.replace("_", " ")}" }
+                    { "$PERFORMANCE_KEY: ${game.settings.performance.name.replace("_", " ")}" }
                 }
 
                 else -> {
@@ -106,7 +107,7 @@ class GameSettingsPanel(
             )
             blinkArrows.put(
                 key, BlinkingArrow(
-                    game.assMan,
+                    game.assets,
                     Vector2(ARROW_X * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
                 )
             )
@@ -116,20 +117,20 @@ class GameSettingsPanel(
 
         fontHandles.add(
             MegaFontHandle(
-                { (game.audioMan.musicVolume * 10f).toInt().toString() },
+                { (game.audio.musicVolume * 10f).toInt().toString() },
                 positionX = 25.2f * ConstVals.PPM,
                 positionY = 10.45f * ConstVals.PPM,
             )
         )
         fontHandles.add(
             MegaFontHandle(
-                { (game.audioMan.soundVolume * 10f).toInt().toString() },
+                { (game.audio.soundVolume * 10f).toInt().toString() },
                 positionX = 25.2f * ConstVals.PPM,
                 positionY = 9.625f * ConstVals.PPM
             )
         )
 
-        val arrowRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.ARROW)
+        val arrowRegion = game.assets.getTextureRegion(TextureAsset.UI_1.source, ConstKeys.ARROW)
         var y = 9.8f
         for (i in 0 until 4) {
             if (i != 0 && i % 2 == 0) y -= 0.85f
@@ -174,16 +175,16 @@ class GameSettingsPanel(
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.LEFT -> {
-                    var v = game.audioMan.musicVolume
+                    var v = game.audio.musicVolume
                     v = if (v <= 0f) 1f else v - 0.1f
-                    game.audioMan.musicVolume = v
+                    game.audio.musicVolume = v
                     currentKey
                 }
 
                 Direction.RIGHT -> {
-                    var v = game.audioMan.musicVolume
+                    var v = game.audio.musicVolume
                     v = if (v >= 1f) 0f else v + 0.1f
-                    game.audioMan.musicVolume = v
+                    game.audio.musicVolume = v
                     currentKey
                 }
 
@@ -203,16 +204,16 @@ class GameSettingsPanel(
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
                 Direction.LEFT -> {
-                    var v = game.audioMan.soundVolume
+                    var v = game.audio.soundVolume
                     v = if (v <= 0f) 1f else v - 0.1f
-                    game.audioMan.soundVolume = v
+                    game.audio.soundVolume = v
                     currentKey
                 }
 
                 Direction.RIGHT -> {
-                    var v = game.audioMan.soundVolume
+                    var v = game.audio.soundVolume
                     v = if (v >= 1f) 0f else v + 0.1f
-                    game.audioMan.soundVolume = v
+                    game.audio.soundVolume = v
                     currentKey
                 }
 
@@ -243,7 +244,7 @@ class GameSettingsPanel(
                 }
 
                 Direction.LEFT, Direction.RIGHT -> {
-                    game.eventsMan.submitEvent(
+                    game.events.submitEvent(
                         Event(
                             EventType.TOGGLE_PIXEL_PERFECT,
                             props(ConstKeys.VALUE pairTo !game.isPixelPerfect())
@@ -294,15 +295,15 @@ class GameSettingsPanel(
                 }
 
                 Direction.LEFT -> {
-                    val entries = MegamanMaverickGame.Performance.entries
-                    val idx = entries.indexOf(game.getPerformance())
+                    val entries = Performance.entries
+                    val idx = entries.indexOf(game.settings.performance)
                     game.setPerformance(if (idx <= 0) entries.last() else entries[idx - 1])
                     currentKey
                 }
 
                 Direction.RIGHT -> {
-                    val entries = MegamanMaverickGame.Performance.entries
-                    val idx = entries.indexOf(game.getPerformance())
+                    val entries = Performance.entries
+                    val idx = entries.indexOf(game.settings.performance)
                     game.setPerformance(if (idx >= entries.lastIndex) entries.first() else entries[idx + 1])
                     currentKey
                 }
@@ -343,7 +344,7 @@ class GameSettingsPanel(
 
             override fun onSelect(delta: Float): Boolean {
                 if (!ControllerUtils.isControllerConnected()) {
-                    game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                    game.audio.playSound(SoundAsset.ERROR_SOUND, false)
                     onError()
                     return false
                 }

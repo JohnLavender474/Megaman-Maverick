@@ -30,7 +30,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IDamageableEntity {
+class Needle(services: MegaServices) : AbstractProjectile(services), IHealthEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "Needle"
@@ -78,7 +78,7 @@ class Needle(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("default", "ice").forEach { regions.put(it, atlas.findRegion("${TAG}/${it}")) }
         }
         super.init()

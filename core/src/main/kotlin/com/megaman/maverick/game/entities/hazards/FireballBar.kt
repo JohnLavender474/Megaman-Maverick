@@ -18,7 +18,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -30,7 +30,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class FireballBar(game: MegamanMaverickGame) : MegaGameEntity(game), IParentEntity<Fireball>, ICullableEntity, IHazard {
+class FireballBar(services: MegaServices) : MegaGameEntity(services), IParentEntity<Fireball>, ICullableEntity, IHazard {
 
     companion object {
         const val TAG = "FireballBar"

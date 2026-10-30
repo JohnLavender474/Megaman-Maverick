@@ -3,11 +3,11 @@ package com.megaman.maverick.game.entities.sensors
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.world.body.getBounds
 
-class InfernoDeath(game: MegamanMaverickGame) : Death(game) {
+class InfernoDeath(services: MegaServices) : Death(services) {
 
     companion object {
         const val TAG = "InfernoDeath"
@@ -20,8 +20,8 @@ class InfernoDeath(game: MegamanMaverickGame) : Death(game) {
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         if (!super.canSpawn(spawnProps)) return false
-        if (game.state.isLevelDefeated(LevelDefinition.INFERNO_MAN)) return true
-        return !game.state.isLevelDefeated(LevelDefinition.GLACIER_MAN)
+        if (services.gameState.isLevelDefeated(LevelDefinition.INFERNO_MAN)) return true
+        return !services.gameState.isLevelDefeated(LevelDefinition.GLACIER_MAN)
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -30,7 +30,7 @@ class InfernoDeath(game: MegamanMaverickGame) : Death(game) {
         super.onSpawn(spawnProps)
     }
 
-    override fun isActive() = body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())
+    override fun isActive() = body.getBounds().overlaps(services.getGameCamera().getRotatedBounds())
 
     override fun getTag() = TAG
 }

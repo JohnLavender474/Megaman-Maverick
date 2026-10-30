@@ -1,10 +1,11 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.points.PointsComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.state.GameState
@@ -21,11 +22,9 @@ class MegamanHeartTankTest : DescribeSpec({
 
     beforeEach {
         state = GameState()
-        val game = mockk<MegamanMaverickGame>(relaxed = true)
-        every { game.engine } returns mockk<GameEngine>(relaxed = true)
-        every { game.state } returns state
+        val services = testServices(engine = mockk<GameEngine>(relaxed = true), gameState = state)
 
-        megaman = Megaman(game)
+        megaman = Megaman(services)
         megaman.addComponent(PointsComponent().apply {
             putPoints(ConstKeys.HEALTH, ConstVals.MIN_HEALTH, MegamanValues.START_HEALTH, MegamanValues.START_HEALTH)
         })

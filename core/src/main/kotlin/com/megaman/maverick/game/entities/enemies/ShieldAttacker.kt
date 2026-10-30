@@ -37,7 +37,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable {
+class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "ShieldAttacker"
@@ -77,7 +77,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     override lateinit var facing: Facing
 
     private val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !services.camera.rotating
 
     private val turnTimer = Timer(TURN_DUR)
     private val turning: Boolean
@@ -95,7 +95,7 @@ class ShieldAttacker(game: MegamanMaverickGame) : AbstractEnemy(game, size = Siz
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

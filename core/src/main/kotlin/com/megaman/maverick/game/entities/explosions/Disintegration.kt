@@ -26,14 +26,14 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+class Disintegration(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     IDirectional {
 
     companion object {
@@ -49,7 +49,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -61,7 +61,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: game.gravity.direction
+        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: services.gravity.direction
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         defaultSprite.setPosition(spawn, Position.CENTER)
@@ -69,7 +69,7 @@ class Disintegration(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
         val sound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
         if (sound) {
             reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
-            if (reusableRect.overlaps(getGameCamera().toGameRectangle()))
+            if (reusableRect.overlaps(services.getGameCamera().toGameRectangle()))
                 requestToPlaySound(SoundAsset.THUMP_SOUND, false)
         }
 

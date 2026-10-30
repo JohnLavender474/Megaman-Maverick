@@ -30,7 +30,7 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity, IActivatable,
+class QuestionBlock(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity, IActivatable,
     IDirectional, IEventListener {
 
     companion object {
@@ -81,7 +81,7 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -94,7 +94,7 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -118,7 +118,7 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         spawnedItem = null
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -189,10 +189,10 @@ class QuestionBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IA
                     )
                 )
 
-                val coins = game.getOrDefaultProperty(ConstKeys.COINS, 0, Int::class)
-                game.putProperty(ConstKeys.COINS, coins + 1)
+                val coins = services.levelState.coins
+                services.levelState.coins = coins + 1
 
-                playSoundNow(SoundAsset.SMB3_COIN_SOUND, false)
+                services.audio.playSound(SoundAsset.SMB3_COIN_SOUND, false)
 
                 return coin
             }

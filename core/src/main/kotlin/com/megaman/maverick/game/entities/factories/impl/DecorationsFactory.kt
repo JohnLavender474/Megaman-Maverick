@@ -1,13 +1,13 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.decorations.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 
-class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
+class DecorationsFactory(private val services: MegaServices) : EntityFactory() {
 
     companion object {
         const val SPLASH = "Splash"
@@ -45,38 +45,38 @@ class DecorationsFactory(private val game: MegamanMaverickGame) : EntityFactory(
     }
 
     override fun init(vararg params: Any) {
-        pools.put(SPLASH, GameEntityPoolCreator.create { Splash(game) })
-        pools.put(FORCE_DECORATION, GameEntityPoolCreator.create { ForceDecoration(game) })
-        pools.put(WINDY_GRASS, GameEntityPoolCreator.create { WindyGrass(game) })
-        pools.put(FALLING_LEAF, GameEntityPoolCreator.create { FallingLeaf(game) })
-        pools.put(FALLING_LEAVES, GameEntityPoolCreator.create { FallingLeaves(game) })
-        pools.put(TREE, GameEntityPoolCreator.create { Tree(game) })
-        pools.put(TREE_STUMP, GameEntityPoolCreator.create { TreeStump(game) })
-        pools.put(LAVA_FALL, GameEntityPoolCreator.create { LavaFall(game) })
-        pools.put(PIPI_EGG_SHATTER, GameEntityPoolCreator.create { PipiEggShatter(game) })
-        pools.put(MUZZLE_FLASH, GameEntityPoolCreator.create { MuzzleFlash(game) })
-        pools.put(UNDER_WATER_BUBBLE, GameEntityPoolCreator.create { UnderWaterBubble(game) })
-        pools.put(WHITE_ARROW, GameEntityPoolCreator.create { WhiteArrow(game) })
-        pools.put(WHITE_ARROW_POOL, GameEntityPoolCreator.create { WhiteArrowPool(game) })
-        pools.put(RAIN_DROP, GameEntityPoolCreator.create { RainDrop(game) })
-        pools.put(RAIN_FALL, GameEntityPoolCreator.create { RainFall(game) })
-        pools.put(DRIPPING_TOXIC_GOOP, GameEntityPoolCreator.create { DrippingToxicGoop(game) })
-        pools.put(TOXIC_WATERFALL, GameEntityPoolCreator.create { ToxicWaterfall(game) })
-        pools.put(LIGHT_SOURCE, GameEntityPoolCreator.create { LightSourceEntity(game) })
-        pools.put(LANTERN, GameEntityPoolCreator.create { Lantern(game) })
-        pools.put(SPACE_SATELLITE, GameEntityPoolCreator.create { SpaceSatellite(game) })
+        pools.put(SPLASH, GameEntityPoolCreator.create { Splash(services) })
+        pools.put(FORCE_DECORATION, GameEntityPoolCreator.create { ForceDecoration(services) })
+        pools.put(WINDY_GRASS, GameEntityPoolCreator.create { WindyGrass(services) })
+        pools.put(FALLING_LEAF, GameEntityPoolCreator.create { FallingLeaf(services) })
+        pools.put(FALLING_LEAVES, GameEntityPoolCreator.create { FallingLeaves(services) })
+        pools.put(TREE, GameEntityPoolCreator.create { Tree(services) })
+        pools.put(TREE_STUMP, GameEntityPoolCreator.create { TreeStump(services) })
+        pools.put(LAVA_FALL, GameEntityPoolCreator.create { LavaFall(services) })
+        pools.put(PIPI_EGG_SHATTER, GameEntityPoolCreator.create { PipiEggShatter(services) })
+        pools.put(MUZZLE_FLASH, GameEntityPoolCreator.create { MuzzleFlash(services) })
+        pools.put(UNDER_WATER_BUBBLE, GameEntityPoolCreator.create { UnderWaterBubble(services) })
+        pools.put(WHITE_ARROW, GameEntityPoolCreator.create { WhiteArrow(services) })
+        pools.put(WHITE_ARROW_POOL, GameEntityPoolCreator.create { WhiteArrowPool(services) })
+        pools.put(RAIN_DROP, GameEntityPoolCreator.create { RainDrop(services) })
+        pools.put(RAIN_FALL, GameEntityPoolCreator.create { RainFall(services) })
+        pools.put(DRIPPING_TOXIC_GOOP, GameEntityPoolCreator.create { DrippingToxicGoop(services) })
+        pools.put(TOXIC_WATERFALL, GameEntityPoolCreator.create { ToxicWaterfall(services) })
+        pools.put(LIGHT_SOURCE, GameEntityPoolCreator.create { LightSourceEntity(services) })
+        pools.put(LANTERN, GameEntityPoolCreator.create { Lantern(services) })
+        pools.put(SPACE_SATELLITE, GameEntityPoolCreator.create { SpaceSatellite(services) })
         // pools.put(MEGAMAN_TRAIL_SPRITE, GameEntityPoolCreator.create { MegamanTrailSprite(game) })
-        pools.put(MEGAMAN_TRAIL_SPRITE_V2, GameEntityPoolCreator.create { MegamanTrailSpriteV2(game) })
-        pools.put(CHARGED_SHOT_RESIDUAL, GameEntityPoolCreator.create { ChargedShotResidual(game) })
-        pools.put(SNOW, GameEntityPoolCreator.create { Snow(game) })
-        pools.put(SNOW_FALL, GameEntityPoolCreator.create { Snowfall(game) })
-        pools.put(SNOW_FLUFF, GameEntityPoolCreator.create { SnowFluff(game) })
-        pools.put(AIR_CONDITIONER, GameEntityPoolCreator.create { AirConditioner(game) })
-        pools.put(CRYSTAL_CONVEYOR_BKG, GameEntityPoolCreator.create { CrystalConveyorBKG(game) })
-        pools.put(SMALL_GRASS, GameEntityPoolCreator.create { SmallGrass(game) })
-        pools.put(SMALL_GRASS_PATCH, GameEntityPoolCreator.create { SmallGrassPatch(game) })
-        pools.put(FURNACE, GameEntityPoolCreator.create { Furnace(game) })
-        pools.put(SMOKE, GameEntityPoolCreator.create { Smoke(game) })
+        pools.put(MEGAMAN_TRAIL_SPRITE_V2, GameEntityPoolCreator.create { MegamanTrailSpriteV2(services) })
+        pools.put(CHARGED_SHOT_RESIDUAL, GameEntityPoolCreator.create { ChargedShotResidual(services) })
+        pools.put(SNOW, GameEntityPoolCreator.create { Snow(services) })
+        pools.put(SNOW_FALL, GameEntityPoolCreator.create { Snowfall(services) })
+        pools.put(SNOW_FLUFF, GameEntityPoolCreator.create { SnowFluff(services) })
+        pools.put(AIR_CONDITIONER, GameEntityPoolCreator.create { AirConditioner(services) })
+        pools.put(CRYSTAL_CONVEYOR_BKG, GameEntityPoolCreator.create { CrystalConveyorBKG(services) })
+        pools.put(SMALL_GRASS, GameEntityPoolCreator.create { SmallGrass(services) })
+        pools.put(SMALL_GRASS_PATCH, GameEntityPoolCreator.create { SmallGrassPatch(services) })
+        pools.put(FURNACE, GameEntityPoolCreator.create { Furnace(services) })
+        pools.put(SMOKE, GameEntityPoolCreator.create { Smoke(services) })
     }
 
     override fun fetch(key: Any?) = pools.get(key)?.fetch()

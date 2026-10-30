@@ -28,7 +28,7 @@ import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
@@ -58,7 +58,7 @@ import kotlin.math.ceil
 import kotlin.math.min
 import kotlin.reflect.KClass
 
-class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener,
+class DarknessV4(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IEventListener,
     IGameShapeOverlappable {
 
     companion object {
@@ -261,7 +261,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         super.init()
         addComponent(SpritesComponent())
         addComponent(defineUpdatablesComponent())
@@ -278,7 +278,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         key = spawnProps.getOrDefault(ConstKeys.KEY, -1, Int::class)
         spawnProps.get(ConstKeys.ROOM, String::class)!!.split(",").forEach { t -> rooms.add(t) }
@@ -306,7 +306,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         rooms.clear()
         allTiles.clear()
@@ -330,7 +330,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
 
         when (event.key) {
             EventType.PLAYER_READY -> {
-                val room = game.getCurrentRoom()?.name
+                val room = services.levelState.currentRoom?.name
                 darkMode = if (room == null) false else rooms.contains(room)
                 GameLogger.debug(TAG, "onEvent(): PLAYER_READY: darkMode=$darkMode")
             }
@@ -371,7 +371,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
                     val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
 
                     reusableCircle.setRadius(radius.toFloat()).setCenter(center)
-                    if (!reusableCircle.overlaps(game.getGameCamera().getRotatedBounds())) return
+                    if (!reusableCircle.overlaps(services.getGameCamera().getRotatedBounds())) return
 
                     val radiance = event.getProperty(ConstKeys.RADIANCE, Float::class)!!
 
@@ -553,9 +553,9 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         }
 
         // Collect beam light source
-        val beaming = game.isProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+        val beaming = services.levelState.megamanBeam
         if (beaming) {
-            val beamCenter = game.getProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", Vector2::class)
+            val beamCenter = services.levelState.megamanBeamCenter
             if (beamCenter != null) {
                 val lightSourceDef = lightSourcePool.fetch()
                 lightSourceDef.center = beamCenter
@@ -589,7 +589,7 @@ class DarknessV4(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnti
         lightSourceQueue.clear()
 
         // Get camera bounds
-        val camBounds = game.getGameCamera().getRotatedBounds()
+        val camBounds = services.getGameCamera().getRotatedBounds()
         camBounds.translate(-CAM_BOUNDS_BUFFER * ConstVals.PPM, -CAM_BOUNDS_BUFFER * ConstVals.PPM)
         camBounds.translateSize(2f * CAM_BOUNDS_BUFFER * ConstVals.PPM, 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM)
 

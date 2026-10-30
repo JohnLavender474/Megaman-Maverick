@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IFaceable {
+class SwinginJoe(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "SwinginJoe"
@@ -88,7 +88,7 @@ class SwinginJoe(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("swing1", "swing2", "throw", "frozen").forEach { key ->
                 val region = atlas.findRegion("$TAG/$key")
                 regions.put(key, region)

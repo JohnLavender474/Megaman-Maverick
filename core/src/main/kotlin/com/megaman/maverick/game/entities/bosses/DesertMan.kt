@@ -42,7 +42,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -64,7 +64,7 @@ import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, ILightSource, IFaceable {
+class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, ILightSource, IFaceable {
 
     companion object {
         const val TAG = "DesertMan"
@@ -158,7 +158,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
             DesertManState.entries.forEach { t ->
                 val key = t.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
@@ -502,7 +502,7 @@ class DesertMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity
                 if (currentState == DesertManState.WALL_SLIDE) body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)
                 else isFacing(Facing.RIGHT)
             sprite.setFlip(flipX, false)
-            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = damageBlink || services.levelState.roomTransition
         }
 
         for (i in 1..ARM_EXTENSIONS_COUNT) {

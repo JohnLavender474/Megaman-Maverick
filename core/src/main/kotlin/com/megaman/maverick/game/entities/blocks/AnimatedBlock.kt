@@ -18,13 +18,13 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.getCenter
 import java.util.function.Predicate
 
-open class AnimatedBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+open class AnimatedBlock(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "AnimatedBlock"
@@ -116,7 +116,7 @@ object AnimatedBlockAnimators {
     const val TAG = "AnimatedBlockAnimators"
 
     fun createAndSetAnimations(key: String, block: AnimatedBlock) {
-        val assMan = block.game.assMan
+        val assMan = block.services.assets
 
         val animation = when (key) {
             "AppearingBrick" -> {

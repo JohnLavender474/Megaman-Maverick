@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.badlogic.gdx.graphics.Color
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectMapOf
@@ -15,7 +16,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -23,7 +24,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
+class GravityChange(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity {
 
     private lateinit var gravityChangeFixture: Fixture
 
@@ -68,10 +69,17 @@ class GravityChange(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
     private fun setGravityDirection(direction: Direction) {
         gravityChangeFixture.putProperty(ConstKeys.DIRECTION, direction)
+        body.drawingColor = when (direction) {
+            Direction.UP -> Color.GREEN
+            Direction.DOWN -> Color.RED
+            Direction.LEFT -> Color.YELLOW
+            Direction.RIGHT -> Color.CYAN
+        }
     }
 
     private fun removeGravityDirection() {
         gravityChangeFixture.removeProperty(ConstKeys.DIRECTION)
+        body.drawingColor = Color.WHITE
     }
 
     private fun defineBodyComponent(): BodyComponent {

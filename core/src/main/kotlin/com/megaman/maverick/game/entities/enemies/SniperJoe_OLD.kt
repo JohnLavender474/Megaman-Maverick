@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -56,7 +56,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IScalableGravityEntity, IFaceable,
+class SniperJoe_OLD(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IScalableGravityEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -120,7 +120,7 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
         get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED || sniperJoeState == SniperJoeState.SHOOTING_WITH_SHIELD
 
     private val shouldUpdate: Boolean
-        get() = !game.isCameraRotating()
+        get() = !services.camera.rotating
     private val waitTimer = Timer(SHIELD_DUR)
     private val shootTimer = Timer(SHOOT_DUR)
     private val throwShieldTimer = Timer(THROW_SHIELD_DUR)
@@ -134,7 +134,7 @@ class SniperJoe_OLD(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             joeTypes.forEach { joeType ->
                 regionKeys.forEach { regionKey ->
                     val region = atlas.findRegion("$TAG/$joeType/$regionKey")

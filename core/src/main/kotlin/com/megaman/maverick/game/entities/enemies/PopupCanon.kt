@@ -39,7 +39,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -51,7 +51,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class PopupCanon(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
     IFaceable, IDirectional {
 
     companion object {
@@ -80,7 +80,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override lateinit var facing: Facing
 
     private val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !services.camera.rotating
 
     private val loop = Loop(PopupCanonState.entries.toGdxArray())
 
@@ -107,7 +107,7 @@ class PopupCanon(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.ME
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("rest", atlas.findRegion("$TAG/Down"))
             regions.put("trans", atlas.findRegion("$TAG/Rise"))
             regions.put("shoot", atlas.findRegion("$TAG/Up"))

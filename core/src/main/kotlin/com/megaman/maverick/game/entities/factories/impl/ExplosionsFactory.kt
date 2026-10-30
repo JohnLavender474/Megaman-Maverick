@@ -1,13 +1,13 @@
 package com.megaman.maverick.game.entities.factories.impl
 
 import com.maverick.game.engine.common.GameLogger
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.*
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 
-class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
+class ExplosionsFactory(private val services: MegaServices) : EntityFactory() {
 
     companion object {
         const val TAG = "ExplosionFactory"
@@ -29,23 +29,23 @@ class ExplosionsFactory(private val game: MegamanMaverickGame) : EntityFactory()
     }
 
     override fun init(vararg params: Any) {
-        pools.put(EXPLOSION, GameEntityPoolCreator.create { Explosion(game) })
-        pools.put(SNOWBALL_EXPLOSION, GameEntityPoolCreator.create { SnowballExplosion(game) })
-        pools.put(DISINTEGRATION, GameEntityPoolCreator.create { Disintegration(game) })
-        pools.put(CHARGED_SHOT_EXPLOSION, GameEntityPoolCreator.create { ChargedShotExplosion(game) })
-        pools.put(EXPLOSION_ORB, GameEntityPoolCreator.create { ExplosionOrb(game) })
-        pools.put(CAVE_ROCK_EXPLOSION, GameEntityPoolCreator.create { CaveRockExplosion(game) })
+        pools.put(EXPLOSION, GameEntityPoolCreator.create { Explosion(services) })
+        pools.put(SNOWBALL_EXPLOSION, GameEntityPoolCreator.create { SnowballExplosion(services) })
+        pools.put(DISINTEGRATION, GameEntityPoolCreator.create { Disintegration(services) })
+        pools.put(CHARGED_SHOT_EXPLOSION, GameEntityPoolCreator.create { ChargedShotExplosion(services) })
+        pools.put(EXPLOSION_ORB, GameEntityPoolCreator.create { ExplosionOrb(services) })
+        pools.put(CAVE_ROCK_EXPLOSION, GameEntityPoolCreator.create { CaveRockExplosion(services) })
         pools.put(
             SIGMA_RAT_ELECTRIC_BALL_EXPLOSION,
-            GameEntityPoolCreator.create { SigmaRatElectricBallExplosion(game) })
-        pools.put(ICE_SHARD, GameEntityPoolCreator.create { IceShard(game) })
-        pools.put(TOXIC_GOOP_SPLASH, GameEntityPoolCreator.create { ToxicGoopSplash(game) })
-        pools.put(SMOKE_PUFF, GameEntityPoolCreator.create { SmokePuff(game) })
-        pools.put(ASTEROID_EXPLOSION, GameEntityPoolCreator.create { AsteroidExplosion(game) })
-        pools.put(GREEN_EXPLOSION, GameEntityPoolCreator.create { SpreadExplosion(game) })
-        pools.put(EXPLOSION_FIELD, GameEntityPoolCreator.create { ExplosionField(game) })
-        pools.put(MAGMA_EXPLOSION, GameEntityPoolCreator.create { MagmaExplosion(game) })
-        pools.put(MAGMA_GOOP_EXPLOSION, GameEntityPoolCreator.create { MagmaGoopExplosion(game) })
+            GameEntityPoolCreator.create { SigmaRatElectricBallExplosion(services) })
+        pools.put(ICE_SHARD, GameEntityPoolCreator.create { IceShard(services) })
+        pools.put(TOXIC_GOOP_SPLASH, GameEntityPoolCreator.create { ToxicGoopSplash(services) })
+        pools.put(SMOKE_PUFF, GameEntityPoolCreator.create { SmokePuff(services) })
+        pools.put(ASTEROID_EXPLOSION, GameEntityPoolCreator.create { AsteroidExplosion(services) })
+        pools.put(GREEN_EXPLOSION, GameEntityPoolCreator.create { SpreadExplosion(services) })
+        pools.put(EXPLOSION_FIELD, GameEntityPoolCreator.create { ExplosionField(services) })
+        pools.put(MAGMA_EXPLOSION, GameEntityPoolCreator.create { MagmaExplosion(services) })
+        pools.put(MAGMA_GOOP_EXPLOSION, GameEntityPoolCreator.create { MagmaGoopExplosion(services) })
     }
 
     override fun fetch(key: Any?): MegaGameEntity? {

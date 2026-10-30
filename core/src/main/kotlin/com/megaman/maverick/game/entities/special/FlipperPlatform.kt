@@ -30,7 +30,7 @@ import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -48,7 +48,7 @@ import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.setCenterX
 
-class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     Updatable {
 
     companion object {
@@ -83,7 +83,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             leftRegion = atlas.findRegion("$TAG/Left")
             rightRegion = atlas.findRegion("$TAG/Right")
             leftDelayRegion = atlas.findRegion("$TAG/LeftDelay")
@@ -136,7 +136,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     override fun update(delta: Float) {
         block!!.body.setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
 
-        val active = game.getGameCamera().getRotatedBounds().overlaps(bounds)
+        val active = services.getGameCamera().getRotatedBounds().overlaps(bounds)
         block?.body!!.physics.collisionOn = active
         block?.body!!.forEachFixture { fixture -> fixture.setActive(active) }
 
@@ -209,7 +209,7 @@ class FlipperPlatform(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val gameCamera = game.getGameCamera()
+        val gameCamera = services.getGameCamera()
         val cullable = getGameCameraCullingLogic(gameCamera, { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }

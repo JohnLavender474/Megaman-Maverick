@@ -33,7 +33,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class PortalHopper(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ITeleporterEntity, IAudioEntity, IEventListener {
 
     companion object {
@@ -100,7 +100,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             val keys = Array<String>()
             portalAnimDefs.keys().forEach { key -> keys.add(key) }
             moonAnimDefs.keys().forEach { key -> keys.add(key) }
@@ -118,7 +118,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -150,7 +150,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         GameLogger.debug(TAG, "onDestroy(): thisKey=$thisKey")
         super.onDestroy()
         hopQueueMap.clear()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -201,7 +201,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         // if (bodyDirection != null) entity.body.direction = bodyDirection
         if (entityDirection != null) {
-            if (entity.asPlayer != null) game.gravity.set(entityDirection)
+            if (entity.asPlayer != null) services.gravity.set(entityDirection)
             else if (entity is IDirectional) entity.direction = entityDirection
         }
 
@@ -214,7 +214,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun teleport(entity: IBodyEntity) {
         GameLogger.debug(TAG, "teleportEntity(): thisKey=$thisKey, nextKey=$nextKey, entity=$entity")
 
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.TELEPORT, props(
                     ConstKeys.KEY pairTo nextKey,
@@ -277,7 +277,7 @@ class PortalHopper(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = if (rotation < 0f) game.gravity.direction.rotation else rotation
+            sprite.rotation = if (rotation < 0f) services.gravity.direction.rotation else rotation
         }
         .sprite("moon", GameSprite(regions["moon"]).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .preProcess { delta, sprite ->

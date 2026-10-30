@@ -79,7 +79,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
     )
 
     private val uiCam = game.getUiCamera()
-    private val audioMan = game.audioMan
+    private val audioMan = game.audio
 
     private val bossSprite = GameSprite()
     private val bossAnimQ = Queue<GamePair<IAnimation, Timer?>>()
@@ -121,7 +121,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
 
         initialized = true
 
-        val barReg = game.assMan.getTextureRegion(TextureAsset.UI_1.source, BAR_REG_KEY)
+        val barReg = game.assets.getTextureRegion(TextureAsset.UI_1.source, BAR_REG_KEY)
         barAnim = Animation(barReg, 1, 4, Array.with(0.3f, 0.15f, 0.15f, 0.15f), true)
 
         for (i in 0 until NUM_STARS_N_BARS) {
@@ -149,7 +149,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         )
 
         // Orb animation: 1 row × 2 cols, matches ExplosionOrb entity
-        val orbRegion = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, ORB_REG_KEY)
+        val orbRegion = game.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, ORB_REG_KEY)
         orbAnimation = Animation(orbRegion, 1, 2, 0.075f, true)
 
         // Orb start positions (UI pixel space; center = 256, 224 for 16×14 @ PPM=32)
@@ -185,7 +185,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
 
         GameLogger.debug(TAG, "show()")
 
-        val level = game.getCurrentLevel()
+        val level = game.levelState.currentLevel!!
         val (fullText, spriteSize, animQueue, startPosition, endPosition) = buildRobotMasterAnimDef(level)
 
         animQueue.forEach { bossAnimQ.addLast(it) }
@@ -223,7 +223,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
             return
         }
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             totalTimer.update(delta)
 
             scrollingStars.update(delta)
@@ -302,7 +302,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
 
     private fun buildRobotMasterAnimDef(level: LevelDefinition): RobotMasterAnimDef = when (level) {
         LevelDefinition.TIMBER_WOMAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
@@ -349,7 +349,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         LevelDefinition.MOON_MAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
@@ -390,7 +390,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         LevelDefinition.RODENT_MAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
@@ -442,7 +442,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         LevelDefinition.DESERT_MAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
@@ -480,7 +480,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         LevelDefinition.INFERNO_MAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
@@ -509,7 +509,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         LevelDefinition.REACTOR_MAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
@@ -544,7 +544,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         LevelDefinition.GLACIER_MAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(
@@ -579,7 +579,7 @@ class RobotMasterIntroScreen(private val game: MegamanMaverickGame) : BaseScreen
         }
 
         LevelDefinition.PRECIOUS_WOMAN -> {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = game.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
 
             val animQueue = Queue<GamePair<IAnimation, Timer?>>()
             animQueue.addLast(

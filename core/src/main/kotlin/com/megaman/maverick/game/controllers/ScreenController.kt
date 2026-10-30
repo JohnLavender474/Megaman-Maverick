@@ -95,7 +95,7 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
         stage = Stage(viewport, game.batch)
         Gdx.input.inputProcessor = stage
 
-        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
         dpadRegion = uiAtlas.findRegion("$TAG/${ConstKeys.ARROW}")
         dpadPressedRegion = uiAtlas.findRegion("$TAG/${ConstKeys.ARROW}_${ConstKeys.PRESSED}")
         buttonRegion = uiAtlas.findRegion("$TAG/${ConstKeys.BUTTON}")

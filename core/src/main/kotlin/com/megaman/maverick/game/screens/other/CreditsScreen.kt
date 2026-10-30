@@ -72,9 +72,9 @@ class CreditsScreen(
         creditsQueue = CreditsLoader.load()
 
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.VINNYZ_CREDITS_MUSIC, true)
+        game.audio.playMusic(MusicAsset.VINNYZ_CREDITS_MUSIC, true)
 
-        val blackRegion = game.assMan.getTextureRegion(
+        val blackRegion = game.assets.getTextureRegion(
             TextureAsset.COLORS.source,
             ConstKeys.BLACK
         )
@@ -91,13 +91,13 @@ class CreditsScreen(
     private fun setCreditsComplete() {
         GameLogger.debug(TAG, "setCreditsComplete()")
         creditsComplete = true
-        game.audioMan.fadeOutMusic(FADE_OUT_TIME)
+        game.audio.fadeOutMusic(FADE_OUT_TIME)
     }
 
     override fun render(delta: Float) {
         if (!creditsComplete && shouldSkipCredits()) {
             GameLogger.debug(TAG, "render(): player triggered early exit")
-            game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+            game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
             setCreditsComplete()
         }
 

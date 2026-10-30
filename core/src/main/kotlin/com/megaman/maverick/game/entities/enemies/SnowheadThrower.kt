@@ -35,7 +35,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class SnowheadThrower(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "SnowheadThrower"
@@ -86,7 +86,7 @@ class SnowheadThrower(game: MegamanMaverickGame) : AbstractEnemy(game, size = Si
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { state ->
                 val key = state.name.lowercase()
                 val region = atlas.findRegion("$TAG/$key")

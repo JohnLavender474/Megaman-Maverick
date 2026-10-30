@@ -45,7 +45,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.utils.extensions.midPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable, IFreezableEntity {
+class MockingByte(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable, IFreezableEntity {
 
     companion object {
         const val TAG = "MockingByte"
@@ -162,7 +162,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -360,7 +360,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
 
                     facing = if (body.physics.velocity.x > 0f) Facing.RIGHT else Facing.LEFT
 
-                    val camBounds = game.getGameCamera().getRotatedBounds()
+                    val camBounds = services.getGameCamera().getRotatedBounds()
                     val bodyBounds = body.getBounds()
 
                     if (!camBounds.overlaps(bodyBounds)) {
@@ -368,7 +368,7 @@ class MockingByte(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnt
                             TAG,
                             "update(): just left game camera bounds: " +
                                 "body.getBounds=${body.getBounds()}, " +
-                                "camera.getBounds=${game.getGameCamera().getRotatedBounds()}"
+                                "camera.getBounds=${services.getGameCamera().getRotatedBounds()}"
                         )
 
                         diveOutOfBoundsTimer.update(delta)

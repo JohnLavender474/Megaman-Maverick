@@ -33,7 +33,7 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
-class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class Snowhead(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Snowhead"
@@ -80,7 +80,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             animDefs.keys().forEach { key ->
                 val region = atlas.findRegion("$TAG/$key")
                 regions.put(key, region)
@@ -144,7 +144,7 @@ class Snowhead(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
         tempSnowballsArray.clear()
 
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.CHILL_SHOOT_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
     override fun explodeAndDie(vararg params: Any?) {

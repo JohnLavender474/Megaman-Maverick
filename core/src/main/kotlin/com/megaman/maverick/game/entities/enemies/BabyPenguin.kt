@@ -29,13 +29,13 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.world.body.*
 
-class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class BabyPenguin(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "BabyPenguin"
@@ -49,7 +49,7 @@ class BabyPenguin(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
 
     override fun init(vararg params: Any) {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "BabyPenguin")
+            region = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "BabyPenguin")
         super.init()
         addComponent(defineAnimationsComponent())
     }

@@ -37,7 +37,7 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
         if (initialized) return
         initialized = true
 
-        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
         val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg_v2")
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
@@ -70,7 +70,7 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
         pressStartBlinkTimer.reset()
         pressStartBlink = true
 
-        game.audioMan.playMusic(MusicAsset.MM3_GAME_OVER_MUSIC, true)
+        game.audio.playMusic(MusicAsset.MM3_GAME_OVER_MUSIC, true)
     }
 
     override fun render(delta: Float) {

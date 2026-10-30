@@ -30,7 +30,7 @@ import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -51,7 +51,7 @@ import java.util.*
 import kotlin.math.ceil
 import kotlin.reflect.KClass
 
-class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener {
+class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IEventListener {
 
     companion object {
         const val TAG = "Darkness"
@@ -127,7 +127,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         addComponent(SpritesComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
@@ -138,7 +138,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         key = spawnProps.getOrDefault(ConstKeys.KEY, -1, Int::class)
         spawnProps.get(ConstKeys.ROOM, String::class)!!.split(",").forEach { t -> rooms.add(t) }
@@ -200,7 +200,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
 
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         rooms.clear()
         sprites.clear()
@@ -265,7 +265,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        val currentRoom = game.getCurrentRoom()
+        val currentRoom = services.levelState.currentRoom
         if (currentRoom != null) {
             MegaGameEntities.getOfType(EntityType.PROJECTILE).forEach { t -> tryToLightUp(t) }
             MegaGameEntities.getOfType(EntityType.EXPLOSION).forEach { t -> tryToLightUp(t) }
@@ -379,7 +379,7 @@ class Darkness(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullable = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        val cullable = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 

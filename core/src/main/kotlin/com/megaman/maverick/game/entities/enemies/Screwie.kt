@@ -35,7 +35,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity {
+class Screwie(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity {
 
     companion object {
         const val TAG = "Screwie"
@@ -96,7 +96,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         shootTimer.addRunnables(
             gdxArrayOf(
                 TimeMarkedRunnable(0.5f) { shoot() },
@@ -180,7 +180,7 @@ class Screwie(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
         updatablesComponent.add {
             freezeHandler.update(it)
 
-            if (frozen || game.isCameraRotating()) return@add
+            if (frozen || services.camera.rotating) return@add
 
             when {
                 !downTimer.isFinished() -> {

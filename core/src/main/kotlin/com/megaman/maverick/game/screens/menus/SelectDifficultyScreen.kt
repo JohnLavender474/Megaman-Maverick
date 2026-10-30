@@ -51,7 +51,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
 
         GameLogger.debug(TAG, "init()")
 
-        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
         val backgroundRegion = uiAtlas.findRegion(BGK_REG_KEY)
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
@@ -72,7 +72,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
                 row - ConstVals.ARROW_CENTER_ROW_DECREMENT
             ).scl(ConstVals.PPM.toFloat())
 
-            arrows.put(text, BlinkingArrow(game.assMan, arrowCenter))
+            arrows.put(text, BlinkingArrow(game.assets, arrowCenter))
 
             row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
         }
@@ -86,12 +86,12 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
             }
 
             override fun onSelect(delta: Float): Boolean {
-                game.state.setDifficultyMode(DifficultyMode.NORMAL)
+                game.gameState.setDifficultyMode(DifficultyMode.NORMAL)
 
-                game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
                 game.startLevel()
 
-                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
                 return true
             }
@@ -106,12 +106,12 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
             }
 
             override fun onSelect(delta: Float): Boolean {
-                game.state.setDifficultyMode(DifficultyMode.HARD)
+                game.gameState.setDifficultyMode(DifficultyMode.HARD)
 
-                game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
                 game.startLevel()
 
-                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
                 return true
             }
@@ -140,7 +140,7 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
 
         game.getUiCamera().setToDefaultPosition()
 
-        game.audioMan.playMusic(MusicAsset.VINNYZ_PASSWORD_MUSIC)
+        game.audio.playMusic(MusicAsset.VINNYZ_PASSWORD_MUSIC)
     }
 
     override fun render(delta: Float) {
@@ -161,6 +161,6 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
     }
 
     override fun onAnyMovement(direction: Direction) {
-        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
+        game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }
 }

@@ -29,7 +29,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
 // TODO: unfinished
-class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class PenguinBot(services: MegaServices): AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PenguinBot"
@@ -57,7 +57,7 @@ class PenguinBot(game: MegamanMaverickGame): AbstractEnemy(game, size = Size.MED
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("wait", atlas.findRegion("$TAG/wait"))
             regions.put("stand", atlas.findRegion("$TAG/stand"))
             regions.put("waddle", atlas.findRegion("$TAG/waddle"))

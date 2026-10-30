@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
-import com.badlogic.gdx.utils.OrderedSet
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.Animator
@@ -103,11 +102,11 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     private var initialized = false
 
     override fun init(vararg params: Any) {
-        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
         val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
         backgroundSprite.setRegion(backgroundRegion)
 
-        val weaponGetAtlas = game.assMan.getTextureAtlas(TextureAsset.WEAPON_GET.source)
+        val weaponGetAtlas = game.assets.getTextureAtlas(TextureAsset.WEAPON_GET.source)
         overlaySprite.setRegion(weaponGetAtlas.findRegion("overlay"))
         MegamanWeapon.entries.forEach { weapon ->
             val baseKey = weapon.name.lowercase()
@@ -143,14 +142,14 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         game.getUiCamera().setToDefaultPosition()
 
-        val weaponsAttained = (game.getProperty(ConstKeys.WEAPONS_ATTAINED) as OrderedSet<MegamanWeapon>?)?.toGdxArray()
+        val weaponsAttained = game.levelState.weaponsAttained?.toGdxArray()
         if (weaponsAttained == null || weaponsAttained.isEmpty) {
             GameLogger.error(TAG, "show(): failed to load weapons attained")
             game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
             return
         }
 
-        game.removeProperty(ConstKeys.WEAPONS_ATTAINED)
+        game.levelState.weaponsAttained = null
         GameLogger.debug(TAG, "show(): remove weapons attained prop from global game object")
 
         eventQueue.clear()
@@ -178,7 +177,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         resetEventTimer()
 
-        game.audioMan.playMusic(MusicAsset.VINNYZ_WEAPON_GET_MUSIC, true)
+        game.audio.playMusic(MusicAsset.VINNYZ_WEAPON_GET_MUSIC, true)
     }
 
     override fun render(delta: Float) {

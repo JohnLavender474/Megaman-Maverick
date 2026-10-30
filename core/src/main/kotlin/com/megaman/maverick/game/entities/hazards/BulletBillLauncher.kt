@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -43,7 +43,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, IHazard {
+class BulletBillLauncher(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAudioEntity, IHazard {
 
     companion object {
         const val TAG = "BulletBillLauncher"
@@ -62,7 +62,7 @@ class BulletBillLauncher(game: MegamanMaverickGame) : MegaGameEntity(game), IBod
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             region = atlas.findRegion("${BulletBill.TAG}/launcher")
         }
         super.init()

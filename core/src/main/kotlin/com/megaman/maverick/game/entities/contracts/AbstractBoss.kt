@@ -21,7 +21,7 @@ import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.DamageNegotiation
@@ -44,12 +44,12 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
 abstract class AbstractBoss(
-    game: MegamanMaverickGame,
+    services: MegaServices,
     dmgDuration: Float = DEFAULT_BOSS_DMG_DURATION,
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR,
     defeatDur: Float = DEFAULT_DEFEAT_DURATION,
     size: Size = Size.MEDIUM
-) : AbstractEnemy(game, dmgDuration, dmgBlinkDur, size), IEventListener {
+) : AbstractEnemy(services, dmgDuration, dmgBlinkDur, size), IEventListener {
 
     companion object {
         const val TAG = "AbstractBoss"
@@ -130,7 +130,7 @@ abstract class AbstractBoss(
         // Assume that none of the bosses should die by spikes or other "instant death" contacts
         body.forEachFixture { fixture -> fixture.putProperty(ConstKeys.DEATH_LISTENER, false) }
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
         players.playerDamaged.connect(playerDamagedListener)
 
         bossKey = spawnProps.getOrDefault("${ConstKeys.BOSS}_${ConstKeys.KEY}", "NO_BOSS_KEY", String::class)
@@ -161,14 +161,14 @@ abstract class AbstractBoss(
         ready = false
 
         players.playerDamaged.disconnect(playerDamagedListener)
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
         removeProperty("${ConstKeys.BOSS}_${ConstKeys.KEY}")
 
         if (isHealthDepleted() && spawnDefeatOrbs) spawnExplosionOrbs(body.getCenter())
     }
 
     protected open fun spawnExplosionOrbs(spawn: Vector2) {
-        playSoundNow(SoundAsset.DEFEAT_SOUND, false)
+        services.audio.playSound(SoundAsset.DEFEAT_SOUND, false)
 
         EXPLOSION_ORB_TRAJS.forEach { trajectory ->
             val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
@@ -195,7 +195,7 @@ abstract class AbstractBoss(
 
     override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner.asPlayer != null &&
-            game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+            services.gameState.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.BOSS_DAMAGE_INCREASE_SCALAR)
 
         else -> baseDamage
@@ -227,7 +227,7 @@ abstract class AbstractBoss(
                 if (defeatTimer.isFinished()) {
                     GameLogger.debug(TAG, "update(): defeat timer finished")
                     destroy()
-                    game.eventsMan.submitEvent(Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS pairTo this)))
+                    services.events.submitEvent(Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS pairTo this)))
                 }
             }
         }
@@ -266,7 +266,7 @@ abstract class AbstractBoss(
                 ConstKeys.HEALTH_FILL_TYPE pairTo getHealthFillType()
             )
         )
-        game.eventsMan.submitEvent(event)
+        services.events.submitEvent(event)
 
         betweenReadyAndEndBossSpawnEvent = true
     }
@@ -280,7 +280,7 @@ abstract class AbstractBoss(
             try {
                 val musicStr = getOrDefaultProperty(ConstKeys.MUSIC, DEFAULT_BOSS_BATTLE_MUSIC, String::class)
                 val ass = MusicAsset.valueOf(musicStr.uppercase())
-                game.audioMan.playMusic(ass, ass.loop)
+                services.audio.playMusic(ass, ass.loop)
             } catch (e: Exception) {
                 throw Exception("Failed to play music. Music prop: ${getProperty(ConstKeys.MUSIC)}.", e)
             }
@@ -289,7 +289,7 @@ abstract class AbstractBoss(
 
     protected open fun triggerDefeat() {
         GameLogger.debug(TAG, "triggerDefeat()")
-        game.eventsMan.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS pairTo this)))
+        services.events.submitEvent(Event(EventType.BOSS_DEFEATED, props(ConstKeys.BOSS pairTo this)))
         defeatTimer.reset()
         defeated = true
     }
@@ -317,7 +317,7 @@ abstract class AbstractBoss(
             )
         )
 
-        game.audioMan.playSound(
+        services.audio.playSound(
             SoundRequest(SoundAsset.EXPLOSION_2_SOUND, loop = false, allowOverlap = true)
         )
     }

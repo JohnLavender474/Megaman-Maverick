@@ -6,11 +6,11 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-abstract class Switch(game: MegamanMaverickGame) : MegaGameEntity(game) {
+abstract class Switch(services: MegaServices) : MegaGameEntity(services) {
 
     companion object {
         const val TAG = "Switch"

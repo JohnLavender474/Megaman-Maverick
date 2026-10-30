@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -57,8 +57,8 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class ReactorMonkey(game: MegamanMaverickGame) :
-    AbstractBoss(game, dmgDuration = DEFAULT_MINI_BOSS_DMG_DURATION, size = Size.LARGE), IAnimatedEntity, IFaceable {
+class ReactorMonkey(services: MegaServices) :
+    AbstractBoss(services, dmgDuration = DEFAULT_MINI_BOSS_DMG_DURATION, size = Size.LARGE), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "ReactorMonkey"
@@ -102,7 +102,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             gdxArrayOf("stand", "stand_damaged", "throw", "throw_damaged").forEach { key ->
                 val region = atlas.findRegion("$TAG/$key")
                 regions.put(key, region)
@@ -152,7 +152,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
         monkeyBall?.let { ball -> if (ball.existenceState.liveAfterUpdate) ball.destroy() }
         monkeyBall = null
 
-        if (megaHeartTank != null && !game.state.containsHeartTank(megaHeartTank!!)) {
+        if (megaHeartTank != null && !services.gameState.containsHeartTank(megaHeartTank!!)) {
             val heartTank = MegaEntityFactory.fetch(HeartTank::class)!!
             heartTank.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.VALUE pairTo megaHeartTank!!))
         }
@@ -225,7 +225,7 @@ class ReactorMonkey(game: MegamanMaverickGame) :
 
                             val minDelay: Float
                             val maxDelay: Float
-                            if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+                            if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) {
                                 minDelay = MIN_THROW_DELAY_HARD
                                 maxDelay = MAX_THROW_DELAY_HARD
                             } else {

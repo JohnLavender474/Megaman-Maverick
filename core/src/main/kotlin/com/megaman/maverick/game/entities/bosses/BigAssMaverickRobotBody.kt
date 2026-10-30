@@ -18,7 +18,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -26,7 +26,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.getSize
 
-class BigAssMaverickRobotBody(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IEventListener {
+class BigAssMaverickRobotBody(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IEventListener {
 
     companion object {
         const val TAG = "BigAssMaverickRobotBody"
@@ -40,7 +40,7 @@ class BigAssMaverickRobotBody(game: MegamanMaverickGame) : MegaGameEntity(game),
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(
+        if (region == null) region = services.assets.getTextureRegion(
             TextureAsset.BOSSES_3.source,
             "${BigAssMaverickRobot.TAG}/$BODY/${ConstKeys.BODY}"
         )
@@ -51,14 +51,14 @@ class BigAssMaverickRobotBody(game: MegamanMaverickGame) : MegaGameEntity(game),
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, IRectangle::class)!!)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {

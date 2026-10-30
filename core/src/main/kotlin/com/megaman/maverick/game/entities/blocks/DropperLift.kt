@@ -26,7 +26,7 @@ import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.feetFixture
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+class DropperLift(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
 
     enum class DropperLiftState {
         CLOSED, OPENING, OPEN, CLOSING
@@ -58,7 +58,7 @@ class DropperLift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAni
     override fun init(vararg params: Any) {
         super.init()
         if (closedRegion == null || openingRegion == null || openRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             closedRegion = atlas.findRegion("DropperLift/Closed")
             openingRegion = atlas.findRegion("DropperLift/Opening")
             openRegion = atlas.findRegion("DropperLift/Open")

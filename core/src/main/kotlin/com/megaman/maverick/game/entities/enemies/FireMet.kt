@@ -39,7 +39,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class FireMet(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FireMet"
@@ -80,7 +80,7 @@ class FireMet(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun init(vararg params: Any) {
         damageOverrides.put(Fireball::class, null)
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("walk", atlas.findRegion("$TAG/Walk"))
             regions.put("jump", atlas.findRegion("$TAG/Jump"))
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))

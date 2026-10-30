@@ -41,7 +41,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<RatRobot>, IAnimatedEntity, IFaceable,
+class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<RatRobot>, IAnimatedEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -216,7 +216,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -237,7 +237,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
         stateMachine.reset()
         stateTimers.values().forEach { it.reset() }
 
-        when (game.state.getDifficultyMode()) {
+        when (services.gameState.getDifficultyMode()) {
             DifficultyMode.NORMAL -> {
                 standSlashTimer = Timer(STAND_SLASH_DUR).also { timer ->
                     STAND_SLASH_DEFS.forEach { (time, slashType) ->
@@ -620,7 +620,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
             sprite.setOriginCenter()
             sprite.rotation = if (stunned) 0f else direction.rotation
 
-            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = damageBlink || services.levelState.roomTransition
         }
         .build()
 
@@ -706,7 +706,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
             RodentManState.JUMP -> {
                 jump()
 
-                val slashDelayDur = when (game.state.getDifficultyMode()) {
+                val slashDelayDur = when (services.gameState.getDifficultyMode()) {
                     DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
                     DifficultyMode.HARD -> SLASH_DELAY_HARD
                 }
@@ -717,7 +717,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
 
                 timesAtStandState++
                 if (timesAtStandState % STAND_SLASH == 0) {
-                    val slashDelayDur = when (game.state.getDifficultyMode()) {
+                    val slashDelayDur = when (services.gameState.getDifficultyMode()) {
                         DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
                         DifficultyMode.HARD -> SLASH_DELAY_HARD
                     }
@@ -732,7 +732,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
 
         when (previous) {
             RodentManState.STAND -> {
-                val slashDelayDur = when (game.state.getDifficultyMode()) {
+                val slashDelayDur = when (services.gameState.getDifficultyMode()) {
                     DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
                     DifficultyMode.HARD -> SLASH_DELAY_HARD
                 }
@@ -741,7 +741,7 @@ class RodentMan(game: MegamanMaverickGame) : AbstractBoss(game), IParentEntity<R
                 standSlashTimer.setToEnd()
             }
             RodentManState.JUMP -> {
-                val slashDelayDur = when (game.state.getDifficultyMode()) {
+                val slashDelayDur = when (services.gameState.getDifficultyMode()) {
                     DifficultyMode.NORMAL -> SLASH_DELAY_NORMAL
                     DifficultyMode.HARD -> SLASH_DELAY_HARD
                 }

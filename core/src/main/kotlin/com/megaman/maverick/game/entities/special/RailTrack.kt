@@ -26,7 +26,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEntity, ISpritesEntity {
+class RailTrack(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "RailTrack"
@@ -60,7 +60,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("left", "right", "middle", "drop").forEach { key ->
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
@@ -189,7 +189,7 @@ class RailTrack(game: MegamanMaverickGame) : MegaGameEntity(game), ICullableEnti
     override fun getTag() = TAG
 }
 
-class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+class RailTrackPlatform(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "RailTrackPlatform"
@@ -202,7 +202,7 @@ class RailTrackPlatform(game: MegamanMaverickGame) : Block(game), ISpritesEntity
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("platform", "platform_drop").forEach { key ->
                 regions.put(key, atlas.findRegion("${RailTrack.TAG}/$key"))
             }

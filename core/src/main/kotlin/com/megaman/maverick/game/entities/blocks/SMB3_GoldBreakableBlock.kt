@@ -3,9 +3,9 @@ package com.megaman.maverick.game.entities.blocks
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 
-class SMB3_GoldBreakableBlock(game: MegamanMaverickGame): BreakableBlock(game) {
+class SMB3_GoldBreakableBlock(services: MegaServices): BreakableBlock(services) {
 
     companion object {
         const val TAG = "SMB3_GoldBreakableBlock"

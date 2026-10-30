@@ -33,7 +33,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.enemies.MockingBit
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.*
 
-class MockingByteEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class MockingByteEgg(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "MockingByteEgg"
@@ -56,7 +56,7 @@ class MockingByteEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region =
-            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "$TAG/${ConstKeys.WHOLE}")
+            services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "$TAG/${ConstKeys.WHOLE}")
         super.init()
     }
 
@@ -75,7 +75,7 @@ class MockingByteEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.THUMP_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.THUMP_SOUND, false)
         spawnMockingBit()
         spawnShatters()
         destroy()
@@ -121,7 +121,7 @@ class MockingByteEgg(game: MegamanMaverickGame) : AbstractProjectile(game) {
     }
 }
 
-class MockingByteEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity,
+class MockingByteEggShatter(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity,
     ISpritesEntity {
 
     companion object {
@@ -143,7 +143,7 @@ class MockingByteEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             for (i in 1..PIECES) regions.put(
                 i, atlas.findRegion("${MockingByteEgg.TAG}/${ConstKeys.PIECES}/$i")
             )

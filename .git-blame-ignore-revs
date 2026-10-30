@@ -2,3 +2,7 @@
 1a61734b5969944ff6565a400a27149e086de7b2
 # Rename IDamageable/IDamager to IDamageableEntity/IDamagerEntity (squash of mega-refactor-063b-damage-entity-rename)
 550d67569e64426ea1631b4480320150ddee13a9
+# Entities take MegaServices in place of MegamanMaverickGame (squash of mega-refactor-016c-entity-services; mostly the mechanical constructor-type swap)
+4097749fad4568e56a91e63cf95a7e5fc3062279
+# Rename the services value game to services and the members eventsMan, assMan, audioMan, state to events, assets, audio, gameState (squash of mega-refactor-016e-service-names)
+9502724cd3a4e87f124d362fde8a975fd1597e9f

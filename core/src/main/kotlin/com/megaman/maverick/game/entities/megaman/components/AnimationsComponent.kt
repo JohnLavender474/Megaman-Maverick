@@ -49,7 +49,7 @@ internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IA
         shouldEqualKeysTriggerChange = this::shouldEqualAnimKeysTriggerChange
     )
 
-    val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+    val decorationsAtlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
 
     val jetpackFlameRegion = decorationsAtlas.findRegion(JETPACK_FLAME_SPRITE_KEY)
     val jetpackFlameAnimation = Animation(jetpackFlameRegion, 1, 3, 0.1f)

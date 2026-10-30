@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.common.extensions.putIfAbsentAndGet
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.IAsset
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -19,7 +18,7 @@ import com.megaman.maverick.game.screens.ScreenEnum
 enum class LevelDefinition(
     val type: LevelType,
     val tmxMapSource: String,
-    val screenOnCompletion: (MegamanMaverickGame) -> ScreenEnum,
+    val screenOnCompletion: (LevelState) -> ScreenEnum,
     val music: MusicAsset? = null,
     val mugshotAtlas: String? = null,
     val mugshotRegion: String? = null,
@@ -29,7 +28,7 @@ enum class LevelDefinition(
         type = LevelType.INTRO_LEVEL,
         tmxMapSource = "IntroStage_v3.tmx",
         music = MusicAsset.VINNYZ_INTRO_STAGE_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     TIMBER_WOMAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -37,7 +36,7 @@ enum class LevelDefinition(
         mugshotRegion = "Timber Woman",
         tmxMapSource = "TimberWoman_16x14_v4.tmx",
         music = MusicAsset.MEGA_QUEST_2_LEVEL_1_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     MOON_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -45,7 +44,7 @@ enum class LevelDefinition(
         mugshotRegion = "Moon Man",
         tmxMapSource = "MoonMan_16x14_v5.tmx",
         music = MusicAsset.MMX5_DARK_DIZZY_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     RODENT_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -53,7 +52,7 @@ enum class LevelDefinition(
         mugshotRegion = "Rodent Man",
         tmxMapSource = "RodentMan_16x14.tmx",
         music = MusicAsset.FAMITARD_OC_2_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     DESERT_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -61,7 +60,7 @@ enum class LevelDefinition(
         mugshotRegion = "Desert Man",
         tmxMapSource = "DesertMan_16x14_v4.tmx",
         music = MusicAsset.CODY_O_QUINN_BATTLE_MAN_MUSIC_INTRO,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     INFERNO_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -69,7 +68,7 @@ enum class LevelDefinition(
         mugshotRegion = "Inferno Man",
         tmxMapSource = "InfernoMan_16x14_v3.tmx",
         music = MusicAsset.INFERNO_MAN_INTRO_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     REACTOR_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -77,7 +76,7 @@ enum class LevelDefinition(
         mugshotRegion = "Reactor Man",
         tmxMapSource = "ReactorMan_v3.tmx",
         music = MusicAsset.FAMITARD_OC_1_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     GLACIER_MAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -85,7 +84,7 @@ enum class LevelDefinition(
         mugshotRegion = "Glacier Man",
         tmxMapSource = "GlacierMan_16x14_v2.tmx",
         music = MusicAsset.VINNYZ_GLACIER_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     PRECIOUS_WOMAN(
         type = LevelType.ROBOT_MASTER_LEVEL,
@@ -93,7 +92,7 @@ enum class LevelDefinition(
         mugshotRegion = "Precious Woman",
         tmxMapSource = "PreciousWoman_v2.tmx",
         music = MusicAsset.MMX2_CRYSTAL_SNAIL_MUSIC,
-        screenOnCompletion = { game -> RobotMasterLevelOnCompletion.invoke(game) }
+        screenOnCompletion = RobotMasterLevelOnCompletion
     ),
     WILY_STAGE_1(
         type = LevelType.WILY_LEVEL,
@@ -142,6 +141,12 @@ enum class LevelDefinition(
         levelOverride = LevelOverride(
             loadout = LoadoutOverride(weapons = setOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MOON_SCYTHES))
         )
+    ),
+    REFACTOR_TEST_016(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "RefactorTest016.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
     SMB3_1(
         type = LevelType.MARIO_LEVEL,

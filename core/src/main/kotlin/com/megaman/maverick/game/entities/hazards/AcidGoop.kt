@@ -36,7 +36,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
-class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamagerEntity, IHazard, ISpritesEntity, IAnimatedEntity,
+class AcidGoop(services: MegaServices) : MegaGameEntity(services), IDamagerEntity, IHazard, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity, IEventListener {
 
     companion object {
@@ -65,7 +65,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamagerEntity
 
     override fun init(vararg params: Any) {
         if (fallingRegion == null || splatRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             fallingRegion = atlas.findRegion("$TAG/falling")
             splatRegion = atlas.findRegion("$TAG/landed")
         }
@@ -79,7 +79,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamagerEntity
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setTopCenterToPoint(spawn)
@@ -93,7 +93,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamagerEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -118,7 +118,7 @@ class AcidGoop(game: MegamanMaverickGame) : MegaGameEntity(game), IDamagerEntity
         if (dissipating) {
             dissipateTimer.update(delta)
             if (dissipateTimer.isFinished()) {
-                if (overlapsGameCamera()) playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+                if (overlapsGameCamera()) services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
                 destroy()
             }
         }

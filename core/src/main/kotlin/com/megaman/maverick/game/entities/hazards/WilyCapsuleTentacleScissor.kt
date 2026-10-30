@@ -32,7 +32,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class WilyCapsuleTentacleScissor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class WilyCapsuleTentacleScissor(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDamagerEntity, IHazard, IOwnable<WilyCapsuleTentacle> {
 
     companion object {
@@ -86,7 +86,7 @@ class WilyCapsuleTentacleScissor(game: MegamanMaverickGame) : MegaGameEntity(gam
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             regions.put(CLOSED_KEY, atlas.findRegion("phase_2/scissors/closed"))
             regions.put(CHOP_KEY, atlas.findRegion("phase_2/scissors/chop"))
         }

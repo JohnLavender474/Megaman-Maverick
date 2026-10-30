@@ -21,7 +21,7 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -29,7 +29,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.levels.LevelUtils
 import kotlin.math.ceil
 
-class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
+class Smoke(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
         const val TAG = "Smoke"
@@ -45,7 +45,7 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             for (i in 0 until REGION_COUNT) {
                 val key = "$TAG/$i$REGION_SUFFIX"
                 val region = atlas.findRegion(key)
@@ -59,7 +59,7 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
     }
 
     override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
-        !LevelUtils.isInfernoManLevelFrozen(game.state)
+        !LevelUtils.isInfernoManLevelFrozen(services.gameState)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
@@ -98,7 +98,7 @@ class Smoke(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, I
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         )
     )
 

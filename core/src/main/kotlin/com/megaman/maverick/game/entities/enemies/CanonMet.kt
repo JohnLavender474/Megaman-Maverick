@@ -9,10 +9,10 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.world.body.BodyComponent
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 
-class CanonMet(game: MegamanMaverickGame): AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class CanonMet(services: MegaServices): AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "CanonMet"

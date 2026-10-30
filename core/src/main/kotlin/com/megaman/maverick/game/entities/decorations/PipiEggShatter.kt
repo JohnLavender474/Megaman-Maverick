@@ -26,7 +26,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -35,7 +35,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
+class PipiEggShatter(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "PipiEggShatter"
@@ -50,7 +50,7 @@ class PipiEggShatter(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnt
     override fun getType() = EntityType.DECORATION
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "Pipi/EggShatter")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "Pipi/EggShatter")
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

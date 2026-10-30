@@ -37,7 +37,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -49,7 +49,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+class Tropish(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -79,7 +79,7 @@ class Tropish(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("swim", atlas.findRegion("$TAG/swim"))
             regions.put("bent", atlas.findRegion("$TAG/bent"))
             regions.put("frozen", atlas.findRegion("$TAG/frozen"))

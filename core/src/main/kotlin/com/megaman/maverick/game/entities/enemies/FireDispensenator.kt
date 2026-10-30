@@ -44,7 +44,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -60,7 +60,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity,
+class FireDispensenator(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity,
     IAnimatedEntity, IFaceable {
 
     companion object {
@@ -107,7 +107,7 @@ class FireDispensenator(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             FireDispensenatorState.entries.forEach {
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

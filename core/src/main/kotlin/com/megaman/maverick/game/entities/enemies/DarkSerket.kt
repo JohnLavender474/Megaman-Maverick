@@ -38,7 +38,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -58,7 +58,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
+class DarkSerket(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
 
     companion object {
         const val TAG = "DarkSerket"
@@ -144,7 +144,7 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -194,7 +194,7 @@ class DarkSerket(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
             body.getAllFixtures(fixtures)
 
             val updateCullTimer = fixtures.none { fixture ->
-                fixture.getShape().overlaps(game.getGameCamera().getRotatedBounds())
+                fixture.getShape().overlaps(services.getGameCamera().getRotatedBounds())
             }
             if (updateCullTimer) cullTimer.update(delta) else cullTimer.reset()
 

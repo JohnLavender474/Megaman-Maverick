@@ -43,7 +43,7 @@ import com.megaman.maverick.game.ConstKeys.CAN
 import com.megaman.maverick.game.ConstKeys.END
 import com.megaman.maverick.game.ConstKeys.ON
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
-class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, IAudioEntity,
+class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, IAudioEntity,
     ISpritesEntity, IAnimatedEntity, ILaserEntity, IDirectional, IHazard, IDamagerEntity {
 
     companion object {
@@ -130,10 +130,10 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         if (regions.isEmpty) {
             regions.put(
                 BEAM_REGION_KEY,
-                game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, BEAM_REGION_KEY)
+                services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, BEAM_REGION_KEY)
             )
             gdxArrayOf(ConstKeys.BLACK, ConstKeys.WHITE, ConstKeys.PINK).forEach { color ->
-                regions.put(color, game.assMan.getTextureRegion(TextureAsset.COLORS.source, color))
+                regions.put(color, services.assets.getTextureRegion(TextureAsset.COLORS.source, color))
             }
         }
         super.init()
@@ -179,7 +179,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
         val delayDur = spawnProps.getOrDefault(
             ConstKeys.DELAY,
-            if (game.state.getDifficultyMode() == DifficultyMode.HARD) BEAM_DELAY_HARD else BEAM_DELAY,
+            if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) BEAM_DELAY_HARD else BEAM_DELAY,
             Float::class
         )
         beamDelay.resetDuration(delayDur)
@@ -224,7 +224,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
                 val targetLen = actualClampEnd.dst(actualLine.getFirstLocalPoint())
                 when {
                     actualLine.getLength() < targetLen -> {
-                        val growthRate = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+                        val growthRate = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
                             BEAM_GROWTH_RATE_HARD else BEAM_GROWTH_RATE
 
                         val nextEndPoint = actualLine.getSecondLocalPoint()
@@ -268,7 +268,7 @@ class TubeBeamerV2(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         beamTimer.reset()
         spawnExplosionDelay.setToEnd()
 
-        if (game.getGameCamera().overlaps(rawLine.getBoundingRectangle()))
+        if (services.getGameCamera().overlaps(rawLine.getBoundingRectangle()))
             requestToPlaySound(SoundAsset.BURST_SOUND, false)
     }
 

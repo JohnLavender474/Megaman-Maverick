@@ -20,12 +20,12 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class BulletResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class BulletResidual(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "BulletResidual"
@@ -39,7 +39,7 @@ class BulletResidual(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())

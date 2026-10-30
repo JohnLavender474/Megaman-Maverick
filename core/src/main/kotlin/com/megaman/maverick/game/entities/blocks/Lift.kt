@@ -22,14 +22,14 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectional {
+class Lift(services: MegaServices) : Block(services), ISpritesEntity, IDirectional {
 
     enum class LiftState {
         LIFTING, FALLING, STOPPED
@@ -53,7 +53,7 @@ class Lift(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IDirectiona
 
     override fun init(vararg params: Any) {
         super.init()
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
     }

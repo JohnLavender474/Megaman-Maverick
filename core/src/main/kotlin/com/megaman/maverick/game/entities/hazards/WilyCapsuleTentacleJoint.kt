@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 
-class WilyCapsuleTentacleJoint(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IDamagerEntity,
+class WilyCapsuleTentacleJoint(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IDamagerEntity,
     IHazard, IOwnable<WilyCapsuleTentacle> {
 
     companion object {
@@ -55,7 +55,7 @@ class WilyCapsuleTentacleJoint(game: MegamanMaverickGame) : MegaGameEntity(game)
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             for (i in 0..2) regions.put(i, atlas.findRegion("phase_2/joints/$i"))
         }
         super.init(*params)

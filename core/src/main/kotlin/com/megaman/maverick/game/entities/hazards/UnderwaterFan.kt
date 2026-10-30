@@ -41,7 +41,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -61,7 +61,7 @@ import java.util.*
 import kotlin.math.max
 import kotlin.reflect.KClass
 
-class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -111,7 +111,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             UnderwaterFanColor.entries.map { it.name.lowercase() }
                 .forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
@@ -185,7 +185,7 @@ class UnderwaterFan(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val gameCamBounds = game.getGameCamera().getRotatedBounds()
+        val gameCamBounds = services.getGameCamera().getRotatedBounds()
         if (gameCamBounds.overlaps(forceBounds) || gameCamBounds.overlaps(body.getBounds())) {
             spawnBubblesDelay.update(delta)
             if (spawnBubblesDelay.isFinished()) {

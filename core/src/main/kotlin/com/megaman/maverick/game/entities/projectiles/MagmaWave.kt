@@ -37,7 +37,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFireEntity, IFaceable,
+class MagmaWave(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFireEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -73,7 +73,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("wave", "disintegrate").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -85,7 +85,7 @@ class MagmaWave(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimated
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, game.gravity.direction, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, services.gravity.direction, Direction::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val position = DirectionPositionMapper.getPosition(direction).opposite()

@@ -48,7 +48,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -77,7 +77,7 @@ import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEntity, IAnimatedEntity,
+class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEntity, IAnimatedEntity,
     IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -270,7 +270,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         GameLogger.debug(TAG, "init()")
 
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
 
             val keys = gdxArrayOf(
                 ConstKeys.DEFEATED,
@@ -352,7 +352,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         }
         otherTimers.values().forEach { it.reset() }
 
-        if (game.state.hardMode) hardModeLeafSpawnDelay.reset()
+        if (services.gameState.hardMode) hardModeLeafSpawnDelay.reset()
 
         spawnProps.forEach { key, value ->
             when {
@@ -495,7 +495,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             GameLogger.debug(TAG, "onChangeState(): reset current timer")
             if (current == TimberWomanState.STAND) {
                 standCycle++
-                val hard = game.state.hardMode
+                val hard = services.gameState.hardMode
                 val duration = if (standCycle % 2 == 0) {
                     if (hard) STAND_DUR_1 else STAND_DUR_1_NORMAL
                 } else {
@@ -690,7 +690,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
                 }
             }
 
-            if (ready && game.state.hardMode) {
+            if (ready && services.gameState.hardMode) {
                 hardModeLeafSpawnDelay.update(delta)
                 if (hardModeLeafSpawnDelay.isFinished()) {
                     val spawn = leafSpawnBounds.getRandomPositionInBounds()
@@ -786,7 +786,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         if (currentState == TimberWomanState.STAND_SWING)
             spawn.add(GROUND_PEBBLES_AXE_SWING_OFFSET_X * ConstVals.PPM * facing.value, 0f)
 
-        val groundPebbleImpulses = if (game.state.hardMode)
+        val groundPebbleImpulses = if (services.gameState.hardMode)
             GROUND_PEBBLE_IMPULSES_HARD else GROUND_PEBBLE_IMPULSES_NORMAL
         for (i in 0 until groundPebbleImpulses.size) {
             val impulse = groundPebbleImpulses[i].cpy().scl(ConstVals.PPM.toFloat())
@@ -810,7 +810,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
         val randomLeafSpawn = leafSpawnBounds.getRandomPositionInBounds(spawn)
         spawnDeadlyLeaves(randomLeafSpawn)
 
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.STUN_PLAYER,
                 props(
@@ -820,7 +820,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             )
         )
 
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.SHAKE_CAM, props(
                     ConstKeys.INTERVAL pairTo ROOM_SHAKE_INTERVAL,
@@ -1047,7 +1047,7 @@ class TimberWoman(game: MegamanMaverickGame) : AbstractBoss(game), IFireableEnti
             }
             sprite.setFlip(flipX, false)
 
-            sprite.hidden = damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+            sprite.hidden = damageBlink || services.levelState.roomTransition
         }
 
         // axe wall slide

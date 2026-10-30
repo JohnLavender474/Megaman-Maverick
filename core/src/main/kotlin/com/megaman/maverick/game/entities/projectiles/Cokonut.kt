@@ -28,12 +28,12 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
-class Cokonut(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class Cokonut(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "Cokonut"
@@ -44,7 +44,7 @@ class Cokonut(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEn
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

@@ -20,7 +20,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.Explosion
 
-class WilySkullHead(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEntity, ISpritesEntity {
+class WilySkullHead(services: MegaServices) : MegaGameEntity(services), IAudioEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "WilySkullHead"
@@ -54,7 +54,7 @@ class WilySkullHead(game: MegamanMaverickGame) : MegaGameEntity(game), IAudioEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.WILY_FINAL_BOSS.source, TAG)
+            region = services.assets.getTextureRegion(TextureAsset.WILY_FINAL_BOSS.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineSpritesComponent())

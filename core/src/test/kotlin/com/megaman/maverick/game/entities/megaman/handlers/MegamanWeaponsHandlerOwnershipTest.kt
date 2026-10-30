@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.handlers
 
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.testServices
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -19,10 +20,9 @@ class MegamanWeaponsHandlerOwnershipTest : DescribeSpec({
 
     beforeEach {
         state = GameState()
-        val game = mockk<MegamanMaverickGame>(relaxed = true)
-        every { game.state } returns state
+        val services = testServices(gameState = state)
         val megaman = mockk<Megaman>(relaxed = true)
-        every { megaman.game } returns game
+        every { megaman.services } returns services
         handler = MegamanWeaponsHandler(megaman)
     }
 

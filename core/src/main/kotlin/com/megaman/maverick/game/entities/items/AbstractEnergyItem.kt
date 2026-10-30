@@ -16,7 +16,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.special.DarknessV2
@@ -25,7 +25,7 @@ import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-abstract class AbstractEnergyItem(game: MegamanMaverickGame) : AbstractItem(game), ILightSource, ISpritesEntity {
+abstract class AbstractEnergyItem(services: MegaServices) : AbstractItem(services), ILightSource, ISpritesEntity {
 
     companion object {
         const val TAG = "AbstractItem"

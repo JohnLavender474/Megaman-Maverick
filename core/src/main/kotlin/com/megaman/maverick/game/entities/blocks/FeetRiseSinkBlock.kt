@@ -9,14 +9,14 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.math.abs
 
-open class FeetRiseSinkBlock(game: MegamanMaverickGame) : Block(game) {
+open class FeetRiseSinkBlock(services: MegaServices) : Block(services) {
 
     companion object {
         const val TAG = "FeetRiseSinkBlock"

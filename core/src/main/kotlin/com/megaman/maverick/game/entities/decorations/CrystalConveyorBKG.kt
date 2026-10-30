@@ -16,13 +16,13 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getPosition
 
-class CrystalConveyorBKG(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class CrystalConveyorBKG(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "CrystalConveyorBKG"
@@ -34,7 +34,7 @@ class CrystalConveyorBKG(game: MegamanMaverickGame) : MegaGameEntity(game), ISpr
     private val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())

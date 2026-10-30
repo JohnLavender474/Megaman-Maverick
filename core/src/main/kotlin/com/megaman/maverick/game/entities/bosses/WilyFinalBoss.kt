@@ -55,7 +55,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
@@ -99,7 +99,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 import kotlin.math.min
 
-class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFreezableEntity {
+class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFreezableEntity {
 
     companion object {
         const val TAG = "WilyFinalBoss"
@@ -214,7 +214,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val bossAtlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val bossAtlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             animDefs.keys().forEach {
                 regions.put(it, bossAtlas.findRegion(it))
 
@@ -225,7 +225,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
             }
 
-            val decorationsAtlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val decorationsAtlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             regions.put(WILY_DEATH_PLANE_LAZOR_RESIDUAL, decorationsAtlas.findRegion(WILY_DEATH_PLANE_LAZOR_RESIDUAL))
         }
         super.init()
@@ -307,7 +307,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     if (body.getCenter().x > it.body.getX()) Facing.RIGHT else Facing.LEFT
             }
 
-            game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+            services.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
         }
 
         super.onDestroy()
@@ -330,7 +330,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         phaseTransitionHandler.active = false
     }
 
-    override fun playBossMusic() = game.audioMan.getCurrentMusicAsset() == null
+    override fun playBossMusic() = services.audio.getCurrentMusicAsset() == null
 
     override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (phaseTransitionHandler.active) return false
@@ -374,7 +374,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             )
         )
 
-        playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+        services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun isReady(delta: Float) = !initSequence
@@ -969,7 +969,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
         var lastSwoopFollowedByFlyBy = false
         val swoopEntryDelayTimer = Timer(Phase1ConstVals.SWOOP_ENTRY_DELAY)
             .setRunOnJustFinished {
-                MegaUtilMethods.delayRun(game, 0.1f) {
+                MegaUtilMethods.delayRun(services, 0.1f) {
                     requestToPlaySound(SoundAsset.JET_SOUND, false)
                 }
             }
@@ -1345,7 +1345,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             .build()
 
         private fun getStateDelay(current: WilyPhase1State, previous: WilyPhase1State): Float {
-            val hardMode = game.state.hardMode
+            val hardMode = services.gameState.hardMode
 
             if (previous == WilyPhase1State.DROP_BOMB) return 1f
 
@@ -1393,7 +1393,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     resetChance(WilyPhase1State.SWOOP, Phase1ConstVals.INIT_SWOOP_CHANCE)
 
                     swoopExplosionIndices.clear()
-                    val signsToBlow = if (game.state.hardMode) Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW_HARD
+                    val signsToBlow = if (services.gameState.hardMode) Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW_HARD
                     else Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW
                     (Phase1ConstVals.GROUND_WARNING_SIGN_START_INDEX..Phase1ConstVals.GROUND_WARNING_SIGN_END_INDEX)
                         .shuffled()
@@ -1443,7 +1443,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyPhase1State.HOVER -> {
                     stateTimers[WilyPhase1State.HOVER]!!.resetDuration(
-                        if (game.state.hardMode) Phase1ConstVals.HOVER_STATE_DUR_HARD else Phase1ConstVals.HOVER_STATE_DUR
+                        if (services.gameState.hardMode) Phase1ConstVals.HOVER_STATE_DUR_HARD else Phase1ConstVals.HOVER_STATE_DUR
                     )
                     if (initSequence) {
                         GameLogger.debug(TAG, "onChangeState(): end init sequence")
@@ -1468,7 +1468,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 WilyPhase1State.SHOOT_MISSILES -> {
                     stateTimers[WilyPhase1State.SHOOT_MISSILES]!!.resetDuration(
-                        if (game.state.hardMode) Phase1ConstVals.SHOOT_MISSILES_STATE_DUR_HARD
+                        if (services.gameState.hardMode) Phase1ConstVals.SHOOT_MISSILES_STATE_DUR_HARD
                         else Phase1ConstVals.SHOOT_MISSILES_STATE_DUR
                     )
                     resetChance(WilyPhase1State.SHOOT_MISSILES, Phase1ConstVals.INIT_MISSILES_CHANCE)
@@ -1634,7 +1634,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             flyInDecelerating = distance <= slowDownThreshold
 
             val flyInSpeed =
-                if (game.state.hardMode) Phase1ConstVals.FLY_IN_SPEED_HARD else Phase1ConstVals.FLY_IN_SPEED
+                if (services.gameState.hardMode) Phase1ConstVals.FLY_IN_SPEED_HARD else Phase1ConstVals.FLY_IN_SPEED
             val speed = when {
                 flyInDecelerating -> minOf(
                     flyInSpeed * ConstVals.PPM * (distance / slowDownThreshold),
@@ -1650,7 +1650,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
         private fun applyFlyByVelocity() {
             val flyBySpeed =
-                if (game.state.hardMode) Phase1ConstVals.FLY_BY_SPEED_HARD else Phase1ConstVals.FLY_BY_SPEED
+                if (services.gameState.hardMode) Phase1ConstVals.FLY_BY_SPEED_HARD else Phase1ConstVals.FLY_BY_SPEED
             body.physics.velocity.x = if (flyByMovingRight) flyBySpeed * ConstVals.PPM else -flyBySpeed * ConstVals.PPM
             body.physics.velocity.y = 0f
         }
@@ -1707,7 +1707,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             applyFlyByVelocity()
 
-            val camBounds = game.getGameCamera().getRotatedBounds()
+            val camBounds = services.getGameCamera().getRotatedBounds()
             val offScreen = when {
                 flyByMovingRight -> body.getX() > camBounds.getMaxX() + OFF_SCREEN_BUFFER * ConstVals.PPM
                 else -> body.getMaxX() < camBounds.getX() - OFF_SCREEN_BUFFER * ConstVals.PPM
@@ -1760,7 +1760,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 }
             }
 
-            val camBounds = game.getGameCamera().getRotatedBounds()
+            val camBounds = services.getGameCamera().getRotatedBounds()
             return when {
                 flyByMovingRight -> body.getX() > camBounds.getMaxX() + OFF_SCREEN_BUFFER * ConstVals.PPM
                 else -> body.getMaxX() < camBounds.getX() - OFF_SCREEN_BUFFER * ConstVals.PPM
@@ -1801,7 +1801,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             lazorEndPauseTimer.reset()
 
             shootBulletsDelay.resetDuration(
-                if (game.state.hardMode) Phase1ConstVals.SHOOT_BULLETS_DELAY_HARD
+                if (services.gameState.hardMode) Phase1ConstVals.SHOOT_BULLETS_DELAY_HARD
                 else Phase1ConstVals.SHOOT_BULLETS_DELAY
             )
             shootBulletsTimer.setToEnd()
@@ -1884,7 +1884,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             val center = body.getCenter().sub(0f, 1.75f * ConstVals.PPM)
 
             val trajectories = when {
-                game.state.hardMode -> when {
+                services.gameState.hardMode -> when {
                     bulletTraj1 -> Phase1ConstVals.BULLET_TRAJECTORIES_1_HARD
                     else -> Phase1ConstVals.BULLET_TRAJECTORIES_2_HARD
                 }
@@ -1959,7 +1959,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
                 val delay = UtilMethods.getRandom(0.5f, 0.75f)
 
-                MegaUtilMethods.delayRun(game, delay) {
+                MegaUtilMethods.delayRun(services, delay) {
                     val explosion = MegaEntityFactory.fetch(GroundExplosion::class)!!
                     explosion.spawn(
                         props(
@@ -1971,7 +1971,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     GameObjectPools.free(bottomCenter)
                 }
 
-                MegaUtilMethods.delayRun(game, delay) { requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false) }
+                MegaUtilMethods.delayRun(services, delay) { requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false) }
             }
         }
 
@@ -2217,20 +2217,20 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
             GameLogger.debug(TAG, "Phase2Handler: init()")
 
             hoverTimer.resetDuration(
-                if (game.state.hardMode) Phase2ConstVals.HOVER_DURATOIN_HARD
+                if (services.gameState.hardMode) Phase2ConstVals.HOVER_DURATOIN_HARD
                 else Phase2ConstVals.HOVER_DURATION
             )
             cannonTimer.resetDuration(
-                if (game.state.hardMode) Phase2ConstVals.CANNON_FIRE_INTERVAL_HARD
+                if (services.gameState.hardMode) Phase2ConstVals.CANNON_FIRE_INTERVAL_HARD
                 else Phase2ConstVals.CANNON_FIRE_INTERVAL
             )
             prepareTimer.resetDuration(
-                if (game.state.hardMode) Phase2ConstVals.PREPARE_DURATION_HARD
+                if (services.gameState.hardMode) Phase2ConstVals.PREPARE_DURATION_HARD
                 else Phase2ConstVals.PREPARE_DURATION
             )
 
             orbLaunchSpeed =
-                if (game.state.hardMode) Phase2ConstVals.ORB_LAUNCH_SPEED_HARD else Phase2ConstVals.ORB_LAUNCH_SPEED
+                if (services.gameState.hardMode) Phase2ConstVals.ORB_LAUNCH_SPEED_HARD else Phase2ConstVals.ORB_LAUNCH_SPEED
 
             lungeLeft = true
             lungeLaunched = false
@@ -2397,7 +2397,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                 WilyPhase2State.PREPARE, WilyPhase2State.DIVE, WilyPhase2State.CHARGE -> {}
                 WilyPhase2State.LOW_SWAY -> {
                     val multiplier = when {
-                        game.state.hardMode -> Phase2ConstVals.LOW_SWAY_SPEED_MULT_HARD
+                        services.gameState.hardMode -> Phase2ConstVals.LOW_SWAY_SPEED_MULT_HARD
                         else -> Phase2ConstVals.LOW_SWAY_SPEED_MULT
                     }
                     swayTheta += Phase2ConstVals.SWAY_ANGULAR_SPEED *
@@ -2498,7 +2498,7 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
                     when (chargePhase) {
                         ChargePhase.APPROACH -> {
                             val speed = when {
-                                game.state.hardMode -> Phase2ConstVals.CHARGE_SPEED_HARD
+                                services.gameState.hardMode -> Phase2ConstVals.CHARGE_SPEED_HARD
                                 else -> Phase2ConstVals.CHARGE_SPEED
                             }
                             if (stepAnchorToward(chargeTarget, speed, delta)) {
@@ -2919,15 +2919,15 @@ class WilyFinalBoss(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEn
 
             blink = false
 
-            val fadeDur = if (game.state.hardMode) Phase3ConstVals.FADE_DUR_HARD else Phase3ConstVals.FADE_DUR
+            val fadeDur = if (services.gameState.hardMode) Phase3ConstVals.FADE_DUR_HARD else Phase3ConstVals.FADE_DUR
             fadeTimer.resetDuration(fadeDur)
 
             orbLaunchSpeed =
-                if (game.state.hardMode) Phase2ConstVals.ORB_LAUNCH_SPEED_HARD else Phase2ConstVals.ORB_LAUNCH_SPEED
+                if (services.gameState.hardMode) Phase2ConstVals.ORB_LAUNCH_SPEED_HARD else Phase2ConstVals.ORB_LAUNCH_SPEED
 
-            waitTimer.resetDuration(if (game.state.hardMode) Phase3ConstVals.WAIT_DUR_HARD else Phase3ConstVals.WAIT_DUR)
-            attackTimer.resetDuration(if (game.state.hardMode) Phase3ConstVals.ATTACK_DUR_HARD else Phase3ConstVals.ATTACK_DUR)
-            cannonTimer.resetDuration(if (game.state.hardMode) Phase3ConstVals.CANNON_WAIT_DUR_HARD else Phase3ConstVals.CANNON_WAIT_DUR)
+            waitTimer.resetDuration(if (services.gameState.hardMode) Phase3ConstVals.WAIT_DUR_HARD else Phase3ConstVals.WAIT_DUR)
+            attackTimer.resetDuration(if (services.gameState.hardMode) Phase3ConstVals.ATTACK_DUR_HARD else Phase3ConstVals.ATTACK_DUR)
+            cannonTimer.resetDuration(if (services.gameState.hardMode) Phase3ConstVals.CANNON_WAIT_DUR_HARD else Phase3ConstVals.CANNON_WAIT_DUR)
         }
 
         override fun buildBody(body: Body) {

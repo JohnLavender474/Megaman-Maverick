@@ -14,7 +14,7 @@ import com.maverick.game.engine.entities.contracts.IParentEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.convertObjectPropsToEntitySuppliers
@@ -23,7 +23,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setReceiver
 
-class FixtureTypeOverlapSpawn(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
+class FixtureTypeOverlapSpawn(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     IParentEntity<IGameEntity> {
 
     companion object {

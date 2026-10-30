@@ -31,14 +31,14 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, size = Size.SMALL), IAnimatedEntity {
+class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, size = Size.SMALL), IAnimatedEntity {
 
     companion object {
         const val TAG = "GreenPelletBlast"
@@ -52,7 +52,7 @@ class GreenPelletBlast(game: MegamanMaverickGame) : AbstractProjectile(game, siz
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             gdxArrayOf("blast", "burst").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

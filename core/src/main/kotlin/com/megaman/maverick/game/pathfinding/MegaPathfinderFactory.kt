@@ -10,10 +10,10 @@ import com.maverick.game.engine.world.container.IWorldContainer
 import com.maverick.game.engine.world.pathfinding.WorldPathfinder
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
+import com.megaman.maverick.game.levels.LevelState
 
-class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderFactory {
+class MegaPathfinderFactory(private val levelState: LevelState): IPathfinderFactory {
 
     private val defaultHeuristic = EuclideanHeuristic()
 
@@ -23,9 +23,9 @@ class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderF
 
     private fun getWorldContainerSnapshot(): IWorldContainer? {
         val frameId = Gdx.graphics.frameId
-        val source = game.getWorldContainer()
+        val source = levelState.worldContainer
         if (frameId != snapshotFrameId || source !== snapshotSource) {
-            val container = game.getWorldContainer()
+            val container = levelState.worldContainer
             snapshot = container?.copy()
             snapshotSource = container
             snapshotFrameId = frameId
@@ -39,7 +39,7 @@ class MegaPathfinderFactory(private val game: MegamanMaverickGame): IPathfinderF
         val heuristic = params.getOrDefaultProperty(ConstKeys.HEURISTIC, defaultHeuristic, IHeuristic::class)
         if (heuristic is DynamicBodyHeuristic) heuristic.worldContainer = worldContainer
 
-        val tiledMapResult = game.getTiledMapLoadResult()
+        val tiledMapResult = levelState.tiledMapLoadResult!!
 
         return WorldPathfinder(
             start = params.startCoordinateSupplier(),

@@ -25,14 +25,14 @@ const val MEGAMAN_ANIM_KEY_SUPPLIER_TAG = "MEGA_MAN_ANIM_KEY_SUPPLIER"
 fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
     !roomTransPauseTimer.isFinished() -> null
 
-    priorAnimKey != null && game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> {
+    priorAnimKey != null && services.levelState.roomTransition -> {
         var key = priorAnimKey
         if (key.contains("stand")) key = key.replace("stand", "run")
         if (key.contains("slip")) key = key.replace("slip", "run")
         key
     }
 
-    game.isCameraRotating() -> amendKey(if (damaged) "damaged" else "jump")
+    services.camera.rotating -> amendKey(if (damaged) "damaged" else "jump")
 
     !inPlay -> "spawn"
 
@@ -105,7 +105,7 @@ fun Megaman.amendKey(baseKey: String) = when {
             // Should not animate slashes for "slip" or "run", so default to "stand"
             val newBaseKey = if (baseKey.equalsAny("slip", "run")) "stand" else baseKey
 
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_RATTY_CLAWS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.MEGAMAN_RATTY_CLAWS.source)
 
             if (atlas.containsRegion("${newBaseKey}_slash$slashIndex"))
                 "${newBaseKey}_slash$slashIndex"

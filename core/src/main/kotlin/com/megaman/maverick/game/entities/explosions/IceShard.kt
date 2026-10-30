@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -42,7 +42,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
+class IceShard(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "IceShard"
@@ -84,19 +84,19 @@ class IceShard(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (TEXTURES.isEmpty) {
-            val region1 = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "BreakableIce/Shards")
+            val region1 = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, "BreakableIce/Shards")
             val array1 = Array<TextureRegion>()
             val out1 = region1.splitAndFlatten(1, 5, array1)
             TEXTURES.put(BreakableIce.TAG, out1)
             SCALARS.put(BreakableIce.TAG, 2f)
 
-            val region2 = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "IcicleShards")
+            val region2 = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "IcicleShards")
             val array2 = Array<TextureRegion>()
             val out2 = region2.splitAndFlatten(5, 1, array2)
             TEXTURES.put(FallingIcicle.TAG, out2)
             SCALARS.put(FallingIcicle.TAG, 1f)
 
-            val region3 = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "BreakableIce/SmallShards")
+            val region3 = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, "BreakableIce/SmallShards")
             val array3 = Array<TextureRegion>()
             val out3 = region3.splitAndFlatten(5, 1, array3)
             TEXTURES.put(SmallIceCube.TAG, out3)

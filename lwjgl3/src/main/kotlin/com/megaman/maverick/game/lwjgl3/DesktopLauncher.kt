@@ -13,7 +13,7 @@ import com.megaman.maverick.game.LaunchOptions
 import com.megaman.maverick.game.parseEnumOption
 import com.megaman.maverick.game.resolveLaunchOptions
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.MegamanMaverickGame.Performance
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.MegamanMaverickGame.RunType
 import com.megaman.maverick.game.MegamanMaverickGameParams
 import com.megaman.maverick.game.levels.LevelDefinition
@@ -169,15 +169,15 @@ object DesktopLauncher {
         config.setWindowListener(object : Lwjgl3WindowAdapter() {
 
             override fun focusLost() {
-                if (appArgs.pauseOnFocusLost && !game.paused) game.pause()
+                if (appArgs.pauseOnFocusLost && !game.clock.paused) game.pause()
             }
 
             override fun focusGained() {
-                if (appArgs.resumeOnFocusGained && game.paused) game.resume()
+                if (appArgs.resumeOnFocusGained && game.clock.paused) game.resume()
             }
 
             override fun iconified(isIconified: Boolean) {
-                if (appArgs.pauseOnMinimized && !game.paused) game.pause()
+                if (appArgs.pauseOnMinimized && !game.clock.paused) game.pause()
             }
         })
 

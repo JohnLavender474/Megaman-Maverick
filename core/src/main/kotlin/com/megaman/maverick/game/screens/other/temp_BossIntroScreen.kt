@@ -140,7 +140,7 @@ class temp_BossIntroScreen(private val game: MegamanMaverickGame) : BaseScreen()
 
         val bSprite = currBAnim!!.component1()
 
-        if (!game.paused) {
+        if (!game.clock.paused) {
             durTimer.update(delta)
 
             scrollingStars.update(delta)

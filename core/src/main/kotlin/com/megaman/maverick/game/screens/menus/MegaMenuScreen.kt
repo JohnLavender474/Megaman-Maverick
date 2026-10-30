@@ -36,11 +36,11 @@ abstract class MegaMenuScreen(
 
     override fun pause() {
         super.pause()
-        if (pauseMusicOnPause) game.audioMan.pauseMusic()
+        if (pauseMusicOnPause) game.audio.pauseMusic()
     }
 
     override fun resume() {
         super.resume()
-        if (playMusicOnResume) game.audioMan.playMusic()
+        if (playMusicOnResume) game.audio.playMusic()
     }
 }

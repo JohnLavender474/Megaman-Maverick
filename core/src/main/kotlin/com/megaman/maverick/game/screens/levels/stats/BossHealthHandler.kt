@@ -45,7 +45,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
         temp = 0
 
         bar = BitsBar(
-            game.assMan,
+            game.assets,
             ConstKeys.STANDARD,
             (ConstVals.VIEW_WIDTH - (ConstVals.HEALTH_BAR_X + ConstVals.STAT_BIT_WIDTH)) * ConstVals.PPM,
             ConstVals.STATS_BAR_Y * ConstVals.PPM,
@@ -64,7 +64,7 @@ class BossHealthHandler(private val game: MegamanMaverickGame) : IDrawable<Batch
                     val timeToRun = i * ConstVals.DUR_PER_BIT
                     runnables.add(TimeMarkedRunnable(timeToRun) {
                         temp = i + 1
-                        game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
+                        game.audio.playSound(SoundAsset.ENERGY_FILL_SOUND)
                     })
                 }
                 timer.addRunnables(runnables).setRunOnFirstupdate(runOnFirstUpdate).setRunOnJustFinished(runOnFinished)

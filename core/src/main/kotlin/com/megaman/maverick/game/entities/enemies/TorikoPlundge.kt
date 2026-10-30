@@ -37,7 +37,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -54,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IParentEntity<Block>, IDirectional {
+class TorikoPlundge(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IParentEntity<Block>, IDirectional {
 
     companion object {
         const val TAG = "TorikoPlundge"
@@ -93,7 +93,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -228,7 +228,7 @@ class TorikoPlundge(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedE
                 ConstKeys.POSITION pairTo body.getPositionPoint(position)
             )
         )
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun onHealthDepleted() {

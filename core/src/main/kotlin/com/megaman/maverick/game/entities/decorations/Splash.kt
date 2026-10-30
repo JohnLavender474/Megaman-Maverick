@@ -27,7 +27,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
 import kotlin.math.ceil
 
-class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
+class Splash(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAudioEntity {
 
     enum class SplashType(
         val defaultAlpha: Float,
@@ -92,7 +92,7 @@ class Splash(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
             SplashType.entries.forEach { t -> regions.put(t.name, atlas.findRegion(t.regionkey)) }
         }
         super.init()

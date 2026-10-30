@@ -24,14 +24,14 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.ElecDevil
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class MockSpriteEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IDrawableShapesEntity,
+class MockSpriteEntity(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IDrawableShapesEntity,
     IFaceable {
 
     companion object {
@@ -50,7 +50,7 @@ class MockSpriteEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(
+        if (region == null) region = services.assets.getTextureRegion(
             TextureAsset.BOSSES_3.source, "${ElecDevil.TAG}/${ConstKeys.GRID}"
         )
         super.init()

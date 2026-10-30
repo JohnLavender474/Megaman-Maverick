@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -57,7 +57,7 @@ import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAMAGE_DUR, size = Size.LARGE),
+class MoonHead(services: MegaServices) : AbstractBoss(services, dmgDuration = DAMAGE_DUR, size = Size.LARGE),
     IAnimatedEntity {
 
     companion object {
@@ -118,7 +118,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             gdxArrayOf("dark", "awaken", "angry", "shoot", "crumble", "damaged").forEach { key ->
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
@@ -137,7 +137,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
         loop.reset()
 
         timers["shoot"].resetDuration(
-            if (game.state.getDifficultyMode() == DifficultyMode.HARD) SHOOT_DUR_HARD else SHOOT_DUR
+            if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) SHOOT_DUR_HARD else SHOOT_DUR
         )
         timers.values().forEach { it.reset() }
 
@@ -184,7 +184,7 @@ class MoonHead(game: MegamanMaverickGame) : AbstractBoss(game, dmgDuration = DAM
     private fun shoot() {
         val spawn = body.getCenter().add(0f, ASTEROID_OFFSET_Y * ConstVals.PPM)
 
-        val speed = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+        val speed = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
             SHOOT_SPEED_HARD else SHOOT_SPEED
 
         val impulse = targetPlayer.body.getCenter().sub(spawn).nor().scl(speed * ConstVals.PPM)

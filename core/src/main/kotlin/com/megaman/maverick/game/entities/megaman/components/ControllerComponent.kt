@@ -6,7 +6,6 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonActuator
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -64,21 +63,21 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
 
             val scalar = when {
-                game.state.containsEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
+                services.gameState.containsEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
                 else -> 1f
             }
 
             chargingTimer.update(delta * scalar)
         },
         onJustReleased = {
-            if (stunned || damaged || game.isCameraRotating() || teleporting || !inPlay ||
+            if (stunned || damaged || services.camera.rotating || teleporting || !inPlay ||
                 !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
-                game.isProperty(ConstKeys.ROOM_TRANSITION, true)
+                services.levelState.roomTransition
             ) {
                 GameLogger.debug(
                     MEGAMAN_CONTROLLER_COMPONENT_TAG,
                     "attack actuator just released, do not shoot: " +
-                        "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.isCameraRotating()}, " +
+                        "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${services.camera.rotating}, " +
                         "teleporting=$teleporting, inPlay=$inPlay, " +
                         "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
                 )
@@ -97,7 +96,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     )
 
     val select = ButtonActuator(onJustReleased = {
-        when (game.selectButtonAction) {
+        when (services.players.selectButtonAction) {
             SelectButtonAction.NEXT_WEAPON -> {
                 if (!inPlay || damaged || teleporting) {
                     GameLogger.debug(

@@ -23,12 +23,12 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
-class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity {
+class MagmaOrb(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "MagmaOrb"
@@ -39,7 +39,7 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -61,7 +61,7 @@ class MagmaOrb(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (game.isCameraRotating()) body.physics.velocity.setZero()
+            if (services.camera.rotating) body.physics.velocity.setZero()
             else body.physics.velocity.set(trajectory)
         }
 

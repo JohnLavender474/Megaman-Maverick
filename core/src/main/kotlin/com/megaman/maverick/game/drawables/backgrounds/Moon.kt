@@ -15,7 +15,7 @@ class Moon(game: MegamanMaverickGame, it: RectangleMapObject): Background(
     TAG,
     startX = it.rectangle.x,
     startY = it.rectangle.y,
-    model = game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
+    model = game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
     modelWidth = it.rectangle.width,
     modelHeight = it.rectangle.height,
     rows = 1,

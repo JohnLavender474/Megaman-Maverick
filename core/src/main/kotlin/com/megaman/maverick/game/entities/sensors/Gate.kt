@@ -40,7 +40,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -58,7 +58,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudioEntity, ISpritesEntity, IEventListener,
+class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAudioEntity, ISpritesEntity, IEventListener,
     Resettable, IDirectional {
 
     companion object {
@@ -109,7 +109,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.GATES.source)
             GateType.entries.forEach { type ->
                 val prefix = type.name.lowercase()
                 GateState.entries.forEach { state ->
@@ -132,7 +132,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         center.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
 
@@ -171,7 +171,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -247,8 +247,8 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
         GameLogger.debug(TAG, "trigger(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
 
         state = GateState.OPENING
-        playSoundNow(SoundAsset.BOSS_DOOR_SOUND, false)
-        game.eventsMan.submitEvent(Event(EventType.GATE_INIT_OPENING))
+        services.audio.playSound(SoundAsset.BOSS_DOOR_SOUND, false)
+        services.events.submitEvent(Event(EventType.GATE_INIT_OPENING))
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
@@ -259,8 +259,8 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
                 timer.reset()
                 state = GateState.OPEN
-                game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_OPENING))
-                game.eventsMan.submitEvent(
+                services.events.submitEvent(Event(EventType.GATE_FINISH_OPENING))
+                services.events.submitEvent(
                     Event(
                         EventType.NEXT_ROOM_REQ, props(
                             ConstKeys.ROOM pairTo nextRoomKey,
@@ -278,7 +278,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
                 transitionFinished = false
                 state = GateState.CLOSING
                 if (showCloseEvent) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
-                game.eventsMan.submitEvent(Event(EventType.GATE_INIT_CLOSING))
+                services.events.submitEvent(Event(EventType.GATE_INIT_CLOSING))
             }
         }
 
@@ -289,7 +289,7 @@ class Gate(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IAudi
 
                 timer.reset()
                 state = GateState.CLOSED
-                game.eventsMan.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
+                services.events.submitEvent(Event(EventType.GATE_FINISH_CLOSING))
             }
         }
     })

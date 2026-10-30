@@ -9,7 +9,7 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
@@ -19,7 +19,7 @@ import com.megaman.maverick.game.world.body.getBounds
 
 // Unlike `Death`, the `PlayerDeath` entity is NOT added to the world system and applies ONLY to Mega Man.
 // Use this entity if it is guaranteed that ONLY Mega Man will ever make contact with this entity.
-open class PlayerDeath(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, Updatable {
+open class PlayerDeath(services: MegaServices) : MegaGameEntity(services), IBodyEntity, Updatable {
 
     companion object {
         const val TAG = "PlayerDeath"

@@ -11,7 +11,7 @@ import com.maverick.game.engine.players.registeredSlots
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
@@ -19,7 +19,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.utils.misc.StunType
 
-class TestStunPulser(game: MegamanMaverickGame) : MegaGameEntity(game) {
+class TestStunPulser(services: MegaServices) : MegaGameEntity(services) {
 
     companion object {
         const val TAG = "TestStunPulser"
@@ -49,7 +49,7 @@ class TestStunPulser(game: MegamanMaverickGame) : MegaGameEntity(game) {
     private fun pulse() {
         GameLogger.debug(TAG, "pulse()")
 
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.STUN_PLAYER, props(
                     ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_IF_ON_SURFACE,
@@ -58,7 +58,7 @@ class TestStunPulser(game: MegamanMaverickGame) : MegaGameEntity(game) {
             )
         )
 
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.SHAKE_CAM, props(
                     ConstKeys.INTERVAL pairTo ROOM_SHAKE_INTERVAL,
@@ -71,7 +71,7 @@ class TestStunPulser(game: MegamanMaverickGame) : MegaGameEntity(game) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!game.getGameCamera().getRotatedBounds().overlaps(bounds)) {
+        if (!services.getGameCamera().getRotatedBounds().overlaps(bounds)) {
             timer.reset()
             return@UpdatablesComponent
         }

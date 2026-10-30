@@ -42,6 +42,7 @@ enum class EventType {
     GAUNTLET_CLEARED,
     VICTORY_EVENT,
     END_LEVEL,
+    GAME_COMPLETE,
 
     TELEPORT,
     SHAKE_CAM,

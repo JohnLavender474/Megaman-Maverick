@@ -58,7 +58,7 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
 
         if (game.controllerPoller.isAnyJustReleased(START_BUTTONS)) {
             GameLogger.debug(TAG, "render(): set to next screen")
-            game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+            game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
             game.setCurrentScreen(ScreenEnum.LOGO_SCREEN.name)
         }
     }

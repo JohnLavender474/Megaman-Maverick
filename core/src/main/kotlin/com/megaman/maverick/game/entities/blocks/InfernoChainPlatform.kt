@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.players
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game), ICullableEntity, ISpritesEntity {
+class InfernoChainPlatform(services: MegaServices) : FeetRiseSinkBlock(services), ICullableEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "InfernoChainPlatform"
@@ -71,7 +71,7 @@ class InfernoChainPlatform(game: MegamanMaverickGame) : FeetRiseSinkBlock(game),
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             gdxArrayOf(PLATFORM, CHAIN).forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()

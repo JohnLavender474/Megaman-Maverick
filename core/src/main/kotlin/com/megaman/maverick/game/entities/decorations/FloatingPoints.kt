@@ -22,13 +22,13 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class FloatingPoints(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IDirectional {
+class FloatingPoints(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IDirectional {
 
     companion object {
         const val TAG = "FloatingPoints"
@@ -83,7 +83,7 @@ class FloatingPoints(game: MegamanMaverickGame) : MegaGameEntity(game), ISprites
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_POINTS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_POINTS.source)
             FloatingPointsType.entries.forEach {
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion(key))

@@ -12,14 +12,14 @@ import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.drawables.sprites.splitAndFlatten
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimationDefs.CHARGING_FRAME_DUR
 import java.util.function.Supplier
 
 class MegamanAnimations(
-    private val game: MegamanMaverickGame,
+    private val services: MegaServices,
     private val regionProcessor: MegaRegionProcessor? = null
 ) : Initializable, Supplier<OrderedMap<String, IAnimation>> {
 
@@ -50,7 +50,7 @@ class MegamanAnimations(
     override fun init(vararg params: Any) {
         MegamanWeapon.entries.forEach { weapon ->
             val assetSource = getAssetSourceForWeapon(weapon)
-            val atlas = game.assMan.getTextureAtlas(assetSource)
+            val atlas = services.assets.getTextureAtlas(assetSource)
 
             MegamanAnimationDefs.getKeys().forEach { defKey ->
                 if (!atlas.containsRegion(defKey)) return@forEach

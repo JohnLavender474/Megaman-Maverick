@@ -20,13 +20,13 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.getCenter
 
-class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class Coin(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         const val TAG = "Coin"
@@ -41,7 +41,7 @@ class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ITEMS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ITEMS.source)
             region = atlas.findRegion(TAG.lowercase())
         }
         super.init()
@@ -75,10 +75,10 @@ class Coin(game: MegamanMaverickGame) : AbstractItem(game), ISpritesEntity, IAni
     override fun contactWithPlayer(player: MegaGameEntity) {
         if (!doContactWithPlayer) return
 
-        val coins = game.getOrDefaultProperty(ConstKeys.COINS, 0, Int::class)
-        game.putProperty(ConstKeys.COINS, coins + 1)
+        val coins = services.levelState.coins
+        services.levelState.coins = coins + 1
 
-        playSoundNow(SoundAsset.SMB3_COIN_SOUND, false)
+        services.audio.playSound(SoundAsset.SMB3_COIN_SOUND, false)
 
         destroy()
     }

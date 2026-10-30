@@ -11,7 +11,7 @@ import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -21,7 +21,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 
 import com.megaman.maverick.game.utils.GameObjectPools
 
-class ExplosionField(game: MegamanMaverickGame): MegaGameEntity(game), IOwnable<IGameEntity> {
+class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "ExplosionField"

@@ -35,7 +35,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable {
+class Elecn(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFaceable {
 
     enum class ElecnState {
         MOVING, CHARGING, SHOCKING
@@ -82,7 +82,7 @@ class Elecn(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM)
 
     override fun init(vararg params: Any) {
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         addComponent(defineAnimationsComponent())
     }
 

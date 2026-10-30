@@ -70,14 +70,14 @@ internal fun Megaman.jumpBehavior(): IBehavior {
 
                 Direction.LEFT, Direction.RIGHT -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                    game.state.containsEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    services.gameState.containsEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
             }
             v.y = when (direction) {
                 Direction.UP, Direction.DOWN -> ConstVals.PPM * when {
                     isBehaviorActive(BehaviorType.WALL_SLIDING) -> wallJumpVel
-                    game.state.containsEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
+                    services.gameState.containsEnhancement(MegaEnhancement.JUMP_BOOST) -> jumpVel * MegaEnhancement.JUMP_BOOST_SCALAR
                     else -> jumpVel
                 }
 
@@ -111,7 +111,7 @@ internal fun Megaman.jumpBehavior(): IBehavior {
                 }
             }
 
-            if (game.getCurrentLevel().type == LevelType.MARIO_LEVEL)
+            if (services.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
                 requestToPlaySound(SoundAsset.SMB3_JUMP_SOUND, false)
             canMakeLandSound = true
 

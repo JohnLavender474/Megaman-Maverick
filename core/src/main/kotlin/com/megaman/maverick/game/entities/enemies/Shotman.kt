@@ -31,7 +31,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity {
+class Shotman(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity {
 
     companion object {
         const val TAG = "Shotman"
@@ -63,7 +63,7 @@ class Shotman(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIU
 
     override fun init(vararg params: Any) {
         if (shootRegion == null || launchRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             shootRegion = atlas.findRegion("Shotman/Shoot")
             launchRegion = atlas.findRegion("Shotman/Launch")
         }

@@ -27,7 +27,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.explosions.SpreadExplosion.SpreadExplo
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IDirectional {
+class SmallGreenMissile(services: MegaServices) : AbstractProjectile(services), IDirectional {
 
     companion object {
         const val TAG = "SmallGreenMissile"
@@ -58,7 +58,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
     private lateinit var explosionType: String
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
     }
 
@@ -100,7 +100,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
             DEFAULT_EXPLOSION -> {
                 val explosion = MegaEntityFactory.fetch(Explosion::class)!!
                 explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-                if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+                if (overlapsGameCamera()) services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
             }
 
             WAVE_EXPLOSION -> {
@@ -112,7 +112,7 @@ class SmallGreenMissile(game: MegamanMaverickGame) : AbstractProjectile(game), I
                         ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
                     )
                 )
-                if (overlapsGameCamera()) playSoundNow(SoundAsset.EXPLOSION_2_SOUND, false)
+                if (overlapsGameCamera()) services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
             }
         }
     }

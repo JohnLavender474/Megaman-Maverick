@@ -23,6 +23,6 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) {
         boss.ready = false
         boss.spawn(bossSpawnProps)
 
-        game.eventsMan.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS pairTo boss)))
+        game.events.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS pairTo boss)))
     }
 }

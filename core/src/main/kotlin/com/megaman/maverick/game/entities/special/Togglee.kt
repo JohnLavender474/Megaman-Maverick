@@ -41,7 +41,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IParentEntity<IGameEntity>,
+class Togglee(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IParentEntity<IGameEntity>,
     ISpritesEntity, IAnimatedEntity, IFontsEntity, IAudioEntity, IDirectional, IDamagerEntity, IEventListener {
 
     enum class ToggleeState {
@@ -107,7 +107,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val enemyAtlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val enemyAtlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("${ENEMY_TYPE}/${ToggleeState.TOGGLED_ON.name}", enemyAtlas.findRegion("$TAG/Left"))
             regions.put("${ENEMY_TYPE}/${ToggleeState.TOGGLED_OFF.name}", enemyAtlas.findRegion("$TAG/Right"))
             regions.put("${ENEMY_TYPE}/${ToggleeState.TOGGLING_TO_ON.name}", enemyAtlas.findRegion("$TAG/SwitchToLeft"))
@@ -115,7 +115,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
                 "${ENEMY_TYPE}/${ToggleeState.TOGGLING_TO_OFF.name}", enemyAtlas.findRegion("$TAG/SwitchToRight")
             )
 
-            val specialsAtlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val specialsAtlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
 
             regions.put("${LEVER_TYPE}/on", specialsAtlas.findRegion("$TAG/Left"))
             regions.put("${LEVER_TYPE}/off", specialsAtlas.findRegion("$TAG/Right"))
@@ -133,7 +133,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
 
@@ -187,7 +187,7 @@ class Togglee(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, IP
     override fun onDestroy() {
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         children.forEach { it.destroy() }
         children.clear()

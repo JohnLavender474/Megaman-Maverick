@@ -1,12 +1,12 @@
 package com.megaman.maverick.game.entities.factories.impl
 
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 import com.megaman.maverick.game.entities.sensors.Death
 import com.megaman.maverick.game.entities.sensors.Gate
 
-class SensorsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
+class SensorsFactory(private val services: MegaServices) : EntityFactory() {
 
     companion object {
         const val TAG = "SensorsFactory"
@@ -15,8 +15,8 @@ class SensorsFactory(private val game: MegamanMaverickGame) : EntityFactory() {
     }
 
     override fun init(vararg params: Any) {
-        pools.put(GATE, GameEntityPoolCreator.create { Gate(game) })
-        pools.put(DEATH, GameEntityPoolCreator.create { Death(game) })
+        pools.put(GATE, GameEntityPoolCreator.create { Gate(services) })
+        pools.put(DEATH, GameEntityPoolCreator.create { Death(services) })
     }
 
     override fun fetch(key: Any?) = pools.get(key)?.fetch()

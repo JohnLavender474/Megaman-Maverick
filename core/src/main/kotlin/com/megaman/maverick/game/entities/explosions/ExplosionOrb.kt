@@ -28,7 +28,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
+class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity,
     IEventListener {
 
     companion object {
@@ -52,7 +52,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -63,7 +63,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -79,7 +79,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -105,7 +105,7 @@ class ExplosionOrb(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOOB = getGameCameraCullingLogic(
-            game.getGameCamera(),
+            services.getGameCamera(),
             { defaultSprite.boundingRectangle.toGameRectangle() },
             OOB_CULL_TIME
         )

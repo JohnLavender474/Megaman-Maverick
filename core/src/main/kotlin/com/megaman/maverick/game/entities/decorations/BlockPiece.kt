@@ -23,14 +23,14 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
+class BlockPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "BlockPiece"
@@ -56,7 +56,7 @@ class BlockPiece(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity,
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             BlockPieceColor.entries.forEach { color ->
                 val key = color.name.lowercase()
                 val region = atlas.findRegion("$TAG/$key")

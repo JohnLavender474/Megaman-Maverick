@@ -16,8 +16,8 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 
 fun IBody.defaultDoUpdate(): Boolean {
-    val game = getEntity().game
-    if (getEntity().asPlayer == null && game.isCameraRotating()) return false
+    val services = getEntity().services
+    if (getEntity().asPlayer == null && services.camera.rotating) return false
     return when (type) {
         // NOTE: an ABSTRACT body that can be spawned OUTSIDE the camera must have its velocity set in
         // `onSpawn`, not only in `body.preProcess`. The `preProcess` function runs only for bodies the
@@ -30,8 +30,8 @@ fun IBody.defaultDoUpdate(): Boolean {
 }
 
 fun IBody.overlapsGameCam(): Boolean {
-    val game = getEntity().game
-    return getBounds().overlaps(game.getGameCamera().getRotatedBounds())
+    val services = getEntity().services
+    return getBounds().overlaps(services.getGameCamera().getRotatedBounds())
 }
 
 fun IBody.getBounds(reclaim: Boolean = true) = getBounds(GameObjectPools.fetch(GameRectangle::class, reclaim))

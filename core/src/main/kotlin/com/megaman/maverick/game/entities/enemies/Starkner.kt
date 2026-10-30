@@ -44,7 +44,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -66,7 +66,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL, dmgDuration = DMG_DUR),
+class Starkner(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL, dmgDuration = DMG_DUR),
     IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
@@ -136,7 +136,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -299,7 +299,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
         updatablesComponent.add update@{ delta ->
             direction = targetPlayer.direction
 
-            if (game.isCameraRotating()) {
+            if (services.camera.rotating) {
                 body.physics.velocity.setZero()
                 return@update
             }
@@ -367,8 +367,8 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
                     stateTimer.update(delta)
                     if (stateTimer.isFinished()) destroy()
 
-                    if (!game.audioMan.isSoundPlaying(SoundAsset.BLACKHOLE_SOUND))
-                        game.audioMan.playSound(SoundAsset.BLACKHOLE_SOUND, false)
+                    if (!services.audio.isSoundPlaying(SoundAsset.BLACKHOLE_SOUND))
+                        services.audio.playSound(SoundAsset.BLACKHOLE_SOUND, false)
                 }
             }
         }
@@ -411,7 +411,7 @@ class Starkner(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()
-            if (!game.paused) when {
+            if (!services.clock.paused) when {
                 moving && targetPlayer.existenceState.liveAfterUpdate -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
                 else -> rawRotation = direction.rotation
             }

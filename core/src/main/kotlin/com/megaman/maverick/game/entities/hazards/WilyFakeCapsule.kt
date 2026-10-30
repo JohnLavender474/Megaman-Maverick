@@ -36,7 +36,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
-class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class WilyFakeCapsule(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IOwnable<WilyFinalBoss>, IDamagerEntity, IHazard, IActivatable, Updatable {
 
     companion object {
@@ -88,7 +88,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             animDefs.keys().forEach { key ->
                 val region = atlas.findRegion("phase_3/fake/$key")
                 regions.put(key, region)
@@ -168,7 +168,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
             )
         }
 
-        game.audioMan.playSound(SoundAsset.BLAST_2_SOUND, false)
+        services.audio.playSound(SoundAsset.BLAST_2_SOUND, false)
     }
 
     fun explodeAndDestroy() {
@@ -177,7 +177,7 @@ class WilyFakeCapsule(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEn
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.DAMAGER pairTo false))
 
-        game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+        services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
 
         destroy()
     }

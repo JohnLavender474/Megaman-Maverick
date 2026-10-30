@@ -34,7 +34,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -51,7 +51,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageableEntity {
+class CactusMissile(services: MegaServices) : AbstractProjectile(services), IHealthEntity, IAnimatedEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "CactusMissile"
@@ -86,7 +86,7 @@ class CactusMissile(game: MegamanMaverickGame) : AbstractProjectile(game), IHeal
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("fly", "blink").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

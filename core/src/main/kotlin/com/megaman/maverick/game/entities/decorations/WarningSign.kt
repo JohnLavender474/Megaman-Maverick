@@ -19,12 +19,12 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IActivatable {
+class WarningSign(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, IActivatable {
 
     companion object {
         const val TAG = "WarningSign"
@@ -37,7 +37,7 @@ class WarningSign(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEnt
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())

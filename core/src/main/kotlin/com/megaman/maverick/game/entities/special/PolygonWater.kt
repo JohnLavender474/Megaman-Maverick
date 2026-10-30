@@ -28,7 +28,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 
-class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class PolygonWater(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IWater {
 
     companion object {
@@ -64,7 +64,7 @@ class PolygonWater(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private var splashSound = false
 
     override fun init(vararg params: Any) {
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
+        val atlas = services.assets.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
         if (blueReg == null) blueReg = atlas.findRegion(BLUE_REG)
         if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
         if (underReg == null) underReg = atlas.findRegion(UNDER_REG)

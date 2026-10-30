@@ -22,7 +22,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
@@ -33,7 +33,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
-class WilyDeathPlaneLazor(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class WilyDeathPlaneLazor(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IHazard, IDamagerEntity, IOwnable<WilyFinalBoss>, IActivatable {
 
     companion object {
@@ -63,7 +63,7 @@ class WilyDeathPlaneLazor(game: MegamanMaverickGame) : MegaGameEntity(game), IBo
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_2.source)
             for (i in 1..5) regions.put(i, atlas.findRegion("$TAG/$i"))
         }
         super.init()

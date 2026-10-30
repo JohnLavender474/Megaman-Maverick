@@ -34,7 +34,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class SigmaRatElectricBallExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -67,7 +67,7 @@ class SigmaRatElectricBallExplosion(game: MegamanMaverickGame) : MegaGameEntity(
 
     override fun init(vararg params: Any) {
         if (explosionRegion == null || dissipateRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             explosionRegion = atlas.findRegion("SigmaRat/ElectricPulse")
             dissipateRegion = atlas.findRegion("SigmaRat/ElectricDissipate")
         }

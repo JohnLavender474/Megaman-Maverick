@@ -33,7 +33,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireEntity, IAnimatedEntity {
+class SpitFireball(services: MegaServices) : AbstractProjectile(services), IFireEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "SpitFireball"
@@ -62,7 +62,7 @@ class SpitFireball(game: MegamanMaverickGame) : AbstractProjectile(game), IFireE
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         if (angles.isEmpty) {
             angles.put(Direction.UP, gdxArrayOf(45f, 315f))
             angles.put(Direction.LEFT, gdxArrayOf(45f, 135f))

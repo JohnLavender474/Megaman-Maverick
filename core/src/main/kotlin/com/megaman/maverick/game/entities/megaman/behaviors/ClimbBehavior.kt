@@ -139,7 +139,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
             body.physics.gravityOn = false
             body.physics.velocity.setZero()
 
-            game.setFocusSnappedAway(true)
+            services.camera.focusSnappedAway = true
 
             aButtonTask = when {
                 body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
@@ -157,7 +157,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
 
             body.physics.gravityOn = false
 
-            if (shooting || game.isProperty(ConstKeys.ROOM_TRANSITION, true)) {
+            if (shooting || services.levelState.roomTransition) {
                 GameLogger.debug(MEGAMAN_CLIMB_BEHAVIOR_TAG, "shooting or room transition")
                 body.physics.velocity.setZero()
                 return
@@ -212,7 +212,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
         }
 
         override fun end() {
-            game.setFocusSnappedAway(false)
+            services.camera.focusSnappedAway = false
 
             body.physics.gravityOn = true
             body.physics.velocity.setZero()

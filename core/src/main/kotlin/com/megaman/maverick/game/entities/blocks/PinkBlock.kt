@@ -8,7 +8,7 @@ import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.hazards.Laser
@@ -19,7 +19,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-class PinkBlock(game: MegamanMaverickGame) : BreakableBlock(game), IDamageableEntity {
+class PinkBlock(services: MegaServices) : BreakableBlock(services), IDamageableEntity {
 
     override val invincible = false
 

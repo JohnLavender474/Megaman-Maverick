@@ -30,7 +30,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.world.body.*
 
-class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class RollingBotShot(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "RollingBotShot"
@@ -52,7 +52,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -75,7 +75,7 @@ class RollingBotShot(game: MegamanMaverickGame) : AbstractProjectile(game), IAni
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
-        if (overlapsGameCamera()) playSoundNow(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val explosion = MegaEntityFactory.fetch(ChargedShotExplosion::class)!!
         explosion.spawn(
             props(

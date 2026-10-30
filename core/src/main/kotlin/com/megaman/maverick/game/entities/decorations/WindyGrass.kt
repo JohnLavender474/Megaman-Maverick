@@ -22,13 +22,13 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 
-open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
+open class WindyGrass(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity,
     ICullableEntity {
 
     companion object {
@@ -45,7 +45,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
 
     override fun init(vararg params: Any) {
         if (leftRegion == null || rightRegion == null || middleRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
             leftRegion = atlas.findRegion("$TAG/Left")
             rightRegion = atlas.findRegion("$TAG/Right")
             middleRegion = atlas.findRegion("$TAG/Middle")
@@ -91,7 +91,7 @@ open class WindyGrass(game: MegamanMaverickGame) : MegaGameEntity(game), ISprite
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds }, 0f)
+        val cullOutOfBounds = getGameCameraCullingLogic(services.getGameCamera(), { bounds }, 0f)
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

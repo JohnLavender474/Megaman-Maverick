@@ -21,14 +21,14 @@ import com.megaman.maverick.game.entities.utils.hardMode
 
 class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator {
 
-    private val game = megaman.game
+    private val services = megaman.services
 
     private val custom = objectMapOf(
         BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
         BigAssMaverickRobot.TAG pairTo dmgNeg(2),
         PropellerPlatform.TAG pairTo dmgNeg(1),
         RocketPlatform.TAG pairTo dmgNeg(1),
-        Laser.TAG pairTo dmgNeg { if (game.state.hardMode) 15 else 8 },
+        Laser.TAG pairTo dmgNeg { if (services.gameState.hardMode) 15 else 8 },
     )
     private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION)
 

@@ -31,7 +31,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         private val ALWAYS_TRUE_PRED: (Float) -> Boolean = { true }
 
         private fun predBasedOnRoomTrans(game: MegamanMaverickGame): (Float) -> Boolean {
-            return { !game.isProperty(ConstKeys.ROOM_TRANSITION, true) }
+            return { !game.levelState.roomTransition }
         }
     }
 
@@ -121,7 +121,7 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                                 )
                             if (!eventsToAccept.contains(event.key)) return@predicate false
 
-                            val currentRoomName = game.getCurrentRoom()?.name
+                            val currentRoomName = game.levelState.currentRoom?.name
                             val shouldSpawn = roomNames.contains(currentRoomName)
 
                             GameLogger.debug(
@@ -147,8 +147,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     )
                     spawners.add(spawner)
 
-                    game.eventsMan.addListener(spawner)
-                    disposables.add { game.eventsMan.removeListener(spawner) }
+                    game.events.addListener(spawner)
+                    disposables.add { game.events.removeListener(spawner) }
                 }
 
                 SpawnType.SPAWN_EVENT -> {
@@ -170,8 +170,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                     GameLogger.debug(TAG, "build(): adding SPAWN_EVENT spawne: entity=$name")
 
-                    game.eventsMan.addListener(spawner)
-                    disposables.add { game.eventsMan.removeListener(spawner) }
+                    game.events.addListener(spawner)
+                    disposables.add { game.events.removeListener(spawner) }
                 }
 
                 else -> {

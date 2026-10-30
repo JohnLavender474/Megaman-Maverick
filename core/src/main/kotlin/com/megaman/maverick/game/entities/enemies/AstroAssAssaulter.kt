@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
     IFreezableEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -109,7 +109,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("stand", "throw", "shoot", "shoot_up", "frozen").forEach { key ->
                 regions.put(key, atlas.findRegion("${TAG}/$key"))
             }
@@ -227,7 +227,7 @@ class AstroAssAssaulter(game: MegamanMaverickGame) : AbstractEnemy(game, size = 
             freezeHandler.update(delta)
             if (frozen) return@add
 
-            if (game.isCameraRotating()) return@add
+            if (services.camera.rotating) return@add
 
             if (flag?.existenceState?.liveAfterUpdate == false) flag = null
 

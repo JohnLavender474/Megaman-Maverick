@@ -38,7 +38,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -57,7 +57,7 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IFireEntity {
+class Fireball(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFireEntity {
 
     companion object {
         const val TAG = "Fireball"
@@ -86,10 +86,10 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val fireballAtlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val fireballAtlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put("fireball", fireballAtlas.findRegion("Fire/Fireball"))
 
-            val flameAtlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val flameAtlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put("burst", flameAtlas.findRegion("Flame"))
         }
         super.init()
@@ -177,11 +177,11 @@ class Fireball(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedE
         val spawn = GameObjectPools.fetch(Vector2::class).set(body.getCenter().x, waterFixture.getShape().getMaxY())
         val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
         puff.spawn(props(ConstKeys.POSITION pairTo spawn, ConstKeys.OWNER pairTo owner))
-        playSoundNow(SoundAsset.WHOOSH_SOUND, false)
+        services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        val overlapsCamera = body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())
+        val overlapsCamera = body.getBounds().overlaps(services.getGameCamera().getRotatedBounds())
         val active = overlapsCamera && owner !is FireballBar
         body.physics.collisionOn = active
         body.forEachFixture { fixture ->

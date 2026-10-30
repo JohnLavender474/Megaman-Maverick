@@ -33,7 +33,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.StandardDamageNegotiator
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class DarkSerketClaw(game: MegamanMaverickGame) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
+class DarkSerketClaw(services: MegaServices) : AbstractHealthEntity(services), IProjectileEntity, ISpritesEntity,
     IAnimatedEntity, IFaceable, ILightSource {
 
     companion object {
@@ -68,7 +68,7 @@ class DarkSerketClaw(game: MegamanMaverickGame) : AbstractHealthEntity(game), IP
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

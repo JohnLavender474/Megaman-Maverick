@@ -1,15 +1,17 @@
 package com.megaman.maverick.game.spawns
 
+import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -17,7 +19,7 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 
-private class SpawnedEntity(game: MegamanMaverickGame) : MegaGameEntity(game) {
+private class SpawnedEntity(services: MegaServices) : MegaGameEntity(services) {
     var allowSpawn = true
     override fun canSpawn(spawnProps: Properties) = allowSpawn && super.canSpawn(spawnProps)
     override fun getType() = EntityType.OTHER
@@ -28,16 +30,13 @@ private const val ROOM_EVENT = "room_event"
 class SpawnerReleaseTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegamanMaverickGame
+    lateinit var services: MegaServices
     lateinit var spawns: Array<Spawn>
     lateinit var spawnsMan: SpawnsManager
 
     beforeEach {
         engine = GameEngine()
-        game = mockk(relaxed = true)
-        every { game.engine } returns engine
-        every { game.state } returns GameState()
-        every { game.getCurrentLevel() } returns LevelDefinition.TEST_1
+        services = testServices(engine = engine)
         spawns = Array()
         spawnsMan = SpawnsManager(spawns)
     }
@@ -67,7 +66,7 @@ class SpawnerReleaseTest : DescribeSpec({
     describe("an event spawner") {
         it("accepts the events of the frame in which its entity is destroyed after the spawn pass") {
             val made = ArrayList<MegaGameEntity>()
-            val spawner = eventSpawner { SpawnedEntity(game).also { made.add(it) } }
+            val spawner = eventSpawner { SpawnedEntity(services).also { made.add(it) } }
             spawnsMan.setSpawners(Array<ISpawner>().apply { add(spawner) })
 
             frame(events = listOf(Event(ROOM_EVENT)), listener = spawner)
@@ -84,7 +83,7 @@ class SpawnerReleaseTest : DescribeSpec({
 
         it("ignores events while its entity lives") {
             val made = ArrayList<MegaGameEntity>()
-            val spawner = eventSpawner { SpawnedEntity(game).also { made.add(it) } }
+            val spawner = eventSpawner { SpawnedEntity(services).also { made.add(it) } }
             spawnsMan.setSpawners(Array<ISpawner>().apply { add(spawner) })
 
             frame(events = listOf(Event(ROOM_EVENT)), listener = spawner)
@@ -95,7 +94,7 @@ class SpawnerReleaseTest : DescribeSpec({
         }
 
         it("does not keep a pooled entity that another caller spawned again before the next spawn pass") {
-            val pooled = SpawnedEntity(game)
+            val pooled = SpawnedEntity(services)
             val spawner = eventSpawner { pooled }
             spawnsMan.setSpawners(Array<ISpawner>().apply { add(spawner) })
 
@@ -111,7 +110,7 @@ class SpawnerReleaseTest : DescribeSpec({
         }
 
         it("is free after reset, and leaves no runnable on its entity") {
-            val entity = SpawnedEntity(game)
+            val entity = SpawnedEntity(services)
             val spawner = eventSpawner { entity }
             spawnsMan.setSpawners(Array<ISpawner>().apply { add(spawner) })
             frame(events = listOf(Event(ROOM_EVENT)), listener = spawner)
@@ -124,7 +123,7 @@ class SpawnerReleaseTest : DescribeSpec({
         }
 
         it("leaves no runnable on its entity when it is removed after one spawn") {
-            val entity = SpawnedEntity(game)
+            val entity = SpawnedEntity(services)
             val spawner = SpawnerForEvent(
                 predicate = { it.key == ROOM_EVENT },
                 spawnSupplier = { Spawn(entity, Properties()) },
@@ -140,7 +139,7 @@ class SpawnerReleaseTest : DescribeSpec({
         }
 
         it("leaves no runnable on its pooled entity after another owner reused it") {
-            val pooled = SpawnedEntity(game)
+            val pooled = SpawnedEntity(services)
             val spawner = eventSpawner { pooled }
             spawnsMan.setSpawners(Array<ISpawner>().apply { add(spawner) })
             frame(events = listOf(Event(ROOM_EVENT)), listener = spawner)
@@ -157,7 +156,7 @@ class SpawnerReleaseTest : DescribeSpec({
         }
 
         it("is free again after its spawn is rejected") {
-            val entity = SpawnedEntity(game).also { it.allowSpawn = false }
+            val entity = SpawnedEntity(services).also { it.allowSpawn = false }
             val spawner = eventSpawner { entity }
             spawnsMan.setSpawners(Array<ISpawner>().apply { add(spawner) })
 
@@ -170,7 +169,7 @@ class SpawnerReleaseTest : DescribeSpec({
 
     describe("a bounds spawner") {
         fun boundsSpawner(camera: GameRectangle, made: MutableList<MegaGameEntity>) = SpawnerForBoundsEntered(
-            spawnSupplier = { Spawn(SpawnedEntity(game).also { made.add(it) }, Properties()) },
+            spawnSupplier = { Spawn(SpawnedEntity(services).also { made.add(it) }, Properties()) },
             thisBounds = { GameRectangle(100, 0, 10, 10) },
             otherBounds = { camera }
         )

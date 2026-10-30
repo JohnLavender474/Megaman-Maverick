@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -56,7 +56,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class GravityBlock(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAudioEntity, IDirectional {
 
     companion object {
@@ -86,7 +86,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             gdxArrayOf(MOON_CRATE).forEach { regions.put(it, atlas.findRegion(it)) }
         }
         super.init()
@@ -139,7 +139,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
     private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
         entity == this && block == this.innerBlock
 
-    private fun defineUpdatablesComponent() = UpdatablesComponent({ direction = game.gravity.direction })
+    private fun defineUpdatablesComponent() = UpdatablesComponent({ direction = services.gravity.direction })
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
@@ -170,7 +170,7 @@ class GravityBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntit
         feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) hitByBlock@{ block, _ ->
             if (block == innerBlock) return@hitByBlock
 
-            if (game.getGameCamera().getRotatedBounds().overlaps(body.getBounds()))
+            if (services.getGameCamera().getRotatedBounds().overlaps(body.getBounds()))
                 requestToPlaySound(SoundAsset.POUND_SOUND, false)
         }
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f

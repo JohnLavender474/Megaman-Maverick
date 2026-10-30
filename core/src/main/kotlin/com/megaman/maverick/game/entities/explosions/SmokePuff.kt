@@ -32,7 +32,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDamagerEntity, IOwnable<IGameEntity>,
+class SmokePuff(services: MegaServices) : MegaGameEntity(services), IHazard, IDamagerEntity, IOwnable<IGameEntity>,
     IBodyEntity, ISpritesEntity, IDirectional {
 
     companion object {
@@ -59,7 +59,7 @@ class SmokePuff(game: MegamanMaverickGame) : MegaGameEntity(game), IHazard, IDam
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())

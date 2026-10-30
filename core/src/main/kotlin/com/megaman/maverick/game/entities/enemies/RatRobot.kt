@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
+class RatRobot(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
     IFaceable {
 
     companion object {
@@ -90,7 +90,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
@@ -235,7 +235,7 @@ class RatRobot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMAL
 
             body.physics.velocity.x = when {
                 frozen || !body.isSensing(BodySense.FEET_ON_GROUND) -> 0f
-                else -> when (game.state.getDifficultyMode()) {
+                else -> when (services.gameState.getDifficultyMode()) {
                     DifficultyMode.NORMAL -> NORMAL_SPEED
                     DifficultyMode.HARD -> HARD_SPEED
                 } * ConstVals.PPM * facing.value

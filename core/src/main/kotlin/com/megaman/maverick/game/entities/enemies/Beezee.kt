@@ -38,7 +38,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -54,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable,
+class Beezee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable,
     IOwnable<CannoHoney>, ICullable, IFreezableEntity {
 
     companion object {
@@ -119,7 +119,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init(): hashCode=${hashCode()}")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -164,7 +164,7 @@ class Beezee(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
             if (state == BeezeeState.ATTACK &&
-                !game.getGameCamera().overlaps(body.getBounds())
+                !services.getGameCamera().overlaps(body.getBounds())
             ) cullTimer.update(delta)
             else cullTimer.reset()
 

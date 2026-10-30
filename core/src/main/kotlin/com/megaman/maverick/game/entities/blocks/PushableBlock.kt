@@ -27,7 +27,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -46,7 +46,7 @@ import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
+class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "PushableBlock"
@@ -68,7 +68,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private class InnerBlock(game: MegamanMaverickGame, private val pushableBody: Body) : Block(game) {
+    private class InnerBlock(services: MegaServices, private val pushableBody: Body) : Block(services) {
 
         override fun hitByProjectile(projectileFixture: IFixture) {
             val projectile = projectileFixture.getEntity()
@@ -101,7 +101,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             gdxArrayOf(METAL_CRATE).forEach { regions.put(it, atlas.findRegion(it)) }
         }
         super.init()
@@ -112,7 +112,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        val currentRoom = game.getCurrentRoom()?.name
+        val currentRoom = services.levelState.currentRoom?.name
         GameLogger.debug(TAG, "onSpawn(): currentRoom=$currentRoom, spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
@@ -120,7 +120,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
             .getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        block = InnerBlock(game, body)
+        block = InnerBlock(services, body)
         block!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -152,7 +152,7 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this, objectSetOf(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS), cull@{ event ->
-                    val room = game.getCurrentRoom()?.name
+                    val room = services.levelState.currentRoom?.name
                     val cull = room != spawnRoom
                     GameLogger.debug(
                         TAG,
@@ -206,13 +206,13 @@ class PushableBlock(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEnti
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = when {
-                game.isProperty(ConstKeys.ROOM_TRANSITION, true) -> 0f
+                services.levelState.roomTransition -> 0f
                 body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY
                 else -> GRAVITY
             }
             body.physics.gravity.y = -gravity * ConstVals.PPM
 
-            if (game.isProperty(ConstKeys.ROOM_TRANSITION, true)) body.physics.velocity.setZero()
+            if (services.levelState.roomTransition) body.physics.velocity.setZero()
 
             val velocity = body.physics.velocity
             if (players.any {

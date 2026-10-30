@@ -40,8 +40,8 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.MegamanMaverickGame.Performance
+import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -62,7 +62,7 @@ import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after each Reactor Monkey is defeated
-class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IBossListener,
+class FloatingCan(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IBossListener,
     IAnimatedEntity, IEventListener {
 
     companion object {
@@ -104,7 +104,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -121,7 +121,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
@@ -132,7 +132,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         body.setCenter(spawn)
 
         spawnDelayTimer.resetDuration(
-            if (game.state.getDifficultyMode() == DifficultyMode.HARD) SPAWN_DELAY_HARD else SPAWN_DELAY
+            if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) SPAWN_DELAY_HARD else SPAWN_DELAY
         )
 
         spawningBlinkTimer.reset()
@@ -145,7 +145,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         frozen = false
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun canDamage(damageable: IDamageableEntity) = spawnDelayTimer.isFinished() && super.canDamage(damageable)
@@ -257,7 +257,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
                     body = body,
                     start = body.getCenter(),
                     speed = speed@{
-                        val speed = if (game.state.hardMode) FLY_SPEED_HARD else FLY_SPEED
+                        val speed = if (services.gameState.hardMode) FLY_SPEED_HARD else FLY_SPEED
                         return@speed speed * ConstVals.PPM
                     },
                     stopOnTargetReached = false,
@@ -273,7 +273,7 @@ class FloatingCan(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.S
     }
 
     private fun directlyChaseMegaman() {
-        val speed = if (game.state.hardMode) FLY_SPEED_HARD else FLY_SPEED
+        val speed = if (services.gameState.hardMode) FLY_SPEED_HARD else FLY_SPEED
         body.physics.velocity.set(
             targetPlayer.body
                 .getCenter()

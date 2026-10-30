@@ -24,13 +24,13 @@ import com.maverick.game.engine.motion.MotionComponent.MotionDefinition
 import com.maverick.game.engine.motion.Trajectory
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 
-class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpritesEntity, IEventListener {
+class GearTrolley(services: MegaServices) : Block(services), IMotionEntity, ISpritesEntity, IEventListener {
 
     companion object {
         private var region: TextureRegion? = null
@@ -46,7 +46,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
     override fun init(vararg params: Any) {
         super.init()
         if (region == null) region =
-            game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
+            services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, "GearTrolleyPlatform")
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
         addComponent(MotionComponent())
@@ -56,7 +56,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = (spawnProps.get(ConstKeys.BOUNDS) as GameRectangle).getCenter()
         val bounds = GameRectangle().setSize(WIDTH * ConstVals.PPM, HEIGHT * ConstVals.PPM)
@@ -73,7 +73,7 @@ class GearTrolley(game: MegamanMaverickGame) : Block(game), IMotionEntity, ISpri
 
     override fun onDestroy() {
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {

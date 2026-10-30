@@ -89,7 +89,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         GameLogger.debug(PlayerSpawnEventHandler.TAG, "init()")
         if (!initialized) {
             MegamanWeapon.entries.forEach { weapon ->
-                val atlas = game.assMan.getTextureAtlas(MegamanAnimations.getAssetSourceForWeapon(weapon))
+                val atlas = game.assets.getTextureAtlas(MegamanAnimations.getAssetSourceForWeapon(weapon))
                 val key = weapon.name
                 atlas.findRegion(ConstKeys.BEAM)?.let { BEAM_REGIONS.put(key, it) }
                 atlas.findRegion(ConstKeys.SPAWN)?.let {
@@ -116,14 +116,14 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         player.lock(MegaLockGroup.DAMAGE, MegaLockReason.LEVEL_END)
         player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.LEVEL_END)
 
-        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
-        game.audioMan.stopMusic()
+        game.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+        game.levelState.megamanBeam = true
+        game.audio.stopMusic()
     }
 
     override fun update(delta: Float) {
         beamCenter.set(beamSprite.boundingRectangle.getCenter())
-        game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}_${ConstKeys.CENTER}", beamCenter)
+        game.levelState.megamanBeamCenter = beamCenter
 
         game.addDrawable(beamSprite)
 
@@ -133,7 +133,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
                 if (startDelayTimer.isJustFinished()) {
                     GameLogger.debug(TAG, "start delay timer just finished")
                     preBeamTimer.reset()
-                    game.audioMan.playMusic(MusicAsset.VINNYZ_VICTORY_MUSIC, false)
+                    game.audio.playMusic(MusicAsset.VINNYZ_VICTORY_MUSIC, false)
                 }
             }
 
@@ -180,7 +180,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
             beamTransitionTimer.reset()
 
-            game.audioMan.playSound(SoundAsset.BEAM_SOUND, false)
+            game.audio.playSound(SoundAsset.BEAM_SOUND, false)
         }
     }
 
@@ -221,10 +221,10 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamEndTimer.update(delta)
         if (beamEndTimer.isFinished()) {
             GameLogger.debug(TAG, "beam end timer just finished")
-            game.audioMan.stopMusic()
-            val level = game.getCurrentLevel()
-            game.eventsMan.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
-            game.putProperty("${Megaman.TAG}_${ConstKeys.BEAM}", true)
+            game.audio.stopMusic()
+            val level = game.levelState.currentLevel!!
+            game.events.submitEvent(Event(EventType.END_LEVEL, props(ConstKeys.LEVEL pairTo level)))
+            game.levelState.megamanBeam = true
         }
     }
 }

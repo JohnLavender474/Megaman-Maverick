@@ -45,7 +45,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -61,7 +61,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 
-class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity, IDirectional, IActivatable {
 
     companion object {
@@ -111,7 +111,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf(ConstKeys.ARROW, ConstKeys.AURA, ConstKeys.DEACTIVATED).forEach {
                 regions.put(it, atlas.findRegion("${TAG}/$it"))
             }
@@ -170,10 +170,10 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
     }
 
     override fun shouldBeginSwitchToDown(delta: Float) = on &&
-        direction != game.gravity.direction && isTriggerEntityInBounds() &&
-        triggerArea.overlaps(game.getGameCamera().getRotatedBounds())
+        direction != services.gravity.direction && isTriggerEntityInBounds() &&
+        triggerArea.overlaps(services.getGameCamera().getRotatedBounds())
 
-    override fun shouldBeginSwitchToUp(delta: Float) = direction != game.gravity.direction
+    override fun shouldBeginSwitchToUp(delta: Float) = direction != services.gravity.direction
 
     override fun shouldFinishSwitchToDown(delta: Float) = true
 
@@ -192,7 +192,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
             }
         }
 
-        game.gravity.set(direction)
+        services.gravity.set(direction)
         players.forEach { it.onGravityDeviceSwitch() }
 
         requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
@@ -206,7 +206,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         component.put(ConstKeys.TRIGGER) update@{ delta ->
             triggerArea.setCenter(body.getCenter())
 
-            if (game.isCameraRotating()) {
+            if (services.camera.rotating) {
                 if (hasActiveDelay) on = false
                 return@update
             }
@@ -268,7 +268,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         )
         .preProcess { delta, sprite ->
             sprite.setCenter(body.getCenter())
-            auraBlink.update(if (game.gravity.direction == direction) delta / 2f else delta)
+            auraBlink.update(if (services.gravity.direction == direction) delta / 2f else delta)
             val alpha = auraBlink.getValue()
             sprite.setAlpha(alpha)
         }
@@ -279,7 +279,7 @@ class GravitySwitcharoo(game: MegamanMaverickGame) : Switch(game), IBodyEntity, 
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (!on || game.isCameraRotating() || game.gravity.direction == direction) ConstKeys.DEACTIVATED
+                    if (!on || services.camera.rotating || services.gravity.direction == direction) ConstKeys.DEACTIVATED
                     else ConstKeys.ARROW
                 }
                 .applyToAnimations { animations ->

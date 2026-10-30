@@ -34,7 +34,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -51,7 +51,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class Goomba(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFaceable {
 
     companion object {
         const val TAG = "Goomba"
@@ -88,7 +88,7 @@ class Goomba(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.SMALL)
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         addComponent(defineAnimationsComponent())

@@ -36,7 +36,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class BikerKibbo(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "BikerKibbo"
@@ -89,7 +89,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -101,7 +101,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
 
-        val canSpawn = !isNextPossibleSpawnDelayed(game, TAG, id)
+        val canSpawn = !isNextPossibleSpawnDelayed(services, TAG, id)
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
 
         return canSpawn
@@ -130,7 +130,7 @@ class BikerKibbo(game: MegamanMaverickGame) : AbstractEnemy(game), IAnimatedEnti
 
         if (overlapsGameCamera() && isHealthDepleted()) explode()
 
-        delayNextPossibleSpawn(game, TAG, mapObjectId!!, NEXT_POSSIBLE_SPAWN_DELAY)
+        delayNextPossibleSpawn(services, TAG, mapObjectId!!, NEXT_POSSIBLE_SPAWN_DELAY)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

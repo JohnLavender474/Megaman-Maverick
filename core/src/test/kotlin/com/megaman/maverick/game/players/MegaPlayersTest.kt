@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.players
 
+import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.IDirectional
@@ -13,8 +14,9 @@ import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import io.kotest.assertions.throwables.shouldThrow
@@ -24,21 +26,20 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 
-private class TestPlayerEntity(game: MegamanMaverickGame) : MegaGameEntity(game), IDirectional {
+private class TestPlayerEntity(services: MegaServices) : MegaGameEntity(services), IDirectional {
     override var direction = Direction.UP
     override fun getType() = EntityType.MEGAMAN
 }
 
 class MegaPlayersTest : DescribeSpec({
 
-    lateinit var game: MegamanMaverickGame
+    lateinit var services: MegaServices
 
     beforeEach {
-        game = mockk(relaxed = true)
-        every { game.engine } returns mockk<GameEngine>(relaxed = true)
+        services = testServices(engine = mockk<GameEngine>(relaxed = true))
     }
 
-    fun playerEntity(withBody: Boolean = true) = TestPlayerEntity(game).also {
+    fun playerEntity(withBody: Boolean = true) = TestPlayerEntity(services).also {
         if (withBody) it.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         it.addComponent(ControllerComponent())
     }
@@ -49,13 +50,13 @@ class MegaPlayersTest : DescribeSpec({
         }
 
         it("registers an entity with no other parts, and asPlayer gives it back") {
-            val entity = TestPlayerEntity(game)
+            val entity = TestPlayerEntity(services)
 
             MegaPlayers().register(PlayerSlot(0), entity) shouldBeSameInstanceAs entity
 
             entity.asPlayer shouldBeSameInstanceAs entity
             entity.playerSlot shouldBe PlayerSlot(0)
-            TestPlayerEntity(game).asPlayer shouldBe null
+            TestPlayerEntity(services).asPlayer shouldBe null
             "not an entity".asPlayer shouldBe null
             null.asPlayer shouldBe null
         }
@@ -87,7 +88,7 @@ class MegaPlayersTest : DescribeSpec({
             players.register(PlayerSlot(0), playerEntity(withBody = false))
             val withBody = players.register(PlayerSlot(1), playerEntity())
 
-            players.targetFor(TestPlayerEntity(game)) shouldBeSameInstanceAs withBody
+            players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs withBody
         }
 
         it("targetFor gives the player in slot 0, also when it is not present") {
@@ -96,7 +97,7 @@ class MegaPlayersTest : DescribeSpec({
 
             entity.existenceState.liveNow shouldBe false
 
-            players.targetFor(TestPlayerEntity(game)) shouldBeSameInstanceAs entity
+            players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs entity
         }
 
         it("tells the damage signal's listeners in the order they connected, with the player and the damager") {
@@ -117,6 +118,19 @@ class MegaPlayersTest : DescribeSpec({
             players.onPlayerDamaged(player, damager)
 
             calls shouldBe listOf("first", "second", "second")
+        }
+    }
+
+    describe("MegaPlayers.selectButtonAction") {
+        it("starts as NEXT_WEAPON and keeps a value that is set") {
+            val players = MegaPlayers()
+            players.selectButtonAction shouldBe SelectButtonAction.NEXT_WEAPON
+
+            players.selectButtonAction = SelectButtonAction.AIR_DASH
+            players.selectButtonAction shouldBe SelectButtonAction.AIR_DASH
+
+            players.selectButtonAction = SelectButtonAction.START
+            players.selectButtonAction shouldBe SelectButtonAction.START
         }
     }
 

@@ -30,7 +30,7 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -38,10 +38,9 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.AnimationUtils
 
-class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
+class DrWily(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
     IEventListener {
 
     companion object {
@@ -76,7 +75,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             animDefs.keys().forEach {
                 val region = atlas.findRegion("defeated/$it")
                 regions.put(it, region)
@@ -92,7 +91,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
 
@@ -114,7 +113,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -139,7 +138,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                     position.set(target)
                     state = DrWilyState.LAND
                     if (targetPlayer.existenceState.liveAfterUpdate)
-                        game.audioMan.playMusic(MusicAsset.MM3_ALL_CLEAR_MUSIC, false)
+                        services.audio.playMusic(MusicAsset.MM3_ALL_CLEAR_MUSIC, false)
                 }
             }
 
@@ -149,7 +148,7 @@ class DrWily(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, 
                 if (begTimer.isFinished()) {
                     stillTimer.update(delta)
                     if (stillTimer.isJustFinished() && targetPlayer.existenceState.liveAfterUpdate)
-                        game.setCurrentScreen(ScreenEnum.ENDING_SCREEN.name)
+                        services.events.submitEvent(Event(EventType.GAME_COMPLETE))
                 }
             }
         }

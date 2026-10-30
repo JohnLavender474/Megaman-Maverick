@@ -11,7 +11,7 @@ import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -21,7 +21,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 
-open class LightSourceEntity(game: MegamanMaverickGame) : MegaGameEntity(game), ILightSource, ICullableEntity {
+open class LightSourceEntity(services: MegaServices) : MegaGameEntity(services), ILightSource, ICullableEntity {
 
     companion object {
         const val TAG = "LightSource"
@@ -63,7 +63,7 @@ open class LightSourceEntity(game: MegamanMaverickGame) : MegaGameEntity(game), 
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(
-            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
         val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)

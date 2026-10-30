@@ -44,7 +44,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
@@ -71,7 +71,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class InfernoMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "InfernoMan"
@@ -164,7 +164,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
             InfernoManState.entries.forEach { state ->
                 val key = state.name.lowercase()
                 if (atlas.containsRegion("$TAG/$key")) regions.put(key, atlas.findRegion("$TAG/$key"))
@@ -281,7 +281,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 return@add
             }
 
-            if (game.isCameraRotating()) {
+            if (services.camera.rotating) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
             } else body.physics.gravityOn = !frozen
@@ -438,7 +438,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
                 else -> isFacing(Facing.LEFT)
             }
             sprite.setFlip(flipX, false)
-            sprite.hidden = !frozen && (damageBlink || game.isProperty(ConstKeys.ROOM_TRANSITION, true))
+            sprite.hidden = !frozen && (damageBlink || services.levelState.roomTransition)
         }
         return component
     }
@@ -488,7 +488,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
     }
 
     private fun buildTimers() {
-        val hardMode = game.state.getDifficultyMode() == DifficultyMode.HARD
+        val hardMode = services.gameState.getDifficultyMode() == DifficultyMode.HARD
 
         timers.put("init", Timer(INIT_DUR))
         timers.put("stand", Timer(if (hardMode) STAND_DUR_HARD else STAND_DUR))
@@ -653,7 +653,7 @@ class InfernoMan(game: MegamanMaverickGame) : AbstractBoss(game), IAnimatedEntit
             ConstKeys.TRAJECTORY pairTo trajectory
         )
 
-        if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+        if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
             props.put("${ConstKeys.DROP}_${ConstKeys.FLAME}_${ConstKeys.DELAY}", WAVE_DROP_FLAME_HARD)
 
         wave.spawn(props)

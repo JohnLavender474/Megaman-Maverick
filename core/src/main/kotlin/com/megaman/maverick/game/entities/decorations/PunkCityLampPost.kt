@@ -27,7 +27,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.addFixtureLabel
 import com.megaman.maverick.game.world.body.getCenter
 
-class PunkCityLampPost(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+class PunkCityLampPost(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     IFaceable {
 
     companion object {
@@ -73,7 +73,7 @@ class PunkCityLampPost(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             LampPostState.entries.forEach { state ->
                 val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
@@ -156,7 +156,7 @@ class PunkCityLampPost(game: MegamanMaverickGame) : MegaGameEntity(game), ISprit
     override fun getTag() = TAG
 }
 
-class PunkCityLampPostBlock(game: MegamanMaverickGame) : Block(game), IOwnable<PunkCityLampPost> {
+class PunkCityLampPostBlock(services: MegaServices) : Block(services), IOwnable<PunkCityLampPost> {
 
     companion object {
         const val TAG = "PunkCityLampPostBlock"

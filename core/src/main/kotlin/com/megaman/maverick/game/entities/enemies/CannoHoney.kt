@@ -39,7 +39,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -59,7 +59,7 @@ import com.megaman.maverick.game.utils.extensions.getShape
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.world.body.*
 
-class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IDrawableShapesEntity,
+class CannoHoney(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IDrawableShapesEntity,
     IParentEntity<Beezee>, ICullable {
 
     companion object {
@@ -126,7 +126,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -145,7 +145,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         stateLoopHandler.reset()
 
         (0 until MAX_BEES).forEach { i ->
-            MegaUtilMethods.delayRun(game, (i + 1) * BEE_SPAWN_DELAY) {
+            MegaUtilMethods.delayRun(services, (i + 1) * BEE_SPAWN_DELAY) {
                 spawnBeezee()
             }
         }
@@ -153,7 +153,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         putCullable(ConstKeys.CUSTOM_CULL, this)
         cullTimer.reset()
 
-        val beeCycleDur = when (game.state.getDifficultyMode()) {
+        val beeCycleDur = when (services.gameState.getDifficultyMode()) {
             DifficultyMode.NORMAL -> BEE_CYCLE_DELAY_NORMAL
             DifficultyMode.HARD -> BEE_CYCLE_DELAY_HARD
         }
@@ -223,7 +223,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
 
             cullBounds.setCenter(body.getCenter())
 
-            if (!game.getGameCamera().overlaps(cullBounds)) cullTimer.update(delta)
+            if (!services.getGameCamera().overlaps(cullBounds)) cullTimer.update(delta)
             else cullTimer.reset()
 
             if (frozen) return@add
@@ -236,7 +236,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
                 if (beeCycleDelay.isFinished()) {
                     cycleBees()
 
-                    val beeCycleDur = when (game.state.getDifficultyMode()) {
+                    val beeCycleDur = when (services.gameState.getDifficultyMode()) {
                         DifficultyMode.NORMAL -> BEE_CYCLE_DELAY_NORMAL
                         DifficultyMode.HARD -> BEE_CYCLE_DELAY_HARD
                     }
@@ -313,7 +313,7 @@ class CannoHoney(game: MegamanMaverickGame) : AbstractEnemy(game), IFreezableEnt
         }
 
         (0 until numBeesToCycle).forEach { i ->
-            MegaUtilMethods.delayRun(game, (i + 1) * BEE_SPAWN_DELAY) {
+            MegaUtilMethods.delayRun(services, (i + 1) * BEE_SPAWN_DELAY) {
                 spawnBeezee()
             }
         }

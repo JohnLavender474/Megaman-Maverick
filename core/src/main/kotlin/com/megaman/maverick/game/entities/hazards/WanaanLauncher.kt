@@ -36,7 +36,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 // implements `IBossListener` to ensure is destroyed after 2nd Reactor Man fight
-class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
+class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, IAudioEntity,
     ICullableEntity, IDrawableShapesEntity, IBossListener, IDirectional {
 
     companion object {
@@ -77,7 +77,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             gdxArrayOf("launcher", "bust").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
@@ -134,7 +134,7 @@ class WanaanLauncher(game: MegamanMaverickGame) : AbstractHealthEntity(game), IB
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (isHealthDepleted() || game.isCameraRotating()) return@add
+            if (isHealthDepleted() || services.camera.rotating) return@add
 
             if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()

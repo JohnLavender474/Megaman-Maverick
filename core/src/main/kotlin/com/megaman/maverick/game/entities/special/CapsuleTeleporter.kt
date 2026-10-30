@@ -42,7 +42,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -60,7 +60,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITeleporterEntity, IBodyEntity,
+class CapsuleTeleporter(services: MegaServices) : MegaGameEntity(services), ITeleporterEntity, IBodyEntity,
     ISpritesEntity, IAnimatedEntity, IAudioEntity, IEventListener {
 
     companion object {
@@ -93,7 +93,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             regions.put("frame", atlas.findRegion("$TAG/FrameV2"))
             regions.put("inactive", atlas.findRegion("$TAG/InactiveV2"))
             regions.put("active", atlas.findRegion("$TAG/ActiveV2"))
@@ -110,7 +110,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         GameLogger.debug(TAG, "onSpawn(): props = $spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
@@ -156,7 +156,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         upperBlock?.destroy()
         upperBlock = null
@@ -206,7 +206,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
 
         incomingBodies.put(entity, Timer(RECEIVE_DELAY))
 
-        if (entity.asPlayer != null && megamanDirOnReceive != null) game.gravity.set(megamanDirOnReceive!!)
+        if (entity.asPlayer != null && megamanDirOnReceive != null) services.gravity.set(megamanDirOnReceive!!)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -227,7 +227,7 @@ class CapsuleTeleporter(game: MegamanMaverickGame) : MegaGameEntity(game), ITele
             timer.update(delta)
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "update(): send timer finished; thisKey=$thisKey, entity=$entity")
-                game.eventsMan.submitEvent(
+                services.events.submitEvent(
                     Event(
                         EventType.TELEPORT, props(ConstKeys.ENTITY pairTo entity, ConstKeys.KEY pairTo nextKey)
                     )

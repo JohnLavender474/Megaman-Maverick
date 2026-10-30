@@ -49,7 +49,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
         GameLogger.debug(TAG, "init()")
 
-        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
         val backgroundRegion = uiAtlas.findRegion(BKG_REG_KEY)
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
@@ -64,7 +64,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
                 centerY = false,
             )
             fontHandles.put(text, fontHandle)
-            arrows.put(text, BlinkingArrow(game.assMan))
+            arrows.put(text, BlinkingArrow(game.assets))
         }
 
         buttons.put(SAVE, object : IMenuButton {
@@ -73,7 +73,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
             override fun onSelect(delta: Float): Boolean {
                 game.saveState()
-                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
         })
@@ -84,11 +84,11 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
             override fun onSelect(delta: Float): Boolean {
                 when {
-                    game.isInExtraLevel() -> game.startExtraLevel(game.getCurrentLevel())
-                    game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
+                    game.levelState.isInExtraLevel -> game.startExtraLevel(game.levelState.currentLevel!!)
+                    game.gameState.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
                         game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                     else -> {
-                        game.setCurrentLevel(LevelDefinition.INTRO_STAGE)
+                        game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
                         game.startLevel()
                     }
                 }
@@ -112,7 +112,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             override fun onNavigate(direction: Direction, delta: Float) = navigate(MAIN_MENU, direction)
 
             override fun onSelect(delta: Float): Boolean {
-                if (game.isInExtraLevel()) game.resetPlayerProgress()
+                if (game.levelState.isInExtraLevel) game.resetPlayerProgress()
                 game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
                 return true
             }
@@ -132,7 +132,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
         if (!initialized) init()
         GameLogger.debug(TAG, "show()")
 
-        activeKeys = if (game.isInExtraLevel()) extrasKeys else mainlineKeys
+        activeKeys = if (game.levelState.isInExtraLevel) extrasKeys else mainlineKeys
         firstButtonKey = activeKeys.first()
 
         var row = TEXT_ROW_START
@@ -148,7 +148,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
 
         super.show()
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.VINNYZ_PASSWORD_MUSIC)
+        game.audio.playMusic(MusicAsset.VINNYZ_PASSWORD_MUSIC)
     }
 
     override fun render(delta: Float) {
@@ -169,6 +169,6 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
     }
 
     override fun onAnyMovement(direction: Direction) {
-        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
+        game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }
 }

@@ -36,7 +36,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class UnderwaterPenguinBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -67,7 +67,7 @@ class UnderwaterPenguinBot(game: MegamanMaverickGame) : AbstractEnemy(game, size
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("swim", atlas.findRegion("$TAG/swim"))
             regions.put("bent", atlas.findRegion("$TAG/bent"))
         }

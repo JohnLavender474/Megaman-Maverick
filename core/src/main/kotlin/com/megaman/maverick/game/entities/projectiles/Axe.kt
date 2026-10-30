@@ -32,7 +32,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
@@ -41,7 +41,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity, IDirectional, IEventListener {
+class Axe(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IDirectional, IEventListener {
 
     companion object {
         const val TAG = "Axe"
@@ -65,7 +65,7 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, "$TAG/spin")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, "$TAG/spin")
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -75,7 +75,7 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -93,7 +93,7 @@ class Axe(game: MegamanMaverickGame) : AbstractProjectile(game), IAnimatedEntity
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {

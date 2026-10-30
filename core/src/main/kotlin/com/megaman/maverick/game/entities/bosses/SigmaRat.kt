@@ -33,7 +33,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
@@ -54,7 +54,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE) {
+class SigmaRat(services: MegaServices) : AbstractBoss(services, size = Size.LARGE) {
 
     companion object {
         const val TAG = "SigmaRat"
@@ -151,7 +151,7 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
 
     override fun init(vararg params: Any) {
         if (bodyRegion == null || bodyDamagedRegion == null || bodyTittyShootRegion == null || bodyTittyShootDamagedRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             bodyRegion = atlas.findRegion("SigmaRat/Body")
             bodyDamagedRegion = atlas.findRegion("SigmaRat/BodyDamaged")
             bodyTittyShootRegion = atlas.findRegion("SigmaRat/BodyTittyShoot")
@@ -172,8 +172,8 @@ class SigmaRat(game: MegamanMaverickGame) : AbstractBoss(game, size = Size.LARGE
         leftClawSpawn.set(spawnProps.get(ConstKeys.LEFT, RectangleMapObject::class)!!.rectangle.getCenter())
         rightClawSpawn.set(spawnProps.get(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter())
 
-        leftClaw = SigmaRatClaw(game)
-        rightClaw = SigmaRatClaw(game)
+        leftClaw = SigmaRatClaw(services)
+        rightClaw = SigmaRatClaw(services)
 
         leftClaw!!.spawn(
             props(

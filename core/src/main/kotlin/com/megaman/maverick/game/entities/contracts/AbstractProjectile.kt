@@ -8,15 +8,15 @@ import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.IEventListener
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 
-abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: Size = Size.MEDIUM) :
-    MegaGameEntity(game), IProjectileEntity, ISpritesEntity, IBossListener, ISizable {
+abstract class AbstractProjectile(services: MegaServices, override var size: Size = Size.MEDIUM) :
+    MegaGameEntity(services), IProjectileEntity, ISpritesEntity, IBossListener, ISizable {
 
     override var owner: IGameEntity? = null
 
     open val canMove: Boolean
-        get() = !game.isCameraRotating()
+        get() = !services.camera.rotating
 
     protected var onDamageInflictedTo: ((IDamageableEntity) -> Unit)? = null
     protected var movementScalar = 1f
@@ -50,13 +50,13 @@ abstract class AbstractProjectile(game: MegamanMaverickGame, override var size: 
                 val cullOnEvents = getCullOnEventsCullable()
                 putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
                 putProperty(ConstKeys.CULL_EVENTS, cullOnEvents)
-                game.eventsMan.addListener(cullOnEvents)
-                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+                services.events.addListener(cullOnEvents)
+                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
             }
             else -> {
                 removeCullOnEventCullable()
                 val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS) as IEventListener?
-                if (cullOnEvents != null) game.eventsMan.removeListener(cullOnEvents)
+                if (cullOnEvents != null) services.events.removeListener(cullOnEvents)
                 runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
             }
         }

@@ -21,7 +21,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.common.utils.OrbitUtils
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -139,8 +139,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         const val TAG = "MegamanWeaponsHandler"
     }
 
-    private val game: MegamanMaverickGame
-        get() = megaman.game
+    private val services: MegaServices
+        get() = megaman.services
 
     private val weaponHandlers = ObjectMap<MegamanWeapon, MegaWeaponHandler>()
 
@@ -432,7 +432,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
             cooldown = Timer(0.25f),
             normalCost = { 2 },
             chargeable = { false },
-            preShoot = { game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false) }
+            preShoot = { services.audio.playSound(SoundAsset.WHOOSH_SOUND, false) }
         ) {
 
             private var canSpin = true
@@ -505,7 +505,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         )
     }
 
-    fun hasWeapon(weapon: MegamanWeapon) = game.state.containsWeapon(weapon)
+    fun hasWeapon(weapon: MegamanWeapon) = services.gameState.containsWeapon(weapon)
 
     fun onChangeWeapon(current: MegamanWeapon, previous: MegamanWeapon?) {
         GameLogger.debug(TAG, "onChangeWeapon(): current=$current, previous=$previous")
@@ -652,7 +652,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
         when (weapon) {
             MegamanWeapon.MEGA_BUSTER, MegamanWeapon.RUSH_JET -> shootMegaBuster(stat)
-            MegamanWeapon.AXE_SWINGER -> MegaUtilMethods.delayRun(game, 0.1f) { throwAxe() }
+            MegamanWeapon.AXE_SWINGER -> MegaUtilMethods.delayRun(services, 0.1f) { throwAxe() }
             MegamanWeapon.INFERNAL_BARRAGE -> shootInfernalBarrage(stat)
             MegamanWeapon.MOON_SCYTHES -> shootMoonScythes(stat)
             MegamanWeapon.PRECIOUS_GUARD -> shootPreciousGuard()
@@ -688,7 +688,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
             if (megaman.hasProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}")) {
                 val id = megaman.removeProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}", String::class)!!
-                game.updatables.remove(id)
+                services.updatables.remove(id)
 
                 GameLogger.debug(
                     "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
@@ -696,7 +696,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 )
             }
 
-            val id = MegaUtilMethods.delayRun(game, MegamanValues.SHOOT_ANIM_TIME) {
+            val id = MegaUtilMethods.delayRun(services, MegamanValues.SHOOT_ANIM_TIME) {
                 GameLogger.debug(
                     "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
                     "shootMegaBuster(): set shoot down to false"
@@ -828,10 +828,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 )
             )
 
-            game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+            services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
 
             return
-        } else if (game.getCurrentLevel() == LevelDefinition.MOON_MAN) {
+        } else if (services.levelState.currentLevel!! == LevelDefinition.MOON_MAN) {
             GameLogger.debug(TAG, "shootMagmaWave(): in Moon Man's stage")
 
             val explosion = MegaEntityFactory.fetch(MagmaExplosion::class)!!
@@ -1025,7 +1025,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
         }
         impulse.scl(ConstVals.PPM.toFloat())
 
-        if (game.getCurrentLevel() == LevelDefinition.MOON_MAN || megaman.body.isSensing(BodySense.IN_WATER))
+        if (services.levelState.currentLevel!! == LevelDefinition.MOON_MAN || megaman.body.isSensing(BodySense.IN_WATER))
             impulse.scl(MegamanValues.AXE_SLOW_SCALAR)
 
         val spawn = megaman.body.getCenter()

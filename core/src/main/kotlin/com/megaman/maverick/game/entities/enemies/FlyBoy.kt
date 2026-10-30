@@ -31,7 +31,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -40,7 +40,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class FlyBoy(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FlyBoy"
@@ -169,7 +169,7 @@ class FlyBoy(game: MegamanMaverickGame) : AbstractEnemy(game, size = Size.MEDIUM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         val animations = objectMapOf<String, IAnimation>(
             "fly" pairTo Animation(atlas.findRegion("FlyBoy/Fly"), 1, 4, 0.1f),
             "stand" pairTo Animation(atlas.findRegion("FlyBoy/Stand"))

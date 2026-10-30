@@ -29,7 +29,7 @@ import com.maverick.game.engine.motion.Pendulum
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.math.PI
 
-class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity, IMotionEntity,
+class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<MegaGameEntity>, ISpritesEntity, IMotionEntity,
     IEventListener {
 
     companion object {
@@ -76,7 +76,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             regions.put(ConstKeys.PLATFORM, atlas.findRegion("$TAG/${ConstKeys.PLATFORM}"))
             regions.put(ConstKeys.RING, atlas.findRegion("$TAG/${ConstKeys.RING}"))
         }
@@ -112,11 +112,11 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
             target?.let {
                 body.physics.velocity.set(it)
                     .sub(body.getPositionPoint(Position.TOP_CENTER))
-                    .scl(1f / game.getPerformance().fixedStep)
+                    .scl(1f / services.settings.performance.fixedStep)
             }
         }
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
     }
 
     override fun onDestroy() {
@@ -131,7 +131,7 @@ class SwingingPlatform(game: MegamanMaverickGame) : Block(game), IParentEntity<M
 
         target = null
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {

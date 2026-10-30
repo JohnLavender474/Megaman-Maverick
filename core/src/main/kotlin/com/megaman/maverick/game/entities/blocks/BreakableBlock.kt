@@ -24,7 +24,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEntity, IAnimatedEntity {
+open class BreakableBlock(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
 
@@ -83,11 +83,11 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val platformsAtlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val platformsAtlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             regions.put(BRICK_TYPE, platformsAtlas.findRegion(BRICK_TYPE))
             regions.put(PRECIOUS_TYPE, platformsAtlas.findRegion(PRECIOUS_TYPE))
 
-            val smb3BlocksAtlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
+            val smb3BlocksAtlas = services.assets.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
             regions.put(SMB3_GOLD_TYPE, smb3BlocksAtlas.findRegion("GoldBreakableBlock/block"))
         }
         super.init()
@@ -135,8 +135,8 @@ open class BreakableBlock(game: MegamanMaverickGame) : Block(game), ISpritesEnti
         connectedBlocks.forEach { block -> block.explodeAndDie() }
         connectedBlocks.clear()
 
-        if (game.audioMan.isSoundPlaying(SoundAsset.THUMP_SOUND)) stopSoundNow(SoundAsset.THUMP_SOUND)
-        playSoundNow(SoundAsset.THUMP_SOUND, false)
+        if (services.audio.isSoundPlaying(SoundAsset.THUMP_SOUND)) services.audio.stopSound(SoundAsset.THUMP_SOUND)
+        services.audio.playSound(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun hitByProjectile(projectileFixture: IFixture) {

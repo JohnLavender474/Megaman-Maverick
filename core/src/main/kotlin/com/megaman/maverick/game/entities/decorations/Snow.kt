@@ -20,7 +20,7 @@ import com.maverick.game.engine.motion.SineWave
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
+class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
 
     companion object {
         const val TAG = "Snow"
@@ -61,7 +61,7 @@ class Snow(game: MegamanMaverickGame) : MegaGameEntity(game), ISpritesEntity {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())

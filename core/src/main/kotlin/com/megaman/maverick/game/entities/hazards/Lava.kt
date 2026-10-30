@@ -43,7 +43,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
@@ -58,7 +58,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class Lava(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IDirectional, IFaceable {
 
     companion object {
@@ -98,7 +98,7 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put(FLOW, atlas.findRegion("$TAG/${FLOW}"))
             regions.put("${TOP}${FLOW}1", atlas.findRegion("$TAG/${TOP}${FLOW}1"))
             regions.put("${TOP}${FLOW}2", atlas.findRegion("$TAG/${TOP}${FLOW}2"))
@@ -222,8 +222,8 @@ class Lava(game: MegamanMaverickGame) : MegaGameEntity(game), IBodyEntity, ICull
             }
         }, cullEvents)
 
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvents) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { services.events.addListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
 
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }

@@ -20,7 +20,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -29,7 +29,7 @@ import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
 
-class Rock(game: MegamanMaverickGame) : AbstractProjectile(game) {
+class Rock(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "Rock"
@@ -49,7 +49,7 @@ class Rock(game: MegamanMaverickGame) : AbstractProjectile(game) {
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             val keys = RockSize.entries.map { it.name.lowercase() }
             AnimationUtils.loadRegions(TAG, atlas, keys, regions)
         }
@@ -92,7 +92,7 @@ class Rock(game: MegamanMaverickGame) : AbstractProjectile(game) {
 
         explodeAndDie()
 
-        playSoundNow(SoundAsset.DINK_SOUND, false)
+        services.audio.playSound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
