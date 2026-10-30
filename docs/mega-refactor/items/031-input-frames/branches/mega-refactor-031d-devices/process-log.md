@@ -5,7 +5,7 @@
 - State: planned
 - Goal: devices: the keyboard aliases, every connected gamepad (with the index-shift and code-0 fixes), the stick at `0.5`, the triggers
 - Done:
-- Next: the draft `docs/CONTRACT.md`
+- Next: the draft `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -22,3 +22,8 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   the input tests, and the `gdx-controllers` `2.2.3` and `jamepad` `2.0.20.0` sources. Draft `docs/SCOPE.md` written.
 - The owner approved `docs/SCOPE.md` (question 1: "I agree"; questions 2 to 6: "approved"; all as recommended).
   Answers in `docs/SCOPE.md` and the item `ITEM.md` (decision of 2026-10-30).
+- Draft `docs/CONTRACT.md` written. Test rooms used (all checked in the live TMX `game_rooms` layers): `REFACTOR_TEST_029`
+  `movement` and `player_death` (`RefactorTest029.tmx`), `INTRO_STAGE` `room1` and `room12` (`IntroStage_v3.tmx`;
+  `room12` holds the boss `Gate` and a player spawn). No new test room.
+- The owner approved `docs/CONTRACT.md` with both recommendations (verbatim: "yes"). The overlap note in
+  `docs/NOTES.md` now names `mega-refactor-051a-camera-read-interface` (no overlap known).

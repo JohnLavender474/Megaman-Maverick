@@ -7,6 +7,11 @@
 Checked on 2026-10-30, on `master` at `05fc5ed12`: no other branch is active, and no worktree exists
 (`git worktree list` shows only the main checkout). So there is no overlap now.
 
+Checked again on 2026-10-30, on `master` at `1dc4d898a`: `mega-refactor-051a-camera-read-interface` started (its own
+worktree; its `docs/SCOPE.md` on `master` is still the template). Its item is the camera read model (`051`). This
+branch does not change the camera, `MegamanMaverickGame` or the engine, so no overlap is known. Check again before the
+branch starts and before the merge.
+
 Planned branches that read or change the same code later:
 
 - `031e` (bindings): replaces `ControllerButtons` and changes `ControllerSettingsScreen`. This branch changes
