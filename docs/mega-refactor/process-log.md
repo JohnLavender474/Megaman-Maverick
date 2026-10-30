@@ -1204,3 +1204,17 @@ newest entry at the bottom.
   2026-10-30), so that open question is closed.
 - Contract check: not needed (docs only).
 - Follow-up: the `031e` scan.
+
+## 2026-10-30 — mega-refactor-084a-player-state
+
+- Summary: the first branch of `084`. `facing`, `aButtonTask`, `currentWeapon` and `running` are typed fields on
+  `Megaman`, and the teleport hooks are constructor parameters of `TeleportableComponent`, set once in
+  `Megaman.init()`. `MegamanProps`, `ConstKeys.RUNNING`, the 3 `ON_TELEPORT_*` keys and
+  `setStandardOnTeleportContinueProp` are deleted. Squash commit `2a81e1ba3`.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` pass (876 tests in `engine:test` and
+  `core:test`, `lwjgl3:jar`, the `grep`, a smoke launch with a clean exit). The owner played the manual checks ("all
+  tests pass"), before `master` was merged into the branch; that merge took in `031d` and `051a` with no conflict, and
+  the automated checks ran again on the result. Merge approval (verbatim: "merge").
+- Follow-up: item `084` stays active. The branch backlog candidate (the other player keys in the property bag) went to
+  the `084` `ITEM.md`, not a new item, because it belongs to a later `084` branch. No bugs filed. `051b` takes this
+  branch from `master` before its step 8.

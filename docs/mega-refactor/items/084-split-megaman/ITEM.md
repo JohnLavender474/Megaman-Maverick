@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: none
 - Related: `017`, `023`, `024`, `025`, `029`, `030`, `042`, `048`, `051`, `053`, `058`, `059`, `060`, `081`
-- Branches: `mega-refactor-084a-player-state` (started 2026-10-30)
+- Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)
 
 ## Goal
 
@@ -19,9 +19,10 @@ not mix the split with new gameplay.
 
 Not approved. The branch `SCOPE.md` decides the final scope. The facts and line numbers are in `NOTES.md`.
 
-- **Typed state in place of the property bag:** `facing`, `aButtonTask`, `currentWeapon` and `running` are read and
-  written through `getProperty`/`putProperty` (`MegamanProps`, `ConstKeys.RUNNING`). The teleport hooks are lambdas
-  stored as properties (`ConstKeys.ON_TELEPORT_START`, `ON_TELEPORT_END`). Give them typed fields or components.
+- **Typed state in place of the property bag:** done in `084a` for `facing`, `aButtonTask`, `currentWeapon`, `running`
+  and the teleport hooks. Still in the bag, for a later branch: the other player keys (15 bag calls in
+  `entities/megaman/` at the `084a` scan), for example `MegamanKeys.DIRECTION_ON_AIR_DASH`, the `SHOOT_DOWN` keys,
+  `ConstKeys.ANIMATION_KEY` and `ConstKeys.SIDE`. `ConstKeys.FOCUS` belongs to `051`.
 - **Damage reaction as components:** the knockback per direction and `noDmgBounce`, the recovery flash, the stun
   (`STUN_PLAYER`, `stunTimer`), and the freeze with mash-to-unfreeze (`frozen`, `hitsToUnfreeze`, `frozenPushTimer`,
   the ice shards).
