@@ -36,7 +36,6 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.controller.ControllerSystem
-import com.megaman.maverick.game.controllers.ControllerUtils
 import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.cullables.CullablesSystem
@@ -54,6 +53,8 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.EventsManager
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.groups.GroupsSystem
+import com.maverick.game.engine.input.InputFrameBuilder
+import com.maverick.game.engine.input.checkInputButtons
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.PathfinderResult
@@ -74,6 +75,7 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
+import com.megaman.maverick.game.controllers.ControllerUtils
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadControllerButtons
@@ -85,29 +87,27 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.input.FrameControllerPoller
+import com.megaman.maverick.game.input.GamepadInput
+import com.megaman.maverick.game.input.KeyboardInput
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
-import com.maverick.game.engine.input.InputFrameBuilder
-import com.maverick.game.engine.input.checkInputButtons
-import com.megaman.maverick.game.input.FrameControllerPoller
-import com.megaman.maverick.game.input.GamepadInput
-import com.megaman.maverick.game.input.KeyboardInput
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
+import com.megaman.maverick.game.screens.levels.camera.GameCameraState
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreenV2
 import com.megaman.maverick.game.screens.other.*
-import com.megaman.maverick.game.screens.levels.camera.GameCameraState
 import com.megaman.maverick.game.state.GameClock
 import com.megaman.maverick.game.state.GameSettings
-import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.state.GameState
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.utils.AsyncFileWriter
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
@@ -180,6 +180,7 @@ class MegamanMaverickGame(
         EventType.TURN_CONTROLLER_OFF,
         EventType.TOGGLE_PIXEL_PERFECT
     )
+
     val levelState = LevelState()
     val clock = GameClock()
     val camera = GameCameraState()
