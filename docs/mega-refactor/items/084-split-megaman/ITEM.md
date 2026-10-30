@@ -6,6 +6,7 @@
 - Related: `017`, `023`, `024`, `025`, `029`, `030`, `042`, `048`, `051`, `053`, `058`, `059`, `060`, `081`
 - Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)
   `mega-refactor-084d-damage-reaction` (merged 2026-10-30)
+  `mega-refactor-084c-movement` (started 2026-10-30)
 
 ## Goal
 
