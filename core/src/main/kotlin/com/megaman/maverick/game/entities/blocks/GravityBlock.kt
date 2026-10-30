@@ -54,6 +54,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.*
 
 class GravityBlock(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
@@ -170,7 +171,7 @@ class GravityBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         feetFixture.setReceiver(Receivers.HIT_BY_BLOCK, ProcessState.BEGIN) hitByBlock@{ block, _ ->
             if (block == innerBlock) return@hitByBlock
 
-            if (services.getGameCamera().getRotatedBounds().overlaps(body.getBounds()))
+            if (services.gameCamera.getRotatedBounds().overlaps(body.getBounds()))
                 requestToPlaySound(SoundAsset.POUND_SOUND, false)
         }
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f

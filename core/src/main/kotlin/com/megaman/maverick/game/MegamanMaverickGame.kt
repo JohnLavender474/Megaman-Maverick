@@ -187,6 +187,11 @@ class MegamanMaverickGame(
     val levelState = LevelState()
     val clock = GameClock()
     val camera = GameCameraState()
+    val gameCamera = RotatableCamera(onJustFinishedRotating = {
+        camera.rotating = false
+        camera.focusSnappedAway = false
+        events.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
+    })
     val settings = GameSettings()
 
     lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
@@ -319,11 +324,6 @@ class MegamanMaverickGame(
 
         val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val gameHeight = ConstVals.VIEW_HEIGHT * ConstVals.PPM
-        val gameCamera = RotatableCamera(onJustFinishedRotating = {
-            camera.rotating = false
-            camera.focusSnappedAway = false
-            events.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
-        })
         gameCamera.setToDefaultPosition()
 
         val gameViewport = when {
@@ -422,7 +422,7 @@ class MegamanMaverickGame(
             updatables,
             runQueue,
             getSystem(GroupsSystem::class)!!,
-            getGameCamera()
+            gameCamera
         )
 
         MegaEntityFactory.init(services)
@@ -696,7 +696,7 @@ class MegamanMaverickGame(
                 val newGameViewport: Viewport
                 val newUiViewport: Viewport
 
-                val gameCam = getGameCamera()
+                val gameCam = gameCamera
                 val uiCam = getUiCamera()
 
                 val gameWidth = ConstVals.VIEW_WIDTH * ConstVals.PPM
@@ -1022,8 +1022,6 @@ class MegamanMaverickGame(
 
         setCurrentScreen(ScreenEnum.LEVEL_SCREEN.name)
     }
-
-    fun getGameCamera() = viewports.get(ConstKeys.GAME).camera as RotatableCamera
 
     fun getUiCamera() = viewports.get(ConstKeys.UI).camera as OrthographicCamera
 

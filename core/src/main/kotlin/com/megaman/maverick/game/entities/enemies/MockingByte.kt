@@ -62,6 +62,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.midPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
@@ -360,7 +361,7 @@ class MockingByte(services: MegaServices) : AbstractEnemy(services), IAnimatedEn
 
                     facing = if (body.physics.velocity.x > 0f) Facing.RIGHT else Facing.LEFT
 
-                    val camBounds = services.getGameCamera().getRotatedBounds()
+                    val camBounds = services.gameCamera.getRotatedBounds()
                     val bodyBounds = body.getBounds()
 
                     if (!camBounds.overlaps(bodyBounds)) {
@@ -368,7 +369,7 @@ class MockingByte(services: MegaServices) : AbstractEnemy(services), IAnimatedEn
                             TAG,
                             "update(): just left game camera bounds: " +
                                 "body.getBounds=${body.getBounds()}, " +
-                                "camera.getBounds=${services.getGameCamera().getRotatedBounds()}"
+                                "camera.getBounds=${services.gameCamera.getRotatedBounds()}"
                         )
 
                         diveOutOfBoundsTimer.update(delta)

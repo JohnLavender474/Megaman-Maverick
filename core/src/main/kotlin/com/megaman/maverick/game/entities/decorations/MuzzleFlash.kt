@@ -72,7 +72,7 @@ class MuzzleFlash(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
 
         val cullOutOfBounds =
-            getGameCameraCullingLogic(services.getGameCamera(), { defaultSprite.boundingRectangle.toGameRectangle() })
+            getGameCameraCullingLogic(services.gameCamera, { defaultSprite.boundingRectangle.toGameRectangle() })
 
         return CullablesComponent(
             objectMapOf(

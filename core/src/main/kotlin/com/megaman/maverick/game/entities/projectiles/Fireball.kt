@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -181,7 +182,7 @@ class Fireball(services: MegaServices) : AbstractProjectile(services), IAnimated
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        val overlapsCamera = body.getBounds().overlaps(services.getGameCamera().getRotatedBounds())
+        val overlapsCamera = body.getBounds().overlaps(services.gameCamera.getRotatedBounds())
         val active = overlapsCamera && owner !is FireballBar
         body.physics.collisionOn = active
         body.forEachFixture { fixture ->

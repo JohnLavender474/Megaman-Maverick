@@ -9,7 +9,6 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureRegion
-import com.maverick.game.engine.common.extensions.overlaps
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -119,7 +118,7 @@ class IceCubeMaker(services: MegaServices) : MegaGameEntity(services), IBodyEnti
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (runBounds != null &&
-            !services.getGameCamera().overlaps(runBounds!!, GameObjectPools.fetch(BoundingBox::class))
+            !services.gameCamera.overlaps(runBounds!!, GameObjectPools.fetch(BoundingBox::class))
         ) return@UpdatablesComponent
 
         delayTimer.update(delta)

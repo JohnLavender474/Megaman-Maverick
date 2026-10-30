@@ -55,6 +55,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import java.util.*
@@ -185,7 +186,7 @@ class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val gameCamBounds = services.getGameCamera().getRotatedBounds()
+        val gameCamBounds = services.gameCamera.getRotatedBounds()
         if (gameCamBounds.overlaps(forceBounds) || gameCamBounds.overlaps(body.getBounds())) {
             spawnBubblesDelay.update(delta)
             if (spawnBubblesDelay.isFinished()) {

@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.lightOrNull
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
@@ -284,7 +285,7 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
                     val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
 
                     reusableCircle.setRadius(radius.toFloat()).setCenter(center)
-                    if (!reusableCircle.overlaps(services.getGameCamera().getRotatedBounds())) return
+                    if (!reusableCircle.overlaps(services.gameCamera.getRotatedBounds())) return
 
                     val radiance = event.getProperty(ConstKeys.RADIANCE, Float::class)!!
 
@@ -327,7 +328,7 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val camBounds = services.getGameCamera().getRotatedBounds()
+        val camBounds = services.gameCamera.getRotatedBounds()
         camBounds.translate(-CAM_BOUNDS_BUFFER * ConstVals.PPM, -CAM_BOUNDS_BUFFER * ConstVals.PPM)
         camBounds.translateSize(2f * CAM_BOUNDS_BUFFER * ConstVals.PPM, 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM)
 

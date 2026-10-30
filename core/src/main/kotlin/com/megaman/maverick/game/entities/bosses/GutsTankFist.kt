@@ -58,6 +58,7 @@ import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -199,7 +200,7 @@ class GutsTankFist(services: MegaServices) : AbstractEnemy(services, dmgDuration
                     }
 
                     val speed = when {
-                        services.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> LAUNCH_SPEED_IN_CAM
+                        services.gameCamera.getRotatedBounds().overlaps(body.getBounds()) -> LAUNCH_SPEED_IN_CAM
                         else -> LAUNCH_SPEED_OUT_OF_CAM
                     }
 
@@ -223,7 +224,7 @@ class GutsTankFist(services: MegaServices) : AbstractEnemy(services, dmgDuration
 
                     if (returnDelayTimer.isFinished()) {
                         val speed = when {
-                            services.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> RETURN_SPEED_IN_CAM
+                            services.gameCamera.getRotatedBounds().overlaps(body.getBounds()) -> RETURN_SPEED_IN_CAM
                             else -> RETURN_SPEED_OUT_OF_CAM
                         }
 

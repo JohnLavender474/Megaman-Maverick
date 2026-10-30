@@ -329,7 +329,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
                     )
                 )
 
-                if (services.getGameCamera().getRotatedBounds().contains(shardsPosition))
+                if (services.gameCamera.getRotatedBounds().contains(shardsPosition))
                     requestToPlaySound(SoundAsset.DINK_SOUND, false)
             }
 

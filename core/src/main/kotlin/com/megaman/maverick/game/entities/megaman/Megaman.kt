@@ -211,7 +211,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
                 services.camera.focusSnappedAway = true
 
                 val camDir = if (value.isVertical()) value else value.getOpposite()
-                if (services.getGameCamera().direction != camDir) {
+                if (services.gameCamera.direction != camDir) {
                     services.events.submitEvent(
                         Event(
                             EventType.START_GAME_CAM_ROTATION,

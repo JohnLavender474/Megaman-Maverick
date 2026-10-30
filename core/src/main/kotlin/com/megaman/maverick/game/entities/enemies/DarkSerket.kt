@@ -55,6 +55,7 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -194,7 +195,7 @@ class DarkSerket(services: MegaServices) : AbstractEnemy(services), IFreezableEn
             body.getAllFixtures(fixtures)
 
             val updateCullTimer = fixtures.none { fixture ->
-                fixture.getShape().overlaps(services.getGameCamera().getRotatedBounds())
+                fixture.getShape().overlaps(services.gameCamera.getRotatedBounds())
             }
             if (updateCullTimer) cullTimer.update(delta) else cullTimer.reset()
 

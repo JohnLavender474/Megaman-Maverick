@@ -128,7 +128,7 @@ class WhiteArrowPool(services: MegaServices) : MegaGameEntity(services), ICullab
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cull = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
+        val cull = getGameCameraCullingLogic(services.gameCamera, { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cull))
     }
 

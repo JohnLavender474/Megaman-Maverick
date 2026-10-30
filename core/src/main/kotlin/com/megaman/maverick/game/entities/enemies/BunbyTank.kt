@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.projectiles.BunbyRedRocket
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.*
 
 class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
@@ -225,7 +226,7 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
             if (targetPlayer.existenceState.liveAfterUpdate) {
-                if (body.getBounds().overlaps(services.getGameCamera().getRotatedBounds()) &&
+                if (body.getBounds().overlaps(services.gameCamera.getRotatedBounds()) &&
                     targetPlayer.body.getBounds().overlaps(shootScanner)
                 ) {
                     body.physics.velocity.setZero()

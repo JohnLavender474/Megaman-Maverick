@@ -94,6 +94,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
@@ -1707,7 +1708,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
             applyFlyByVelocity()
 
-            val camBounds = services.getGameCamera().getRotatedBounds()
+            val camBounds = services.gameCamera.getRotatedBounds()
             val offScreen = when {
                 flyByMovingRight -> body.getX() > camBounds.getMaxX() + OFF_SCREEN_BUFFER * ConstVals.PPM
                 else -> body.getMaxX() < camBounds.getX() - OFF_SCREEN_BUFFER * ConstVals.PPM
@@ -1760,7 +1761,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                 }
             }
 
-            val camBounds = services.getGameCamera().getRotatedBounds()
+            val camBounds = services.gameCamera.getRotatedBounds()
             return when {
                 flyByMovingRight -> body.getX() > camBounds.getMaxX() + OFF_SCREEN_BUFFER * ConstVals.PPM
                 else -> body.getMaxX() < camBounds.getX() - OFF_SCREEN_BUFFER * ConstVals.PPM

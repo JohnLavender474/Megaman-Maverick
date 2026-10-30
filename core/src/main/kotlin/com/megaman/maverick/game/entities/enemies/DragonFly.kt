@@ -14,7 +14,6 @@ import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.equalsAny
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.objectMapOf
-import com.maverick.game.engine.common.extensions.overlaps
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -213,7 +212,7 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
 
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
-                    if (!services.getGameCamera().overlaps(
+                    if (!services.gameCamera.overlaps(
                             oobScannerFixture.getShape().getBoundingRectangle(),
                             GameObjectPools.fetch(BoundingBox::class)
                         )
@@ -224,7 +223,7 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
                 }
                 DragonFlyBehavior.MOVE_DOWN -> {
                     if (megamanScannerFixture.getShape().contains(targetPlayer.body.getCenter()) ||
-                        (!isMegamanBelow() && !services.getGameCamera().overlaps(
+                        (!isMegamanBelow() && !services.gameCamera.overlaps(
                             oobScannerFixture.getShape().getBoundingRectangle(),
                             GameObjectPools.fetch(BoundingBox::class)
                         ))
@@ -235,7 +234,7 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
                 }
                 DragonFlyBehavior.MOVE_HORIZONTAL -> {
                     val doChange = (toLeftBounds && !isMegamanLeft()) || (!toLeftBounds && isMegamanLeft())
-                    if (doChange && !services.getGameCamera().overlaps(
+                    if (doChange && !services.gameCamera.overlaps(
                             oobScannerFixture.getShape().getBoundingRectangle(),
                             GameObjectPools.fetch(BoundingBox::class)
                         )

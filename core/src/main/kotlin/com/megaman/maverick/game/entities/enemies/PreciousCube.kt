@@ -38,6 +38,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
@@ -182,7 +183,7 @@ class PreciousCube(services: MegaServices) : AbstractEnemy(services), IAnimatedE
             }
             positions.shuffle()
 
-            val camBounds = services.getGameCamera().getRotatedBounds()
+            val camBounds = services.gameCamera.getRotatedBounds()
             var blinkInPos = positions.firstOrNull { position -> camBounds.contains(position) }
 
             if (blinkInPos == null) {

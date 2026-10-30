@@ -64,7 +64,7 @@ class SwimBooster(services: MegaServices) : MegaGameEntity(services), ICullableE
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.getGameCamera(), { bounds }))
+        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.gameCamera, { bounds }))
     )
 
     override fun getType() = EntityType.SPECIAL

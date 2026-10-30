@@ -69,7 +69,7 @@ class Disintegration(services: MegaServices) : MegaGameEntity(services), ISprite
         val sound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
         if (sound) {
             reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
-            if (reusableRect.overlaps(services.getGameCamera().toGameRectangle()))
+            if (reusableRect.overlaps(services.gameCamera.toGameRectangle()))
                 requestToPlaySound(SoundAsset.THUMP_SOUND, false)
         }
 

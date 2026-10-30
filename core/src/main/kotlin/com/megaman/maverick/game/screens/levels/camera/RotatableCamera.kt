@@ -3,16 +3,19 @@ package com.megaman.maverick.game.screens.levels.camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.collision.BoundingBox
+import com.maverick.game.engine.camera.ICameraView
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.IDirectional
+import com.maverick.game.engine.common.interfaces.IRectangle
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 
 // https://stackoverflow.com/questions/16509244/set-camera-rotation-in-libgdx
 class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var printDebug: Boolean = true) :
-    OrthographicCamera(), Updatable, IDirectional {
+    OrthographicCamera(), Updatable, IDirectional, ICameraView {
 
     companion object {
         const val TAG = "RotatableCamera"
@@ -68,11 +71,19 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         totRot += degrees
     }
 
-    fun getRotatedBounds(): GameRectangle {
-        val rect = toGameRectangle()
-        rect.rotate(direction.rotation, position.x, position.y)
-        return rect
+    override fun getRotatedBounds(out: GameRectangle): GameRectangle {
+        toGameRectangle(out)
+        out.rotate(direction.rotation, position.x, position.y)
+        return out
     }
+
+    override fun toGameRectangle(out: GameRectangle): GameRectangle {
+        out.setSize(viewportWidth, viewportHeight)
+        out.setCenter(position.x, position.y)
+        return out
+    }
+
+    override fun overlaps(bounds: IRectangle, out: BoundingBox) = frustum.boundsInFrustum(bounds.toBoundingBox(out))
 
     fun coerceIntoBounds(bounds: GameRectangle) {
         if (printDebug) GameLogger.debug(TAG, "coerceIntoBounds(): bounds=$bounds")

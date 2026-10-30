@@ -20,6 +20,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.CullBoundsType
 
@@ -69,14 +70,14 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
         when (cullBoundsType) {
             CullBoundsType.BODY -> putCullable(
                 ConstKeys.CULL_OUT_OF_BOUNDS,
-                getGameCameraCullingLogic(services.getGameCamera(), { bounds })
+                getGameCameraCullingLogic(services.gameCamera, { bounds })
             )
             CullBoundsType.OTHER -> {
                 val other =
                     spawnProps.get(ConstKeys.OTHER, RectangleMapObject::class)!!.rectangle.toGameRectangle(false)
                 putCullable(
                     ConstKeys.CULL_OUT_OF_BOUNDS,
-                    getGameCameraCullingLogic(services.getGameCamera(), { other })
+                    getGameCameraCullingLogic(services.gameCamera, { other })
                 )
             }
         }
@@ -103,7 +104,7 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
         val minX = bounds.getX() - CAM_SCAN_BUFFER_X * ConstVals.PPM
         val maxX = bounds.getMaxX() + CAM_SCAN_BUFFER_X * ConstVals.PPM
 
-        val camBounds = services.getGameCamera().getRotatedBounds()
+        val camBounds = services.gameCamera.getRotatedBounds()
 
         return (minX >= camBounds.getX() && minX <= camBounds.getMaxX()) ||
             (maxX >= camBounds.getX() && maxX <= camBounds.getMaxX()) ||

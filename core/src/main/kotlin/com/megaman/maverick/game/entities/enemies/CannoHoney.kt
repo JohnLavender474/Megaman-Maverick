@@ -223,7 +223,7 @@ class CannoHoney(services: MegaServices) : AbstractEnemy(services), IFreezableEn
 
             cullBounds.setCenter(body.getCenter())
 
-            if (!services.getGameCamera().overlaps(cullBounds)) cullTimer.update(delta)
+            if (!services.gameCamera.overlaps(cullBounds)) cullTimer.update(delta)
             else cullTimer.reset()
 
             if (frozen) return@add

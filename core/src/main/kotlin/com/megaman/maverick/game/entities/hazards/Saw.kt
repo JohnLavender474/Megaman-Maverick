@@ -54,6 +54,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -241,7 +242,7 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
         body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val active = services.getGameCamera().getRotatedBounds().overlaps(body.getBounds())
+            val active = services.gameCamera.getRotatedBounds().overlaps(body.getBounds())
             body.physics.collisionOn = active
             body.forEachFixture { fixture -> fixture.setActive(active) }
         }

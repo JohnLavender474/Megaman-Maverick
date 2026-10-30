@@ -138,7 +138,7 @@ class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBo
                     GameLogger.debug(TAG, "defineUpdatablesComponent(): gem dead, removing: $gem")
                     iter.remove()
                 }
-                !services.getGameCamera().overlaps(gem.body.getBounds()) &&
+                !services.gameCamera.overlaps(gem.body.getBounds()) &&
                     gem.body.getCenter().dst(origin) > maxDistFromOrigin -> {
                     GameLogger.debug(TAG, "defineUpdatablesComponent(): gem out of cam bounds: $gem")
                     gem.destroy()

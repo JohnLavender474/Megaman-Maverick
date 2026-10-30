@@ -14,6 +14,7 @@ import com.megaman.maverick.game.entities.contracts.IWater
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 
 fun IBody.defaultDoUpdate(): Boolean {
     val services = getEntity().services
@@ -31,7 +32,7 @@ fun IBody.defaultDoUpdate(): Boolean {
 
 fun IBody.overlapsGameCam(): Boolean {
     val services = getEntity().services
-    return getBounds().overlaps(services.getGameCamera().getRotatedBounds())
+    return getBounds().overlaps(services.gameCamera.getRotatedBounds())
 }
 
 fun IBody.getBounds(reclaim: Boolean = true) = getBounds(GameObjectPools.fetch(GameRectangle::class, reclaim))

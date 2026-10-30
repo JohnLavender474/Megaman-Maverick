@@ -42,6 +42,7 @@ import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
@@ -183,7 +184,7 @@ class Water(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         body.preProcess.put(ConstKeys.DEFAULT) {
             val overlap = ShapeUtils.intersectRectangles(
                 fullBounds,
-                services.getGameCamera().getRotatedBounds(),
+                services.gameCamera.getRotatedBounds(),
                 tempRect
             )
             if (overlap) {

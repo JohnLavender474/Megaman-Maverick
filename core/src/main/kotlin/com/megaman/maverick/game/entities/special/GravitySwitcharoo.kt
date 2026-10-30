@@ -58,6 +58,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.onGravityDeviceSwitch
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 
@@ -171,7 +172,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
 
     override fun shouldBeginSwitchToDown(delta: Float) = on &&
         direction != services.gravity.direction && isTriggerEntityInBounds() &&
-        triggerArea.overlaps(services.getGameCamera().getRotatedBounds())
+        triggerArea.overlaps(services.gameCamera.getRotatedBounds())
 
     override fun shouldBeginSwitchToUp(delta: Float) = direction != services.gravity.direction
 

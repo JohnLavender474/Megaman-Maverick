@@ -379,7 +379,7 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullable = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
+        val cullable = getGameCameraCullingLogic(services.gameCamera, { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }
 

@@ -104,6 +104,7 @@ import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
@@ -233,7 +234,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         drawables = game.drawables
         shapes = game.shapes
 
-        gameCamera = game.getGameCamera()
+        gameCamera = game.gameCamera
         uiCamera = game.getUiCamera()
 
         checkpointText = MegaFontHandle(

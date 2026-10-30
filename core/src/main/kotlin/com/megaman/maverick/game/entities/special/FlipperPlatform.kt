@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.getBounds
@@ -136,7 +137,7 @@ class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISprit
     override fun update(delta: Float) {
         block!!.body.setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
 
-        val active = services.getGameCamera().getRotatedBounds().overlaps(bounds)
+        val active = services.gameCamera.getRotatedBounds().overlaps(bounds)
         block?.body!!.physics.collisionOn = active
         block?.body!!.forEachFixture { fixture -> fixture.setActive(active) }
 
@@ -209,7 +210,7 @@ class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISprit
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val gameCamera = services.getGameCamera()
+        val gameCamera = services.gameCamera
         val cullable = getGameCameraCullingLogic(gameCamera, { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullable))
     }

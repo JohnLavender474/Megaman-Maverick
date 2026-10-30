@@ -268,7 +268,7 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         beamTimer.reset()
         spawnExplosionDelay.setToEnd()
 
-        if (services.getGameCamera().overlaps(rawLine.getBoundingRectangle()))
+        if (services.gameCamera.overlaps(rawLine.getBoundingRectangle()))
             requestToPlaySound(SoundAsset.BURST_SOUND, false)
     }
 

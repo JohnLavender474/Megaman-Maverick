@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
+import com.maverick.game.engine.camera.ICameraView
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.GamePair
@@ -28,8 +29,8 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.world.body.getBounds
@@ -54,13 +55,13 @@ fun getStandardEventCullingLogic(
 }
 
 fun getGameCameraCullingLogic(entity: IBodyEntity, timeToCull: Float = 1f) =
-    getGameCameraCullingLogic((entity as MegaGameEntity).services.getGameCamera(), { entity.body.getBounds() }, timeToCull)
+    getGameCameraCullingLogic((entity as MegaGameEntity).services.gameCamera, { entity.body.getBounds() }, timeToCull)
 
-fun getGameCameraCullingLogic(camera: RotatableCamera, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
+fun getGameCameraCullingLogic(camera: ICameraView, bounds: () -> GameRectangle, timeToCull: Float = 1f) =
     CullableOnUncontained({ camera.getRotatedBounds() }, { bounds().overlaps(it) }, timeToCull)
 
 fun getUpdateWhenNearCameraPredicate(entity: IBodyEntity, buffer: Float): () -> Boolean {
-    val camera = (entity as MegaGameEntity).services.getGameCamera()
+    val camera = (entity as MegaGameEntity).services.gameCamera
     return predicate@{
         val window = GameObjectPools.fetch(GameRectangle::class)
             .set(camera.getRotatedBounds())
@@ -76,7 +77,7 @@ fun getUpdateWhenGroupNearCameraPredicate(
     buffer: Float
 ): () -> Boolean {
     val services = (entity as MegaGameEntity).services
-    val camera = services.getGameCamera()
+    val camera = services.gameCamera
     val groupsSystem = services.groups
     return predicate@{
         val window = GameObjectPools.fetch(GameRectangle::class)

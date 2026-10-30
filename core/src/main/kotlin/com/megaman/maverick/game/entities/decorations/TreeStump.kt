@@ -58,7 +58,7 @@ class TreeStump(services: MegaServices) : MegaGameEntity(services), ISpritesEnti
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
+        val cullOutOfBounds = getGameCameraCullingLogic(services.gameCamera, { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

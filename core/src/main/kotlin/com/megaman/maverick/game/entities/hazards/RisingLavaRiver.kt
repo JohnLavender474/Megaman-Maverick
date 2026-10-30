@@ -292,7 +292,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
                         .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
                         .setHeight(EMBER_SPAWN_Y_BUFFER * ConstVals.PPM)
-                        .setCenter(services.getGameCamera().getRotatedBounds().getCenter())
+                        .setCenter(services.gameCamera.getRotatedBounds().getCenter())
 
                     if (canSpawnBounds.contains(position)) {
                         val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!
@@ -340,7 +340,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
                 velocity.set(0f, -fallSpeed * ConstVals.PPM)
 
                 val maxY = body.getMaxY()
-                val camY = services.getGameCamera().toGameRectangle().getY()
+                val camY = services.gameCamera.toGameRectangle().getY()
                 if (maxY < camY) {
                     GameLogger.debug(TAG, "update(): falling: maxY=$maxY, camY=$camY")
                     setLavaToDormant()
@@ -360,7 +360,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
             velocity.y * delta
         )
         val overlap = Intersector.intersectRectangles(
-            services.getGameCamera().getRotatedBounds().toGdxRectangle(),
+            services.gameCamera.getRotatedBounds().toGdxRectangle(),
             fullBounds.toGdxRectangle(),
             tempRect
         )

@@ -17,6 +17,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.misc.StunType
 
 class TestStunPulser(services: MegaServices) : MegaGameEntity(services) {
@@ -71,7 +72,7 @@ class TestStunPulser(services: MegaServices) : MegaGameEntity(services) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!services.getGameCamera().getRotatedBounds().overlaps(bounds)) {
+        if (!services.gameCamera.getRotatedBounds().overlaps(bounds)) {
             timer.reset()
             return@UpdatablesComponent
         }

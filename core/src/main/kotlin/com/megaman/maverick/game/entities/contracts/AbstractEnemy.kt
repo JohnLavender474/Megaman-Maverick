@@ -212,7 +212,7 @@ abstract class AbstractEnemy(
             ) as () -> GameRectangle
 
             val cullOnOutOfBounds = getGameCameraCullingLogic(
-                services.getGameCamera(),
+                services.gameCamera,
                 cullBoundsSupplier,
                 cullTime
             )

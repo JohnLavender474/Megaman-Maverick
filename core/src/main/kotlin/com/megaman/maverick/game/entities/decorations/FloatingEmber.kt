@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.entities.utils.onMaxSpawnedByTag
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import kotlin.math.max
 
 class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity,
@@ -95,7 +96,7 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         this.maxY = when (maxY) {
             is Float -> maxY
             is RectangleMapObject -> maxY.rectangle.getCenter().y
-            else -> services.getGameCamera().getRotatedBounds().getMaxY() + 6f * ConstVals.PPM
+            else -> services.gameCamera.getRotatedBounds().getMaxY() + 6f * ConstVals.PPM
         }
 
         fading = false
@@ -140,7 +141,7 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         sine.update(delta)
         sine.getMotionValue(out).swapped().let { position.set(it) }
 
-        if (!services.getGameCamera().getRotatedBounds().contains(position)) {
+        if (!services.gameCamera.getRotatedBounds().contains(position)) {
             outOfBoundsTimer.update(delta)
             if (outOfBoundsTimer.isFinished()) fading = true
         } else if (!fading) outOfBoundsTimer.reset()

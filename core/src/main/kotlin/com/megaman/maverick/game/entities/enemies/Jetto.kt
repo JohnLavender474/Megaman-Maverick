@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.utils.isNextPossibleSpawnDelayed
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -202,7 +203,7 @@ class Jetto(services: MegaServices) : AbstractEnemy(services), IFreezableEntity,
 
             body.physics.velocity.x = SPEED * ConstVals.PPM * facing.value
 
-            if (!body.getBounds().overlaps(services.getGameCamera().getRotatedBounds())) cullTimer.update(delta)
+            if (!body.getBounds().overlaps(services.gameCamera.getRotatedBounds())) cullTimer.update(delta)
             else cullTimer.reset()
 
             if (state == JettoState.FLY) {
@@ -210,11 +211,11 @@ class Jetto(services: MegaServices) : AbstractEnemy(services), IFreezableEntity,
                     if (cullTimer.isFinished()) {
                         val centerX: Float
                         val facing: Facing
-                        if (body.getBounds().getMaxX() < services.getGameCamera().getRotatedBounds().getX()) {
-                            centerX = services.getGameCamera().getRotatedBounds().getX()
+                        if (body.getBounds().getMaxX() < services.gameCamera.getRotatedBounds().getX()) {
+                            centerX = services.gameCamera.getRotatedBounds().getX()
                             facing = Facing.RIGHT
                         } else {
-                            centerX = services.getGameCamera().getRotatedBounds().getMaxX()
+                            centerX = services.gameCamera.getRotatedBounds().getMaxX()
                             facing = Facing.LEFT
                         }
                         body.setCenterX(centerX)

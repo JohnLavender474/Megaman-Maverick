@@ -30,6 +30,7 @@ import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -129,7 +130,7 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
         if (services.levelState.roomTransition) return@update
 
-        val camBounds = services.getGameCamera().getRotatedBounds()
+        val camBounds = services.gameCamera.getRotatedBounds()
         spawners.forEach spawner@{ entry ->
             val spawner = entry.key
             if (spawner.getX() > camBounds.getMaxX() + CAMERA_MAX_DIST_X * ConstVals.PPM ||

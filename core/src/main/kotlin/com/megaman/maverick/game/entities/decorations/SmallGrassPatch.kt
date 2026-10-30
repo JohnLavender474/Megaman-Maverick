@@ -73,7 +73,7 @@ class SmallGrassPatch(services: MegaServices) : MegaGameEntity(services) {
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.getGameCamera(), { bounds })
+            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.gameCamera, { bounds })
         )
     )
 

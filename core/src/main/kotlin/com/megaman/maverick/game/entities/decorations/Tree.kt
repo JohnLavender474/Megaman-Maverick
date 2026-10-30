@@ -60,7 +60,7 @@ class Tree(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, I
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(services.getGameCamera(), { bounds }, 0f)
+        val cullOutOfBounds = getGameCameraCullingLogic(services.gameCamera, { bounds }, 0f)
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

@@ -6,3 +6,5 @@
 4097749fad4568e56a91e63cf95a7e5fc3062279
 # Rename the services value game to services and the members eventsMan, assMan, audioMan, state to events, assets, audio, gameState (squash of mega-refactor-016e-service-names)
 9502724cd3a4e87f124d362fde8a975fd1597e9f
+# Rename services.getGameCamera() to services.gameCamera (mega-refactor-051a-camera-read-interface; replace with the squash SHA at merge)
+eebd95fc3aa2e83fd3d55e51c9c825007cd63c8c

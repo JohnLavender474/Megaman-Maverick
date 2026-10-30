@@ -5,6 +5,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.getBounds
 
 class InfernoDeath(services: MegaServices) : Death(services) {
@@ -30,7 +31,7 @@ class InfernoDeath(services: MegaServices) : Death(services) {
         super.onSpawn(spawnProps)
     }
 
-    override fun isActive() = body.getBounds().overlaps(services.getGameCamera().getRotatedBounds())
+    override fun isActive() = body.getBounds().overlaps(services.gameCamera.getRotatedBounds())
 
     override fun getTag() = TAG
 }

@@ -63,7 +63,7 @@ open class LightSourceEntity(services: MegaServices) : MegaGameEntity(services),
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(
-            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(services.getGameCamera(), { bounds })
+            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(services.gameCamera, { bounds })
         ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
         val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)

@@ -133,7 +133,7 @@ class DisappearingBlocks(services: MegaServices) : MegaGameEntity(services), IPa
 
                 if (on && blockKey == next) block.animators.values().forEach { it.reset() }
 
-                val gameCamera = services.getGameCamera()
+                val gameCamera = services.gameCamera
                 if (!soundRequested && gameCamera.toGameRectangle().overlaps(block.body.getBounds())) {
                     requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
                     soundRequested = true
@@ -146,7 +146,7 @@ class DisappearingBlocks(services: MegaServices) : MegaGameEntity(services), IPa
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullablesComponent = CullablesComponent()
-        val cullable = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
+        val cullable = getGameCameraCullingLogic(services.gameCamera, { bounds })
         cullablesComponent.put(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
         return cullablesComponent
     }

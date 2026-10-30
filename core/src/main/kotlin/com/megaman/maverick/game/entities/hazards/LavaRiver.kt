@@ -40,6 +40,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 
 class LavaRiver(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity, IAnimatedEntity {
 
@@ -131,7 +132,7 @@ class LavaRiver(services: MegaServices) : MegaGameEntity(services), ICullableEnt
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
                         .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
                         .setHeight(EMBER_SPAWN_Y_BUFFER * ConstVals.PPM)
-                        .setCenter(services.getGameCamera().getRotatedBounds().getCenter())
+                        .setCenter(services.gameCamera.getRotatedBounds().getCenter())
 
                     if (canSpawnBounds.contains(position)) {
                         val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!

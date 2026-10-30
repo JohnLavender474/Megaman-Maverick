@@ -105,7 +105,7 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOOB = getGameCameraCullingLogic(
-            services.getGameCamera(),
+            services.gameCamera,
             { defaultSprite.boundingRectangle.toGameRectangle() },
             OOB_CULL_TIME
         )

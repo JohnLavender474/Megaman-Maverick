@@ -28,6 +28,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import kotlin.math.floor
 
 class UnderWaterBubble(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity,
@@ -84,7 +85,7 @@ class UnderWaterBubble(services: MegaServices) : MegaGameEntity(services), ICull
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         position.add(velocity.x * delta, velocity.y * delta)
 
-        if (!services.getGameCamera().getRotatedBounds().contains(position)) {
+        if (!services.gameCamera.getRotatedBounds().contains(position)) {
             GameLogger.debug(TAG, "update(): out of game cam, destroy")
             destroy()
             return@UpdatablesComponent

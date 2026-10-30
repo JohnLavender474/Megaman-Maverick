@@ -164,7 +164,7 @@ class Beezee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
             if (state == BeezeeState.ATTACK &&
-                !services.getGameCamera().overlaps(body.getBounds())
+                !services.gameCamera.overlaps(body.getBounds())
             ) cullTimer.update(delta)
             else cullTimer.reset()
 

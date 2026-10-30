@@ -98,7 +98,7 @@ class Snowfall(services: MegaServices) : MegaGameEntity(services) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (services.levelState.currentRoom?.name != spawnRoom || !services.getGameCamera().overlaps(trigger))
+        if (services.levelState.currentRoom?.name != spawnRoom || !services.gameCamera.overlaps(trigger))
             return@UpdatablesComponent
 
         spawnDelay.update(delta)
