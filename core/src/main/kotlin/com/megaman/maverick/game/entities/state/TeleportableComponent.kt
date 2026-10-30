@@ -3,7 +3,12 @@ package com.megaman.maverick.game.entities.state
 import com.maverick.game.engine.components.IGameComponent
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 
-class TeleportableComponent(var teleporter: ITeleporterEntity? = null) : IGameComponent {
+class TeleportableComponent(
+    var teleporter: ITeleporterEntity? = null,
+    val onStart: ((ITeleporterEntity) -> Unit)? = null,
+    val onContinue: (() -> Unit)? = null,
+    val onEnd: (() -> Unit)? = null
+) : IGameComponent {
 
     override fun reset() {
         teleporter = null

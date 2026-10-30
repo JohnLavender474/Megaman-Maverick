@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.state.TeleportableComponent
 import com.megaman.maverick.game.entities.state.beginTeleport
 import com.megaman.maverick.game.entities.state.endTeleport
 import com.megaman.maverick.game.events.EventType
@@ -221,8 +222,7 @@ class CapsuleTeleporter(services: MegaServices) : MegaGameEntity(services), ITel
                 continue
             }
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
-            onPortalContinue?.invoke()
+            entity.getComponent(TeleportableComponent::class)?.onContinue?.invoke()
 
             timer.update(delta)
             if (timer.isFinished()) {
@@ -247,8 +247,7 @@ class CapsuleTeleporter(services: MegaServices) : MegaGameEntity(services), ITel
                 continue
             }
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
-            onPortalContinue?.invoke()
+            entity.getComponent(TeleportableComponent::class)?.onContinue?.invoke()
 
             timer.update(delta)
             if (timer.isFinished()) {

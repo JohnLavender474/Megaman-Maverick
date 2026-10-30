@@ -192,8 +192,7 @@ class PipePortal(services: MegaServices) : MegaGameEntity(services), IBodyEntity
                 continue
             }
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
-            onPortalContinue?.invoke()
+            entity.getComponent(TeleportableComponent::class)?.onContinue?.invoke()
 
             timer.update(delta)
             if (timer.isFinished()) {
@@ -222,8 +221,7 @@ class PipePortal(services: MegaServices) : MegaGameEntity(services), IBodyEntity
                 continue
             }
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
-            onPortalContinue?.invoke()
+            entity.getComponent(TeleportableComponent::class)?.onContinue?.invoke()
 
             timer.update(delta)
             if (timer.isFinished()) {

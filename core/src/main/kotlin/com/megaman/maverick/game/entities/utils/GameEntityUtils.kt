@@ -149,10 +149,6 @@ fun standardOnTeleportStart(entity: GameEntity) {
     if (entity is ISpritesEntity) entity.sprites.forEach { it.value.hidden = true }
 }
 
-fun setStandardOnTeleportContinueProp(entity: GameEntity) {
-    entity.putProperty(ConstKeys.ON_TELEPORT_CONTINUE, { standardOnTeleportStart(entity) })
-}
-
 fun standardOnTeleportEnd(entity: GameEntity) {
     GameLogger.debug("standardOnTeleportEnd()", "entity=$entity")
     if (entity is IBodyEntity) {

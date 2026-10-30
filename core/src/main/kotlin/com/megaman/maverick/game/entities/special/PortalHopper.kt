@@ -40,6 +40,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.TeleportableComponent
 import com.megaman.maverick.game.entities.state.beginTeleport
 import com.megaman.maverick.game.entities.state.endTeleport
 import com.megaman.maverick.game.events.EventType
@@ -241,8 +242,7 @@ class PortalHopper(services: MegaServices) : MegaGameEntity(services), IBodyEnti
 
             timer.update(delta)
 
-            val onPortalContinue = entity.getProperty(ConstKeys.ON_TELEPORT_CONTINUE) as? () -> Unit
-            onPortalContinue?.invoke()
+            entity.getComponent(TeleportableComponent::class)?.onContinue?.invoke()
 
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "update(): thisKey=$thisKey, timer finished")

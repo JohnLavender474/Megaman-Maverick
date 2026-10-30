@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.state
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.components.MissingComponentException
 import com.maverick.game.engine.entities.GameEntity
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
@@ -27,14 +26,18 @@ class TeleportsTest : DescribeSpec({
         }
 
         it("calls the start hook before it sets the teleporter, and the end hook before it clears it") {
-            val entity = TeleportedEntity().also { it.addComponent(TeleportableComponent()) }
+            val entity = TeleportedEntity()
             val teleporter = mockk<ITeleporterEntity>()
             val seen = ArrayList<String>()
-            entity.putProperty(ConstKeys.ON_TELEPORT_START, { t: ITeleporterEntity ->
-                t shouldBeSameInstanceAs teleporter
-                seen.add("start teleporting=${entity.teleporting}")
-            })
-            entity.putProperty(ConstKeys.ON_TELEPORT_END, { seen.add("end teleporting=${entity.teleporting}") })
+            entity.addComponent(
+                TeleportableComponent(
+                    onStart = { t: ITeleporterEntity ->
+                        t shouldBeSameInstanceAs teleporter
+                        seen.add("start teleporting=${entity.teleporting}")
+                    },
+                    onEnd = { seen.add("end teleporting=${entity.teleporting}") }
+                )
+            )
 
             entity.beginTeleport(teleporter)
 
@@ -66,6 +69,20 @@ class TeleportsTest : DescribeSpec({
             component.reset()
 
             component.teleporter shouldBe null
+        }
+
+        it("keeps the hooks on a reset of the component") {
+            val onStart: (ITeleporterEntity) -> Unit = {}
+            val onContinue: () -> Unit = {}
+            val onEnd: () -> Unit = {}
+            val component = TeleportableComponent(mockk(), onStart, onContinue, onEnd)
+
+            component.reset()
+
+            component.teleporter shouldBe null
+            component.onStart shouldBeSameInstanceAs onStart
+            component.onContinue shouldBeSameInstanceAs onContinue
+            component.onEnd shouldBeSameInstanceAs onEnd
         }
     }
 })

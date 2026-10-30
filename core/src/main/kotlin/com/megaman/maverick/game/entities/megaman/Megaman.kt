@@ -55,7 +55,6 @@ import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.entities.state.TeleportableComponent
 import com.megaman.maverick.game.entities.state.inPlay
-import com.megaman.maverick.game.entities.utils.setStandardOnTeleportContinueProp
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
@@ -263,31 +262,23 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
             }
         }
 
-    override var facing: Facing
-        get() = getProperty(MegamanProps.FACING) as Facing
-        set(value) {
-            putProperty(MegamanProps.FACING, value)
-        }
+    override lateinit var facing: Facing
 
-    var aButtonTask: AButtonTask
-        get() = getProperty(MegamanProps.A_BUTTON_TASK) as AButtonTask
-        set(value) {
-            putProperty(MegamanProps.A_BUTTON_TASK, value)
-        }
+    lateinit var aButtonTask: AButtonTask
 
+    private var weapon: MegamanWeapon? = null
     var currentWeapon: MegamanWeapon
-        get() = getProperty(MegamanProps.WEAPON, MegamanWeapon::class)!!
+        get() = weapon!!
         set(value) {
-            val previous = getProperty(MegamanProps.WEAPON, MegamanWeapon::class)
-            weaponsHandler.onChangeWeapon(value, previous)
-
-            putProperty(MegamanProps.WEAPON, value)
+            weaponsHandler.onChangeWeapon(value, weapon)
+            weapon = value
         }
 
+    private var runningFlag = false
     var running: Boolean
-        get() = inPlay && getProperty(ConstKeys.RUNNING, Boolean::class)!!
+        get() = inPlay && runningFlag
         set(value) {
-            putProperty(ConstKeys.RUNNING, value)
+            runningFlag = value
         }
 
     val slipSliding: Boolean
@@ -335,7 +326,24 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         super.init()
 
         addComponent(PlayPhaseComponent())
-        addComponent(TeleportableComponent())
+        addComponent(
+            TeleportableComponent(
+                onStart = { _: ITeleporterEntity ->
+                    stopCharging()
+                    standardOnTeleportStart(this)
+                    if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
+                    lock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
+                },
+                onContinue = { standardOnTeleportStart(this) },
+                onEnd = {
+                    stopCharging()
+                    standardOnTeleportEnd(this)
+                    aButtonTask = AButtonTask.AIR_DASH
+                    unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
+                    services.camera.focusSnappedAway = false
+                }
+            )
+        )
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
         addComponent(defineBehaviorsComponent())
@@ -488,21 +496,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         postActionMomentumTimer.setToEnd()
         pendingPostActionMomentumKill = false
         airDashConsumed = false
-
-        putProperty(ConstKeys.ON_TELEPORT_START, { _: ITeleporterEntity ->
-            stopCharging()
-            standardOnTeleportStart(this)
-            if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
-            lock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-        })
-        setStandardOnTeleportContinueProp(this)
-        putProperty(ConstKeys.ON_TELEPORT_END, {
-            stopCharging()
-            standardOnTeleportEnd(this)
-            aButtonTask = AButtonTask.AIR_DASH
-            unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-            services.camera.focusSnappedAway = false
-        })
 
         removeProperty(ConstKeys.FOCUS)
         services.camera.focusSnappedAway = false
