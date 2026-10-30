@@ -1,7 +1,7 @@
 # Scope: mega-refactor-051d-auto-scroll
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-30
 
 This draft assumes that `051c` is merged. Check each reference again at branch start.
 
@@ -82,9 +82,9 @@ reads.
 
 ## Open questions
 
-1. A respawn in a section: the camera resets to the spawn, and the scroll continues from there. Is that correct when the
-   spawn point is near the far edge, where only a short scroll stays?
-2. A section that ends on an event: X6 ends its scroll when the mini-boss dies (`stages/shark-2.md`). I recommend no
-   event field until a level needs one.
-3. The gravity rule at the trailing edge: "in the direction of gravity" follows a rotated player. Is that the wanted
-   result, or must the bottom of the world always kill?
+None. Answered on 2026-10-30:
+
+1. A respawn in a section: the camera resets to the spawn and the scroll continues from there, also near the far edge.
+   The designer chooses the spawn point.
+2. No event field until a level needs one (owner accepted the recommendation).
+3. The trailing edge kills in the direction of gravity, so the rule follows a rotated player.

@@ -1,7 +1,7 @@
 # Scope: mega-refactor-051c-camera-zones
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-10-30
 
 ## Goal
 
@@ -37,7 +37,7 @@ snap and ease rule, the hold test, `CrusherComponent`, and the edge blocks. The 
 
 1. **The limits stage, with no feature.** The first commit group. Levels play the same.
    - Split the room scan from `CameraRoomClamp`. Tracking stays first.
-   - A limits result: per axis a range or a pin. This branch has no pin caller unless a zone sets one; see question 1.
+   - A limits result: per axis a range or a pin. A zone that locks an axis is the first pin caller (item 3).
    - The room supplies the target. The cut uses `currentGameRoom ?: priorGameRoom`, as the clamp does now. No limits
      stage in `CameraFollowMode.OFF`.
    - `CameraController.reset()` resets each `Resettable` part. The 3 call sites become 1 call.
@@ -46,19 +46,20 @@ snap and ease rule, the hold test, `CrusherComponent`, and the edge blocks. The 
    it) or from `CameraManagerForRooms` at `7fe00b8b8^`. It adds cases: the pan-end snap of the cross axis, the reset frame
    with no clamp, min wins in a short room, a rotated pan.
 3. **Zones.**
-   - A Tiled layer and a builder. A zone is data, not an entity. Properties name each edge that it sets; other edges keep.
+   - A layer `camera_sections` and a builder. A zone is data, not an entity, with `type=zone`. Properties `min_x`, `max_x`,
+     `min_y`, `max_y` (tiles) name each edge that it sets; other edges keep. Equal min and max on an axis make a pin.
    - A part that folds the active zones in Tiled object order each frame. A zone is active while
      `getFocusPosition()` is inside it.
    - Zones never change `currentRoom`. The 25 reads stay the same.
 4. **The ease.** The limits move to the target, relative to the camera, at a speed from the zone. Snap when the room
    changes, on a reset, or when the focus is out of view after the move. The ease reads the position after the movers,
-   not the position with shake. A hold test stops the ease; see question 2.
+   not the position with shake. An injected hold test stops the ease; `051d` is its second reader.
 5. **Edge blocks.** A new class on `AbstractBlock`, for example `CameraEdgeBlock`, so that callers do not repeat the
    flags:
    - body collision with players only, through a block filter added after `super.onSpawn`;
    - no culling, no drawing;
    - it follows the current limit, and it acts only on an edge that a rule sets and that differs from the room edge.
-   A per-zone Tiled property enables it per edge. Zones default to off. Code spawns it, not Tiled.
+   `edge_blocks=left,right` on a zone enables it per edge. Zones default to off. Code spawns it, not Tiled.
 6. **`CrusherComponent`** on the crushing entity, with one test per player in `body.preProcess` or an updatable. It has
    the player side that it hits, an active predicate, and "needs a solid on the opposite side". `GravityBlock` moves to
    it with no behavior change, and the edge block is its second caller. It kills through one shared path that keeps the
@@ -103,11 +104,6 @@ snap and ease rule, the hold test, `CrusherComponent`, and the edge blocks. The 
 
 ## Open questions
 
-1. Does a zone need a pin in this branch, for example a locked boss view? I recommend yes: a pin is the only form that
-   survives a rotated view, and it gives the pin a caller in this branch. If no, the pin moves to `051d`.
-2. The hold test here covers the ease. I recommend the injected predicate from the `ITEM.md` decision in this branch,
-   with `051d` as its second reader.
-3. Tiled names. I propose one layer, `camera_sections`, with a `type` of `zone` or `scroll`, so that `051d` adds to the
-   same layer. Edge properties: `min_x`, `max_x`, `min_y`, `max_y` in tiles, and `edge_blocks=left,right`.
-4. Default ease speed. X6 uses 2 px/frame in a 320 x 240 view. I propose one default in `ConstVals` and a zone property
-   that overrides it, with the value chosen in the first test room.
+None. The owner accepted the 4 recommendations on 2026-10-30: a zone can set a pin; the hold test is in this branch; one
+layer `camera_sections` with `type`, and the property names in item 3; one default ease speed in `ConstVals` with a zone
+property that overrides it, with the value chosen in the first test room.
