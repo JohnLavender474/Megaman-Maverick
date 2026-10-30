@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: per-slot bindings: one settings object per slot replaces `ControllerButtons`, the bindings screen rules, `--resetBindings`, `selectButtonAction` per slot
 - Done:
-- Next: the draft `docs/PLAN.md`
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -31,3 +31,11 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   the owner has no prefs to protect ("I deleted the prefs, so nothing needs to be backed up"), so S1 is removed, and S2,
   S3 and X1 now only give a known start state. `docs/SCOPE.md`: the 2 text fixes, and the 2 test seams in the table of
   new APIs. Note: at this point `~/.prefs` holds 1 file and `~/.prefs.bak-031d` still exists; neither was changed.
+- Draft `docs/PLAN.md` written (18 steps: branch start, baseline, `selectButtonAction` to `PlayerSettings`, the store and
+  the slot file, keyboard codes, gamepad codes, deletion of the old storage, `selectButtonAction` at boot,
+  `--resetBindings`, "RESET TO DEFAULTS", reserved keys, the `Enter` swap, labels, capture end, back to pause, contract
+  checks, the owner's play test, merge).
+- The owner approved `docs/PLAN.md` ("plan approved"), with the 3 recommendations. `docs/CONTRACT.md` Performance: the
+  4 `playerSlot` reader lookups are added (a reading note, not a check).
+- Step 1 (branch start): `ITEMS.md` row and `ITEM.md` set to active; worktree `.worktrees/mega-refactor-031e-bindings`
+  created from `master`.

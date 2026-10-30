@@ -233,7 +233,9 @@ the parts that stay the same are the kept test cases.
 
 No performance captures: the scope calls for none. The branch adds no native call per tick. `held()` reads an
 `IntArray` in place of an `OrderedMap` lookup, so it has less work per tick. The new per-tick work is one reference
-compare in `ControllerSettingsScreen.render`, only while that screen is current. The `"controllerPoller"` entry keeps
+compare in `ControllerSettingsScreen.render`, only while that screen is current, and one `playerSlot` component lookup
+in each of 4 reader lines when they run (`AirDashBehavior.kt:33` and `:38`, `ControllerComponent.kt:99` on a select
+release, `MegaLevelScreen.kt:926`). These lookups are not measured (corrected on 2026-10-30 at the plan review). The `"controllerPoller"` entry keeps
 its name (A16).
 
 ## Intended changes
