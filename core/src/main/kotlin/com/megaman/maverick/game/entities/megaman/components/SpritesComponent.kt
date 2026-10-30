@@ -17,6 +17,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.PipePortal
+import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.teleporter
 import com.megaman.maverick.game.entities.state.teleporting
@@ -127,7 +128,7 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
         player.setPosition(body.getPositionPoint(position), position)
         player.translateX(getSpriteXTranslation() * ConstVals.PPM)
         player.translateY(getSpriteYTranslation() * ConstVals.PPM)
-        player.setAlpha(if (recoveryFlash) 0f else 1f)
+        player.setAlpha(if (damageRecovery.flash) 0f else 1f)
         player.hidden = shouldHideSprite()
     }
 }

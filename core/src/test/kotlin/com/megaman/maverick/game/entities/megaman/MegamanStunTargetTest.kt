@@ -15,6 +15,8 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.entities.megaman.components.defineStunComponent
+import com.megaman.maverick.game.entities.state.stunned
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.players.MegaPlayers
@@ -40,7 +42,7 @@ class MegamanStunTargetTest : DescribeSpec({
 
         players.register(PlayerSlot(0), megaman)
 
-        megaman.stunTimer.setToEnd()
+        megaman.addComponent(megaman.defineStunComponent())
     }
 
     afterEach { unmockkAll() }
@@ -74,6 +76,32 @@ class MegamanStunTargetTest : DescribeSpec({
 
         it("is ignored when the targets do not hold Megaman's slot") {
             megaman.onEvent(stunEvent(listOf(PlayerSlot(1))))
+
+            megaman.stunned shouldBe false
+        }
+
+        it("ignores a second stun while Megaman is stunned") {
+            megaman.facing = Facing.RIGHT
+            megaman.onEvent(stunEvent(listOf(PlayerSlot(0))))
+            megaman.body.physics.velocity.setZero()
+
+            megaman.onEvent(stunEvent(listOf(PlayerSlot(0))))
+
+            megaman.body.physics.velocity.isZero shouldBe true
+        }
+
+        it("does not stun in the air when the type needs a surface") {
+            megaman.facing = Facing.RIGHT
+
+            megaman.onEvent(
+                Event(
+                    EventType.STUN_PLAYER,
+                    props(
+                        ConstKeys.TYPE pairTo StunType.STUN_BOUNCE_IF_ON_SURFACE,
+                        PlayerEventKeys.SLOTS pairTo Array<PlayerSlot>().apply { add(PlayerSlot(0)) }
+                    )
+                )
+            )
 
             megaman.stunned shouldBe false
         }

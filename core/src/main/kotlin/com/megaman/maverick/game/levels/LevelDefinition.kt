@@ -142,6 +142,12 @@ enum class LevelDefinition(
             loadout = LoadoutOverride(weapons = setOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MOON_SCYTHES))
         )
     ),
+    REFACTOR_TEST_084(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "RefactorTest084.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+    ),
     REFACTOR_TEST_016(
         type = LevelType.TEST_LEVEL,
         tmxMapSource = "RefactorTest016.tmx",

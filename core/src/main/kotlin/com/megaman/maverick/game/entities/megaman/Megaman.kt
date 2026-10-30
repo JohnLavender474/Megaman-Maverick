@@ -43,9 +43,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
-import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
-import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
@@ -53,9 +51,16 @@ import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
+import com.megaman.maverick.game.entities.state.FreezeComponent
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
+import com.megaman.maverick.game.entities.state.StunComponent
 import com.megaman.maverick.game.entities.state.TeleportableComponent
+import com.megaman.maverick.game.entities.state.freezeFrom
+import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.knockBackFrom
+import com.megaman.maverick.game.entities.state.onStunPlayerEvent
+import com.megaman.maverick.game.entities.state.stunned
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
@@ -77,7 +82,6 @@ import com.megaman.maverick.game.utils.extensions.startSmoothFollow
 import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.FacingUtils
-import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -86,7 +90,7 @@ import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
 class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
-    IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
+    IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IGameStateListener,
     IEventListener, IFaceable, IDirectional, IFocusable, IDamagerEntity, IGateTrigger, ICartRider {
 
     companion object {
@@ -114,26 +118,16 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     override val damageNegotiator = MegamanDamageNegotiator(this)
 
-    val stunned: Boolean
-        get() = !stunTimer.isFinished()
+    internal val damageRecovery = defineDamageRecoveryComponent()
 
+    // TODO: a second player entity needs this same rule; extract one function when it exists (item 060)
     override val invincible: Boolean
-        get() = damaged || !damageRecoveryTimer.isFinished() || isLocked(MegaLockGroup.DAMAGE) || !existenceState.liveAfterUpdate || !inPlay
+        get() = damaged || damageRecovery.recovering || isLocked(MegaLockGroup.DAMAGE) || !existenceState.liveAfterUpdate || !inPlay
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
-
-    override var frozen = false
-    private var hitsToUnfreeze = 0
-    internal var frozenPushTimer = Timer(MegamanValues.FROZEN_PUSH_DUR)
 
     val canMove: Boolean
         get() = !isLocked(MegaLockGroup.MOVEMENT) && !stunned && !damaged && !frozen
 
-    internal val stunTimer = Timer(MegamanValues.STUN_DUR)
-    internal val damageRecoveryTimer = Timer(MegamanValues.DAMAGE_RECOVERY_TIME).setToEnd()
-    internal val damageFlashTimer = Timer(MegamanValues.DAMAGE_FLASH_DURATION)
-    internal var recoveryFlash = false
-
-    private val noDmgBounce = objectSetOf<Any>(SpringHead::class)
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
 
@@ -348,6 +342,10 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         )
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
+        addComponent(defineKnockbackComponent())
+        addComponent(defineFreezeComponent())
+        addComponent(defineStunComponent())
+        addComponent(damageRecovery)
         addComponent(defineBehaviorsComponent())
         controllerComponent = defineControllerComponent()
         addComponent(controllerComponent)
@@ -471,21 +469,13 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         clearLocks(MegaLockGroup.MOVEMENT)
         require(TeleportableComponent::class).teleporter = null
         clearLocks(MegaLockGroup.DAMAGE)
-        recoveryFlash = false
         canMakeLandSound = false
-
-        frozen = false
-        hitsToUnfreeze = 0
-        frozenPushTimer.setToEnd()
 
         gravityScalar = spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", 1f, Float::class)
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
 
-        stunTimer.setToEnd()
         damageTimer.setToEnd()
-        damageFlashTimer.reset()
-        damageRecoveryTimer.setToEnd()
 
         shootAnimTimer.reset()
         wallJumpTimer.reset()
@@ -596,45 +586,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
 
-            EventType.STUN_PLAYER -> {
-                GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER: called")
-
-                val targets = event.getProperty(PlayerEventKeys.SLOTS)
-                if (targets == null || !targets.contains(playerSlot, false)) {
-                    GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "STUN_PLAYER: Megaman is not a target: $targets")
-                    return
-                }
-
-                if (stunned) {
-                    GameLogger.debug(
-                        MEGAMAN_EVENT_LISTENER_TAG,
-                        "STUN_PLAYER: do not stun Megaman because he is already stunned: " +
-                            "stunTimer.getRatio()=${stunTimer.getRatio()}"
-                    )
-                    return
-                }
-
-                val stunType = event.getProperty(ConstKeys.TYPE, StunType::class)!!
-                if (stunType == StunType.STUN_BOUNCE_IF_ON_SURFACE &&
-                    !body.isSensing(BodySense.FEET_ON_GROUND) &&
-                    !isBehaviorActive(BehaviorType.WALL_SLIDING)
-                ) {
-                    GameLogger.debug(
-                        MEGAMAN_EVENT_LISTENER_TAG,
-                        "STUN_PLAYER: do not stun because stun type is $stunType and Megaman is not on a surface"
-                    )
-                    return
-                }
-
-                // TODO: This assumes that Megaman's body is rotated UP.
-                //    Refactor this to support directionally dynamic bouncing.
-                body.physics.velocity.let {
-                    it.x = MegamanValues.STUN_IMPULSE_X * ConstVals.PPM * movementScalar * -facing.value
-                    it.y = MegamanValues.STUN_IMPULSE_Y * ConstVals.PPM
-                }
-
-                stunTimer.reset()
-            }
+            EventType.STUN_PLAYER -> onStunPlayerEvent(event)
 
             EventType.END_GAME_CAM_ROTATION -> {
                 unlock(MegaLockGroup.MOVEMENT, MegaLockReason.CAMERA_ROTATION)
@@ -663,38 +615,9 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         val healthDiff = oldHealth - getCurrentHealth()
         GameLogger.debug(TAG, "takeDamageFrom(): healthDiff=$healthDiff, damager=$damager")
 
-        if (!noDmgBounce.contains(damager::class) && damager is IBodyEntity) {
-            val bounds = damager.body.getBounds()
+        knockBackFrom(damager)
 
-            when (direction) {
-                Direction.UP -> {
-                    body.physics.velocity.x =
-                        (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-                    body.physics.velocity.y = MegamanValues.DMG_Y * ConstVals.PPM
-                }
-                Direction.DOWN -> {
-                    body.physics.velocity.x =
-                        (if (bounds.getX() > body.getX()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-                    body.physics.velocity.y = -MegamanValues.DMG_Y * ConstVals.PPM
-                }
-                Direction.LEFT -> {
-                    body.physics.velocity.x = -MegamanValues.DMG_Y * ConstVals.PPM
-                    body.physics.velocity.y =
-                        (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-                }
-                Direction.RIGHT -> {
-                    body.physics.velocity.x = MegamanValues.DMG_Y * ConstVals.PPM
-                    body.physics.velocity.y =
-                        (if (bounds.getY() > body.getY()) -MegamanValues.DMG_X else MegamanValues.DMG_X) * ConstVals.PPM
-                }
-            }
-        }
-
-        if (!frozen && damager is IFreezerEntity) {
-            frozen = true
-            hitsToUnfreeze = 0
-            frozenPushTimer.setToEnd()
-        }
+        freezeFrom(damager)
 
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
@@ -743,19 +666,10 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
             jetpackHandler.update(delta)
 
-            if (body.isSensing(BodySense.FEET_ON_GROUND)) stunTimer.update(delta)
-            if (damageTimer.isJustFinished()) damageRecoveryTimer.reset()
+            require(StunComponent::class).update(delta, body.isSensing(BodySense.FEET_ON_GROUND))
             if (stunned || damaged) chargingTimer.reset()
 
-            if (damageTimer.isFinished() && !damageRecoveryTimer.isFinished()) {
-                damageRecoveryTimer.update(delta)
-                damageFlashTimer.update(delta)
-                if (damageFlashTimer.isFinished()) {
-                    damageFlashTimer.reset()
-                    recoveryFlash = !recoveryFlash
-                }
-            }
-            if (damageRecoveryTimer.isJustFinished()) recoveryFlash = false
+            damageRecovery.update(delta, damaged, damageTimer.isJustFinished())
 
             wallJumpTimer.update(delta)
             shootAnimTimer.update(delta)
@@ -806,27 +720,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
             if (inPlay) spawningTimer.update(delta)
 
-            frozenPushTimer.update(delta)
-            if (frozen) {
-                if (frozenPushTimer.isFinished() &&
-                    MegamanValues.BUTTONS_TO_UNFREEZE.any { input.isJustReleased(it) }
-                ) {
-                    hitsToUnfreeze++
-                    frozenPushTimer.reset()
-                    requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false)
-                }
-
-                if (hitsToUnfreeze >= MegamanValues.HITS_TO_UNFREEZE) {
-                    frozen = false
-                    hitsToUnfreeze = 0
-                    frozenPushTimer.setToEnd()
-
-                    for (i in 0 until 5) {
-                        val shard = MegaEntityFactory.fetch(IceShard::class)!!
-                        shard.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.INDEX pairTo i))
-                    }
-                }
-            }
+            require(FreezeComponent::class).update(delta)
 
             wallSlideNotAllowedTimer.update(delta)
 
