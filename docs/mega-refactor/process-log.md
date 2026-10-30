@@ -1154,3 +1154,14 @@ newest entry at the bottom.
   engine and 272 core tests, 0 failures; 81 unique warnings.
 - Follow-up: item `072` (remove `IMegaGameEntity`) can start. Found during the play test: the old bug
   `docs/issues/2026-10-29-needle-spin-no-bounce-while-jump-held.md` (also on `master` before the merge).
+
+## 2026-10-30 — master (docs)
+
+- Summary: item `031`: branch folders prepared ahead of time (no branches yet). `mega-refactor-031d-devices` is
+  `planned`; its scan and a draft `docs/SCOPE.md` come next. `mega-refactor-031f-menu-input` (the "menu-input branch"
+  of the `031` decisions of 2026-10-26) is `blocked` by `031d` and `031e`; its process log has the proposed goal,
+  including the removal of the `controllerPoller` facade and the engine `IControllerPoller`. Its scan waits for `031e`
+  to merge. `ITEMS.md` has both branch rows; `ITEM.md` lists them. Owner (verbatim): "yes", to the proposal to
+  register `031f` now and scope `031d` next.
+- Contract check: not needed (docs only).
+- Follow-up: the `031d` scan.

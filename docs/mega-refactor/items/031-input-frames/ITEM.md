@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`, `082`
-- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged), `mega-refactor-031c-input-pipeline` (merged); next: `031d` (devices), `031e` (per-slot bindings), then the menu-input branch
+- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged), `mega-refactor-031c-input-pipeline` (merged); `mega-refactor-031d-devices` (planned), `mega-refactor-031f-menu-input` (blocked by `031d` and `031e`); next: `031d` (devices), `031e` (per-slot bindings), then `031f` (the menu-input branch)
 
 ## Goal
 
