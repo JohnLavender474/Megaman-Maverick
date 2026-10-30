@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: The camera is built from behavior components (room bounds, focus follow, rotation); `MegaLevelScreen` talks
   to a camera control interface, not to `CameraManagerForRooms`; `GameCameraState` goes. The game plays the same.
-- Done: branch start (docs commit on `master`), worktree.
-- Next: the owner's approval to merge.
+- Done: all plan steps; merged into `master` on 2026-10-30 (squash `7fe00b8b8`).
+- Next: none.
 - Blocked:
 
 ## Entries

@@ -1218,3 +1218,17 @@ newest entry at the bottom.
 - Follow-up: item `084` stays active. The branch backlog candidate (the other player keys in the property bag) went to
   the `084` `ITEM.md`, not a new item, because it belongs to a later `084` branch. No bugs filed. `051b` takes this
   branch from `master` before its step 8.
+
+## 2026-10-30 — mega-refactor-051b-camera-behaviors
+
+- Summary: the game camera is driven by a `CameraController` with ordered parts (`CameraFollow`, `CameraRoomBounds`,
+  `CameraRoomClamp`, `CameraRoomTransition`, `CameraRotationStep`, `CameraShake`), in place of `CameraManagerForRooms`
+  and `CameraShaker`. The camera knows only where it points and how it is rotated. The 5 room callbacks moved from
+  `MegaLevelScreen` to `LevelRoomHandler`. `focusSnappedAway` became `startSmoothFollow` and `stopSmoothFollow` on
+  `services.cameraController`; `coerceIntoBounds` is gone. Test map `REFACTOR_TEST_051`. Squash commit `7fe00b8b8`.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` pass. The temporary equivalence suite matched
+  the old manager frame by frame, and it caught 4 of 4 deliberate defects. After its removal: engine 585, core 310, 0
+  failures, `lwjgl3:jar`, 96 unique warnings with none new. The owner played the manual checks ("All tests passed").
+  Merge approval (verbatim: "approved").
+- Follow-up: item `051` stays active; next are `051c`, `051d` and `051e` (`051e` removes `RotatableCamera` and
+  `GameCameraState`, with or after `046`). New item `085` from the branch backlog candidate. No bugs filed.

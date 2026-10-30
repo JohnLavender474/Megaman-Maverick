@@ -92,6 +92,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
 | 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | active | none | 2026-10-30 | |
+| 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
@@ -117,7 +118,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-031e-bindings`](items/031-input-frames/branches/mega-refactor-031e-bindings/process-log.md) | 031 | Per-slot bindings: one settings object per slot replaces `ControllerButtons`; the bindings screen rules; `--resetBindings` | active | 2026-10-30 | |
 | [`mega-refactor-031f-menu-input`](items/031-input-frames/branches/mega-refactor-031f-menu-input/process-log.md) | 031 | Menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes | blocked | | |
 | [`mega-refactor-051a-camera-read-interface`](items/051-camera-behaviors/branches/mega-refactor-051a-camera-read-interface/process-log.md) | 051 | Read-only camera interface in `engine`; `getGameCamera()` becomes a property | merged | 2026-10-30 | 2026-10-30 |
-| [`mega-refactor-051b-camera-behaviors`](items/051-camera-behaviors/branches/mega-refactor-051b-camera-behaviors/process-log.md) | 051 | The camera built from behavior components; the level screen talks to a camera control interface; `GameCameraState` goes | active | 2026-10-30 | |
+| [`mega-refactor-051b-camera-behaviors`](items/051-camera-behaviors/branches/mega-refactor-051b-camera-behaviors/process-log.md) | 051 | The camera built from behavior components; the level screen talks to a camera control interface; `GameCameraState` goes | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-061a-thin-player`](items/061-thin-player/branches/mega-refactor-061a-thin-player/process-log.md) | 061 | Thin `MegaPlayer`, free functions over the entity, engine locks, an immediate damage signal | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061b-play-phase-teleport`](items/061-thin-player/branches/mega-refactor-061b-play-phase-teleport/process-log.md) | 061 | `ready` and `teleporting` as entity state (play phase, teleportable); no player wrappers | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061c-entity-queries`](items/061-thin-player/branches/mega-refactor-061c-entity-queries/process-log.md) | 061 | A player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go | merged | 2026-10-26 | 2026-10-26 |
