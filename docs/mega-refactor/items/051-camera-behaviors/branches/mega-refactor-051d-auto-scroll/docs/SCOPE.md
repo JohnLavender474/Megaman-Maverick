@@ -57,7 +57,9 @@ rules research for `051c` and `051d`".
 
 ## Out of scope
 
-- A speed change for the player. A later player component can hold it. See the `ITEM.md` decision.
+- A speed change for the player. Item `086` holds the component. A boost would be a term in `getMaxRunSpeed()`, not
+  `movementScalar`, which does not change the top speed. X6 adds its boost in a room with a belt that slows the player, so
+  a Maverick scroll with no belt may not need one (inferred).
 - Diagonal scrolls, and a scroll that does not stop at a room edge.
 - A section that ends on an event, for example a boss death. See question 2.
 - A parent object for chains, and a level validator (owner decisions).

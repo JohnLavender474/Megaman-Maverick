@@ -1255,3 +1255,10 @@ newest entry at the bottom.
   `051c`) prepared ahead of time with draft `SCOPE.md` files. No branch exists yet.
 - Contract check: not needed (docs only).
 - Follow-up: owner approval of the 2 draft scopes. Short answers to linked questions in `013` and `041`.
+
+## 2026-10-30 — master (docs)
+
+- Summary: new item `086` (player movement modifiers as a component), from the owner's request and a scan. `084` does
+  not entail it. The `051` `ITEM.md` and the `051d` draft scope point to it.
+- Contract check: not needed (docs only).
+- Follow-up: none. `086` is `idea`.

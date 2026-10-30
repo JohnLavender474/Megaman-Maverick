@@ -152,8 +152,9 @@ here.
   Tiled property enables them per edge: on by default for scrolls, off for zones. Tiled walls stay valid.
 - 2026-10-30 (owner): chained scrolls are separate sections with an optional `next` property, as `PipePortal` links
   objects. No parent object. A second stop mode, `arrive`, stops when the leading edge reaches the far edge, for corners.
-- 2026-10-30 (owner): movement multipliers should move to a player component later, not in `051d`. The `084` question
-  is in progress.
+- 2026-10-30 (owner): movement multipliers should move to a player component later, not in `051d`. Item `086` holds this.
+  `051d` keeps the player's speed unchanged. If a level later needs a boost, it is a term in `getMaxRunSpeed()`, because
+  `movementScalar` scales the run impulse and not the top speed (`ControllerComponent.kt:177-196`).
 
 ## Contract notes
 

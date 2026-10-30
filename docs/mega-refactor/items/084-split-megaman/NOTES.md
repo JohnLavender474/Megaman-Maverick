@@ -118,3 +118,9 @@ rest is a proposal for each branch `SCOPE.md`. Line numbers are in `M/Megaman.kt
   with no write.
 - X6 has no general invincibility: each hit source decides (`~/IdeaProjects/mmx-demake-tools/docs/engine.md`, "Damage
   to an object" and "Damage to the player").
+
+## Movement multipliers (2026-10-30, at `ba4b3ca1c`)
+
+This item does not entail a modifier component. `084c` leaves out `getMaxRunSpeed()` and the scalars, and it stays as it
+is. The owner wants the component later: see item `086`, which has the inventory. A typed field move would fit this
+item in a new branch, but it gives no outside hook.

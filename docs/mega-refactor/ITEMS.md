@@ -93,6 +93,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
 | 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | active | none | 2026-10-30 | |
 | 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | idea | none | | |
+| 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
