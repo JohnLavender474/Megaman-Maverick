@@ -56,7 +56,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class ElecDevilBodyPieces(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class ElecDevilBodyPieces(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDrawableShapesEntity, IOwnable<ElecDevilBody>, IFaceable, IActivatable, IDamagerEntity, IHazard {
 
     companion object {
@@ -90,7 +90,7 @@ class ElecDevilBodyPieces(game: MegaServices) : MegaGameEntity(game), IBodyEntit
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
             ElecDevilConstants.forEachCell { row, column ->
                 val rowColumnKey = ElecDevilConstants.getRowColumnKey(row, column)
                 colors.forEach { color ->

@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class FireMetFlame(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class FireMetFlame(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FireMetFlame"
@@ -56,7 +56,7 @@ class FireMetFlame(game: MegaServices) : AbstractProjectile(game), IAnimatedEnti
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put("still", atlas.findRegion("Flame3/Still"))
             regions.put("whoosh", atlas.findRegion("Flame3/Whoosh"))
         }
@@ -89,7 +89,7 @@ class FireMetFlame(game: MegaServices) : AbstractProjectile(game), IAnimatedEnti
                 ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
             )
         )
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     internal fun launch(impulse: Vector2) = body.physics.velocity.set(impulse)

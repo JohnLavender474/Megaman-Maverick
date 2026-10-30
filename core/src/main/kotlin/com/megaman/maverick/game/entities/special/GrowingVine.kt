@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class GrowingVine(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class GrowingVine(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity {
 
     companion object {
@@ -71,7 +71,7 @@ class GrowingVine(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpri
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.SMB3_SPECIALS.source, "$TAG/vine")
+            region = services.assets.getTextureRegion(TextureAsset.SMB3_SPECIALS.source, "$TAG/vine")
         super.init()
         addComponent(AudioComponent())
         addComponent(SpritesComponent())

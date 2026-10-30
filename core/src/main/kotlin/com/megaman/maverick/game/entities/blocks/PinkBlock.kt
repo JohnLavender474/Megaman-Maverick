@@ -19,7 +19,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-class PinkBlock(game: MegaServices) : BreakableBlock(game), IDamageableEntity {
+class PinkBlock(services: MegaServices) : BreakableBlock(services), IDamageableEntity {
 
     override val invincible = false
 

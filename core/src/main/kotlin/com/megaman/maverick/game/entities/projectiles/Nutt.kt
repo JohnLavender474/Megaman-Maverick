@@ -30,7 +30,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class Nutt(game: MegaServices) : AbstractProjectile(game) {
+class Nutt(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "Nutt"
@@ -39,7 +39,7 @@ class Nutt(game: MegaServices) : AbstractProjectile(game) {
     }
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
     }
 

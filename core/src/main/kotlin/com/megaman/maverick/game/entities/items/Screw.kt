@@ -21,7 +21,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 
-class Screw(game: MegaServices) : AbstractEnergyItem(game) {
+class Screw(services: MegaServices) : AbstractEnergyItem(services) {
 
     companion object {
         const val TAG = "Screw"
@@ -36,7 +36,7 @@ class Screw(game: MegaServices) : AbstractEnergyItem(game) {
         GameLogger.debug(TAG, "init()")
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ITEMS_1.source)
             animDefs.keys().forEach { key -> map.put(key, atlas.findRegion("${getTag()}/$key")) }
             regions.put(getTag(), map)
         }
@@ -47,7 +47,7 @@ class Screw(game: MegaServices) : AbstractEnergyItem(game) {
     override fun contactWithPlayer(player: MegaGameEntity) {
         GameLogger.debug(TAG, "contactWithPlayer()")
         destroy()
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.ADD_CURRENCY, props(
                     ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT,

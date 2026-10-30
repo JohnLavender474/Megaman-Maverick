@@ -40,7 +40,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class SmokePuff(game: MegaServices) : MegaGameEntity(game), IHazard, IDamagerEntity, IOwnable<IGameEntity>,
+class SmokePuff(services: MegaServices) : MegaGameEntity(services), IHazard, IDamagerEntity, IOwnable<IGameEntity>,
     IBodyEntity, ISpritesEntity, IDirectional {
 
     companion object {
@@ -59,7 +59,7 @@ class SmokePuff(game: MegaServices) : MegaGameEntity(game), IHazard, IDamagerEnt
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())

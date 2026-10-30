@@ -15,7 +15,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-private class TestExistenceEntity(game: MegaServices) : MegaGameEntity(game), IFreezableEntity {
+private class TestExistenceEntity(services: MegaServices) : MegaGameEntity(services), IFreezableEntity {
     override var frozen = false
     override fun getType() = EntityType.OTHER
 }
@@ -23,16 +23,16 @@ private class TestExistenceEntity(game: MegaServices) : MegaGameEntity(game), IF
 class EntityExistenceTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
 
     beforeEach {
         engine = GameEngine()
-        game = testServices(engine = engine)
+        services = testServices(engine = engine)
     }
 
     describe("engine reset") {
         it("leaves an entity that was live not live after the update") {
-            val entity = TestExistenceEntity(game)
+            val entity = TestExistenceEntity(services)
             entity.spawn(Properties())
             engine.update(0f)
 
@@ -45,7 +45,7 @@ class EntityExistenceTest : DescribeSpec({
 
     describe("the ice shield of a FreezableEntityHandler") {
         it("stays live through an unfreeze and a freeze in one frame and a later freeze") {
-            val entity = TestExistenceEntity(game)
+            val entity = TestExistenceEntity(services)
             val handler = FreezableEntityHandler(entity)
             val shield = FreezableEntityHandler::class.java.getDeclaredField("shieldEntity")
                 .apply { isAccessible = true }
@@ -69,10 +69,10 @@ class EntityExistenceTest : DescribeSpec({
 
     describe("a child and its parent destroyed in one frame") {
         it("runs the onDestroy of the child once") {
-            val child = TestExistenceEntity(game)
+            val child = TestExistenceEntity(services)
             var childDestroys = 0
             child.runnablesOnDestroy.put("count") { childDestroys++ }
-            val parent = object : MegaGameEntity(game) {
+            val parent = object : MegaGameEntity(services) {
                 override fun getType() = EntityType.OTHER
 
                 override fun onDestroy() {

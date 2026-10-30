@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.special.DarknessV2
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class DarkSerketClaw(game: MegaServices) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
+class DarkSerketClaw(services: MegaServices) : AbstractHealthEntity(services), IProjectileEntity, ISpritesEntity,
     IAnimatedEntity, IFaceable, ILightSource {
 
     companion object {
@@ -68,7 +68,7 @@ class DarkSerketClaw(game: MegaServices) : AbstractHealthEntity(game), IProjecti
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class TubeBeamer(game: MegaServices) : MegaGameEntity(game), IAudioEntity, IBodyEntity, ICullableEntity,
+class TubeBeamer(services: MegaServices) : MegaGameEntity(services), IAudioEntity, IBodyEntity, ICullableEntity,
     IDirectional {
 
     companion object {

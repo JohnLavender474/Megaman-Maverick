@@ -21,7 +21,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 
-class WeaponEnergyBulb(game: MegaServices): AbstractEnergyItem(game) {
+class WeaponEnergyBulb(services: MegaServices): AbstractEnergyItem(services) {
 
     companion object {
         const val TAG = "WeaponEnergyBulb"
@@ -37,7 +37,7 @@ class WeaponEnergyBulb(game: MegaServices): AbstractEnergyItem(game) {
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()
 
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ITEMS_1.source)
             animDefs.keys().forEach { key -> map.put(key, atlas.findRegion("${getTag()}/$key")) }
 
             regions.put(getTag(), map)
@@ -51,7 +51,7 @@ class WeaponEnergyBulb(game: MegaServices): AbstractEnergyItem(game) {
 
         destroy()
 
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.ADD_WEAPON_ENERGY, props(
                     ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT,

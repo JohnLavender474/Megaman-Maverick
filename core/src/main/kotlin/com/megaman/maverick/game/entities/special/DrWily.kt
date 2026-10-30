@@ -40,7 +40,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.AnimationUtils
 
-class DrWily(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
+class DrWily(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, Updatable, IFaceable,
     IEventListener {
 
     companion object {
@@ -75,7 +75,7 @@ class DrWily(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimat
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             animDefs.keys().forEach {
                 val region = atlas.findRegion("defeated/$it")
                 regions.put(it, region)
@@ -91,7 +91,7 @@ class DrWily(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimat
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         facing = spawnProps.get(ConstKeys.FACING, Facing::class)!!
 
@@ -113,7 +113,7 @@ class DrWily(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimat
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -138,7 +138,7 @@ class DrWily(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimat
                     position.set(target)
                     state = DrWilyState.LAND
                     if (targetPlayer.existenceState.liveAfterUpdate)
-                        game.audioMan.playMusic(MusicAsset.MM3_ALL_CLEAR_MUSIC, false)
+                        services.audio.playMusic(MusicAsset.MM3_ALL_CLEAR_MUSIC, false)
                 }
             }
 
@@ -148,7 +148,7 @@ class DrWily(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimat
                 if (begTimer.isFinished()) {
                     stillTimer.update(delta)
                     if (stillTimer.isJustFinished() && targetPlayer.existenceState.liveAfterUpdate)
-                        game.eventsMan.submitEvent(Event(EventType.GAME_COMPLETE))
+                        services.events.submitEvent(Event(EventType.GAME_COMPLETE))
                 }
             }
         }

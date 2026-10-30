@@ -39,7 +39,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class RailTrack(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity {
+class RailTrack(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "RailTrack"
@@ -60,7 +60,7 @@ class RailTrack(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISp
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("left", "right", "middle", "drop").forEach { key ->
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }
@@ -189,7 +189,7 @@ class RailTrack(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISp
     override fun getTag() = TAG
 }
 
-class RailTrackPlatform(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity {
+class RailTrackPlatform(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "RailTrackPlatform"
@@ -202,7 +202,7 @@ class RailTrackPlatform(game: MegaServices) : Block(game), ISpritesEntity, IAnim
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("platform", "platform_drop").forEach { key ->
                 regions.put(key, atlas.findRegion("${RailTrack.TAG}/$key"))
             }

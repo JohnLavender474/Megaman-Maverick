@@ -26,7 +26,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class SlashDissipation(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IFaceable {
+class SlashDissipation(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "SlashDissipation"
@@ -42,7 +42,7 @@ class SlashDissipation(game: MegaServices) : MegaGameEntity(game), ISpritesEntit
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())

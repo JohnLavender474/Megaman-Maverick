@@ -41,7 +41,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class PurpleBlast(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class PurpleBlast(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PurpleBlast"
@@ -57,7 +57,7 @@ class PurpleBlast(game: MegaServices) : AbstractProjectile(game), IAnimatedEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (chargeRegion == null || blastRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             chargeRegion = atlas.findRegion("PurpleBlast/Charge")
             blastRegion = atlas.findRegion("PurpleBlast/Blast")
         }

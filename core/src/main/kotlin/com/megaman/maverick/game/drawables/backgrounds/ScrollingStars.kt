@@ -15,7 +15,7 @@ class ScrollingStars(
 ) : ScrollingBackground(
     game,
     "ScrollingStars",
-    game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "StarFieldBG"),
+    game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "StarFieldBG"),
     start,
     target,
     DUR,

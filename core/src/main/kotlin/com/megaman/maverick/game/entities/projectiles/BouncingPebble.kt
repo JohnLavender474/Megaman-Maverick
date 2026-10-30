@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class BouncingPebble(game: MegaServices) : AbstractProjectile(game) {
+class BouncingPebble(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "BouncingPebble"
@@ -60,7 +60,7 @@ class BouncingPebble(game: MegaServices) : AbstractProjectile(game) {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
     }

@@ -21,7 +21,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 
-open class LightSourceEntity(game: MegaServices) : MegaGameEntity(game), ILightSource, ICullableEntity {
+open class LightSourceEntity(services: MegaServices) : MegaGameEntity(services), ILightSource, ICullableEntity {
 
     companion object {
         const val TAG = "LightSource"
@@ -63,7 +63,7 @@ open class LightSourceEntity(game: MegaServices) : MegaGameEntity(game), ILightS
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullOutOfBounds) putCullable(
-            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
         val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)

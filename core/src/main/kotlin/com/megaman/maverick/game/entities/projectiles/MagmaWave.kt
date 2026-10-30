@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class MagmaWave(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFireEntity, IFaceable,
+class MagmaWave(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFireEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -73,7 +73,7 @@ class MagmaWave(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity,
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("wave", "disintegrate").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -85,7 +85,7 @@ class MagmaWave(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity,
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, game.gravity.direction, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, services.gravity.direction, Direction::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val position = DirectionPositionMapper.getPosition(direction).opposite()

@@ -36,7 +36,7 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.misc.GravityUtils
 import com.megaman.maverick.game.world.body.*
 
-class PreciousShard(game: MegaServices) : AbstractProjectile(game), IDirectional {
+class PreciousShard(services: MegaServices) : AbstractProjectile(services), IDirectional {
 
     companion object {
         const val TAG = "PreciousShard"
@@ -71,7 +71,7 @@ class PreciousShard(game: MegaServices) : AbstractProjectile(game), IDirectional
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
 
             val keys = Array<String>()
             PreciousShardSize.entries.forEach { shardSize ->
@@ -92,7 +92,7 @@ class PreciousShard(game: MegaServices) : AbstractProjectile(game), IDirectional
 
         direction = spawnProps.getOrDefault(
             ConstKeys.DIRECTION,
-            if (owner is IDirectional) (owner as IDirectional).direction else game.gravity.direction,
+            if (owner is IDirectional) (owner as IDirectional).direction else services.gravity.direction,
             Direction::class
         )
 
@@ -139,7 +139,7 @@ class PreciousShard(game: MegaServices) : AbstractProjectile(game), IDirectional
 
         explodeAndDie()
 
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.DINK_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.DINK_SOUND, false)
     }
 
     override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()

@@ -51,7 +51,7 @@ import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class TotemPolem(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class TotemPolem(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "TotemPolem"
@@ -89,7 +89,7 @@ class TotemPolem(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), 
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("eyes_closed", atlas.findRegion("$TAG/eyes_closed"))
             regions.put("eyes_closing", atlas.findRegion("$TAG/eyes_closing"))
             regions.put("eyes_open", atlas.findRegion("$TAG/eyes_open"))

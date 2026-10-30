@@ -210,12 +210,12 @@ class MegamanMaverickGame(
     private lateinit var keyboardInput: KeyboardInput
     private val slot0FrameBuilder = InputFrameBuilder(MegaControllerButton.entries)
 
-    lateinit var assMan: AssetManager
-    lateinit var eventsMan: EventsManager
-    lateinit var audioMan: MegaAudioManager
+    lateinit var assets: AssetManager
+    lateinit var events: EventsManager
+    lateinit var audio: MegaAudioManager
 
     lateinit var engine: GameEngine
-    lateinit var state: GameState
+    lateinit var gameState: GameState
 
     val players = MegaPlayers()
     val gravity = WorldGravity(players)
@@ -296,14 +296,14 @@ class MegamanMaverickGame(
         gamepadInput = GamepadInput(buttons)
         controllerPoller = FrameControllerPoller { players.inputs[PlayerSlot(0)] }
 
-        eventsMan = EventsManager()
-        eventsMan.addListener(this)
+        events = EventsManager()
+        events.addListener(this)
 
         if (params.diagnostics)
             diagnostics = RuntimeDiagnostics("${System.currentTimeMillis()}-diagnostics.txt")
 
         engine = createGameEngine()
-        state = GameState()
+        gameState = GameState()
 
         this.pixelPerfect = params.pixelPerfect
         this.vsync = params.vsync
@@ -313,7 +313,7 @@ class MegamanMaverickGame(
         val gameCamera = RotatableCamera(onJustFinishedRotating = {
             camera.rotating = false
             camera.focusSnappedAway = false
-            eventsMan.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
+            events.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
         })
         gameCamera.setToDefaultPosition()
 
@@ -354,7 +354,7 @@ class MegamanMaverickGame(
             positionY = (ConstVals.VIEW_HEIGHT - 1f) * ConstVals.PPM
         )
 
-        assMan = AssetManager()
+        assets = AssetManager()
         queueAssets()
 
         if (params.writeLogsToFile) {
@@ -394,16 +394,16 @@ class MegamanMaverickGame(
     private fun postCreate() {
         val sounds = OrderedMap<SoundAsset, Sound>()
         val music = OrderedMap<MusicAsset, Music>()
-        audioMan = MegaAudioManager(assMan.getSounds(sounds), assMan.getMusics(music))
-        audioMan.musicVolume = params.musicVolume
-        audioMan.soundVolume = params.soundVolume
+        audio = MegaAudioManager(assets.getSounds(sounds), assets.getMusics(music))
+        audio.musicVolume = params.musicVolume
+        audio.soundVolume = params.soundVolume
 
         val services = MegaServices(
             engine,
-            eventsMan,
-            assMan,
-            audioMan,
-            state,
+            events,
+            assets,
+            audio,
+            gameState,
             players,
             gravity,
             levelState,
@@ -426,7 +426,7 @@ class MegamanMaverickGame(
         megaman.init()
         megaman.initialized = true
         // add megaman as a game state listener
-        state.addListener(megaman)
+        gameState.addListener(megaman)
 
         // TODO: a player that registers after progress exists keeps the base max health, because the heart tank
         //  max health is set only when a heart tank changes; a late join must set it from the game state (item 047)
@@ -455,9 +455,9 @@ class MegamanMaverickGame(
 
         val start = launch.start
         if (start is LaunchStart.StartLevel) start.level.levelOverride?.let { applyLevelOverride(it) }
-        launch.weapons.forEach { state.addWeapon(it) }
-        launch.heartTanks.forEach { state.addHeartTank(it) }
-        launch.healthTanks.forEach { state.fillHealthTank(it) }
+        launch.weapons.forEach { gameState.addWeapon(it) }
+        launch.heartTanks.forEach { gameState.addHeartTank(it) }
+        launch.healthTanks.forEach { gameState.fillHealthTank(it) }
 
         when (start) {
             LaunchStart.Default -> when (params.runType) {
@@ -497,7 +497,7 @@ class MegamanMaverickGame(
 
         if (!finishedLoadingAssets) {
             diagnostics?.beginEntry("assMan.update")
-            val finished = assMan.update(ASSET_MILLIS)
+            val finished = assets.update(ASSET_MILLIS)
             diagnostics?.endEntry()
 
             if (finished) {
@@ -509,7 +509,7 @@ class MegamanMaverickGame(
             } else {
                 diagnostics?.beginEntry("loadingText")
 
-                val progress = (assMan.progress * 100).toInt()
+                val progress = (assets.progress * 100).toInt()
                 loadingText.setText("${LOADING}: $progress%")
 
                 viewports.get(ConstKeys.UI).apply()
@@ -597,11 +597,11 @@ class MegamanMaverickGame(
             }
 
             diagnostics?.beginEntry("eventsMan")
-            eventsMan.run()
+            events.run()
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("audioMan")
-            audioMan.update(delta)
+            audio.update(delta)
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("updatables")
@@ -790,10 +790,10 @@ class MegamanMaverickGame(
      */
     fun resetPlayerProgress() {
         GameLogger.debug(TAG, "resetPlayerProgress()")
-        state.reset()
-        state.clearWeapons()
+        gameState.reset()
+        gameState.clearWeapons()
         players.forEach { (it as Megaman).currentWeapon = MegamanWeapon.MEGA_BUSTER }
-        state.resetLives()
+        gameState.resetLives()
         levelState.weaponsAttained = null
     }
 
@@ -805,12 +805,12 @@ class MegamanMaverickGame(
         GameLogger.debug(TAG, "applyLevelOverride(): override=$override")
         resetPlayerProgress()
         val loadout = override.loadout
-        loadout.heartTanks.forEach { state.addHeartTank(it) }
-        loadout.healthTanks.forEach { (tank, value) -> state.putHealthTank(tank, value) }
-        loadout.enhancements.forEach { state.addEnhancement(it) }
-        loadout.weapons.forEach { state.addWeapon(it) }
-        override.difficultyMode?.let { state.setDifficultyMode(it) }
-        override.lives?.let { state.setLives(it) }
+        loadout.heartTanks.forEach { gameState.addHeartTank(it) }
+        loadout.healthTanks.forEach { (tank, value) -> gameState.putHealthTank(tank, value) }
+        loadout.enhancements.forEach { gameState.addEnhancement(it) }
+        loadout.weapons.forEach { gameState.addWeapon(it) }
+        override.difficultyMode?.let { gameState.setDifficultyMode(it) }
+        override.lives?.let { gameState.setLives(it) }
     }
 
     fun startExtraLevel(level: LevelDefinition) {
@@ -829,7 +829,7 @@ class MegamanMaverickGame(
             return
         }
 
-        val state = this.state.toString()
+        val state = this.gameState.toString()
         GameLogger.debug(TAG, "saveState(): state=$state")
 
         val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
@@ -855,9 +855,9 @@ class MegamanMaverickGame(
             } else {
                 GameLogger.debug(TAG, "loadSavedState(): loading state: state=$state")
 
-                this.state.reset()
-                this.state.fromString(state)
-                this.state.resetLives()
+                this.gameState.reset()
+                this.gameState.fromString(state)
+                this.gameState.resetLives()
 
                 return true
             }
@@ -870,17 +870,17 @@ class MegamanMaverickGame(
 
 
     private fun queueAssets() {
-        val assets = Array<IAsset>()
-        assets.addAll(MusicAsset.valuesAsIAssetArray())
-        assets.addAll(SoundAsset.valuesAsIAssetArray())
-        assets.addAll(TextureAsset.valuesAsIAssetArray())
+        val queuedAssets = Array<IAsset>()
+        queuedAssets.addAll(MusicAsset.valuesAsIAssetArray())
+        queuedAssets.addAll(SoundAsset.valuesAsIAssetArray())
+        queuedAssets.addAll(TextureAsset.valuesAsIAssetArray())
 
-        assMan.setLoader(TiledMap::class.java, TmxMapLoader(InternalFileHandleResolver()))
-        LevelDefinition.entries.forEach { assets.add(it) }
+        assets.setLoader(TiledMap::class.java, TmxMapLoader(InternalFileHandleResolver()))
+        LevelDefinition.entries.forEach { queuedAssets.add(it) }
 
-        assets.forEach {
+        queuedAssets.forEach {
             GameLogger.debug(TAG, "loadAssets(): Loading ${it.assClass.simpleName} asset: ${it.source}")
-            assMan.load(it.source, it.assClass)
+            assets.load(it.source, it.assClass)
         }
     }
 
@@ -963,10 +963,10 @@ class MegamanMaverickGame(
                     diagnostics = diagnostics
                 ),
                 AudioSystem(
-                    { audioMan.playSound(it.source, it.loop) },
-                    { audioMan.playMusic(it.source, it.loop) },
-                    { audioMan.stopSound(it) },
-                    { audioMan.stopMusic(it) },
+                    { audio.playSound(it.source, it.loop) },
+                    { audio.playMusic(it.source, it.loop) },
+                    { audio.stopSound(it) },
+                    { audio.stopMusic(it) },
                     diagnostics = diagnostics
                 ),
                 GroupsSystem()
@@ -1055,7 +1055,7 @@ class MegamanMaverickGame(
         settings.performance = performance
         Gdx.graphics.setForegroundFPS(performance.fps)
         getSystem(WorldSystem::class)?.fixedStep = performance.fixedStep
-        eventsMan.submitEvent(Event(EventType.CHANGE_PERFORMANCE_MODE, props(ConstKeys.MODE pairTo performance)))
+        events.submitEvent(Event(EventType.CHANGE_PERFORMANCE_MODE, props(ConstKeys.MODE pairTo performance)))
         autoPerfGraceTimer.reset()
         autoPerfTimer.reset()
     }

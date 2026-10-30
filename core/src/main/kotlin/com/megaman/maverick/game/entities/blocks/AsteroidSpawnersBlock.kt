@@ -12,7 +12,7 @@ import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setReceiver
 
-class AsteroidSpawnersBlock(game: MegaServices) : Block(game) {
+class AsteroidSpawnersBlock(services: MegaServices) : Block(services) {
 
     companion object {
         const val TAG = "AsteroidSpawnersBlock"

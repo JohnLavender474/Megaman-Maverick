@@ -33,7 +33,7 @@ import io.mockk.mockk
 class DrWilyTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
     lateinit var submitted: MutableList<Int>
     var step = 0
     var alive = true
@@ -47,22 +47,22 @@ class DrWilyTest : DescribeSpec({
         every { eventsMan.submitEvent(any()) } answers {
             if (firstArg<Event>().key == EventType.GAME_COMPLETE) submitted.add(step)
         }
-        game = testServices(engine = engine, eventsMan = eventsMan, players = mockk<MegaPlayers>(relaxed = true))
+        services = testServices(engine = engine, events = eventsMan, players = mockk<MegaPlayers>(relaxed = true))
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-        every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
+        every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
         val target = mockk<MegaGameEntity>(relaxed = true)
         every { target.getComponent(BodyComponent::class) } returns BodyComponent(Body(BodyType.ABSTRACT))
         every { target.existenceState } answers {
             if (alive) EntityExistenceState.LIVE else EntityExistenceState.DESTROY_QUEUED
         }
-        every { game.players.targetFor(any()) } returns target
+        every { services.players.targetFor(any()) } returns target
     }
 
     afterEach { engine.reset() }
 
     fun runDrWily(deadFromStep: Int = Int.MAX_VALUE) {
-        val wily = DrWily(game)
+        val wily = DrWily(services)
         wily.spawn(
             props(
                 ConstKeys.POSITION pairTo Vector2(0f, 0f),

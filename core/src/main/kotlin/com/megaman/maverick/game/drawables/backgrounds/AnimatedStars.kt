@@ -16,7 +16,7 @@ class AnimatedStars(
     "AnimatedStars",
     start.x - (ROWS * ConstVals.PPM) / 2f,
     start.y - (COLS * ConstVals.PPM) / 2f,
-    game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "AnimatedStarsBG"),
+    game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_1.source, "AnimatedStarsBG"),
     width,
     height,
     ROWS,

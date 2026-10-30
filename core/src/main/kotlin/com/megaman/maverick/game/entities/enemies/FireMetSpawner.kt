@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class FireMetSpawner(game: MegaServices) : MegaGameEntity(game), IParentEntity<FireMet>, IBodyEntity,
+class FireMetSpawner(services: MegaServices) : MegaGameEntity(services), IParentEntity<FireMet>, IBodyEntity,
     ICullableEntity, ISpritesEntity, IAnimatedEntity, IHazard {
 
     companion object {
@@ -71,7 +71,7 @@ class FireMetSpawner(game: MegaServices) : MegaGameEntity(game), IParentEntity<F
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("closed", atlas.findRegion("$TAG/Closed"))
             regions.put("opening", atlas.findRegion("$TAG/Opening"))
             regions.put("open", atlas.findRegion("$TAG/Open"))

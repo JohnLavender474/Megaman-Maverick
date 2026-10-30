@@ -28,7 +28,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
-class MagmaOrb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class MagmaOrb(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "MagmaOrb"
@@ -39,7 +39,7 @@ class MagmaOrb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -61,7 +61,7 @@ class MagmaOrb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
         body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (game.camera.rotating) body.physics.velocity.setZero()
+            if (services.camera.rotating) body.physics.velocity.setZero()
             else body.physics.velocity.set(trajectory)
         }
 

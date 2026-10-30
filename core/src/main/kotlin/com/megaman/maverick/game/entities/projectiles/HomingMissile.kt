@@ -50,7 +50,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class HomingMissile(game: MegaServices) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageableEntity {
+class HomingMissile(services: MegaServices) : AbstractProjectile(services), IHealthEntity, IAnimatedEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "HomingMissile"
@@ -86,7 +86,7 @@ class HomingMissile(game: MegaServices) : AbstractProjectile(game), IHealthEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

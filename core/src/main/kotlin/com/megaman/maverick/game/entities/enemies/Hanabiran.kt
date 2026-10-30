@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class Hanabiran(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional {
+class Hanabiran(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IDirectional {
 
     enum class HanabiranState {
         SLEEPING,
@@ -85,7 +85,7 @@ class Hanabiran(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IA
 
     override fun init(vararg params: Any) {
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         addComponent(defineAnimationsComponent())
     }
 

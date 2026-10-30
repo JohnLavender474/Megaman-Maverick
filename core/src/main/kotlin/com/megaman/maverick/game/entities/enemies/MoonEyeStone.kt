@@ -69,7 +69,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class MoonEyeStone(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity,
+class MoonEyeStone(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity,
     IDrawableShapesEntity, IFaceable, IDirectional {
 
     companion object {
@@ -149,7 +149,7 @@ class MoonEyeStone(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -217,7 +217,7 @@ class MoonEyeStone(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, 
 
             direction = targetPlayer.body.direction
 
-            if (game.camera.rotating) return@update
+            if (services.camera.rotating) return@update
 
             if (currentState != MoonEyeStoneState.SEEK || !throwing) processAsteroids(delta)
 

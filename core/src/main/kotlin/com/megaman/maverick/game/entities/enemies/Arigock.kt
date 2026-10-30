@@ -48,7 +48,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Arigock(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+class Arigock(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -83,7 +83,7 @@ class Arigock(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFre
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("closed", "shooting", "frozen").forEach { key ->
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }

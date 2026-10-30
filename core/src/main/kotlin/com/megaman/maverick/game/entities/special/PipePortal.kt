@@ -47,7 +47,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class PipePortal(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ITeleporterEntity, IAudioEntity,
+class PipePortal(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ITeleporterEntity, IAudioEntity,
     IEventListener, IDirectional {
 
     companion object {
@@ -78,7 +78,7 @@ class PipePortal(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ITelep
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -94,7 +94,7 @@ class PipePortal(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ITelep
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         entering.clear()
         exiting.clear()
@@ -125,7 +125,7 @@ class PipePortal(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ITelep
         exiting.put(entity, Timer(TELEPORT_DUR))
 
         if (entity.asPlayer != null) {
-            game.camera.focusSnappedAway = false
+            services.camera.focusSnappedAway = false
             entity.require(TeleportableComponent::class).teleporter = this
         }
 
@@ -147,7 +147,7 @@ class PipePortal(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ITelep
 
         entity.beginTeleport(this)
 
-        if (entity.asPlayer != null) game.camera.focusSnappedAway = true
+        if (entity.asPlayer != null) services.camera.focusSnappedAway = true
 
         requestToPlaySound(SoundAsset.SMB3_PIPE_SOUND, false)
     }
@@ -198,7 +198,7 @@ class PipePortal(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ITelep
             timer.update(delta)
             if (timer.isFinished()) {
                 GameLogger.debug(TAG, "update(): send timer finished; thisKey=$thisKey, entity=$entity")
-                game.eventsMan.submitEvent(
+                services.events.submitEvent(
                     Event(
                         EventType.TELEPORT, props(
                             ConstKeys.TYPE pairTo ConstKeys.EXIT,

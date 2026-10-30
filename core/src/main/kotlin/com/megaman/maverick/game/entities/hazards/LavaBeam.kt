@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class LavaBeam(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class LavaBeam(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IHazard, IDirectional {
 
     companion object {
@@ -56,7 +56,7 @@ class LavaBeam(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprites
     override fun getType() = EntityType.HAZARD
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "LavaBeam")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "LavaBeam")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())

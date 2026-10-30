@@ -42,7 +42,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
-class RocketPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity,
+class RocketPlatform(services: MegaServices) : Block(services), IParentEntity<MegaGameEntity>, ISpritesEntity,
     IMotionEntity, IEventListener, IDamagerEntity, IDirectional {
 
     companion object {
@@ -62,12 +62,12 @@ class RocketPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGameEn
     override var children = Array<MegaGameEntity>()
 
     private val canMove: Boolean
-        get() = !game.camera.rotating
+        get() = !services.camera.rotating
     private var hidden = false
 
     override fun init(vararg params: Any) {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "${TAG}${REGION_SUFFIX}")
+            region = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, "${TAG}${REGION_SUFFIX}")
         super.init()
         addComponent(MotionComponent())
         addComponent(defineSpritesCompoent())
@@ -80,7 +80,7 @@ class RocketPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGameEn
 
         putProperty("${ConstKeys.FEET}_${ConstKeys.SOUND}", false)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -118,7 +118,7 @@ class RocketPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGameEn
 
     override fun onDestroy() {
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
         children.forEach { it.destroy() }
         children.clear()
     }

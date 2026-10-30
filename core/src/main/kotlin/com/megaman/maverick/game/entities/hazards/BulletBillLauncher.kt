@@ -43,7 +43,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BulletBillLauncher(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IAudioEntity, IHazard {
+class BulletBillLauncher(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAudioEntity, IHazard {
 
     companion object {
         const val TAG = "BulletBillLauncher"
@@ -62,7 +62,7 @@ class BulletBillLauncher(game: MegaServices) : MegaGameEntity(game), IBodyEntity
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             region = atlas.findRegion("${BulletBill.TAG}/launcher")
         }
         super.init()

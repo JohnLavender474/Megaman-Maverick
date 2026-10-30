@@ -21,7 +21,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 
 import com.megaman.maverick.game.utils.GameObjectPools
 
-class ExplosionField(game: MegaServices): MegaGameEntity(game), IOwnable<IGameEntity> {
+class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "ExplosionField"

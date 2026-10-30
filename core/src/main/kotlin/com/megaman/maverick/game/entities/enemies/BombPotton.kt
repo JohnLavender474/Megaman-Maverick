@@ -41,7 +41,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class BombPotton(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class BombPotton(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "BombPotton"
@@ -58,7 +58,7 @@ class BombPotton(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), I
     private var speed = 0f
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

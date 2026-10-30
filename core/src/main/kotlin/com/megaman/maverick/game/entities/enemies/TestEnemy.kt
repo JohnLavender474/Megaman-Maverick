@@ -26,7 +26,7 @@ import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class TestEnemy(game: MegaServices) : AbstractEnemy(game) {
+class TestEnemy(services: MegaServices) : AbstractEnemy(services) {
 
     companion object {
         const val TAG = "TestEnemy"

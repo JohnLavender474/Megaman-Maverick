@@ -52,7 +52,7 @@ object LightSourceUtils {
         center: Vector2,
         radiance: Float,
         radius: Int
-    ) = entity.game.eventsMan.submitEvent(
+    ) = entity.services.events.submitEvent(
         Event(
             EventType.ADD_LIGHT_SOURCE, props(
                 ConstKeys.OWNER pairTo entity,

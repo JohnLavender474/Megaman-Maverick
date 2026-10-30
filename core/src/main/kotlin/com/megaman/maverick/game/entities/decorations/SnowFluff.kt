@@ -27,7 +27,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.*
 
-class SnowFluff(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class SnowFluff(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "SnowFluff"
@@ -35,7 +35,7 @@ class SnowFluff(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprite
     }
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, Snow.TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, Snow.TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

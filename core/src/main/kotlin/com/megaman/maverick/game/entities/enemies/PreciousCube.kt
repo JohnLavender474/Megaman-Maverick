@@ -42,7 +42,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class PreciousCube(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class PreciousCube(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PreciousCube"
@@ -90,7 +90,7 @@ class PreciousCube(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { state ->
                 PreciousCubeColor.entries.forEach { color ->
                     val key = "${state}_${color.name.lowercase()}"
@@ -182,7 +182,7 @@ class PreciousCube(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, I
             }
             positions.shuffle()
 
-            val camBounds = game.getGameCamera().getRotatedBounds()
+            val camBounds = services.getGameCamera().getRotatedBounds()
             var blinkInPos = positions.firstOrNull { position -> camBounds.contains(position) }
 
             if (blinkInPos == null) {

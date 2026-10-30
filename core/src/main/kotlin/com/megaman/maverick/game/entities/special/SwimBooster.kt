@@ -23,7 +23,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
-class SwimBooster(game: MegaServices) : MegaGameEntity(game), ICullableEntity, IEventListener {
+class SwimBooster(services: MegaServices) : MegaGameEntity(services), ICullableEntity, IEventListener {
 
     companion object {
         const val TAG = "SwimBooster"
@@ -42,14 +42,14 @@ class SwimBooster(game: MegaServices) : MegaGameEntity(game), ICullableEntity, I
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -64,7 +64,7 @@ class SwimBooster(game: MegaServices) : MegaGameEntity(game), ICullableEntity, I
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(game.getGameCamera(), { bounds }))
+        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.getGameCamera(), { bounds }))
     )
 
     override fun getType() = EntityType.SPECIAL

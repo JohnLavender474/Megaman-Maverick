@@ -63,7 +63,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class LaserBeamer(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IBodyEntity,
+class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IBodyEntity,
     ICullableEntity, IAudioEntity, IEventListener, IDirectional, Resettable {
 
     companion object {
@@ -104,7 +104,7 @@ class LaserBeamer(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IB
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(MotionComponent())
@@ -118,7 +118,7 @@ class LaserBeamer(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IB
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         direction = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase()
@@ -127,7 +127,7 @@ class LaserBeamer(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IB
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val hardMode = game.state.getDifficultyMode() == DifficultyMode.HARD
+        val hardMode = services.gameState.getDifficultyMode() == DifficultyMode.HARD
 
         val maxRadius = spawnProps.getOrDefault(ConstKeys.RADIUS, DEFAULT_MAX_RADIUS, Float::class) * ConstVals.PPM
         speed = spawnProps.getOrDefault(
@@ -169,7 +169,7 @@ class LaserBeamer(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IB
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         laser?.destroy()
         laser = null

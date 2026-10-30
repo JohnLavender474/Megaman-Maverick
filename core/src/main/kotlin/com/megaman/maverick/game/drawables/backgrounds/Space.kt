@@ -24,7 +24,7 @@ class Space(game: MegamanMaverickGame, it: RectangleMapObject) : AnimatedBackgro
     animRows = ANIM_ROWS,
     animColumns = ANIM_COLS,
     duration = ANIM_DUR,
-    model = game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
+    model = game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
     priority = DrawingPriority(DrawingSection.BACKGROUND, 0),
     initPos = Vector2(it.rectangle.getCenter().x + 15f * ConstVals.PPM, it.rectangle.getCenter().y + 5f * ConstVals.PPM)
 ) {

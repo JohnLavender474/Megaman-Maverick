@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.floor
 
-class DrippingToxicGoop(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class DrippingToxicGoop(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IDamagerEntity, IHazard {
 
     companion object {
@@ -66,7 +66,7 @@ class DrippingToxicGoop(game: MegaServices) : MegaGameEntity(game), IBodyEntity,
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())

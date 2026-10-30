@@ -45,7 +45,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class ShieldGuardBot(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable {
+class ShieldGuardBot(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "ShieldGuardBot"
@@ -73,7 +73,7 @@ class ShieldGuardBot(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL
     private val freezeHandler = FreezableEntityHandler(this)
 
     private val canMove: Boolean
-        get() = !game.camera.rotating && !frozen
+        get() = !services.camera.rotating && !frozen
 
     private val turnTimer = Timer(TURN_DUR)
     private val turning: Boolean
@@ -91,7 +91,7 @@ class ShieldGuardBot(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

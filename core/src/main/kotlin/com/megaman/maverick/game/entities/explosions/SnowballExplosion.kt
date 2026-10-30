@@ -37,7 +37,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class SnowballExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard,
+class SnowballExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IHazard,
     IDamagerEntity {
 
     companion object {
@@ -52,7 +52,7 @@ class SnowballExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity,
     override fun getType() = EntityType.EXPLOSION
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())

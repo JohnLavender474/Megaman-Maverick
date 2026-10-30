@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.*
 
-class SubmarineMissile(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class SubmarineMissile(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "SubmarineMissile"
@@ -47,7 +47,7 @@ class SubmarineMissile(game: MegaServices) : AbstractProjectile(game), IAnimated
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -74,7 +74,7 @@ class SubmarineMissile(game: MegaServices) : AbstractProjectile(game), IAnimated
         destroy()
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun defineBodyComponent(): BodyComponent {

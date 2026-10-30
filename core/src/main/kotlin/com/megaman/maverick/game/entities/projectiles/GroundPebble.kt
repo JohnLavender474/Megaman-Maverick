@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.world.body.*
 
-class GroundPebble(game: MegaServices) : AbstractHealthEntity(game, dmgDuration = DAMAGE_DUR), IProjectileEntity,
+class GroundPebble(services: MegaServices) : AbstractHealthEntity(services, dmgDuration = DAMAGE_DUR), IProjectileEntity,
     IBodyEntity, ISpritesEntity {
 
     companion object {
@@ -80,7 +80,7 @@ class GroundPebble(game: MegaServices) : AbstractHealthEntity(game, dmgDuration 
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

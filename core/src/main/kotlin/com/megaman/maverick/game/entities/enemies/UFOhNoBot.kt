@@ -62,7 +62,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class UFOhNoBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
+class UFOhNoBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -108,7 +108,7 @@ class UFOhNoBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("with_bomb", "no_bomb", "with_bomb_frozen", "no_bomb_frozen").forEach { key ->
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }

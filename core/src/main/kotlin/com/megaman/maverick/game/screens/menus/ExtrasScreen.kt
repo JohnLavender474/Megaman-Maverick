@@ -41,13 +41,13 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
 
         GameLogger.debug(TAG, "init()")
 
-        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
         val backgroundRegion = uiAtlas.findRegion(BKG_REG_KEY)
         backgroundSprite.setBounds(0f, 0f, ConstVals.VIEW_WIDTH * ConstVals.PPM, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
         backgroundSprite.setRegion(backgroundRegion)
 
         scrollPane = MenuScrollPane(
-            assMan = game.assMan,
+            assMan = game.assets,
             textX = TEXT_X,
             topRow = TEXT_ROW_START,
             maxVisibleRows = MAX_VISIBLE_ROWS,
@@ -68,7 +68,7 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
                 override fun onNavigate(direction: Direction, delta: Float) = scrollPane.navigate(key, direction)
 
                 override fun onSelect(delta: Float): Boolean {
-                    game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                    game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
                     if (key == BACK) {
                         game.resetPlayerProgress()
@@ -87,7 +87,7 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
         super.show()
         scrollPane.reset()
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC, true)
+        game.audio.playMusic(MusicAsset.MM3_SNAKE_MAN_MUSIC, true)
     }
 
     override fun render(delta: Float) {
@@ -108,6 +108,6 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
     override fun onNavigate(button: IMenuButton, direction: Direction, delta: Float) {
         val oldKey = buttonKey
         super.onNavigate(button, direction, delta)
-        if (buttonKey != oldKey) game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
+        if (buttonKey != oldKey) game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }
 }

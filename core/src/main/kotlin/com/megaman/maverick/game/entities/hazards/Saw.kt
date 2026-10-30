@@ -59,7 +59,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class Saw(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IMotionEntity,
+class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IMotionEntity,
     ICullableEntity, IDamagerEntity, IHazard, IFaceable {
 
     companion object {
@@ -86,7 +86,7 @@ class Saw(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (sawRegion == null || ringRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             sawRegion = atlas.findRegion("$TAG/saw")
             ringRegion = atlas.findRegion("$TAG/ring")
         }
@@ -130,7 +130,7 @@ class Saw(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntit
         )
 
         for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
-            sprite.hidden = game.levelState.roomTransition
+            sprite.hidden = services.levelState.roomTransition
             val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
             val center = pendulum.getPointFromAnchor(distance)
             sprite.setCenter(center)
@@ -171,7 +171,7 @@ class Saw(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntit
         )
 
         for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
-            sprite.hidden = game.levelState.roomTransition
+            sprite.hidden = services.levelState.roomTransition
             val scale = i.toFloat() / RING_COUNT.toFloat()
             val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
             sprite.setCenter(center)
@@ -241,7 +241,7 @@ class Saw(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntit
         body.addFixture(shieldFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val active = game.getGameCamera().getRotatedBounds().overlaps(body.getBounds())
+            val active = services.getGameCamera().getRotatedBounds().overlaps(body.getBounds())
             body.physics.collisionOn = active
             body.forEachFixture { fixture -> fixture.setActive(active) }
         }
@@ -256,7 +256,7 @@ class Saw(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntit
         sawSprite.setSize(2.5f * ConstVals.PPM)
         spritesComponent.sprites.put("saw", sawSprite)
         spritesComponent.putPreProcess("saw") { _, _ ->
-            sawSprite.hidden = game.levelState.roomTransition
+            sawSprite.hidden = services.levelState.roomTransition
             sawSprite.setPosition(body.getCenter(), Position.CENTER)
             sawSprite.setFlip(isFacing(Facing.LEFT), false)
         }

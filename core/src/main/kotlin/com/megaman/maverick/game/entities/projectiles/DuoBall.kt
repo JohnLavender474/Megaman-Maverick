@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.world.body.*
 
-class DuoBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class DuoBall(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "DuoBall"
@@ -50,7 +50,7 @@ class DuoBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

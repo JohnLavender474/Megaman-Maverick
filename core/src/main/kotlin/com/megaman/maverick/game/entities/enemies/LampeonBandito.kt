@@ -60,7 +60,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class LampeonBandito(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity,
+class LampeonBandito(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity,
     IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -126,7 +126,7 @@ class LampeonBandito(game: MegaServices) : AbstractEnemy(game), IFreezableEntity
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

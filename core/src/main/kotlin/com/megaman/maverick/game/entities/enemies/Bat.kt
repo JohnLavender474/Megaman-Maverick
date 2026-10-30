@@ -68,7 +68,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 
-class Bat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
+class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFreezableEntity,
     IDirectional, IEventListener {
 
     companion object {
@@ -115,7 +115,7 @@ class Bat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimate
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
 
     private val canMove: Boolean
-        get() = !game.camera.rotating && !frozen
+        get() = !services.camera.rotating && !frozen
 
     private lateinit var type: String
     private lateinit var state: BatState
@@ -133,7 +133,7 @@ class Bat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimate
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         super.init()
         addComponent(defineAnimationsComponent())
         addComponent(definePathfindingComponent())
@@ -146,7 +146,7 @@ class Bat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimate
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         hangTimer.reset()
         releasePerchTimer.reset()
@@ -173,7 +173,7 @@ class Bat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimate
             DEFAULT_FLY_TO_ATTACK_SPEED,
             Float::class
         )
-        if (game.state.getDifficultyMode() == DifficultyMode.HARD) flyToAttackSpeed *= HARD_MODE_FLY_SCALAR
+        if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) flyToAttackSpeed *= HARD_MODE_FLY_SCALAR
 
         flyToRetreatSpeed = spawnProps.getOrDefault(
             "${ConstKeys.RETREAT}_${ConstKeys.SPEED}",
@@ -204,7 +204,7 @@ class Bat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimate
         super.onDestroy()
         blocksToIgnore.clear()
         frozen = false
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {

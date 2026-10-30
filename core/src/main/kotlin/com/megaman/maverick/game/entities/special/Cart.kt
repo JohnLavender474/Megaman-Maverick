@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Cart(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class Cart(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IOwnable<IGameEntity>, IFaceable {
 
     companion object {
@@ -67,7 +67,7 @@ class Cart(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEnt
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.SPECIALS_1.source, TAG)
         super.init()
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

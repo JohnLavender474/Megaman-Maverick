@@ -32,7 +32,7 @@ import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.world.body.*
 
 class
-FirePellet(game: MegaServices) : AbstractProjectile(game) {
+FirePellet(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "FirePellet"
@@ -41,7 +41,7 @@ FirePellet(game: MegaServices) : AbstractProjectile(game) {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
     }
 
@@ -63,7 +63,7 @@ FirePellet(game: MegaServices) : AbstractProjectile(game) {
     override fun explodeAndDie(vararg params: Any?) {
         GameLogger.debug(TAG, "explodeAndDie()")
         destroy()
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
     }

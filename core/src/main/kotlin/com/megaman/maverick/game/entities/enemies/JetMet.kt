@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 
-class JetMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+class JetMet(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
     IDirectional, IFaceable {
 
     companion object {
@@ -86,7 +86,7 @@ class JetMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFree
     private val shootTimer = Timer(SHOOT_DELAY)
 
     private val canMove: Boolean
-        get() = !game.camera.rotating
+        get() = !services.camera.rotating
 
     private lateinit var animations: ObjectMap<String, IAnimation>
     private lateinit var jetMetState: JetMetState
@@ -104,7 +104,7 @@ class JetMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFree
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("stand", atlas.findRegion("$TAG/Stand"))
             regions.put("take_off", atlas.findRegion("$TAG/TakeOff"))
             regions.put("jet", atlas.findRegion("$TAG/Jet"))

@@ -19,10 +19,10 @@ import com.megaman.maverick.game.state.GameState
 
 class MegaServices(
     val engine: GameEngine,
-    val eventsMan: EventsManager,
-    val assMan: AssetManager,
-    val audioMan: MegaAudioManager,
-    val state: GameState,
+    val events: EventsManager,
+    val assets: AssetManager,
+    val audio: MegaAudioManager,
+    val gameState: GameState,
     val players: MegaPlayers,
     val gravity: WorldGravity,
     val levelState: LevelState,

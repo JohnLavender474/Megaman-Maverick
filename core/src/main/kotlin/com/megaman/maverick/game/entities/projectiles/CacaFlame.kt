@@ -29,7 +29,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class CacaFlame(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class CacaFlame(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "CacaFlame"
@@ -43,7 +43,7 @@ class CacaFlame(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity 
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             gdxArrayOf("burst", "fall").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()

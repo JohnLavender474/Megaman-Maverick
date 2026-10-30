@@ -26,20 +26,20 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 
-private class TestPlayerEntity(game: MegaServices) : MegaGameEntity(game), IDirectional {
+private class TestPlayerEntity(services: MegaServices) : MegaGameEntity(services), IDirectional {
     override var direction = Direction.UP
     override fun getType() = EntityType.MEGAMAN
 }
 
 class MegaPlayersTest : DescribeSpec({
 
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
 
     beforeEach {
-        game = testServices(engine = mockk<GameEngine>(relaxed = true))
+        services = testServices(engine = mockk<GameEngine>(relaxed = true))
     }
 
-    fun playerEntity(withBody: Boolean = true) = TestPlayerEntity(game).also {
+    fun playerEntity(withBody: Boolean = true) = TestPlayerEntity(services).also {
         if (withBody) it.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         it.addComponent(ControllerComponent())
     }
@@ -50,13 +50,13 @@ class MegaPlayersTest : DescribeSpec({
         }
 
         it("registers an entity with no other parts, and asPlayer gives it back") {
-            val entity = TestPlayerEntity(game)
+            val entity = TestPlayerEntity(services)
 
             MegaPlayers().register(PlayerSlot(0), entity) shouldBeSameInstanceAs entity
 
             entity.asPlayer shouldBeSameInstanceAs entity
             entity.playerSlot shouldBe PlayerSlot(0)
-            TestPlayerEntity(game).asPlayer shouldBe null
+            TestPlayerEntity(services).asPlayer shouldBe null
             "not an entity".asPlayer shouldBe null
             null.asPlayer shouldBe null
         }
@@ -88,7 +88,7 @@ class MegaPlayersTest : DescribeSpec({
             players.register(PlayerSlot(0), playerEntity(withBody = false))
             val withBody = players.register(PlayerSlot(1), playerEntity())
 
-            players.targetFor(TestPlayerEntity(game)) shouldBeSameInstanceAs withBody
+            players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs withBody
         }
 
         it("targetFor gives the player in slot 0, also when it is not present") {
@@ -97,7 +97,7 @@ class MegaPlayersTest : DescribeSpec({
 
             entity.existenceState.liveNow shouldBe false
 
-            players.targetFor(TestPlayerEntity(game)) shouldBeSameInstanceAs entity
+            players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs entity
         }
 
         it("tells the damage signal's listeners in the order they connected, with the player and the damager") {

@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
 
-class ToxicWaterfall(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class ToxicWaterfall(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity {
 
     companion object {
@@ -68,7 +68,7 @@ class ToxicWaterfall(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IS
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())

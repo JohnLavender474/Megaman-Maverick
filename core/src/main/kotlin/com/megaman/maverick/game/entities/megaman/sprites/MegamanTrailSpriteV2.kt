@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class MegamanTrailSpriteV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
+class MegamanTrailSpriteV2(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
 
     companion object {
         const val TAG = "MegamanTrailingSprite_v2"
@@ -85,7 +85,7 @@ class MegamanTrailSpriteV2(game: MegaServices) : MegaGameEntity(game), ISpritesE
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.camera.rotating) {
+        if (services.camera.rotating) {
             destroy()
             return@UpdatablesComponent
         }
@@ -102,7 +102,7 @@ class MegamanTrailSpriteV2(game: MegaServices) : MegaGameEntity(game), ISpritesE
             val alpha = 1f - fadeTimer.getRatio()
             sprite.setAlpha(alpha)
             sprite.setFlip(flipX, flipY)
-            sprite.hidden = game.camera.rotating
+            sprite.hidden = services.camera.rotating
         }
         return component
     }
@@ -111,7 +111,7 @@ class MegamanTrailSpriteV2(game: MegaServices) : MegaGameEntity(game), ISpritesE
         val keySupplier: (String?) -> String? = { animKey }
         val animations = ObjectMap<String, IAnimation>()
 
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.MEGAMAN_TRAIL_SPRITE_V2.source)
+        val atlas = services.assets.getTextureAtlas(TextureAsset.MEGAMAN_TRAIL_SPRITE_V2.source)
 
         MegamanWeapon.entries.forEach { weapon ->
             MegamanAnimationDefs.getKeys().forEach { key ->

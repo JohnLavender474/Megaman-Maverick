@@ -25,7 +25,7 @@ import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-abstract class AbstractEnergyItem(game: MegaServices) : AbstractItem(game), ILightSource, ISpritesEntity {
+abstract class AbstractEnergyItem(services: MegaServices) : AbstractItem(services), ILightSource, ISpritesEntity {
 
     companion object {
         const val TAG = "AbstractItem"

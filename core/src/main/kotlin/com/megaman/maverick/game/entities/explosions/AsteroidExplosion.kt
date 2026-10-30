@@ -46,7 +46,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class AsteroidExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class AsteroidExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IDamagerEntity, IOwnable<IGameEntity> {
 
     companion object {
@@ -62,7 +62,7 @@ class AsteroidExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity,
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
@@ -85,7 +85,7 @@ class AsteroidExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity,
         val sound = spawnProps.getOrDefault(ConstKeys.SOUND, true, Boolean::class)
         if (sound &&
             overlapsGameCamera() &&
-            !game.audioMan.isSoundPlaying(SoundAsset.ASTEROID_EXPLODE_SOUND)
+            !services.audio.isSoundPlaying(SoundAsset.ASTEROID_EXPLODE_SOUND)
         ) requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)
 
         damager = spawnProps.getOrDefault(ConstKeys.DAMAGER, false, Boolean::class)

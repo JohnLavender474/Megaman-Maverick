@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
-class WilyFakeCapsule(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class WilyFakeCapsule(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IOwnable<WilyFinalBoss>, IDamagerEntity, IHazard, IActivatable, Updatable {
 
     companion object {
@@ -88,7 +88,7 @@ class WilyFakeCapsule(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             animDefs.keys().forEach { key ->
                 val region = atlas.findRegion("phase_3/fake/$key")
                 regions.put(key, region)
@@ -168,7 +168,7 @@ class WilyFakeCapsule(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
             )
         }
 
-        game.audioMan.playSound(SoundAsset.BLAST_2_SOUND, false)
+        services.audio.playSound(SoundAsset.BLAST_2_SOUND, false)
     }
 
     fun explodeAndDestroy() {
@@ -177,7 +177,7 @@ class WilyFakeCapsule(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.DAMAGER pairTo false))
 
-        game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+        services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
 
         destroy()
     }

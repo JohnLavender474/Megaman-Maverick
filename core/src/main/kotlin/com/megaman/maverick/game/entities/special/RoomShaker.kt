@@ -20,7 +20,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
-class RoomShaker(game: MegaServices) : MegaGameEntity(game), IEventListener, IAudioEntity {
+class RoomShaker(services: MegaServices) : MegaGameEntity(services), IEventListener, IAudioEntity {
 
     companion object {
         const val TAG = "RoomShaker"
@@ -55,7 +55,7 @@ class RoomShaker(game: MegaServices) : MegaGameEntity(game), IEventListener, IAu
         GameLogger.debug(TAG, "Spawning RoomShake entity")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         roomToShake = spawnProps.get(ConstKeys.ROOM, String::class)!!
 
@@ -77,7 +77,7 @@ class RoomShaker(game: MegaServices) : MegaGameEntity(game), IEventListener, IAu
     override fun onDestroy() {
         GameLogger.debug(TAG, "Destroying RoomShake entity")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -121,7 +121,7 @@ class RoomShaker(game: MegaServices) : MegaGameEntity(game), IEventListener, IAu
         if (delayTimer.isFinished()) {
             GameLogger.debug(TAG, "Shaking room")
 
-            game.eventsMan.submitEvent(
+            services.events.submitEvent(
                 Event(
                     EventType.SHAKE_CAM, props(
                         ConstKeys.INTERVAL pairTo interval,

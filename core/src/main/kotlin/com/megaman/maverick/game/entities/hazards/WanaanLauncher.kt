@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
 // implements `IBossListener` to ensure is destroyed after 2nd Reactor Man fight
-class WanaanLauncher(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, IAudioEntity,
+class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, IAudioEntity,
     ICullableEntity, IDrawableShapesEntity, IBossListener, IDirectional {
 
     companion object {
@@ -77,7 +77,7 @@ class WanaanLauncher(game: MegaServices) : AbstractHealthEntity(game), IBodyEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             gdxArrayOf("launcher", "bust").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
@@ -134,7 +134,7 @@ class WanaanLauncher(game: MegaServices) : AbstractHealthEntity(game), IBodyEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (isHealthDepleted() || game.camera.rotating) return@add
+            if (isHealthDepleted() || services.camera.rotating) return@add
 
             if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()

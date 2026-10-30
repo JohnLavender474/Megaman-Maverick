@@ -84,7 +84,7 @@ import com.megaman.maverick.game.world.body.getContactWater
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
-class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
+class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
     IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IFreezableEntity, IGameStateListener,
     IEventListener, IFaceable, IDirectional, IFocusable, IDamagerEntity, IGateTrigger, ICartRider {
 
@@ -208,11 +208,11 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
 
                 body.direction = value
 
-                game.camera.focusSnappedAway = true
+                services.camera.focusSnappedAway = true
 
                 val camDir = if (value.isVertical()) value else value.getOpposite()
-                if (game.getGameCamera().direction != camDir) {
-                    game.eventsMan.submitEvent(
+                if (services.getGameCamera().direction != camDir) {
+                    services.events.submitEvent(
                         Event(
                             EventType.START_GAME_CAM_ROTATION,
                             props(ConstKeys.DIRECTION pairTo camDir)
@@ -401,7 +401,7 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
             }
         }
          */
-        val animations = MegamanAnimations(game /*, regionProcessor */).get()
+        val animations = MegamanAnimations(services /*, regionProcessor */).get()
         addComponent(defineAnimationsComponent(animations))
 
         weaponsHandler = MegamanWeaponsHandler(this)
@@ -432,7 +432,7 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.positionOnPoint(bounds.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
@@ -445,7 +445,7 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
         runTime = 0f
 
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
-        game.gravity.set(
+        services.gravity.set(
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
         )
 
@@ -501,13 +501,13 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
             standardOnTeleportEnd(this)
             aButtonTask = AButtonTask.AIR_DASH
             unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-            game.camera.focusSnappedAway = false
+            services.camera.focusSnappedAway = false
         })
 
         removeProperty(ConstKeys.FOCUS)
-        game.camera.focusSnappedAway = false
+        services.camera.focusSnappedAway = false
 
-        game.eventsMan.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
+        services.events.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
     }
 
     override fun onDestroy() {
@@ -516,11 +516,11 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
 
         body.removeProperty(ConstKeys.VELOCITY)
 
-        val eventsMan = game.eventsMan
+        val eventsMan = services.events
         eventsMan.removeListener(this)
         eventsMan.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
 
-        game.audioMan.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
+        services.audio.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
 
     override fun onHealthDepleted() {
@@ -537,8 +537,8 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
             )
         }
 
-        if (game.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
-            game.audioMan.playSound(SoundAsset.SMB3_PLAYER_DOWN_SOUND, false)
+        if (services.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
+            services.audio.playSound(SoundAsset.SMB3_PLAYER_DOWN_SOUND, false)
     }
 
     override fun onEvent(event: Event) {
@@ -711,14 +711,14 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
 
     override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int): Int {
         var damage = when {
-            game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
+            services.gameState.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
                 baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR
             )
 
             else -> baseDamage
         }
 
-        if (game.state.getDifficultyMode() == DifficultyMode.HARD) damage += 1
+        if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) damage += 1
 
         return damage
     }
@@ -736,8 +736,8 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
-                body.getMaxX() > (game.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
-                body.getMaxY() > (game.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
+                body.getMaxX() > (services.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
+                body.getMaxY() > (services.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
             ) {
                 GameLogger.error(TAG, "Megaman is below game bounds, kill him")
                 destroy()
@@ -918,7 +918,7 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
     }
 
     override fun onAddLevelDefeated(level: LevelDefinition) {
-        game.levelState.weaponsAttained = LevelRewards.weaponsFor(level)
+        services.levelState.weaponsAttained = LevelRewards.weaponsFor(level)
     }
 
     override fun onAddHeartTank(heartTank: MegaHeartTank) = setMaxHealthFromHeartTanks()
@@ -929,12 +929,12 @@ class Megaman(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISp
     //  the game state on each access needs a change to the engine Points (backlog candidate "max health read through
     //  from the profile", item 029)
     private fun setMaxHealthFromHeartTanks() {
-        val heartTanks = MegaHeartTank.entries.count { game.state.containsHeartTank(it) }
+        val heartTanks = MegaHeartTank.entries.count { services.gameState.containsHeartTank(it) }
         setMaxHealth(MegamanValues.START_HEALTH + heartTanks * MegaHeartTank.HEALTH_BUMP)
     }
 
     override fun onAddCurrency(value: Int) {
-        if (game.state.getCurrency() < game.state.getMaxCurrency())
+        if (services.gameState.getCurrency() < services.gameState.getMaxCurrency())
             requestToPlaySound(SoundAsset.CURRENCY_PICKUP_SOUND, false)
     }
 

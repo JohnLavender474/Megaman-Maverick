@@ -18,7 +18,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-private class MapObjectTestEntity(game: MegaServices) : MegaGameEntity(game) {
+private class MapObjectTestEntity(services: MegaServices) : MegaGameEntity(services) {
 
     var idInOnDestroy: Int? = null
 
@@ -33,11 +33,11 @@ private class MapObjectTestEntity(game: MegaServices) : MegaGameEntity(game) {
 class MapObjectComponentTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
 
     beforeEach {
         engine = GameEngine()
-        game = testServices(engine = engine)
+        services = testServices(engine = engine)
     }
 
     afterEach { engine.reset() }
@@ -56,21 +56,21 @@ class MapObjectComponentTest : DescribeSpec({
     describe("MapObjectComponent") {
 
         it("is added with the id when the spawn has ConstKeys.ID") {
-            val entity = spawn(MapObjectTestEntity(game), props(ConstKeys.ID pairTo 7101))
+            val entity = spawn(MapObjectTestEntity(services), props(ConstKeys.ID pairTo 7101))
 
             entity.getComponent(MapObjectComponent::class)!!.id shouldBe 7101
             entity.mapObjectId shouldBe 7101
         }
 
         it("is not added when the spawn has no ConstKeys.ID") {
-            val entity = spawn(MapObjectTestEntity(game), Properties())
+            val entity = spawn(MapObjectTestEntity(services), Properties())
 
             entity.hasComponent(MapObjectComponent::class) shouldBe false
             entity.mapObjectId shouldBe null
         }
 
         it("is removed when a pooled entity spawns again with no ConstKeys.ID") {
-            val entity = spawn(MapObjectTestEntity(game), props(ConstKeys.ID pairTo 7102))
+            val entity = spawn(MapObjectTestEntity(services), props(ConstKeys.ID pairTo 7102))
             destroy(entity)
 
             spawn(entity, Properties())
@@ -80,7 +80,7 @@ class MapObjectComponentTest : DescribeSpec({
         }
 
         it("gets the new id when a pooled entity spawns again with another ConstKeys.ID") {
-            val entity = spawn(MapObjectTestEntity(game), props(ConstKeys.ID pairTo 7103))
+            val entity = spawn(MapObjectTestEntity(services), props(ConstKeys.ID pairTo 7103))
             destroy(entity)
 
             spawn(entity, props(ConstKeys.ID pairTo 7104))
@@ -91,7 +91,7 @@ class MapObjectComponentTest : DescribeSpec({
         }
 
         it("keeps the id readable in onDestroy, after the component reset") {
-            val entity = spawn(MapObjectTestEntity(game), props(ConstKeys.ID pairTo 7105))
+            val entity = spawn(MapObjectTestEntity(services), props(ConstKeys.ID pairTo 7105))
 
             destroy(entity)
 
@@ -102,8 +102,8 @@ class MapObjectComponentTest : DescribeSpec({
     describe("MegaGameEntities.getOfId") {
 
         it("gives the entities of a map id in spawn order, and drops them at destroy") {
-            val first = spawn(MapObjectTestEntity(game), props(ConstKeys.ID pairTo 7201))
-            val second = spawn(MapObjectTestEntity(game), props(ConstKeys.ID pairTo 7201))
+            val first = spawn(MapObjectTestEntity(services), props(ConstKeys.ID pairTo 7201))
+            val second = spawn(MapObjectTestEntity(services), props(ConstKeys.ID pairTo 7201))
 
             MegaGameEntities.getOfId(7201).toList() shouldBe listOf(first, second)
             MegaGameEntities.existsAnyOfId(7201) shouldBe true
@@ -117,7 +117,7 @@ class MapObjectComponentTest : DescribeSpec({
         }
 
         it("does not index an entity that spawns with no map id") {
-            val runtime = spawn(MapObjectTestEntity(game), Properties())
+            val runtime = spawn(MapObjectTestEntity(services), Properties())
 
             MegaGameEntities.getOfTag(runtime.getTag()).contains(runtime) shouldBe true
             listOf(-1, 0, 1).forEach { MegaGameEntities.getOfId(it).contains(runtime) shouldBe false }

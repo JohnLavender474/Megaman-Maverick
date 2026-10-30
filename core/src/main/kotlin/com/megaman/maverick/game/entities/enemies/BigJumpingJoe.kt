@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BigJumpingJoe(game: MegaServices) : AbstractEnemy(game, size = Size.LARGE), IFreezableEntity, IScalableGravityEntity,
+class BigJumpingJoe(services: MegaServices) : AbstractEnemy(services, size = Size.LARGE), IFreezableEntity, IScalableGravityEntity,
     IFaceable, IAnimatedEntity {
 
     companion object {
@@ -119,7 +119,7 @@ class BigJumpingJoe(game: MegaServices) : AbstractEnemy(game, size = Size.LARGE)
         GameLogger.debug(TAG, "init()")
         super.init()
         if (standRegion == null || jumpRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             standRegion = atlas.findRegion("$TAG/Stand")
             jumpRegion = atlas.findRegion("$TAG/Jump")
             frozenRegion = atlas.findRegion("$TAG/frozen")

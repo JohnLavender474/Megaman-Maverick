@@ -46,7 +46,7 @@ import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.world.body.*
 
-class SpringBouncer(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IAudioEntity,
+class SpringBouncer(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IBodyEntity, IAudioEntity,
     IAnimatedEntity, IDirectional {
 
     companion object {
@@ -69,7 +69,7 @@ class SpringBouncer(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("bounce", "still").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

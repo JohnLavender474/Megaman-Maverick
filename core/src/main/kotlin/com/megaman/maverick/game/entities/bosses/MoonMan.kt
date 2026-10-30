@@ -74,7 +74,7 @@ import kotlin.math.abs
 
 // In game, Moon Man's name has been changed to Lunar Man. Keeping his class name here as Moon Man to avoid having to
 // make many changes throughout existing code & maps.
-class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalableGravityEntity, IFaceable,
+class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IScalableGravityEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -190,7 +190,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_2.source)
             ANIM_DEFS.keys().forEach { key ->
                 val atlasKey = "${TAG}/${key}"
                 when {
@@ -245,7 +245,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
         this.direction = direction
         currentGravityChangeDir = direction
 
-        gravityScalar = if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
+        gravityScalar = if (services.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
             spawnProps.getOrDefault("${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}", DEFAULT_GRAVITY_SCALAR, Float::class)
         else 1f
 
@@ -321,7 +321,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
                         .sub(asteroid.body.getCenter())
                         .nor().scl(speed * ConstVals.PPM)
 
-                    if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
+                    if (services.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
                         impulse.scl(ASTEROID_SCALAR)
 
                     asteroid.impulse.set(impulse)
@@ -358,7 +358,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
                 }
                 MoonManState.JUMP -> if (shouldGoToStandState()) stateMachine.next()
                 MoonManState.THROW_ASTEROIDS -> {
-                    val max = when (game.state.getDifficultyMode()) {
+                    val max = when (services.gameState.getDifficultyMode()) {
                         DifficultyMode.HARD -> ASTEROIDS_TO_SPAWN_HARD
                         else -> ASTEROIDS_TO_SPAWN
                     }
@@ -490,7 +490,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
             val flipX = if (direction == Direction.UP) isFacing(Facing.LEFT) else isFacing(Facing.RIGHT)
             sprite.setFlip(flipX, false)
 
-            sprite.hidden = damageBlink || game.levelState.roomTransition
+            sprite.hidden = damageBlink || services.levelState.roomTransition
         }
         return component
     }
@@ -523,7 +523,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
         currentGravityChangeDir = currentGravityChangeDir.getOpposite()
         // TODO: the swap changes the gravity only while the target player (always Megaman for now) is alive; with
         //  more players, the rule for dead players is for item 047
-        if (targetPlayer.existenceState.liveAfterUpdate) game.gravity.set(currentGravityChangeDir)
+        if (targetPlayer.existenceState.liveAfterUpdate) services.gravity.set(currentGravityChangeDir)
 
         gravityChangeChance = 0f
         timers["gravity_change_delay"].reset()
@@ -616,7 +616,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
         timers.put("gravity_change_end", Timer(GRAVITY_CHANGE_END_DUR))
         timers.put(
             "gravity_change_delay", Timer(
-                if (game.state.getDifficultyMode() == DifficultyMode.HARD) GRAVITY_CHANGE_DELAY_DUR_HARD
+                if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) GRAVITY_CHANGE_DELAY_DUR_HARD
                 else GRAVITY_CHANGE_DELAY_DUR
             )
         )
@@ -654,9 +654,9 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
     private fun canShootInJumpState() = (jumpIndex + 1) % 2 == 0
 
     private fun shootMoonScythe() {
-        val scytheOffsets = if (game.state.hardMode) MOON_SCYTHE_DEG_OFFSETS_HARD else MOON_SCYTHE_DEG_OFFSETS
+        val scytheOffsets = if (services.gameState.hardMode) MOON_SCYTHE_DEG_OFFSETS_HARD else MOON_SCYTHE_DEG_OFFSETS
         for (i in 0 until scytheOffsets.size) {
-            val speed = if (game.state.hardMode) MOON_SCYTHE_SPEED_HARD else MOON_SCYTHE_SPEED
+            val speed = if (services.gameState.hardMode) MOON_SCYTHE_SPEED_HARD else MOON_SCYTHE_SPEED
 
             val trajectory = GameObjectPools.fetch(Vector2::class).set(0f, speed * ConstVals.PPM)
 
@@ -665,7 +665,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
             val rotation = (if (isFacing(Facing.LEFT)) 90f else 270f) + rotOffset
             trajectory.rotateDeg(rotation)
 
-            val scytheScalar = if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
+            val scytheScalar = if (services.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
                 MOON_SCYTHE_MOVEMENT_SCALAR else 1f
 
             val scythe = MegaEntityFactory.fetch(MoonScythe::class)!!
@@ -694,7 +694,7 @@ class MoonMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IScalab
         val trajectory =
             targetPlayer.body.getPositionPoint(position).sub(body.getCenter()).nor().scl(speed * ConstVals.PPM)
 
-        val starScalar = if (game.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
+        val starScalar = if (services.levelState.currentLevel!! == LevelDefinition.MOON_MAN)
             SHARP_STAR_MOVEMENT_SCALAR else 1f
 
         val sharpStar = MegaEntityFactory.fetch(SharpStar::class)!!

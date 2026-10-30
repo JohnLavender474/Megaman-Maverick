@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.Explosion
 
-class WilySkullHead(game: MegaServices) : MegaGameEntity(game), IAudioEntity, ISpritesEntity {
+class WilySkullHead(services: MegaServices) : MegaGameEntity(services), IAudioEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "WilySkullHead"
@@ -54,7 +54,7 @@ class WilySkullHead(game: MegaServices) : MegaGameEntity(game), IAudioEntity, IS
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.WILY_FINAL_BOSS.source, TAG)
+            region = services.assets.getTextureRegion(TextureAsset.WILY_FINAL_BOSS.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineSpritesComponent())

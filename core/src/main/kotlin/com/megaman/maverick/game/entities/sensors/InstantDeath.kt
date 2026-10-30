@@ -5,7 +5,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 
-class InstantDeath(game: MegaServices): Death(game) {
+class InstantDeath(services: MegaServices): Death(services) {
 
     companion object {
         const val TAG = "InstantDeath"

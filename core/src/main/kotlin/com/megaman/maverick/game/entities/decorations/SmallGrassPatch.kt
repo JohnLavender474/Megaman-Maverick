@@ -19,7 +19,7 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 
-class SmallGrassPatch(game: MegaServices) : MegaGameEntity(game) {
+class SmallGrassPatch(services: MegaServices) : MegaGameEntity(services) {
 
     companion object {
         const val TAG = "SmallGrassPatch"
@@ -73,7 +73,7 @@ class SmallGrassPatch(game: MegaServices) : MegaGameEntity(game) {
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         )
     )
 

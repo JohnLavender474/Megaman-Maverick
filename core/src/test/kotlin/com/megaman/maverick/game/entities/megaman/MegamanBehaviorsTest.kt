@@ -16,8 +16,8 @@ import io.mockk.unmockkAll
 class MegamanBehaviorsTest : DescribeSpec({
 
     fun newMegaman(): Megaman {
-        val game = testServices(engine = mockk<GameEngine>(relaxed = true))
-        return Megaman(game)
+        val services = testServices(engine = mockk<GameEngine>(relaxed = true))
+        return Megaman(services)
     }
 
     afterEach { unmockkAll() }

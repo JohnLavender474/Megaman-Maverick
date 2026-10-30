@@ -23,7 +23,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.CullBoundsType
 
-class FallingLeaves(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
+class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullableEntity {
 
     companion object {
         const val TAG = "FallingLeaves"
@@ -69,14 +69,14 @@ class FallingLeaves(game: MegaServices) : MegaGameEntity(game), ICullableEntity 
         when (cullBoundsType) {
             CullBoundsType.BODY -> putCullable(
                 ConstKeys.CULL_OUT_OF_BOUNDS,
-                getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+                getGameCameraCullingLogic(services.getGameCamera(), { bounds })
             )
             CullBoundsType.OTHER -> {
                 val other =
                     spawnProps.get(ConstKeys.OTHER, RectangleMapObject::class)!!.rectangle.toGameRectangle(false)
                 putCullable(
                     ConstKeys.CULL_OUT_OF_BOUNDS,
-                    getGameCameraCullingLogic(game.getGameCamera(), { other })
+                    getGameCameraCullingLogic(services.getGameCamera(), { other })
                 )
             }
         }
@@ -103,7 +103,7 @@ class FallingLeaves(game: MegaServices) : MegaGameEntity(game), ICullableEntity 
         val minX = bounds.getX() - CAM_SCAN_BUFFER_X * ConstVals.PPM
         val maxX = bounds.getMaxX() + CAM_SCAN_BUFFER_X * ConstVals.PPM
 
-        val camBounds = game.getGameCamera().getRotatedBounds()
+        val camBounds = services.getGameCamera().getRotatedBounds()
 
         return (minX >= camBounds.getX() && minX <= camBounds.getMaxX()) ||
             (maxX >= camBounds.getX() && maxX <= camBounds.getMaxX()) ||
@@ -114,7 +114,7 @@ class FallingLeaves(game: MegaServices) : MegaGameEntity(game), ICullableEntity 
         spawnTimer.update(delta)
         if (shouldSpawnLeaf() &&
             spawnTimer.isFinished() &&
-            (spawnRoom == null || game.levelState.currentRoom?.name == spawnRoom)
+            (spawnRoom == null || services.levelState.currentRoom?.name == spawnRoom)
         ) {
             spawnLeaf()
 

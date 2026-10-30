@@ -22,9 +22,9 @@ class MegamanHeartTankTest : DescribeSpec({
 
     beforeEach {
         state = GameState()
-        val game = testServices(engine = mockk<GameEngine>(relaxed = true), state = state)
+        val services = testServices(engine = mockk<GameEngine>(relaxed = true), gameState = state)
 
-        megaman = Megaman(game)
+        megaman = Megaman(services)
         megaman.addComponent(PointsComponent().apply {
             putPoints(ConstKeys.HEALTH, ConstVals.MIN_HEALTH, MegamanValues.START_HEALTH, MegamanValues.START_HEALTH)
         })

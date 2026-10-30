@@ -25,7 +25,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class BombPenguinBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class BombPenguinBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "BombPenguinBot"
@@ -40,7 +40,7 @@ class BombPenguinBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIU
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("fly", atlas.findRegion("$TAG/fly"))
             regions.put("rise", atlas.findRegion("$TAG/rise"))
             regions.put("throw_bomb", atlas.findRegion("$TAG/throw_bomb"))

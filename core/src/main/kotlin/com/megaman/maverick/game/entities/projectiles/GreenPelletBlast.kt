@@ -38,7 +38,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class GreenPelletBlast(game: MegaServices) : AbstractProjectile(game, size = Size.SMALL), IAnimatedEntity {
+class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, size = Size.SMALL), IAnimatedEntity {
 
     companion object {
         const val TAG = "GreenPelletBlast"
@@ -52,7 +52,7 @@ class GreenPelletBlast(game: MegaServices) : AbstractProjectile(game, size = Siz
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             gdxArrayOf("blast", "burst").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

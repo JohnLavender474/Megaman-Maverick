@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.floor
 
-class Sealion(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class Sealion(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
     IFreezableEntity, IDrawableShapesEntity {
 
     companion object {
@@ -97,7 +97,7 @@ class Sealion(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("wait_with_ball", atlas.findRegion("$TAG/wait_with_ball"))
             regions.put("wait_no_ball", atlas.findRegion("$TAG/wait_no_ball"))
             regions.put("taunt_with_ball", atlas.findRegion("$TAG/taunt_with_ball"))

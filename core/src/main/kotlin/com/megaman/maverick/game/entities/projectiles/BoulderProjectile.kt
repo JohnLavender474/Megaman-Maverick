@@ -38,7 +38,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.world.body.*
 
-class BoulderProjectile(game: MegaServices) : AbstractProjectile(game) {
+class BoulderProjectile(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "BoulderProjectile"
@@ -76,7 +76,7 @@ class BoulderProjectile(game: MegaServices) : AbstractProjectile(game) {
 
     override fun init(vararg params: Any) {
         if (largeRegion == null || mediumRegion == null || smallRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             largeRegion = atlas.findRegion("Boulder/Large")
             mediumRegion = atlas.findRegion("Boulder/Medium")
             smallRegion = atlas.findRegion("Boulder/Small")

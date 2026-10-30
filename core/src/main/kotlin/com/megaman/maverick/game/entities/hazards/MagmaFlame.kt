@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.GravityUtils
 import com.megaman.maverick.game.world.body.*
 
-class MagmaFlame(game: MegaServices) : MegaGameEntity(game), IFireEntity, IBodyEntity, ISpritesEntity,
+class MagmaFlame(services: MegaServices) : MegaGameEntity(services), IFireEntity, IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IOwnable<IGameEntity>, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -82,7 +82,7 @@ class MagmaFlame(game: MegaServices) : MegaGameEntity(game), IFireEntity, IBodyE
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
@@ -123,7 +123,7 @@ class MagmaFlame(game: MegaServices) : MegaGameEntity(game), IFireEntity, IBodyE
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, game.gravity.direction, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, services.gravity.direction, Direction::class)
 
         val position = DirectionPositionMapper.getPosition(direction).opposite()
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -170,7 +170,7 @@ class MagmaFlame(game: MegaServices) : MegaGameEntity(game), IFireEntity, IBodyE
         val waterListenerFixture = Fixture(body, FixtureType.WATER_LISTENER, GameRectangle(body))
         waterListenerFixture.setReceiver(Receivers.HIT_BY_WATER) {
             destroy()
-            game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+            services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
         }
         body.addFixture(waterListenerFixture)
 

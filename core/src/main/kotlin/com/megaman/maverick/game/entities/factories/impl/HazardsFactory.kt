@@ -6,7 +6,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 import com.megaman.maverick.game.entities.hazards.*
 
-class HazardsFactory(private val game: MegaServices) : EntityFactory() {
+class HazardsFactory(private val services: MegaServices) : EntityFactory() {
 
     companion object {
         const val SAW = "Saw"
@@ -41,35 +41,35 @@ class HazardsFactory(private val game: MegaServices) : EntityFactory() {
     }
 
     override fun init(vararg params: Any) {
-        pools.put(SAW, GameEntityPoolCreator.create { Saw(game) })
-        pools.put(SWINGING_AXE, GameEntityPoolCreator.create { SwingingAxe(game) })
-        pools.put(SPIKE, GameEntityPoolCreator.create { Spike(game) })
-        pools.put(BOLT, GameEntityPoolCreator.create { Bolt(game) })
-        pools.put(ELECTROCUTIE, GameEntityPoolCreator.create { Electrocutie(game) })
-        pools.put(ELECTROCUTIE_CHILD, GameEntityPoolCreator.create { ElectrocutieChild(game) })
-        pools.put(SPIKE_BALL, GameEntityPoolCreator.create { SpikeBall(game) })
-        pools.put(WANAAN_LAUNCHER, GameEntityPoolCreator.create { WanaanLauncher(game) })
-        pools.put(CEILING_CRUSHER, GameEntityPoolCreator.create { CeilingCrusher(game) })
-        pools.put(ACID_GOOP, GameEntityPoolCreator.create { AcidGoop(game) })
-        pools.put(ACID_GOOP_SUPPLIER, GameEntityPoolCreator.create { AcidGoopSupplier(game) })
-        pools.put(TUBE_BEAMER, GameEntityPoolCreator.create { TubeBeamer(game) })
-        pools.put(LAVA, GameEntityPoolCreator.create { Lava(game) })
-        pools.put(FLAME_THROWER, GameEntityPoolCreator.create { FlameThrower(game) })
-        pools.put(FIREBALL_BAR, GameEntityPoolCreator.create { FireballBar(game) })
-        pools.put(LAVA_DROP, GameEntityPoolCreator.create { LavaDrop(game) })
-        pools.put(LAVA_DROP_SUPPLIER, GameEntityPoolCreator.create { LavaDropSupplier(game) })
-        pools.put(ASTEROIDS_SPAWNER, GameEntityPoolCreator.create { AsteroidsSpawner(game) })
-        pools.put(LAVA_BEAM, GameEntityPoolCreator.create { LavaBeam(game) })
-        pools.put(LAVA_BEAMER, GameEntityPoolCreator.create { LavaBeamer(game) })
-        pools.put(ICE_CUBE_MAKER, GameEntityPoolCreator.create { IceCubeMaker(game) })
-        pools.put(UNDERWATER_FAN, GameEntityPoolCreator.create { UnderwaterFan(game) })
-        pools.put(SEA_MINE, GameEntityPoolCreator.create { SeaMine(game) })
-        pools.put(CACTUS, GameEntityPoolCreator.create { Cactus(game) })
-        pools.put(MAGMA_FLAME, GameEntityPoolCreator.create { MagmaFlame(game) })
-        pools.put(DEADLY_LEAF, GameEntityPoolCreator.create { DeadlyLeaf(game) })
-        pools.put(INFERNO_OVEN, GameEntityPoolCreator.create { InfernoOven(game) })
-        pools.put(INFERNO_METEOR_SHOWER, GameEntityPoolCreator.create { InfernoMeteorShower(game) })
-        pools.put(RISING_LAVA_RIVER, GameEntityPoolCreator.create { RisingLavaRiver(game) })
+        pools.put(SAW, GameEntityPoolCreator.create { Saw(services) })
+        pools.put(SWINGING_AXE, GameEntityPoolCreator.create { SwingingAxe(services) })
+        pools.put(SPIKE, GameEntityPoolCreator.create { Spike(services) })
+        pools.put(BOLT, GameEntityPoolCreator.create { Bolt(services) })
+        pools.put(ELECTROCUTIE, GameEntityPoolCreator.create { Electrocutie(services) })
+        pools.put(ELECTROCUTIE_CHILD, GameEntityPoolCreator.create { ElectrocutieChild(services) })
+        pools.put(SPIKE_BALL, GameEntityPoolCreator.create { SpikeBall(services) })
+        pools.put(WANAAN_LAUNCHER, GameEntityPoolCreator.create { WanaanLauncher(services) })
+        pools.put(CEILING_CRUSHER, GameEntityPoolCreator.create { CeilingCrusher(services) })
+        pools.put(ACID_GOOP, GameEntityPoolCreator.create { AcidGoop(services) })
+        pools.put(ACID_GOOP_SUPPLIER, GameEntityPoolCreator.create { AcidGoopSupplier(services) })
+        pools.put(TUBE_BEAMER, GameEntityPoolCreator.create { TubeBeamer(services) })
+        pools.put(LAVA, GameEntityPoolCreator.create { Lava(services) })
+        pools.put(FLAME_THROWER, GameEntityPoolCreator.create { FlameThrower(services) })
+        pools.put(FIREBALL_BAR, GameEntityPoolCreator.create { FireballBar(services) })
+        pools.put(LAVA_DROP, GameEntityPoolCreator.create { LavaDrop(services) })
+        pools.put(LAVA_DROP_SUPPLIER, GameEntityPoolCreator.create { LavaDropSupplier(services) })
+        pools.put(ASTEROIDS_SPAWNER, GameEntityPoolCreator.create { AsteroidsSpawner(services) })
+        pools.put(LAVA_BEAM, GameEntityPoolCreator.create { LavaBeam(services) })
+        pools.put(LAVA_BEAMER, GameEntityPoolCreator.create { LavaBeamer(services) })
+        pools.put(ICE_CUBE_MAKER, GameEntityPoolCreator.create { IceCubeMaker(services) })
+        pools.put(UNDERWATER_FAN, GameEntityPoolCreator.create { UnderwaterFan(services) })
+        pools.put(SEA_MINE, GameEntityPoolCreator.create { SeaMine(services) })
+        pools.put(CACTUS, GameEntityPoolCreator.create { Cactus(services) })
+        pools.put(MAGMA_FLAME, GameEntityPoolCreator.create { MagmaFlame(services) })
+        pools.put(DEADLY_LEAF, GameEntityPoolCreator.create { DeadlyLeaf(services) })
+        pools.put(INFERNO_OVEN, GameEntityPoolCreator.create { InfernoOven(services) })
+        pools.put(INFERNO_METEOR_SHOWER, GameEntityPoolCreator.create { InfernoMeteorShower(services) })
+        pools.put(RISING_LAVA_RIVER, GameEntityPoolCreator.create { RisingLavaRiver(services) })
     }
 
     override fun fetch(key: Any?) = pools.get(key)?.fetch()

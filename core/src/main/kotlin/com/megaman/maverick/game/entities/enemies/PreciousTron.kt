@@ -61,7 +61,7 @@ import com.megaman.maverick.game.world.body.*
 import java.util.*
 
 // This isn't a "big" enemy, but his size is set to "LARGE" so that he is more powerful against weapons
-class PreciousTron(game: MegaServices) : AbstractEnemy(game, size = Size.LARGE), IFreezableEntity,
+class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size.LARGE), IFreezableEntity,
     IAnimatedEntity, IFaceable {
 
     companion object {
@@ -132,7 +132,7 @@ class PreciousTron(game: MegaServices) : AbstractEnemy(game, size = Size.LARGE),
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -164,7 +164,7 @@ class PreciousTron(game: MegaServices) : AbstractEnemy(game, size = Size.LARGE),
         body.setBottomCenterToPoint(spawn)
         currentPosition.set(spawn)
 
-        val hardMode = game.state.getDifficultyMode() == DifficultyMode.HARD
+        val hardMode = services.gameState.getDifficultyMode() == DifficultyMode.HARD
 
         timers = orderedMapOf(
             PreciousTronState.APPEAR pairTo Timer(APPEAR_DUR),

@@ -50,7 +50,7 @@ class FreezableEntityHandler<T>(
         if (noDamageOnFrozen && entity is AbstractEnemy) entity.canDamagePredicates.add { !entity.frozen }
     }
 
-    private val shieldEntity = ShieldEntity(entity.game)
+    private val shieldEntity = ShieldEntity(entity.services)
 
     val timer = Timer(duration).setToEnd()
 

@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class ToxicGoopSplash(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class ToxicGoopSplash(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IDirectional, IOwnable<IGameEntity>, IDamagerEntity {
 
     companion object {
@@ -61,7 +61,7 @@ class ToxicGoopSplash(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())

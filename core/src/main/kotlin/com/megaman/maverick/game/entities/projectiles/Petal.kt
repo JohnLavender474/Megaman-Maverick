@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class Petal(game: MegaServices) : AbstractProjectile(game), IHealthEntity, IDamagerEntity, IDamageableEntity {
+class Petal(services: MegaServices) : AbstractProjectile(services), IHealthEntity, IDamagerEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "Petal"
@@ -67,7 +67,7 @@ class Petal(game: MegaServices) : AbstractProjectile(game), IHealthEntity, IDama
 
     override fun init(vararg params: Any) {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Petal")
+            region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Petal")
         super.init()
         addComponent(AudioComponent())
         addComponent(defineAnimationsComponent())

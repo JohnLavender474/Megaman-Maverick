@@ -43,7 +43,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class DeadlyLeaf(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class DeadlyLeaf(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IHazard, IDamagerEntity {
 
     companion object {
@@ -88,7 +88,7 @@ class DeadlyLeaf(game: MegaServices) : AbstractHealthEntity(game), IBodyEntity, 
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())

@@ -48,7 +48,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class CanonHopper(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFaceable, IFreezableEntity {
+class CanonHopper(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFaceable, IFreezableEntity {
 
     companion object {
         const val TAG = "CanonHopper"
@@ -88,7 +88,7 @@ class CanonHopper(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             CanonHopperState.entries.forEach { state ->
                 val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

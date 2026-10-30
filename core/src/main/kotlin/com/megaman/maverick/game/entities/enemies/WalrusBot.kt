@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class WalrusBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable, IAnimatedEntity,
+class WalrusBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFaceable, IAnimatedEntity,
     IDrawableShapesEntity {
 
     companion object {
@@ -84,7 +84,7 @@ class WalrusBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), I
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("stand", atlas.findRegion("$TAG/stand"))
             regions.put("shoot", atlas.findRegion("$TAG/shoot"))
             regions.put("jet", atlas.findRegion("$TAG/jet"))

@@ -19,7 +19,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 // This entity adds a DEATH fixture to the world system. This entity should be used if other entities
 // besides Mega Man can make contact with this entity. If it is guaranteed that ONLY Mega Man will make
 // contact, then it is recommended to use the `PlayerDeath` entity instead as an optimization trick.
-open class Death(game: MegaServices) : MegaGameEntity(game), IBodyEntity {
+open class Death(services: MegaServices) : MegaGameEntity(services), IBodyEntity {
 
     companion object {
         const val TAG = "Death"
@@ -69,7 +69,7 @@ open class Death(game: MegaServices) : MegaGameEntity(game), IBodyEntity {
     }
 
     protected open fun isActive() = rooms?.let compute@{
-        val currentRoom = game.levelState.currentRoom?.name
+        val currentRoom = services.levelState.currentRoom?.name
         return@compute currentRoom == null || it.contains(currentRoom)
     } ?: true
 

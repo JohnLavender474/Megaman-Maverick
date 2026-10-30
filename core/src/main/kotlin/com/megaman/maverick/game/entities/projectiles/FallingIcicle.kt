@@ -47,7 +47,7 @@ import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FallingIcicle(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FallingIcicle"
@@ -73,7 +73,7 @@ class FallingIcicle(game: MegaServices) : AbstractProjectile(game), IAnimatedEnt
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("still", "shake").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()

@@ -53,7 +53,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class RollingBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity, IFaceable {
+class RollingBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     enum class RollingBotState { ROLL, OPEN, SHOOT, CLOSE }
 
@@ -116,7 +116,7 @@ class RollingBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -164,7 +164,7 @@ class RollingBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.OWNER pairTo this))
 
-        game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+        services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     private fun shoot() {

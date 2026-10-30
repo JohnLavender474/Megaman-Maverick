@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class CartinJoe(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, ISpritesEntity, IAnimatedEntity, IFaceable,
+class CartinJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, ISpritesEntity, IAnimatedEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -100,7 +100,7 @@ class CartinJoe(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, ISp
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("move", "shoot", "frozen").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

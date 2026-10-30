@@ -51,16 +51,16 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         deathTimer.reset()
 
-        val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        val black = game.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         fadeout.setRegion(black)
         fadeout.reset()
 
-        game.eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
+        game.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
 
         player.body.physics.gravityOn = false
         player.setPlayPhase(PlayPhase.POST_PLAY)
 
-        game.audioMan.playSound(SoundAsset.DEFEAT_SOUND)
+        game.audio.playSound(SoundAsset.DEFEAT_SOUND)
     }
 
     override fun update(delta: Float) {
@@ -81,7 +81,7 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
             if (fadeout.isJustFinished()) {
                 GameLogger.debug(TAG, "update(): fade out just finished, submit PLAYER_DONE_DYIN event")
 
-                game.eventsMan.submitEvent(
+                game.events.submitEvent(
                     Event(EventType.PLAYER_DONE_DYIN, props(PlayerEventKeys.SLOT pairTo player.playerSlot!!))
                 )
             }

@@ -53,7 +53,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class ToxicBarrelBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity,
+class ToxicBarrelBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity,
     IAnimatedEntity, IFaceable {
 
     enum class ToxicBarrelBotState {
@@ -123,7 +123,7 @@ class ToxicBarrelBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIU
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (closedRegion == null || openCenterRegion == null || openTopRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             closedRegion = atlas.findRegion("$TAG/Closed")
             openTopRegion = atlas.findRegion("$TAG/OpenTop")
             openCenterRegion = atlas.findRegion("$TAG/OpenCenter")

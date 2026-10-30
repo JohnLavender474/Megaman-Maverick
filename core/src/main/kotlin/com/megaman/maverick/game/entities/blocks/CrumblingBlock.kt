@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.projectiles.SmallGreenMissile
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class CrumblingBlock(game: MegaServices) : Block(game), ISpritesEntity {
+class CrumblingBlock(services: MegaServices) : Block(services), ISpritesEntity {
 
     companion object {
         const val TAG = "CrumblingBlock"
@@ -47,7 +47,7 @@ class CrumblingBlock(game: MegaServices) : Block(game), ISpritesEntity {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
         super.init()
         addComponent(SpritesComponent())
     }
@@ -125,7 +125,7 @@ class CrumblingBlock(game: MegaServices) : Block(game), ISpritesEntity {
             }
         }
 
-        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
+        services.audio.playSound(SoundAsset.THUMP_SOUND, false)
     }
 
     private fun defineDrawables() {

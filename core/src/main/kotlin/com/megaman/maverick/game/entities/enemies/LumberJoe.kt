@@ -61,7 +61,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class LumberJoe(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFireableEntity,
+class LumberJoe(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFireableEntity,
     IFaceable, IFreezableEntity {
 
     companion object {
@@ -140,7 +140,7 @@ class LumberJoe(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), I
         GameLogger.debug(TAG, "init()")
 
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key ->
                 gdxArrayOf(key, "${key}$SHIELDED_REGION_SUFFIX").forEach {
                     try {

@@ -39,7 +39,7 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import kotlin.math.max
 
-class FloatingEmber(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
+class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity,
     ICullableEntity {
 
     companion object {
@@ -76,7 +76,7 @@ class FloatingEmber(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, 
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())
@@ -95,7 +95,7 @@ class FloatingEmber(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, 
         this.maxY = when (maxY) {
             is Float -> maxY
             is RectangleMapObject -> maxY.rectangle.getCenter().y
-            else -> game.getGameCamera().getRotatedBounds().getMaxY() + 6f * ConstVals.PPM
+            else -> services.getGameCamera().getRotatedBounds().getMaxY() + 6f * ConstVals.PPM
         }
 
         fading = false
@@ -140,7 +140,7 @@ class FloatingEmber(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, 
         sine.update(delta)
         sine.getMotionValue(out).swapped().let { position.set(it) }
 
-        if (!game.getGameCamera().getRotatedBounds().contains(position)) {
+        if (!services.getGameCamera().getRotatedBounds().contains(position)) {
             outOfBoundsTimer.update(delta)
             if (outOfBoundsTimer.isFinished()) fading = true
         } else if (!fading) outOfBoundsTimer.reset()

@@ -35,15 +35,15 @@ class StarknerPausedTest : DescribeSpec({
     beforeEach {
         engine = GameEngine()
         clock = GameClock()
-        val game = testServices(engine = engine, clock = clock, players = mockk<MegaPlayers>(relaxed = true))
+        val services = testServices(engine = engine, clock = clock, players = mockk<MegaPlayers>(relaxed = true))
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-        every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
+        every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
         val target = mockk<MegaGameEntity>(relaxed = true)
         every { target.getComponent(BodyComponent::class) } returns BodyComponent(Body(BodyType.ABSTRACT))
-        every { game.players.targetFor(any()) } returns target
+        every { services.players.targetFor(any()) } returns target
 
-        starkner = Starkner(game)
+        starkner = Starkner(services)
         starkner.spawn(props(ConstKeys.ID pairTo 201, ConstKeys.POSITION pairTo Vector2())) shouldBe true
         engine.update(0f)
         starkner.direction = Direction.LEFT

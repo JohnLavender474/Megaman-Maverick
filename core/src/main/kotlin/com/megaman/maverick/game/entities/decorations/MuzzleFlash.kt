@@ -32,7 +32,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class MuzzleFlash(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class MuzzleFlash(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "MuzzleFlash"
@@ -45,7 +45,7 @@ class MuzzleFlash(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IA
     override fun getType() = EntityType.DECORATION
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
@@ -68,11 +68,11 @@ class MuzzleFlash(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IA
         val cullEvents =
             objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
 
         val cullOutOfBounds =
-            getGameCameraCullingLogic(game.getGameCamera(), { defaultSprite.boundingRectangle.toGameRectangle() })
+            getGameCameraCullingLogic(services.getGameCamera(), { defaultSprite.boundingRectangle.toGameRectangle() })
 
         return CullablesComponent(
             objectMapOf(

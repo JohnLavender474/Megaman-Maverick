@@ -48,7 +48,7 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.*
 
-class SpikeTeeth(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class SpikeTeeth(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAudioEntity, IDamagerEntity, IHazard, IOwnable<IGameEntity> {
 
     companion object {
@@ -65,7 +65,7 @@ class SpikeTeeth(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICulla
     override var owner: IGameEntity? = null
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())

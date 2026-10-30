@@ -62,7 +62,7 @@ import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after each Reactor Monkey is defeated
-class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IBossListener,
+class FloatingCan(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IBossListener,
     IAnimatedEntity, IEventListener {
 
     companion object {
@@ -104,7 +104,7 @@ class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -121,7 +121,7 @@ class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = when {
             spawnProps.containsKey(ConstKeys.BOUNDS) ->
@@ -132,7 +132,7 @@ class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
         body.setCenter(spawn)
 
         spawnDelayTimer.resetDuration(
-            if (game.state.getDifficultyMode() == DifficultyMode.HARD) SPAWN_DELAY_HARD else SPAWN_DELAY
+            if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) SPAWN_DELAY_HARD else SPAWN_DELAY
         )
 
         spawningBlinkTimer.reset()
@@ -145,7 +145,7 @@ class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         frozen = false
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun canDamage(damageable: IDamageableEntity) = spawnDelayTimer.isFinished() && super.canDamage(damageable)
@@ -257,7 +257,7 @@ class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
                     body = body,
                     start = body.getCenter(),
                     speed = speed@{
-                        val speed = if (game.state.hardMode) FLY_SPEED_HARD else FLY_SPEED
+                        val speed = if (services.gameState.hardMode) FLY_SPEED_HARD else FLY_SPEED
                         return@speed speed * ConstVals.PPM
                     },
                     stopOnTargetReached = false,
@@ -273,7 +273,7 @@ class FloatingCan(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
     }
 
     private fun directlyChaseMegaman() {
-        val speed = if (game.state.hardMode) FLY_SPEED_HARD else FLY_SPEED
+        val speed = if (services.gameState.hardMode) FLY_SPEED_HARD else FLY_SPEED
         body.physics.velocity.set(
             targetPlayer.body
                 .getCenter()

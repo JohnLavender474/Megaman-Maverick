@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
 
-class SigmaRatElectricBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class SigmaRatElectricBall(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "SigmaRatElectricBall"
@@ -60,7 +60,7 @@ class SigmaRatElectricBall(game: MegaServices) : AbstractProjectile(game), IAnim
 
     override fun init(vararg params: Any) {
         if (ballRegion == null || hitRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             ballRegion = atlas.findRegion("SigmaRat/ElectricBall")
             hitRegion = atlas.findRegion("SigmaRat/ElectricBallDissipate")
         }

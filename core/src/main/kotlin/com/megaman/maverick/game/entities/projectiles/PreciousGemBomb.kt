@@ -39,7 +39,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class PreciousGemBomb(game: MegaServices) : AbstractProjectile(game) {
+class PreciousGemBomb(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "PreciousGemBomb"
@@ -83,7 +83,7 @@ class PreciousGemBomb(game: MegaServices) : AbstractProjectile(game) {
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             val keys = PreciousGemBombColor.entries.map { it.name.lowercase() }
             AnimationUtils.loadRegions(TAG, atlas, keys, regions)
         }

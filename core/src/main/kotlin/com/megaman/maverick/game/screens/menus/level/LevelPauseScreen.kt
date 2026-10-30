@@ -110,9 +110,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
     private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
     private val state: GameState
-        get() = game.state
+        get() = game.gameState
     private val audioMan: MegaAudioManager
-        get() = game.audioMan
+        get() = game.audio
 
     private lateinit var table: Table<Any>
     private lateinit var node: TableNode<Any>
@@ -156,7 +156,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         settingsPanel.init()
 
-        val blackRegion = game.assMan.getTextureRegion(
+        val blackRegion = game.assets.getTextureRegion(
             TextureAsset.COLORS.source,
             ConstKeys.BLACK
         )
@@ -173,7 +173,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             ConstVals.VIEW_HEIGHT * ConstVals.PPM
         )
 
-        val levelPauseScreenAtlas = game.assMan.getTextureAtlas(
+        val levelPauseScreenAtlas = game.assets.getTextureAtlas(
             TextureAsset.LEVEL_PAUSE_SCREEN_V2.source
         )
 
@@ -233,7 +233,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         fontHandles.addAll(
             MegaFontHandle(
-                textSupplier = { "0${game.state.getLives(PlayerSlot(0))}" },
+                textSupplier = { "0${game.gameState.getLives(PlayerSlot(0))}" },
                 positionX = LIVES_X * ConstVals.PPM,
                 positionY = LIVES_Y * ConstVals.PPM,
                 centerX = false,
@@ -287,7 +287,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                                 }
                             }
                             val bitsBar = LevelPauseScreenBitsBar(
-                                game.assMan, bitsBarX * ConstVals.PPM, bitsBarY * ConstVals.PPM, bitsSupplier
+                                game.assets, bitsBarX * ConstVals.PPM, bitsBarY * ConstVals.PPM, bitsSupplier
                             )
                             bitsBars.add(bitsBar)
                         }
@@ -303,9 +303,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                             val bitsBarX = HEALTH_TANK_BITS_COLUMN_1_X + j * HEALTH_TANK_BITS_COLUMN_OFFSET
                             val bitsBarY =
                                 HEALTH_TANK_BITS_ROW_1_Y + (WEAPON_ROWS + HEALTH_TANK_ROWS - i) * HEALTH_TANK_BITS_ROW_OFFSET
-                            val bitsSupplier: () -> Int = { game.state.getHealthTankValue(element) }
+                            val bitsSupplier: () -> Int = { game.gameState.getHealthTankValue(element) }
                             val bitsBar = LevelPauseScreenBitsBar(
-                                game.assMan, bitsBarX * ConstVals.PPM, bitsBarY * ConstVals.PPM, bitsSupplier
+                                game.assets, bitsBarX * ConstVals.PPM, bitsBarY * ConstVals.PPM, bitsSupplier
                             )
                             bitsBars.add(bitsBar)
                         }
@@ -320,11 +320,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                                 GameLogger.debug(TAG, "exit button: onSelect()")
 
                                 // the player can always exit an extra level
-                                if (game.levelState.isInExtraLevel || game.state.isLevelDefeated(game.levelState.currentLevel!!)) {
-                                    game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
-                                    game.audioMan.fadeOutMusic(EXIT_DUR)
+                                if (game.levelState.isInExtraLevel || game.gameState.isLevelDefeated(game.levelState.currentLevel!!)) {
+                                    game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                                    game.audio.fadeOutMusic(EXIT_DUR)
                                     exiting = true
-                                } else game.audioMan.playSound(SoundAsset.ERROR_SOUND)
+                                } else game.audio.playSound(SoundAsset.ERROR_SOUND)
 
                                 return false
                             }
@@ -591,7 +591,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                 fillHealthTimer.addRunnable(TimeMarkedRunnable(time) {
                     player.translateHealth(1)
                     state.removeHealthFromHealthTank(healthTank, 1)
-                    game.audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
+                    game.audio.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
                 })
             }
 

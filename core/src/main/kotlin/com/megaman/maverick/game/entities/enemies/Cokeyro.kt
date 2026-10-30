@@ -59,7 +59,7 @@ import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Cokeyro(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IDrawableShapesEntity, IFaceable {
+class Cokeyro(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "Cokeyro"
@@ -112,7 +112,7 @@ class Cokeyro(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnim
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

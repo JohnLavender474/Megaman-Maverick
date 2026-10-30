@@ -15,7 +15,7 @@ class DesertNoSunSky(game: MegamanMaverickGame, it: RectangleMapObject) : Backgr
     "DesertNoSunSky",
     startX = it.rectangle.x,
     startY = it.rectangle.y,
-    model = game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/NoSunSky"),
+    model = game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/NoSunSky"),
     modelWidth = it.rectangle.width,
     modelHeight = it.rectangle.height,
     rows = 1,

@@ -93,7 +93,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             )
             blinkArrows.put(
                 it.text, BlinkingArrow(
-                    game.assMan,
+                    game.assets,
                     Vector2(1.5f * ConstVals.PPM, (row - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM)
                 )
             )
@@ -123,7 +123,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         settingsPanel.init()
         settingsPanel.buttons.forEach { buttons.put(it.key, it.value) }
 
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.UI_2.source)
+        val atlas = game.assets.getTextureAtlas(TextureAsset.UI_2.source)
         background = GameSprite(atlas.findRegion("TitleScreenBackgroundv4"))
         // Permanently setting both width and height to the 'view width' size
         background.setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM)
@@ -131,8 +131,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         buttons.put(MainScreenButton.START_NEW_GAME.text, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
-                game.state.reset()
-                game.state.resetLives()
+                game.gameState.reset()
+                game.gameState.resetLives()
                 game.setCurrentScreen(ScreenEnum.SELECT_DIFFICULTY_SCREEN.name)
                 return true
             }
@@ -149,7 +149,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 if (game.hasSavedState() && game.loadSavedState()) {
                     GameLogger.debug(TAG, "Loaded saved state")
                     when {
-                        game.state.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
+                        game.gameState.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
                             game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
 
                         else -> {
@@ -157,12 +157,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                             game.startLevel()
                         }
                     }
-                    game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                    game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
                     game.levelState.weaponsAttained = null
                     return true
                 } else {
                     GameLogger.error(TAG, "Failed to load saved state")
-                    game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+                    game.audio.playSound(SoundAsset.ERROR_SOUND, false)
                     doNotPlayPing = true
                     return false
                 }
@@ -237,7 +237,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         screenSlide.reset()
 
         game.getUiCamera().setToDefaultPosition()
-        game.audioMan.playMusic(MAIN_MENU_MUSIC, false)
+        game.audio.playMusic(MAIN_MENU_MUSIC, false)
 
         GameLogger.debug(TAG, "current button key: $buttonKey")
         GameLogger.debug(TAG, "blinking arrows keys: ${blinkArrows.keys().toGdxArray()}")
@@ -290,14 +290,14 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     override fun onAnyMovement(direction: Direction) {
         GameLogger.debug(TAG, "Current button: $buttonKey")
-        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
+        game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }
 
     override fun onAnySelection() {
         val allow = screenSlide.finished
         if (allow) {
             if (doNotPlayPing) doNotPlayPing = false
-            else game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND)
+            else game.audio.playSound(SoundAsset.SELECT_PING_SOUND)
         }
     }
 }

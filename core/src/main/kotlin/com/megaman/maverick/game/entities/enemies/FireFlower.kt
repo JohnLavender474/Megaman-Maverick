@@ -50,7 +50,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class FireFlower(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IDirectional, IFaceable {
+class FireFlower(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IDirectional, IFaceable {
 
     companion object {
         const val TAG = "FireFlower"
@@ -109,7 +109,7 @@ class FireFlower(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IDi
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

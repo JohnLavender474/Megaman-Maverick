@@ -47,11 +47,11 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
-    private val state = game.state
+    private val state = game.gameState
     private val engine = game.engine
-    private val assMan = game.assMan
-    private val eventsMan = game.eventsMan
-    private val audioMan = game.audioMan
+    private val assMan = game.assets
+    private val eventsMan = game.events
+    private val audioMan = game.audio
 
     // TODO: the HUD acts on the lead player in slot 0; which player the HUD shows is a session policy (item 047)
     private val player: MegaGameEntity

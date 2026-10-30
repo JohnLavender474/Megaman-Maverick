@@ -50,7 +50,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class PicketJoe(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable {
+class PicketJoe(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFaceable {
 
     companion object {
         const val TAG = "PicketJoe"
@@ -78,7 +78,7 @@ class PicketJoe(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), I
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("stand", "throw").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

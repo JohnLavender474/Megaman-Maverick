@@ -40,8 +40,8 @@ import kotlin.math.sqrt
  * 3. Running the lunge state machine and calling [WavyTentacleOfJoints.setState].
  * 4. Reading joint positions from the child and drawing line segments + joint circles.
  */
-class TestWavyTentacleController(game: MegaServices) :
-    MegaGameEntity(game), IDrawableShapesEntity, Updatable {
+class TestWavyTentacleController(services: MegaServices) :
+    MegaGameEntity(services), IDrawableShapesEntity, Updatable {
 
     companion object {
         const val TAG = "TestWavyTentacleController"

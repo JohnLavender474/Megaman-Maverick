@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class BunbyRedRocket(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IDirectional,
+class BunbyRedRocket(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IDirectional,
     IFaceable {
 
     companion object {
@@ -61,7 +61,7 @@ class BunbyRedRocket(game: MegaServices) : AbstractProjectile(game), IAnimatedEn
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -107,7 +107,7 @@ class BunbyRedRocket(game: MegaServices) : AbstractProjectile(game), IAnimatedEn
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (game.camera.rotating) body.physics.velocity.setZero()
+        if (services.camera.rotating) body.physics.velocity.setZero()
         else body.physics.velocity.set(trajectory)
     })
 

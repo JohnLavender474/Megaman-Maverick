@@ -12,19 +12,19 @@ import kotlin.math.roundToInt
 
 object MegaUtilMethods {
 
-    fun delayRun(game: MegaServices, delay: Float, action: () -> Unit): String {
+    fun delayRun(services: MegaServices, delay: Float, action: () -> Unit): String {
         if (delay <= 0f) throw IllegalArgumentException("Delay must be greater than 0: $delay")
 
         val id = UUID.randomUUID().toString()
 
         val timer = Timer(delay)
 
-        game.updatables.put(id) { delta ->
+        services.updatables.put(id) { delta ->
             timer.update(delta)
             if (timer.isJustFinished()) {
                 action()
 
-                game.runQueue.addLast { game.updatables.remove(id) }
+                services.runQueue.addLast { services.updatables.remove(id) }
             }
         }
 

@@ -56,7 +56,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class RainDrop(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IEventListener {
+class RainDrop(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IEventListener {
 
     companion object {
         const val TAG = "RainDrop"
@@ -85,7 +85,7 @@ class RainDrop(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprites
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             RainDropType.entries.forEach { type ->
                 val key = type.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
@@ -137,7 +137,7 @@ class RainDrop(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprites
             Float::class
         )
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         destroyOnRoomChange = spawnProps.getOrDefault(
             "${ConstKeys.DESTROY}_${ConstKeys.ON}_${ConstKeys.ROOM}_${ConstKeys.CHANGE}",
@@ -152,7 +152,7 @@ class RainDrop(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprites
 
         ignoreIds.clear()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -233,7 +233,7 @@ class RainDrop(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprites
     override fun getType() = EntityType.DECORATION
 }
 
-class RainFall(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
+class RainFall(services: MegaServices) : MegaGameEntity(services), ICullableEntity {
 
     companion object {
         const val TAG = "RainFall"
@@ -350,7 +350,7 @@ class RainFall(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { rainFallBounds })
+        val cullOutOfBounds = getGameCameraCullingLogic(services.getGameCamera(), { rainFallBounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 

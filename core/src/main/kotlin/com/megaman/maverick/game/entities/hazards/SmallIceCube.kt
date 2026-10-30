@@ -50,7 +50,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
-class SmallIceCube(game: MegaServices) : AbstractProjectile(game), IFreezerEntity {
+class SmallIceCube(services: MegaServices) : AbstractProjectile(services), IFreezerEntity {
 
     companion object {
         const val TAG = "SmallIceCube"
@@ -97,7 +97,7 @@ class SmallIceCube(game: MegaServices) : AbstractProjectile(game), IFreezerEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region1 == null || region2 == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             region1 = atlas.findRegion("${TAG}/1")
             region2 = atlas.findRegion("${TAG}/2")
         }
@@ -154,7 +154,7 @@ class SmallIceCube(game: MegaServices) : AbstractProjectile(game), IFreezerEntit
     override fun onDamageInflictedTo(damageable: IDamageableEntity) = shatterAndDie()
 
     override fun hitShield(shieldFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
-        game.audioMan.playSound(SoundAsset.DINK_SOUND, false)
+        services.audio.playSound(SoundAsset.DINK_SOUND, false)
         shatterAndDie()
     }
 
@@ -182,7 +182,7 @@ class SmallIceCube(game: MegaServices) : AbstractProjectile(game), IFreezerEntit
         val puff = MegaEntityFactory.fetch(SmokePuff::class)!!
         puff.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
 
-        game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+        services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     private fun getHit(entity: IGameEntity) {

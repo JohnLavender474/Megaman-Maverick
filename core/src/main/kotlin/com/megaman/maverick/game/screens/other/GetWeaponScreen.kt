@@ -102,11 +102,11 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     private var initialized = false
 
     override fun init(vararg params: Any) {
-        val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+        val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
         val backgroundRegion = uiAtlas.findRegion("menu_screen_bkg")
         backgroundSprite.setRegion(backgroundRegion)
 
-        val weaponGetAtlas = game.assMan.getTextureAtlas(TextureAsset.WEAPON_GET.source)
+        val weaponGetAtlas = game.assets.getTextureAtlas(TextureAsset.WEAPON_GET.source)
         overlaySprite.setRegion(weaponGetAtlas.findRegion("overlay"))
         MegamanWeapon.entries.forEach { weapon ->
             val baseKey = weapon.name.lowercase()
@@ -177,7 +177,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         resetEventTimer()
 
-        game.audioMan.playMusic(MusicAsset.VINNYZ_WEAPON_GET_MUSIC, true)
+        game.audio.playMusic(MusicAsset.VINNYZ_WEAPON_GET_MUSIC, true)
     }
 
     override fun render(delta: Float) {

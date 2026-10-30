@@ -31,7 +31,7 @@ import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
-open class Block(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity,
+open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity,
     IDrawableShapesEntity {
 
     companion object {
@@ -88,9 +88,9 @@ open class Block(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICulla
                         return@predicate nextRoom != room
                     }
                 )
-                game.eventsMan.addListener(cullable)
+                services.events.addListener(cullable)
                 runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) {
-                    game.eventsMan.removeListener(cullable)
+                    services.events.removeListener(cullable)
                     runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
                 }
                 putCullable(ConstKeys.CULL_ROOM, cullable)

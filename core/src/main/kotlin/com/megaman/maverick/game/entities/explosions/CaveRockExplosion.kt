@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class CaveRockExplosion(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IBodyEntity, IAudioEntity,
+class CaveRockExplosion(services: MegaServices) : MegaGameEntity(services), IDamagerEntity, IBodyEntity, IAudioEntity,
     ISpritesEntity, IAnimatedEntity {
 
     companion object {
@@ -54,7 +54,7 @@ class CaveRockExplosion(game: MegaServices) : MegaGameEntity(game), IDamagerEnti
 
     override fun init(vararg params: Any) {
         if (burstRegion == null) burstRegion =
-            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Burst")
+            services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Burst")
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())

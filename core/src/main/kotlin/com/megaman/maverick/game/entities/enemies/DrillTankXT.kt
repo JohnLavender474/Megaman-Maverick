@@ -58,7 +58,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DrillTankXT(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
+class DrillTankXT(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
         const val TAG = "DrillTankXT"
@@ -133,7 +133,7 @@ class DrillTankXT(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, ID
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

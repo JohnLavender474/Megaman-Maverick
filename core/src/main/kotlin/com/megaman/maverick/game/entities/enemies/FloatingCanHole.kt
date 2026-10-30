@@ -29,7 +29,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class FloatingCanHole(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IParentEntity<FloatingCan>,
+class FloatingCanHole(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IParentEntity<FloatingCan>,
     ICullableEntity, IHazard {
 
     companion object {

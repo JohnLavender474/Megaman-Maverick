@@ -42,7 +42,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class Adamski(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IMotionEntity {
+class Adamski(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IMotionEntity {
 
     companion object {
         const val TAG = "Adamski"
@@ -60,9 +60,9 @@ class Adamski(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAni
 
     override fun init(vararg params: Any) {
         if (purpleRegion == null || blueRegion == null || orangeRegion == null) {
-            purpleRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Purple")
-            blueRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Blue")
-            orangeRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Orange")
+            purpleRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Purple")
+            blueRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Blue")
+            orangeRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Orange")
         }
         super.init()
         addComponent(MotionComponent())

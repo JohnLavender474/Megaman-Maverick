@@ -48,7 +48,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class BigFishNeo(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class BigFishNeo(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "BigFishNeo"
@@ -81,7 +81,7 @@ class BigFishNeo(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IA
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("swim", "laugh", "frozen").forEach { key ->
                 regions.put(key, atlas.findRegion("$TAG/$key"))
             }

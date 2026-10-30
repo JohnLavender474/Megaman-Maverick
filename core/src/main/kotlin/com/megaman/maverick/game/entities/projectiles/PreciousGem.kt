@@ -67,7 +67,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class PreciousGem(game: MegaServices) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
+class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IProjectileEntity, ISpritesEntity,
     IAnimatedEntity, IEventListener, IDirectional {
 
     companion object {
@@ -130,7 +130,7 @@ class PreciousGem(game: MegaServices) : AbstractHealthEntity(game), IProjectileE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             PreciousGemColor.entries.forEach { color ->
                 regions.put(
                     color,
@@ -152,13 +152,13 @@ class PreciousGem(game: MegaServices) : AbstractHealthEntity(game), IProjectileE
         GameLogger.debug(TAG, "onSpawn(): hashCode=${hashCode()}, spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
 
         direction = spawnProps.getOrDefault(
             ConstKeys.DIRECTION,
-            if (owner is IDirectional) (owner as IDirectional).direction else game.gravity.direction,
+            if (owner is IDirectional) (owner as IDirectional).direction else services.gravity.direction,
             Direction::class
         )
 
@@ -192,7 +192,7 @@ class PreciousGem(game: MegaServices) : AbstractHealthEntity(game), IProjectileE
         GameLogger.debug(TAG, "onDestroy(): hashCode=${hashCode()}")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onHealthDepleted() {

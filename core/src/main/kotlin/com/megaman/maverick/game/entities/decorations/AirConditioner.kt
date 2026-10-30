@@ -29,7 +29,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class AirConditioner(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity,
+class AirConditioner(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity,
     IAnimatedEntity {
 
     companion object {
@@ -45,7 +45,7 @@ class AirConditioner(game: MegaServices) : MegaGameEntity(game), ICullableEntity
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             gdxArrayOf("machine", "pipe").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
@@ -106,7 +106,7 @@ class AirConditioner(game: MegaServices) : MegaGameEntity(game), ICullableEntity
     }
 
     private fun defineCullablesComponent() = CullablesComponent(
-        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(game.getGameCamera(), { bounds }))
+        objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.getGameCamera(), { bounds }))
     )
 
     override fun getType() = EntityType.DECORATION

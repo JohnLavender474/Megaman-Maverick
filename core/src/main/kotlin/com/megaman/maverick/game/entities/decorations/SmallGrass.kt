@@ -34,7 +34,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getPosition
 import com.megaman.maverick.game.world.body.setReceiver
 
-class SmallGrass(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class SmallGrass(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "SmallGrass"
@@ -47,7 +47,7 @@ class SmallGrass(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprit
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             gdxArrayOf("still", "brush").forEach {
                 val region = atlas.findRegion("$TAG/$it")
                 regions.put(it, region)

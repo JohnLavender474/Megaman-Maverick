@@ -73,7 +73,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity {
+class GutsTank(services: MegaServices) : AbstractBoss(services, size = Size.LARGE), IAnimatedEntity {
 
     enum class GutsTankMoveState { PAUSE, MOVE, }
     enum class GutsTankAttackState { LAUNCH_FIST, LAUNCH_RUNNING_METS, LAUNCH_HELI_METS, CHUNK_ORBS, SHOOT_BLASTS }
@@ -194,7 +194,7 @@ class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -227,7 +227,7 @@ class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
         )
         tankBlockOffset.set(tankBlockBounds.getCenter().sub(body.getCenter()))
 
-        fist = GutsTankFist(game)
+        fist = GutsTankFist(services)
         fist!!.spawn(props(ConstKeys.PARENT pairTo this))
 
         frontPoint.set(
@@ -264,7 +264,7 @@ class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
         blastsShot = 0
 
         launchFistDelayTimer.resetDuration(
-            if (game.state.hardMode) LAUNCH_FIST_DELAY_HARD else LAUNCH_FIST_DELAY
+            if (services.gameState.hardMode) LAUNCH_FIST_DELAY_HARD else LAUNCH_FIST_DELAY
         )
         laughTimer.setToEnd()
 
@@ -376,8 +376,8 @@ class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
                     if (attack == GutsTankAttackState.SHOOT_BLASTS) blastAngles = BLAST_ANGLES.toOrderedSet()
 
                     val newDuration = UtilMethods.interpolate(
-                        if (game.state.hardMode) ATTACK_DELAY_MIN_HARD else ATTACK_DELAY_MIN,
-                        if (game.state.hardMode) ATTACK_DELAY_MAX_HARD else ATTACK_DELAY_MAX,
+                        if (services.gameState.hardMode) ATTACK_DELAY_MIN_HARD else ATTACK_DELAY_MIN,
+                        if (services.gameState.hardMode) ATTACK_DELAY_MAX_HARD else ATTACK_DELAY_MAX,
                         getHealthRatio()
                     )
                     attackDelayTimer.resetDuration(newDuration)
@@ -460,8 +460,8 @@ class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
                             blastsShot++
 
                             val duration = UtilMethods.interpolate(
-                                if (game.state.hardMode) BLAST_SHOOT_MIN_DELAY_HARD else BLAST_SHOOT_MIN_DELAY,
-                                if (game.state.hardMode) BLAST_SHOOT_MAX_DELAY_HARD else BLAST_SHOOT_MAX_DELAY,
+                                if (services.gameState.hardMode) BLAST_SHOOT_MIN_DELAY_HARD else BLAST_SHOOT_MIN_DELAY,
+                                if (services.gameState.hardMode) BLAST_SHOOT_MAX_DELAY_HARD else BLAST_SHOOT_MAX_DELAY,
                                 getHealthRatio()
                             )
                             blastShootDelayTimer.resetDuration(duration)
@@ -494,7 +494,7 @@ class GutsTank(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
                             runningMets.add(runningMet)
                             runningMetsLaunched++
                             runningMetDelayTimer.resetDuration(
-                                if (game.state.hardMode) RUNNING_MET_DELAY_HARD else RUNNING_MET_DELAY
+                                if (services.gameState.hardMode) RUNNING_MET_DELAY_HARD else RUNNING_MET_DELAY
                             )
                         }
                     }

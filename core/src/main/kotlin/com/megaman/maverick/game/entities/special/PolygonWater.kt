@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 
-class PolygonWater(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class PolygonWater(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IWater {
 
     companion object {
@@ -64,7 +64,7 @@ class PolygonWater(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
     private var splashSound = false
 
     override fun init(vararg params: Any) {
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
+        val atlas = services.assets.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
         if (blueReg == null) blueReg = atlas.findRegion(BLUE_REG)
         if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
         if (underReg == null) underReg = atlas.findRegion(UNDER_REG)

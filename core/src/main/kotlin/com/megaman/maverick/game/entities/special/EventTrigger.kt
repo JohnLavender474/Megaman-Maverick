@@ -10,7 +10,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 
-class EventTrigger(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
+class EventTrigger(services: MegaServices) : MegaGameEntity(services), ICullableEntity {
 
     companion object {
         const val TAG = "EventTrigger"
@@ -29,7 +29,7 @@ class EventTrigger(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
         }
         val event = Event(eventType, eventProps)
         GameLogger.debug(TAG, "onSpawn(): event=$event, spawnProps=$spawnProps")
-        game.eventsMan.submitEvent(event)
+        services.events.submitEvent(event)
         destroy()
     }
 

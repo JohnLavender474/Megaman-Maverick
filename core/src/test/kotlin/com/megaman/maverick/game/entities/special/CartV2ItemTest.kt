@@ -49,10 +49,10 @@ private const val CART_SPEED = 4f * PPM
 class CartV2ItemTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
     lateinit var cart: CartV2
 
-    class Crate(game: MegaServices) : MegaGameEntity(game), IBodyEntity {
+    class Crate(services: MegaServices) : MegaGameEntity(services), IBodyEntity {
 
         override fun init(vararg params: Any) {
             super.init()
@@ -89,16 +89,16 @@ class CartV2ItemTest : DescribeSpec({
             contactFilter = MegaContactFilter()
         )
         engine = GameEngine(Array<GameSystem>().apply { add(worldSystem) })
-        game = testServices(engine = engine, players = players, gravity = gravity)
+        services = testServices(engine = engine, players = players, gravity = gravity)
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-        every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
+        every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
 
-        Block(game).spawn(
+        Block(services).spawn(
             props(ConstKeys.BOUNDS pairTo GameRectangle(-10f * PPM, -PPM, 40f * PPM, PPM))
         ) shouldBe true
 
-        cart = CartV2(game)
+        cart = CartV2(services)
         cart.spawn(
             props(
                 ConstKeys.BOUNDS pairTo GameRectangle(2f * PPM, 0f, 2f * PPM, PPM),
@@ -113,7 +113,7 @@ class CartV2ItemTest : DescribeSpec({
     afterEach { engine.reset() }
 
     fun spawnBulb(x: Float, y: Float): HealthBulb {
-        val bulb = HealthBulb(game)
+        val bulb = HealthBulb(services)
         bulb.spawn(
             props(
                 ConstKeys.POSITION pairTo Vector2(x, y),
@@ -153,7 +153,7 @@ class CartV2ItemTest : DescribeSpec({
         }
 
         it("still pushes another dynamic body that is in front of it") {
-            val crate = Crate(game)
+            val crate = Crate(services)
             crate.spawn(props(ConstKeys.POSITION pairTo Vector2(6f * PPM, 0f))) shouldBe true
             step(1, 0f)
             val startX = crate.body.getX()

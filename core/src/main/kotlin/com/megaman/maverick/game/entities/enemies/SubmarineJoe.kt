@@ -67,7 +67,7 @@ import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SubmarineJoe(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
+class SubmarineJoe(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IDrawableShapesEntity,
     IFreezableEntity, IFaceable {
 
     companion object {
@@ -163,12 +163,12 @@ class SubmarineJoe(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, I
         get() = stateLoopHandler.getCurrentState()
 
     private val canMove: Boolean
-        get() = !game.camera.rotating && !frozen
+        get() = !services.camera.rotating && !frozen
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

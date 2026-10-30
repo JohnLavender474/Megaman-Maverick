@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import kotlin.math.max
 
-class GravitySwitchAura(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class GravitySwitchAura(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "GravitySwitchAura"
@@ -45,7 +45,7 @@ class GravitySwitchAura(game: MegaServices) : MegaGameEntity(game), ISpritesEnti
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())

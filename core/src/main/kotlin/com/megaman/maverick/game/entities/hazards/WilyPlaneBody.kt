@@ -43,7 +43,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class WilyPlaneBody(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity,
+class WilyPlaneBody(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAudioEntity,
     IDamagerEntity, IHazard {
 
     companion object {
@@ -71,7 +71,7 @@ class WilyPlaneBody(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.WILY_FINAL_BOSS.source, TAG)
+            region = services.assets.getTextureRegion(TextureAsset.WILY_FINAL_BOSS.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineBodyComponent())

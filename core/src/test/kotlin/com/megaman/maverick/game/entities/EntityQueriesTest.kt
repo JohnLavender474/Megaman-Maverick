@@ -31,7 +31,7 @@ private class BareEntity : GameEntity(mockk(relaxed = true)) {
     override fun onDestroy() {}
 }
 
-private class PartsEntity(game: MegaServices) : MegaGameEntity(game), IDamageableEntity, IHealthEntity, IFocusable {
+private class PartsEntity(services: MegaServices) : MegaGameEntity(services), IDamageableEntity, IHealthEntity, IFocusable {
     private val bounds = GameRectangle(0f, 0f, 2f, 2f)
     override fun getFocusBounds() = bounds
     override fun getFocusPosition(): Vector2 = bounds.getCenter(Vector2())
@@ -63,9 +63,9 @@ class EntityQueriesTest : DescribeSpec({
 
     describe("core entity queries on an entity with the parts") {
         it("read the focus, invincibility, health, light and gravity device") {
-            val game = testServices(engine = mockk<GameEngine>(relaxed = true))
+            val services = testServices(engine = mockk<GameEngine>(relaxed = true))
             var switches = 0
-            val entity = PartsEntity(game)
+            val entity = PartsEntity(services)
             entity.addComponent(PointsComponent().also { it.putPoints(ConstKeys.HEALTH, Points(0, 10, 10)) })
             entity.addComponent(PlayerLightComponent { PlayerLight.JETPACK })
             entity.addComponent(GravityDeviceComponent { switches++ })

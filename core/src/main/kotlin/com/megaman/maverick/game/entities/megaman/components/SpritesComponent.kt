@@ -159,7 +159,7 @@ private fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
 }
 
 private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
-    val region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "MegamanDamageBurst")
+    val region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, "MegamanDamageBurst")
     val priority = getSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value - 1))
     component.putSprite(DAMAGE_BURST_SPRITE_KEY, sprite)
@@ -203,7 +203,7 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
 }
 
 private fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
-    val region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, "DesertTornado")
+    val region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, "DesertTornado")
     val priority = getSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value + 1))
     component.putSprite(DESERT_TORNADO_SPRITE_KEY, sprite)

@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 
-class Ratton(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IFaceable {
+class Ratton(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "Ratton"
@@ -83,7 +83,7 @@ class Ratton(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFre
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         addComponent(defineAnimationsComponent())

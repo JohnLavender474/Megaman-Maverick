@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class DragonFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable,
+class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IFaceable,
     IDirectional {
 
     enum class DragonFlyBehavior { MOVE_UP, MOVE_DOWN, MOVE_HORIZONTAL }
@@ -87,8 +87,8 @@ class DragonFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IF
         GameLogger.debug(TAG, "init()")
         super.init()
         if (textureRegion == null) {
-            textureRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "DragonFly")
-            frozenRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "$TAG/frozen")
+            textureRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "DragonFly")
+            frozenRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "$TAG/frozen")
         }
         addComponent(defineAnimationsComponent())
     }
@@ -161,7 +161,7 @@ class DragonFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IF
         body.addFixture(oobScannerFixture)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            behaviorTimer.update(game.settings.performance.fixedStep)
+            behaviorTimer.update(services.settings.performance.fixedStep)
 
             if (!behaviorTimer.isFinished() || frozen) {
                 body.physics.velocity.setZero()
@@ -213,7 +213,7 @@ class DragonFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IF
 
             when (currentBehavior) {
                 DragonFlyBehavior.MOVE_UP -> {
-                    if (!game.getGameCamera().overlaps(
+                    if (!services.getGameCamera().overlaps(
                             oobScannerFixture.getShape().getBoundingRectangle(),
                             GameObjectPools.fetch(BoundingBox::class)
                         )
@@ -224,7 +224,7 @@ class DragonFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IF
                 }
                 DragonFlyBehavior.MOVE_DOWN -> {
                     if (megamanScannerFixture.getShape().contains(targetPlayer.body.getCenter()) ||
-                        (!isMegamanBelow() && !game.getGameCamera().overlaps(
+                        (!isMegamanBelow() && !services.getGameCamera().overlaps(
                             oobScannerFixture.getShape().getBoundingRectangle(),
                             GameObjectPools.fetch(BoundingBox::class)
                         ))
@@ -235,7 +235,7 @@ class DragonFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IF
                 }
                 DragonFlyBehavior.MOVE_HORIZONTAL -> {
                     val doChange = (toLeftBounds && !isMegamanLeft()) || (!toLeftBounds && isMegamanLeft())
-                    if (doChange && !game.getGameCamera().overlaps(
+                    if (doChange && !services.getGameCamera().overlaps(
                             oobScannerFixture.getShape().getBoundingRectangle(),
                             GameObjectPools.fetch(BoundingBox::class)
                         )

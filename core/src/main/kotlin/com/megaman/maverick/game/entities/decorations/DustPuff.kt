@@ -29,7 +29,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 
-class DustPuff(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IDirectional,
+class DustPuff(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, IDirectional,
     IOwnable<IGameEntity> {
 
     companion object {
@@ -46,7 +46,7 @@ class DustPuff(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnim
     private val timer = Timer(DUR)
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         GameLogger.debug(TAG, "init()")
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -63,7 +63,7 @@ class DustPuff(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnim
         val owner = spawnProps.get(ConstKeys.OWNER, IGameEntity::class)
         this.owner = owner
 
-        direction = if (owner is IDirectional) owner.direction else game.gravity.direction
+        direction = if (owner is IDirectional) owner.direction else services.gravity.direction
 
         timer.reset()
     }

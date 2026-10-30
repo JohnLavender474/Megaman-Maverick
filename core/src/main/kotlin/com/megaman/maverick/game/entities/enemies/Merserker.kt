@@ -41,7 +41,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Merserker(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class Merserker(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Merserker"
@@ -71,7 +71,7 @@ class Merserker(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFac
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             ANIM_DEFS.keys().forEach { regions.put(it.name.lowercase(), atlas.findRegion("$TAG/$it")) }
         }
         if (timers.isEmpty) {

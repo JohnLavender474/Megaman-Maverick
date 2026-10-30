@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class WhiteArrowPool(game: MegaServices) : MegaGameEntity(game), ICullableEntity, IDirectional {
+class WhiteArrowPool(services: MegaServices) : MegaGameEntity(services), ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "WhiteArrowPool"
@@ -128,7 +128,7 @@ class WhiteArrowPool(game: MegaServices) : MegaGameEntity(game), ICullableEntity
     })
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cull = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        val cull = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cull))
     }
 

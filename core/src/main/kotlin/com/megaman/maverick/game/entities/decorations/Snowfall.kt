@@ -24,7 +24,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class Snowfall(game: MegaServices) : MegaGameEntity(game) {
+class Snowfall(services: MegaServices) : MegaGameEntity(services) {
 
     companion object {
         const val TAG = "Snowfall"
@@ -98,7 +98,7 @@ class Snowfall(game: MegaServices) : MegaGameEntity(game) {
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.levelState.currentRoom?.name != spawnRoom || !game.getGameCamera().overlaps(trigger))
+        if (services.levelState.currentRoom?.name != spawnRoom || !services.getGameCamera().overlaps(trigger))
             return@UpdatablesComponent
 
         spawnDelay.update(delta)

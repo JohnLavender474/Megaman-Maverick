@@ -37,7 +37,7 @@ import com.megaman.maverick.game.world.body.*
 import com.megaman.maverick.game.world.contacts.ContactValues
 import kotlin.math.abs
 
-class Penguin(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable {
+class Penguin(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFaceable {
 
     companion object {
         const val TAG = "Penguin"
@@ -65,7 +65,7 @@ class Penguin(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFa
 
     override fun init(vararg params: Any) {
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         addComponent(defineAnimationsComponent())
     }
 

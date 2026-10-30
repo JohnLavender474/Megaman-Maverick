@@ -38,7 +38,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class PipiEgg(game: MegaServices) : AbstractProjectile(game) {
+class PipiEgg(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "PipiEgg"
@@ -54,7 +54,7 @@ class PipiEgg(game: MegaServices) : AbstractProjectile(game) {
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("egg", atlas.findRegion("Pipi/Egg"))
 
             // TODO: shatter region never used
@@ -80,7 +80,7 @@ class PipiEgg(game: MegaServices) : AbstractProjectile(game) {
     override fun onDamageInflictedTo(damageable: IDamageableEntity) = explodeAndDie()
 
     override fun explodeAndDie(vararg params: Any?) {
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.THUMP_SOUND, false)
         spawnBabyBirdies()
         spawnEggShatters()
         destroy()

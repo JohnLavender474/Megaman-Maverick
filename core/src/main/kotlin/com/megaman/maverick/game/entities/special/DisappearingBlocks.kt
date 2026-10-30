@@ -26,7 +26,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
 import java.util.*
 
-class DisappearingBlocks(game: MegaServices) : MegaGameEntity(game), IParentEntity<Block>, IAudioEntity {
+class DisappearingBlocks(services: MegaServices) : MegaGameEntity(services), IParentEntity<Block>, IAudioEntity {
 
     companion object {
         const val TAG = "DisappearingBlocks"
@@ -133,7 +133,7 @@ class DisappearingBlocks(game: MegaServices) : MegaGameEntity(game), IParentEnti
 
                 if (on && blockKey == next) block.animators.values().forEach { it.reset() }
 
-                val gameCamera = game.getGameCamera()
+                val gameCamera = services.getGameCamera()
                 if (!soundRequested && gameCamera.toGameRectangle().overlaps(block.body.getBounds())) {
                     requestToPlaySound(SoundAsset.DISAPPEARING_BLOCK_SOUND, false)
                     soundRequested = true
@@ -146,7 +146,7 @@ class DisappearingBlocks(game: MegaServices) : MegaGameEntity(game), IParentEnti
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullablesComponent = CullablesComponent()
-        val cullable = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        val cullable = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         cullablesComponent.put(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
         return cullablesComponent
     }

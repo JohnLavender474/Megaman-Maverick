@@ -37,7 +37,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class AngryFlameBall(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class AngryFlameBall(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "AngryFlameBall"
@@ -53,7 +53,7 @@ class AngryFlameBall(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIU
     private var spawnY = 0f
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -98,7 +98,7 @@ class AngryFlameBall(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIU
                 body.physics.velocity.setZero()
             }
 
-            bounceDelayTimer.update(game.settings.performance.fixedStep)
+            bounceDelayTimer.update(services.settings.performance.fixedStep)
 
             if (!bounceDelayTimer.isFinished()) body.physics.velocity.setZero()
             else if (bounceDelayTimer.isJustFinished()) {

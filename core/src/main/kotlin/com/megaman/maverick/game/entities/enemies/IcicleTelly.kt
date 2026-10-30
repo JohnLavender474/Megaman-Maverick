@@ -54,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class IcicleTelly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class IcicleTelly(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "IcicleTelly"
@@ -94,7 +94,7 @@ class IcicleTelly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys()
                 .map { it.name.lowercase() }
                 .forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

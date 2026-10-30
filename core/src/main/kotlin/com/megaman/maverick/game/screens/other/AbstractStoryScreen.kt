@@ -51,10 +51,10 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
     override fun show() {
         GameLogger.debug(TAG, "show()")
 
-        music?.let { game.audioMan.playMusic(it) }
+        music?.let { game.audio.playMusic(it) }
         game.getUiCamera().setToDefaultPosition()
 
-        val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        val black = game.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         val w = ConstVals.VIEW_WIDTH * ConstVals.PPM
         val h = ConstVals.VIEW_HEIGHT * ConstVals.PPM
 
@@ -94,7 +94,7 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
     private fun advanceSlide() {
         if (slideQueue.isEmpty) {
             done = true
-            game.audioMan.fadeOutMusic(doneDur)
+            game.audio.fadeOutMusic(doneDur)
             return
         }
 
@@ -109,8 +109,8 @@ abstract class AbstractStoryScreen(protected val game: MegamanMaverickGame) : Ba
     override fun render(delta: Float) {
         if (!done && game.controllerPoller.isJustReleased(MegaControllerButton.START)) {
             done = true
-            game.audioMan.fadeOutMusic(doneDur)
-            game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+            game.audio.fadeOutMusic(doneDur)
+            game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
         }
 
         if (done) {

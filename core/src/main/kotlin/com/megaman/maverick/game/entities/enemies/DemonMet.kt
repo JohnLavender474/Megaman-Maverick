@@ -63,7 +63,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 
-class DemonMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity, IFaceable {
+class DemonMet(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "DemonMet"
@@ -117,7 +117,7 @@ class DemonMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFr
         GameLogger.debug(TAG, "init()")
         damageOverrides.put(Fireball::class, null)
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             DemonMetState.entries.forEach {
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

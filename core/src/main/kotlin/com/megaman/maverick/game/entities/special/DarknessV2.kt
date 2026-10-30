@@ -52,7 +52,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEventListener,
+class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IEventListener,
     IGameShapeOverlappable {
 
     companion object {
@@ -189,7 +189,7 @@ class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEv
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         super.init()
 
         sprite = DarknessTileGrid()
@@ -205,7 +205,7 @@ class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEv
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         key = spawnProps.getOrDefault(ConstKeys.KEY, -1, Int::class)
         spawnProps.get(ConstKeys.ROOM, String::class)!!.split(",").forEach { t -> rooms.add(t) }
@@ -230,7 +230,7 @@ class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEv
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         rooms.clear()
         grid.clear()
@@ -245,7 +245,7 @@ class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEv
 
         when (event.key) {
             EventType.PLAYER_READY -> {
-                darkMode = darkModeOnPlayerReady(game.levelState.currentRoom?.name, rooms)
+                darkMode = darkModeOnPlayerReady(services.levelState.currentRoom?.name, rooms)
                 GameLogger.debug(TAG, "onEvent(): PLAYER_READY: darkMode=$darkMode")
             }
 
@@ -284,7 +284,7 @@ class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEv
                     val radius = event.getProperty(ConstKeys.RADIUS, Int::class)!!
 
                     reusableCircle.setRadius(radius.toFloat()).setCenter(center)
-                    if (!reusableCircle.overlaps(game.getGameCamera().getRotatedBounds())) return
+                    if (!reusableCircle.overlaps(services.getGameCamera().getRotatedBounds())) return
 
                     val radiance = event.getProperty(ConstKeys.RADIANCE, Float::class)!!
 
@@ -327,7 +327,7 @@ class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEv
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val camBounds = game.getGameCamera().getRotatedBounds()
+        val camBounds = services.getGameCamera().getRotatedBounds()
         camBounds.translate(-CAM_BOUNDS_BUFFER * ConstVals.PPM, -CAM_BOUNDS_BUFFER * ConstVals.PPM)
         camBounds.translateSize(2f * CAM_BOUNDS_BUFFER * ConstVals.PPM, 2f * CAM_BOUNDS_BUFFER * ConstVals.PPM)
 
@@ -369,10 +369,10 @@ class DarknessV2(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IEv
                 }
             }
 
-            val beaming = game.levelState.megamanBeam
+            val beaming = services.levelState.megamanBeam
             if (beaming) {
                 val beamCenter =
-                    game.levelState.megamanBeamCenter
+                    services.levelState.megamanBeamCenter
 
                 if (beamCenter != null) {
                     val lightSourceDef = lightSourcePool.fetch()

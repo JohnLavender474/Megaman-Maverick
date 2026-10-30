@@ -29,7 +29,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class LavaDropSupplier(game: MegaServices) : MegaGameEntity(game), IHazard, IBodyEntity, ICullableEntity {
+class LavaDropSupplier(services: MegaServices) : MegaGameEntity(services), IHazard, IBodyEntity, ICullableEntity {
 
     companion object {
         const val TAG = "LavaDropSupplier"

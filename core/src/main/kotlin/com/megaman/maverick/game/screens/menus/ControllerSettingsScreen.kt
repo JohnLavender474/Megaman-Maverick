@@ -147,7 +147,7 @@ class ControllerSettingsScreen(
         )
 
         var row = 12.75f
-        blinkingArrow = BlinkingArrow(game.assMan, Vector2(2.5f * ConstVals.PPM, row * ConstVals.PPM))
+        blinkingArrow = BlinkingArrow(game.assets, Vector2(2.5f * ConstVals.PPM, row * ConstVals.PPM))
 
         val backFontHandle = MegaFontHandle(
             { BACK }, positionX = 3f * ConstVals.PPM, positionY = row * ConstVals.PPM, centerX = false, centerY = false
@@ -219,7 +219,7 @@ class ControllerSettingsScreen(
 
                 loadSelectButtonActionFromPrefs(isKeyboardSettings)?.let { game.players.selectButtonAction = it }
 
-                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
                 return false
             }
@@ -246,7 +246,7 @@ class ControllerSettingsScreen(
             override fun onSelect(delta: Float): Boolean {
                 ControllerUtils.resetSettingsToDefaults(controllerButtons, isKeyboardSettings)
                 game.players.selectButtonAction = SelectButtonAction.NEXT_WEAPON
-                game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+                game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
 
@@ -362,24 +362,24 @@ class ControllerSettingsScreen(
         GameLogger.debug(TAG, "show()")
         if (!initialized) init()
         super.show()
-        game.audioMan.stopMusic()
+        game.audio.stopMusic()
         game.getUiCamera().setToDefaultPosition()
     }
 
     override fun onAnySelection() {
         GameLogger.debug(TAG, "onAnySelection()")
-        game.audioMan.playSound(SoundAsset.SELECT_PING_SOUND, false)
+        game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
     }
 
     override fun onAnyMovement(direction: Direction) {
         GameLogger.debug(TAG, "onAnyMovement(): direction=$direction")
-        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
+        game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
     }
 
     override fun render(delta: Float) {
         if (!isKeyboardSettings && controller == null) {
             GameLogger.error(TAG, "No controller found")
-            game.audioMan.playSound(SoundAsset.ERROR_SOUND, false)
+            game.audio.playSound(SoundAsset.ERROR_SOUND, false)
             backAction.invoke()
             return
         }

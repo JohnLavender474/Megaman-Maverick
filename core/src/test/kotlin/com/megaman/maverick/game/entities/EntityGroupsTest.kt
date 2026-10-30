@@ -20,8 +20,8 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-private class GroupsTestEntity(game: MegaServices, private val callsSuperOnDestroy: Boolean = true) :
-    MegaGameEntity(game) {
+private class GroupsTestEntity(services: MegaServices, private val callsSuperOnDestroy: Boolean = true) :
+    MegaGameEntity(services) {
 
     override fun getType() = EntityType.OTHER
 
@@ -34,12 +34,12 @@ class EntityGroupsTest : DescribeSpec({
 
     lateinit var engine: GameEngine
     lateinit var groups: GroupsSystem
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
 
     beforeEach {
         groups = GroupsSystem()
         engine = GameEngine(systems = Array<GameSystem>().apply { add(groups) })
-        game = testServices(engine = engine)
+        services = testServices(engine = engine)
     }
 
     fun members(group: String) = groups.getEntitiesInGroup(group).toList()
@@ -47,7 +47,7 @@ class EntityGroupsTest : DescribeSpec({
     describe("MegaGameEntity groups") {
 
         it("puts the group spawn property into a GroupsComponent") {
-            val entity = GroupsTestEntity(game)
+            val entity = GroupsTestEntity(services)
 
             entity.spawn(props(ConstKeys.GROUP pairTo "entity_groups_a"))
             engine.update(0f)
@@ -57,7 +57,7 @@ class EntityGroupsTest : DescribeSpec({
         }
 
         it("adds no GroupsComponent when the spawn has no group") {
-            val entity = GroupsTestEntity(game)
+            val entity = GroupsTestEntity(services)
 
             entity.spawn(Properties())
             engine.update(0f)
@@ -66,7 +66,7 @@ class EntityGroupsTest : DescribeSpec({
         }
 
         it("has an empty GroupsComponent when it spawns again with no group") {
-            val entity = GroupsTestEntity(game)
+            val entity = GroupsTestEntity(services)
             entity.spawn(props(ConstKeys.GROUP pairTo "entity_groups_b"))
             engine.update(0f)
             entity.destroy()
@@ -80,7 +80,7 @@ class EntityGroupsTest : DescribeSpec({
         }
 
         it("takes an entity that skips super.onDestroy() out of its group at destroy") {
-            val entity = GroupsTestEntity(game, callsSuperOnDestroy = false)
+            val entity = GroupsTestEntity(services, callsSuperOnDestroy = false)
             entity.spawn(props(ConstKeys.GROUP pairTo "entity_groups_c"))
             engine.update(0f)
 

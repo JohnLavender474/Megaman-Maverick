@@ -20,7 +20,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class SpaceSatellite(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
+class SpaceSatellite(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
 
     companion object {
         const val TAG = "SpaceSatellite"
@@ -31,7 +31,7 @@ class SpaceSatellite(game: MegaServices) : MegaGameEntity(game), ISpritesEntity 
     private var left = false
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
     }

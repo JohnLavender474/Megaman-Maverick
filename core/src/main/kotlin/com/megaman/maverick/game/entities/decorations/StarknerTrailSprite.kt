@@ -22,7 +22,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.Starkner.StarknerState
 
-class StarknerTrailSprite(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
+class StarknerTrailSprite(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
 
     companion object {
         const val TAG = "StarknerTrailSprite"
@@ -38,7 +38,7 @@ class StarknerTrailSprite(game: MegaServices) : MegaGameEntity(game), ISpritesEn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             gdxArrayOf(StarknerState.BLUE, StarknerState.YELLOW, StarknerState.RED).forEach { state ->
                 val region = atlas.findRegion("$TAG/${state.name.lowercase()}")
                 if (region == null) throw IllegalStateException("Region is null for state=$state")

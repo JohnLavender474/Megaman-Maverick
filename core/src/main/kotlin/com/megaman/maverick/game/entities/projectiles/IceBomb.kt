@@ -34,7 +34,7 @@ import com.megaman.maverick.game.entities.explosions.IceBombExplosion
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class IceBomb(game: MegaServices) : AbstractProjectile(game), IFreezerEntity, IAnimatedEntity {
+class IceBomb(services: MegaServices) : AbstractProjectile(services), IFreezerEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "IceBomb"
@@ -43,7 +43,7 @@ class IceBomb(game: MegaServices) : AbstractProjectile(game), IFreezerEntity, IA
     }
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

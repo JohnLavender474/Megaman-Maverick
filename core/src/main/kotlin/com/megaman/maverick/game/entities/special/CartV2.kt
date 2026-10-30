@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class CartV2(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IFaceable {
+class CartV2(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "CartV2"
@@ -74,7 +74,7 @@ class CartV2(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity,
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("move", "idle").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

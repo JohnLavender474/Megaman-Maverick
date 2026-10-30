@@ -45,7 +45,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CaveRocker(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class CaveRocker(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "CaveRocker"
@@ -66,7 +66,7 @@ class CaveRocker(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFa
     override fun init(vararg params: Any) {
         super.init()
         if (standingRegion == null || throwingRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             standingRegion = atlas.findRegion("$TAG/Stand")
             throwingRegion = atlas.findRegion("$TAG/Throw")
         }

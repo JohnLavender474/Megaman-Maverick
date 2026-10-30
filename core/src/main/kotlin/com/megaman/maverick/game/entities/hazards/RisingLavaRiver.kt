@@ -60,7 +60,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.defaultDoUpdate
 import com.megaman.maverick.game.world.body.getBounds
 
-class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IAudioEntity, IEventListener {
 
     companion object {
@@ -138,7 +138,7 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_2.source)
             animDefs.keys().forEach {
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))
@@ -162,8 +162,8 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         val canSpawn = super.canSpawn(spawnProps) &&
-            (game.levelState.currentLevel!! != LevelDefinition.INFERNO_MAN ||
-                !LevelUtils.isInfernoManLevelFrozen(game.state))
+            (services.levelState.currentLevel!! != LevelDefinition.INFERNO_MAN ||
+                !LevelUtils.isInfernoManLevelFrozen(services.gameState))
 
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
 
@@ -174,7 +174,7 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         state = RisingLavaRiverState.DORMANT
 
@@ -205,7 +205,7 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         sprites.clear()
         animators.clear()
@@ -219,18 +219,18 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
 
         when (key) {
             EventType.PLAYER_READY -> {
-                val room = game.levelState.currentRoom!!.name
+                val room = services.levelState.currentRoom!!.name
                 if (room == riseRoom) setLavaToRising() else setLavaToDormant()
             }
             EventType.PLAYER_DONE_DYIN -> setLavaToDormant()
             EventType.BEGIN_ROOM_TRANS ->
                 if (state == RisingLavaRiverState.RISING) {
-                    val room = game.levelState.currentRoom!!.name
+                    val room = services.levelState.currentRoom!!.name
                     if (room != riseRoom) setLavaToStopped()
                 }
             EventType.GATE_INIT_OPENING -> setLavaToStopped()
             EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS -> {
-                val room = game.levelState.currentRoom!!.name
+                val room = services.levelState.currentRoom!!.name
                 if (room == riseRoom) setLavaToRising() else setLavaToDormant()
             }
         }
@@ -292,7 +292,7 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
                         .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
                         .setHeight(EMBER_SPAWN_Y_BUFFER * ConstVals.PPM)
-                        .setCenter(game.getGameCamera().getRotatedBounds().getCenter())
+                        .setCenter(services.getGameCamera().getRotatedBounds().getCenter())
 
                     if (canSpawnBounds.contains(position)) {
                         val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!
@@ -307,10 +307,10 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
                     }
                 }
 
-                if (!game.levelState.roomTransition) {
+                if (!services.levelState.roomTransition) {
                     shakeDelay.update(delta)
                     if (shakeDelay.isFinished()) {
-                        game.eventsMan.submitEvent(
+                        services.events.submitEvent(
                             Event(
                                 EventType.SHAKE_CAM, props(
                                     ConstKeys.INTERVAL pairTo RISE_SHAKE_INTERVAL,
@@ -340,7 +340,7 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
                 velocity.set(0f, -fallSpeed * ConstVals.PPM)
 
                 val maxY = body.getMaxY()
-                val camY = game.getGameCamera().toGameRectangle().getY()
+                val camY = services.getGameCamera().toGameRectangle().getY()
                 if (maxY < camY) {
                     GameLogger.debug(TAG, "update(): falling: maxY=$maxY, camY=$camY")
                     setLavaToDormant()
@@ -360,7 +360,7 @@ class RisingLavaRiver(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
             velocity.y * delta
         )
         val overlap = Intersector.intersectRectangles(
-            game.getGameCamera().getRotatedBounds().toGdxRectangle(),
+            services.getGameCamera().getRotatedBounds().toGdxRectangle(),
             fullBounds.toGdxRectangle(),
             tempRect
         )

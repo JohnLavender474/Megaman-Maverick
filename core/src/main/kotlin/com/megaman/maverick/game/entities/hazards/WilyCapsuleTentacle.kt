@@ -34,7 +34,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.sqrt
 
-class WilyCapsuleTentacle(game: MegaServices) : MegaGameEntity(game), IDrawableShapesEntity, Updatable,
+class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), IDrawableShapesEntity, Updatable,
     IActivatable {
 
     companion object {
@@ -254,7 +254,7 @@ class WilyCapsuleTentacle(game: MegaServices) : MegaGameEntity(game), IDrawableS
     fun lunge(
         target: Vector2 = targetPlayer.body.getCenter(),
         lungeType: LungeType = when {
-            game.state.hardMode -> LungeType.entries.random()
+            services.gameState.hardMode -> LungeType.entries.random()
             else -> UtilMethods.getRandom(LungeType.SIMPLE, LungeType.MULTI_STEP)
         }
     ) {
@@ -416,7 +416,7 @@ class WilyCapsuleTentacle(game: MegaServices) : MegaGameEntity(game), IDrawableS
 
                 val speed = when {
                     coilingBack -> COIL_BACK_SPEED
-                    else -> if (game.state.hardMode) LUNGE_SPEED_HARD else LUNGE_SPEED
+                    else -> if (services.gameState.hardMode) LUNGE_SPEED_HARD else LUNGE_SPEED
                 }
                 val step = speed * delta * ConstVals.PPM
 

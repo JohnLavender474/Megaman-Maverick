@@ -49,7 +49,7 @@ internal fun Megaman.swimBehavior(): IBehavior {
                 Direction.RIGHT -> impulse.set(-swimVel, 0f)
             }.scl(ConstVals.PPM.toFloat())
 
-            if (game.state.containsEnhancement(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
+            if (services.gameState.containsEnhancement(MegaEnhancement.JUMP_BOOST)) impulse.scl(MegaEnhancement.JUMP_BOOST_SCALAR)
 
             body.physics.velocity.add(impulse)
         }

@@ -13,7 +13,7 @@ import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-open class AbstractBlock(game: MegaServices) : Block(game) {
+open class AbstractBlock(services: MegaServices) : Block(services) {
 
     companion object {
         const val TAG = "AbstractBlock"

@@ -4,3 +4,5 @@
 550d67569e64426ea1631b4480320150ddee13a9
 # Entities take MegaServices in place of MegamanMaverickGame (squash of mega-refactor-016c-entity-services; mostly the mechanical constructor-type swap)
 4097749fad4568e56a91e63cf95a7e5fc3062279
+# Rename the services value game to services and the members eventsMan, assMan, audioMan, state to events, assets, audio, gameState (mechanical commit of mega-refactor-016e-service-names)
+1552d49f987444cba93e2fcabed8b4c1fb12a666

@@ -41,7 +41,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.world.body.*
 
-class FireWall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IFaceable {
+class FireWall(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FireWall"
@@ -59,7 +59,7 @@ class FireWall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, 
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put("disintegrate", atlas.findRegion("$TAG/disintegrate"))
             regions.put("fire", atlas.findRegion("$TAG/fire"))
         }

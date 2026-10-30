@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Asteroid(game: MegaServices) : AbstractProjectile(game), IOwnable<IGameEntity> {
+class Asteroid(services: MegaServices) : AbstractProjectile(services), IOwnable<IGameEntity> {
 
     companion object {
         const val TAG = "Asteroid"
@@ -112,7 +112,7 @@ class Asteroid(game: MegaServices) : AbstractProjectile(game), IOwnable<IGameEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put(REGULAR, atlas.findRegion("$TAG/$REGULAR"))
             regions.put(BLUE, atlas.findRegion("$TAG/$BLUE"))
         }
@@ -256,7 +256,7 @@ class Asteroid(game: MegaServices) : AbstractProjectile(game), IOwnable<IGameEnt
         debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.IMPULSE) {
-            if (game.camera.rotating) body.physics.velocity.setZero() else body.physics.velocity.set(impulse)
+            if (services.camera.rotating) body.physics.velocity.setZero() else body.physics.velocity.set(impulse)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

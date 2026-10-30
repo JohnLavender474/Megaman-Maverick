@@ -12,7 +12,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setEntity
 
-open class ShieldBlock(game: MegaServices): Block(game) {
+open class ShieldBlock(services: MegaServices): Block(services) {
 
     private lateinit var shieldFixture: IFixture
 

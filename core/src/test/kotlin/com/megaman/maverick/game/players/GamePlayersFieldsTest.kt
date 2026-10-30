@@ -14,7 +14,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.mockk
 
-private class FieldsTestPlayerEntity(game: MegaServices) : MegaGameEntity(game), IDirectional {
+private class FieldsTestPlayerEntity(services: MegaServices) : MegaGameEntity(services), IDirectional {
     override var direction = Direction.UP
     override fun getType() = EntityType.MEGAMAN
 }

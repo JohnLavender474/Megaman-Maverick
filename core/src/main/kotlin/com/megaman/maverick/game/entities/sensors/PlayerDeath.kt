@@ -19,7 +19,7 @@ import com.megaman.maverick.game.world.body.getBounds
 
 // Unlike `Death`, the `PlayerDeath` entity is NOT added to the world system and applies ONLY to Mega Man.
 // Use this entity if it is guaranteed that ONLY Mega Man will ever make contact with this entity.
-open class PlayerDeath(game: MegaServices) : MegaGameEntity(game), IBodyEntity, Updatable {
+open class PlayerDeath(services: MegaServices) : MegaGameEntity(services), IBodyEntity, Updatable {
 
     companion object {
         const val TAG = "PlayerDeath"

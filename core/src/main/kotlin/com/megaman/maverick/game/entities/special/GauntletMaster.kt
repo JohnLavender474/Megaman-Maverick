@@ -43,7 +43,7 @@ import kotlin.reflect.KClass
  * - `start_delay` (optional): seconds before wave 1 after the player enters the room
  * - `wave_delay` (optional): seconds between waves
  */
-class GauntletMaster(game: MegaServices) : MegaGameEntity(game), IEventListener, IAudioEntity {
+class GauntletMaster(services: MegaServices) : MegaGameEntity(services), IEventListener, IAudioEntity {
 
     companion object {
         const val TAG = "GauntletMaster"
@@ -96,7 +96,7 @@ class GauntletMaster(game: MegaServices) : MegaGameEntity(game), IEventListener,
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         room = spawnProps.get(ConstKeys.ROOM, String::class)!!
         key = spawnProps.get(ConstKeys.KEY, String::class)!!
@@ -118,7 +118,7 @@ class GauntletMaster(game: MegaServices) : MegaGameEntity(game), IEventListener,
         GameLogger.debug(TAG, "onDestroy(): key=$key")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         resetGauntlet()
         waves.clear()
@@ -286,7 +286,7 @@ class GauntletMaster(game: MegaServices) : MegaGameEntity(game), IEventListener,
                         GameLogger.debug(TAG, "update(): key=$key, CLEARED")
                         state = GauntletState.CLEARED
                         requestToPlaySound(SoundAsset.SELECT_PING_SOUND, false)
-                        game.eventsMan.submitEvent(
+                        services.events.submitEvent(
                             Event(EventType.GAUNTLET_CLEARED, props(ConstKeys.KEY pairTo key))
                         )
                     }

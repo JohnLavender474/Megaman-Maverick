@@ -10,7 +10,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-abstract class Switch(game: MegaServices) : MegaGameEntity(game) {
+abstract class Switch(services: MegaServices) : MegaGameEntity(services) {
 
     companion object {
         const val TAG = "Switch"

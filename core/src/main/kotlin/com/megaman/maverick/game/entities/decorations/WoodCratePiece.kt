@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class WoodCratePiece(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity {
+class WoodCratePiece(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity {
 
     companion object {
         const val TAG = "WoodCratePiece"
@@ -46,7 +46,7 @@ class WoodCratePiece(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IS
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             for (i in 0 until 10) regions.put(i, atlas.findRegion("$TAG/$i"))
         }
         super.init()

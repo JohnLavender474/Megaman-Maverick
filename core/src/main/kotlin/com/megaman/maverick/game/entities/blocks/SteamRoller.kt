@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SteamRoller(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IDrawableShapesEntity,
+class SteamRoller(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IDrawableShapesEntity,
     ICullableEntity, IAudioEntity, IFaceable {
 
     companion object {
@@ -108,7 +108,7 @@ class SteamRoller(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpri
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

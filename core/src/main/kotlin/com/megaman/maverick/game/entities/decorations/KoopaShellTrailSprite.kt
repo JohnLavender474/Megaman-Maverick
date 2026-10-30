@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.AnimationUtils
 
-class KoopaShellTrailSprite(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
+class KoopaShellTrailSprite(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
 
     companion object {
         const val TAG = "KoopaShellTrailSprite"
@@ -43,7 +43,7 @@ class KoopaShellTrailSprite(game: MegaServices) : MegaGameEntity(game), ISprites
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_EFFECTS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_EFFECTS.source)
             AnimationUtils.loadRegions(TAG, atlas, ShellColor.entries.map { it.name.lowercase() }, regions)
         }
         super.init()

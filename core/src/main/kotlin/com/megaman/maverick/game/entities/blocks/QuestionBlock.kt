@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-class QuestionBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IActivatable,
+class QuestionBlock(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity, IActivatable,
     IDirectional, IEventListener {
 
     companion object {
@@ -81,7 +81,7 @@ class QuestionBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimated
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -94,7 +94,7 @@ class QuestionBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimated
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -118,7 +118,7 @@ class QuestionBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimated
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         spawnedItem = null
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -189,10 +189,10 @@ class QuestionBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimated
                     )
                 )
 
-                val coins = game.levelState.coins
-                game.levelState.coins = coins + 1
+                val coins = services.levelState.coins
+                services.levelState.coins = coins + 1
 
-                game.audioMan.playSound(SoundAsset.SMB3_COIN_SOUND, false)
+                services.audio.playSound(SoundAsset.SMB3_COIN_SOUND, false)
 
                 return coin
             }

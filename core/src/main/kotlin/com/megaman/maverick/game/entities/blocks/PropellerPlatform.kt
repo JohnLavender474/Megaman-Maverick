@@ -36,7 +36,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setEntity
 
-class PropellerPlatform(game: MegaServices) : Block(game), IMotionEntity, ISpritesEntity, IAnimatedEntity,
+class PropellerPlatform(services: MegaServices) : Block(services), IMotionEntity, ISpritesEntity, IAnimatedEntity,
     IDamagerEntity, IEventListener, IDirectional {
 
     companion object {
@@ -61,7 +61,7 @@ class PropellerPlatform(game: MegaServices) : Block(game), IMotionEntity, ISprit
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -99,14 +99,14 @@ class PropellerPlatform(game: MegaServices) : Block(game), IMotionEntity, ISprit
 
         hidden = false
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         clearMotionDefinitions()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {

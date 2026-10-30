@@ -31,7 +31,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class ElectricBall(game: MegaServices) : AbstractProjectile(game) {
+class ElectricBall(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "ElectricBall"
@@ -44,11 +44,11 @@ class ElectricBall(game: MegaServices) : AbstractProjectile(game) {
     private var large = false
 
     override fun init(vararg params: Any) {
-        if (smallRegion == null) smallRegion = game.assMan.getTextureRegion(
+        if (smallRegion == null) smallRegion = services.assets.getTextureRegion(
             TextureAsset.PROJECTILES_1.source, "Electric/SmallElectric"
         )
         if (largeRegion == null) largeRegion =
-            game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/BigElectric")
+            services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Electric/BigElectric")
         super.init()
         addComponent(defineAnimationsComponent())
     }

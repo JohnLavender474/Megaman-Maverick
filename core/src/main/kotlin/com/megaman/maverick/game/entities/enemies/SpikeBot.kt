@@ -58,7 +58,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SpikeBot(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+class SpikeBot(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -139,7 +139,7 @@ class SpikeBot(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFr
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             SpikeBotType.entries.map { it.name.lowercase() }.forEach { type ->
                 animDefs.keys().forEach { key ->
                     val keyName = key.name.lowercase()

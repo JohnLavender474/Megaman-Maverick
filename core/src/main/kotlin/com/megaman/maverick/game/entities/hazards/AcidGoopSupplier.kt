@@ -31,7 +31,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class AcidGoopSupplier(game: MegaServices) : MegaGameEntity(game), IHazard, IBodyEntity, ICullableEntity {
+class AcidGoopSupplier(services: MegaServices) : MegaGameEntity(services), IHazard, IBodyEntity, ICullableEntity {
 
     companion object {
         const val TAG = "AcidGoopSupplier"
@@ -77,7 +77,7 @@ class AcidGoopSupplier(game: MegaServices) : MegaGameEntity(game), IHazard, IBod
     private fun resetSpawnDelay() {
         val minDelay: Float
         val maxDelay: Float
-        if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+        if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) {
             minDelay = MIN_SPAWN_DELAY_HARD
             maxDelay = MAX_SPAWN_DELAY_HARD
         } else {

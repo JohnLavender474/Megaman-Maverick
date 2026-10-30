@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import kotlin.math.PI
 
-class SwingingPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGameEntity>, ISpritesEntity, IMotionEntity,
+class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<MegaGameEntity>, ISpritesEntity, IMotionEntity,
     IEventListener {
 
     companion object {
@@ -76,7 +76,7 @@ class SwingingPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGame
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             regions.put(ConstKeys.PLATFORM, atlas.findRegion("$TAG/${ConstKeys.PLATFORM}"))
             regions.put(ConstKeys.RING, atlas.findRegion("$TAG/${ConstKeys.RING}"))
         }
@@ -112,11 +112,11 @@ class SwingingPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGame
             target?.let {
                 body.physics.velocity.set(it)
                     .sub(body.getPositionPoint(Position.TOP_CENTER))
-                    .scl(1f / game.settings.performance.fixedStep)
+                    .scl(1f / services.settings.performance.fixedStep)
             }
         }
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
     }
 
     override fun onDestroy() {
@@ -131,7 +131,7 @@ class SwingingPlatform(game: MegaServices) : Block(game), IParentEntity<MegaGame
 
         target = null
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {

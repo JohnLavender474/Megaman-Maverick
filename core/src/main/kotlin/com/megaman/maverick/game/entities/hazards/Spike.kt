@@ -50,7 +50,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-open class Spike(game: MegaServices) : MegaGameEntity(game), IChildEntity, IBodyEntity, ISpritesEntity,
+open class Spike(services: MegaServices) : MegaGameEntity(services), IChildEntity, IBodyEntity, ISpritesEntity,
     IAnimatedEntity, ICullableEntity, IDirectional, IEventListener {
 
     companion object {
@@ -90,7 +90,7 @@ open class Spike(game: MegaServices) : MegaGameEntity(game), IChildEntity, IBody
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
         super.init()
         addComponent(CullablesComponent())
         addComponent(defineBodyComponent())
@@ -102,7 +102,7 @@ open class Spike(game: MegaServices) : MegaGameEntity(game), IChildEntity, IBody
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
@@ -117,7 +117,7 @@ open class Spike(game: MegaServices) : MegaGameEntity(game), IChildEntity, IBody
         direction = when {
             spawnProps.containsKey(ConstKeys.DIRECTION) ->
                 Direction.valueOf(spawnProps.get(ConstKeys.DIRECTION, String::class)!!.uppercase())
-            else -> game.gravity.direction
+            else -> services.gravity.direction
         }
 
         val gravityOn = spawnProps.getOrDefault(ConstKeys.GRAVITY_ON, false, Boolean::class)
@@ -189,7 +189,7 @@ open class Spike(game: MegaServices) : MegaGameEntity(game), IChildEntity, IBody
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         block?.destroy()
         block = null
@@ -205,7 +205,7 @@ open class Spike(game: MegaServices) : MegaGameEntity(game), IChildEntity, IBody
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (followMegamanDir) direction = game.gravity.direction
+        if (followMegamanDir) direction = services.gravity.direction
     })
 
     private fun defineBodyComponent(): BodyComponent {

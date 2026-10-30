@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.world.body.*
 
-class Wanaan(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFreezableEntity,
+class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFreezableEntity,
     IDirectional {
 
     companion object {
@@ -87,7 +87,7 @@ class Wanaan(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAni
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()

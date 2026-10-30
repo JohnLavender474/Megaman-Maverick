@@ -26,7 +26,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-open class DynamicBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IUpdatableEntity,
+open class DynamicBlock(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IUpdatableEntity,
     IDrawableShapesEntity {
 
     companion object {

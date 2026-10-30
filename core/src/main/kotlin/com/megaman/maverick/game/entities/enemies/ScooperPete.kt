@@ -51,7 +51,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class ScooperPete(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable, ILightSource {
+class ScooperPete(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable, ILightSource {
 
     companion object {
         const val TAG = "ScooperPete"
@@ -122,7 +122,7 @@ class ScooperPete(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

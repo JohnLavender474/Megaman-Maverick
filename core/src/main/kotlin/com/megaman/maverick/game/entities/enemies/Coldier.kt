@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Coldier(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class Coldier(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Coldier"
@@ -106,7 +106,7 @@ class Coldier(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFacea
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             val keys = Array<String>().also {
                 it.addAll("before_big_blow", "before_small_blow", "frozen")
                 ColdierState.entries.forEach { state -> it.add(state.name.lowercase()) }

@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.projectiles.CactusMissile
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CactusLauncher(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IParentEntity<CactusMissile>,
+class CactusLauncher(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IParentEntity<CactusMissile>,
     IAnimatedEntity {
 
     companion object {
@@ -69,7 +69,7 @@ class CactusLauncher(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("fire", "reload", "wait").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

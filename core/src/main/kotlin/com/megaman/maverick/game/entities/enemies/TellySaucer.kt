@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class TellySaucer(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IMotionEntity,
+class TellySaucer(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IMotionEntity,
     IDirectional {
 
     companion object {
@@ -87,7 +87,7 @@ class TellySaucer(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("spin", "flash", "collapsed").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -148,7 +148,7 @@ class TellySaucer(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
         updatablesComponent.add update@{ delta ->
             direction = targetPlayer.direction
 
-            if (game.camera.rotating) {
+            if (services.camera.rotating) {
                 body.physics.velocity.setZero()
 
                 rayTimer.setToEnd()
@@ -218,7 +218,7 @@ class TellySaucer(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (game.camera.rotating) "collapsed" else if (raying) "flash" else "spin" }
+                .setKeySupplier { if (services.camera.rotating) "collapsed" else if (raying) "flash" else "spin" }
                 .addAnimations(
                     "flash" pairTo Animation(regions["flash"], 2, 1, 0.1f, true),
                     "spin" pairTo Animation(regions["spin"], 3, 2, 0.1f, true)

@@ -49,7 +49,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DuoBallCanon(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "DuoBallCanon"
@@ -127,7 +127,7 @@ class DuoBallCanon(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             val keys = gdxArrayOf("frozen")
             DuoBallCanonDirection.entries.forEach { direction ->
                 val key = direction.name.lowercase()

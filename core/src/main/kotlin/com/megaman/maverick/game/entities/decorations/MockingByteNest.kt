@@ -37,7 +37,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
-class MockingByteNest(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
+class MockingByteNest(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IOwnable<MockingByte> {
 
     companion object {
@@ -58,7 +58,7 @@ class MockingByteNest(game: MegaServices) : MegaGameEntity(game), ISpritesEntity
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())

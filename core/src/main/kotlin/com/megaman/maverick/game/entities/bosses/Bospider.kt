@@ -64,7 +64,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class Bospider(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAnimatedEntity,
+class Bospider(services: MegaServices) : AbstractBoss(services, size = Size.LARGE), IAnimatedEntity,
     IParentEntity<BabySpider>, IFreezableEntity, IFireableEntity {
 
     companion object {
@@ -155,7 +155,7 @@ class Bospider(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -199,7 +199,7 @@ class Bospider(game: MegaServices) : AbstractBoss(game, size = Size.LARGE), IAni
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
         super.onReady()
-        if (!mini) game.audioMan.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
+        if (!mini) services.audio.playMusic(MusicAsset.MM7_FINAL_BOSS_LOOP_MUSIC, true)
     }
 
     override fun takeDamageFrom(damager: IDamagerEntity): Boolean {

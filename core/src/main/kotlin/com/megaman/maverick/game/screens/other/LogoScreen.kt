@@ -94,7 +94,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
         )
         text.add(byFansText)
 
-        val logoRegion = game.assMan.getTextureRegion(TextureAsset.UI_1.source, LOGO_REGION_KEY)
+        val logoRegion = game.assets.getTextureRegion(TextureAsset.UI_1.source, LOGO_REGION_KEY)
         val (rows, columns, durations, loop) = logoAnimDef
         logoAnim = Animation(logoRegion, rows, columns, durations, loop)
 
@@ -103,7 +103,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
 
         fadeOut = Fade(Fade.FadeType.FADE_OUT, FADE_OUT_DUR)
 
-        val black = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        val black = game.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         fadeOut.setRegion(black)
         fadeOut.setPosition(0f, 0f)
         fadeOut.setWidth(ConstVals.VIEW_WIDTH * ConstVals.PPM)
@@ -184,7 +184,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
                 stateQueue.isEmpty -> onCompletion()
 
                 currentState == LogoScreenState.FADE_IN_LOGO ->
-                    game.audioMan.playMusic(MusicAsset.MM6_CAPCOM_LOGO_MUSIC, false)
+                    game.audio.playMusic(MusicAsset.MM6_CAPCOM_LOGO_MUSIC, false)
             }
         }
     }

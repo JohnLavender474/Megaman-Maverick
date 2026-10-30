@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class IceFox(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "IceFox"
@@ -90,7 +90,7 @@ class IceFox(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceab
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -110,8 +110,8 @@ class IceFox(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceab
 
         timers = orderedMapOf(
             IceFoxState.STAND pairTo Timer(STAND_DUR),
-            IceFoxState.SHOOT pairTo Timer(if (game.state.hardMode) SHOOT_DUR_HARD else SHOOT_DUR).also { timer ->
-                val shots = if (game.state.getDifficultyMode() == DifficultyMode.HARD) SHOTS_HARD else SHOTS
+            IceFoxState.SHOOT pairTo Timer(if (services.gameState.hardMode) SHOOT_DUR_HARD else SHOOT_DUR).also { timer ->
+                val shots = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) SHOTS_HARD else SHOTS
                 for (i in 1..shots) {
                     val time = i * SHOOT_DELAY
                     val runnable = TimeMarkedRunnable(time) { shoot() }
@@ -135,7 +135,7 @@ class IceFox(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceab
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (game.camera.rotating) return@add
+            if (services.camera.rotating) return@add
 
             val timer = timers[currentState]
             timer.update(delta)

@@ -22,7 +22,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 
-class HealthBulb(game: MegaServices) : AbstractEnergyItem(game), IAnimatedEntity {
+class HealthBulb(services: MegaServices) : AbstractEnergyItem(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "HealthBulb"
@@ -37,7 +37,7 @@ class HealthBulb(game: MegaServices) : AbstractEnergyItem(game), IAnimatedEntity
         GameLogger.debug(TAG, "init()")
         if (!regions.containsKey(getTag())) {
             val map = ObjectMap<String, TextureRegion>()
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ITEMS_1.source)
             animDefs.keys().forEach { key -> map.put(key, atlas.findRegion("${getTag()}/$key")) }
             regions.put(getTag(), map)
         }
@@ -48,7 +48,7 @@ class HealthBulb(game: MegaServices) : AbstractEnergyItem(game), IAnimatedEntity
     override fun contactWithPlayer(player: MegaGameEntity) {
         GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
         destroy()
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.ADD_PLAYER_HEALTH, props(
                     ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT,

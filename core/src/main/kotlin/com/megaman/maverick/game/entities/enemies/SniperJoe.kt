@@ -63,7 +63,7 @@ import com.megaman.maverick.game.utils.misc.GravityUtils
 import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 
-class SniperJoe(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IScalableGravityEntity,
+class SniperJoe(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IScalableGravityEntity,
     IDirectional, IFaceable, IFreezableEntity {
 
     companion object {
@@ -168,7 +168,7 @@ class SniperJoe(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, ISca
     private var scaleBullet = true
 
     private val shouldUpdate: Boolean
-        get() = !game.camera.rotating
+        get() = !services.camera.rotating
     private val shielded: Boolean
         get() = currentState != SniperJoeState.SHOOT
 
@@ -178,7 +178,7 @@ class SniperJoe(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, ISca
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.forEach { entry1 ->
                 val type = entry1.key
                 val map = entry1.value

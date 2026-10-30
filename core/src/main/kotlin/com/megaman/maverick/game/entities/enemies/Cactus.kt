@@ -66,7 +66,7 @@ import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Cactus(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFreezableEntity, IFaceable {
+class Cactus(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "Cactus"
@@ -163,7 +163,7 @@ class Cactus(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFreeza
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             CactusType.entries.forEach { type ->
                 animDefs.keys().forEach { key ->
                     val fullKey = "${type.name.lowercase()}/$key"

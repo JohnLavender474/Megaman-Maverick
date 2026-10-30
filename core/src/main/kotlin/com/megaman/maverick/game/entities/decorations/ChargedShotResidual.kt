@@ -29,7 +29,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class ChargedShotResidual(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class ChargedShotResidual(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "ChargedShotResidual"
@@ -47,7 +47,7 @@ class ChargedShotResidual(game: MegaServices) : MegaGameEntity(game), ISpritesEn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             regions.put("full", atlas.findRegion("FullChargedShotResidual"))
             regions.put("half", atlas.findRegion("ChargedShot_Residual_Half"))
         }

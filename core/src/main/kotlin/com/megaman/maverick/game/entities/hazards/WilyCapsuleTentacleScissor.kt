@@ -47,7 +47,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class WilyCapsuleTentacleScissor(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class WilyCapsuleTentacleScissor(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDamagerEntity, IHazard, IOwnable<WilyCapsuleTentacle> {
 
     companion object {
@@ -86,7 +86,7 @@ class WilyCapsuleTentacleScissor(game: MegaServices) : MegaGameEntity(game), IBo
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.WILY_FINAL_BOSS.source)
             regions.put(CLOSED_KEY, atlas.findRegion("phase_2/scissors/closed"))
             regions.put(CHOP_KEY, atlas.findRegion("phase_2/scissors/chop"))
         }

@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class ReactorManProjectile(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
+class ReactorManProjectile(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "ReactorManProjectile"
@@ -139,7 +139,7 @@ class ReactorManProjectile(game: MegaServices) : AbstractProjectile(game), IAnim
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -256,7 +256,7 @@ class ReactorManProjectile(game: MegaServices) : AbstractProjectile(game), IAnim
 
         val overlapDirection = getOverlapPushDirection(body.getBounds(), shape) ?: Direction.UP
 
-        val trajectories = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+        val trajectories = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
             SHATTER_TRAJS_HARD else SHATTER_TRAJS
 
         trajectories.get(overlapDirection).forEach { trajectory ->

@@ -29,7 +29,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Lift(game: MegaServices) : Block(game), ISpritesEntity, IDirectional {
+class Lift(services: MegaServices) : Block(services), ISpritesEntity, IDirectional {
 
     enum class LiftState {
         LIFTING, FALLING, STOPPED
@@ -53,7 +53,7 @@ class Lift(game: MegaServices) : Block(game), ISpritesEntity, IDirectional {
 
     override fun init(vararg params: Any) {
         super.init()
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, "Lift")
         addComponent(defineSpritesComponent())
         addComponent(defineUpdatablesComponent())
     }

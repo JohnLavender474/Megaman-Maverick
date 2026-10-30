@@ -75,7 +75,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
 
-class Laser(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IHazard, IDamagerEntity,
+class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IHazard, IDamagerEntity,
     ILaserEntity, IAudioEntity, IActivatable, IOwnable<MegaGameEntity>, IChildEntity {
 
     companion object {
@@ -176,7 +176,7 @@ class Laser(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region =
-            game.assMan.getTextureRegion(TextureAsset.COLORS.source, "${ConstKeys.BRIGHT}_${ConstKeys.RED}")
+            services.assets.getTextureRegion(TextureAsset.COLORS.source, "${ConstKeys.BRIGHT}_${ConstKeys.RED}")
         super.init()
         addComponent(AudioComponent())
         addComponent(SpritesComponent())
@@ -329,7 +329,7 @@ class Laser(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEnt
                     )
                 )
 
-                if (game.getGameCamera().getRotatedBounds().contains(shardsPosition))
+                if (services.getGameCamera().getRotatedBounds().contains(shardsPosition))
                     requestToPlaySound(SoundAsset.DINK_SOUND, false)
             }
 

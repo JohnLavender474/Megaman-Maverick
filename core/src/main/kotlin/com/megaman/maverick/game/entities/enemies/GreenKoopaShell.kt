@@ -58,7 +58,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.world.body.*
 
-class GreenKoopaShell(game: MegaServices) : AbstractEnemy(game), IFaceable {
+class GreenKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceable {
 
     companion object {
         const val TAG = "GreenKoopaShell"
@@ -95,7 +95,7 @@ class GreenKoopaShell(game: MegaServices) : AbstractEnemy(game), IFaceable {
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         addComponent(defineAnimationsComponent())

@@ -16,7 +16,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import kotlin.math.abs
 
-open class FeetRiseSinkBlock(game: MegaServices) : Block(game) {
+open class FeetRiseSinkBlock(services: MegaServices) : Block(services) {
 
     companion object {
         const val TAG = "FeetRiseSinkBlock"

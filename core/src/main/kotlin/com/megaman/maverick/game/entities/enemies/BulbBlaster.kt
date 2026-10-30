@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
 // implements `IBossListener` to ensure is destroyed after 2nd Desert Man fight
-class BulbBlaster(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, ILightSource, IAnimatedEntity, IMotionEntity,
+class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, ILightSource, IAnimatedEntity, IMotionEntity,
     IBossListener, IEventListener {
 
     companion object {
@@ -86,7 +86,7 @@ class BulbBlaster(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (lightRegion == null || darkRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             lightRegion = atlas.findRegion("$TAG/Light")
             darkRegion = atlas.findRegion("$TAG/Dark")
             frozenRegion = atlas.findRegion("$TAG/frozen")
@@ -100,7 +100,7 @@ class BulbBlaster(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, I
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = if (spawnProps.containsKey(ConstKeys.POSITION))
             spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -138,7 +138,7 @@ class BulbBlaster(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, I
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
 
         clearMotionDefinitions()
 

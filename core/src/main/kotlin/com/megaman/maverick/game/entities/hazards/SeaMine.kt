@@ -56,7 +56,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class SeaMine(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class SeaMine(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IDrawableShapesEntity, IDamagerEntity, IHazard {
 
     companion object {
@@ -85,7 +85,7 @@ class SeaMine(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -104,13 +104,13 @@ class SeaMine(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesE
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        val blowDur = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+        val blowDur = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
             TIME_TO_BLOW_HARD else TIME_TO_BLOW
         blowTimer.resetDuration(blowDur)
 
         triggered = false
 
-        val sensorRadius = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+        val sensorRadius = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
             SENSOR_RADIUS_HARD else SENSOR_RADIUS
         sensor.setRadius(sensorRadius * ConstVals.PPM)
     }
@@ -139,7 +139,7 @@ class SeaMine(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesE
         if (!triggered && targetPlayer.body.getBounds().overlaps(sensor)) trigger()
 
         if (triggered) {
-            val speed = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+            val speed = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
                 SPEED_HARD else SPEED
 
             val velocity = GameObjectPools.fetch(Vector2::class)
@@ -183,8 +183,8 @@ class SeaMine(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesE
         val cullEvents =
             objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
 
         val cullOutOfBounds = getGameCameraCullingLogic(this)
 

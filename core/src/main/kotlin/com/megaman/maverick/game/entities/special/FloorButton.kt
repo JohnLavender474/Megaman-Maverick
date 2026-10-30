@@ -63,7 +63,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FloorButton(game: MegaServices) : Switch(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class FloorButton(services: MegaServices) : Switch(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity {
 
     companion object {
@@ -81,7 +81,7 @@ class FloorButton(game: MegaServices) : Switch(game), IBodyEntity, ISpritesEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SPECIALS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("down", "switch", "up").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
@@ -143,7 +143,7 @@ class FloorButton(game: MegaServices) : Switch(game), IBodyEntity, ISpritesEntit
 
     private fun onActivate() {
         GameLogger.debug(TAG, "onActivate()")
-        game.eventsMan.submitEvent(Event(EventType.ACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
+        services.events.submitEvent(Event(EventType.ACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
     }
 
     override fun onBeginSwitchToUp() {
@@ -154,7 +154,7 @@ class FloorButton(game: MegaServices) : Switch(game), IBodyEntity, ISpritesEntit
 
     private fun onDeactivate() {
         GameLogger.debug(TAG, "onDeactivate()")
-        game.eventsMan.submitEvent(Event(EventType.DEACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
+        services.events.submitEvent(Event(EventType.DEACTIVATE_SWITCH, props(ConstKeys.KEY pairTo key)))
     }
 
     override fun onFinishSwitchToDown() {

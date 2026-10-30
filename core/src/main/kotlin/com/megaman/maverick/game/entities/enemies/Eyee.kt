@@ -48,7 +48,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.min
 
-class Eyee(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity {
+class Eyee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Eyee"
@@ -80,7 +80,7 @@ class Eyee(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreeza
         get() = loop.getCurrent()
 
     private val canMove: Boolean
-        get() = !game.camera.rotating
+        get() = !services.camera.rotating
 
     private val waitTimer = Timer(WAIT_DUR)
 
@@ -94,7 +94,7 @@ class Eyee(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreeza
         GameLogger.debug(TAG, "init()")
         super.init()
         if (openRegion == null || blinkRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             openRegion = atlas.findRegion("$TAG/Open")
             blinkRegion = atlas.findRegion("$TAG/Blink")
             frozenRegion = atlas.findRegion("$TAG/frozen")

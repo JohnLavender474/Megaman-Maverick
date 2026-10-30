@@ -34,7 +34,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class TeardropBlast(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class TeardropBlast(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "TeardropBlast"
@@ -44,7 +44,7 @@ class TeardropBlast(game: MegaServices) : AbstractProjectile(game), IAnimatedEnt
     private var rotation = 0f
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

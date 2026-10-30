@@ -20,11 +20,11 @@ class MegaEntityFactoryTest : DescribeSpec({
             val services = testServices(engine = GameEngine())
             val atlas = mockk<TextureAtlas>()
             every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-            every { services.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
+            every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
             MegaEntityFactory.reset()
             MegaEntityFactory.init(services)
 
-            MegaEntityFactory.fetch(Met::class)!!.game shouldBeSameInstanceAs services
+            MegaEntityFactory.fetch(Met::class)!!.services shouldBeSameInstanceAs services
         }
     }
 })

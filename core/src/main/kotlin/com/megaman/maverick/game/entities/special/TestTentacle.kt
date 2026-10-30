@@ -166,7 +166,7 @@ import kotlin.math.sqrt
  * | `wave_amplitude` | Float              | 0.5                      | Wave amplitude scalar              |
  * | `wave_phase_offset` | Float           | 1.25                     | Per-joint phase offset (radians)   |
  */
-class TestTentacle(game: MegaServices) : MegaGameEntity(game), IDrawableShapesEntity, Updatable {
+class TestTentacle(services: MegaServices) : MegaGameEntity(services), IDrawableShapesEntity, Updatable {
 
     companion object {
         const val TAG = "TestTentacle"

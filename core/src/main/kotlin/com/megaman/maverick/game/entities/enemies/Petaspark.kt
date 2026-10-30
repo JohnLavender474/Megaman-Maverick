@@ -43,7 +43,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
 // TODO: Currently a failed experiment, but might be worth revisiting...
-class Petaspark(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFaceable {
+class Petaspark(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Petaspark"
@@ -82,7 +82,7 @@ class Petaspark(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IFac
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { state ->
                 val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

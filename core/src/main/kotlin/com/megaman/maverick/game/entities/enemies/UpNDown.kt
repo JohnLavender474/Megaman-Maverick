@@ -38,7 +38,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class UpNDown(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFaceable, IAnimatedEntity {
+class UpNDown(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFaceable, IAnimatedEntity {
 
     companion object {
         const val TAG = "UpNDown"
@@ -62,7 +62,7 @@ class UpNDown(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFac
 
     override fun init(vararg params: Any) {
         if (redRegion == null || blueRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             redRegion = atlas.findRegion("UpNDown/Red")
             blueRegion = atlas.findRegion("UpNDown/Blue")
         }

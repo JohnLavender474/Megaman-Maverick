@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 
 // convenience implementation that joins `GravityChange`, `Force`, and `ForceDecoration` into one entity
-class DecoratedGravityForce(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
+class DecoratedGravityForce(services: MegaServices) : MegaGameEntity(services), ICullableEntity {
 
     companion object {
         const val TAG = "GravityForce"
@@ -114,7 +114,7 @@ class DecoratedGravityForce(game: MegaServices) : MegaGameEntity(game), ICullabl
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOnOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        val cullOnOutOfBounds = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOnOutOfBounds))
     }
 }

@@ -51,7 +51,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
-class CactusMissile(game: MegaServices) : AbstractProjectile(game), IHealthEntity, IAnimatedEntity, IDamageableEntity {
+class CactusMissile(services: MegaServices) : AbstractProjectile(services), IHealthEntity, IAnimatedEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "CactusMissile"
@@ -86,7 +86,7 @@ class CactusMissile(game: MegaServices) : AbstractProjectile(game), IHealthEntit
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("fly", "blink").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

@@ -54,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class GreenKoopa(game: MegaServices) : AbstractEnemy(game), IFaceable {
+class GreenKoopa(services: MegaServices) : AbstractEnemy(services), IFaceable {
 
     companion object {
         const val TAG = "GreenKoopa"
@@ -88,7 +88,7 @@ class GreenKoopa(game: MegaServices) : AbstractEnemy(game), IFaceable {
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         addComponent(defineAnimationsComponent())
@@ -214,7 +214,7 @@ class GreenKoopa(game: MegaServices) : AbstractEnemy(game), IFaceable {
                 // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for the
                 //  second playable character (Proto Man item)
                 player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
-                game.audioMan.playSound(SoundAsset.SWIM_SOUND, false)
+                services.audio.playSound(SoundAsset.SWIM_SOUND, false)
 
                 bumpedNoDmgTimer.reset()
             }

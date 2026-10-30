@@ -35,7 +35,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
 
-class InfernoMeteorShower(game: MegaServices) : MegaGameEntity(game), ICullableEntity, IDirectional {
+class InfernoMeteorShower(services: MegaServices) : MegaGameEntity(services), ICullableEntity, IDirectional {
 
     companion object {
         const val TAG = "InfernoMeteorShower"
@@ -78,7 +78,7 @@ class InfernoMeteorShower(game: MegaServices) : MegaGameEntity(game), ICullableE
     }
 
     override fun canSpawn(spawnProps: Properties) = super.canSpawn(spawnProps) &&
-        !LevelUtils.isInfernoManLevelFrozen(game.state)
+        !LevelUtils.isInfernoManLevelFrozen(services.gameState)
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
@@ -123,7 +123,7 @@ class InfernoMeteorShower(game: MegaServices) : MegaGameEntity(game), ICullableE
 
     private fun shakeRoom() {
         GameLogger.debug(TAG, "shakeRoom()")
-        game.eventsMan.submitEvent(
+        services.events.submitEvent(
             Event(
                 EventType.SHAKE_CAM, props(
                     ConstKeys.INTERVAL pairTo SHAKE_INTERVAL,
@@ -142,7 +142,7 @@ class InfernoMeteorShower(game: MegaServices) : MegaGameEntity(game), ICullableE
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (game.levelState.roomTransition) return@UpdatablesComponent
+        if (services.levelState.roomTransition) return@UpdatablesComponent
 
         val cooldown = timers["cooldown"]
         when {

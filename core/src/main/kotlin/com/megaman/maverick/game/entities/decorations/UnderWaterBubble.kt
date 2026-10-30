@@ -30,7 +30,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import kotlin.math.floor
 
-class UnderWaterBubble(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity,
+class UnderWaterBubble(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity,
     IDirectional {
 
     companion object {
@@ -50,7 +50,7 @@ class UnderWaterBubble(game: MegaServices) : MegaGameEntity(game), ICullableEnti
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -84,7 +84,7 @@ class UnderWaterBubble(game: MegaServices) : MegaGameEntity(game), ICullableEnti
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         position.add(velocity.x * delta, velocity.y * delta)
 
-        if (!game.getGameCamera().getRotatedBounds().contains(position)) {
+        if (!services.getGameCamera().getRotatedBounds().contains(position)) {
             GameLogger.debug(TAG, "update(): out of game cam, destroy")
             destroy()
             return@UpdatablesComponent

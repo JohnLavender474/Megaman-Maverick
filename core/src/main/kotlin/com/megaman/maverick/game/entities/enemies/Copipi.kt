@@ -35,7 +35,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class Copipi(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity, IFaceable {
+class Copipi(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Copipi"
@@ -54,7 +54,7 @@ class Copipi(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFree
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "${Pipi.TAG}/$TAG")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "${Pipi.TAG}/$TAG")
         super.init()
         addComponent(defineAnimationsComponent())
         putProperty(ConstKeys.ENTITY_KILLED_BY_DEATH_FIXTURE, false)

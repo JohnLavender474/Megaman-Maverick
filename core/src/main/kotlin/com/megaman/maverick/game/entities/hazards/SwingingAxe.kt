@@ -39,7 +39,7 @@ import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class SwingingAxe(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IBodyEntity, IMotionEntity,
+class SwingingAxe(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IBodyEntity, IMotionEntity,
     IDrawableShapesEntity {
 
     companion object {
@@ -58,7 +58,7 @@ class SwingingAxe(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IB
     private val debugSwingRotationTimer = Timer(DEBUG_SWING_ROTATION_SPEED)
 
     override fun init(vararg params: Any) {
-        if (textureRegion == null) textureRegion = game.assMan.getTextureRegion(
+        if (textureRegion == null) textureRegion = services.assets.getTextureRegion(
             TextureAsset.HAZARDS_1.source, "SwingingAxe_HandleEndCentered"
         )
         addComponent(DrawableShapesComponent(debug = true))

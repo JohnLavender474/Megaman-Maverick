@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class FlameHeadThrower(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class FlameHeadThrower(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -69,7 +69,7 @@ class FlameHeadThrower(game: MegaServices) : AbstractEnemy(game, size = Size.MED
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("stand", atlas.findRegion("$TAG/Stand"))
             regions.put("throw", atlas.findRegion("$TAG/Throw"))
         }

@@ -17,7 +17,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import kotlin.math.sqrt
 
-class WavyTentacleOfJoints(game: MegaServices) : MegaGameEntity(game), Updatable {
+class WavyTentacleOfJoints(services: MegaServices) : MegaGameEntity(services), Updatable {
 
     companion object {
         const val TAG = "WavyTentacleOfJoints"

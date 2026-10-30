@@ -147,8 +147,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                     )
                     spawners.add(spawner)
 
-                    game.eventsMan.addListener(spawner)
-                    disposables.add { game.eventsMan.removeListener(spawner) }
+                    game.events.addListener(spawner)
+                    disposables.add { game.events.removeListener(spawner) }
                 }
 
                 SpawnType.SPAWN_EVENT -> {
@@ -170,8 +170,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
 
                     GameLogger.debug(TAG, "build(): adding SPAWN_EVENT spawne: entity=$name")
 
-                    game.eventsMan.addListener(spawner)
-                    disposables.add { game.eventsMan.removeListener(spawner) }
+                    game.events.addListener(spawner)
+                    disposables.add { game.events.removeListener(spawner) }
                 }
 
                 else -> {

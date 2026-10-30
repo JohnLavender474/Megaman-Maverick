@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.exp
 import kotlin.math.max
 
-class MagFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class MagFly(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFaceable {
 
     companion object {
         const val TAG = "MagFly"
@@ -72,7 +72,7 @@ class MagFly(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFace
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         addComponent(defineAnimationsComponent())
     }
 

@@ -38,7 +38,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class SniperJoeShield(game: MegaServices) : AbstractProjectile(game), IFaceable {
+class SniperJoeShield(services: MegaServices) : AbstractProjectile(services), IFaceable {
 
     override var owner: IGameEntity? = null
 
@@ -61,7 +61,7 @@ class SniperJoeShield(game: MegaServices) : AbstractProjectile(game), IFaceable 
 
     override fun init(vararg params: Any) {
         if (orangeRegion == null || blueRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ITEMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ITEMS_1.source)
             orangeRegion = atlas.findRegion("$TAG/$ORANGE_TYPE")
             blueRegion = atlas.findRegion("$TAG/$BLUE_TYPE")
         }

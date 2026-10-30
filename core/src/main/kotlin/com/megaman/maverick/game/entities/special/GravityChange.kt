@@ -24,7 +24,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class GravityChange(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
+class GravityChange(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity {
 
     private lateinit var gravityChangeFixture: Fixture
 

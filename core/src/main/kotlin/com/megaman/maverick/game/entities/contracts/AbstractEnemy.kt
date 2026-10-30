@@ -70,11 +70,11 @@ import com.megaman.maverick.game.world.body.isSensing
 import kotlin.reflect.KClass
 
 abstract class AbstractEnemy(
-    game: MegaServices,
+    services: MegaServices,
     dmgDuration: Float = DEFAULT_DMG_DURATION,
     dmgBlinkBlur: Float = DEFAULT_DMG_BLINK_DUR,
     override var size: Size = Size.MEDIUM
-) : AbstractHealthEntity(game, dmgDuration, dmgBlinkBlur), IDamagerEntity, IBodyEntity, IAudioEntity, ISpritesEntity,
+) : AbstractHealthEntity(services, dmgDuration, dmgBlinkBlur), IDamagerEntity, IBodyEntity, IAudioEntity, ISpritesEntity,
     ICullableEntity, ISizable {
 
     companion object {
@@ -101,7 +101,7 @@ abstract class AbstractEnemy(
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
             Life::class pairTo {
                 when {
-                    it.game.state.getLives(it.targetPlayer.playerSlot!!) < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
+                    it.services.gameState.getLives(it.targetPlayer.playerSlot!!) < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
                     else -> LOW_LIFE_CHANCE
                 }
             },
@@ -212,7 +212,7 @@ abstract class AbstractEnemy(
             ) as () -> GameRectangle
 
             val cullOnOutOfBounds = getGameCameraCullingLogic(
-                game.getGameCamera(),
+                services.getGameCamera(),
                 cullBoundsSupplier,
                 cullTime
             )
@@ -227,11 +227,11 @@ abstract class AbstractEnemy(
             )
             val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
 
-            game.eventsMan.addListener(cullOnEvents)
+            services.events.addListener(cullOnEvents)
             GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
 
             runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) {
-                game.eventsMan.removeListener(cullOnEvents)
+                services.events.removeListener(cullOnEvents)
                 GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
             }
 
@@ -245,7 +245,7 @@ abstract class AbstractEnemy(
 
     override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int) = when {
         damager is IOwnable<*> && damager.owner.asPlayer != null &&
-            game.state.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
+            services.gameState.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) ->
             MegaEnhancement.scaleDamage(baseDamage, MegaEnhancement.ENEMY_DAMAGE_INCREASE_SCALAR)
         else -> baseDamage
     }
@@ -273,7 +273,7 @@ abstract class AbstractEnemy(
     }
 
     protected open fun disintegrate(disintegrationProps: Properties? = null) {
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
 
         val disintegration = MegaEntityFactory.fetch(Disintegration::class)!!
         val props = disintegrationProps ?: props(ConstKeys.POSITION pairTo body.getCenter())
@@ -281,7 +281,7 @@ abstract class AbstractEnemy(
     }
 
     protected open fun explode(explosionProps: Properties? = null) {
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         val props = explosionProps ?: props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo body.getCenter())
@@ -302,33 +302,33 @@ abstract class AbstractEnemy(
         val whack = MegaEntityFactory.fetch(Whack::class)!!
         whack.spawn(props(ConstKeys.POSITION pairTo position))
 
-        game.audioMan.playSound(SoundAsset.SMB3_KICK_SOUND, false)
+        services.audio.playSound(SoundAsset.SMB3_KICK_SOUND, false)
     }
 
     open fun spawnFloatingPoints() {
         var floatingPointsType = FloatingPointsType.POINTS100
 
-        val timeSinceLastFloatingPoints = game.levelState.timeSinceLastFloatingPoints
+        val timeSinceLastFloatingPoints = services.levelState.timeSinceLastFloatingPoints
 
         if (timeSinceLastFloatingPoints < ConstVals.AGGREGATE_FLOATING_POINTS_DUR) {
-            val previousFloatingPointsType = game.levelState.lastFloatingPointsType
+            val previousFloatingPointsType = services.levelState.lastFloatingPointsType
 
             if (previousFloatingPointsType != null &&
                 previousFloatingPointsType.ordinal < FloatingPointsType.entries.size - 1
             ) floatingPointsType = FloatingPointsType.entries[previousFloatingPointsType.ordinal + 1]
         }
 
-        game.levelState.lastFloatingPointsType = floatingPointsType
-        game.levelState.timeSinceLastFloatingPoints = 0f
+        services.levelState.lastFloatingPointsType = floatingPointsType
+        services.levelState.timeSinceLastFloatingPoints = 0f
 
         val pointsToAdd = floatingPointsType.points
         if (pointsToAdd != null) {
-            val currentPoints = game.levelState.levelPoints
-            game.levelState.levelPoints = currentPoints + pointsToAdd
+            val currentPoints = services.levelState.levelPoints
+            services.levelState.levelPoints = currentPoints + pointsToAdd
         }
 
         // TODO: the one-up goes to the target player's slot; with more players, who gets it is a co-op rule (item 047)
-        if (floatingPointsType == FloatingPointsType.ONE_UP && game.state.addLife(targetPlayer.playerSlot!!))
+        if (floatingPointsType == FloatingPointsType.ONE_UP && services.gameState.addLife(targetPlayer.playerSlot!!))
             requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
 
         val position = when (targetPlayer.direction) {

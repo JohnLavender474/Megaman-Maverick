@@ -20,9 +20,9 @@ class MegamanWeaponsHandlerOwnershipTest : DescribeSpec({
 
     beforeEach {
         state = GameState()
-        val game = testServices(state = state)
+        val services = testServices(gameState = state)
         val megaman = mockk<Megaman>(relaxed = true)
-        every { megaman.game } returns game
+        every { megaman.services } returns services
         handler = MegamanWeaponsHandler(megaman)
     }
 

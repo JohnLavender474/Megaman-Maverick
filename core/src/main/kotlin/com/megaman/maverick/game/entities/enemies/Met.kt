@@ -56,7 +56,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Met(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable, IDirectional {
+class Met(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IFaceable, IDirectional {
 
     enum class MetBehavior { SHIELDING, POP_UP, RUNNING }
 
@@ -118,7 +118,7 @@ class Met(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezab
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         addComponent(defineAnimationsComponent())
         damageOverrides.put(GutsTankFist::class, dmgNeg(ConstVals.MAX_HEALTH))
         damageOverrides.put(BigAssMaverickRobotOrb::class, dmgNeg(ConstVals.MAX_HEALTH))

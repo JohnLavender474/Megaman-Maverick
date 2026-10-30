@@ -56,7 +56,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class SniperJoe_OLD(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IScalableGravityEntity, IFaceable,
+class SniperJoe_OLD(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IScalableGravityEntity, IFaceable,
     IDirectional {
 
     companion object {
@@ -120,7 +120,7 @@ class SniperJoe_OLD(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM
         get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED || sniperJoeState == SniperJoeState.SHOOTING_WITH_SHIELD
 
     private val shouldUpdate: Boolean
-        get() = !game.camera.rotating
+        get() = !services.camera.rotating
     private val waitTimer = Timer(SHIELD_DUR)
     private val shootTimer = Timer(SHOOT_DUR)
     private val throwShieldTimer = Timer(THROW_SHIELD_DUR)
@@ -134,7 +134,7 @@ class SniperJoe_OLD(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             joeTypes.forEach { joeType ->
                 regionKeys.forEach { regionKey ->
                     val region = atlas.findRegion("$TAG/$joeType/$regionKey")

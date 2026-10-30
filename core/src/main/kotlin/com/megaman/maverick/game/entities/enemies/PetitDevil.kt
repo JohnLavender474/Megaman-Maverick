@@ -53,7 +53,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class PetitDevil(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
+class PetitDevil(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity,
     IParentEntity<PetitDevilChild>, IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -75,7 +75,7 @@ class PetitDevil(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun init(vararg params: Any) {
         if (orangeRegion == null || greenRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             orangeRegion = atlas.findRegion("PetitDevil/LargeOrange")
             greenRegion = atlas.findRegion("PetitDevil/LargeGreen")
         }
@@ -226,7 +226,7 @@ class PetitDevil(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), I
     }
 }
 
-class PetitDevilChild(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
+class PetitDevilChild(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity,
     IDrawableShapesEntity, IChildEntity, IFaceable {
 
     companion object {
@@ -247,7 +247,7 @@ class PetitDevilChild(game: MegaServices) : AbstractEnemy(game, size = Size.SMAL
 
     override fun init(vararg params: Any) {
         if (greenRegion == null || orangeRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             greenRegion = atlas.findRegion("PetitDevil/SmallGreen")
             orangeRegion = atlas.findRegion("PetitDevil/SmallOrange")
         }

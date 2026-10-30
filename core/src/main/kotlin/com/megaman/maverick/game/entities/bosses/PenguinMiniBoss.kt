@@ -46,7 +46,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class PenguinMiniBoss(game: MegaServices) : AbstractBoss(game), IParentEntity<BabyPenguin>, IAnimatedEntity,
+class PenguinMiniBoss(services: MegaServices) : AbstractBoss(services), IParentEntity<BabyPenguin>, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -75,7 +75,7 @@ class PenguinMiniBoss(game: MegaServices) : AbstractBoss(game), IParentEntity<Ba
     private var launchPenguins = false
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.BOSSES_1.source, "$TAG/$TAG")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.BOSSES_1.source, "$TAG/$TAG")
         super.init()
         addComponent(defineAnimationsComponent())
     }

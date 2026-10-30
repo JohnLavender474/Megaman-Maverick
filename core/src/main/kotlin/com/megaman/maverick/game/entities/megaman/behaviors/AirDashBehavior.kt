@@ -30,12 +30,12 @@ internal fun Megaman.airDashBehavior(): IBehavior {
         private val impulse = Vector2()
         private var lastFacing = Facing.RIGHT
 
-        private fun isAirDashButtonActivated() = when (game.players.selectButtonAction) {
+        private fun isAirDashButtonActivated() = when (services.players.selectButtonAction) {
             SelectButtonAction.AIR_DASH -> input.isPressed(MegaControllerButton.SELECT)
             else -> input.isPressed(MegaControllerButton.A)
         }
 
-        private fun isAirDashButtonJustActivated() = when (game.players.selectButtonAction) {
+        private fun isAirDashButtonJustActivated() = when (services.players.selectButtonAction) {
             SelectButtonAction.AIR_DASH -> input.isJustPressed(MegaControllerButton.SELECT)
             else -> input.isJustPressed(MegaControllerButton.A)
         }
@@ -113,7 +113,7 @@ internal fun Megaman.airDashBehavior(): IBehavior {
             minTimer.reset()
             maxTimer.reset()
 
-            if (!game.camera.rotating) {
+            if (!services.camera.rotating) {
                 body.physics.gravityOn = true
 
                 if (!teleporting) {

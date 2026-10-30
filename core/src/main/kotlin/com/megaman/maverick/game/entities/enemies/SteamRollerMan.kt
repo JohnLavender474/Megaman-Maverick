@@ -60,7 +60,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SteamRollerMan(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IDrawableShapesEntity,
+class SteamRollerMan(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IDrawableShapesEntity,
     IFaceable {
 
     companion object {
@@ -124,7 +124,7 @@ class SteamRollerMan(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity,
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

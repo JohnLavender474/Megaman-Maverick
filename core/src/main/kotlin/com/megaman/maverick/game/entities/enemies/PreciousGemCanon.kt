@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class PreciousGemCanon(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class PreciousGemCanon(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PreciousGemCanon"
@@ -134,7 +134,7 @@ class PreciousGemCanon(game: MegaServices) : AbstractEnemy(game), IFreezableEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             val keys = gdxArrayOf("frozen")
             PreciousGemCanonDirection.entries.forEach { direction ->
                 val key = direction.name.lowercase()

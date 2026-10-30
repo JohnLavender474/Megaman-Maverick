@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
-class BulletBill(game: MegaServices) : AbstractEnemy(game), IProjectileEntity, IFaceable {
+class BulletBill(services: MegaServices) : AbstractEnemy(services), IProjectileEntity, IFaceable {
 
     companion object {
         const val TAG = "BulletBill"
@@ -56,7 +56,7 @@ class BulletBill(game: MegaServices) : AbstractEnemy(game), IProjectileEntity, I
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.SMB3_ENEMIES.source, "${TAG}/missile")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.SMB3_ENEMIES.source, "${TAG}/missile")
         super.init()
     }
 
@@ -138,7 +138,7 @@ class BulletBill(game: MegaServices) : AbstractEnemy(game), IProjectileEntity, I
                 // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for the
                 //  second playable character (Proto Man item)
                 player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
-                game.audioMan.playSound(SoundAsset.SWIM_SOUND, false)
+                services.audio.playSound(SoundAsset.SWIM_SOUND, false)
             }
         }
         body.addFixture(headFixture)

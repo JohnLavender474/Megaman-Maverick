@@ -47,7 +47,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class SnowheadThrower(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class SnowheadThrower(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "SnowheadThrower"
@@ -86,7 +86,7 @@ class SnowheadThrower(game: MegaServices) : AbstractEnemy(game, size = Size.SMAL
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             animDefs.keys().forEach { state ->
                 val key = state.name.lowercase()
                 val region = atlas.findRegion("$TAG/$key")

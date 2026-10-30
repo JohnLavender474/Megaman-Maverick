@@ -11,7 +11,7 @@ import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 
-class GoldBlock(game: MegaServices) : AnimatedBlock(game), ILightSource {
+class GoldBlock(services: MegaServices) : AnimatedBlock(services), ILightSource {
 
     companion object {
         const val TAG = "GoldBlock"

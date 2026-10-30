@@ -23,7 +23,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
-class Ladder(game: MegaServices) : MegaGameEntity(game), IBodyEntity {
+class Ladder(services: MegaServices) : MegaGameEntity(services), IBodyEntity {
 
     companion object {
         const val TAG = "Ladder"

@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class GreenUziJoe(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IScalableGravityEntity,
+class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IScalableGravityEntity,
     IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
@@ -157,7 +157,7 @@ class GreenUziJoe(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.forEach { entry ->
                 val key = entry.key
                 regions.put(key, atlas.findRegion("$TAG/$key"))

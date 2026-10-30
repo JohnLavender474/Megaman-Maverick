@@ -46,7 +46,7 @@ import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
+class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "PushableBlock"
@@ -68,7 +68,7 @@ class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private class InnerBlock(game: MegaServices, private val pushableBody: Body) : Block(game) {
+    private class InnerBlock(services: MegaServices, private val pushableBody: Body) : Block(services) {
 
         override fun hitByProjectile(projectileFixture: IFixture) {
             val projectile = projectileFixture.getEntity()
@@ -101,7 +101,7 @@ class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             gdxArrayOf(METAL_CRATE).forEach { regions.put(it, atlas.findRegion(it)) }
         }
         super.init()
@@ -112,7 +112,7 @@ class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        val currentRoom = game.levelState.currentRoom?.name
+        val currentRoom = services.levelState.currentRoom?.name
         GameLogger.debug(TAG, "onSpawn(): currentRoom=$currentRoom, spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
@@ -120,7 +120,7 @@ class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
             .getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
-        block = InnerBlock(game, body)
+        block = InnerBlock(services, body)
         block!!.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -152,7 +152,7 @@ class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this, objectSetOf(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS), cull@{ event ->
-                    val room = game.levelState.currentRoom?.name
+                    val room = services.levelState.currentRoom?.name
                     val cull = room != spawnRoom
                     GameLogger.debug(
                         TAG,
@@ -206,13 +206,13 @@ class PushableBlock(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
 
         body.preProcess.put(ConstKeys.DEFAULT) {
             val gravity = when {
-                game.levelState.roomTransition -> 0f
+                services.levelState.roomTransition -> 0f
                 body.isSensing(BodySense.FEET_ON_GROUND) -> GROUND_GRAVITY
                 else -> GRAVITY
             }
             body.physics.gravity.y = -gravity * ConstVals.PPM
 
-            if (game.levelState.roomTransition) body.physics.velocity.setZero()
+            if (services.levelState.roomTransition) body.physics.velocity.setZero()
 
             val velocity = body.physics.velocity
             if (players.any {

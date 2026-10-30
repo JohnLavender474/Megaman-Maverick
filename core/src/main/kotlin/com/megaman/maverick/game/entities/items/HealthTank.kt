@@ -30,7 +30,7 @@ import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class HealthTank(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEntity {
+class HealthTank(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "HealthTank"
@@ -45,7 +45,7 @@ class HealthTank(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnim
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         super.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -57,7 +57,7 @@ class HealthTank(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnim
         GameLogger.debug(TAG, "canSpawn(): spawnProps=$spawnProps")
 
         healthTank = MegaHealthTank.valueOf(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
-        return !game.state.containsHealthTank(healthTank)
+        return !services.gameState.containsHealthTank(healthTank)
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -71,7 +71,7 @@ class HealthTank(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnim
     override fun contactWithPlayer(player: MegaGameEntity) {
         GameLogger.debug(TAG, "contactWithPlayer()")
         destroy()
-        game.eventsMan.submitEvent(Event(
+        services.events.submitEvent(Event(
                 EventType.ATTAIN_HEALTH_TANK,
                 props(ConstKeys.VALUE pairTo healthTank, PlayerEventKeys.SLOT pairTo player.playerSlot!!)
             ))

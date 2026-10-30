@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
-class AcidGoop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHazard, ISpritesEntity, IAnimatedEntity,
+class AcidGoop(services: MegaServices) : MegaGameEntity(services), IDamagerEntity, IHazard, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity, IEventListener {
 
     companion object {
@@ -65,7 +65,7 @@ class AcidGoop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHaza
 
     override fun init(vararg params: Any) {
         if (fallingRegion == null || splatRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             fallingRegion = atlas.findRegion("$TAG/falling")
             splatRegion = atlas.findRegion("$TAG/landed")
         }
@@ -79,7 +79,7 @@ class AcidGoop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHaza
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setTopCenterToPoint(spawn)
@@ -93,7 +93,7 @@ class AcidGoop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHaza
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     override fun onEvent(event: Event) {
@@ -118,7 +118,7 @@ class AcidGoop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHaza
         if (dissipating) {
             dissipateTimer.update(delta)
             if (dissipateTimer.isFinished()) {
-                if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+                if (overlapsGameCamera()) services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
                 destroy()
             }
         }

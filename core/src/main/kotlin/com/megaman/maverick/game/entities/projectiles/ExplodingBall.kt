@@ -37,7 +37,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class ExplodingBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class ExplodingBall(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "ExplodingBall"
@@ -47,7 +47,7 @@ class ExplodingBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEnt
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "GachappanBall")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "GachappanBall")
         super.init()
         addComponent(defineAnimationsComponent())
     }

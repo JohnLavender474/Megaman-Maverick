@@ -18,14 +18,14 @@ class LevelStateHandler(private val game: MegamanMaverickGame) {
             if (it !is SpritesSystem) it.on = false
         }
 
-        game.audioMan.pauseAllSound()
-        game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
+        game.audio.pauseAllSound()
+        game.audio.playSound(SoundAsset.PAUSE_SOUND, false)
     }
 
     fun resume() {
         systems.forEach { it.on = true }
 
-        game.audioMan.resumeAllSound()
-        game.audioMan.playSound(SoundAsset.PAUSE_SOUND, false)
+        game.audio.resumeAllSound()
+        game.audio.playSound(SoundAsset.PAUSE_SOUND, false)
     }
 }

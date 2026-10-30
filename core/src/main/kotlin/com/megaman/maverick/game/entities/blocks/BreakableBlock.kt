@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-open class BreakableBlock(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity {
+open class BreakableBlock(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
 
@@ -83,11 +83,11 @@ open class BreakableBlock(game: MegaServices) : Block(game), ISpritesEntity, IAn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val platformsAtlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val platformsAtlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             regions.put(BRICK_TYPE, platformsAtlas.findRegion(BRICK_TYPE))
             regions.put(PRECIOUS_TYPE, platformsAtlas.findRegion(PRECIOUS_TYPE))
 
-            val smb3BlocksAtlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
+            val smb3BlocksAtlas = services.assets.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
             regions.put(SMB3_GOLD_TYPE, smb3BlocksAtlas.findRegion("GoldBreakableBlock/block"))
         }
         super.init()
@@ -135,8 +135,8 @@ open class BreakableBlock(game: MegaServices) : Block(game), ISpritesEntity, IAn
         connectedBlocks.forEach { block -> block.explodeAndDie() }
         connectedBlocks.clear()
 
-        if (game.audioMan.isSoundPlaying(SoundAsset.THUMP_SOUND)) game.audioMan.stopSound(SoundAsset.THUMP_SOUND)
-        game.audioMan.playSound(SoundAsset.THUMP_SOUND, false)
+        if (services.audio.isSoundPlaying(SoundAsset.THUMP_SOUND)) services.audio.stopSound(SoundAsset.THUMP_SOUND)
+        services.audio.playSound(SoundAsset.THUMP_SOUND, false)
     }
 
     override fun hitByProjectile(projectileFixture: IFixture) {

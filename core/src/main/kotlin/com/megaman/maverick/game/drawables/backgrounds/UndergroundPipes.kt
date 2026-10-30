@@ -15,7 +15,7 @@ class UndergroundPipes(game: MegamanMaverickGame, it: RectangleMapObject) : Back
     key = TAG,
     startX = it.rectangle.x,
     startY = it.rectangle.y,
-    model = game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
+    model = game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
     modelWidth = WIDTH * ConstVals.PPM,
     modelHeight = HEIGHT * ConstVals.PPM,
     rows = 1,

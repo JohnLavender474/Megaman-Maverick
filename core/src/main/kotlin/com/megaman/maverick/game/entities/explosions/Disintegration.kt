@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class Disintegration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, IAudioEntity,
+class Disintegration(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, IAudioEntity,
     IDirectional {
 
     companion object {
@@ -49,7 +49,7 @@ class Disintegration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity,
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -61,7 +61,7 @@ class Disintegration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity,
         super.onSpawn(spawnProps)
 
         val rawDir = spawnProps.get(ConstKeys.DIRECTION, String::class)
-        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: game.gravity.direction
+        direction = rawDir?.let { Direction.valueOf(it.uppercase()) } ?: services.gravity.direction
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         defaultSprite.setPosition(spawn, Position.CENTER)
@@ -69,7 +69,7 @@ class Disintegration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity,
         val sound = spawnProps.getOrDefault(ConstKeys.SOUND, false, Boolean::class)
         if (sound) {
             reusableRect.setSize(ConstVals.PPM.toFloat()).setCenter(spawn)
-            if (reusableRect.overlaps(game.getGameCamera().toGameRectangle()))
+            if (reusableRect.overlaps(services.getGameCamera().toGameRectangle()))
                 requestToPlaySound(SoundAsset.THUMP_SOUND, false)
         }
 

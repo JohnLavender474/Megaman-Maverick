@@ -31,7 +31,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 
 import com.megaman.maverick.game.world.body.*
 
-class CaveRock(game: MegaServices) : AbstractProjectile(game) {
+class CaveRock(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "CaveRock"
@@ -44,7 +44,7 @@ class CaveRock(game: MegaServices) : AbstractProjectile(game) {
 
     override fun init(vararg params: Any) {
         if (rockRegion == null)
-            rockRegion = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "$TAG/Rock")
+            rockRegion = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "$TAG/Rock")
         super.init()
     }
 

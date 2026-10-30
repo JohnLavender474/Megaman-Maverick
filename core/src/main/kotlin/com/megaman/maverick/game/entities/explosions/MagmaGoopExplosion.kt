@@ -52,7 +52,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class MagmaGoopExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class MagmaGoopExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -69,7 +69,7 @@ class MagmaGoopExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())

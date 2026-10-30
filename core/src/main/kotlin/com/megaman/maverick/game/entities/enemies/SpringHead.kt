@@ -40,7 +40,7 @@ import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class SpringHead(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFaceable {
+class SpringHead(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFaceable {
 
     companion object {
         const val TAG = "SpringHead"
@@ -75,7 +75,7 @@ class SpringHead(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), I
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("unleashed", "compressed").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

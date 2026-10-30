@@ -21,7 +21,7 @@ class EarthBackdrop(game: MegamanMaverickGame, it: RectangleMapObject) : Backgro
     columns = COLS,
     parallaxX = 0.25f,
     parallaxY = 0.1f,
-    model = game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
+    model = game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, TAG),
     priority = DrawingPriority(DrawingSection.BACKGROUND, 1),
     initPos = Vector2(it.rectangle.getCenter().x, it.rectangle.getCenter().y + 3f * ConstVals.PPM)
 ) {

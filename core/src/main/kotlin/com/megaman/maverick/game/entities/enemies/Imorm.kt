@@ -37,7 +37,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Imorm(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable, IDirectional {
+class Imorm(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
         const val TAG = "Imorm"
@@ -52,7 +52,7 @@ class Imorm(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnima
     private val slitherTimer = Timer(SLITHER_DURATION)
     override fun init(vararg params: Any) {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "Imorm")
+            region = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, "Imorm")
         super.init()
         addComponent(defineAnimationsComponent())
     }

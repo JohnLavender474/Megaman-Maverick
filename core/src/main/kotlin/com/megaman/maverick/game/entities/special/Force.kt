@@ -20,7 +20,7 @@ import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.world.body.*
 
-class Force(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity {
+class Force(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity {
 
     companion object {
         const val TAG = "Force"

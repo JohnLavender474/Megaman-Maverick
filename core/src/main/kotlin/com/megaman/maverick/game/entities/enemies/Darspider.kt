@@ -46,7 +46,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class Darspider(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IDirectional,
+class Darspider(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IDirectional,
     IFaceable {
 
     companion object {
@@ -80,7 +80,7 @@ class Darspider(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IA
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("crawl", "frozen", "jump", "still").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()

@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class FireMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity, IFaceable {
+class FireMet(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "FireMet"
@@ -80,7 +80,7 @@ class FireMet(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAni
     override fun init(vararg params: Any) {
         damageOverrides.put(Fireball::class, null)
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("walk", atlas.findRegion("$TAG/Walk"))
             regions.put("jump", atlas.findRegion("$TAG/Jump"))
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))

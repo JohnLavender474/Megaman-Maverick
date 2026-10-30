@@ -7,4 +7,4 @@ import com.maverick.game.engine.world.pathfinding.*;
 
 import com.megaman.maverick.game.MegaServices
 
-class Zap(game: MegaServices)
+class Zap(services: MegaServices)

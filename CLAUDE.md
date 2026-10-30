@@ -46,25 +46,25 @@ Python tools in `utils/` (`level_analyzer`, `level_builder`, `diagnostics`) each
 
 `MegamanMaverickGame.kt` is the LibGDX `Game`. It owns the shared state:
 
-- `engine: GameEngine`, `eventsMan: EventsManager`, `assMan: AssetManager`, `audioMan: MegaAudioManager`, `state: GameState`.
+- `engine: GameEngine`, `events: EventsManager`, `assets: AssetManager`, `audio: MegaAudioManager`, `gameState: GameState`.
 - `players: MegaPlayers` (the players service; capacity 1) and `gravity: WorldGravity`, built with the game object (before `create()`). `postCreate()` makes the one `Megaman` once (not pooled) and registers it in slot 0. Code reaches a player through `game.players` (for example `targetPlayer`, `players.forEach`, `x.asPlayer`), not through a global. `players.selectButtonAction` is the select button setting (default `NEXT_WEAPON`).
 - `clock: GameClock` (`state/GameClock.kt`): `clock.paused` is the pause flag. `pause()` and `resume()` change it (and pause or resume the current screen); every reader reads `game.clock.paused`.
 - `levelState: LevelState` (`levels/LevelState.kt`): the level values, typed. It lives for the session (pooled entities outlive a level); the level screen sets the values at level start and during play, and callers read them when used: `currentLevel` (read with `!!` in a level), the rooms and current-room suppliers (read with `getRooms(out)` and `currentRoom`), `isInExtraLevel`, `worldContainer`, `tiledMapLoadResult`, `roomTransition`, the beam flag and center, `coins`, `levelPoints`, the floating-points state, and `weaponsAttained` (the reward weapons of the last level that was newly defeated, for the get-weapon screen, which clears it; a save load and `resetPlayerProgress()` also clear it; not saved). The game has no forwarding functions for these values; read the home (`game.levelState.currentLevel!!`).
 - `camera: GameCameraState` (`screens/levels/camera/GameCameraState.kt`): the game camera flags `rotating` and `focusSnappedAway`. State only; the camera behavior stays in `RotatableCamera` and the level screen (item `051` plans a camera with components). The camera object itself is `getGameCamera()`.
 - `settings: GameSettings` (`state/GameSettings.kt`): `settings.performance` (a `Performance`, `state/Performance.kt`), read when used. `setPerformance()` changes it (and the FPS, the world fixed step, and the `CHANGE_PERFORMANCE_MODE` event).
 - `drawables` and `shapes`: the render collectors, read-only.
-- Entities and the entity utilities do not take the game. They take `MegaServices` (`MegaServices.kt`): one holder of the same session objects (`engine`, `eventsMan`, `assMan`, `audioMan`, `state`, `players`, `gravity`, `levelState`, `clock`, `camera`, `settings`, `updatables`, `runQueue`, `groups`, and `getGameCamera()`). `postCreate()` builds it once, before the entity pools and `Megaman`. Inside an entity it is still named `game`. Screens, layer builders, backgrounds, `ScreenController` and the launcher keep the game. The contact rules take `players` and `gravity` (`megaContactRules(players, gravity, debugFilter)`), and the pathfinder factory takes `levelState` (`MegaPathfinderFactory(levelState)`); `createGameEngine()` builds both.
+- Entities and the entity utilities do not take the game. They take `MegaServices` (`MegaServices.kt`): one holder of the same session objects (`engine`, `events`, `assets`, `audio`, `gameState`, `players`, `gravity`, `levelState`, `clock`, `camera`, `settings`, `updatables`, `runQueue`, `groups`, and `getGameCamera()`). `postCreate()` builds it once, before the entity pools and `Megaman`. Inside an entity and an entity utility it is named `services` (`MegaGameEntity.services`). Screens, layer builders, backgrounds, `ScreenController` and the launcher keep the game. The contact rules take `players` and `gravity` (`megaContactRules(players, gravity, debugFilter)`), and the pathfinder factory takes `levelState` (`MegaPathfinderFactory(levelState)`); `createGameEngine()` builds both.
 - The game has no property bag (it is not an `IPropertizable`). Add a typed field, not a string key.
 - `screens` (keyed by `ScreenEnum.name`), `viewports` (keys `ConstKeys.GAME` and `ConstKeys.UI`), and `runQueue`.
 - `createGameEngine()` sets the system order: Controller, Behaviors, World, Cullables, Motion, Pathfinding, Points, Updatables, Fonts, Animations, Sprites, DrawableShapes, Audio, Groups.
 
-Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` (the level screen calls `engine.update(delta)`), then `eventsMan.run()`.
+Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` (the level screen calls `engine.update(delta)`), then `events.run()`.
 
 ### Engine ECS (`engine/`)
 
 - `GameEngine` queues spawns and destroys. It processes them at the start of `update()`, then updates each `GameSystem`.
 - `GameSystem` takes a component mask. An entity joins a system only if it has all components in the mask. A system can override `onEntityJoined`/`onEntityLeft`; they fire when an entity really joins or leaves (in the engine, right after `onSpawn` and before the component `reset()` at destroy).
-- Entity groups: a `GroupsComponent` holds an entity's group names; `GroupsSystem` keeps the group index. An entity looks up with `game.groups.getEntitiesInGroup(name)` (the game itself uses `getSystem(GroupsSystem::class)`). `MegaGameEntity` puts the `ConstKeys.GROUP` spawn property into the component.
+- Entity groups: a `GroupsComponent` holds an entity's group names; `GroupsSystem` keeps the group index. An entity looks up with `services.groups.getEntitiesInGroup(name)` (the game itself uses `getSystem(GroupsSystem::class)`). `MegaGameEntity` puts the `ConstKeys.GROUP` spawn property into the component.
 - `GameEntity` stores components in a map keyed by `KClass`. Add them with `addComponent(...)`.
 - Components: `BodyComponent`, `SpritesComponent`, `AnimationsComponent`, `UpdatablesComponent`, `BehaviorsComponent`, `ControllerComponent`, `CullablesComponent`, `PointsComponent`, `DrawableShapesComponent`, `FontsComponent`, `PathfindingComponent`, and others.
 - Physics is custom (not Box2D): `engine/.../world/` (`Body`, `Fixture`, `WorldSystem`). Game rules for contacts are in `core/.../world/contacts/MegaContactRules.kt` (a table of fixture-type pairs, dispatched by the engine `ContactRuleDispatcher`; one rule class per pair in `world/contacts/rules/`) and `world/collisions/MegaCollisionHandler.kt`. `ContactRuleSelectionTest` checks the table against `core/src/test/resources/contact-rule-selection.txt`.
@@ -83,22 +83,22 @@ Frame order in `render()`: drain `runQueue`, then `currentScreen.render(delta)` 
 - `AbstractEnemy`: adds Audio, Cullables, Body and Sprites components in `init()`. Subclasses implement `defineBodyComponent()` and `defineSpritesComponent()`. Handles item drops and spawn blink.
 - `AbstractBoss`: boss intro, health fill, defeat sequence. Registers as an event listener in `onSpawn` and removes itself in `onDestroy`.
 - `AbstractProjectile` and many small interfaces (`IFreezableEntity`, `IHazard`, `IOwnable`, `IFaceable`, and so on).
-- `IMegaGameEntity` holds only the tag and the `EntityType` (item `072` removes it). The extensions `players` and `targetPlayer` take a `MegaGameEntity` (see `docs/mega-refactor/items/029-player-contract/`); `overlapsGameCamera()` takes a `MegaGameEntity` that is also an `IBodyEntity`. An entity plays a sound with `game.audioMan.playSound(...)` and reads the camera with `game.getGameCamera()`.
+- `IMegaGameEntity` holds only the tag and the `EntityType` (item `072` removes it). The extensions `players` and `targetPlayer` take a `MegaGameEntity` (see `docs/mega-refactor/items/029-player-contract/`); `overlapsGameCamera()` takes a `MegaGameEntity` that is also an `IBodyEntity`. An entity plays a sound with `services.audio.playSound(...)` and reads the camera with `services.getGameCamera()`.
 
 Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemies` (about 127 files), `bosses`, `hazards`, `items`, `projectiles`, `sensors`, `special`, `decorations`, `explosions`. The player is in `entities/megaman/` (behaviors, components, constants, handlers, sprites).
 
 ### Factories
 
-- Use `MegaEntityFactory` (`entities/MegaEntityFactory.kt`). It makes one pool per class and calls the primary constructor `(game: MegaServices)` through reflection (`EntityConstructorsTest` checks every entity class). Example: `MegaEntityFactory.fetch(Bullet::class)!!.spawn(props(...))`.
+- Use `MegaEntityFactory` (`entities/MegaEntityFactory.kt`). It makes one pool per class and calls the primary constructor `(services: MegaServices)` through reflection (`EntityConstructorsTest` checks every entity class). Example: `MegaEntityFactory.fetch(Bullet::class)!!.spawn(props(...))`.
 - A pooled entity goes back to its pool through `runnablesOnDestroy[ConstKeys.POOL]` (see `GameEntityPoolCreator`).
 - `EntityFactories` (`entities/factories/EntityFactories.kt`) is deprecated. Do not add new entries to it. Some old code still calls it.
 
 ### Events
 
 - `EventsManager` (engine) is pub/sub. Listeners implement `IEventListener` with `eventKeyMask: ObjectSet<Any>` and `onEvent(event)`.
-- Submit with `game.eventsMan.submitEvent(Event(EventType.X, props(...)))`. Event keys are in `events/EventType.kt`.
-- Events are buffered. Listeners get them only when `eventsMan.run()` runs, after the screen render. Listener order is registration order.
-- Register in `onSpawn` (`game.eventsMan.addListener(this)`) and remove in `onDestroy`.
+- An entity submits with `services.events.submitEvent(Event(EventType.X, props(...)))`. A screen uses `game.events`. Event keys are in `events/EventType.kt`.
+- Events are buffered. Listeners get them only when `events.run()` runs, after the screen render. Listener order is registration order.
+- Register in `onSpawn` (`services.events.addListener(this)`) and remove in `onDestroy`.
 - Level exits go through the level screen's `onEvent`: `END_LEVEL` (the next screen from `screenOnCompletion`) and `GAME_COMPLETE` (the ending screen; `DrWily` submits it after the final boss). Entities do not call `setCurrentScreen`.
 
 ### Levels and Tiled pipeline
@@ -116,7 +116,7 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 ### Assets
 
 - `assets/TextureAsset.kt` (atlases in `assets/sprites/sprite_sheets/`), `SoundAsset.kt` (`assets/sounds/`), `MusicAsset.kt` (`assets/music/`). All implement `IAsset` (`source`, `assClass`).
-- Get a texture region with `game.assMan.getTextureAtlas(TextureAsset.X.source).findRegion("$TAG/name")`.
+- Get a texture region with `services.assets.getTextureAtlas(TextureAsset.X.source).findRegion("$TAG/name")` (in a screen, `game.assets`).
 - The `generateAssetList` Gradle task writes `assets/assets.txt` on each build.
 
 ### Constants (`Constants.kt`)

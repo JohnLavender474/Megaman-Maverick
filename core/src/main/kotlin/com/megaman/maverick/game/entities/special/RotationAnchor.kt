@@ -35,7 +35,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-open class RotationAnchor(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IParentEntity<IGameEntity>,
+open class RotationAnchor(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IParentEntity<IGameEntity>,
     IMotionEntity, IDrawableShapesEntity {
 
     companion object {
@@ -120,7 +120,7 @@ open class RotationAnchor(game: MegaServices) : MegaGameEntity(game), IBodyEntit
                 child as IBodyEntity
                 val target = childTargets[child as GameEntity] ?: return@forEach
                 val velocity = target.cpy().sub(child.body.getCenter())
-                child.body.physics.velocity.set(velocity.scl(1f / game.settings.performance.fixedStep))
+                child.body.physics.velocity.set(velocity.scl(1f / services.settings.performance.fixedStep))
             }
         }
         return BodyComponentCreator.create(this, body)

@@ -8,7 +8,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setEntity
 
-open class IceBlock(game: MegaServices) : ShieldBlock(game) {
+open class IceBlock(services: MegaServices) : ShieldBlock(services) {
 
     companion object {
         const val TAG = "IceBlock"

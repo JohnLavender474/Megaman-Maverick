@@ -33,7 +33,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
-class WilyDeathPlaneLazor(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class WilyDeathPlaneLazor(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IHazard, IDamagerEntity, IOwnable<WilyFinalBoss>, IActivatable {
 
     companion object {
@@ -63,7 +63,7 @@ class WilyDeathPlaneLazor(game: MegaServices) : MegaGameEntity(game), IBodyEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_2.source)
             for (i in 1..5) regions.put(i, atlas.findRegion("$TAG/$i"))
         }
         super.init()

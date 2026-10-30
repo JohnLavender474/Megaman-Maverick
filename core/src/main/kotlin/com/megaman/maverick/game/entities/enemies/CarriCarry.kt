@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CarriCarry(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IMotionEntity, IAnimatedEntity,
+class CarriCarry(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IMotionEntity, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -100,7 +100,7 @@ class CarriCarry(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("ride", "shake", "frozen").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

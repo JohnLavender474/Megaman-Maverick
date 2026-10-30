@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class ReactorMonkeyBall(game: MegaServices) : AbstractProjectile(game) {
+class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "ReactorMonkeyBall"
@@ -66,7 +66,7 @@ class ReactorMonkeyBall(game: MegaServices) : AbstractProjectile(game) {
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             for (i in 0..MAX_BOUNCES) {
                 val region = atlas.findRegion("$TAG/$i")
                 regions.put(i, region)

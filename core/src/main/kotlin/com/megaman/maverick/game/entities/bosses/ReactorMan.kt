@@ -68,7 +68,7 @@ import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.math.min
 
-class ReactorMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class ReactorMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "ReactorMan"
@@ -216,7 +216,7 @@ class ReactorMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFac
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             val failedKeys = Array<String>()
             animDefs.keys().forEach { key ->
                 val region = atlas.findRegion("$TAG/$key")
@@ -387,7 +387,7 @@ class ReactorMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFac
 
                                 val minDelay: Float
                                 val maxDelay: Float
-                                if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+                                if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) {
                                     minDelay = GIGA_DELAY_BETWEEN_BEAMS_MIN_HARD
                                     maxDelay = GIGA_DELAY_BETWEEN_BEAMS_MAX_HARD
                                 } else {
@@ -493,7 +493,7 @@ class ReactorMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFac
             val position = Position.BOTTOM_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
             sprite.setFlip(isFacing(Facing.RIGHT), false)
-            sprite.hidden = damageBlink || game.levelState.roomTransition
+            sprite.hidden = damageBlink || services.levelState.roomTransition
         }
         .build()
 

@@ -33,7 +33,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 
-class AsteroidsSpawner(game: MegaServices) : MegaGameEntity(game), ICullableEntity {
+class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICullableEntity {
 
     companion object {
         const val TAG = "AsteroidsSpawner"
@@ -127,9 +127,9 @@ class AsteroidsSpawner(game: MegaServices) : MegaGameEntity(game), ICullableEnti
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent(update@{ delta ->
-        if (game.levelState.roomTransition) return@update
+        if (services.levelState.roomTransition) return@update
 
-        val camBounds = game.getGameCamera().getRotatedBounds()
+        val camBounds = services.getGameCamera().getRotatedBounds()
         spawners.forEach spawner@{ entry ->
             val spawner = entry.key
             if (spawner.getX() > camBounds.getMaxX() + CAMERA_MAX_DIST_X * ConstVals.PPM ||

@@ -17,10 +17,10 @@ import com.megaman.maverick.game.damage.IDamageNegotiator
 import kotlin.reflect.KClass
 
 abstract class AbstractHealthEntity(
-    game: MegaServices,
+    services: MegaServices,
     protected var dmgDuration: Float = DEFAULT_DMG_DURATION,
     dmgBlinkDur: Float = DEFAULT_DMG_BLINK_DUR
-) : MegaGameEntity(game), IHealthEntity, IDamageableEntity {
+) : MegaGameEntity(services), IHealthEntity, IDamageableEntity {
 
     companion object {
         const val DEFAULT_DMG_DURATION = 0.1f

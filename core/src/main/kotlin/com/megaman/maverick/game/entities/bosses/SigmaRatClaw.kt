@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
 
-class SigmaRatClaw(game: MegaServices) : AbstractEnemy(game), IChildEntity, IAnimatedEntity {
+class SigmaRatClaw(services: MegaServices) : AbstractEnemy(services), IChildEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "SigmaRatClaw"
@@ -103,7 +103,7 @@ class SigmaRatClaw(game: MegaServices) : AbstractEnemy(game), IChildEntity, IAni
 
     override fun init(vararg params: Any) {
         if (closedRegion == null || openRegion == null || shockRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             closedRegion = atlas.findRegion("SigmaRat/ClawClosed")
             openRegion = atlas.findRegion("SigmaRat/ClawOpen")
             shockRegion = atlas.findRegion("SigmaRat/ClawFlash")
@@ -309,7 +309,7 @@ class SigmaRatClaw(game: MegaServices) : AbstractEnemy(game), IChildEntity, IAni
             val velocity = GameObjectPools.fetch(Vector2::class)
                 .set(body.getPositionPoint(Position.TOP_CENTER).sub(0f, 0.1f * ConstVals.PPM))
                 .sub(block!!.body.getPositionPoint(Position.TOP_CENTER))
-                .scl(1f / game.settings.performance.fixedStep)
+                .scl(1f / services.settings.performance.fixedStep)
             block!!.body.physics.velocity.set(velocity)
 
             val swiping = clawState == SigmaRatClawState.LAUNCH

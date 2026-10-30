@@ -60,7 +60,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
-class FireDispensenator(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity,
+class FireDispensenator(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity,
     IAnimatedEntity, IFaceable {
 
     companion object {
@@ -107,7 +107,7 @@ class FireDispensenator(game: MegaServices) : AbstractEnemy(game, size = Size.ME
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             FireDispensenatorState.entries.forEach {
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

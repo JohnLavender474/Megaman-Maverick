@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.getBody
 import com.megaman.maverick.game.world.body.setEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-class ConveyorBelt(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity,
+class ConveyorBelt(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity, IDrawableShapesEntity,
     IDirectional {
 
     companion object {
@@ -64,7 +64,7 @@ class ConveyorBelt(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
 
             regions.put("lLeft", atlas.findRegion("$TAG/LeftPart-MoveLeft"))
             regions.put("lRight", atlas.findRegion("$TAG/LeftPart-MoveRight"))
@@ -174,6 +174,6 @@ class ConveyorBelt(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedE
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        direction = game.gravity.direction
+        direction = services.gravity.direction
     })
 }

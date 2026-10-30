@@ -47,7 +47,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
 
-class Water(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity, IWater,
+class Water(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity, IWater,
     Updatable {
 
     private data class WaterSpriteDef(
@@ -99,7 +99,7 @@ class Water(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(ATLAS_KEY)
+            val atlas = services.assets.getTextureAtlas(ATLAS_KEY)
             SPRITE_DEFS.keys().forEach { key -> regions.put(key, atlas.findRegion("${REGION_KEY_PREFIX}/$key")) }
         }
         super.init()
@@ -183,7 +183,7 @@ class Water(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEnt
         body.preProcess.put(ConstKeys.DEFAULT) {
             val overlap = ShapeUtils.intersectRectangles(
                 fullBounds,
-                game.getGameCamera().getRotatedBounds(),
+                services.getGameCamera().getRotatedBounds(),
                 tempRect
             )
             if (overlap) {

@@ -61,7 +61,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DrillHead(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "DrillHead"
@@ -128,7 +128,7 @@ class DrillHead(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -153,7 +153,7 @@ class DrillHead(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAn
         super.onSpawn(spawnProps)
 
         stateTimers = orderedMapOf(
-            DrillHeadState.IDLE pairTo Timer(if (game.state.hardMode) HARD_IDLE_DUR else IDLE_DUR),
+            DrillHeadState.IDLE pairTo Timer(if (services.gameState.hardMode) HARD_IDLE_DUR else IDLE_DUR),
             DrillHeadState.DRILL pairTo Timer(DRILL_DUR).also { drillTimer ->
                 val debrisRunnable: () -> Unit = {
                     if (Gdx.graphics.framesPerSecond >= FPS_GUARD) spawnDrillDebris()
@@ -252,7 +252,7 @@ class DrillHead(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAn
                 }
                 DrillHeadState.DRILL -> body.physics.velocity.setZero()
                 DrillHeadState.HOVER -> {
-                    val hoverSpeed = if (game.state.hardMode) HARD_HOVER_SPEED else HOVER_SPEED
+                    val hoverSpeed = if (services.gameState.hardMode) HARD_HOVER_SPEED else HOVER_SPEED
                     val velocity = GameObjectPools.fetch(Vector2::class)
                         .set(currentHoverSpot)
                         .sub(body.getCenter())

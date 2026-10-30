@@ -61,7 +61,7 @@ import java.util.*
 import kotlin.math.max
 import kotlin.reflect.KClass
 
-class UnderwaterFan(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -111,7 +111,7 @@ class UnderwaterFan(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             UnderwaterFanColor.entries.map { it.name.lowercase() }
                 .forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
@@ -185,7 +185,7 @@ class UnderwaterFan(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISp
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        val gameCamBounds = game.getGameCamera().getRotatedBounds()
+        val gameCamBounds = services.getGameCamera().getRotatedBounds()
         if (gameCamBounds.overlaps(forceBounds) || gameCamBounds.overlaps(body.getBounds())) {
             spawnBubblesDelay.update(delta)
             if (spawnBubblesDelay.isFinished()) {

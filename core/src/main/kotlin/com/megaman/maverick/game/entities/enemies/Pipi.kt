@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class Pipi(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
+class Pipi(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "Pipi"
@@ -56,7 +56,7 @@ class Pipi(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnima
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("with_egg", atlas.findRegion("$TAG/PipiWithEgg"))
             regions.put("no_egg", atlas.findRegion("$TAG/Pipi"))
         }

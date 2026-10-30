@@ -30,7 +30,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class BlockPiece(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAudioEntity {
+class BlockPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "BlockPiece"
@@ -56,7 +56,7 @@ class BlockPiece(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             BlockPieceColor.entries.forEach { color ->
                 val key = color.name.lowercase()
                 val region = atlas.findRegion("$TAG/$key")

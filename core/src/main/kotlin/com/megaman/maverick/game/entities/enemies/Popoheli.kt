@@ -58,7 +58,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 
-class Popoheli(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
+class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -113,9 +113,9 @@ class Popoheli(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFr
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (heliRegion == null || flameRegion == null) {
-            heliRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "${TAG}/fly")
-            frozenRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, "${TAG}/frozen")
-            flameRegion = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame2")
+            heliRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "${TAG}/fly")
+            frozenRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "${TAG}/frozen")
+            flameRegion = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame2")
         }
         super.init()
         addComponent(defineAnimationsComponent())

@@ -8,7 +8,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
 
-class CollideDownOnlyBlock(game: MegaServices): Block(game) {
+class CollideDownOnlyBlock(services: MegaServices): Block(services) {
 
     companion object {
         const val TAG = "CollideDownOnlyBlock"

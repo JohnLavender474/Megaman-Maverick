@@ -57,7 +57,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class InfernoOven(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class InfernoOven(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IAudioEntity, IDirectional, IDamagerEntity, IHazard {
 
     companion object {
@@ -95,7 +95,7 @@ class InfernoOven(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpri
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             InfernoOvenState.entries.forEach { state ->
                 val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

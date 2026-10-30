@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 
-class MagmaPellet(game: MegaServices) : AbstractProjectile(game), IDirectional {
+class MagmaPellet(services: MegaServices) : AbstractProjectile(services), IDirectional {
 
     companion object {
         const val TAG = "MagmaPellet"
@@ -59,7 +59,7 @@ class MagmaPellet(game: MegaServices) : AbstractProjectile(game), IDirectional {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
     }
 
@@ -73,7 +73,7 @@ class MagmaPellet(game: MegaServices) : AbstractProjectile(game), IDirectional {
         val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!
         body.physics.velocity.set(impulse)
 
-        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, game.gravity.direction, Direction::class)
+        direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, services.gravity.direction, Direction::class)
     }
 
     override fun hitBlock(

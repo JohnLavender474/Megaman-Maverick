@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 
-class ChompFlower(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, IDirectional {
+class ChompFlower(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "ChompFlower"
@@ -86,7 +86,7 @@ class ChompFlower(game: MegaServices) : AbstractEnemy(game), IAnimatedEntity, ID
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ENEMIES.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class ElectrocutieChild(game: MegaServices) : MegaGameEntity(game), IHazard, IDamagerEntity, IBodyEntity,
+class ElectrocutieChild(services: MegaServices) : MegaGameEntity(services), IHazard, IDamagerEntity, IBodyEntity,
     ISpritesEntity, IAnimatedEntity, IChildEntity {
 
     enum class ElectrocutieState {
@@ -67,7 +67,7 @@ class ElectrocutieChild(game: MegaServices) : MegaGameEntity(game), IHazard, IDa
 
     override fun init(vararg params: Any) {
         if (moveRegion == null || chargeRegion == null || shockRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             moveRegion = atlas.findRegion("Electrocutie/Move")
             chargeRegion = atlas.findRegion("Electrocutie/Charge")
             shockRegion = atlas.findRegion("Electrocutie/Shock")

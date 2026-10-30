@@ -66,7 +66,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class Starkner(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL, dmgDuration = DMG_DUR),
+class Starkner(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL, dmgDuration = DMG_DUR),
     IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
@@ -136,7 +136,7 @@ class Starkner(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL, dmgD
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
@@ -299,7 +299,7 @@ class Starkner(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL, dmgD
         updatablesComponent.add update@{ delta ->
             direction = targetPlayer.direction
 
-            if (game.camera.rotating) {
+            if (services.camera.rotating) {
                 body.physics.velocity.setZero()
                 return@update
             }
@@ -367,8 +367,8 @@ class Starkner(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL, dmgD
                     stateTimer.update(delta)
                     if (stateTimer.isFinished()) destroy()
 
-                    if (!game.audioMan.isSoundPlaying(SoundAsset.BLACKHOLE_SOUND))
-                        game.audioMan.playSound(SoundAsset.BLACKHOLE_SOUND, false)
+                    if (!services.audio.isSoundPlaying(SoundAsset.BLACKHOLE_SOUND))
+                        services.audio.playSound(SoundAsset.BLACKHOLE_SOUND, false)
                 }
             }
         }
@@ -411,7 +411,7 @@ class Starkner(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL, dmgD
             sprite.setCenter(body.getCenter())
 
             sprite.setOriginCenter()
-            if (!game.clock.paused) when {
+            if (!services.clock.paused) when {
                 moving && targetPlayer.existenceState.liveAfterUpdate -> rawRotation += ROTS_PER_SEC * 360f * delta * -facing.value
                 else -> rawRotation = direction.rotation
             }

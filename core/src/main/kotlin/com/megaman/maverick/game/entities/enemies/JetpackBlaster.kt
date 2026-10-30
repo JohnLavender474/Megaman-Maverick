@@ -57,7 +57,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class JetpackBlaster(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class JetpackBlaster(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
     IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -105,7 +105,7 @@ class JetpackBlaster(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIU
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             DistanceType.entries.forEach { d ->
                 val regionKey = "${d.name.lowercase()}_thrust"
                 val region =

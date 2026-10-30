@@ -54,7 +54,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class PipePuff(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class PipePuff(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -91,7 +91,7 @@ class PipePuff(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullabl
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
@@ -151,7 +151,7 @@ class PipePuff(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullabl
                 }
             }
             PipePuffState.DELAY -> {
-                if (!game.levelState.roomTransition) delayTimer.update(delta)
+                if (!services.levelState.roomTransition) delayTimer.update(delta)
 
                 if (delayTimer.isFinished()) {
                     if (overlapsGameCamera()) requestToPlaySound(SoundAsset.WHOOSH_SOUND, false)

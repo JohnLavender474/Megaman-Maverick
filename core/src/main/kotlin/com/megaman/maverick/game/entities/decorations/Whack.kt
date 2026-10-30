@@ -27,7 +27,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.AnimationUtils
 
-class Whack(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity {
+class Whack(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "Whack"
@@ -47,7 +47,7 @@ class Whack(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimate
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_EFFECTS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_EFFECTS.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

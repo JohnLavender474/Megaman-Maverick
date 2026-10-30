@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.explosions.SpreadExplosion.SpreadExplo
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class SmallGreenMissile(game: MegaServices) : AbstractProjectile(game), IDirectional {
+class SmallGreenMissile(services: MegaServices) : AbstractProjectile(services), IDirectional {
 
     companion object {
         const val TAG = "SmallGreenMissile"
@@ -58,7 +58,7 @@ class SmallGreenMissile(game: MegaServices) : AbstractProjectile(game), IDirecti
     private lateinit var explosionType: String
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
     }
 
@@ -100,7 +100,7 @@ class SmallGreenMissile(game: MegaServices) : AbstractProjectile(game), IDirecti
             DEFAULT_EXPLOSION -> {
                 val explosion = MegaEntityFactory.fetch(Explosion::class)!!
                 explosion.spawn(props(ConstKeys.OWNER pairTo owner, ConstKeys.POSITION pairTo body.getCenter()))
-                if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+                if (overlapsGameCamera()) services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
             }
 
             WAVE_EXPLOSION -> {
@@ -112,7 +112,7 @@ class SmallGreenMissile(game: MegaServices) : AbstractProjectile(game), IDirecti
                         ConstKeys.POSITION pairTo body.getPositionPoint(Position.BOTTOM_CENTER)
                     )
                 )
-                if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+                if (overlapsGameCamera()) services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
             }
         }
     }

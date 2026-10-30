@@ -66,7 +66,7 @@ import com.megaman.maverick.game.utils.misc.HeadUtils
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class PreciousWoman(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "PreciousWoman"
@@ -233,7 +233,7 @@ class PreciousWoman(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         if (stateTimers.isEmpty) stateTimers.putAll(
@@ -660,7 +660,7 @@ class PreciousWoman(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, I
             }
             sprite.translate(offsetX * ConstVals.PPM, 0f)
 
-            sprite.hidden = damageBlink || game.levelState.roomTransition
+            sprite.hidden = damageBlink || services.levelState.roomTransition
         }
         .build()
 

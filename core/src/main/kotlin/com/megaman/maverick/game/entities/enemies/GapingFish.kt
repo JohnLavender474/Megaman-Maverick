@@ -48,7 +48,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class GapingFish(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity, IFaceable {
+class GapingFish(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "GapingFish"
@@ -78,7 +78,7 @@ class GapingFish(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), I
             UnderwaterFan::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             FallingIcicle::class pairTo dmgNeg(ConstVals.MAX_HEALTH)
         )
-        if (atlas == null) atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+        if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
         super.init()
         addComponent(defineAnimationsComponent())
     }

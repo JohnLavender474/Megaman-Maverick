@@ -63,21 +63,21 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
             }
 
             val scalar = when {
-                game.state.containsEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
+                services.gameState.containsEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
                 else -> 1f
             }
 
             chargingTimer.update(delta * scalar)
         },
         onJustReleased = {
-            if (stunned || damaged || game.camera.rotating || teleporting || !inPlay ||
+            if (stunned || damaged || services.camera.rotating || teleporting || !inPlay ||
                 !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
-                game.levelState.roomTransition
+                services.levelState.roomTransition
             ) {
                 GameLogger.debug(
                     MEGAMAN_CONTROLLER_COMPONENT_TAG,
                     "attack actuator just released, do not shoot: " +
-                        "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${game.camera.rotating}, " +
+                        "stunned=$stunned, damaged=$damaged, game.isCameraRotating=${services.camera.rotating}, " +
                         "teleporting=$teleporting, inPlay=$inPlay, " +
                         "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
                 )
@@ -96,7 +96,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     )
 
     val select = ButtonActuator(onJustReleased = {
-        when (game.players.selectButtonAction) {
+        when (services.players.selectButtonAction) {
             SelectButtonAction.NEXT_WEAPON -> {
                 if (!inPlay || damaged || teleporting) {
                     GameLogger.debug(

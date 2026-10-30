@@ -45,7 +45,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class IceCubeMaker(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
+class IceCubeMaker(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity,
     IAudioEntity {
 
     companion object {
@@ -63,7 +63,7 @@ class IceCubeMaker(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
@@ -90,7 +90,7 @@ class IceCubeMaker(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
             }
         }
 
-        val delay = if (game.state.getDifficultyMode() == DifficultyMode.HARD) DELAY_TIME_HARD else DELAY_TIME
+        val delay = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) DELAY_TIME_HARD else DELAY_TIME
         delayTimer.resetDuration(delay)
     }
 
@@ -119,7 +119,7 @@ class IceCubeMaker(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (runBounds != null &&
-            !game.getGameCamera().overlaps(runBounds!!, GameObjectPools.fetch(BoundingBox::class))
+            !services.getGameCamera().overlaps(runBounds!!, GameObjectPools.fetch(BoundingBox::class))
         ) return@UpdatablesComponent
 
         delayTimer.update(delta)

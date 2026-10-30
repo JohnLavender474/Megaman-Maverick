@@ -64,7 +64,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 key = it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "CrystalBKG"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "CrystalBKG"),
                 modelWidth = it.rectangle.width,
                 modelHeight = it.rectangle.height,
                 rows = it.properties.get(ConstKeys.ROWS) as Int,
@@ -78,7 +78,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 key = it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "InfernoBKG_v2"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "InfernoBKG_v2"),
                 modelWidth = it.rectangle.width,
                 modelHeight = it.rectangle.height,
                 rows = it.properties.get(ConstKeys.ROWS) as Int,
@@ -95,7 +95,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.name,
                 it.rectangle.x,
                 it.rectangle.y,
-                params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_3.source, "ForestBKG"),
+                params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_3.source, "ForestBKG"),
                 it.rectangle.width,
                 it.rectangle.height,
                 it.properties.get(ConstKeys.ROWS) as Int,
@@ -109,7 +109,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 key = it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_3.source, "ForestBKG_v2"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_3.source, "ForestBKG_v2"),
                 modelWidth = it.rectangle.width,
                 modelHeight = it.rectangle.height,
                 rows = it.properties.get(ConstKeys.ROWS) as Int,
@@ -125,7 +125,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_4.source, "GlacierBKG_v2"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_4.source, "GlacierBKG_v2"),
                 modelWidth = (300f / 32f) * 2f * ConstVals.PPM,
                 modelHeight = (225f / 32f) * 2f * ConstVals.PPM,
                 rows = 1,
@@ -145,7 +145,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y + ConstVals.PPM,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_5.source, "GlacierCloudsBKG"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_5.source, "GlacierCloudsBKG"),
                 modelWidth = (300f / 32f) * 2f * ConstVals.PPM,
                 modelHeight = (225f / 32f) * 2f * ConstVals.PPM,
                 rows = 1,
@@ -162,7 +162,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_2.source, "BKG12"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_2.source, "BKG12"),
                 modelWidth = it.rectangle.width,
                 modelHeight = it.rectangle.height,
                 rows = 10,
@@ -182,7 +182,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunriseHills"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunriseHills"),
                 modelWidth = 16f * ConstVals.PPM,
                 modelHeight = 32f * ConstVals.PPM,
                 rows = 1,
@@ -198,7 +198,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunsetHills"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunsetHills"),
                 modelWidth = 16f * ConstVals.PPM,
                 modelHeight = 32f * ConstVals.PPM,
                 rows = 1,
@@ -231,7 +231,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
 
             val atlasKey = TEXTURE_ASSET_PREFIX + props.get(ConstKeys.ATLAS, String::class)!!
             val regionKey = props.get(ConstKeys.REGION, String::class)!!
-            val backgroundRegion = params.game.assMan.getTextureRegion(atlasKey, regionKey)
+            val backgroundRegion = params.game.assets.getTextureRegion(atlasKey, regionKey)
 
             val rows = props.get(ConstKeys.ROWS, Int::class)!!
             val columns = props.get(ConstKeys.COLUMNS, Int::class)!!

@@ -6,7 +6,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactory
 import com.megaman.maverick.game.entities.factories.GameEntityPoolCreator
 import com.megaman.maverick.game.entities.special.RailTrackPlatform
 
-class BlocksFactory(private val game: MegaServices) : EntityFactory() {
+class BlocksFactory(private val services: MegaServices) : EntityFactory() {
 
     companion object {
         const val TAG = "BlockFactory"
@@ -32,25 +32,25 @@ class BlocksFactory(private val game: MegaServices) : EntityFactory() {
     }
 
     override fun init(vararg params: Any) {
-        pools.put(STANDARD, GameEntityPoolCreator.create { Block(game) })
-        pools.put(ANIMATED_BLOCK, GameEntityPoolCreator.create { AnimatedBlock(game) })
-        pools.put(ICE_BLOCK, GameEntityPoolCreator.create { IceBlock(game) })
-        pools.put(GEAR_TROLLEY, GameEntityPoolCreator.create { GearTrolley(game) })
-        pools.put(CONVEYOR_BELT, GameEntityPoolCreator.create { ConveyorBelt(game) })
-        pools.put(ROCKET_PLATFORM, GameEntityPoolCreator.create { RocketPlatform(game) })
-        pools.put(DROPPER_LIFT, GameEntityPoolCreator.create { DropperLift(game) })
-        pools.put(LIFT, GameEntityPoolCreator.create { Lift(game) })
-        pools.put(PROPELLER_PLATFORM, GameEntityPoolCreator.create { PropellerPlatform(game) })
-        pools.put(SWINGING_PLATFORM, GameEntityPoolCreator.create { SwingingPlatform(game) })
-        pools.put(RAIL_TRACK_PLATFORM, GameEntityPoolCreator.create { RailTrackPlatform(game) })
-        pools.put(BREAKABLE_ICE, GameEntityPoolCreator.create { BreakableIce(game) })
-        pools.put(FEET_RISE_SINK_BLOCK, GameEntityPoolCreator.create { FeetRiseSinkBlock(game) })
-        pools.put(LADDER_TOP, GameEntityPoolCreator.create { LadderTop(game) })
-        pools.put(DESTROYABLE_WOOD_PLANK, GameEntityPoolCreator.create { WoodPlank(game) })
-        pools.put(PUSHABLE_BLOCK, GameEntityPoolCreator.create { PushableBlock(game) })
-        pools.put(SWITCH_GATE, GameEntityPoolCreator.create { SwitchGate(game) })
-        pools.put(GRAVITY_BLOCK, GameEntityPoolCreator.create { GravityBlock(game) })
-        pools.put(INFERNO_CHAIN_PLATFORM, GameEntityPoolCreator.create { InfernoChainPlatform(game) })
+        pools.put(STANDARD, GameEntityPoolCreator.create { Block(services) })
+        pools.put(ANIMATED_BLOCK, GameEntityPoolCreator.create { AnimatedBlock(services) })
+        pools.put(ICE_BLOCK, GameEntityPoolCreator.create { IceBlock(services) })
+        pools.put(GEAR_TROLLEY, GameEntityPoolCreator.create { GearTrolley(services) })
+        pools.put(CONVEYOR_BELT, GameEntityPoolCreator.create { ConveyorBelt(services) })
+        pools.put(ROCKET_PLATFORM, GameEntityPoolCreator.create { RocketPlatform(services) })
+        pools.put(DROPPER_LIFT, GameEntityPoolCreator.create { DropperLift(services) })
+        pools.put(LIFT, GameEntityPoolCreator.create { Lift(services) })
+        pools.put(PROPELLER_PLATFORM, GameEntityPoolCreator.create { PropellerPlatform(services) })
+        pools.put(SWINGING_PLATFORM, GameEntityPoolCreator.create { SwingingPlatform(services) })
+        pools.put(RAIL_TRACK_PLATFORM, GameEntityPoolCreator.create { RailTrackPlatform(services) })
+        pools.put(BREAKABLE_ICE, GameEntityPoolCreator.create { BreakableIce(services) })
+        pools.put(FEET_RISE_SINK_BLOCK, GameEntityPoolCreator.create { FeetRiseSinkBlock(services) })
+        pools.put(LADDER_TOP, GameEntityPoolCreator.create { LadderTop(services) })
+        pools.put(DESTROYABLE_WOOD_PLANK, GameEntityPoolCreator.create { WoodPlank(services) })
+        pools.put(PUSHABLE_BLOCK, GameEntityPoolCreator.create { PushableBlock(services) })
+        pools.put(SWITCH_GATE, GameEntityPoolCreator.create { SwitchGate(services) })
+        pools.put(GRAVITY_BLOCK, GameEntityPoolCreator.create { GravityBlock(services) })
+        pools.put(INFERNO_CHAIN_PLATFORM, GameEntityPoolCreator.create { InfernoChainPlatform(services) })
     }
 
     override fun fetch(key: Any?) =

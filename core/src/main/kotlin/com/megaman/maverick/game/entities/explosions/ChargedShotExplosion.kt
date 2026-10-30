@@ -41,7 +41,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class ChargedShotExplosion(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "ChargedShotExplosion"
@@ -70,7 +70,7 @@ class ChargedShotExplosion(game: MegaServices) : AbstractProjectile(game), IAnim
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             regions.put("full", atlas.findRegion("ChargedShotExplosion"))
             regions.put("half", atlas.findRegion("HalfChargedShotExplosion"))
         }

@@ -31,7 +31,7 @@ import com.megaman.maverick.game.utils.extensions.getPosition
 import com.megaman.maverick.game.world.body.getBounds
 import kotlin.math.ceil
 
-class PreciousBlock(game: MegaServices) : ShieldBlock(game), ISpritesEntity, IAnimatedEntity, IMotionEntity {
+class PreciousBlock(services: MegaServices) : ShieldBlock(services), ISpritesEntity, IAnimatedEntity, IMotionEntity {
 
     companion object {
         const val TAG = "PreciousBlock"
@@ -43,7 +43,7 @@ class PreciousBlock(game: MegaServices) : ShieldBlock(game), ISpritesEntity, IAn
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PLATFORMS_1.source, TAG)
         super.init()
         addComponent(MotionComponent())
         addComponent(SpritesComponent())

@@ -42,7 +42,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class RocketBomb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, IDirectional {
+class RocketBomb(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, IDirectional {
 
     companion object {
         const val TAG = "RocketBomb"
@@ -54,7 +54,7 @@ class RocketBomb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity
 
     override fun init(vararg params: Any) {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "RocketBomb")
+            region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "RocketBomb")
         super.init()
         addComponent(defineAnimationsComponent())
     }

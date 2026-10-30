@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
-class BigAssMaverickRobotOrb(game: MegaServices) : AbstractProjectile(game, size = Size.MEDIUM), IAnimatedEntity {
+class BigAssMaverickRobotOrb(services: MegaServices) : AbstractProjectile(services, size = Size.MEDIUM), IAnimatedEntity {
 
     companion object {
         const val TAG = "BigAssMaverickRobotOrb"
@@ -71,7 +71,7 @@ class BigAssMaverickRobotOrb(game: MegaServices) : AbstractProjectile(game, size
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             animDefs.keys().forEach { key ->
                 OrbColor.entries.map { it.name.lowercase() }.forEach { color ->
                     regions.put("$color/$key", atlas.findRegion("$TAG/$color/$key"))

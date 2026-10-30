@@ -111,7 +111,7 @@ import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
 
 class MegaLevelScreen(private val game: MegamanMaverickGame) :
-    TiledMapLevelScreen(game.batch, TiledMapLoader(game.assMan)), Initializable, IEventListener, IShapeDebuggable,
+    TiledMapLevelScreen(game.batch, TiledMapLoader(game.assets)), Initializable, IEventListener, IShapeDebuggable,
     Resettable {
 
     companion object {
@@ -171,9 +171,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
     val eventsMan: EventsManager
-        get() = game.eventsMan
+        get() = game.events
     val audioMan: MegaAudioManager
-        get() = game.audioMan
+        get() = game.audio
 
     var music: MusicAsset? = null
 
@@ -522,8 +522,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     override fun buildLevel(result: Properties) {
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
         backgrounds.forEach {
-            game.eventsMan.addListener(it)
-            disposables.add { game.eventsMan.removeListener(it) }
+            game.events.addListener(it)
+            disposables.add { game.events.removeListener(it) }
         }
         backgroundsToHide =
             result.get("${ConstKeys.HIDDEN}_${ConstKeys.BACKGROUNDS}") as ObjectSet<String>? ?: ObjectSet()
@@ -638,7 +638,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
 
-                game.state.removeLife(event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!)
+                game.gameState.removeLife(event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!)
 
                 playerDeathEventHandler.init()
 
@@ -658,9 +658,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 music?.let { audioMan.playMusic(it, it.loop) }
 
-                if (game.state.livesExhausted()) {
+                if (game.gameState.livesExhausted()) {
                     game.setCurrentScreen(ScreenEnum.GAME_OVER_SCREEN.name)
-                    game.state.resetLives()
+                    game.gameState.resetLives()
                     return
                 }
 
@@ -680,7 +680,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.ADD_CURRENCY -> {
                 val currency = event.getProperty(ConstKeys.VALUE, Int::class)!!
-                game.state.addCurrency(currency)
+                game.gameState.addCurrency(currency)
             }
 
             EventType.ATTAIN_HEART_TANK -> {
@@ -751,7 +751,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 // victory event should be triggered (when the boss is already defeated)
                 if (!mini && end) {
                     val levelDef = game.levelState.currentLevel!!
-                    if (game.state.isLevelDefeated(levelDef)) {
+                    if (game.gameState.isLevelDefeated(levelDef)) {
                         eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
                         return
                     }
@@ -775,7 +775,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                         val runOnFirstUpdate: (() -> Unit)? = when (type) {
                             HealthFillType.BIT_BY_BIT -> {
-                                { game.audioMan.pauseMusic() }
+                                { game.audio.pauseMusic() }
                             }
 
                             else -> null
@@ -783,7 +783,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                         val runOnFinished = {
                             eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                            if (type == HealthFillType.BIT_BY_BIT) game.audioMan.playMusic()
+                            if (type == HealthFillType.BIT_BY_BIT) game.audio.playMusic()
                         }
 
                         bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
@@ -874,7 +874,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
                 val level = game.levelState.currentLevel!!
-                if (level.type != LevelType.EXTRA_LEVEL) game.state.addLevelDefeated(level)
+                if (level.type != LevelType.EXTRA_LEVEL) game.gameState.addLevelDefeated(level)
 
                 val nextScreen = screenOnCompletion.invoke(game.levelState)
                 game.setCurrentScreen(nextScreen.name)

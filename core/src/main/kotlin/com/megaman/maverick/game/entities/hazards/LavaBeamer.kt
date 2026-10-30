@@ -49,7 +49,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class LavaBeamer(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class LavaBeamer(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IHazard, IDirectional {
 
     companion object {
@@ -85,7 +85,7 @@ class LavaBeamer(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICulla
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put("on", atlas.findRegion("$TAG/On"))
             regions.put("off", atlas.findRegion("$TAG/Off"))
             regions.put("switch", atlas.findRegion("$TAG/SwitchingOn"))
@@ -121,12 +121,12 @@ class LavaBeamer(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICulla
         body.positionOnPoint(bounds.getPositionPoint(position), position)
         loop.reset()
         timers.values().forEach { it.reset() }
-        game.eventsMan.addListener(cullOnEvents)
+        services.events.addListener(cullOnEvents)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        game.eventsMan.removeListener(cullOnEvents)
+        services.events.removeListener(cullOnEvents)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

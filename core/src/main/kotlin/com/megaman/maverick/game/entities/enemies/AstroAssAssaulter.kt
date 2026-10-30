@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class AstroAssAssaulter(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IAnimatedEntity,
+class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
     IFreezableEntity, IDrawableShapesEntity, IFaceable {
 
     companion object {
@@ -109,7 +109,7 @@ class AstroAssAssaulter(game: MegaServices) : AbstractEnemy(game, size = Size.ME
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("stand", "throw", "shoot", "shoot_up", "frozen").forEach { key ->
                 regions.put(key, atlas.findRegion("${TAG}/$key"))
             }
@@ -227,7 +227,7 @@ class AstroAssAssaulter(game: MegaServices) : AbstractEnemy(game, size = Size.ME
             freezeHandler.update(delta)
             if (frozen) return@add
 
-            if (game.camera.rotating) return@add
+            if (services.camera.rotating) return@add
 
             if (flag?.existenceState?.liveAfterUpdate == false) flag = null
 

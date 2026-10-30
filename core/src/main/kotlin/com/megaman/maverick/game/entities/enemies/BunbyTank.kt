@@ -54,7 +54,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BunbyTank(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
+class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
     IDrawableShapesEntity, IFaceable, IDirectional {
 
     companion object {
@@ -97,7 +97,7 @@ class BunbyTank(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), I
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             regions.put("still", atlas.findRegion("$TAG/Still"))
             regions.put("roll", atlas.findRegion("$TAG/Roll"))
             regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
@@ -190,7 +190,7 @@ class BunbyTank(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), I
                 return@add
             }
 
-            if (game.camera.rotating) {
+            if (services.camera.rotating) {
                 body.physics.velocity.setZero()
                 return@add
             }
@@ -225,7 +225,7 @@ class BunbyTank(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), I
             turnAroundScanner.positionOnPoint(turnAroundScannerPosition, position.opposite())
 
             if (targetPlayer.existenceState.liveAfterUpdate) {
-                if (body.getBounds().overlaps(game.getGameCamera().getRotatedBounds()) &&
+                if (body.getBounds().overlaps(services.getGameCamera().getRotatedBounds()) &&
                     targetPlayer.body.getBounds().overlaps(shootScanner)
                 ) {
                     body.physics.velocity.setZero()

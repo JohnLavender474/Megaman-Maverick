@@ -13,7 +13,7 @@ class DesertSunSky(game: MegamanMaverickGame, it: RectangleMapObject) : Animated
     "DesertSunSky",
     startX = it.rectangle.x,
     startY = it.rectangle.y,
-    model = game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/SunSky"),
+    model = game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/SunSky"),
     modelWidth = 16f * ConstVals.PPM,
     modelHeight = 14f * ConstVals.PPM,
     rows = 1,

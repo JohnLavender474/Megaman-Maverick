@@ -38,7 +38,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 
-class UFOBomb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class UFOBomb(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "UFOBomb"
@@ -49,7 +49,7 @@ class UFOBomb(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
     override var owner: IGameEntity? = null
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

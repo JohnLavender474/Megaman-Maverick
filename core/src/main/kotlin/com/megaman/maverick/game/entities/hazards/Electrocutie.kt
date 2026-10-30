@@ -36,7 +36,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.roundToInt
 
-class Electrocutie(game: MegaServices) : MegaGameEntity(game), IHazard, IBodyEntity, IParentEntity<MegaGameEntity> {
+class Electrocutie(services: MegaServices) : MegaGameEntity(services), IHazard, IBodyEntity, IParentEntity<MegaGameEntity> {
 
     enum class ElectrocutieState { MOVE, CHARGE, SHOCK }
 
@@ -155,7 +155,7 @@ class Electrocutie(game: MegaServices) : MegaGameEntity(game), IHazard, IBodyEnt
             val length = bounds.getWidth().roundToInt() / ConstVals.PPM
             for (i in 0 until length) {
                 val position = body.getPositionPoint(Position.CENTER_LEFT).add(i * ConstVals.PPM.toFloat(), 0f)
-                val bolt = Bolt(game)
+                val bolt = Bolt(services)
                 bolt.spawn(
                     props(
                         ConstKeys.POSITION pairTo position,

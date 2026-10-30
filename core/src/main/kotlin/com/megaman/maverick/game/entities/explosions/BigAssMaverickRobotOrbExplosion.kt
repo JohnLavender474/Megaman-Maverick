@@ -44,7 +44,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class BigAssMaverickRobotOrbExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -69,7 +69,7 @@ class BigAssMaverickRobotOrbExplosion(game: MegaServices) : MegaGameEntity(game)
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (explosionRegion == null || dissipateRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             explosionRegion = atlas.findRegion("$TAG/ElectricPulse")
             dissipateRegion = atlas.findRegion("$TAG/ElectricDissipate")
         }

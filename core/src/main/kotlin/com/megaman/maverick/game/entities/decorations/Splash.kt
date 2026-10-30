@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.GameObjectPools
 import kotlin.math.ceil
 
-class Splash(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAudioEntity {
+class Splash(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAudioEntity {
 
     enum class SplashType(
         val defaultAlpha: Float,
@@ -92,7 +92,7 @@ class Splash(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAudioE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
             SplashType.entries.forEach { t -> regions.put(t.name, atlas.findRegion(t.regionkey)) }
         }
         super.init()

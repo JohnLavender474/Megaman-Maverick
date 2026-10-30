@@ -23,7 +23,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getPosition
 
-class TreeStump(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
+class TreeStump(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
 
     companion object {
         const val TAG = "TreeStump"
@@ -35,7 +35,7 @@ class TreeStump(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
     override fun getType() = EntityType.DECORATION
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.name, "TreeStump")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENVIRONS_1.name, "TreeStump")
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())
     }
@@ -58,7 +58,7 @@ class TreeStump(game: MegaServices) : MegaGameEntity(game), ISpritesEntity {
     }
 
     private fun defineCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+        val cullOutOfBounds = getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

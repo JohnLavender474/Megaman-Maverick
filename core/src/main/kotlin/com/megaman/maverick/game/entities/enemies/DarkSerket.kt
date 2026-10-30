@@ -58,7 +58,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class DarkSerket(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
+class DarkSerket(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
 
     companion object {
         const val TAG = "DarkSerket"
@@ -144,7 +144,7 @@ class DarkSerket(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IA
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -194,7 +194,7 @@ class DarkSerket(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IA
             body.getAllFixtures(fixtures)
 
             val updateCullTimer = fixtures.none { fixture ->
-                fixture.getShape().overlaps(game.getGameCamera().getRotatedBounds())
+                fixture.getShape().overlaps(services.getGameCamera().getRotatedBounds())
             }
             if (updateCullTimer) cullTimer.update(delta) else cullTimer.reset()
 

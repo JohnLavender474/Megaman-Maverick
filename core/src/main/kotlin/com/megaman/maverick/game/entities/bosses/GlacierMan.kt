@@ -63,7 +63,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class GlacierMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFaceable {
+class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "GlacierMan"
@@ -134,7 +134,7 @@ class GlacierMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFac
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             gdxArrayOf(
                 "defeated",
                 "fired",
@@ -394,7 +394,7 @@ class GlacierMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFac
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 
-            sprite.hidden = damageBlink || game.levelState.roomTransition
+            sprite.hidden = damageBlink || services.levelState.roomTransition
         }
         return spritesComponent
     }
@@ -537,7 +537,7 @@ class GlacierMan(game: MegaServices) : AbstractBoss(game), IAnimatedEntity, IFac
         val iceBlastAttackTimer = Timer(ICE_BLAST_ATTACK_DUR)
         val iceBlastAttackTimerRunnables = Array<TimeMarkedRunnable>()
 
-        val count = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+        val count = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
             ICE_BLAST_ATTACK_COUNT_HARD else ICE_BLAST_ATTACK_COUNT
 
         for (i in 0 until count) {

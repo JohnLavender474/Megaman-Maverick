@@ -31,9 +31,9 @@ class MegamanStunTargetTest : DescribeSpec({
 
     beforeEach {
         val players = MegaPlayers(2)
-        val game = testServices(engine = mockk<GameEngine>(relaxed = true), players = players)
+        val services = testServices(engine = mockk<GameEngine>(relaxed = true), players = players)
 
-        megaman = Megaman(game)
+        megaman = Megaman(services)
         megaman.addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(ControllerComponent())

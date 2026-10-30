@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Bolt(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IHazard, IDamagerEntity, ISpritesEntity,
+class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHazard, IDamagerEntity, ISpritesEntity,
     IAnimatedEntity, ICullableEntity, IChildEntity, IDirectional {
 
     companion object {
@@ -60,7 +60,7 @@ class Bolt(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IHazard, IDa
     var scale = 1f
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Bolt")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "Bolt")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())

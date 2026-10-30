@@ -43,7 +43,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.floor
 
-class FallingLeaf(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAnimatedEntity {
+class FallingLeaf(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "FallingLeaf"
@@ -86,7 +86,7 @@ class FallingLeaf(game: MegaServices) : MegaGameEntity(game), ICullableEntity, I
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/$TAG")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENVIRONS_1.source, "Wood/$TAG")
         super.init()
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
@@ -163,7 +163,7 @@ class FallingLeaf(game: MegaServices) : MegaGameEntity(game), ICullableEntity, I
         maxTtlTimer.reset()
     }
 
-    private fun maxAllowedSpawned() = game.settings.performance.fps.floorDiv(3)
+    private fun maxAllowedSpawned() = services.settings.performance.fps.floorDiv(3)
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")

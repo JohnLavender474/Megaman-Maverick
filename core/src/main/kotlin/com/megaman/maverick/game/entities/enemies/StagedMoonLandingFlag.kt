@@ -50,7 +50,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class StagedMoonLandingFlag(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity,
+class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity,
     IFaceable, IScalableGravityEntity {
 
     companion object {
@@ -105,7 +105,7 @@ class StagedMoonLandingFlag(game: MegaServices) : AbstractEnemy(game, size = Siz
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             FlagState.entries.forEach {
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

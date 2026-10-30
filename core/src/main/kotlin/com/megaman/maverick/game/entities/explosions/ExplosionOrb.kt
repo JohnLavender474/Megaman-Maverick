@@ -39,7 +39,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class ExplosionOrb(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
+class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity,
     IEventListener {
 
     companion object {
@@ -52,7 +52,7 @@ class ExplosionOrb(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineBodyComponent())
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
@@ -63,7 +63,7 @@ class ExplosionOrb(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -79,7 +79,7 @@ class ExplosionOrb(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -105,7 +105,7 @@ class ExplosionOrb(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpr
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullOOB = getGameCameraCullingLogic(
-            game.getGameCamera(),
+            services.getGameCamera(),
             { defaultSprite.boundingRectangle.toGameRectangle() },
             OOB_CULL_TIME
         )

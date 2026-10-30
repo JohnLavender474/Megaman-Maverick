@@ -63,7 +63,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class GutsTankFist(game: MegaServices) : AbstractEnemy(game, dmgDuration = DAMAGE_DURATION, size = Size.MEDIUM),
+class GutsTankFist(services: MegaServices) : AbstractEnemy(services, dmgDuration = DAMAGE_DURATION, size = Size.MEDIUM),
     IChildEntity, IDrawableShapesEntity, IFaceable {
 
     enum class GutsTankFistState { ATTACHED, LAUNCHED, RETURNING }
@@ -118,7 +118,7 @@ class GutsTankFist(game: MegaServices) : AbstractEnemy(game, dmgDuration = DAMAG
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (launchedRegion == null || fistRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             fistRegion = atlas.findRegion("${GutsTank.TAG}/fist")
             launchedRegion = atlas.findRegion("${GutsTank.TAG}/fist_launched")
         }
@@ -199,7 +199,7 @@ class GutsTankFist(game: MegaServices) : AbstractEnemy(game, dmgDuration = DAMAG
                     }
 
                     val speed = when {
-                        game.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> LAUNCH_SPEED_IN_CAM
+                        services.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> LAUNCH_SPEED_IN_CAM
                         else -> LAUNCH_SPEED_OUT_OF_CAM
                     }
 
@@ -223,7 +223,7 @@ class GutsTankFist(game: MegaServices) : AbstractEnemy(game, dmgDuration = DAMAG
 
                     if (returnDelayTimer.isFinished()) {
                         val speed = when {
-                            game.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> RETURN_SPEED_IN_CAM
+                            services.getGameCamera().getRotatedBounds().overlaps(body.getBounds()) -> RETURN_SPEED_IN_CAM
                             else -> RETURN_SPEED_OUT_OF_CAM
                         }
 

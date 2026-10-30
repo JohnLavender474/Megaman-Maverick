@@ -22,22 +22,22 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-private class LaserIgnoreTestEntity(game: MegaServices) : MegaGameEntity(game) {
+private class LaserIgnoreTestEntity(services: MegaServices) : MegaGameEntity(services) {
     override fun getType() = EntityType.OTHER
 }
 
 class LaserIgnoreTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
 
     beforeEach {
         engine = GameEngine()
-        game = testServices(engine = engine)
+        services = testServices(engine = engine)
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-        every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
-        MegaEntityFactory.init(game)
+        every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
+        MegaEntityFactory.init(services)
     }
 
     afterEach {
@@ -46,7 +46,7 @@ class LaserIgnoreTest : DescribeSpec({
     }
 
     fun entity(props: Properties = Properties()): LaserIgnoreTestEntity {
-        val entity = LaserIgnoreTestEntity(game)
+        val entity = LaserIgnoreTestEntity(services)
         entity.spawn(props)
         engine.update(0f)
         return entity
@@ -55,7 +55,7 @@ class LaserIgnoreTest : DescribeSpec({
     fun ignoreObject(id: Int) = RectangleMapObject().also { it.properties.put(ConstKeys.ID, id) }
 
     fun laser(owner: MegaGameEntity, vararg ignoreIds: Int): Laser {
-        val laser = Laser(game)
+        val laser = Laser(services)
         val laserProps = props(ConstKeys.OWNER pairTo owner, ConstKeys.RADIUS pairTo 1f)
         ignoreIds.forEachIndexed { i, id -> laserProps.put("${ConstKeys.IGNORE}_$i", ignoreObject(id)) }
         laser.spawn(laserProps)
@@ -64,7 +64,7 @@ class LaserIgnoreTest : DescribeSpec({
     }
 
     fun reflectingLaser(parent: Laser, reflector: MegaGameEntity): Laser {
-        val laser = Laser(game)
+        val laser = Laser(services)
         laser.spawn(props(ConstKeys.PARENT pairTo parent, ConstKeys.ACTIVE pairTo false, ConstKeys.RADIUS pairTo 1f))
         engine.update(0f)
         laser.setReflector(reflector, parent)

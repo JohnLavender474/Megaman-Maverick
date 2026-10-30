@@ -50,7 +50,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class SpreadExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class SpreadExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     IDirectional, IOwnable<IGameEntity>, IDamagerEntity, IHazard {
 
     companion object {
@@ -100,7 +100,7 @@ class SpreadExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity, I
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             SpreadExplosionColor.entries.forEach { color ->
                 val key = color.name.lowercase()
                 val region = atlas.findRegion("$TAG/$key")

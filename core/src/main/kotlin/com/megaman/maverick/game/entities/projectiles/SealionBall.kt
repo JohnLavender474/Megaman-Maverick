@@ -40,7 +40,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class SealionBall(game: MegaServices) : AbstractHealthEntity(game), IProjectileEntity, ISpritesEntity,
+class SealionBall(services: MegaServices) : AbstractHealthEntity(services), IProjectileEntity, ISpritesEntity,
     IDamageableEntity {
 
     companion object {
@@ -58,7 +58,7 @@ class SealionBall(game: MegaServices) : AbstractHealthEntity(game), IProjectileE
     private var ballInHand = true
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponents(defineProjectileComponents(OUT_OF_BOUNDS_CULL_TIME))
         addComponent(defineBodyComponent())
@@ -103,7 +103,7 @@ class SealionBall(game: MegaServices) : AbstractHealthEntity(game), IProjectileE
     override fun onDestroy() {
         super.onDestroy()
 
-        if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+        if (overlapsGameCamera()) services.audio.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
 
         val disintegration = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.DISINTEGRATION)!!
         disintegration.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))

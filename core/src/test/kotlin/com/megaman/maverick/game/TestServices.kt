@@ -22,10 +22,10 @@ import io.mockk.mockk
 
 fun testServices(
     engine: GameEngine = mockk(relaxed = true),
-    eventsMan: EventsManager = EventsManager(),
-    assMan: AssetManager = mockk(relaxed = true),
-    audioMan: MegaAudioManager = mockk(relaxed = true),
-    state: GameState = GameState(),
+    events: EventsManager = EventsManager(),
+    assets: AssetManager = mockk(relaxed = true),
+    audio: MegaAudioManager = mockk(relaxed = true),
+    gameState: GameState = GameState(),
     players: MegaPlayers = MegaPlayers(),
     gravity: WorldGravity = WorldGravity(players),
     levelState: LevelState = LevelState().apply { currentLevel = LevelDefinition.TEST_1 },
@@ -38,10 +38,10 @@ fun testServices(
     gameCamera: RotatableCamera = RotatableCamera()
 ) = MegaServices(
     engine,
-    eventsMan,
-    assMan,
-    audioMan,
-    state,
+    events,
+    assets,
+    audio,
+    gameState,
     players,
     gravity,
     levelState,

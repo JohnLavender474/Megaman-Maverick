@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class ForceDecoration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity,
+class ForceDecoration(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity,
     ICullableEntity {
 
     companion object {
@@ -43,7 +43,7 @@ class ForceDecoration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity
 
     override fun init(vararg params: Any) {
         if (region == null)
-            region = game.assMan.getTextureRegion(TextureAsset.SPECIALS_1.source, "Force")
+            region = services.assets.getTextureRegion(TextureAsset.SPECIALS_1.source, "Force")
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
     }
@@ -76,7 +76,7 @@ class ForceDecoration(game: MegaServices) : MegaGameEntity(game), ISpritesEntity
     }
 
     private fun createCullablesComponent(): CullablesComponent {
-        val cullOutOfBounds = getGameCameraCullingLogic(game.getGameCamera(), { bounds }, 0f)
+        val cullOutOfBounds = getGameCameraCullingLogic(services.getGameCamera(), { bounds }, 0f)
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 }

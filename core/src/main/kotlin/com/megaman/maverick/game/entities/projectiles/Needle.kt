@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Needle(game: MegaServices) : AbstractProjectile(game), IHealthEntity, IDamageableEntity {
+class Needle(services: MegaServices) : AbstractProjectile(services), IHealthEntity, IDamageableEntity {
 
     companion object {
         const val TAG = "Needle"
@@ -78,7 +78,7 @@ class Needle(game: MegaServices) : AbstractProjectile(game), IHealthEntity, IDam
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("default", "ice").forEach { regions.put(it, atlas.findRegion("${TAG}/${it}")) }
         }
         super.init()

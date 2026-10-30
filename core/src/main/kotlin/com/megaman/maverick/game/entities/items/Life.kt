@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Life(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class Life(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         const val TAG = "Life"
@@ -34,7 +34,7 @@ class Life(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEn
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ITEMS_1.source, TAG)
         super.init()
         addComponent(AudioComponent())
         addComponent(defineSpritesComponent())
@@ -50,7 +50,7 @@ class Life(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEn
     override fun contactWithPlayer(player: MegaGameEntity) {
         GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
         destroy()
-        if (game.state.addLife(player.playerSlot!!)) requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
+        if (services.gameState.addLife(player.playerSlot!!)) requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

@@ -42,7 +42,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class SuicideBummer(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable, IAnimatedEntity {
+class SuicideBummer(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFaceable, IAnimatedEntity {
 
     companion object {
         const val TAG = "SuicideBummer"
@@ -61,7 +61,7 @@ class SuicideBummer(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM
 
     override fun init(vararg params: Any) {
         if (runRegion == null || jumpRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             runRegion = atlas.findRegion("SuicideBummer/Run")
             jumpRegion = atlas.findRegion("SuicideBummer/Jump")
         }

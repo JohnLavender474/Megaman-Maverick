@@ -108,10 +108,10 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
             return
         }
 
-        val blackRegion = game.assMan.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
+        val blackRegion = game.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         regions.put(ConstKeys.BLACK, blackRegion)
 
-        val levelSelectScreenAtlas = game.assMan.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN.source)
+        val levelSelectScreenAtlas = game.assets.getTextureAtlas(TextureAsset.LEVEL_SELECT_SCREEN.source)
 
         val staticBkgRegion =
             levelSelectScreenAtlas.findRegion("${ConstKeys.BACKGROUND}_${ConstKeys.STATIC}")
@@ -150,7 +150,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                 val key = buttonKey
                 when (key) {
                     BACK_BUTTON_KEY, null -> PRESS_START
-                    Position.CENTER.name -> if (game.state.allRobotMasterLevelsDefeated()) DR_WILY else MEGA_MAN
+                    Position.CENTER.name -> if (game.gameState.allRobotMasterLevelsDefeated()) DR_WILY else MEGA_MAN
                     else -> {
                         val position = Position.valueOf(key)
                         levelDefGrid[position].getFormattedName()
@@ -163,7 +163,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         )
         text.add(bossName)
 
-        val backArrow = BlinkingArrow(game.assMan, Vector2(BACK_ARROW_X * ConstVals.PPM, BACK_ARROW_Y * ConstVals.PPM))
+        val backArrow = BlinkingArrow(game.assets, Vector2(BACK_ARROW_X * ConstVals.PPM, BACK_ARROW_Y * ConstVals.PPM))
         blinkingArrows.put(BACK_BUTTON_KEY, backArrow)
 
         buttons.put(BACK_BUTTON_KEY, object : IMenuButton {
@@ -216,7 +216,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     }
 
     private fun putCenterMugshot() {
-        val atlas = game.assMan.getTextureAtlas(TextureAsset.FACES_1.source)
+        val atlas = game.assets.getTextureAtlas(TextureAsset.FACES_1.source)
 
         val megamanFaces = ObjectMap<Position, TextureRegion>()
         Position.entries.forEach { pos ->
@@ -227,7 +227,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         val wilyFace = atlas.findRegion("Wily")
 
         val faceSupplier: () -> TextureRegion = faceSupplier@{
-            if (game.state.allRobotMasterLevelsDefeated()) return@faceSupplier wilyFace
+            if (game.gameState.allRobotMasterLevelsDefeated()) return@faceSupplier wilyFace
 
             val position = Position.entries.find { it.name == buttonKey } ?: Position.CENTER
             val megamanFace = megamanFaces[position]
@@ -248,8 +248,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         buttons.put(Position.CENTER.name, object : IMenuButton {
 
             override fun onSelect(delta: Float): Boolean {
-                if (game.state.allRobotMasterLevelsDefeated()) {
-                    val wilyStage = game.state.getNextWilyStage()
+                if (game.gameState.allRobotMasterLevelsDefeated()) {
+                    val wilyStage = game.gameState.getNextWilyStage()
 
                     if (wilyStage == null) {
                         GameLogger.error(TAG, "Next Wily stage is null")
@@ -287,8 +287,8 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     }
 
     private fun select(levelDef: LevelDefinition) {
-        game.audioMan.playSound(SoundAsset.BEAM_OUT_SOUND, false)
-        game.audioMan.stopMusic(null)
+        game.audio.playSound(SoundAsset.BEAM_OUT_SOUND, false)
+        game.audio.stopMusic(null)
 
         selectedLevelDef = levelDef
 
@@ -296,13 +296,13 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
     }
 
     private fun putBossMugshot(position: Position, levelDef: LevelDefinition) {
-        val mugshotRegion = game.assMan.getTextureRegion(
+        val mugshotRegion = game.assets.getTextureRegion(
             TextureAsset.valueOf(levelDef.mugshotAtlas!!.uppercase()).source,
             levelDef.mugshotRegion!!
         )
         val faceSupplier: () -> TextureRegion = {
             when {
-                game.state.isLevelDefeated(levelDef) -> regions[ConstKeys.BLACK]
+                game.gameState.isLevelDefeated(levelDef) -> regions[ConstKeys.BLACK]
                 else -> mugshotRegion
             }
         }
@@ -331,7 +331,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         if (levelDef == LevelDefinition.MOON_MAN) {
             GameLogger.debug(TAG, "putBossMugshot(): put moon pieces for Moon Man")
 
-            val region = game.assMan.getTextureRegion(TextureAsset.FACES_1.source, MOON_PIECES_REGION_KEY)
+            val region = game.assets.getTextureRegion(TextureAsset.FACES_1.source, MOON_PIECES_REGION_KEY)
 
             val moonPieces = GameSprite(region)
             foregroundSprites.put(moonPieces) {
@@ -343,7 +343,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                 moonPieces.setPosition(x, y)
                 moonPieces.setSize(width, height)
 
-                moonPieces.hidden = game.state.isLevelDefeated(levelDef)
+                moonPieces.hidden = game.gameState.isLevelDefeated(levelDef)
             }
         }
     }
@@ -364,14 +364,14 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         game.getUiCamera().position.set(ConstFuncs.getUiCamInitPos())
 
         val musicAsset = when {
-            game.state.allRobotMasterLevelsDefeated() -> MusicAsset.MMX5_STAGE_SELECT_2_MUSIC
+            game.gameState.allRobotMasterLevelsDefeated() -> MusicAsset.MMX5_STAGE_SELECT_2_MUSIC
             else -> MusicAsset.MMX5_STAGE_SELECT_1_MUSIC
         }
-        game.audioMan.playMusic(musicAsset, true)
+        game.audio.playMusic(musicAsset, true)
     }
 
     override fun onAnyMovement(direction: Direction) =
-        game.audioMan.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
+        game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
 
     override fun render(delta: Float) {
         super.render(delta)
@@ -456,7 +456,7 @@ internal class Mugshot(
         }
 
         if (regions.isEmpty) {
-            val uiAtlas = game.assMan.getTextureAtlas(TextureAsset.UI_1.source)
+            val uiAtlas = game.assets.getTextureAtlas(TextureAsset.UI_1.source)
             gdxArrayOf(NONE_REGION_KEY, BLINKING_REGION_KEY, HIGHLIGHTED_REGION_KEY).forEach {
                 regions.put(it, uiAtlas.findRegion("${TAG}/$it"))
             }

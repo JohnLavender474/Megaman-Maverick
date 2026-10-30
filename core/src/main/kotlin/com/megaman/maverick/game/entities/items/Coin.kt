@@ -26,7 +26,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.getCenter
 
-class Coin(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEntity, IAudioEntity {
+class Coin(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAnimatedEntity, IAudioEntity {
 
     companion object {
         const val TAG = "Coin"
@@ -41,7 +41,7 @@ class Coin(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEn
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.SMB3_ITEMS.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.SMB3_ITEMS.source)
             region = atlas.findRegion(TAG.lowercase())
         }
         super.init()
@@ -75,10 +75,10 @@ class Coin(game: MegaServices) : AbstractItem(game), ISpritesEntity, IAnimatedEn
     override fun contactWithPlayer(player: MegaGameEntity) {
         if (!doContactWithPlayer) return
 
-        val coins = game.levelState.coins
-        game.levelState.coins = coins + 1
+        val coins = services.levelState.coins
+        services.levelState.coins = coins + 1
 
-        game.audioMan.playSound(SoundAsset.SMB3_COIN_SOUND, false)
+        services.audio.playSound(SoundAsset.SMB3_COIN_SOUND, false)
 
         destroy()
     }

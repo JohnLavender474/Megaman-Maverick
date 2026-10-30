@@ -52,7 +52,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class ChargedShot(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "ChargedShot"
@@ -87,7 +87,7 @@ class ChargedShot(game: MegaServices) : AbstractProjectile(game), IAnimatedEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put(ConstKeys.FULL, atlas.findRegion("${TAG}${CHARGED_SHOT_REGION_SUFFIX}"))
             regions.put(ConstKeys.HALF, atlas.findRegion("${HALF_CHARGED_SHOT_REGION_PREFIX}${TAG}"))
         }

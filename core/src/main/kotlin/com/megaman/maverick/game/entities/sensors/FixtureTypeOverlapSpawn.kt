@@ -23,7 +23,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.setReceiver
 
-class FixtureTypeOverlapSpawn(game: MegaServices) : MegaGameEntity(game), IBodyEntity,
+class FixtureTypeOverlapSpawn(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     IParentEntity<IGameEntity> {
 
     companion object {

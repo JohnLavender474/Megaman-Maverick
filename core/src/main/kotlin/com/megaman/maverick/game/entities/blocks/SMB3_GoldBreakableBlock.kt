@@ -5,7 +5,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 
-class SMB3_GoldBreakableBlock(game: MegaServices): BreakableBlock(game) {
+class SMB3_GoldBreakableBlock(services: MegaServices): BreakableBlock(services) {
 
     companion object {
         const val TAG = "SMB3_GoldBreakableBlock"

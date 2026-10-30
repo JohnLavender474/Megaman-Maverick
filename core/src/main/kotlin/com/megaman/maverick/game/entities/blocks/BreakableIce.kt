@@ -33,7 +33,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.setReceiver
 
-class BreakableIce(game: MegaServices) : IceBlock(game), ISpritesEntity, IAudioEntity {
+class BreakableIce(services: MegaServices) : IceBlock(services), ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "BreakableIce"
@@ -49,7 +49,7 @@ class BreakableIce(game: MegaServices) : IceBlock(game), ISpritesEntity, IAudioE
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region1 == null || region2 == null || region3 == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             region1 = atlas.findRegion("$TAG/1")
             region2 = atlas.findRegion("$TAG/2")
             region3 = atlas.findRegion("$TAG/3")

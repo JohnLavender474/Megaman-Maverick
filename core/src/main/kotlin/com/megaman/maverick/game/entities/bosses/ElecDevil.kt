@@ -52,7 +52,7 @@ import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.max
 import kotlin.math.min
 
-class ElecDevil(game: MegaServices) : AbstractBoss(game), IStateable<ElecDevilState> {
+class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<ElecDevilState> {
 
     companion object {
         const val TAG = "ElecDevil"
@@ -151,7 +151,7 @@ class ElecDevil(game: MegaServices) : AbstractBoss(game), IStateable<ElecDevilSt
             ElecDevilState.STAND pairTo Timer(STAND_DUR),
             ElecDevilState.CHARGE pairTo Timer(CHARGE_DUR).setRunOnFinished { shootFromEye() },
             ElecDevilState.HAND pairTo Timer(HAND_DUR).also { timer ->
-                val delay = if (game.state.getDifficultyMode() == DifficultyMode.HARD)
+                val delay = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
                     EYE_SHOT_DELAY_HARD else EYE_SHOT_DELAY_NORMAL
 
                 val shots = HAND_DUR.div(delay).toInt()
@@ -540,7 +540,7 @@ class ElecDevil(game: MegaServices) : AbstractBoss(game), IStateable<ElecDevilSt
         val numerator = max(0f, getCurrentHealth() - MIN_HEALTH_FOR_LAUNCH_OFFSET)
         val ratio = min(1f, numerator / ConstVals.MAX_HEALTH)
 
-        val hard = game.state.getDifficultyMode() == DifficultyMode.HARD
+        val hard = services.gameState.getDifficultyMode() == DifficultyMode.HARD
 
         val min: Float
         val max: Float

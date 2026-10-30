@@ -43,7 +43,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class SigmaRatElectricBallExplosion(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity,
+class SigmaRatElectricBallExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -67,7 +67,7 @@ class SigmaRatElectricBallExplosion(game: MegaServices) : MegaGameEntity(game), 
 
     override fun init(vararg params: Any) {
         if (explosionRegion == null || dissipateRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             explosionRegion = atlas.findRegion("SigmaRat/ElectricPulse")
             dissipateRegion = atlas.findRegion("SigmaRat/ElectricDissipate")
         }

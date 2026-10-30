@@ -45,7 +45,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
-class Bullet(game: MegaServices) : AbstractProjectile(game), IDirectional {
+class Bullet(services: MegaServices) : AbstractProjectile(services), IDirectional {
 
     companion object {
         const val TAG = "Bullet"
@@ -76,7 +76,7 @@ class Bullet(game: MegaServices) : AbstractProjectile(game), IDirectional {
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -240,7 +240,7 @@ class Bullet(game: MegaServices) : AbstractProjectile(game), IDirectional {
         val component = SpritesComponent(TAG pairTo sprite)
         component.putPreProcess(TAG) { _, _ ->
             sprite.setCenter(body.getCenter())
-            val flipX = when (game.gravity.direction) {
+            val flipX = when (services.gravity.direction) {
                 Direction.UP -> body.physics.velocity.x < 0f
                 Direction.DOWN -> body.physics.velocity.x > 0f
                 Direction.LEFT -> body.physics.velocity.y < 0f
@@ -248,7 +248,7 @@ class Bullet(game: MegaServices) : AbstractProjectile(game), IDirectional {
             }
             sprite.setFlip(flipX, false)
             sprite.setOriginCenter()
-            sprite.rotation = game.gravity.direction.rotation
+            sprite.rotation = services.gravity.direction.rotation
         }
         return component
     }

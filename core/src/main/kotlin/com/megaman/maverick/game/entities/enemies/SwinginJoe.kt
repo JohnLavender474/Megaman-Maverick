@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class SwinginJoe(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IFaceable {
+class SwinginJoe(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IFaceable {
 
     companion object {
         const val TAG = "SwinginJoe"
@@ -88,7 +88,7 @@ class SwinginJoe(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("swing1", "swing2", "throw", "frozen").forEach { key ->
                 val region = atlas.findRegion("$TAG/$key")
                 regions.put(key, region)

@@ -34,7 +34,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class Snowball(game: MegaServices) : AbstractProjectile(game) {
+class Snowball(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "Snowball"
@@ -43,7 +43,7 @@ class Snowball(game: MegaServices) : AbstractProjectile(game) {
     }
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball2")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "Snowball2")
         super.init()
     }
 

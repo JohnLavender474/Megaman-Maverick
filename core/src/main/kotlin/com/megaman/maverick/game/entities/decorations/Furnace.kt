@@ -25,7 +25,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class Furnace(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnimatedEntity, ICullableEntity {
+class Furnace(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
     companion object {
         const val TAG = "Furnace"
@@ -36,7 +36,7 @@ class Furnace(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnima
     private val bounds = GameRectangle().setSize(SIZE * ConstVals.PPM)
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         super.init()
         addComponent(defineCullablesComponent())
         addComponent(defineSpritesComponent())
@@ -51,7 +51,7 @@ class Furnace(game: MegaServices) : MegaGameEntity(game), ISpritesEntity, IAnima
 
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
-            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(game.getGameCamera(), { bounds })
+            ConstKeys.CULL_OUT_OF_BOUNDS pairTo getGameCameraCullingLogic(services.getGameCamera(), { bounds })
         )
     )
 

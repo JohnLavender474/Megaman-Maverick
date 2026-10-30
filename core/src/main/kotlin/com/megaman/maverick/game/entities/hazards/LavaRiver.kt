@@ -41,7 +41,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 
-class LavaRiver(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISpritesEntity, IAnimatedEntity {
+class LavaRiver(services: MegaServices) : MegaGameEntity(services), ICullableEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "LavaRiver"
@@ -85,7 +85,7 @@ class LavaRiver(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISp
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
@@ -108,7 +108,7 @@ class LavaRiver(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISp
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         left = spawnProps.getOrDefault(ConstKeys.LEFT, false, Boolean::class)
         frozen = spawnProps.getOrDefault(
-            ConstKeys.FROZEN, LevelUtils.isInfernoManLevelFrozen(game.state), Boolean::class
+            ConstKeys.FROZEN, LevelUtils.isInfernoManLevelFrozen(services.gameState), Boolean::class
         )
 
         resetEmberDelay()
@@ -131,7 +131,7 @@ class LavaRiver(game: MegaServices) : MegaGameEntity(game), ICullableEntity, ISp
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
                         .setWidth(EMBER_SPAWN_X_BUFFER * ConstVals.PPM)
                         .setHeight(EMBER_SPAWN_Y_BUFFER * ConstVals.PPM)
-                        .setCenter(game.getGameCamera().getRotatedBounds().getCenter())
+                        .setCenter(services.getGameCamera().getRotatedBounds().getCenter())
 
                     if (canSpawnBounds.contains(position)) {
                         val ember = MegaEntityFactory.fetch(FloatingEmber::class)!!

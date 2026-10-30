@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.world.body.*
 
-class LavaDrop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHazard, ISpritesEntity, IAnimatedEntity,
+class LavaDrop(services: MegaServices) : MegaGameEntity(services), IDamagerEntity, IHazard, ISpritesEntity, IAnimatedEntity,
     IBodyEntity, ICullableEntity {
 
     companion object {
@@ -62,7 +62,7 @@ class LavaDrop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHaza
 
     override fun init(vararg params: Any) {
         if (fallingRegion == null || splatRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             fallingRegion = atlas.findRegion("LavaDrop/Falling")
             splatRegion = atlas.findRegion("LavaDrop/Landed")
         }
@@ -93,7 +93,7 @@ class LavaDrop(game: MegaServices) : MegaGameEntity(game), IDamagerEntity, IHaza
         if (dissipating) {
             dissipateTimer.update(delta)
             if (dissipateTimer.isFinished()) {
-                if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+                if (overlapsGameCamera()) services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
                 spawnSmokePuff()
                 destroy()
             }

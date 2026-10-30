@@ -51,7 +51,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toGridCoordinate
 import com.megaman.maverick.game.world.body.*
 
-class DeathBat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAnimatedEntity {
+class DeathBat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IAnimatedEntity {
 
     companion object {
         const val TAG = "DeathBat"
@@ -88,7 +88,7 @@ class DeathBat(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IAn
         damageOverrides.put(Fireball::class, null)
 
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             DeathBatState.entries.forEach {
                 val key = it.name.lowercase()
                 regions.put(key, atlas.findRegion("$TAG/$key"))

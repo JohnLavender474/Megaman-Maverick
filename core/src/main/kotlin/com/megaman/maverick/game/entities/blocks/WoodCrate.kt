@@ -57,7 +57,7 @@ import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
 
-class WoodCrate(game: MegaServices) : Block(game), IFireableEntity, ISpritesEntity, IAudioEntity {
+class WoodCrate(services: MegaServices) : Block(services), IFireableEntity, ISpritesEntity, IAudioEntity {
 
     companion object {
         const val TAG = "WoodCrate"
@@ -129,7 +129,7 @@ class WoodCrate(game: MegaServices) : Block(game), IFireableEntity, ISpritesEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
@@ -162,7 +162,7 @@ class WoodCrate(game: MegaServices) : Block(game), IFireableEntity, ISpritesEnti
 
         if (health <= 0) {
             spawnPieces()
-            if (overlapsGameCamera()) game.audioMan.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
+            if (overlapsGameCamera()) services.audio.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         }
 
         burnOwner = null

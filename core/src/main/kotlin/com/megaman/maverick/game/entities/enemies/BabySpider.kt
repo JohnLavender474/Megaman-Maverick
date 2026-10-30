@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
-class BabySpider(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL) {
+class BabySpider(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL) {
 
     companion object {
         const val TAG = "BabySpider"
@@ -68,8 +68,8 @@ class BabySpider(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL) {
 
     override fun init(vararg params: Any) {
         if (runRegion == null || stillRegion == null) {
-            runRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Run")
-            stillRegion = game.assMan.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Still")
+            runRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Run")
+            stillRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, "BabySpider/Still")
         }
         super.init()
         addComponent(defineAnimationsComponent())

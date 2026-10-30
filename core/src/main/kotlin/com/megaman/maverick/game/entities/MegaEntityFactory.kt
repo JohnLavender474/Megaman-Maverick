@@ -24,15 +24,15 @@ object MegaEntityFactory : ArgsInitializable<MegaServices>, Resettable {
     private val constructors = ObjectMap<KClass<out MegaGameEntity>, KFunction<MegaGameEntity>>()
     private val pools = OrderedMap<KClass<out MegaGameEntity>, Pool<MegaGameEntity>>()
 
-    private lateinit var game: MegaServices
+    private lateinit var services: MegaServices
     private var initialized = false
 
     private val ENTITIES_TO_PRELOAD = orderedMapOf<KClass<out MegaGameEntity>, Int>(
         Bullet::class pairTo 25, Block::class pairTo 25
     )
 
-    override fun init(game: MegaServices) {
-        this.game = game
+    override fun init(services: MegaServices) {
+        this.services = services
         initialized = true
         ENTITIES_TO_PRELOAD.forEach { entry ->
             val key = entry.key
@@ -69,7 +69,7 @@ object MegaEntityFactory : ArgsInitializable<MegaServices>, Resettable {
         if (!pools.containsKey(key)) {
             val constructor = constructors.putIfAbsentAndGet(key) { key.primaryConstructor!! }
             val pool = GameEntityPoolCreator.create create@{
-                return@create constructor.call(game)
+                return@create constructor.call(services)
             }
             pools.put(key, pool)
         }

@@ -47,7 +47,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class CeilingCrusher(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity,
+class CeilingCrusher(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity,
     IAudioEntity, IHazard, IDamagerEntity {
 
     companion object {
@@ -78,7 +78,7 @@ class CeilingCrusher(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IS
 
     override fun init(vararg params: Any) {
         if (crusherRegion == null || barRegion == null) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             crusherRegion = atlas.findRegion("CeilingCrusher/Crusher")
             barRegion = atlas.findRegion("CeilingCrusher/Bar")
         }

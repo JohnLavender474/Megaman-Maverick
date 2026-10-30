@@ -37,7 +37,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class Flame(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, IAnimatedEntity,
+class Flame(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IDamagerEntity, IHazard, IDirectional {
 
     companion object {
@@ -51,7 +51,7 @@ class Flame(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEnt
     private var perpetual = true
 
     override fun init(vararg params: Any) {
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame")
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame")
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

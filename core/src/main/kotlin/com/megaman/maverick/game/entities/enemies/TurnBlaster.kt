@@ -45,7 +45,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class TurnBlaster(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IDirectional {
+class TurnBlaster(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IDirectional {
 
     companion object {
         const val TAG = "TurnBlaster"
@@ -74,7 +74,7 @@ class TurnBlaster(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM),
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             gdxArrayOf("base", "dial", "tube").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()

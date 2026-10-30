@@ -39,7 +39,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.explosions.ToxicGoopSplash
 import com.megaman.maverick.game.world.body.*
 
-class ToxicGoopShot(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class ToxicGoopShot(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "ToxicGoopShot"
@@ -49,7 +49,7 @@ class ToxicGoopShot(game: MegaServices) : AbstractProjectile(game), IAnimatedEnt
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }

@@ -44,7 +44,7 @@ import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class MagmaGoop(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class MagmaGoop(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "MagmaGoop"
@@ -58,7 +58,7 @@ class MagmaGoop(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity 
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -85,14 +85,14 @@ class MagmaGoop(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity 
 
     override fun hitWater(waterFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         destroy()
-        game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+        services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity()
         if (projectile is SmallIceCube) {
             destroy()
-            game.audioMan.playSound(SoundAsset.WHOOSH_SOUND, false)
+            services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
         }
     }
 
@@ -103,7 +103,7 @@ class MagmaGoop(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity 
             val thisShape = params[0] as IGameShape2D
             val otherShape = params[1] as IGameShape2D
 
-            val direction = getOverlapPushDirection(thisShape, otherShape) ?: game.gravity.direction
+            val direction = getOverlapPushDirection(thisShape, otherShape) ?: services.gravity.direction
             val position = DirectionPositionMapper.getPosition(direction)
 
             val overlap = GameObjectPools.fetch(Rectangle::class)
@@ -134,7 +134,7 @@ class MagmaGoop(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity 
         body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (game.camera.rotating) body.physics.velocity.setZero()
+            if (services.camera.rotating) body.physics.velocity.setZero()
             else body.physics.velocity.set(trajectory)
         }
 

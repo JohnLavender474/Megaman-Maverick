@@ -42,7 +42,7 @@ import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class SwitchGate(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEntity, IEventListener,
+class SwitchGate(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity, IEventListener,
     IAudioEntity, IDirectional {
 
     companion object {
@@ -71,7 +71,7 @@ class SwitchGate(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEnt
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.GATES.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.GATES.source)
             SwitchGateState.entries.forEach { state ->
                 val key = state.name.lowercase()
                 regions.put(key, atlas.findRegion("$REGION_PREFIX/$key"))
@@ -91,13 +91,13 @@ class SwitchGate(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEnt
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        game.eventsMan.addListener(this)
+        services.events.addListener(this)
 
         switchTimer.setToEnd()
         state = SwitchGateState.CLOSED
         key = spawnProps.get(ConstKeys.KEY, Int::class)!!
 
-        val rooms = game.levelState.getRooms(reusableRoomsArray)
+        val rooms = services.levelState.getRooms(reusableRoomsArray)
         rooms.forEach {
             if (it.rectangle.toGameRectangle().overlaps(body.getBounds())) {
                 val room = it.name
@@ -109,7 +109,7 @@ class SwitchGate(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEnt
 
     override fun onDestroy() {
         super.onDestroy()
-        game.eventsMan.removeListener(this)
+        services.events.removeListener(this)
         overlapRooms.clear()
     }
 
@@ -138,7 +138,7 @@ class SwitchGate(game: MegaServices) : Block(game), ISpritesEntity, IAnimatedEnt
     }
 
     private fun requestToPlaySwitchSound() {
-        val room = game.levelState.currentRoom?.name
+        val room = services.levelState.currentRoom?.name
         if (overlapRooms.contains(room)) requestToPlaySound(SoundAsset.BOSS_DOOR_SOUND, false)
     }
 

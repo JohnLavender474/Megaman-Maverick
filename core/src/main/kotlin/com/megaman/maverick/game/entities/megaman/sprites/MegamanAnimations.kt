@@ -19,7 +19,7 @@ import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimationDefs.C
 import java.util.function.Supplier
 
 class MegamanAnimations(
-    private val game: MegaServices,
+    private val services: MegaServices,
     private val regionProcessor: MegaRegionProcessor? = null
 ) : Initializable, Supplier<OrderedMap<String, IAnimation>> {
 
@@ -50,7 +50,7 @@ class MegamanAnimations(
     override fun init(vararg params: Any) {
         MegamanWeapon.entries.forEach { weapon ->
             val assetSource = getAssetSourceForWeapon(weapon)
-            val atlas = game.assMan.getTextureAtlas(assetSource)
+            val atlas = services.assets.getTextureAtlas(assetSource)
 
             MegamanAnimationDefs.getKeys().forEach { defKey ->
                 if (!atlas.containsRegion(defKey)) return@forEach

@@ -8,7 +8,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureLabel
 
-class LadderTop(game: MegaServices) : Block(game) {
+class LadderTop(services: MegaServices) : Block(services) {
 
     companion object {
         const val TAG = "LadderTop"

@@ -27,7 +27,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
-class DeathBomb(game: MegaServices) : AbstractProjectile(game) {
+class DeathBomb(services: MegaServices) : AbstractProjectile(services) {
 
     companion object {
         const val TAG = "DeathBomb"
@@ -37,7 +37,7 @@ class DeathBomb(game: MegaServices) : AbstractProjectile(game) {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
         super.init()
     }
 

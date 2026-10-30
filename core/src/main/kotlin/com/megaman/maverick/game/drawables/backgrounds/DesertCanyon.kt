@@ -15,7 +15,7 @@ class DesertCanyon(game: MegamanMaverickGame, it: RectangleMapObject) : Backgrou
     "DesertCanyon",
     it.rectangle.x,
     it.rectangle.y,
-    game.assMan.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/Canyon"),
+    game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "Desert/Canyon"),
     it.rectangle.width,
     it.rectangle.height,
     rows = 1,

@@ -74,7 +74,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 
-class MechaDragon(game: MegaServices) : AbstractBoss(game), IFreezableEntity, IAnimatedEntity, IFaceable {
+class MechaDragon(services: MegaServices) : AbstractBoss(services), IFreezableEntity, IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "MechaDragon"
@@ -185,7 +185,7 @@ class MechaDragon(game: MegaServices) : AbstractBoss(game), IFreezableEntity, IA
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.BOSSES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         if (stateTimers.isEmpty) stateTimers.putAll(
@@ -252,7 +252,7 @@ class MechaDragon(game: MegaServices) : AbstractBoss(game), IFreezableEntity, IA
         val fireTime: Float
         val fireDelayDur: Float
 
-        if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+        if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) {
             fireDur = FIRE_DUR_HARD
             fireTime = FIRE_TIME_HARD
             fireDelayDur = FIRE_MAX_DELAY_HARD
@@ -368,7 +368,7 @@ class MechaDragon(game: MegaServices) : AbstractBoss(game), IFreezableEntity, IA
 
                         val fireMinDelay: Float
                         val fireMaxDelay: Float
-                        if (game.state.getDifficultyMode() == DifficultyMode.HARD) {
+                        if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) {
                             fireMinDelay = FIRE_MIN_DELAY_HARD
                             fireMaxDelay = FIRE_MAX_DELAY_HARD
                         } else {

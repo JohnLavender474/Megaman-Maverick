@@ -38,7 +38,7 @@ import io.mockk.slot
 import io.mockk.unmockkObject
 import io.mockk.verify
 
-private class RulesTestEntity(game: MegaServices) : MegaGameEntity(game), IBodyEntity, IDirectional {
+private class RulesTestEntity(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IDirectional {
     override var direction = Direction.UP
     override fun getType() = EntityType.SPECIAL
 }

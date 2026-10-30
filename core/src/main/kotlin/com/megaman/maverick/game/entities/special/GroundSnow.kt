@@ -53,7 +53,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class GroundSnow(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISpritesEntity, ICullableEntity {
+class GroundSnow(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity {
 
     companion object {
         const val TAG = "GroundSnow"
@@ -98,7 +98,7 @@ class GroundSnow(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ISprit
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             gdxArrayOf("left", "middle", "right", "back").forEach { regions.put(it, atlas.findRegion("${TAG}/$it")) }
         }
         super.init()

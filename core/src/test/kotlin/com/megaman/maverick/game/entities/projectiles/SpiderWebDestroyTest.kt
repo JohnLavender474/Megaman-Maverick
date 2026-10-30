@@ -30,19 +30,19 @@ import io.mockk.mockk
 class SpiderWebDestroyTest : DescribeSpec({
 
     lateinit var engine: GameEngine
-    lateinit var game: MegaServices
+    lateinit var services: MegaServices
     lateinit var pool: Pool<MegaGameEntity>
 
     beforeEach {
         engine = GameEngine()
-        game = testServices(engine = engine, players = mockk<MegaPlayers>(relaxed = true))
+        services = testServices(engine = engine, players = mockk<MegaPlayers>(relaxed = true))
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
-        every { game.assMan.get(any<String>(), TextureAtlas::class.java) } returns atlas
+        every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
         val target = mockk<MegaGameEntity>(relaxed = true)
         every { target.getComponent(BodyComponent::class) } returns BodyComponent(Body(BodyType.ABSTRACT))
-        every { game.players.targetFor(any()) } returns target
-        pool = GameEntityPoolCreator.create { SpiderWeb(game) }
+        every { services.players.targetFor(any()) } returns target
+        pool = GameEntityPoolCreator.create { SpiderWeb(services) }
     }
 
     afterEach { engine.reset() }

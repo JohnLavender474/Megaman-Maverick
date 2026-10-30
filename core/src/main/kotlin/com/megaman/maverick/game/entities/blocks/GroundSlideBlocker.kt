@@ -12,7 +12,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 
-class GroundSlideBlocker(game: MegaServices): AbstractBlock(game) {
+class GroundSlideBlocker(services: MegaServices): AbstractBlock(services) {
 
     companion object {
         const val TAG = "GroundSlideBlock"

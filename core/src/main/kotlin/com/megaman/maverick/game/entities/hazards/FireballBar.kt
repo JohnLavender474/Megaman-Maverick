@@ -30,7 +30,7 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 
-class FireballBar(game: MegaServices) : MegaGameEntity(game), IParentEntity<Fireball>, ICullableEntity, IHazard {
+class FireballBar(services: MegaServices) : MegaGameEntity(services), IParentEntity<Fireball>, ICullableEntity, IHazard {
 
     companion object {
         const val TAG = "FireballBar"

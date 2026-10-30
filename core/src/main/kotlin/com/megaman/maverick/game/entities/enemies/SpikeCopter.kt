@@ -54,7 +54,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class SpikeCopter(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), IFreezableEntity,
+class SpikeCopter(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), IFreezableEntity,
     IAnimatedEntity, IFaceable {
 
     companion object {
@@ -104,7 +104,7 @@ class SpikeCopter(game: MegaServices) : AbstractEnemy(game, size = Size.SMALL), 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             val keys = gdxArrayOf("frozen")
             SpikeCopterState.entries.forEach { keys.add(it.name.lowercase()) }
             keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }

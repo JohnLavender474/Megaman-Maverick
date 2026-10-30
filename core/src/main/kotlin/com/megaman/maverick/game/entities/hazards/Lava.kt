@@ -58,7 +58,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class Lava(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEntity, ISpritesEntity,
+class Lava(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICullableEntity, ISpritesEntity,
     IAnimatedEntity, IAudioEntity, IDirectional, IFaceable {
 
     companion object {
@@ -98,7 +98,7 @@ class Lava(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEnt
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.HAZARDS_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put(FLOW, atlas.findRegion("$TAG/${FLOW}"))
             regions.put("${TOP}${FLOW}1", atlas.findRegion("$TAG/${TOP}${FLOW}1"))
             regions.put("${TOP}${FLOW}2", atlas.findRegion("$TAG/${TOP}${FLOW}2"))
@@ -222,8 +222,8 @@ class Lava(game: MegaServices) : MegaGameEntity(game), IBodyEntity, ICullableEnt
             }
         }, cullEvents)
 
-        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { game.eventsMan.addListener(cullOnEvents) }
-        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { game.eventsMan.removeListener(cullOnEvents) }
+        runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { services.events.addListener(cullOnEvents) }
+        runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
 
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))
     }

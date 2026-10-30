@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class TankBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
+class TankBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFreezableEntity, IAnimatedEntity,
     IFaceable {
 
     companion object {
@@ -103,7 +103,7 @@ class TankBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFr
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
             gdxArrayOf("roll", "stop", "turn", "frozen").forEach { key ->
                 regions.put(
                     key,
@@ -182,7 +182,7 @@ class TankBot(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFr
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.OWNER pairTo this))
 
-        game.audioMan.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
+        services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {

@@ -33,7 +33,7 @@ import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class Matasaburo(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), IFaceable {
+class Matasaburo(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IFaceable {
 
     companion object {
         const val TAG = "Matasaburo"
@@ -46,7 +46,7 @@ class Matasaburo(game: MegaServices) : AbstractEnemy(game, size = Size.MEDIUM), 
 
     override fun init(vararg params: Any) {
         super.init()
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, TAG)
         addComponent(defineAnimationsComponent())
     }
 

@@ -35,7 +35,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.world.body.*
 
-class SuperCoolActionStarWarsSpaceLazer(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity {
+class SuperCoolActionStarWarsSpaceLazer(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "SuperCoolActionStarWarsSpaceLazer"
@@ -50,7 +50,7 @@ class SuperCoolActionStarWarsSpaceLazer(game: MegaServices) : AbstractProjectile
         GameLogger.debug(TAG, "init()")
 
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
             gdxArrayOf("lazer", "burst").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
 

@@ -55,7 +55,7 @@ import com.megaman.maverick.game.utils.extensions.getRandomPositionInBounds
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
-class Jetto(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
+class Jetto(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IAnimatedEntity, IFaceable, ICullable {
 
     companion object {
         const val TAG = "Jetto"
@@ -119,7 +119,7 @@ class Jetto(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimat
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.ENEMIES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             JettoColor.entries.map { it.name.lowercase() }.forEach { color ->
                 animDefs.keys().forEach { key -> regions.put("$color/$key", atlas.findRegion("$TAG/$color/$key")) }
             }
@@ -133,7 +133,7 @@ class Jetto(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimat
         if (!MegaGameEntities.getOfTag(TAG).isEmpty) return false
 
         val id = spawnProps.get(ConstKeys.ID, Int::class)!!
-        val canSpawn = !isNextPossibleSpawnDelayed(game, TAG, id)
+        val canSpawn = !isNextPossibleSpawnDelayed(services, TAG, id)
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
 
         return canSpawn
@@ -182,7 +182,7 @@ class Jetto(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimat
 
         if (overlapsGameCamera() && isHealthDepleted()) explode()
 
-        delayNextPossibleSpawn(game, TAG, mapObjectId!!, NEXT_POSSIBLE_SPAWN_DELAY)
+        delayNextPossibleSpawn(services, TAG, mapObjectId!!, NEXT_POSSIBLE_SPAWN_DELAY)
 
         frozen = false
     }
@@ -202,7 +202,7 @@ class Jetto(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimat
 
             body.physics.velocity.x = SPEED * ConstVals.PPM * facing.value
 
-            if (!body.getBounds().overlaps(game.getGameCamera().getRotatedBounds())) cullTimer.update(delta)
+            if (!body.getBounds().overlaps(services.getGameCamera().getRotatedBounds())) cullTimer.update(delta)
             else cullTimer.reset()
 
             if (state == JettoState.FLY) {
@@ -210,11 +210,11 @@ class Jetto(game: MegaServices) : AbstractEnemy(game), IFreezableEntity, IAnimat
                     if (cullTimer.isFinished()) {
                         val centerX: Float
                         val facing: Facing
-                        if (body.getBounds().getMaxX() < game.getGameCamera().getRotatedBounds().getX()) {
-                            centerX = game.getGameCamera().getRotatedBounds().getX()
+                        if (body.getBounds().getMaxX() < services.getGameCamera().getRotatedBounds().getX()) {
+                            centerX = services.getGameCamera().getRotatedBounds().getX()
                             facing = Facing.RIGHT
                         } else {
-                            centerX = game.getGameCamera().getRotatedBounds().getMaxX()
+                            centerX = services.getGameCamera().getRotatedBounds().getMaxX()
                             facing = Facing.LEFT
                         }
                         body.setCenterX(centerX)

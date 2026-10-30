@@ -40,7 +40,7 @@ import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.*
 
-class ElecBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, ILightSource {
+class ElecBall(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity, ILightSource {
 
     companion object {
         const val TAG = "ElecBall"
@@ -71,7 +71,7 @@ class ElecBall(game: MegaServices) : AbstractProjectile(game), IAnimatedEntity, 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
-            val atlas = game.assMan.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             AnimationUtils.loadRegions(TAG, atlas, animDefs.keys(), regions)
         }
         super.init()

@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getCenter
 
-class Explosion(game: MegaServices) : MegaGameEntity(game), IHazard, IOwnable<IGameEntity>, IBodyEntity,
+class Explosion(services: MegaServices) : MegaGameEntity(services), IHazard, IOwnable<IGameEntity>, IBodyEntity,
     ISpritesEntity, IAudioEntity, IDamagerEntity {
 
     companion object {
@@ -61,7 +61,7 @@ class Explosion(game: MegaServices) : MegaGameEntity(game), IHazard, IOwnable<IG
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = game.assMan.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
+        if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         super.init()
         addComponent(defineSpritesCompoent())
         addComponent(defineBodyComponent())
