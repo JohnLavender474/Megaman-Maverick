@@ -6,8 +6,7 @@
 - Goal: the menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes
 - Done:
 - Next: the scan and a draft `docs/SCOPE.md`, after `031e` merges
-- Blocked: by `031d` (devices: the keyboard aliases and `Esc` as a reserved system key) and `031e` (bindings: it
-  changes the bindings screen, which is one of the menus)
+- Blocked: by `031e` (bindings: it changes the bindings screen, which is one of the menus). `031d` merged.
 
 ## Entries
 

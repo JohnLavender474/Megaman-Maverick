@@ -1196,3 +1196,11 @@ newest entry at the bottom.
 - Follow-up: item `031` stays active; next is `031e` (bindings), then `031f`. Bug filed:
   `docs/issues/2026-10-30-robot-master-intro-dispose-after-audio.md`. The branch backlog candidate (a readable trigger
   label) went to the `031` `ITEM.md` as a `031e` question, not a new item, because it belongs to that branch.
+
+## 2026-10-30 — master (docs)
+
+- Summary: item `031`: branch folder `mega-refactor-031e-bindings` prepared ahead of time (no branch yet; `planned`).
+  The owner decided that a replug keeps today's behavior: saved bindings do not load by default (`ITEM.md`, decision of
+  2026-10-30), so that open question is closed.
+- Contract check: not needed (docs only).
+- Follow-up: the `031e` scan.
