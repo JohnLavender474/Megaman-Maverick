@@ -1139,3 +1139,18 @@ newest entry at the bottom.
   core tests pass; the same 81 warnings; `contact-rule-selection.txt` unchanged; 3 smoke launches with no exception;
   the owner's short sanity pass passes ("approved").
 - Follow-up: none. Next for `016`: the parent merge into `master`.
+
+## 2026-10-30 — mega-refactor-016-master (into `master`)
+
+- Summary: item `016` is done. The parent merges into `master` with `--no-ff` (merge commit `eb2debc6e`), so each
+  branch keeps its squash commit: `016a` `07a4a3297`, `016b` `dcb5db93e`, `016c` `4097749fa`, `016d` `ffb8741a0`,
+  `016e` `9502724cd`. `.git-blame-ignore-revs` lists `4097749fa` and `9502724cd`. Entities, entity utilities, contact
+  rules and the pathfinder factory take `MegaServices` (named `services`) or narrow services in place of
+  `MegamanMaverickGame`; only the host, screens, layer builders, backgrounds, `ScreenController` and the launcher name
+  the host (the input for `001b`). Before the merge, `master` merged into the parent twice (docs only; the 5 `016e`
+  branch-folder files conflicted add/add and kept the parent's versions).
+- Contract check: the owner's combined play test (12 checks chosen from the `016a` to `016d` contracts) passes
+  (verbatim: "all tests pass"); merge approval (verbatim: "yes"). On `master` after the merge: clean build passes; 575
+  engine and 272 core tests, 0 failures; 81 unique warnings.
+- Follow-up: item `072` (remove `IMegaGameEntity`) can start. Found during the play test: the old bug
+  `docs/issues/2026-10-29-needle-spin-no-bounce-while-jump-held.md` (also on `master` before the merge).
