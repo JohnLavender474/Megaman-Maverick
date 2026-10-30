@@ -1124,3 +1124,18 @@ newest entry at the bottom.
   owner's play test passes (check 2 in the new room replaced by the `GravitySwitcharoo` checks; the upside-down view
   there is filed as the question `docs/issues/2026-10-29-gravity-change-turns-camera-upside-down.md`).
 - Follow-up: backlog candidate is new item `083` (`PathfinderResult.targetReached`).
+
+## 2026-10-29 — mega-refactor-016e-service-names (into `mega-refactor-016-master`)
+
+- Summary: a mechanical rename (owner: "Scope approved, go with your recommendations"). The value `game` of type
+  `MegaServices` is `services` in 489 files; on `MegaServices` and on `MegamanMaverickGame`, `eventsMan`, `assMan`,
+  `audioMan` and `state` are `events`, `assets`, `audio` and `gameState`, with every read on a services or host
+  receiver. A 6-line pre-step renames the local `assets` in `MegamanMaverickGame.queueAssets()` to `queuedAssets`.
+  Comments, strings, locals of other classes and the host's own name `game` keep their names. Root `CLAUDE.md` uses
+  the new names. Squash commit on the parent `9502724cd`; `.git-blame-ignore-revs` on the parent points at it
+  (`2f6f1fc6c`).
+- Contract check: the mechanical commit is 532 files and 2,038 lines, each line only token renames (the same as the
+  dry run of the scan); normalized `javap -c -p` of all 1,861 `core` main classes equal; clean build, 575 engine and 272
+  core tests pass; the same 81 warnings; `contact-rule-selection.txt` unchanged; 3 smoke launches with no exception;
+  the owner's short sanity pass passes ("approved").
+- Follow-up: none. Next for `016`: the parent merge into `master`.
