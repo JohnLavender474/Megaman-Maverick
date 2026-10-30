@@ -1,6 +1,6 @@
 # 082: Dialogue boxes, in-level dialogue scenes and cutscenes
 
-- Status: idea
+- Status: planned
 - Type: feature
 - Depends on: `012`, `031`
 - Related: `007`, `013`, `015`, `026`, `029`, `038`, `047`, `050`, `051`, `057`, `060`, `081`

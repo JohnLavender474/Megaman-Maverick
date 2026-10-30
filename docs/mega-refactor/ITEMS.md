@@ -89,7 +89,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | idea | none | | |
 | 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | idea | `024`, `069` | | |
-| 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | idea | `012`, `031` | | |
+| 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
