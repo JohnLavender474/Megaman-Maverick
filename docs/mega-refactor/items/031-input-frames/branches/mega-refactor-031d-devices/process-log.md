@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: devices: the keyboard aliases, every connected gamepad (with the index-shift and code-0 fixes), the stick at `0.5`, the triggers
 - Done:
-- Next: step 1 (branch start)
+- Next: step 2 (baseline)
 - Blocked:
 
 ## Entries
@@ -33,3 +33,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/PLAN.md` with the 3 recommendations (verbatim: "approved"), and asked for a comment at the
   test subclass of `ControllerMapping` (`docs/NOTES.md`, decisions). `docs/CONTRACT.md` P1: "up to 4 native calls"
   corrected to 2 (a reading note, not a check). Trigger label added to `docs/TODO.md` as a backlog candidate.
+- Step 1 (branch start): `ITEMS.md` row and `ITEM.md` set to active; worktree
+  `.worktrees/mega-refactor-031d-devices` created from `master`.

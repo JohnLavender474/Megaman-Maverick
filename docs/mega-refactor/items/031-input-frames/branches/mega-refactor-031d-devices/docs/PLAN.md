@@ -64,7 +64,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
   the main checkout and `.worktrees/mega-refactor-051a-camera-read-interface`. `git status` in the main checkout shows
   no staged change left.
 - Contract checks: none.
-- Done: no
+- Done: yes
 
 ### 2. Baseline
 
