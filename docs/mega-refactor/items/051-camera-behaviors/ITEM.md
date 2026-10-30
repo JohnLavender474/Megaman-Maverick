@@ -102,6 +102,23 @@ here.
 - 2026-10-30 (owner): new branch `051e-camera-rotation`, with or after `046`: the rotation part, the typed lookup for
   `rotating`, the backgrounds' own rotating cameras and the removal of `GameCameraState`. `051b` removes only
   `focusSnappedAway`. The typed lookup and the `051b` follow part use the names in `051b` `docs/NOTES.md`.
+- 2026-10-30 (owner): the view (reading) is separate from the controller (management). `services.gameCamera` is for
+  reads; `services.cameraController` gives requests (`051b`).
+- 2026-10-30 (owner): `051e` removes `RotatableCamera`. The game camera and the background cameras become plain
+  `OrthographicCamera`s, and the rotation behavior stays the same. Design (option C of the 2026-10-30 brainstorm):
+  - A `CameraRotation` part holds `direction`, `rotating` and `angle`, and never touches the camera.
+  - The controller writes the orientation after the parts update: the part's angle, or 0 if no part exists. So a reset
+    or removed part gives the default orientation by construction, with no cleanup hook.
+  - A thin `CameraView` holds the plain camera, implements `ICameraView`, and reads the direction from the rotation
+    part (`UP` if there is none).
+  - A background with `rotatable = false` omits the part.
+  - Keep: the direction changes at the start of a turn, not at its end. Reset writes the orientation at once (the
+    controller does not update while paused).
+  - For the `051e` contract: a reset during a turn sets `rotating = false` at once (today it stays `true` until the
+    next level start, and no end callback fires; check the `END_GAME_CAM_ROTATION` listeners). `up` can differ from
+    today by a small float amount, so the equivalence check needs a tolerance.
+  - Rejected: delta writes with a cleanup hook, absolute writes by the part with a cleanup hook, and a turn applied
+    only at render (the frustum test and the map renderer read the camera).
 
 ## Contract notes
 
