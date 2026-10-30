@@ -105,12 +105,17 @@ Answer to review item 30 (2026-10-22, verbatim):
   session use the saved bindings, as today (`loadPrefsOnConnect`).
 - 2026-10-30 (owner, at the `031d` merge review): the performance check of `031d` (`--diagnostics` captures) was
   skipped, so the extra native calls per pad have no measurement.
+- 2026-10-30 (owner, on the `031e` scope; the branch `docs/SCOPE.md` has the 10 questions and answers): saved gamepad
+  tables are one per pad name inside the slot, and at run time every pad still reads one code set from the primary pad;
+  `BACK` holds the level screen, and the level music keeps playing; a swap that would move `Enter` is refused; "RESET
+  TO DEFAULTS" also clears the saved values; the saved `selectButtonAction` applies at boot (it cannot make a
+  controller unusable, so the replug decision does not cover it); labels for triggers and keyboard key names; one
+  LibGDX prefs file per slot; one branch, with a `fix/` branch for back to pause only if the play test fails. At the
+  merge: close `2026-10-22-saved-key-bindings-not-applied.md` as "on purpose", and update item `034`.
 
 ## Open questions
 
 - None of the binding questions in `NOTES.md` is still open (see "Decisions").
-- For `031e` (backlog candidate from `031d`): a readable label for a bound trigger on the gamepad bindings screen. The
-  screen shows the raw code, for example `B: 1005`.
 
 ## Sources
 
