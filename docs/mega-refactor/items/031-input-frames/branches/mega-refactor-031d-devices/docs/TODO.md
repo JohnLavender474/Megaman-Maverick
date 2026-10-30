@@ -9,6 +9,9 @@ Loose tasks that are not steps in `PLAN.md`.
 Ideas found during this branch that are out of scope. When the branch merges, make each one a
 new item on `master` (a row in `ITEMS.md` and a folder in `items/`).
 
+- For `031e`: a readable label for a bound trigger on the gamepad bindings screen. The screen shows the raw code, so a
+  bound trigger shows as, for example, `B: 1005` (owner, 2026-10-30: accepted for `031d`).
+
 ## Bug candidates
 
 Bugs found during this branch. File each one in the bug tracker (see `CLAUDE.md`).

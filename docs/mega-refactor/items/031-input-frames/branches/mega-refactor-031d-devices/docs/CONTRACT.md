@@ -120,8 +120,9 @@ How to read the result:
 - In "Process Summary", read the `controllerPoller` row: mean, p50, p95, p99 and `avg%`. Write the 4 rows in the
   branch process log, side by side.
 - No gamepad: the branch row must be at the `master` level. With no pad, neither version makes a native call.
-- One gamepad: the branch row can be higher, because each tick adds up to 4 native calls (2 stick axes, and the
-  trigger axes only for a button bound to a trigger). Write the difference in the log. The owner decides if it is
+- One gamepad: the branch row can be higher, because each tick adds 2 native calls (the 2 stick axes). A button bound
+  to a trigger reads `getAxis` in place of `getButton`, so it adds no call (corrected on 2026-10-30 at the plan
+  review; it was "up to 4"). Write the difference in the log. The owner decides if it is
   acceptable.
 - Check the end of each raw capture for a `=== Dropped N frames ===` line. A capture with dropped frames is still
   valid, but write the count.

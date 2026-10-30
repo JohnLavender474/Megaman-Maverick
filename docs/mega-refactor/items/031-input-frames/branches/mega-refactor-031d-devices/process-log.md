@@ -5,7 +5,7 @@
 - State: planned
 - Goal: devices: the keyboard aliases, every connected gamepad (with the index-shift and code-0 fixes), the stick at `0.5`, the triggers
 - Done:
-- Next: the draft `docs/PLAN.md`
+- Next: step 1 (branch start)
 - Blocked:
 
 ## Entries
@@ -27,3 +27,9 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   `room12` holds the boss `Gate` and a player spawn). No new test room.
 - The owner approved `docs/CONTRACT.md` with both recommendations (verbatim: "yes"). The overlap note in
   `docs/NOTES.md` now names `mega-refactor-051a-camera-read-interface` (no overlap known).
+- Draft `docs/PLAN.md` written (10 steps: branch start, baseline with the `master` half of P1, code-0 fix,
+  keyboard aliases, every gamepad with the index-shift fix and the removal of the index-0 overload, left stick,
+  triggers with the capture listener, contract checks, the owner's play test with the branch half of P1, merge).
+- The owner approved `docs/PLAN.md` with the 3 recommendations (verbatim: "approved"), and asked for a comment at the
+  test subclass of `ControllerMapping` (`docs/NOTES.md`, decisions). `docs/CONTRACT.md` P1: "up to 4 native calls"
+  corrected to 2 (a reading note, not a check). Trigger label added to `docs/TODO.md` as a backlog candidate.
