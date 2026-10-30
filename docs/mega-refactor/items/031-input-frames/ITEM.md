@@ -92,6 +92,12 @@ Answer to review item 30 (2026-10-22, verbatim):
   code sets it); the lock moves to the edge builder and is still switched by `TURN_CONTROLLER_*` (`012` replaces the
   events later); the edge builder goes in the engine and the device adapters in core, so the engine reads no device.
 
+- 2026-10-30 (owner, on the `031d` scope; the branch `docs/SCOPE.md` has the 6 questions and answers): every
+  connected gamepad reads one code set, from the primary gamepad (the one at index 0); the refusal of reserved keys on
+  the bindings screen stays in `031e` (a `TODO` at the alias table until then); `031d` adds the trigger capture to the
+  bindings screen's capture listener; the left stick only; the capture-state issue
+  (`2026-10-25-capture-state-left-after-gamepad-disconnect.md`) goes to `031e`; the trigger threshold is `0.5`.
+
 ## Open questions
 
 - None of the binding questions in `NOTES.md` is still open (see "Decisions").
