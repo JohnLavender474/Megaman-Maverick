@@ -5,7 +5,7 @@
 - State: planned
 - Goal: per-slot bindings: one settings object per slot replaces `ControllerButtons`, the bindings screen rules, `--resetBindings`, `selectButtonAction` per slot
 - Done:
-- Next: the draft `docs/CONTRACT.md`
+- Next: the draft `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -24,3 +24,10 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner approved `docs/SCOPE.md` with all 10 recommendations (verbatim: "yes"). Answers in `docs/SCOPE.md` and
   the item `ITEM.md`. One fact in the scope was corrected before the review: the keyboard prefs file exists, in the
   `031d` backup.
+- Draft `docs/CONTRACT.md` written. Test rooms used (all checked in the live TMX `game_rooms` layers, each with a player
+  spawn): `REFACTOR_TEST_029` `movement`, `enemy_aim` and `player_death` (`RefactorTest029.tmx`), `INTRO_STAGE` `room3`
+  (`IntroStage_v3.tmx`). No new test room.
+- The owner approved `docs/CONTRACT.md` ("contract approved"), with the recommendations for questions 2 to 5. Question 1:
+  the owner has no prefs to protect ("I deleted the prefs, so nothing needs to be backed up"), so S1 is removed, and S2,
+  S3 and X1 now only give a known start state. `docs/SCOPE.md`: the 2 text fixes, and the 2 test seams in the table of
+  new APIs. Note: at this point `~/.prefs` holds 1 file and `~/.prefs.bak-031d` still exists; neither was changed.

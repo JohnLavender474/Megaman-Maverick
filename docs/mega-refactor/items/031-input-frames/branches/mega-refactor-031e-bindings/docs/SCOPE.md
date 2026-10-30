@@ -85,7 +85,8 @@ Based on `master` at `5d4a37eac`. `E` = `engine/src/main/kotlin/com/maverick/gam
   (`C/controllers/ControllerUtilsExtensions.kt:24-31`), but `GamepadInput.primary` starts `null`, so the first `held()`
   sets the codes again (`C/input/GamepadInput.kt:31-41`). That boot step is dead since `031d`.
 - **`--loadKeyboardPrefs`** (commit `1eaef3415`, `L/DesktopLauncher.kt:422-426`, `:157`): if given, `:304-308` loads the
-  keyboard codes from the keyboard prefs file and `selectButtonAction` from that same file. The default is `false`. All 3
+  keyboard codes from the keyboard prefs file and `selectButtonAction` from that same file (scope question 6 moves the
+  `selectButtonAction` read out of this flag). The default is `false`. All 3
   run scripts pass it (`run-game-alpha.sh:3`, `run-game-debug.sh:3`, `run-game-test.sh:3`). The packaged game passes no
   game arguments (`build-game.sh:83-92`). So a normal player gets defaults at boot, and the owner's dev runs load the
   keyboard prefs. It never loads gamepad prefs, so it does not touch the replug decision.
@@ -284,6 +285,7 @@ Other gamepad codes stay as numbers, because the library has no names for them. 
 | `PlayerSettings` (codes, `NO_CODE`, `selectButtonAction`) | `KeyboardInput.held()`, `GamepadInput.held()`, `CSS`, the 4 reader lines |
 | `MegaPlayers.settings(slot)` | `MegamanMaverickGame.create()`, `postCreate()`, `AirDashBehavior`, `ControllerComponent`, `MLS:926` |
 | `PlayerSettingsStore(slot)` | `create()`, `postCreate()` |
+| Boot-order function next to `PlayerSettingsStore`, and the label function next to the capture decision (test seams, contract question 2) | `create()`; `ControllerSettingsScreen` |
 | `saveKeyboard` | `CSS` key capture |
 | `loadKeyboard` | `CSS` load row; `create()` (`--loadKeyboardPrefs`) |
 | `saveGamepad(padName)` | `CSS` pad capture |
@@ -433,7 +435,8 @@ the storage work, and `CSS` is the center of both. See question 10.
 - **`Enter` in a capture:** the frame still sees the key (the adapters read the device), but `selectionMade` blocks the menu
   during a capture, so the refused key does nothing else.
 - **Keyboard names in the font (question 7):** names such as `L-Shift` need glyphs that the menu font may not have. Check
-  on the screen. `Input.Keys.toString` can return `null` for an unknown code, so the raw code is the fallback.
+  on the screen. `Input.Keys.toString` can return `null` for an unknown code, and it throws `IllegalArgumentException` for a code
+  outside `0..255`, so the raw code is the fallback in both cases.
 - **The screen has no tests:** see "Tests".
 
 ## Overlap with other branches
