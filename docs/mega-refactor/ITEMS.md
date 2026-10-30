@@ -89,6 +89,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | idea | none | | |
 | 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | idea | `024`, `069` | | |
+| 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | idea | `012`, `031` | | |
+| 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
@@ -125,7 +127,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-016a-typed-level-state`](items/016-narrow-services/branches/mega-refactor-016a-typed-level-state/process-log.md) | 016 | Typed `LevelState` fields and camera flags replace the `game` property bag | merged | 2026-10-28 | 2026-10-28 |
 | [`mega-refactor-016b-entity-host-reads`](items/016-narrow-services/branches/mega-refactor-016b-entity-host-reads/process-log.md) | 016 | The host-only reads in entities get a home (`DrWily` screen switch, `Starkner` `paused`, `selectButtonAction`, debug shapes, `weaponsAttained`) | merged | 2026-10-28 | 2026-10-29 |
 | [`mega-refactor-016c-entity-services`](items/016-narrow-services/branches/mega-refactor-016c-entity-services/process-log.md) | 016 | Entities take `MegaServices` in place of `MegamanMaverickGame`; factory, test helper, `IMegaGameEntity` cleanup; the `016a` forwards become direct reads | merged | 2026-10-29 | 2026-10-29 |
-| [`mega-refactor-016d-system-services`](items/016-narrow-services/branches/mega-refactor-016d-system-services/process-log.md) | 016 | Contact rules and the pathfinder factory take narrow services in place of `MegamanMaverickGame`; the creation order in `create()` allows it | active | 2026-10-29 | |
+| [`mega-refactor-016d-system-services`](items/016-narrow-services/branches/mega-refactor-016d-system-services/process-log.md) | 016 | Contact rules and the pathfinder factory take narrow services in place of `MegamanMaverickGame`; the creation order in `create()` allows it | merged | 2026-10-29 | 2026-10-29 |
+| [`mega-refactor-016e-service-names`](items/016-narrow-services/branches/mega-refactor-016e-service-names/process-log.md) | 016 | Mechanical rename of `game` and the old host member names to names that fit `MegaServices` | merged | 2026-10-29 | 2026-10-29 |
 | [`mega-refactor-014a-fixture-type`](items/014-contact-rules-table/branches/mega-refactor-014a-fixture-type/process-log.md) | 014 | Narrow the engine fixture type from `Any` | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |

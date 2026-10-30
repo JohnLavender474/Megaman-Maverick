@@ -3,7 +3,7 @@
 - Status: planned
 - Type: refactor
 - Depends on: none
-- Related: `010`, `013`, `031`, `038`
+- Related: `010`, `013`, `031`, `038`, `082`
 - Branches: none yet
 
 ## Goal
@@ -25,6 +25,14 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 Answer to review item 11 (2026-10-22, verbatim):
 
 > I assume this is in reference to certain systems and tools being paused in runtime, e.g. behaviors and physics system when Mega is transitioning from one room to another, or switching on/off the controller during/after certain events? The X6 game utilizes global flags to handle this. I like the ability to implement granular switches which the current Maverick architecture at least somewhat supports, but having it cleaner, more modular, and also more maintainable is the goal.
+
+## Decisions
+
+1. 2026-10-29 (from `082`, decision 5): a dialogue `WORLD` freeze (reason `DIALOGUE_WORLD`) stops enemies, hazards,
+   platforms and all other objects in place, with no animation. The player and the other speakers and actors of the
+   scene are exempt and keep their animations. The owner: "this matches the gameplay in X where X and the other
+   interlocutors will be animated, but enemies (as well as hazards, platforms, and other objects) will be unanimated
+   and frozen in place."
 
 ## Open questions
 
