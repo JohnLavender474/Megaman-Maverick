@@ -2,8 +2,8 @@
 
 - Status: idea
 - Type: feature
-- Depends on: `024`, `069`; `CharacterDef` (`060`, or this item if X comes first)
-- Related: `029`, `031`, `048`, `051`, `060`, `061`, `067`, `068`
+- Depends on: `024`, `069`, `084`; `CharacterDef` (`060`, or this item if X comes first)
+- Related: `029`, `031`, `048`, `051`, `060`, `061`, `067`, `068`, `084`
 - Branches: none yet
 
 ## Goal
@@ -39,6 +39,11 @@ approximation of X in the X6 reimplementation (@~/IdeaProjects/mmx-x6)."
 
 2026-10-29: the first X6-based extra level is the intro stage, or a section of it. Slopes (`068`) must support both
 Megaman and X.
+
+## Decisions
+
+- (2026-10-30, from `084`) This item depends on `084` (split `Megaman` into player components). The split of
+  `Megaman.kt` is a refactor with the contract "plays the same"; it must not mix with the new gameplay of this item.
 
 ## Open questions
 

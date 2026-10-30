@@ -67,7 +67,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | idea | none | | |
 | 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | idea | none | | |
 | 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | idea | none | | |
-| 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | idea | `024` | | |
+| 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | idea | `024`, `084` | | |
 | 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
 | 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | done | none | 2026-10-26 | 2026-10-27 |
 | 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | done | none | 2026-10-27 | 2026-10-28 |
@@ -88,9 +88,10 @@ statuses and column meanings are in `CLAUDE.md`.
 | 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | idea | none | | |
-| 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | idea | `024`, `069` | | |
+| 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | idea | `024`, `069`, `084` | | |
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
+| 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | planned | none | | |
 
 ## Branches
 

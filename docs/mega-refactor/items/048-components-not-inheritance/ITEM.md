@@ -3,7 +3,7 @@
 - Status: planned
 - Type: refactor
 - Depends on: none
-- Related: `017`, `018`, `023`, `029`, `030`
+- Related: `017`, `018`, `023`, `029`, `030`, `084`
 - Branches: none yet
 
 ## Goal
@@ -18,6 +18,9 @@ From the first request (summary): entities get health by extending `AbstractHeal
 
 - (2026-10-22) Entity roles come from components, not from base classes or layers. An entity that is both an enemy and a block has both parts (a solid block fixture, health and damage), with no child entity, extra interface or flag swapping. Code that checks `EntityType` or `is AbstractEnemy` checks a capability instead.
 - (2026-10-23, from `029`) The player contract follows this direction: no `IPlayer` interface on the player entity; the game's player view resolves required components at registration, and optional parts are capability lookups (`getComponent(X::class)`; a `ComponentKey<T>` type was added in `029a` and removed on 2026-10-23, because `KClass` is already a typed key). When this item turns facing, direction, health or the lifecycle into components, only the player view's accessors change, not the call sites that `029` moves.
+- (2026-10-30) The player side of the split (the logic and state in `Megaman.kt`) is item `084`, not this item.
+  This item keeps the base classes and the state-only contracts for all entities; see `084` "Open questions" for
+  the order between the two.
 
 ## Open questions
 

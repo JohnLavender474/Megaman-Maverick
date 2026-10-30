@@ -2,8 +2,8 @@
 
 - Status: idea
 - Type: feature
-- Depends on: `024`
-- Related: `029`, `031`, `047`, `048`
+- Depends on: `024`, `084`
+- Related: `029`, `031`, `047`, `048`, `084`
 - Branches: none yet
 
 ## Goal
@@ -38,6 +38,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 2026-10-25 (from the `029g` planning): Proto Man is a separate feature item after `029g` and `024`; `CharacterDef`
 waits for it.
+
+## Decisions
+
+- (2026-10-30, from `084`) This item depends on `084` (split `Megaman` into player components). The split of
+  `Megaman.kt` is a refactor with the contract "plays the same"; it must not mix with the new gameplay of this item.
 
 ## Open questions
 
