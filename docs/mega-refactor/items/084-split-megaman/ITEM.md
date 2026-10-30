@@ -1,10 +1,10 @@
 # 084: Split `Megaman` into player components
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Depends on: none
 - Related: `017`, `023`, `024`, `025`, `029`, `030`, `042`, `048`, `051`, `053`, `058`, `059`, `060`, `081`
-- Branches: none yet
+- Branches: `mega-refactor-084a-player-state` (started 2026-10-30)
 
 ## Goal
 
@@ -63,6 +63,10 @@ Not in this item (other items own these parts):
 
 - (2026-10-30) A new item, not a larger `048` scope and not part of `060`/`081`. Reason: keep the refactor apart
   from the gameplay features. `060` and `081` depend on this item.
+- (2026-10-30, owner) Merge target: directly into `master`. Reason: each branch is a refactor that plays the same, so
+  each one is safe to ship alone, and small merges keep the conflicts with `051b` in `Megaman.kt` small.
+- (2026-10-30, owner) The first branch is `mega-refactor-084a-player-state`: typed state in place of the property bag
+  and the teleport hook lambdas. Its `SCOPE.md` decides the final scope.
 
 ## Open questions
 
@@ -74,7 +78,6 @@ Not in this item (other items own these parts):
   all entities, or does it wait for `048`?
 - Is the stun bounce direction (the `TODO` that assumes `UP`) kept as is? A fix changes gameplay, so it is a bug in
   `docs/issues/`, not part of this item.
-- Merge target: directly into `master`, or a parent branch (decide at item start).
 
 ## Sources
 

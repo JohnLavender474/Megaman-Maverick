@@ -91,7 +91,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | idea | `024`, `069`, `084` | | |
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
-| 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | planned | none | | |
+| 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | active | none | 2026-10-30 | |
 
 ## Branches
 
@@ -137,3 +137,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-014b-typed-fixture-receivers`](items/014-contact-rules-table/branches/mega-refactor-014b-typed-fixture-receivers/process-log.md) | 014 | One typed receiver registration in place of the hand-written extension trios | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014c-contact-rules-table`](items/014-contact-rules-table/branches/mega-refactor-014c-contact-rules-table/process-log.md) | 014 | Replace the contact `if/else` chain with an engine rule table and per-pair rule classes | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-014d-contact-receivers`](items/014-contact-rules-table/branches/mega-refactor-014d-contact-receivers/process-log.md) | 014 | Replace the `Megaman` checks in the contact rules with receivers and capabilities; `MegaCollisionHandler` body flags | merged | 2026-10-22 | 2026-10-22 |
+| [`mega-refactor-084a-player-state`](items/084-split-megaman/branches/mega-refactor-084a-player-state/process-log.md) | 084 | Typed player state in place of the property bag (`facing`, `aButtonTask`, `currentWeapon`, `running`) and the teleport hook lambdas | active | 2026-10-30 | |
