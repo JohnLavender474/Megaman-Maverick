@@ -95,6 +95,13 @@ here.
      `CameraManagerForRooms`; `GameCameraState` goes. Its scan answers the research questions in `NOTES.md` first.
   3. `051c-camera-zones` (feature): X-style bounds from stage objects, opt-in in Tiled.
   4. `051d-auto-scroll` (feature): opt-in in Tiled.
+- 2026-10-30 (owner): the camera is dumb: it knows where it points and how it is rotated. Focus, rooms and bounds are
+  rules of a controller with parts that a context can add or omit, so more than one camera can follow the same rules.
+  `coerceIntoBounds` leaves the camera. Model: one follow, each behavior a bounds change, plus a position-override part
+  for scripted moves (the room pan). Research: `051b` `docs/NOTES.md`.
+- 2026-10-30 (owner): new branch `051e-camera-rotation`, with or after `046`: the rotation part, the typed lookup for
+  `rotating`, the backgrounds' own rotating cameras and the removal of `GameCameraState`. `051b` removes only
+  `focusSnappedAway`. The typed lookup and the `051b` follow part use the names in `051b` `docs/NOTES.md`.
 
 ## Contract notes
 
