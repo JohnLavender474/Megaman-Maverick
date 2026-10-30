@@ -5,6 +5,7 @@
 - Depends on: none
 - Related: `017`, `023`, `024`, `025`, `029`, `030`, `042`, `048`, `051`, `053`, `058`, `059`, `060`, `081`
 - Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)
+  `mega-refactor-084d-damage-reaction` (started 2026-10-30)
 
 ## Goal
 
@@ -68,6 +69,13 @@ Not in this item (other items own these parts):
   each one is safe to ship alone, and small merges keep the conflicts with `051b` in `Megaman.kt` small.
 - (2026-10-30, owner) The first branch is `mega-refactor-084a-player-state`: typed state in place of the property bag
   and the teleport hook lambdas. Its `SCOPE.md` decides the final scope.
+- (2026-10-30, owner) The next branch is `mega-refactor-084d-damage-reaction`: stun, knockback, recovery flash and freeze. It runs
+  before the movement and effects branches, and it does not wait for `048`. Its `SCOPE.md` decides the final scope.
+- (2026-10-30, owner) The thaw condition is passed into `FreezeComponent` as a rule, not written into it, so that
+  mashing is the player's rule and other entities can use another one.
+- (2026-10-30, owner) A type that has `fun reset()` extends `Resettable`.
+- (2026-10-30, owner) No invincibility component in this item. The getter stays on `Megaman`; `048` owns the rule for
+  all entities (see the `048` `ITEM.md`).
 
 ## Open questions
 
@@ -75,8 +83,11 @@ Not in this item (other items own these parts):
   others are content (death orbs, trail sprites). `001` keeps Megaman Maverick content out of `engine/`.
 - Does the charge state (`chargingTimer`, `chargeStatus`, `shoot()`) move here or wait for `024`?
 - Do the effects (trail sprites, bubbles) belong here or in `042` (reusable components)?
-- Order against `048`: does this item make the player-side health and freeze components that `048` later takes for
-  all entities, or does it wait for `048`?
+- Trail and bubble timers survive a respawn today. Keep that with a `reset()` that does nothing, or change the rule
+  that each component resets its state? Recommended: keep it.
+- `AButtonTask` with no component, until `060` shows that Proto Man needs it? Recommended: yes.
+- `ExplosionOrb.spawnRing` moves `EXPLOSION_ORB_SPEED` out of `MegamanValues`, with no value change. Bosses share the
+  value. Recommended: yes.
 - Is the stun bounce direction (the `TODO` that assumes `UP`) kept as is? A fix changes gameplay, so it is a bug in
   `docs/issues/`, not part of this item.
 

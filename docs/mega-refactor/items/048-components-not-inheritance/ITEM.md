@@ -21,6 +21,11 @@ From the first request (summary): entities get health by extending `AbstractHeal
 - (2026-10-30) The player side of the split (the logic and state in `Megaman.kt`) is item `084`, not this item.
   This item keeps the base classes and the state-only contracts for all entities; see `084` "Open questions" for
   the order between the two.
+- (2026-10-30, owner, from `084`) Invincibility becomes a read through a component with one constructor hook, for all
+  18 `invincible` getters, in one pass. It is never stored as a boolean: the timers end with no write, and a contact
+  later in the same contact pass must see a hit at once, so a stored or per-frame value can be stale. `084d` keeps the
+  getter on `Megaman`. Facts and options: `084` `NOTES.md`, "Invincibility research". The final form waits for the
+  scan of this item, including the 4 getters that are constants and replace the base rule.
 
 ## Open questions
 
