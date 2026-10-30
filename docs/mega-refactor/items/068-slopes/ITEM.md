@@ -48,6 +48,9 @@ Not approved. The branch `SCOPE.md` decides the final scope. Facts are in `NOTES
 2026-10-28 (summary): from a session in `mmx-x6`. The goal is to build "extra" levels in Maverick that mimic X6
 levels, for a ported X. Slopes are needed in these levels only. The main levels must not change.
 
+2026-10-29 (summary): the first X6-based extra level that uses slopes is the intro stage, or only a section of it.
+Slopes must support both Megaman (as he plays now) and the future playable X (`081`). The classic game has no slopes.
+
 ## Decisions
 
 - 2026-10-28: the slope surface is stepped, as in X6 (one step per 4 px of x on the shallow slope, per 2 px on the
@@ -55,20 +58,37 @@ levels, for a ported X. Slopes are needed in these levels only. The main levels 
 - 2026-10-28: all slope code goes in core, with one generic engine step after `resolveCollisions`. No level flag:
   the stick probe is always on, guarded by "last floor was a slope". The other proposals in this file are agreed.
   (Item `069` adds `LevelType.X_LEVEL` for the select-button override; slopes do not depend on it.)
+- 2026-10-29: X (`081`) is not a prerequisite. The first branch is built and play-tested with Megaman.
+- 2026-10-29 (merge target): the first branch is `mega-refactor-068a-slopes`. It squash-merges directly into
+  `master` (the code is new, and the main maps have no slopes).
+- 2026-10-29: `068a` starts after the `016` parent branch merges into `master`, so that `Slope` uses the
+  `MegaServices` constructor from `016c`.
+- 2026-10-29: `068a` adds the test map `RefactorTest068.tmx` (`REFACTOR_TEST_068`), with one room per check.
+- 2026-10-29: the intro-stage section is not part of `068a`. It is a separate item or branch, because it also needs
+  the X6 converter (`mmx-demake-tools`).
 
 ## Open questions
+
+Proposed answers (2026-10-29, not decided yet) are under each question.
 
 1. Units: at `PPM = 32` the X6 rises are 8 px and 16 px per 32 px tile. After `067` phase 2 (1x art and maps) they
    are 4 px and 8 px per 16 px tile, as in X6. Should this item wait for `067`, or work in world units so that it
    does not matter?
+   - Proposed: world units. The rise is a fraction of the tile height (1/4 shallow, 1/2 steep), the step width
+     1/4 or 1/8 of a tile. No wait for `067`, and no change after it.
 2. Side and head fixtures: `BLOCK_SIDE` and `HEAD_BLOCK` rules also fire against a slope's `BLOCK` fixture. How
    should a slope opt out (a fixture filter, a body label)? A slope is never a wall or a ceiling in X6.
+   - Proposed: the two rules skip a block with the slope body label.
 3. Feet width: Megaman's feet fixture is 16 px wide. X6 uses only the bottom-centre point. Filter the feet contact to
    the centre point for slopes only, or for all floors in slope levels?
+   - Proposed: the centre point on slopes only. Flat floors keep the full feet, so the main levels do not change.
 4. Should enemies that walk (for example the ones that turn at edges) be checked on slopes in the first version, or
    only Megaman and the player?
+   - Proposed: every body with a `FEET` fixture gets the slope handling. `068a` checks Megaman and one walking enemy
+     in the test map. A full enemy pass comes when an X6 level puts enemies on slopes.
 5. Does the dash and run speed on a slope stay the same as on a flat floor (X6: the x speed does not change on a
    slope)?
+   - Proposed: yes, for running, sliding and X's future dash.
 
 ## Sources
 
