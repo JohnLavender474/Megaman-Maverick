@@ -85,7 +85,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
     `controllerPoller` row of "Process Summary" in `summary.txt` (mean, p50, p95, p99, `avg%`) and the
     `=== Dropped N frames ===` count of each capture in the process log.
 - Contract checks: baseline for A1 to A4 and P1.
-- Done: no
+- Done: yes for the build half; the `master` half of P1 (captures 1 and 2) is pending with the owner
 
 ### 3. Code-0 fix
 
@@ -107,7 +107,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
   still pass.
 - Commit: `031d: getPreferredControllerCode gives null for a missing key (code-0 fix)`
 - Contract checks: T21, T22, T23, R2; intended change 6.
-- Done: no
+- Done: yes
 
 ### 4. Keyboard aliases
 
@@ -133,7 +133,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
   `TODO`. Smoke launch: `./run-game-alpha.sh --level REFACTOR_TEST_029 --room movement` from the worktree.
 - Commit: `031d: keyboard aliases: Enter and numpad Enter give START, the arrow keys give the d-pad`
 - Contract checks: T1 to T7, A10; intended changes 1, 2, 3.
-- Done: no
+- Done: yes
 
 ### 5. Every connected gamepad and the index-shift fix
 
@@ -174,7 +174,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
   as in step 4, with the PS3 pad connected.
 - Commit: `031d: gamepad adapter reads every connected pad; tracks the primary pad by object (index-shift fix)`
 - Contract checks: T8 to T13, A3 (moved cases), A8, A9, R1, R4; intended changes 4, 5.
-- Done: no
+- Done: yes
 
 ### 6. Left stick
 
@@ -200,7 +200,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
 - Check: the build command passes. Core count = step 5 + 5. Smoke launch as in step 5.
 - Commit: `031d: left stick gives the d-pad at 0.5 per axis`
 - Contract checks: T14 to T17, T20; intended change 7.
-- Done: no
+- Done: yes
 
 ### 7. Triggers and their capture
 
@@ -230,7 +230,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
   back out with no exception.
 - Commit: `031d: triggers can be bound on the gamepad bindings screen and act as buttons at 0.5`
 - Contract checks: T18, T19, R3; intended change 8.
-- Done: no
+- Done: yes
 
 ### 8. Contract checks
 
@@ -251,7 +251,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
   Write each result in the process log. Then give the owner the manual checks of step 9 as a list of commands.
 - Commit: `031d: contract checks` (branch docs only).
 - Contract checks: A1 to A11, T1 to T23, R1 to R4.
-- Done: no
+- Done: yes
 
 ### 9. Owner's play test and the branch half of P1
 
@@ -327,7 +327,7 @@ in step 5, the step that removes its only caller (`C/input/GamepadInput.kt:41`).
   result of each K, G and D check in the process log, and which checks were skipped and why.
 - Commit: `031d: play test results` (branch docs only).
 - Contract checks: K1 to K7, G1 to G10, D1 to D4, P1.
-- Done: no
+- Done: yes, except P1 (see the process log)
 
 ### 10. Merge
 
@@ -364,4 +364,4 @@ Follow "Branch merge" in `docs/mega-refactor/CLAUDE.md`:
 - Check: `git worktree list` no longer shows the branch; the build on `master` passes; `ITEMS.md` shows `031d` as
   `merged`.
 - Contract checks: all, as recorded in steps 8 and 9; the automated checks again on `master`.
-- Done: no
+- Done: yes

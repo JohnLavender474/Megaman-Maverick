@@ -83,6 +83,7 @@ fun ControllerUtils.resetSettingsToDefaults(buttons: ControllerButtons, isKeyboa
 fun getPreferredControllerCode(controller: Controller, button: MegaControllerButton): Int? {
     val controllerPreferences =
         Gdx.app.getPreferences("${PreferenceFiles.MEGAMAN_MAVERICK_CONTROLLER_PREFERENCES} - ${controller.name}")
+    if (!controllerPreferences.contains(button.name)) return null
     return controllerPreferences.getInteger(button.name)
 }
 

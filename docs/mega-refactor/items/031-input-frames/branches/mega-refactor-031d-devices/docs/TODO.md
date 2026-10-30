@@ -15,3 +15,7 @@ new item on `master` (a row in `ITEMS.md` and a folder in `items/`).
 ## Bug candidates
 
 Bugs found during this branch. File each one in the bug tracker (see `CLAUDE.md`).
+
+- `RobotMasterIntroScreen.dispose` (`:639`) logs an error at shutdown after an uncaught exception: `stopMusic` runs
+  after the audio is gone (`this.sourceToSoundId` is null, in `OpenALLwjgl3Audio.freeSource`). Seen in the `D3` crash
+  log. Not from this branch: only the shutdown after the crash showed it.

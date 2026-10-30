@@ -22,6 +22,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.controllers.*
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
+import com.megaman.maverick.game.input.GamepadInput
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
@@ -100,7 +101,19 @@ class ControllerSettingsScreen(
 
         buttonListener = object : ControllerAdapter() {
 
-            override fun buttonDown(controller: Controller, buttonIndex: Int): Boolean {
+            override fun buttonDown(controller: Controller, buttonIndex: Int) = setControllerCode(controller, buttonIndex)
+
+            override fun axisMoved(controller: Controller, axisIndex: Int, value: Float): Boolean {
+                val code = when (axisIndex) {
+                    GamepadInput.TRIGGER_LEFT_AXIS -> GamepadInput.TRIGGER_LEFT_CODE
+                    GamepadInput.TRIGGER_RIGHT_AXIS -> GamepadInput.TRIGGER_RIGHT_CODE
+                    else -> return false
+                }
+                if (value < GamepadInput.TRIGGER_THRESHOLD) return false
+                return setControllerCode(controller, code)
+            }
+
+            private fun setControllerCode(controller: Controller, code: Int): Boolean {
                 if (selectedMegaButton == null) {
                     GameLogger.error(TAG, "Selected button is null")
                     return true
@@ -109,14 +122,14 @@ class ControllerSettingsScreen(
                 val button = controllerButtons.get(selectedMegaButton!!)
                 GameLogger.debug(
                     TAG,
-                    "Setting [$selectedMegaButton] controller code from [${button.controllerCode}] to [$buttonIndex]"
+                    "Setting [$selectedMegaButton] controller code from [${button.controllerCode}] to [$code]"
                 )
 
                 // if any buttons match the controller code, then switch them
                 controllerButtons.values().forEach {
-                    if (it.controllerCode == buttonIndex) it.controllerCode = button.controllerCode
+                    if (it.controllerCode == code) it.controllerCode = button.controllerCode
                 }
-                button.controllerCode = buttonIndex
+                button.controllerCode = code
 
                 // save the controller codes to preferences
                 try {
