@@ -1179,3 +1179,20 @@ newest entry at the bottom.
   warnings, the same set as the baseline. Owner play test (verbatim): "All tests pass".
 - Follow-up: no backlog or bug candidates. `master` was merged into the branch (`170b37e05`) before the merge.
   `084a` touches `Megaman.kt`; 051a changed only line 214 there. 051 stays active; next is `051b-camera-behaviors`.
+
+## 2026-10-30 — mega-refactor-031d-devices
+
+- Summary: the device adapters of slot 0 read every device that single player can use. `Enter` and numpad `Enter` give
+  `START`, and the arrow keys give the d-pad, as fixed aliases. `GamepadInput` reads every connected pad, from a copy
+  of the controller list per tick. All pads read one code set, from the primary pad. The left stick gives the d-pad at
+  `0.5` per axis. Triggers can be bound on the gamepad bindings screen and act as buttons at `0.5`. Fixes the issues
+  `2026-10-25-gamepad-index-shift-keeps-old-codes.md` and `2026-10-25-preferred-controller-code-zero.md`. Squash commit
+  `1006260c9`.
+- Contract check: all automated checks in the branch `docs/CONTRACT.md` pass (A1 to A11, T1 to T23, R1 to R4). The
+  owner played K1 to K7, G1 to G10 and D1 to D4 ("all tests pass"), with a PS3 pad and a NES-style pad. Check `D3` found
+  a crash from this branch (a pad left the live list during the read); it was fixed with a test, and G6, G8, D2 and D3
+  ran again. P1 (`--diagnostics` captures) was not done: the owner skipped it ("skip the captures"). Merge approval
+  (verbatim: "approved").
+- Follow-up: item `031` stays active; next is `031e` (bindings), then `031f`. Bug filed:
+  `docs/issues/2026-10-30-robot-master-intro-dispose-after-audio.md`. The branch backlog candidate (a readable trigger
+  label) went to the `031` `ITEM.md` as a `031e` question, not a new item, because it belongs to that branch.

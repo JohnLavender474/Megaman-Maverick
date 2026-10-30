@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -39,3 +39,7 @@ first.
 
 Read the code. In the game: on the gamepad settings screen, select "LOAD SAVED SETTINGS", then connect a gamepad
 model that has never been rebound. Every button acts as every game button.
+
+## Resolution
+
+Fixed by `mega-refactor-031d-devices`, squash commit `1006260c9`. `getPreferredControllerCode` gives `null` for a missing key, so the mapping fallback runs. The owner checked it in the `031d` play test (`G5`).

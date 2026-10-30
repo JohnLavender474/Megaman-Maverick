@@ -4,7 +4,7 @@
 - Type: refactor
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`, `082`
-- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged), `mega-refactor-031c-input-pipeline` (merged); `mega-refactor-031d-devices` (active), `mega-refactor-031f-menu-input` (blocked by `031d` and `031e`); next: `031d` (devices), `031e` (per-slot bindings), then `031f` (the menu-input branch)
+- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged), `mega-refactor-031c-input-pipeline` (merged); `mega-refactor-031d-devices` (merged), `mega-refactor-031f-menu-input` (blocked by `031e`); next: `031e` (per-slot bindings), then `031f` (the menu-input branch)
 
 ## Goal
 
@@ -97,10 +97,19 @@ Answer to review item 30 (2026-10-22, verbatim):
   the bindings screen stays in `031e` (a `TODO` at the alias table until then); `031d` adds the trigger capture to the
   bindings screen's capture listener; the left stick only; the capture-state issue
   (`2026-10-25-capture-state-left-after-gamepad-disconnect.md`) goes to `031e`; the trigger threshold is `0.5`.
+- 2026-10-30 (owner, at the `031d` play test): a replug uses the saved bindings only after "LOAD SAVED SETTINGS", as
+  today. `031d` keeps this. The owner's view: this "might be safer than having the custom settings be loaded by
+  default, that way bad mappings don't render a controller permanently unusable".
+- 2026-10-30 (owner, at the `031d` merge review): the performance check of `031d` (`--diagnostics` captures) was
+  skipped, so the extra native calls per pad have no measurement.
 
 ## Open questions
 
 - None of the binding questions in `NOTES.md` is still open (see "Decisions").
+- For `031e`: should saved bindings load by default? Today a player who rebinds and then has a loose cable loses the
+  bindings until "LOAD SAVED SETTINGS". See the decision of 2026-10-30.
+- For `031e` (backlog candidate from `031d`): a readable label for a bound trigger on the gamepad bindings screen. The
+  screen shows the raw code, for example `B: 1005`.
 
 ## Sources
 

@@ -1,6 +1,6 @@
 ---
-status: open
-verified: no
+status: closed
+verified: yes
 area: core
 gameplay-change: yes
 found-by: mega-refactor 031 scan (2026-10-25)
@@ -41,3 +41,7 @@ select "LOAD SAVED SETTINGS", unplug A, and press buttons on B.
 ## Notes
 
 Item `031` (the device adapters branch) plans one adapter per connected gamepad, keyed by the controller object.
+
+## Resolution
+
+Fixed by `mega-refactor-031d-devices`, squash commit `1006260c9`. `GamepadInput` tracks the primary pad by object, so the remaining pad gets its own codes (its prefs if `loadPrefsOnConnect`, else the mapping). The owner checked it in the `031d` play test (`D2`).

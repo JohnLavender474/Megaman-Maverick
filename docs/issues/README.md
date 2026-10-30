@@ -79,10 +79,10 @@ related-items: [<mega-refactor item IDs>]
 | [`BouncingPebble` bounces to the right when its right side hits a block](2026-10-22-bouncing-pebble-right-side-bounce.md) | no | core | open |
 | [`GameLine.rotate` sets `originY` to the `originX` value](2026-10-25-game-line-rotate-origin-y.md) | yes | engine | open |
 | [`isPerformanceSubpar()` is true for the high tiers and has no caller](2026-10-25-is-performance-subpar-inverted.md) | yes | core | open |
-| [A gamepad model with no saved bindings gets code `0` on all 8 buttons after "LOAD SAVED SETTINGS"](2026-10-25-preferred-controller-code-zero.md) | yes | core | open |
+| [A gamepad model with no saved bindings gets code `0` on all 8 buttons after "LOAD SAVED SETTINGS"](2026-10-25-preferred-controller-code-zero.md) | yes | core | closed |
 | [Leaving the keyboard or gamepad settings screen during a level restarts the level](2026-10-25-bindings-screen-restarts-level.md) | yes | core | open |
 | [Players cannot bind a button to the `P` key without causing screenshots](2026-10-25-p-key-binding-takes-screenshots.md) | yes | core | open |
-| [After gamepad 0 is unplugged while another gamepad stays, the game keeps the old gamepad's codes](2026-10-25-gamepad-index-shift-keeps-old-codes.md) | no | core | open |
+| [After gamepad 0 is unplugged while another gamepad stays, the game keeps the old gamepad's codes](2026-10-25-gamepad-index-shift-keeps-old-codes.md) | yes | core | closed |
 | ["RESET TO DEFAULTS" in the key and gamepad settings is not saved](2026-10-25-reset-to-defaults-not-saved.md) | yes | core | open |
 | [A gamepad disconnect during a button capture leaves the capture state and the listener behind](2026-10-25-capture-state-left-after-gamepad-disconnect.md) | yes | core | open |
 | [`jamepadVersion` in `gradle.properties` does not match the Jamepad version that the build uses](2026-10-25-jamepad-version-mismatch.md) | yes | build | open |
@@ -96,3 +96,4 @@ related-items: [<mega-refactor item IDs>]
 | [Refine the final Dr. Wily boss fight](2026-10-29-refine-wily-final-boss-fight.md) | question | core, content | open |
 | [Question: a `down` gravity area turns the camera upside down, so the level shows upside down](2026-10-29-gravity-change-turns-camera-upside-down.md) | question | core | open |
 | [Needle Spin does not bounce Megaman up while he rises from a jump and JUMP is held](2026-10-29-needle-spin-no-bounce-while-jump-held.md) | yes | core | open |
+| [`RobotMasterIntroScreen.dispose` logs an error at shutdown after an uncaught exception](2026-10-30-robot-master-intro-dispose-after-audio.md) | yes | core | open |
