@@ -1,10 +1,10 @@
 # 051: X-style camera bounds, auto-scroll and other camera behaviors
 
-- Status: planned
+- Status: active
 - Type: feature
 - Depends on: none
-- Related: `019`, `036`, `038`, `041`, `047`
-- Branches: none yet
+- Related: `019`, `036`, `038`, `041`, `047`, `058`
+- Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30)
 
 ## Goal
 
@@ -83,6 +83,18 @@ here.
 - 2026-10-30 (owner): build a per-frame bounds cache behind the interface only if a `--diagnostics` run shows a gain.
   Measure in a room where the camera is not UP: with direction UP, `getRotatedBounds()` returns before the rotation
   math (`GameRectangle.kt:125`). Each call takes a pooled rectangle (`RotatableCamera.kt:71`).
+- 2026-10-30 (owner): merge target is directly into `master`. Each branch is safe to ship alone: `051a` and `051b`
+  are refactors that play the same, and `051c` and `051d` add behavior that a level must turn on.
+- 2026-10-30 (owner): the branch split. Each branch `SCOPE.md` decides its final scope, and `051b` may split again.
+  1. `051a-camera-read-interface` (refactor): the read-only camera interface in `engine`, implemented by
+     `RotatableCamera`; `getGameCamera()` becomes a property on the holder and on the host; the
+     `getGameCameraCullingLogic` signatures take the interface; the 2 Darkness sites stop changing the returned
+     rectangle. The flags stay.
+  2. `051b-camera-behaviors` (refactor): the camera is built from behavior components (room bounds, focus follow
+     with the smooth move, rotation, maybe the shaker); `MegaLevelScreen` talks to a camera control interface, not to
+     `CameraManagerForRooms`; `GameCameraState` goes. Its scan answers the research questions in `NOTES.md` first.
+  3. `051c-camera-zones` (feature): X-style bounds from stage objects, opt-in in Tiled.
+  4. `051d-auto-scroll` (feature): opt-in in Tiled.
 
 ## Contract notes
 

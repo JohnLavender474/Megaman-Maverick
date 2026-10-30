@@ -58,7 +58,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 048 | [Replace entity inheritance with components](items/048-components-not-inheritance/ITEM.md) | refactor | planned | none | | |
 | 049 | [Reduce repetitive object-oriented patterns](items/049-reduce-repetitive-patterns/ITEM.md) | refactor | idea | none | | |
 | 050 | [Define entities in data files](items/050-entities-in-data-files/ITEM.md) | feature | planned | `021`, `022` | | |
-| 051 | [X-style camera bounds, auto-scroll and other camera behaviors](items/051-camera-behaviors/ITEM.md) | feature | planned | none | | |
+| 051 | [X-style camera bounds, auto-scroll and other camera behaviors](items/051-camera-behaviors/ITEM.md) | feature | active | none | 2026-10-30 | |
 | 052 | [Make values configurable](items/052-configurable-values/ITEM.md) | refactor | idea | none | | |
 | 053 | [Clean up event-driven logic](items/053-event-cleanup/ITEM.md) | refactor | idea | none | | |
 | 054 | [Support web browsers and Android](items/054-web-and-android/ITEM.md) | feature | planned | `032`, `033`, `035` | | |
@@ -114,6 +114,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-031c-input-pipeline`](items/031-input-frames/branches/mega-refactor-031c-input-pipeline/process-log.md) | 031 | A new input pipeline with the same behavior: device adapters, held masks, an engine edge builder with the lock; the poller goes | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-031d-devices`](items/031-input-frames/branches/mega-refactor-031d-devices/process-log.md) | 031 | Devices: the keyboard aliases, every connected gamepad, the stick threshold, the triggers | planned | | |
 | [`mega-refactor-031f-menu-input`](items/031-input-frames/branches/mega-refactor-031f-menu-input/process-log.md) | 031 | Menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes | blocked | | |
+| [`mega-refactor-051a-camera-read-interface`](items/051-camera-behaviors/branches/mega-refactor-051a-camera-read-interface/process-log.md) | 051 | Read-only camera interface in `engine`; `getGameCamera()` becomes a property | active | 2026-10-30 | |
 | [`mega-refactor-061a-thin-player`](items/061-thin-player/branches/mega-refactor-061a-thin-player/process-log.md) | 061 | Thin `MegaPlayer`, free functions over the entity, engine locks, an immediate damage signal | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061b-play-phase-teleport`](items/061-thin-player/branches/mega-refactor-061b-play-phase-teleport/process-log.md) | 061 | `ready` and `teleporting` as entity state (play phase, teleportable); no player wrappers | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061c-entity-queries`](items/061-thin-player/branches/mega-refactor-061c-entity-queries/process-log.md) | 061 | A player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go | merged | 2026-10-26 | 2026-10-26 |
