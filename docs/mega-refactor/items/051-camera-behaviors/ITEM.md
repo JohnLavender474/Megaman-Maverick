@@ -119,6 +119,41 @@ here.
     today by a small float amount, so the equivalence check needs a tolerance.
   - Rejected: delta writes with a cleanup hook, absolute writes by the part with a cleanup hook, and a turn applied
     only at render (the frustum test and the map renderer read the camera).
+- 2026-10-30 (owner): `051c` and `051d` are scoped together and built one after the other, `051c` first. They change
+  the same clamp, and `051c` needs the edge blocks too. No live level uses them; the first users are future extra
+  levels. Research: `NOTES.md`, "Camera rules research for `051c` and `051d`".
+- 2026-10-30 (owner): camera rules are composable parts. Each frame: room tracking; the transition hold; target limits
+  from rooms, then zones, then the scroll; the room cut; the ease; follow; one clamp; the room scan; the effects.
+  - A rule sets only the edges it names. Each axis is a range or a pin (a camera center), and a pin beats a range.
+  - Active zones fold in Tiled object order, and a later object wins per edge. No stack and no numeric priority. A zone
+    is active while the focus point is inside it, so the limits depend only on the position.
+  - The rectangle of a zone or a scroll section may overlap rooms, but the view never goes past the current room.
+  - Snap when the room changes, on a reset, or when the focus is out of view after the move. Ease in all other cases.
+    With no zones this gives today's behavior.
+  - One hold test for the ease and the scroll: a pan, the world off, a camera turn, or a dead player. The scroll runs
+    while a player spawns.
+- 2026-10-30 (owner): a scroll section is a Tiled rectangle. It starts when the focus point enters it and takes control
+  from the current camera position, with no jump. Scroll directions are horizontal and vertical. Speed comes from the
+  section, and the player's speed does not change.
+  - Default stop (`exit`): the camera's trailing edge passes the far edge of the rectangle. The follow then takes
+    control again, with an ease.
+  - A players-only block sits at each screen edge. After the stop, the trailing block stays permanently, so the player
+    cannot go back into the section. A respawn clears it and derives it again from the camera at the spawn.
+  - At a room edge the leading block turns off, so the player can reach the next room. The trailing block stays on. A
+    room transition has priority and the camera stops at the room edge. The camera position is the scroll position, so
+    the scroll continues after the pan if the section still overlaps.
+  - Spawn points can be in a section. Rotation is allowed; the scroll direction is a world axis.
+  - The owner, verbatim: "the onus of success lies with the designer's choices. We can't validate and prevent every
+    single edge case or bad design choice." So there is no level validator.
+- 2026-10-30 (owner): a player pinned by a screen edge against a solid dies at once, as in the X games and Super Mario
+  Bros. 3. A `CrusherComponent` goes on the entity that crushes, so that any entity can be a crusher, and `GravityBlock`
+  moves to it.
+- 2026-10-30 (owner): edge blocks are a new class on `AbstractBlock`, so callers do not repeat the flags. A per-section
+  Tiled property enables them per edge: on by default for scrolls, off for zones. Tiled walls stay valid.
+- 2026-10-30 (owner): chained scrolls are separate sections with an optional `next` property, as `PipePortal` links
+  objects. No parent object. A second stop mode, `arrive`, stops when the leading edge reaches the far edge, for corners.
+- 2026-10-30 (owner): movement multipliers should move to a player component later, not in `051d`. The `084` question
+  is in progress.
 
 ## Contract notes
 

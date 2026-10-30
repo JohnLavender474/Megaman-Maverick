@@ -34,6 +34,8 @@ Motivation from `029`: co-op needs one owner for level-wide steps (level reset, 
 ## Open questions
 
 - Must a boss fight and a room transition ever overlap (for example X-style camera zones during a boss)?
+  `051` decision (2026-10-30): a zone in a boss room is plain data and needs no overlap with a transition. The camera
+  rules read one hold test, which a level flow state can replace later.
 
 ## Sources
 

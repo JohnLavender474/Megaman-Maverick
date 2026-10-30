@@ -1247,3 +1247,11 @@ newest entry at the bottom.
 - Follow-up: item `084` stays active; the movement and effects branches are next, and the open questions in its `ITEM.md` apply to
   them. Bugs filed: `docs/issues/2026-10-30-spawn-damage-lock-no-effect.md` and
   `docs/issues/2026-10-30-saw-trajectory-velocity-as-position.md`. No backlog candidates.
+
+## 2026-10-30 — master (docs)
+
+- Summary: item `051`: research and owner decisions for camera zones and auto-scroll are in `ITEM.md` and `NOTES.md`.
+  Branch folders `mega-refactor-051c-camera-zones` (`planned`) and `mega-refactor-051d-auto-scroll` (`blocked` by
+  `051c`) prepared ahead of time with draft `SCOPE.md` files. No branch exists yet.
+- Contract check: not needed (docs only).
+- Follow-up: owner approval of the 2 draft scopes. Short answers to linked questions in `013` and `041`.
