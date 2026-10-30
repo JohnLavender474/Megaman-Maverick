@@ -1165,3 +1165,17 @@ newest entry at the bottom.
   register `031f` now and scope `031d` next.
 - Contract check: not needed (docs only).
 - Follow-up: the `031d` scan.
+
+## 2026-10-30 — mega-refactor-051a-camera-read-interface
+
+- Summary: entities read the game camera through a read-only `engine` interface, `ICameraView` (`direction`,
+  `getRotatedBounds(out)`, `toGameRectangle(out)`, `overlaps(bounds, out)`), with live values. `RotatableCamera`
+  implements it; `core` adds the pooled `getRotatedBounds()`, `toGameRectangle()` and `overlaps(bounds)`.
+  `MegaServices.getGameCamera()` became `val gameCamera: ICameraView` (76 caller lines, mechanical);
+  `MegamanMaverickGame.getGameCamera()` became the field `gameCamera`; `getGameCameraCullingLogic` takes
+  `ICameraView`. Squash `7370943a0`; `1d50a659e` puts it in `.git-blame-ignore-revs`.
+- Contract check: all automated checks pass (a temporary equivalence suite of 50 cases compared the old and new
+  reads, then was deleted); after the deletion and a clean build, engine 575 and core 274 tests pass, 103 unique
+  warnings, the same set as the baseline. Owner play test (verbatim): "All tests pass".
+- Follow-up: no backlog or bug candidates. `master` was merged into the branch (`170b37e05`) before the merge.
+  `084a` touches `Megaman.kt`; 051a changed only line 214 there. 051 stays active; next is `051b-camera-behaviors`.

@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: A read-only camera interface in `engine`; entities read the camera through it; `getGameCamera()` becomes a
   property on the holder and on the host.
-- Done: branch start (docs commit on `master`), worktree.
-- Next: owner approval to merge into `master`.
+- Done: all plan steps; squash-merged into `master` as `7370943a0` (2026-10-30).
+- Next: none.
 - Blocked:
 
 ## Entries
@@ -64,3 +64,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - `170b37e05` merged `master` (at `1eaef3415`: the `--loadKeyboardPrefs` flag in `MegamanMaverickGame`,
   `DesktopLauncher`, the run scripts and `CLAUDE.md`; the `031d` and `084a` starts) into the branch, with no conflict.
   The step 9 checks ran after it. Overlap check with the active branches before the merge: see `docs/NOTES.md`.
+- Owner approved the merge. Squash-merged into `master` as `7370943a0`; `1d50a659e` puts the squash SHA in
+  `.git-blame-ignore-revs`.

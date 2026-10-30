@@ -4,7 +4,7 @@
 - Type: feature
 - Depends on: none
 - Related: `019`, `036`, `038`, `041`, `047`, `058`
-- Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30)
+- Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30, merged into `master` 2026-10-30, squash `7370943a0`)
 
 ## Goal
 
