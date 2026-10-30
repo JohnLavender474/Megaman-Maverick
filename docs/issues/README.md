@@ -97,3 +97,5 @@ related-items: [<mega-refactor item IDs>]
 | [Question: a `down` gravity area turns the camera upside down, so the level shows upside down](2026-10-29-gravity-change-turns-camera-upside-down.md) | question | core | open |
 | [Needle Spin does not bounce Megaman up while he rises from a jump and JUMP is held](2026-10-29-needle-spin-no-bounce-while-jump-held.md) | yes | core | open |
 | [`RobotMasterIntroScreen.dispose` logs an error at shutdown after an uncaught exception](2026-10-30-robot-master-intro-dispose-after-audio.md) | yes | core | open |
+| [The `SPAWN` damage lock appears to have no effect](2026-10-30-spawn-damage-lock-no-effect.md) | no | core | open |
+| [`Saw` type `t` passes a velocity to `body.setCenter`](2026-10-30-saw-trajectory-velocity-as-position.md) | no | core | open |

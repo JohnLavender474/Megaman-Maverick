@@ -5,7 +5,7 @@
 - Depends on: none
 - Related: `017`, `023`, `024`, `025`, `029`, `030`, `042`, `048`, `051`, `053`, `058`, `059`, `060`, `081`
 - Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)
-  `mega-refactor-084d-damage-reaction` (started 2026-10-30)
+  `mega-refactor-084d-damage-reaction` (merged 2026-10-30)
 
 ## Goal
 
@@ -24,9 +24,7 @@ Not approved. The branch `SCOPE.md` decides the final scope. The facts and line 
   and the teleport hooks. Still in the bag, for a later branch: the other player keys (15 bag calls in
   `entities/megaman/` at the `084a` scan), for example `MegamanKeys.DIRECTION_ON_AIR_DASH`, the `SHOOT_DOWN` keys,
   `ConstKeys.ANIMATION_KEY` and `ConstKeys.SIDE`. `ConstKeys.FOCUS` belongs to `051`.
-- **Damage reaction as components:** the knockback per direction and `noDmgBounce`, the recovery flash, the stun
-  (`STUN_PLAYER`, `stunTimer`), and the freeze with mash-to-unfreeze (`frozen`, `hitsToUnfreeze`, `frozenPushTimer`,
-  the ice shards).
+- **Damage reaction as components:** done in `084d`.
 - **Movement support as components:** post-action momentum (`preserveMomentum`, `stopMomentum`,
   `killPostActionMomentum`, the decay in the updatables), and the room-transition velocity carry (`onEvent`,
   `BEGIN/CONTINUE/END_ROOM_TRANS`).

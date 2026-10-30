@@ -1232,3 +1232,18 @@ newest entry at the bottom.
   Merge approval (verbatim: "approved").
 - Follow-up: item `051` stays active; next are `051c`, `051d` and `051e` (`051e` removes `RotatableCamera` and
   `GameCameraState`, with or after `046`). New item `085` from the branch backlog candidate. No bugs filed.
+
+## 2026-10-30 — mega-refactor-084d-damage-reaction
+
+- Summary: stun, knockback, the recovery flash and freeze left `Megaman.kt`, one component per mechanism, in `entities/state/`:
+  `StunComponent`, `KnockbackComponent`, `DamageRecoveryComponent`, `FreezeComponent` with `IThawRule` and `MashThawRule`. Hooks and
+  values are constructor arguments, set in `define*Component()` functions. The updatables lambda stays as the schedule.
+  `IFreezableEntity` left `Megaman`. New test map `RefactorTest084` (`REFACTOR_TEST_084`). Squash commit `4b65b1fdb`.
+- Contract check: the automated checks in the branch `docs/CONTRACT.md` pass (922 tests in `engine:test` and `core:test`,
+  `lwjgl3:jar`, both `grep` checks, a short launch). The temporary suite matched the old code on 20 seeds of 3000 frames for stun,
+  recovery and freeze, and on all 4 directions for knockback. It is deleted. The owner played the manual checks ("All other tests
+  pass"). The `--diagnostics` captures were not done: the owner skipped them ("I'll skip this for now"), so the frame-time effect is
+  not measured. Merge approval (verbatim: "yes").
+- Follow-up: item `084` stays active; the movement and effects branches are next, and the open questions in its `ITEM.md` apply to
+  them. Bugs filed: `docs/issues/2026-10-30-spawn-damage-lock-no-effect.md` and
+  `docs/issues/2026-10-30-saw-trajectory-velocity-as-position.md`. No backlog candidates.
