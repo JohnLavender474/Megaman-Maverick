@@ -1,17 +1,12 @@
-package com.megaman.maverick.game.screens.levels.camera
+package com.maverick.game.engine.camera
 
 import com.badlogic.gdx.graphics.Camera
-import com.maverick.game.engine.common.interfaces.Resettable
-import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.time.Timer
-import com.megaman.maverick.game.ConstVals
 
-class CameraShaker(private val cam: Camera) : Updatable, Resettable {
+class CameraShake(private val unit: Float) : ICameraPart<Camera> {
 
     val isFinished: Boolean
         get() = durTimer.isFinished()
-    val isJustFinished: Boolean
-        get() = durTimer.isJustFinished()
 
     private val durTimer = Timer().setToEnd()
     private val intervalTimer = Timer().setToEnd()
@@ -33,26 +28,25 @@ class CameraShaker(private val cam: Camera) : Updatable, Resettable {
         intervalTimer.setToEnd()
     }
 
-    override fun update(delta: Float) {
+    override fun update(camera: Camera, delta: Float): Boolean {
+        if (isFinished) return false
+
         durTimer.update(delta)
-        if (isFinished) return
+        if (isFinished) return false
 
         intervalTimer.update(delta)
         if (intervalTimer.isFinished()) {
             if (shakeLeft) {
-                cam.position.x -= shakeX * ConstVals.PPM
-                cam.position.y -= shakeY * ConstVals.PPM
+                camera.position.x -= shakeX * unit
+                camera.position.y -= shakeY * unit
             } else {
-                cam.position.x += shakeX * ConstVals.PPM
-                cam.position.y += shakeY * ConstVals.PPM
+                camera.position.x += shakeX * unit
+                camera.position.y += shakeY * unit
             }
             intervalTimer.reset()
             shakeLeft = !shakeLeft
         }
-    }
 
-    override fun reset() {
-        durTimer.reset()
-        intervalTimer.reset()
+        return false
     }
 }

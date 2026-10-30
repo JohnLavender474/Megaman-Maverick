@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.GameEngine
+import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.ICameraView
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.events.EventsManager
@@ -13,6 +14,7 @@ import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.screens.levels.camera.GameCameraState
+import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.state.GameClock
 import com.megaman.maverick.game.state.GameSettings
 import com.megaman.maverick.game.state.GameState
@@ -32,5 +34,6 @@ class MegaServices(
     val updatables: OrderedMap<String, Updatable>,
     val runQueue: Queue<() -> Unit>,
     val groups: GroupsSystem,
-    val gameCamera: ICameraView
+    val gameCamera: ICameraView,
+    val cameraController: CameraController<RotatableCamera>
 )

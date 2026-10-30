@@ -8,27 +8,23 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 class GameCameraStateTest : DescribeSpec({
 
     describe("GameCameraState") {
-        it("starts with both flags false") {
+        it("starts with rotating false") {
             val camera = GameCameraState()
             camera.rotating shouldBe false
-            camera.focusSnappedAway shouldBe false
         }
 
         it("keeps the values that are set") {
             val camera = GameCameraState()
             camera.rotating = true
-            camera.focusSnappedAway = true
             camera.rotating shouldBe true
-            camera.focusSnappedAway shouldBe true
         }
     }
 
     describe("the game") {
-        it("holds one GameCameraState for the session, with both flags false at the start") {
+        it("holds one GameCameraState for the session, with rotating false at the start") {
             val game = MegamanMaverickGame()
             game.camera shouldBeSameInstanceAs game.camera
             game.camera.rotating shouldBe false
-            game.camera.focusSnappedAway shouldBe false
         }
     }
 })

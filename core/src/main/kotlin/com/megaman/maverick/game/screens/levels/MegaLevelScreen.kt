@@ -17,10 +17,12 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.animations.AnimationsSystem
 import com.maverick.game.engine.behaviors.BehaviorsSystem
+import com.maverick.game.engine.camera.CameraFollow
+import com.maverick.game.engine.camera.CameraRoomTransition
+import com.maverick.game.engine.camera.CameraShake
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Position
-import com.maverick.game.engine.common.extensions.epsilonEquals
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.isAny
 import com.maverick.game.engine.common.extensions.objectSetOf
@@ -60,7 +62,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
@@ -71,9 +72,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IBossListener
-import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.focus
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -86,10 +85,10 @@ import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
-import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.screens.ScreenEnum
-import com.megaman.maverick.game.screens.levels.camera.CameraManagerForRooms
-import com.megaman.maverick.game.screens.levels.camera.CameraShaker
+import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
+import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
+import com.megaman.maverick.game.screens.levels.camera.CameraRotationStep
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
@@ -120,7 +119,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         const val MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG = "MegaLevelScreenEventListener"
         private const val ROOM_DISTANCE_ON_TRANSITION = 2f
         private const val TRANSITION_SCANNER_SIZE = 5f
-        private const val FADE_OUT_MUSIC_DUR = 1f
         private const val CHECKPOINT_TIMER = 2f
         private const val CHECKPOINT_ALPHA_DELAY = 1.5f
     }
@@ -205,8 +203,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     private lateinit var uiCamera: OrthographicCamera
     private lateinit var gameCamera: RotatableCamera
-    private lateinit var gameCameraShaker: CameraShaker
-    private lateinit var cameraManagerForRooms: CameraManagerForRooms
+    private lateinit var cameraFollow: CameraFollow
+    private lateinit var roomTransition: CameraRoomTransition
+    private lateinit var roomBounds: CameraRoomBounds
+    private lateinit var cameraShake: CameraShake
+    private lateinit var roomHandler: LevelRoomHandler
 
     private lateinit var levelPointsText: MegaFontHandle
     private lateinit var coinsText: MegaFontHandle
@@ -270,145 +271,33 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         bossHealthHandler = BossHealthHandler(game)
 
-        cameraManagerForRooms = CameraManagerForRooms(
-            camera = gameCamera,
-            distanceOnTransition = ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
-            transitionScannerDimensions = Vector2(
-                TRANSITION_SCANNER_SIZE * ConstVals.PPM,
-                TRANSITION_SCANNER_SIZE * ConstVals.PPM
-            ),
-            transDelay = ConstVals.ROOM_TRANS_DELAY_DURATION,
-            transDuration = ConstVals.ROOM_TRANS_DURATION,
-            shouldInterpolate = { game.camera.focusSnappedAway },
-            interpolationValue = { 20f * Gdx.graphics.deltaTime }
+        cameraFollow = CameraFollow(0.25f * ConstVals.PPM, { 20f * Gdx.graphics.deltaTime })
+        roomTransition = CameraRoomTransition(
+            cameraFollow,
+            ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
+            ConstVals.ROOM_TRANS_DELAY_DURATION,
+            ConstVals.ROOM_TRANS_DURATION
         )
-        cameraManagerForRooms.focus = player.focus
-        cameraManagerForRooms.onFirstUpdateAfterReset = {
-            tryToPlayCurrentRoomMusic()
+        roomBounds = CameraRoomBounds(
+            cameraFollow,
+            roomTransition,
+            Vector2(TRANSITION_SCANNER_SIZE * ConstVals.PPM, TRANSITION_SCANNER_SIZE * ConstVals.PPM)
+        )
+        cameraShake = CameraShake(ConstVals.PPM.toFloat())
+        game.cameraController.addMover(roomBounds)
+        game.cameraController.addMover(roomTransition)
+        game.cameraController.addMover(cameraFollow)
+        game.cameraController.addMover(CameraRoomClamp(cameraFollow, roomBounds))
+        game.cameraController.addEffect(CameraRotationStep())
+        game.cameraController.addEffect(cameraShake)
+        game.cameraController.addEffect(cameraFollow.stopRule)
+
+        cameraFollow.setFocus(gameCamera, player.focus)
+        roomBounds.reset()
+
+        roomHandler = LevelRoomHandler(game.services, roomBounds, roomTransition, { player }) {
+            game.getSystem(BehaviorsSystem::class)?.on = it
         }
-        cameraManagerForRooms.beginTransition = {
-            GameLogger.debug(
-                TAG,
-                "begin transition logic for rooms manager: " +
-                    "current=${cameraManagerForRooms.currentGameRoom?.name}, " +
-                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
-            )
-
-            eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-
-            val current = cameraManagerForRooms.currentGameRoom!!
-            if (current.properties.get(ConstKeys.FADE_OUT_MUSIC, Boolean::class.java) == true)
-                audioMan.fadeOutMusic(FADE_OUT_MUSIC_DUR)
-            val prior = cameraManagerForRooms.priorGameRoom
-            eventsMan.submitEvent(
-                Event(
-                    EventType.BEGIN_ROOM_TRANS, props(
-                        ConstKeys.PRIOR pairTo prior,
-                        ConstKeys.ROOM pairTo current,
-                        ConstKeys.NAME pairTo current.name,
-                        "${ConstKeys.PRIOR}_${ConstKeys.NAME}" pairTo prior?.name,
-                        ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation,
-                    )
-                )
-            )
-
-            MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
-            MegaGameEntities.getOfType(EntityType.PROJECTILE).forEach {
-                val shouldDestroy = it !is IOwnable<*> || it.owner.asPlayer == null
-                if (shouldDestroy) it.destroy()
-            }
-
-            game.getSystem(BehaviorsSystem::class)?.on = false
-            game.levelState.roomTransition = true
-
-            tryToPlayCurrentRoomMusic()
-        }
-        cameraManagerForRooms.continueTransition = {
-            eventsMan.submitEvent(
-                Event(
-                    EventType.CONTINUE_ROOM_TRANS,
-                    props(
-                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
-                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
-                        ConstKeys.POSITION pairTo cameraManagerForRooms.transitionInterpolation
-                    )
-                )
-            )
-
-            GameLogger.debug(
-                TAG, "continue transition logic for rooms manager: " +
-                    "transitionInterpolation=${cameraManagerForRooms.transitionInterpolation} " +
-                    "player.body.getCenter=${player.body.getCenter()}"
-            )
-
-            game.levelState.roomTransition = true
-        }
-        cameraManagerForRooms.endTransition = {
-            GameLogger.debug(
-                TAG, "end transition logic for rooms manager: " +
-                    "current=${cameraManagerForRooms.currentGameRoom?.name}, " +
-                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
-            )
-
-            val currentRoom = cameraManagerForRooms.currentGameRoom
-            val hasEvent = currentRoom?.properties?.containsKey(ConstKeys.EVENT) == true
-            val event = currentRoom?.properties?.get(ConstKeys.EVENT, String::class.java)
-
-            eventsMan.submitEvent(
-                Event(
-                    EventType.END_ROOM_TRANS, props(
-                        ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom,
-                        ConstKeys.PRIOR pairTo cameraManagerForRooms.priorGameRoom,
-                        ConstKeys.VELOCITY pairTo !(hasEvent && event == ConstKeys.BOSS)
-                    )
-                )
-            )
-
-            when {
-                hasEvent -> {
-                    val props = props(ConstKeys.ROOM pairTo currentRoom)
-                    val roomEvent = when (event) {
-                        ConstKeys.BOSS -> EventType.ENTER_BOSS_ROOM
-                        ConstKeys.SUCCESS -> EventType.VICTORY_EVENT
-                        else -> throw IllegalStateException("Unknown room event: $event")
-                    }
-                    eventsMan.submitEvent(Event(roomEvent, props))
-                }
-
-                else -> eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-            }
-
-            if (currentRoom?.properties?.containsKey("megaman_direction") == true) {
-                val direction = Direction.valueOf(
-                    currentRoom.properties.get("megaman_direction", String::class.java).uppercase()
-                )
-                if (direction != game.gravity.direction) {
-                    game.gravity.set(direction)
-
-                    val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
-                    aura.spawn(props(ConstKeys.POSITION pairTo player.body.getCenter()))
-
-                    audioMan.playSound(SoundAsset.LIFT_OFF_SOUND, false)
-                }
-            }
-
-            game.getSystem(BehaviorsSystem::class)?.on = true
-            game.levelState.roomTransition = false
-
-            game.players.forEach { (it as Megaman).running = false }
-        }
-        cameraManagerForRooms.onSetToRoomNoTrans = {
-            GameLogger.debug(TAG, "on set to room no trans")
-            eventsMan.submitEvent(
-                Event(
-                    EventType.SET_TO_ROOM_NO_TRANS,
-                    props(ConstKeys.ROOM pairTo cameraManagerForRooms.currentGameRoom)
-                )
-            )
-            tryToPlayCurrentRoomMusic()
-        }
-
-        gameCameraShaker = CameraShaker(gameCamera)
 
         pauseScreen.init()
 
@@ -440,8 +329,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         music?.let { audioMan.playMusic(it, it.loop) }
 
         game.camera.rotating = false
-        game.levelState.roomsSupplier = { cameraManagerForRooms.gameRooms }
-        game.levelState.currentRoomSupplier = { cameraManagerForRooms.currentGameRoom }
+        game.levelState.roomsSupplier = { roomBounds.gameRooms }
+        game.levelState.currentRoomSupplier = { roomBounds.currentGameRoom }
 
         if (tiledMapLoadResult == null) throw IllegalStateException("no tiled map load result found in level screen")
         game.levelState.tiledMapLoadResult = tiledMapLoadResult!!
@@ -487,26 +376,26 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         endLevelEventHandler.reset()
 
-        game.camera.focusSnappedAway = false
+        cameraFollow.stopSmoothFollow()
         camerasSetToGameCamera = false
         gameCameraPriorPosition.setZero()
         gameCamera.position.set(ConstFuncs.getGameCamInitPos())
         uiCamera.position.set(ConstFuncs.getGameCamInitPos())
 
-        cameraManagerForRooms.absoluteMinX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
-        cameraManagerForRooms.absoluteMaxX = tiledMapLoadResult!!.worldWidth * ConstVals.PPM.toFloat()
+        cameraFollow.minX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f
+        cameraFollow.maxX = tiledMapLoadResult!!.worldWidth * ConstVals.PPM.toFloat()
 
         GameLogger.debug(
             TAG,
-            "start(): set camera-manager-for-rooms absolute min and max: " +
-                "${cameraManagerForRooms.absoluteMinX}, ${cameraManagerForRooms.absoluteMaxX}"
+            "start(): set camera follow min and max: " +
+                "${cameraFollow.minX}, ${cameraFollow.maxX}"
         )
 
         /*
         if (DISPLAY_ROOMS_DEBUG_TEXT) {
             val roomsTextSupplier: () -> String = {
-                "current=${cameraManagerForRooms.currentGameRoom?.name} / " +
-                    "prior=${cameraManagerForRooms.priorGameRoom?.name}"
+                "current=${roomBounds.currentGameRoom?.name} / " +
+                    "prior=${roomBounds.priorGameRoom?.name}"
             }
             game.setDebugTextSupplier(roomsTextSupplier)
         }
@@ -534,7 +423,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerSpawnsMan.set(playerSpawns)
 
         val gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
-        cameraManagerForRooms.gameRooms = gameRooms
+        roomBounds.gameRooms = gameRooms
 
         game.consumeLaunchRoom()?.let { startAtLaunchRoom(it, playerSpawns, gameRooms) }
 
@@ -592,17 +481,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.PLAYER_SPAWN_INIT -> {
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): player spawn --> reset camera manager for rooms and spawn megaman"
+                    "onEvent(): player spawn --> reset the room bounds and spawn megaman"
                 )
 
                 backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
-                cameraManagerForRooms.reset()
+                roomBounds.reset()
 
                 bossHealthHandler.unset()
 
                 engine.systems.forEach { it.on = true }
 
-                game.camera.focusSnappedAway = false
+                cameraFollow.stopSmoothFollow()
                 game.levelState.roomTransition = false
 
                 MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
@@ -612,11 +501,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
                 engine.spawn(player, spawnProps)
 
-                if (!gameCameraShaker.isFinished) gameCameraShaker.stop()
+                if (!cameraShake.isFinished) cameraShake.stop()
 
-                if (cameraManagerForRooms.nextGameRoom()?.properties?.containsKey(ConstKeys.MUSIC) == true) {
+                if (roomBounds.nextGameRoom()?.properties?.containsKey(ConstKeys.MUSIC) == true) {
                     val musicAsset = MusicAsset.valueOf(
-                        cameraManagerForRooms
+                        roomBounds
                             .currentGameRoom!!
                             .properties
                             .get(ConstKeys.MUSIC, String::class.java)
@@ -698,7 +587,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
 
                 val transDirection = event.getProperty("${ConstKeys.TRANS}_${ConstKeys.DIRECTION}", Direction::class)
-                val isTrans = cameraManagerForRooms.transitionToRoom(roomName, transDirection)
+                val isTrans = roomBounds.transitionToRoom(gameCamera, roomName, transDirection)
 
                 if (isTrans) GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
@@ -860,12 +749,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.SHAKE_CAM -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): request to shake game cam")
-                if (gameCameraShaker.isFinished) {
+                if (cameraShake.isFinished) {
                     val duration = event.properties.get(ConstKeys.DURATION, Float::class)!!
                     val interval = event.properties.get(ConstKeys.INTERVAL, Float::class)!!
                     val shakeX = event.properties.get(ConstKeys.X, Float::class)!!
                     val shakeY = event.properties.get(ConstKeys.Y, Float::class)!!
-                    gameCameraShaker.startShake(duration, interval, shakeX, shakeY)
+                    cameraShake.startShake(duration, interval, shakeX, shakeY)
                 }
             }
 
@@ -928,9 +817,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     override fun render(delta: Float) {
         /*
         game.setDebugText(
-            "${cameraManagerForRooms.transitioning} / " +
-                "${cameraManagerForRooms.currentGameRoom?.name} / " +
-                "${cameraManagerForRooms.priorGameRoom?.name}"
+            "${roomTransition.transitioning} / " +
+                "${roomBounds.currentGameRoom?.name} / " +
+                "${roomBounds.priorGameRoom?.name}"
         )
          */
 
@@ -982,17 +871,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             backgrounds.forEach { it.update(delta) }
-            cameraManagerForRooms.update(delta)
-            gameCamera.update(delta)
-
-            if (!gameCameraShaker.isFinished) gameCameraShaker.update(delta)
-
-            if (game.camera.focusSnappedAway) {
-                val focus = player.focus.getFocusPosition()
-                if (focus.x.epsilonEquals(gameCamera.position.x, 0.25f * ConstVals.PPM) &&
-                    focus.y.epsilonEquals(gameCamera.position.y, 0.25f * ConstVals.PPM)
-                ) game.camera.focusSnappedAway = false
-            }
+            game.cameraController.update(delta)
 
             val timeSinceLastFloatingPoints = game.levelState.timeSinceLastFloatingPoints
             game.levelState.timeSinceLastFloatingPoints = timeSinceLastFloatingPoints + delta
@@ -1129,7 +1008,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         backgrounds.forEach { background -> background.reset() }
 
-        cameraManagerForRooms.reset()
+        roomBounds.reset()
         gameCamera.immediateRotation(Direction.UP)
 
         audioMan.unsetMusic()
@@ -1137,7 +1016,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         game.levelState.roomTransition = false
         eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
-        game.camera.focusSnappedAway = false
+        cameraFollow.stopSmoothFollow()
     }
 
     override fun dispose() {
@@ -1163,16 +1042,4 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     override fun resize(width: Int, height: Int) =
         backgrounds.forEach { background -> background.updateViewportSize(width, height) }
 
-    private fun tryToPlayCurrentRoomMusic() {
-        if (cameraManagerForRooms.currentGameRoom?.properties?.containsKey(ConstKeys.MUSIC) == true) {
-            val musicAsset = MusicAsset.valueOf(
-                cameraManagerForRooms
-                    .currentGameRoom!!
-                    .properties
-                    .get(ConstKeys.MUSIC, String::class.java)
-                    .uppercase()
-            )
-            if (musicAsset != audioMan.getCurrentMusicAsset()) musicAsset.let { audioMan.playMusic(it, it.loop) }
-        }
-    }
 }

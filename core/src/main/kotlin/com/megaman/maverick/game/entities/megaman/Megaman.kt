@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.audio.AudioComponent
+import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
@@ -69,10 +70,11 @@ import com.megaman.maverick.game.players.GravityDeviceComponent
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.screens.levels.camera.IFocusable
 import com.megaman.maverick.game.state.IGameStateListener
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.startSmoothFollow
+import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.utils.misc.StunType
@@ -207,7 +209,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
                 body.direction = value
 
-                services.camera.focusSnappedAway = true
+                services.cameraController.startSmoothFollow()
 
                 val camDir = if (value.isVertical()) value else value.getOpposite()
                 if (services.gameCamera.direction != camDir) {
@@ -340,7 +342,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
                     standardOnTeleportEnd(this)
                     aButtonTask = AButtonTask.AIR_DASH
                     unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-                    services.camera.focusSnappedAway = false
+                    services.cameraController.stopSmoothFollow()
                 }
             )
         )
@@ -498,7 +500,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         airDashConsumed = false
 
         removeProperty(ConstKeys.FOCUS)
-        services.camera.focusSnappedAway = false
+        services.cameraController.stopSmoothFollow()
 
         services.events.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
     }

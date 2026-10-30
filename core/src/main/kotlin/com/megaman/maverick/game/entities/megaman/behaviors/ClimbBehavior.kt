@@ -20,6 +20,8 @@ import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
+import com.megaman.maverick.game.utils.extensions.startSmoothFollow
+import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_CLIMB_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: ClimbBehavior"
@@ -139,7 +141,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
             body.physics.gravityOn = false
             body.physics.velocity.setZero()
 
-            services.camera.focusSnappedAway = true
+            services.cameraController.startSmoothFollow()
 
             aButtonTask = when {
                 body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
@@ -212,7 +214,7 @@ internal fun Megaman.climbBehavior(): IBehavior {
         }
 
         override fun end() {
-            services.camera.focusSnappedAway = false
+            services.cameraController.stopSmoothFollow()
 
             body.physics.gravityOn = true
             body.physics.velocity.setZero()

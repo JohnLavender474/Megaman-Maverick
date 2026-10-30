@@ -85,30 +85,6 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
 
     override fun overlaps(bounds: IRectangle, out: BoundingBox) = frustum.boundsInFrustum(bounds.toBoundingBox(out))
 
-    fun coerceIntoBounds(bounds: GameRectangle) {
-        if (printDebug) GameLogger.debug(TAG, "coerceIntoBounds(): bounds=$bounds")
-
-        val adjVpWidth: Float
-        val adjVpHeight: Float
-
-        if (direction.isVertical()) {
-            adjVpWidth = viewportWidth
-            adjVpHeight = viewportHeight
-        } else {
-            adjVpWidth = viewportHeight
-            adjVpHeight = viewportWidth
-        }
-
-        if (position.y > bounds.getMaxY() - adjVpHeight / 2f)
-            position.y = bounds.getMaxY() - adjVpHeight / 2f
-        if (position.y < bounds.getY() + adjVpHeight / 2f)
-            position.y = bounds.getY() + adjVpHeight / 2f
-        if (position.x > bounds.getMaxX() - adjVpWidth / 2f)
-            position.x = bounds.getMaxX() - adjVpWidth / 2f
-        if (position.x < bounds.getX() + adjVpWidth / 2f)
-            position.x = bounds.getX() + adjVpWidth / 2f
-    }
-
     fun startRotation(direction: Direction, time: Float) {
         if (printDebug) GameLogger.debug(
             TAG,

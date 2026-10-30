@@ -18,7 +18,7 @@ import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
 import com.megaman.maverick.game.players.lightOrNull
 import com.megaman.maverick.game.players.onGravityDeviceSwitch
-import com.megaman.maverick.game.screens.levels.camera.IFocusable
+import com.maverick.game.engine.camera.IFocusable
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

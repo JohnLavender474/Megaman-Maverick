@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.GameEngine
+import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.ICameraView
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.events.EventsManager
@@ -36,7 +37,8 @@ fun testServices(
     updatables: OrderedMap<String, Updatable> = OrderedMap(),
     runQueue: Queue<() -> Unit> = Queue(),
     groups: GroupsSystem = GroupsSystem(),
-    gameCamera: ICameraView = RotatableCamera()
+    gameCamera: ICameraView = RotatableCamera(),
+    cameraController: CameraController<RotatableCamera> = CameraController(RotatableCamera())
 ) = MegaServices(
     engine,
     events,
@@ -52,5 +54,6 @@ fun testServices(
     updatables,
     runQueue,
     groups,
-    gameCamera
+    gameCamera,
+    cameraController
 )

@@ -44,6 +44,8 @@ import com.megaman.maverick.game.entities.state.teleporter
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.utils.extensions.startSmoothFollow
+import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
@@ -125,7 +127,7 @@ class PipePortal(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         exiting.put(entity, Timer(TELEPORT_DUR))
 
         if (entity.asPlayer != null) {
-            services.camera.focusSnappedAway = false
+            services.cameraController.stopSmoothFollow()
             entity.require(TeleportableComponent::class).teleporter = this
         }
 
@@ -147,7 +149,7 @@ class PipePortal(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
         entity.beginTeleport(this)
 
-        if (entity.asPlayer != null) services.camera.focusSnappedAway = true
+        if (entity.asPlayer != null) services.cameraController.startSmoothFollow()
 
         requestToPlaySound(SoundAsset.SMB3_PIPE_SOUND, false)
     }

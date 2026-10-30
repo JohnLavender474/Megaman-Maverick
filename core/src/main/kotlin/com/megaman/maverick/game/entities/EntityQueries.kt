@@ -8,7 +8,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.screens.levels.camera.IFocusable
+import com.maverick.game.engine.camera.IFocusable
 
 private fun IGameEntity.missing(part: String): Nothing = throw IllegalStateException("$this has no $part")
 

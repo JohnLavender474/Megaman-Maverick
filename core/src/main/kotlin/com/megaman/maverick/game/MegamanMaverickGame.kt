@@ -22,6 +22,7 @@ import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.animations.AnimationsSystem
 import com.maverick.game.engine.audio.AudioSystem
 import com.maverick.game.engine.behaviors.BehaviorsSystem
+import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.common.GameLogLevel
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.LogReceiver
@@ -115,6 +116,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
 import com.megaman.maverick.game.utils.extensions.getSounds
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
+import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getEntity
@@ -187,13 +189,16 @@ class MegamanMaverickGame(
     val levelState = LevelState()
     val clock = GameClock()
     val camera = GameCameraState()
-    val gameCamera = RotatableCamera(onJustFinishedRotating = {
+    val gameCamera: RotatableCamera = RotatableCamera(onJustFinishedRotating = {
         camera.rotating = false
-        camera.focusSnappedAway = false
+        cameraController.stopSmoothFollow()
         events.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
     })
+    val cameraController: CameraController<RotatableCamera> = CameraController(gameCamera)
     val settings = GameSettings()
 
+    lateinit var services: MegaServices
+        private set
     lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
         private set
     lateinit var shapes: Array<IDrawableShape>
@@ -407,7 +412,7 @@ class MegamanMaverickGame(
         audio.musicVolume = params.musicVolume
         audio.soundVolume = params.soundVolume
 
-        val services = MegaServices(
+        services = MegaServices(
             engine,
             events,
             assets,
@@ -422,7 +427,8 @@ class MegamanMaverickGame(
             updatables,
             runQueue,
             getSystem(GroupsSystem::class)!!,
-            gameCamera
+            gameCamera,
+            cameraController
         )
 
         MegaEntityFactory.init(services)
