@@ -79,6 +79,8 @@ import com.megaman.maverick.game.controllers.ControllerUtils
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.ScreenController
 import com.megaman.maverick.game.controllers.loadControllerButtons
+import com.megaman.maverick.game.controllers.loadKeyboardSettingsFromPrefs
+import com.megaman.maverick.game.controllers.loadSelectButtonActionFromPrefs
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -143,6 +145,7 @@ class MegamanMaverickGameParams {
     var logLevels: OrderedSet<GameLogLevel> = OrderedSet()
     var worldContainer: String = "simple"
     var pathfinding: String = "async"
+    var loadKeyboardPrefs: Boolean = false
     var launchOptions: LaunchOptions = LaunchOptions()
 }
 
@@ -293,6 +296,11 @@ class MegamanMaverickGame(
 
         checkInputButtons(MegaControllerButton.entries)
         buttons = ControllerUtils.loadControllerButtons()
+        if (params.loadKeyboardPrefs) {
+            loadKeyboardSettingsFromPrefs(buttons)
+            loadSelectButtonActionFromPrefs(true)?.let { players.selectButtonAction = it }
+            GameLogger.log(TAG, "create(): loaded keyboard prefs")
+        }
         keyboardInput = KeyboardInput(buttons)
         gamepadInput = GamepadInput(buttons)
         controllerPoller = FrameControllerPoller { players.inputs[PlayerSlot(0)] }

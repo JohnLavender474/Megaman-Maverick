@@ -179,17 +179,8 @@ class ControllerSettingsScreen(
 
             override fun onSelect(delta: Float): Boolean {
                 if (isKeyboardSettings) {
-                    val keyboardPreferences = getKeyboardPreferences()
-
-                    MegaControllerButton.entries.forEach {
-                        controllerButtons[it]?.let { controllerButton ->
-                            val oldCode = controllerButton.keyboardCode
-                            val newCode = keyboardPreferences.getInteger(it.name, oldCode)
-
-                            controllerButton.keyboardCode = newCode
-
-                            GameLogger.debug(TAG, "loadSavedSettings(): keyboard: oldCode=$oldCode, newCode=$newCode")
-                        }
+                    loadKeyboardSettingsFromPrefs(controllerButtons) { _, oldCode, newCode ->
+                        GameLogger.debug(TAG, "loadSavedSettings(): keyboard: oldCode=$oldCode, newCode=$newCode")
                     }
                 } else {
                     if (controller == null) {

@@ -33,6 +33,18 @@ fun ControllerUtils.loadControllerButtons(): ControllerButtons {
     return buttons
 }
 
+fun loadKeyboardSettingsFromPrefs(buttons: ControllerButtons, onLoad: ((MegaControllerButton, Int, Int) -> Unit)? = null) {
+    val keyboardPrefs = getKeyboardPreferences()
+    MegaControllerButton.entries.forEach {
+        buttons[it]?.let { button ->
+            val oldCode = button.keyboardCode
+            val newCode = keyboardPrefs.getInteger(it.name, oldCode)
+            button.keyboardCode = newCode
+            onLoad?.invoke(it, oldCode, newCode)
+        }
+    }
+}
+
 fun ControllerUtils.saveSettingsToPrefs(buttons: ControllerButtons, isKeyboardSettings: Boolean) {
     if (isKeyboardSettings) {
         val keyboardPrefs = getKeyboardPreferences()

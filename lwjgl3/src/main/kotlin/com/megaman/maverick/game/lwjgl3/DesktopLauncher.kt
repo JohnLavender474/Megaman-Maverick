@@ -52,6 +52,7 @@ object DesktopLauncher {
     private const val DEFAULT_WORLD_CONTAINER = "simple"
     private const val DEFAULT_PATHFINDING = "async"
     private const val DEFAULT_AUTO_PERF = true
+    private const val DEFAULT_LOAD_KEYBOARD_PREFS = false
     private const val EXIT_CODE_BAD_ARGS = 2
 
     @JvmStatic
@@ -104,6 +105,7 @@ object DesktopLauncher {
         println("- Heart Tanks: " + appArgs.heartTanks)
         println("- Health Tanks: " + appArgs.healthTanks)
         println("- Auto Perf: " + appArgs.autoPerf)
+        println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Performance: " + appArgs.performance)
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
@@ -152,6 +154,7 @@ object DesktopLauncher {
         params.diagnostics = appArgs.diagnostics
         params.worldContainer = appArgs.worldContainer
         params.pathfinding = appArgs.pathfinding
+        params.loadKeyboardPrefs = appArgs.loadKeyboardPrefs
         params.launchOptions = launchOptions
 
         val logLevels = appArgs.logLevels.replace(Regex("\\s+"), "").split(",").filter { !it.isBlank() }
@@ -414,5 +417,12 @@ object DesktopLauncher {
             description = "Whether the game may change the performance tier at runtime. Default value is $DEFAULT_AUTO_PERF"
         )
         var autoPerf = DEFAULT_AUTO_PERF
+
+        @Parameter(
+            names = ["--loadKeyboardPrefs"],
+            description = "Load the saved keyboard settings at startup, the same as \"LOAD SAVED SETTINGS\" in the " +
+                "keyboard settings screen. Default value = $DEFAULT_LOAD_KEYBOARD_PREFS."
+        )
+        var loadKeyboardPrefs = DEFAULT_LOAD_KEYBOARD_PREFS
     }
 }
