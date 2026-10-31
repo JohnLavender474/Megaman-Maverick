@@ -1314,3 +1314,14 @@ newest entry at the bottom.
   has the new prerequisites. Stale lines in `029`, `030`, `060`, `063` and `084` are corrected. Planned `084` branches: `084e`, `084f`, `084g`, `084h`.
 - Contract check: not needed (docs only).
 - Follow-up: `084e` starts next.
+
+## 2026-10-31 — mega-refactor-051d-auto-scroll
+
+- Summary: merged into the parent `mega-refactor-051-master`. `CameraScroll` with Tiled `type=scroll` sections, stop modes, one-way `next`
+  links, a kept trailing edge and room rules. Edges follow the fall direction. `crush_surface` objects replace the side sense in a
+  crush. Edge blocks cover their section or zone. The view size blends over a camera turn. A scroll waits until the player is ready.
+  New rooms in `RefactorTest051`, and spawn `23` moved out of a ceiling block. Squash commit `4ed49c0f9` on the parent.
+- Contract check: the automated checks pass in the parent worktree after `./gradlew clean` (engine 596, core 429, `lwjgl3:jar`, 96 unique
+  warnings, the baseline count). The owner played the manual checks ("The tests pass"). Merge approval (verbatim: "yes").
+- Follow-up: new item `089` from the backlog candidate. No bugs to file. The hold list has no play check for the boss health fill.
+  `031e` also changes `Constants.kt` and `MegaLevelScreen.kt`. The owner plays the combined result before the parent merges into `master`.
