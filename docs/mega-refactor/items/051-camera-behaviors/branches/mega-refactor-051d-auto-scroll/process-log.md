@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: blocked
+- State: active
 - Goal: Tiled scroll sections that take control of the camera, with edge blocks, stop modes and chains
-- Done: `docs/SCOPE.md` approved.
-- Next: `docs/CONTRACT.md` after `051c` merges.
-- Blocked: `051c` must merge first; this branch builds on its limits stage.
+- Done: `docs/SCOPE.md` approved; branch start.
+- Next: `docs/CONTRACT.md`.
+- Blocked:
 
 ## Entries
 

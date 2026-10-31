@@ -1279,3 +1279,18 @@ newest entry at the bottom.
   "yes").
 - Follow-up: new item `087` (reset order for components). No bugs to file. `051c` check 18 can now run after `051c` takes `master`.
   `WilyStage3_v4.tmx` (`room7`, `room9`) also sets `megaman_direction`; not tested. Item `084` stays active; `084b` (effects) is next.
+
+## 2026-10-31 — mega-refactor-051c-camera-zones
+
+- Summary: merged into the parent `mega-refactor-051-master`, not `master` (owner decision, so that `051c` and `051d` are played
+  together first). `CameraLimitStage` with `ICameraLimitRule`, `CameraRoomScan`, `CameraZones` from the Tiled `camera_sections`
+  layer, with limits as references to Tiled objects, the ease and snap rule, players-only `CameraEdgeBlock`, `CrusherComponent`
+  (`GravityBlock` moved to it), and `CameraController.reset()`. Levels with no zones play the same. New rooms in
+  `RefactorTest051`. Squash commit `03c884d48` on the parent.
+- Contract check: the automated checks pass in the parent worktree after `./gradlew clean` (engine 594, core 391, `lwjgl3:jar`,
+  96 unique warnings, the baseline count). The temporary suites passed against the frozen old code and are deleted. The owner
+  played the manual checks ("tests pass"). Merge direction (verbatim: "let's merge it into a parent 051 branch cut from
+  `master`").
+- Follow-up: 2 bugs filed in `docs/issues/` (`CameraRoomTransition.cancel()` timers; a spawn in the start area). `031e` also
+  changes `Constants.kt` and `MegaLevelScreen.kt`, so check them when it merges. `051d` starts from the parent. The owner plays
+  the combined result before the parent merges into `master`.
