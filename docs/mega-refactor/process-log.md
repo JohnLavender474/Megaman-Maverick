@@ -1304,5 +1304,6 @@ newest entry at the bottom.
   `RefactorTest084`. `Megaman.kt` has 672 lines (990 at the start of `084`). Squash commit `997b83db2`.
 - Contract check: the automated checks in the branch `docs/CONTRACT.md` pass (961 tests in `engine:test` and `core:test`, `lwjgl3:jar`, the 3 `grep`
   checks, short launches). The branch had no temporary suite. The owner played the manual checks ("tests pass"). Merge approval (verbatim: "yes").
-- Follow-up: on the baseline code, Mega moved from the `out_of_bounds` spawn into the pit in 3 of 15 launches with no scripted input. The cause is not
-  proven (see the branch process log). No backlog or bug candidates. Item `084` stays active until the owner decides on the remaining bag keys.
+- Follow-up: on the baseline code, Mega moved from the `out_of_bounds` spawn into the pit in 3 of 15 launches with no scripted input. The cause is known:
+  the owner played in the open window (owner, 2026-10-31), so it is not a defect. No backlog or bug candidates. Item `084` stays active until the owner
+  decides on the remaining bag keys.
