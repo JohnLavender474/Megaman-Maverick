@@ -14,6 +14,11 @@ import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.killPostActionMomentum
+import com.megaman.maverick.game.entities.state.preserveMomentum
+import com.megaman.maverick.game.entities.state.requestMomentumKill
+import com.megaman.maverick.game.entities.state.shouldPreserveMomentum
+import com.megaman.maverick.game.entities.state.stopMomentum
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_GROUND_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: GroundSlideBehavior"
@@ -118,7 +123,7 @@ internal fun Megaman.groundSlideBehavior(): IBehavior {
 
             // Clamp horizontal velocity to max run speed and trigger the friction
             // burst so post-slide overspeed bleeds off quickly on the ground.
-            if (bodyOverGround) killPostActionMomentum() else pendingPostActionMomentumKill = true
+            if (bodyOverGround) killPostActionMomentum() else requestMomentumKill()
         }
     }
 }

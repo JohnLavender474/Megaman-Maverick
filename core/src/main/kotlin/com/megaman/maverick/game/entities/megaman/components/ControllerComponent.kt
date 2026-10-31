@@ -17,8 +17,10 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.input
-import com.megaman.maverick.game.entities.state.stunned
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.shouldPreserveMomentum
+import com.megaman.maverick.game.entities.state.stopMomentum
+import com.megaman.maverick.game.entities.state.stunned
 import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing

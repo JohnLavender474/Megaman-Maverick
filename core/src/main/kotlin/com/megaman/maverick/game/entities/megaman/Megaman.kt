@@ -53,14 +53,20 @@ import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 import com.megaman.maverick.game.entities.state.FreezeComponent
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
+import com.megaman.maverick.game.entities.state.PostActionMomentumComponent
+import com.megaman.maverick.game.entities.state.RoomTransitionCarryComponent
 import com.megaman.maverick.game.entities.state.StunComponent
 import com.megaman.maverick.game.entities.state.TeleportableComponent
+import com.megaman.maverick.game.entities.state.beginRoomTransitionCarry
+import com.megaman.maverick.game.entities.state.endRoomTransitionCarry
 import com.megaman.maverick.game.entities.state.freezeFrom
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.knockBackFrom
 import com.megaman.maverick.game.entities.state.onStunPlayerEvent
+import com.megaman.maverick.game.entities.state.stopMomentum
 import com.megaman.maverick.game.entities.state.stunned
+import com.megaman.maverick.game.entities.state.updatePostActionMomentum
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
@@ -140,9 +146,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal var runTime = 0f
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
-
-    internal val postActionMomentumTimer = Timer(MegamanValues.POST_ACTION_MOMENTUM_DUR).setToEnd()
-    internal var pendingPostActionMomentumKill = false
 
     internal var airDashConsumed = false
 
@@ -311,7 +314,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     internal var canMakeLandSound = false
     internal var applyMovementScalarToBullet = false
 
-    internal val roomTransPauseTimer = Timer(ConstVals.ROOM_TRANS_DELAY_DURATION)
     internal val spawningTimer = Timer(MegamanValues.SPAWNING_DUR)
 
     internal val wallSlideNotAllowedTimer = Timer(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY)
@@ -342,6 +344,8 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         )
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
+        addComponent(defineMomentumComponent())
+        addComponent(defineRoomTransitionCarryComponent())
         addComponent(defineKnockbackComponent())
         addComponent(defineFreezeComponent())
         addComponent(defineStunComponent())
@@ -482,11 +486,10 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         chargingTimer.reset()
         spawningTimer.reset()
 
-        roomTransPauseTimer.setToEnd()
-
         wallSlideNotAllowedTimer.reset()
-        postActionMomentumTimer.setToEnd()
-        pendingPostActionMomentumKill = false
+        // TODO: a behavior that ends in the component reset pass can write momentum after the momentum component reset, so clear it
+        //  here too; a reset order for components would remove this line (see the 084c docs/NOTES.md)
+        require(PostActionMomentumComponent::class).reset()
         airDashConsumed = false
 
         removeProperty(ConstKeys.FOCUS)
@@ -498,8 +501,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        body.removeProperty(ConstKeys.VELOCITY)
 
         val eventsMan = services.events
         eventsMan.removeListener(this)
@@ -529,27 +530,13 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
-                if (event.key == EventType.BEGIN_ROOM_TRANS) roomTransPauseTimer.reset()
-
                 val position = event.getProperty(ConstKeys.POSITION, Vector2::class)!!
                 if (event.key == EventType.BEGIN_ROOM_TRANS) GameLogger.debug(
                     MEGAMAN_EVENT_LISTENER_TAG, "BEGIN ROOM TRANS: position=$position"
                 )
                 body.setCenter(position)
 
-                if (event.key == EventType.BEGIN_ROOM_TRANS) when {
-                    isBehaviorActive(BehaviorType.CLIMBING) || !bodyOverGround -> body.physics.velocity.setZero()
-                    else -> when (direction) {
-                        Direction.UP, Direction.DOWN -> {
-                            val velY = body.physics.velocity.y
-                            body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", velY)
-                        }
-                        else -> {
-                            val velX = body.physics.velocity.x
-                            body.putProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", velX)
-                        }
-                    }
-                }
+                if (event.key == EventType.BEGIN_ROOM_TRANS) beginRoomTransitionCarry()
 
                 body.physics.gravityOn = false
 
@@ -561,19 +548,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
             EventType.END_ROOM_TRANS -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "endRoomTrans()")
 
-                when {
-                    isBehaviorActive(BehaviorType.CLIMBING) || !bodyOverGround -> body.physics.velocity.setZero()
-                    else -> when (direction) {
-                        Direction.UP, Direction.DOWN -> {
-                            val velY = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.Y}", Float::class)!!
-                            body.physics.velocity.y = velY
-                        }
-                        else -> {
-                            val velX = body.removeProperty("${ConstKeys.VELOCITY}_${ConstKeys.X}", Float::class)!!
-                            body.physics.velocity.x = velX
-                        }
-                    }
-                }
+                endRoomTransitionCarry()
 
                 body.physics.gravityOn = !isBehaviorActive(BehaviorType.CLIMBING)
 
@@ -673,28 +648,9 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
             wallJumpTimer.update(delta)
             shootAnimTimer.update(delta)
-            roomTransPauseTimer.update(delta)
+            require(RoomTransitionCarryComponent::class).update(delta)
 
-            if (bodyOverGround) postActionMomentumTimer.update(delta)
-            else if (FacingUtils.isFacingBlock(this)) stopMomentum(!running)
-
-            if (bodyOverGround &&
-                pendingPostActionMomentumKill &&
-                !body.isSensing(BodySense.FEET_ON_ICE)
-            ) killPostActionMomentum()
-
-            if (!running && bodyOverGround && !postActionMomentumTimer.isFinished() &&
-                !isBehaviorActive(BehaviorType.GROUND_SLIDING) &&
-                !body.isSensing(BodySense.FEET_ON_ICE)
-            ) {
-                val decay = kotlin.math.exp(
-                    -MegamanValues.POST_ACTION_BURST_RESISTANCE * delta
-                )
-                when (direction) {
-                    Direction.UP, Direction.DOWN -> body.physics.velocity.x *= decay
-                    else -> body.physics.velocity.y *= decay
-                }
-            }
+            updatePostActionMomentum(delta, running)
 
             if (
                 body.isSensing(BodySense.IN_WATER) &&
@@ -724,24 +680,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
             wallSlideNotAllowedTimer.update(delta)
 
-            if (bodyOverGround) airDashConsumed = false
-
-            if (!bodyOverGround && aButtonTask == AButtonTask.JUMP &&
-                !isAnyBehaviorActive(
-                    BehaviorType.WALL_SLIDING,
-                    BehaviorType.CLIMBING,
-                    BehaviorType.JUMPING
-                )
-            ) aButtonTask = when {
-                body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
-                !airDashConsumed -> AButtonTask.AIR_DASH
-                else -> AButtonTask.JUMP
-            }
-
-            if (bodyOverGround && aButtonTask == AButtonTask.AIR_DASH &&
-                !body.isSensing(BodySense.IN_WATER) &&
-                !isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.AIR_DASHING)
-            ) aButtonTask = AButtonTask.JUMP
+            updateAButtonTask()
         }
     }
 
@@ -842,35 +781,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         val shot = weaponsHandler.fireWeapon(currentWeapon, chargeStatus)
         if (shot) shootAnimTimer.reset()
         return shot
-    }
-
-    fun shouldPreserveMomentum(checkTimer: Boolean): Boolean {
-        if (body.isSensing(BodySense.FEET_ON_SNOW)) return false
-        if (body.isSensing(BodySense.FEET_ON_ICE)) return true
-        return !checkTimer || !postActionMomentumTimer.isFinished()
-    }
-
-    fun preserveMomentum() {
-        postActionMomentumTimer.reset()
-    }
-
-    fun stopMomentum(stopMegaman: Boolean) {
-        postActionMomentumTimer.setToEnd()
-        if (stopMegaman) when (direction) {
-            Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
-            else -> body.physics.velocity.y = 0f
-        }
-    }
-
-    fun killPostActionMomentum() {
-        val maxRun = getMaxRunSpeed()
-        when (direction) {
-            Direction.UP, Direction.DOWN ->
-                body.physics.velocity.x = body.physics.velocity.x.coerceIn(-maxRun, maxRun)
-            else ->
-                body.physics.velocity.y = body.physics.velocity.y.coerceIn(-maxRun, maxRun)
-        }
-        pendingPostActionMomentumKill = false
     }
 
     override fun getType() = EntityType.MEGAMAN

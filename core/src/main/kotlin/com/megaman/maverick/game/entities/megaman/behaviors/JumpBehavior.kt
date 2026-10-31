@@ -14,6 +14,7 @@ import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.stopMomentum
 import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.utils.GameObjectPools

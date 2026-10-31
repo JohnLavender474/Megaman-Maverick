@@ -16,6 +16,8 @@ import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.preserveMomentum
+import com.megaman.maverick.game.entities.state.requestMomentumKill
 import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
@@ -137,7 +139,7 @@ internal fun Megaman.airDashBehavior(): IBehavior {
 
             // Kill excess horizontal momentum on landing after the dash so players
             // can perform tight platforming without sliding past their target.
-            pendingPostActionMomentumKill = true
+            requestMomentumKill()
         }
     }
 }

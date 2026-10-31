@@ -15,6 +15,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.entities.state.frozen
+import com.megaman.maverick.game.entities.state.roomTransitionPaused
 import com.megaman.maverick.game.entities.state.stunned
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.teleporter
@@ -25,7 +26,7 @@ import com.megaman.maverick.game.world.body.getCenter
 const val MEGAMAN_ANIM_KEY_SUPPLIER_TAG = "MEGA_MAN_ANIM_KEY_SUPPLIER"
 
 fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
-    !roomTransPauseTimer.isFinished() -> null
+    roomTransitionPaused -> null
 
     priorAnimKey != null && services.levelState.roomTransition -> {
         var key = priorAnimKey
