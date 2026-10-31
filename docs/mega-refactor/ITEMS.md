@@ -94,6 +94,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | active | none | 2026-10-30 | |
 | 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | idea | none | | |
 | 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | idea | none | | |
+| 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
@@ -145,4 +146,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-014d-contact-receivers`](items/014-contact-rules-table/branches/mega-refactor-014d-contact-receivers/process-log.md) | 014 | Replace the `Megaman` checks in the contact rules with receivers and capabilities; `MegaCollisionHandler` body flags | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-084a-player-state`](items/084-split-megaman/branches/mega-refactor-084a-player-state/process-log.md) | 084 | Typed player state in place of the property bag (`facing`, `aButtonTask`, `currentWeapon`, `running`) and the teleport hook lambdas | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-084d-damage-reaction`](items/084-split-megaman/branches/mega-refactor-084d-damage-reaction/process-log.md) | 084 | Stun, knockback, recovery flash and freeze as player components, one per mechanism | merged | 2026-10-30 | 2026-10-30 |
-| [`mega-refactor-084c-movement`](items/084-split-megaman/branches/mega-refactor-084c-movement/process-log.md) | 084 | Post-action momentum, room-transition carry and the `AButtonTask` transitions out of `Megaman` | active | 2026-10-30 | |
+| [`mega-refactor-084c-movement`](items/084-split-megaman/branches/mega-refactor-084c-movement/process-log.md) | 084 | Post-action momentum, room-transition carry and the `AButtonTask` transitions out of `Megaman` | merged | 2026-10-30 | 2026-10-30 |

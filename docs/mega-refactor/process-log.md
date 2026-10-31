@@ -1262,3 +1262,20 @@ newest entry at the bottom.
   not entail it. The `051` `ITEM.md` and the `051d` draft scope point to it.
 - Contract check: not needed (docs only).
 - Follow-up: none. `086` is `idea`.
+
+## 2026-10-30 — mega-refactor-084c-movement
+
+- Summary: post-action momentum and the room-transition carry are player components, with functions in `entities/state/` and hooks
+  in `M/components/MovementComponents.kt`. The `AButtonTask` transitions moved to `Megaman.updateAButtonTask()`, with no component.
+  `Megaman.kt` went from 879 to 789 lines. `onSpawn` still resets the momentum component, because a behavior that ends in the
+  component reset pass can write momentum after its reset (item `087`). One intended gameplay change: the room-carry crash on a
+  direction change is fixed, at the request of `051c`, with the owner's approval. The start of a transition clears the carried
+  values, and the end restores each one to its own axis. New rooms `carry_left`, `carry_right` and `carry_top` in `RefactorTest084`.
+  Squash commit `1d6a1ee52`.
+- Contract check: the automated checks in the branch `docs/CONTRACT.md` pass (943 tests in `engine:test` and `core:test`,
+  `lwjgl3:jar`, both `grep` checks, short launches). The temporary suite matched the old code on 20 seeds of 3000 frames in 2
+  directions; for the carry, on pairs with the same `carries` value. It is deleted. The owner played the manual checks ("all other
+  tests pass"). `edge_rotated`, which reproduces the crash, is only on `051c`, so it was not played here. Merge approval (verbatim:
+  "yes").
+- Follow-up: new item `087` (reset order for components). No bugs to file. `051c` check 18 can now run after `051c` takes `master`.
+  `WilyStage3_v4.tmx` (`room7`, `room9`) also sets `megaman_direction`; not tested. Item `084` stays active; `084b` (effects) is next.

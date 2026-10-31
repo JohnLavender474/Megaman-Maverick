@@ -6,7 +6,7 @@
 - Related: `017`, `023`, `024`, `025`, `029`, `030`, `042`, `048`, `051`, `053`, `058`, `059`, `060`, `081`
 - Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)
   `mega-refactor-084d-damage-reaction` (merged 2026-10-30)
-  `mega-refactor-084c-movement` (started 2026-10-30)
+  `mega-refactor-084c-movement` (merged 2026-10-30)
 
 ## Goal
 
@@ -26,12 +26,12 @@ Not approved. The branch `SCOPE.md` decides the final scope. The facts and line 
   `entities/megaman/` at the `084a` scan), for example `MegamanKeys.DIRECTION_ON_AIR_DASH`, the `SHOOT_DOWN` keys,
   `ConstKeys.ANIMATION_KEY` and `ConstKeys.SIDE`. `ConstKeys.FOCUS` belongs to `051`.
 - **Damage reaction as components:** done in `084d`.
-- **Movement support as components:** post-action momentum (`preserveMomentum`, `stopMomentum`,
-  `killPostActionMomentum`, the decay in the updatables), and the room-transition velocity carry (`onEvent`,
-  `BEGIN/CONTINUE/END_ROOM_TRANS`).
+- **Movement support as components:** done in `084c`.
 - **Effects as components:** trail sprites, underwater bubbles, the death explosion orbs, and the out-of-bounds kill.
-- **The `AButtonTask` transitions** that run in the updatables, next to the ones in the behaviors.
-- **Resets:** each new component resets its own state in `reset()`, so its lines leave `onSpawn`.
+- **The `AButtonTask` transitions:** done in `084c`, as `Megaman.updateAButtonTask()`, with no component.
+- **Resets:** each new component resets its own state in `reset()`, so its lines leave `onSpawn`. Exception:
+  `PostActionMomentumComponent.reset()` also runs in `onSpawn` until `087` is done, because behaviors can write momentum after the
+  component reset.
 - **Interfaces:** remove each interface on `Megaman` that has no reason left after the steps above.
 
 Not in this item (other items own these parts):
@@ -75,6 +75,9 @@ Not in this item (other items own these parts):
 - (2026-10-30, owner) A type that has `fun reset()` extends `Resettable`.
 - (2026-10-30, owner) No invincibility component in this item. The getter stays on `Megaman`; `048` owns the rule for
   all entities (see the `048` `ITEM.md`).
+- (2026-10-30, owner) `AButtonTask` has no component, until `060` shows that Proto Man needs one.
+- (2026-10-30, owner) `084c` also fixes the room-carry crash on a direction change, at the request of `051c`. This is the one
+  gameplay change in this item so far (see the branch `docs/CONTRACT.md`, "Intended changes").
 
 ## Open questions
 
@@ -84,7 +87,6 @@ Not in this item (other items own these parts):
 - Do the effects (trail sprites, bubbles) belong here or in `042` (reusable components)?
 - Trail and bubble timers survive a respawn today. Keep that with a `reset()` that does nothing, or change the rule
   that each component resets its state? Recommended: keep it.
-- `AButtonTask` with no component, until `060` shows that Proto Man needs it? Recommended: yes.
 - `ExplosionOrb.spawnRing` moves `EXPLOSION_ORB_SPEED` out of `MegamanValues`, with no value change. Bosses share the
   value. Recommended: yes.
 - Is the stun bounce direction (the `TODO` that assumes `UP`) kept as is? A fix changes gameplay, so it is a bug in
