@@ -50,9 +50,15 @@ rules research for `051c` and `051d`".
 6. **Chains**, a separate commit group. A `next` property starts the named section when this one stops, with no
    position test. Stop mode `arrive`: the leading edge reaches the far edge. A section with no `next` that overlaps
    another one starts after the first stops, in Tiled order.
-7. **Test rooms** in `RefactorTest051.tmx`: a section inside a wider room; a wall in the path; a gate in a section; a
-   gravity switch in a section; a section across 2 rooms; a spawn inside a section, and one past its stop; a chain from
-   horizontal to vertical; a section over a pit.
+7. **Test rooms** in `RefactorTest051.tmx`. The basic rooms come first and are the first play checks (owner decision,
+   2026-10-30); the other rooms come after they pass.
+   - `scroll_corridor`: a long corridor. The scroll starts when Megaman reaches a set spot, runs right, and stops at the
+     limit. Low floor blocks that he can jump, and a block that pins him against the trailing edge to test the crush.
+     Enemies and hazards along the way show that they work in a scroll.
+   - `scroll_turn`: a scroll hands over to a scroll in a new direction, for example right then up, through `next` and
+     stop mode `arrive`.
+   - Other rooms: a section inside a wider room; a wall in the path; a gate in a section; a gravity switch in a section;
+     a section across 2 rooms; a spawn inside a section, and one past its stop; a section over a pit.
 8. **Permanent tests** for the start, the stop modes, the respawn derivation, the room rules, and the chain.
 
 ## Out of scope

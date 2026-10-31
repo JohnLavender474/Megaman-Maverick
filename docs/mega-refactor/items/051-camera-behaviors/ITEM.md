@@ -155,6 +155,8 @@ here.
 - 2026-10-30 (owner): movement multipliers should move to a player component later, not in `051d`. Item `086` holds this.
   `051d` keeps the player's speed unchanged. If a level later needs a boost, it is a term in `getMaxRunSpeed()`, because
   `movementScalar` scales the run impulse and not the top speed (`ControllerComponent.kt:177-196`).
+- 2026-10-30 (owner): test rooms and play checks start from the basics and work up to edge cases. `051c` gets a plain
+  `zone_hold` room and a new check order. `051d` starts with `scroll_corridor` and `scroll_turn`.
 
 ## Contract notes
 
