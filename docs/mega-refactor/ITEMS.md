@@ -92,9 +92,10 @@ statuses and column meanings are in `CLAUDE.md`.
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
 | 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | active | none | 2026-10-30 | |
-| 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | idea | none | | |
+| 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | dropped | none | | 2026-10-31 |
 | 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | idea | none | | |
 | 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | idea | none | | |
+| 089 | [Conditional crush surfaces](items/089-conditional-crush-surfaces/ITEM.md) | feature | idea | `051` | | |
 
 ## Branches
 
@@ -123,7 +124,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-051a-camera-read-interface`](items/051-camera-behaviors/branches/mega-refactor-051a-camera-read-interface/process-log.md) | 051 | Read-only camera interface in `engine`; `getGameCamera()` becomes a property | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-051b-camera-behaviors`](items/051-camera-behaviors/branches/mega-refactor-051b-camera-behaviors/process-log.md) | 051 | The camera built from behavior components; the level screen talks to a camera control interface; `GameCameraState` goes | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-051c-camera-zones`](items/051-camera-behaviors/branches/mega-refactor-051c-camera-zones/process-log.md) | 051 | Tiled camera zones, players-only edge blocks and `CrusherComponent`; levels with no zones play the same | merged | 2026-10-30 | 2026-10-31 |
-| [`mega-refactor-051d-auto-scroll`](items/051-camera-behaviors/branches/mega-refactor-051d-auto-scroll/process-log.md) | 051 | Tiled scroll sections that take control of the camera, with edge blocks, stop modes and chains | active | 2026-10-31 | |
+| [`mega-refactor-051d-auto-scroll`](items/051-camera-behaviors/branches/mega-refactor-051d-auto-scroll/process-log.md) | 051 | Tiled scroll sections that take control of the camera, with edge blocks, stop modes and chains | merged | 2026-10-31 | 2026-10-31 |
 | [`mega-refactor-061a-thin-player`](items/061-thin-player/branches/mega-refactor-061a-thin-player/process-log.md) | 061 | Thin `MegaPlayer`, free functions over the entity, engine locks, an immediate damage signal | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061b-play-phase-teleport`](items/061-thin-player/branches/mega-refactor-061b-play-phase-teleport/process-log.md) | 061 | `ready` and `teleporting` as entity state (play phase, teleportable); no player wrappers | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061c-entity-queries`](items/061-thin-player/branches/mega-refactor-061c-entity-queries/process-log.md) | 061 | A player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go | merged | 2026-10-26 | 2026-10-26 |
@@ -148,4 +149,5 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-084a-player-state`](items/084-split-megaman/branches/mega-refactor-084a-player-state/process-log.md) | 084 | Typed player state in place of the property bag (`facing`, `aButtonTask`, `currentWeapon`, `running`) and the teleport hook lambdas | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-084d-damage-reaction`](items/084-split-megaman/branches/mega-refactor-084d-damage-reaction/process-log.md) | 084 | Stun, knockback, recovery flash and freeze as player components, one per mechanism | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-084c-movement`](items/084-split-megaman/branches/mega-refactor-084c-movement/process-log.md) | 084 | Post-action momentum, room-transition carry and the `AButtonTask` transitions out of `Megaman` | merged | 2026-10-30 | 2026-10-30 |
-| [`mega-refactor-084b-effects`](items/084-split-megaman/branches/mega-refactor-084b-effects/process-log.md) | 084 | Trail sprites, underwater bubbles, the death orbs and the out-of-bounds kill out of `Megaman` | active | 2026-10-30 | |
+| [`mega-refactor-084b-effects`](items/084-split-megaman/branches/mega-refactor-084b-effects/process-log.md) | 084 | Trail sprites, underwater bubbles, the death orbs and the out-of-bounds kill out of `Megaman` | merged | 2026-10-30 | 2026-10-31 |
+| [`mega-refactor-084e-class-line`](items/084-split-megaman/branches/mega-refactor-084e-class-line/process-log.md) | 084 | Remove the interfaces on `Megaman` that have no reason left, and the dead player code | active | 2026-10-31 | |

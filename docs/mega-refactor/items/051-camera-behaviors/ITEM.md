@@ -4,7 +4,7 @@
 - Type: feature
 - Depends on: none
 - Related: `019`, `036`, `038`, `041`, `047`, `058`
-- Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30, merged into `master` 2026-10-30, squash `7370943a0`); `mega-refactor-051b-camera-behaviors` (started 2026-10-30, merged into `master` 2026-10-30, squash `7fe00b8b8`); `mega-refactor-051-master` (parent of `051c` and `051d`, started 2026-10-31); `mega-refactor-051c-camera-zones` (started 2026-10-30, merged into `mega-refactor-051-master` 2026-10-31, squash `03c884d48`); `mega-refactor-051d-auto-scroll` (started 2026-10-31, from `mega-refactor-051-master`)
+- Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30, merged into `master` 2026-10-30, squash `7370943a0`); `mega-refactor-051b-camera-behaviors` (started 2026-10-30, merged into `master` 2026-10-30, squash `7fe00b8b8`); `mega-refactor-051-master` (parent of `051c` and `051d`, started 2026-10-31); `mega-refactor-051c-camera-zones` (started 2026-10-30, merged into `mega-refactor-051-master` 2026-10-31, squash `03c884d48`); `mega-refactor-051d-auto-scroll` (started 2026-10-31, from `mega-refactor-051-master`, merged into `mega-refactor-051-master` 2026-10-31, squash `4ed49c0f9`)
 
 ## Goal
 
@@ -163,6 +163,14 @@ here.
 - 2026-10-31 (owner): this replaces the merge target of 2026-10-30 for `051c` and `051d`. Both merge into the parent
   `mega-refactor-051-master`, cut from `master`, so that the owner can play them together before `master`. `051a` and `051b`
   are already on `master`.
+- 2026-10-31 (owner): a crush needs a `crush_surface` of an active zone or section, an edge that moves into the view, and the opposite
+  side of the player on the surface. A surface has a `section` object reference. This replaces "any solid".
+- 2026-10-31 (owner): an edge in the fall direction has no block, and a player fully past it dies, except at a room edge if it leads.
+  A player fully past the trailing edge of a running section dies. The tables are in `NOTES.md`.
+- 2026-10-31 (owner): an edge block covers the rectangle of its section or zone. `next` is a one-way object reference.
+- 2026-10-31 (owner): a scroll waits until the player is ready. This replaces "scrolls run while a player spawns".
+- 2026-10-31 (owner): the view size blends over a camera turn, and a pin ignores the hold. Levels with no section can change by 1 tile
+  or less for 0.75 s or less, near a room limit, in a turn that changes the view size.
 
 ## Contract notes
 

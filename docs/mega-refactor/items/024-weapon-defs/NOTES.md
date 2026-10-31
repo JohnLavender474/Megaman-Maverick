@@ -48,3 +48,10 @@ Option B:
 6. Dependencies
 Item 28 (`IPlayer`, `CharacterDef`), 22 (damage tags), 24 (rewards in manifest), 6 (save ids), 39 (animation definitions).
 ````
+
+## Idea from `Megaman.kt`: weapon spawn pixels (2026-10-31)
+
+`084e` deletes a commented `regionProcessor` block (`Megaman.kt:316-372` at `a38765053`). The idea: mark the weapon spawn point in each player frame with one pixel of the magic color
+`MegamanValues.WEAPON_SPAWN_MAGIC_COLOR`. A `MegaRegionProcessor` reads the frames, finds the pixel with `MagicPixels.get`, stores its position by animation key in `weaponSpawns`, and clears
+the pixel to transparent. The weapons then spawn at the stored position. The block read the frame files `sprites/frames/Megaman_v2/${defKey}.png`, and 2 `TODO` lines wanted it to read from the
+frame region. The full text stays in the git history.

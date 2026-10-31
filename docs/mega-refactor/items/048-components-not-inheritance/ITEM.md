@@ -26,6 +26,8 @@ From the first request (summary): entities get health by extending `AbstractHeal
   later in the same contact pass must see a hit at once, so a stored or per-frame value can be stale. `084d` keeps the
   getter on `Megaman`. Facts and options: `084` `NOTES.md`, "Invincibility research". The final form waits for the
   scan of this item, including the 4 getters that are constants and replace the base rule.
+- (2026-10-31, owner, from `084`) This item owns `IFaceable`, not `063`. It also takes the interfaces that stay on `Megaman` after `084`: see `084` `NOTES.md`,
+  "Who owns each interface".
 
 ## Open questions
 

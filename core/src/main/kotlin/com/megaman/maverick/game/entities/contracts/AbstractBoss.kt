@@ -5,7 +5,6 @@ import com.maverick.game.engine.audio.SoundRequest
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
@@ -34,7 +33,6 @@ import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
-import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerDamaged
@@ -58,17 +56,6 @@ abstract class AbstractBoss(
         const val DEFAULT_MINI_BOSS_DMG_DURATION = 0.5f
         const val DEFAULT_DEFEAT_DURATION = 3f
         const val EXPLOSION_TIME = 0.25f
-
-        val EXPLOSION_ORB_TRAJS = gdxArrayOf(
-            Vector2(-EXPLOSION_ORB_SPEED, 0f),
-            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(0f, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, 0f),
-            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
-            Vector2(0f, -EXPLOSION_ORB_SPEED),
-            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
-        )
 
         protected val BOSS_DMG_NEG = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(1),
@@ -170,15 +157,7 @@ abstract class AbstractBoss(
     protected open fun spawnExplosionOrbs(spawn: Vector2) {
         services.audio.playSound(SoundAsset.DEFEAT_SOUND, false)
 
-        EXPLOSION_ORB_TRAJS.forEach { trajectory ->
-            val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
-            orb.spawn(
-                props(
-                    ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat())
-                )
-            )
-        }
+        ExplosionOrb.spawnRing(spawn)
     }
 
     override fun onEvent(event: Event) {

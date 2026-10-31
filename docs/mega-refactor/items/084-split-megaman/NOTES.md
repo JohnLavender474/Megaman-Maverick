@@ -124,3 +124,62 @@ rest is a proposal for each branch `SCOPE.md`. Line numbers are in `M/Megaman.kt
 This item does not entail a modifier component. `084c` leaves out `getMaxRunSpeed()` and the scalars, and it stays as it
 is. The owner wants the component later: see item `086`, which has the inventory. A typed field move would fit this
 item in a new branch, but it gives no outside hook.
+
+## Interfaces and a second playable entity (2026-10-31, `master` at `96060fe5d`)
+
+One read-only research pass, not approved. The owner asked whether an item already reduces the interfaces on `Megaman`, and whether the work fits in
+`084` from the angle of more than one playable entity. No game ran. The owner's decisions are open.
+
+### What blocks a second player
+
+The 15 interfaces are not the main block: 6 are accessors with default methods, which cost one word on a class line. The main blocks are 57 `Megaman` receivers,
+42 members that exist only on the class, 20 casts (19 lines) and 15 `Megaman::class` keys. Of the 57 receivers, 26 read no class-only member. The 15 cast lines that read weapon data
+are `024` work. The 8 behaviors read weapon, movement and signed values, and 5 of them read `aButtonTask`, so they stay on the `Megaman` receiver until `024` and `060`.
+
+`entities/state/` (22 files) and `players/` (7 files) name no `Megaman`.
+
+### Who owns each interface
+
+| Interface | Owner | Plan |
+|---|---|---|
+| `IPointsEntity` | none | Remove; `IHealthEntity` already gives it |
+| `IAnimatedEntity` | none | Remove; 2 use sites |
+| `IBehaviorsEntity` | none | Remove and delete; 1 implementer; engine queries exist |
+| `IGateTrigger`, `ICartRider` | none | Remove and delete; 1 implementer; use `isPlayer` (`014d` added them before `isPlayer` existed) |
+| `IFocusable` | `051`, `085` | A component implements it; 1 entity implementer |
+| `IGameStateListener` | `059` in part | A listener in a component; 1 implementer; `MegamanMaverickGame.kt:444` names `megaman` |
+| `IScalableGravityEntity` | `086`, `048` | Later |
+| `IFaceable` | `048` and `063` disagree | Later |
+| `IBodyEntity`, `ISpritesEntity`, `IAudioEntity` | `048` | Keep. `GameEntityUtils.kt:149,161` use `is ISpritesEntity`, so a removal stops the teleport hide with no error |
+| `IDirectional`, `IEventListener` | `058`, `060`; `053`, `057` | Keep; true capabilities |
+| `IDamagerEntity` | `023`, `048` | Keep while the `DAMAGER` fixture is on the body |
+
+### Design options
+
+A thin `Megaman` and `Protoman` with components and shared functions fits all decisions. One `PlayerEntity(services, def)` needs `CharacterDef` first, so that choice belongs to `060`. A shared
+`IPlayerEntity` (`029`, `048`) and a player base class (`084`, `029`, `061`) are ruled out. The branches below serve both open options.
+
+### Test for the work in `084`
+
+Work belongs in `084` only if existing logic moves or code is removed, and `Megaman` or a screen calls the result today. `CharacterDef`, supplier parameters, a shared `onSpawn` and `Protoman` go in
+`060`. Weapon data goes in `024`. Rules for all entities go in `048`.
+
+### Proposed branches
+
+- `084e-class-line`: the class line goes from 15 to 10 interfaces. Remove the 5 interfaces above, and delete `val Megaman.input`, the fixture accessors that copy `EntityQueries.kt`, and the dead `spawningTimer`,
+  `wallSlideGravity` and `M/components/PointsComponent.kt`. Widen the 3 sprite helpers, so 4 casts go. New API: `IGameEntity.resetBehavior(key)`. It needs a `cart` test room.
+- `084f-focus-progress`: 10 to 8 interfaces. `FocusComponent` and `PlayerProgressComponent`. The dead `ConstKeys.FOCUS` reads go, which closes `085`.
+- `084g-movement-state`: `canMove` and `RunComponent`; the 2 crouch timers move into `crouchBehavior()`; `ANIMATION_KEY` and `DIRECTION_ON_AIR_DASH` become typed; `runLeft` and `runRight` become one function (keep the `RODENT_CLAWS`
+  difference at `M/components/ControllerComponent.kt:163-168,207-210`). Start after `031e` merges.
+- `084h-charge`: only if the owner decides that the charge state moves here. `ChargeComponent`, with the charge rules left for `024`.
+
+9 of the 15 bag lines are weapon lines and go to `024`; 4 go to `084g`, and 2 go to `084f`.
+
+### Silent failures for `060`
+
+A new player class compiles and then plays wrongly here: exact class matches (`AbstractHealthEntity.kt:75`, `UnderwaterFan.kt:224`, `PreciousGem.kt:257`, `DarknessV4.kt:421`); `MegaContactFilter.kt:110-116` (`EntityType.MEGAMAN`);
+`MegamanMaverickGame.kt:444`; `entities/EntityQueries.kt:42` (`shooting`); `GameEntityUtils.kt:149,161`; `WorldGravity.kt:14`.
+
+### Stale lines
+
+`084` `ITEM.md`: "990 lines, 17 interfaces". `060` `ITEM.md` and `029` `NOTES.md`: `MegaPlayer.megaman`. `030` `ITEM.md`: "37 `is Megaman`" (now 0). `029`: the title and scope say `IPlayer`.

@@ -1,10 +1,12 @@
 # 085: Remove the dead `ConstKeys.FOCUS` override in `Megaman`
 
-- Status: idea
+- Status: dropped
 - Type: refactor
 - Depends on: none
 - Related: `051`, `084`
 - Branches: none yet
+
+Dropped on 2026-10-31 (owner): the planned branch `mega-refactor-084f-focus-progress` of item `084` removes this code when the focus leaves `Megaman`.
 
 ## Goal
 
@@ -20,8 +22,6 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 None yet. This item comes from a backlog candidate of `051b`.
 
 ## Open questions
-
-- Does `084` remove this code when it splits `Megaman`? If so, this item can go into a `084` branch.
 
 ## Sources
 

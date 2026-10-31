@@ -15,7 +15,7 @@ Decide who can hurt whom by faction, copied at spawn, not by `owner == megaman` 
 From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 
 - `Faction` plus `ownerPlayerIndex`, copied at spawn from the root owner. Owner changes (reflect) update both.
-- Replace 70 `megaman` owner checks and 37 `is Megaman` with faction or capability checks.
+- Replace the `megaman` owner checks and the `Megaman::class` keys (15 lines on 2026-10-31; the 37 `is Megaman` checks are gone) with faction or capability checks.
 - One explosion-owner convention. Golden test first, because today's two conventions give different results.
 - Enhancements and score read from the owning player's profile.
 

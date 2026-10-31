@@ -14,7 +14,7 @@ Remove the global `megaman` and allow many playable characters (Mega, Proto, ...
 
 From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 
-- `IPlayer` (body, facing, direction, dead and ready, health and damage, faction, focus, `isDoing`, locks, loadout, input). `Megaman` implements it.
+- `IPlayer` (body, facing, direction, dead and ready, health and damage, faction, focus, `isDoing`, locks, loadout, input). `Megaman` implements it. (Replaced: the 2026-10-23 decision below removed `IPlayer`.)
 - `game.players` (`all`, `byIndex`, `nearestTo`, `primary`). Migrate the about 889 external `megaman` uses in 224 files.
 - Move lives, tanks and enhancements to a `PlayerProfile`.
 - `CharacterDef`: movement table, ordered ability set, body def, animations, loadout. `MegamanDef` keeps behavior identical (proven by replay).

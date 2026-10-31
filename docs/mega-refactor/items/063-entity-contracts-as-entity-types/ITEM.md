@@ -29,7 +29,7 @@ Not approved. The branch `SCOPE.md` decides the final scope. From the two review
   damage tags belong to item `023`. The callback contracts (`IDamageable`, `IDamager`, `IHazard`, `IBossListener`,
   `ITeleporterEntity`, ...) stay interfaces for now.
 - Not candidates: `IDirectional` (`IBody` implements it), `IActivatable` and `IEventListener` (non-entity
-  implementers), `IDamageNegotiator` (a strategy object), `IFaceable`/`ISizable` (generic interfaces).
+  implementers), `IDamageNegotiator` (a strategy object), `ISizable` (a generic interface). `IFaceable` was on this list; `048` owns it (owner, 2026-10-31).
 
 ## Owner's input
 

@@ -99,5 +99,6 @@ related-items: [<mega-refactor item IDs>]
 | [`RobotMasterIntroScreen.dispose` logs an error at shutdown after an uncaught exception](2026-10-30-robot-master-intro-dispose-after-audio.md) | yes | core | open |
 | [The `SPAWN` damage lock appears to have no effect](2026-10-30-spawn-damage-lock-no-effect.md) | no | core | open |
 | [`Saw` type `t` passes a velocity to `body.setCenter`](2026-10-30-saw-trajectory-velocity-as-position.md) | no | core | open |
+| [Make the `BigAssMaverickRobot` hand motion less uniform](2026-10-30-big-ass-maverick-robot-hand-motion.md) | question | core | open |
 | [`CameraRoomTransition.cancel()` does not reset its timers](2026-10-30-camera-room-transition-cancel-timers.md) | no | core | open |
 | [A player spawn in the map's bottom-left area replaces the start spawn](2026-10-30-spawn-in-start-area-replaces-start-spawn.md) | yes | core | open |
