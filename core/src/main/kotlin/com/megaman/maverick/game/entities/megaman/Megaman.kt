@@ -8,8 +8,6 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
-import com.maverick.game.engine.common.enums.Speed
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
@@ -36,18 +34,15 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.*
-import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.*
-import com.megaman.maverick.game.entities.megaman.constants.MegamanValues.EXPLOSION_ORB_SPEED
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
-import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 import com.megaman.maverick.game.entities.state.*
+import com.megaman.maverick.game.entities.utils.isOutsideLevel
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
@@ -63,7 +58,6 @@ import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.state.IGameStateListener
-import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.startSmoothFollow
 import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
@@ -71,7 +65,6 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getContactWater
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
@@ -83,23 +76,8 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         const val TAG = "Megaman"
         const val MEGAMAN_EVENT_LISTENER_TAG = "MegamanEventListener"
 
-        private val explosionOrbTrajectories = gdxArrayOf(
-            Vector2(-EXPLOSION_ORB_SPEED, 0f),
-            Vector2(-EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(0f, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, EXPLOSION_ORB_SPEED),
-            Vector2(EXPLOSION_ORB_SPEED, 0f),
-            Vector2(EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED),
-            Vector2(0f, -EXPLOSION_ORB_SPEED),
-            Vector2(-EXPLOSION_ORB_SPEED, -EXPLOSION_ORB_SPEED)
-        )
-
-        private const val UNDER_WATER_BUBBLE_DELAY = 2f
-
         private const val DEATH_X_OFFSET = 1.5f
         private const val DEATH_Y_OFFSET = 1.5f
-
-        private const val TRAIL_SPRITE_DELAY = 0.1f
     }
 
     override val damageNegotiator = MegamanDamageNegotiator(this)
@@ -131,9 +109,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal val groundSlideToCrouchDelay = Timer(MegamanValues.GROUND_SLIDE_TO_CROUCH_DELAY)
     internal val buttonToCrouchDelay = Timer(MegamanValues.BUTTON_TO_CROUCH_DELAY)
-
-    private val trailSpriteTimer = Timer(TRAIL_SPRITE_DELAY)
-    private val underWaterBubbleTimer = Timer(UNDER_WATER_BUBBLE_DELAY)
 
     override val eventKeyMask = objectSetOf<Any>(
         EventType.BEGIN_ROOM_TRANS,
@@ -326,6 +301,8 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         addComponent(defineBodyComponent())
         addComponent(defineMomentumComponent())
         addComponent(defineRoomTransitionCarryComponent())
+        addComponent(defineBubbleEmitterComponent())
+        addComponent(defineTrailSpriteComponent())
         addComponent(defineKnockbackComponent())
         addComponent(defineFreezeComponent())
         addComponent(defineStunComponent())
@@ -493,15 +470,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
 
-        explosionOrbTrajectories.forEach { trajectory ->
-            val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
-            orb.spawn(
-                props(
-                    ConstKeys.TRAJECTORY pairTo trajectory.cpy().scl(ConstVals.PPM.toFloat()),
-                    ConstKeys.POSITION pairTo body.getCenter()
-                )
-            )
-        }
+        ExplosionOrb.spawnRing(body.getCenter())
 
         if (services.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
             services.audio.playSound(SoundAsset.SMB3_PLAYER_DOWN_SOUND, false)
@@ -608,10 +577,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (body.getX() < -DEATH_X_OFFSET * ConstVals.PPM || body.getY() < -DEATH_Y_OFFSET * ConstVals.PPM ||
-                body.getMaxX() > (services.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.WIDTH) as Int + DEATH_X_OFFSET) * ConstVals.PPM ||
-                body.getMaxY() > (services.levelState.tiledMapLoadResult!!.map.properties.get(ConstKeys.HEIGHT) as Int + DEATH_Y_OFFSET) * ConstVals.PPM
-            ) {
+            if (isOutsideLevel(services.levelState, DEATH_X_OFFSET, DEATH_Y_OFFSET)) {
                 GameLogger.error(TAG, "Megaman is below game bounds, kill him")
                 destroy()
             }
@@ -632,27 +598,9 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
             updatePostActionMomentum(delta, running)
 
-            if (
-                body.isSensing(BodySense.IN_WATER) &&
-                !body.isSensing(BodySense.FORCE_APPLIED) &&
-                body.getContactWater().any { water ->
-                    water.body.getBounds().contains(
-                        this.headFixture.getShape().getCenter()
-                    )
-                }
-            ) {
-                underWaterBubbleTimer.update(delta)
-                if (underWaterBubbleTimer.isFinished()) {
-                    spawnBubble()
-                    underWaterBubbleTimer.reset()
-                }
-            }
+            require(BubbleEmitterComponent::class).update(delta)
 
-            trailSpriteTimer.update(delta)
-            if (trailSpriteTimer.isFinished()) {
-                val trailSpriteSpawned = tryToSpawnTrailSprite()
-                if (trailSpriteSpawned) trailSpriteTimer.reset()
-            }
+            require(TrailSpriteComponent::class).update(delta)
 
             if (inPlay) spawningTimer.update(delta)
 
@@ -662,51 +610,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
             updateAButtonTask()
         }
-    }
-
-    private fun tryToSpawnTrailSprite(): Boolean {
-        val animKey: String
-
-        when {
-            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
-                var key = "groundslide"
-                if (shooting) {
-                    if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
-                    else if (currentWeapon != MegamanWeapon.RODENT_CLAWS) key += "_shoot"
-                }
-                animKey = key
-            }
-
-            isBehaviorActive(BehaviorType.AIR_DASHING) -> {
-                var key = "airdash"
-                if (shooting) {
-                    if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
-                    else if (currentWeapon != MegamanWeapon.RODENT_CLAWS) key += "_shoot"
-                }
-                animKey = key
-            }
-
-            else -> return false
-        }
-
-        val trailSprite = MegaEntityFactory.fetch(MegamanTrailSpriteV2::class)!!
-        return trailSprite.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.KEY pairTo animKey))
-    }
-
-    private fun spawnBubble() {
-        val offsetY = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.05f else 0.1f
-        val offsetX = 0.2f * facing.value
-
-        val spawn = body.getCenter().add(offsetX * ConstVals.PPM, offsetY * ConstVals.PPM)
-
-        val bubble = MegaEntityFactory.fetch(UnderWaterBubble::class)!!
-        bubble.spawn(
-            props(
-                ConstKeys.DIRECTION pairTo direction,
-                ConstKeys.SPEED pairTo Speed.SLOW,
-                ConstKeys.POSITION pairTo spawn
-            )
-        )
     }
 
     override fun getFocusBounds() = body.getBounds()

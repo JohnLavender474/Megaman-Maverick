@@ -6,11 +6,13 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -31,6 +33,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -45,7 +48,30 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     companion object {
         const val TAG = "ExplosionOrb"
         private const val OOB_CULL_TIME = 0.5f
+        private const val DEFAULT_EXPLOSION_ORB_SPEED = 3.5f
+        private val RING_DIRECTIONS = gdxArrayOf(
+            Vector2(-1f, 0f),
+            Vector2(-1f, 1f),
+            Vector2(0f, 1f),
+            Vector2(1f, 1f),
+            Vector2(1f, 0f),
+            Vector2(1f, -1f),
+            Vector2(0f, -1f),
+            Vector2(-1f, -1f)
+        )
         private var region: TextureRegion? = null
+
+        fun spawnRing(center: Vector2, speed: Float = DEFAULT_EXPLOSION_ORB_SPEED) =
+            RING_DIRECTIONS.forEach { direction ->
+                val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
+                orb.spawn(
+                    props(
+                        ConstKeys.POSITION pairTo center,
+                        ConstKeys.TRAJECTORY pairTo direction,
+                        ConstKeys.SPEED pairTo speed
+                    )
+                )
+            }
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
@@ -68,7 +94,8 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!.cpy()
+        val speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_EXPLOSION_ORB_SPEED, Float::class)
+        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!.cpy().scl(speed * ConstVals.PPM)
     }
 
     override fun onEvent(event: Event) {
