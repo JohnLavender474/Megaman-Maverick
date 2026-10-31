@@ -62,6 +62,9 @@ Rules:
   `mega-refactor-001a-package-rename`.
 - The branch folder has the same name as the branch:
   `items/001-maverick-engine/branches/mega-refactor-001a-package-rename/`.
+- A fix cut from an item's parent branch is named `mega-refactor-<id>-fix-<slug>`, for example
+  `mega-refactor-051-fix-scroll-room-scope`. It has no letter. It merges back into the parent branch, as a branch of the item does
+  (owner decision, 2026-10-31).
 
 ## Statuses
 

@@ -95,6 +95,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | dropped | none | | 2026-10-31 |
 | 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | idea | none | | |
 | 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | idea | none | | |
+| 088 | [Web player (TeaVM Wasm)](items/088-web-player/ITEM.md) | feature | idea | `021`, `032` | | |
 | 089 | [Conditional crush surfaces](items/089-conditional-crush-surfaces/ITEM.md) | feature | idea | `051` | | |
 
 ## Branches
@@ -125,6 +126,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-051b-camera-behaviors`](items/051-camera-behaviors/branches/mega-refactor-051b-camera-behaviors/process-log.md) | 051 | The camera built from behavior components; the level screen talks to a camera control interface; `GameCameraState` goes | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-051c-camera-zones`](items/051-camera-behaviors/branches/mega-refactor-051c-camera-zones/process-log.md) | 051 | Tiled camera zones, players-only edge blocks and `CrusherComponent`; levels with no zones play the same | merged | 2026-10-30 | 2026-10-31 |
 | [`mega-refactor-051d-auto-scroll`](items/051-camera-behaviors/branches/mega-refactor-051d-auto-scroll/process-log.md) | 051 | Tiled scroll sections that take control of the camera, with edge blocks, stop modes and chains | merged | 2026-10-31 | 2026-10-31 |
+| [`mega-refactor-051-fix-scroll-room-scope`](items/051-camera-behaviors/branches/mega-refactor-051-fix-scroll-room-scope/process-log.md) | 051 | Fix: scroll kept edges and the done test apply only in the rooms of the section, and edges do not act on the limits of the last room | active | 2026-10-31 | |
 | [`mega-refactor-061a-thin-player`](items/061-thin-player/branches/mega-refactor-061a-thin-player/process-log.md) | 061 | Thin `MegaPlayer`, free functions over the entity, engine locks, an immediate damage signal | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061b-play-phase-teleport`](items/061-thin-player/branches/mega-refactor-061b-play-phase-teleport/process-log.md) | 061 | `ready` and `teleporting` as entity state (play phase, teleportable); no player wrappers | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-061c-entity-queries`](items/061-thin-player/branches/mega-refactor-061c-entity-queries/process-log.md) | 061 | A player is an entity with a `PlayerComponent`; callers ask the entity; `MegaPlayer` and `MegaPlayerAccess.kt` go | merged | 2026-10-26 | 2026-10-26 |
