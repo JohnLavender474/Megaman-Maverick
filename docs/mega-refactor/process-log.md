@@ -1307,3 +1307,10 @@ newest entry at the bottom.
 - Follow-up: on the baseline code, Mega moved from the `out_of_bounds` spawn into the pit in 3 of 15 launches with no scripted input. The cause is known:
   the owner played in the open window (owner, 2026-10-31), so it is not a defect. No backlog or bug candidates. Item `084` stays active until the owner
   decides on the remaining bag keys.
+
+## 2026-10-31 — master (docs)
+
+- Summary: the owner agreed to the 8 decisions from the research on the `Megaman` interfaces (`084` `NOTES.md`). Item `085` is dropped; `084f` takes its work. `048` owns `IFaceable`. The `060` `ITEM.md`
+  has the new prerequisites. Stale lines in `029`, `030`, `060`, `063` and `084` are corrected. Planned `084` branches: `084e`, `084f`, `084g`, `084h`.
+- Contract check: not needed (docs only).
+- Follow-up: `084e` starts next.

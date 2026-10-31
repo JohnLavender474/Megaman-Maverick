@@ -8,10 +8,11 @@
   `mega-refactor-084d-damage-reaction` (merged 2026-10-30)
   `mega-refactor-084c-movement` (merged 2026-10-30)
   `mega-refactor-084b-effects` (merged 2026-10-31)
+  `mega-refactor-084e-class-line` (started 2026-10-31)
 
 ## Goal
 
-Move the logic and state that is buried in `Megaman.kt` (990 lines, 17 interfaces on the class line) into components
+Move the logic and state that was buried in `Megaman.kt` (990 lines and 16 interfaces at the start of this item) into components
 and typed state, so that the player class is easy to maintain and a second playable character (`060` Proto Man, `081`
 X) can use the same parts without a copy of `Megaman.kt` and without a player base class (`048`).
 
@@ -23,9 +24,8 @@ not mix the split with new gameplay.
 Not approved. The branch `SCOPE.md` decides the final scope. The facts and line numbers are in `NOTES.md`.
 
 - **Typed state in place of the property bag:** done in `084a` for `facing`, `aButtonTask`, `currentWeapon`, `running`
-  and the teleport hooks. Still in the bag, for a later branch: the other player keys (15 bag calls in
-  `entities/megaman/` at the `084a` scan), for example `MegamanKeys.DIRECTION_ON_AIR_DASH`, the `SHOOT_DOWN` keys,
-  `ConstKeys.ANIMATION_KEY` and `ConstKeys.SIDE`. `ConstKeys.FOCUS` belongs to `051`.
+  and the teleport hooks. Still in the bag: 15 lines in `entities/megaman/`. 4 go to `084g`, 2 (`ConstKeys.FOCUS`) go to `084f`, and 9 are weapon
+  lines that go to `024`.
 - **Damage reaction as components:** done in `084d`.
 - **Movement support as components:** done in `084c`.
 - **Effects as components:** done in `084b`. The bubbles and the trail are components. The out-of-bounds rule is `isOutsideLevel`, and the
@@ -34,7 +34,9 @@ Not approved. The branch `SCOPE.md` decides the final scope. The facts and line 
 - **Resets:** each new component resets its own state in `reset()`, so its lines leave `onSpawn`. Exception:
   `PostActionMomentumComponent.reset()` also runs in `onSpawn` until `087` is done, because behaviors can write momentum after the
   component reset.
-- **Interfaces:** remove each interface on `Megaman` that has no reason left after the steps above.
+- **Interfaces:** remove each interface on `Megaman` that has no reason left: `084e` (15 to 10) and `084f` (10 to 8). The rest goes to `048` and other owners
+  (see `NOTES.md`, "Interfaces and a second playable entity").
+- **Further branches (planned):** `084f-focus-progress`, `084g-movement-state` (after `031e` merges), `084h-charge`.
 
 Not in this item (other items own these parts):
 
@@ -42,7 +44,7 @@ Not in this item (other items own these parts):
 - The heart-tank max health: `059`.
 - The difficulty and enhancement changes in `editDamageFrom`: `023`.
 - The owner walk in `canBeDamagedBy`: `030`.
-- The weapon charge state and the weapon checks: `024` (see "Open questions").
+- The weapon checks and the charge rules: `024`. The charge timer moves in `084h`.
 - Level checks such as `MARIO_LEVEL` in `onHealthDepleted`: `025`.
 - `AbstractHealthEntity` and the state-only contracts for all entities (`IFreezableEntity`, `IScalableGravityEntity`):
   `048`. This item can do the player side first, if `048` has not started.
@@ -84,12 +86,20 @@ Not in this item (other items own these parts):
 - (2026-10-30, owner) The effects stay in this item, not in `042`.
 - (2026-10-30, owner) `EXPLOSION_ORB_SPEED` moved to `ExplosionOrb` as `DEFAULT_EXPLOSION_ORB_SPEED`, and the spawn props allow an
   optional override.
+- (2026-10-31, owner) All 8 decisions from the research in `NOTES.md`, "Interfaces and a second playable entity":
+  - `isPlayer` replaces `IGateTrigger` and `ICartRider`.
+  - `085` folds into `084f`.
+  - The charge timer moves in `084h`; `024` keeps the charge rules.
+  - `AButtonTask` stays with no component.
+  - `IEventListener` stays on the class; `060` shares the handler body as one function.
+  - The commented `regionProcessor` block in `Megaman.kt` goes, and its idea is in the `024` `NOTES.md`.
+  - `048` owns `IFaceable`.
+  - `084` closes after the agreed branches, and the rest of the interface work moves to `048`.
 
 ## Open questions
 
 - Engine or core for each new component? Some are genre mechanisms (stun, knockback, momentum, room-transition carry);
   others are content (death orbs, trail sprites). `001` keeps Megaman Maverick content out of `engine/`.
-- Does the charge state (`chargingTimer`, `chargeStatus`, `shoot()`) move here or wait for `024`?
 - Is the stun bounce direction (the `TODO` that assumes `UP`) kept as is? A fix changes gameplay, so it is a bug in
   `docs/issues/`, not part of this item.
 
