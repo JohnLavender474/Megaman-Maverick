@@ -86,9 +86,14 @@ import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.screens.levels.camera.CameraEdgeBlocks
+import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
+import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
 import com.megaman.maverick.game.screens.levels.camera.CameraRotationStep
+import com.megaman.maverick.game.screens.levels.camera.CameraZone
+import com.megaman.maverick.game.screens.levels.camera.CameraZones
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
@@ -206,6 +211,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var cameraFollow: CameraFollow
     private lateinit var roomTransition: CameraRoomTransition
     private lateinit var roomBounds: CameraRoomBounds
+    private lateinit var cameraZones: CameraZones
     private lateinit var cameraShake: CameraShake
     private lateinit var roomHandler: LevelRoomHandler
 
@@ -287,13 +293,27 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         game.cameraController.addMover(roomBounds)
         game.cameraController.addMover(roomTransition)
         game.cameraController.addMover(cameraFollow)
-        game.cameraController.addMover(CameraRoomClamp(cameraFollow, roomBounds))
+        val limitStage = CameraLimitStage(
+            cameraFollow,
+            roomBounds,
+            game.cameraController.settledPosition,
+            ConstVals.CAMERA_LIMIT_EASE_SPEED * ConstVals.PPM,
+            { game.camera.rotating || game.getSystem(WorldSystem::class)?.on == false || !player.inPlay }
+        )
+        cameraZones = CameraZones(cameraFollow)
+        limitStage.addRule(cameraZones)
+        game.cameraController.addMover(limitStage)
+        game.cameraController.addMover(CameraRoomClamp(limitStage))
+        game.cameraController.addMover(CameraRoomScan(roomBounds))
         game.cameraController.addEffect(CameraRotationStep())
         game.cameraController.addEffect(cameraShake)
         game.cameraController.addEffect(cameraFollow.stopRule)
+        game.cameraController.addEffect(
+            CameraEdgeBlocks(limitStage) { player.inPlay && !roomTransition.transitioning }
+        )
 
         cameraFollow.setFocus(gameCamera, player.focus)
-        roomBounds.reset()
+        game.cameraController.reset()
 
         roomHandler = LevelRoomHandler(game.services, roomBounds, roomTransition, { player }) {
             game.getSystem(BehaviorsSystem::class)?.on = it
@@ -424,6 +444,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         val gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
         roomBounds.gameRooms = gameRooms
+        @Suppress("UNCHECKED_CAST")
+        val zones = result.get(ConstKeys.CAMERA_SECTIONS) as Array<CameraZone>?
+        cameraZones.zones = zones ?: Array()
 
         game.consumeLaunchRoom()?.let { startAtLaunchRoom(it, playerSpawns, gameRooms) }
 
@@ -485,7 +508,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 )
 
                 backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
-                roomBounds.reset()
+                game.cameraController.reset()
 
                 bossHealthHandler.unset()
 
@@ -1008,7 +1031,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         backgrounds.forEach { background -> background.reset() }
 
-        roomBounds.reset()
+        game.cameraController.reset()
         gameCamera.immediateRotation(Direction.UP)
 
         audioMan.unsetMusic()

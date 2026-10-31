@@ -36,7 +36,10 @@ private class Rig(direction: Direction, rooms: Array<RectangleMapObject>, focusX
         it.addMover(roomBounds)
         it.addMover(transition)
         it.addMover(follow)
-        it.addMover(CameraRoomClamp(follow, roomBounds))
+        val limitStage = CameraLimitStage(follow, roomBounds, it.settledPosition, 1f)
+        it.addMover(limitStage)
+        it.addMover(CameraRoomClamp(limitStage))
+        it.addMover(CameraRoomScan(roomBounds))
     }
 
     init {

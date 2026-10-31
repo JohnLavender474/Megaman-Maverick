@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.shapes.GameRectangle
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
@@ -25,6 +26,10 @@ private class TestPart(val log: MutableList<String>, val name: String, val hold:
     }
 }
 
+private abstract class TestPartBase : ICameraPart<Camera> {
+    override fun update(camera: Camera, delta: Float) = false
+}
+
 class CameraPartsTest : DescribeSpec({
 
     fun camera() = OrthographicCamera().also {
@@ -32,7 +37,100 @@ class CameraPartsTest : DescribeSpec({
         it.viewportHeight = 80f
     }
 
+    describe("CameraAxisLimit") {
+        it("keeps a view inside a range") {
+            val limit = CameraAxisLimit().also { it.set(0f, 100f) }
+            limit.clamp(50f, 20f) shouldBe 50f
+            limit.clamp(-5f, 20f) shouldBe 10f
+            limit.clamp(200f, 20f) shouldBe 90f
+        }
+
+        it("lets min win in a range smaller than the view") {
+            val limit = CameraAxisLimit().also { it.set(0f, 10f) }
+            limit.clamp(50f, 20f) shouldBe 10f
+            limit.clamp(-50f, 20f) shouldBe 10f
+        }
+
+        it("has no limit by default") {
+            CameraAxisLimit().clamp(123f, 20f) shouldBe 123f
+        }
+
+        it("eases a narrowing edge from the view, not from the old limit") {
+            val limit = CameraAxisLimit().also { it.set(0f, 1000f) }
+            val target = CameraAxisLimit().also { it.set(0f, 300f) }
+            limit.easeTo(target, 100f, 100f, 10f)
+            limit.max shouldBe 300f
+            val close = CameraAxisLimit().also { it.set(0f, 180f) }
+            limit.set(0f, 1000f)
+            limit.easeTo(close, 100f, 100f, 10f)
+            limit.max shouldBe 180f
+            val far = CameraAxisLimit().also { it.set(0f, 100f) }
+            limit.set(0f, 1000f)
+            limit.easeTo(far, 100f, 100f, 10f)
+            limit.max shouldBe 140f
+        }
+
+        it("eases a widening edge by one step, and stops at the target") {
+            val limit = CameraAxisLimit().also { it.set(100f, 200f) }
+            val target = CameraAxisLimit().also { it.set(95f, 500f) }
+            limit.easeTo(target, 150f, 100f, 10f)
+            limit.min shouldBe 95f
+            limit.max shouldBe 210f
+        }
+
+        it("cuts a range to the outer range") {
+            val limit = CameraAxisLimit().also { it.set(-50f, 500f) }
+            limit.resolve(0f, 100f)
+            limit.min shouldBe 0f
+            limit.max shouldBe 100f
+        }
+
+        it("copies a limit") {
+            val limit = CameraAxisLimit().also { it.set(CameraAxisLimit().also { other -> other.set(1f, 2f) }) }
+            limit.min shouldBe 1f
+            limit.max shouldBe 2f
+        }
+    }
+
     describe("CameraController") {
+        it("keeps the position after the movers, with no effect in it") {
+            val camera = camera()
+            val controller = CameraController(camera)
+            controller.addMover(object : TestPartBase() {
+                override fun update(camera: Camera, delta: Float): Boolean {
+                    camera.position.x = 10f
+                    return false
+                }
+            })
+            controller.addEffect(object : TestPartBase() {
+                override fun update(camera: Camera, delta: Float): Boolean {
+                    camera.position.x = 15f
+                    return false
+                }
+            })
+            controller.update(0.1f)
+            controller.settledPosition.x shouldBe 10f
+            camera.position.x shouldBe 15f
+        }
+
+        it("resets each part that is resettable, and no other part") {
+            val log = ArrayList<String>()
+            val controller = CameraController(camera())
+            controller.addMover(object : TestPartBase(), Resettable {
+                override fun reset() {
+                    log.add("mover")
+                }
+            })
+            controller.addEffect(object : TestPartBase(), Resettable {
+                override fun reset() {
+                    log.add("effect")
+                }
+            })
+            controller.addEffect(TestPart(log, "plain"))
+            controller.reset()
+            log shouldBe listOf("mover", "effect")
+        }
+
         it("runs the movers in order, then the effects") {
             val log = ArrayList<String>()
             val controller = CameraController(camera())

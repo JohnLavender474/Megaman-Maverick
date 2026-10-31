@@ -35,6 +35,7 @@ class MegaMapLayerBuilders(private val mapLayerParams: MegaMapLayerBuildersParam
 
     internal val builderFactories = orderedMapOf(
         ConstKeys.GAME_ROOMS pairTo { GameRoomsLayerBuilder() },
+        ConstKeys.CAMERA_SECTIONS pairTo { CameraSectionsLayerBuilder() },
         ConstKeys.PLAYER pairTo { PlayerLayerBuilder() },
         ConstKeys.ENEMIES pairTo { SpawnersLayerBuilder(mapLayerParams) },
         ConstKeys.BLOCKS pairTo { SpawnersLayerBuilder(mapLayerParams) },

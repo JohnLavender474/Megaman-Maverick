@@ -27,6 +27,12 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
      */
     override var direction = Direction.UP
 
+    val viewWidth: Float
+        get() = if (direction.isVertical()) viewportWidth else viewportHeight
+
+    val viewHeight: Float
+        get() = if (direction.isVertical()) viewportHeight else viewportWidth
+
     private var accumulator = 0f
     private var startRot = 0f
     private var rotAmount = 0f

@@ -19,8 +19,10 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
+import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
 import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
@@ -67,7 +69,10 @@ private class Rig(next: RectangleMapObject) {
         it.addMover(roomBounds)
         it.addMover(transition)
         it.addMover(follow)
-        it.addMover(CameraRoomClamp(follow, roomBounds))
+        val limitStage = CameraLimitStage(follow, roomBounds, it.settledPosition, 1f)
+        it.addMover(limitStage)
+        it.addMover(CameraRoomClamp(limitStage))
+        it.addMover(CameraRoomScan(roomBounds))
     }
 
     init {

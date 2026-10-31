@@ -22,6 +22,7 @@ object ConstVals {
     const val UI_ARROW_BLINK_DUR = 0.3f
     const val ROOM_TRANS_DELAY_DURATION = 0.35f
     const val ROOM_TRANS_DURATION = 1f
+    const val CAMERA_LIMIT_EASE_SPEED = 6f
     const val HEALTH_BAR_X = 0.5f
     const val WEAPON_BAR_X = 1f
     const val STATS_BAR_Y = 9f
@@ -433,6 +434,7 @@ object ConstKeys {
     const val TRIGGERS = "triggers"
     const val FOREGROUNDS = "foregrounds"
     const val GAME_ROOMS = "game_rooms"
+    const val CAMERA_SECTIONS = "camera_sections"
     const val BOUNDS = "bounds"
     const val RESIST_ON = "resist_on"
     const val GRAVITY_ON = "gravity_on"

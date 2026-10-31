@@ -11,7 +11,7 @@ same.
 
 ## Item
 
-`051`, from the `ITEM.md`, "Decisions" of 2026-10-30: the rule pipeline, ranges and pins, the fold in Tiled order, the
+`051`, from the `ITEM.md`, "Decisions" of 2026-10-30: the rule pipeline, the ranges, the fold in Tiled order, the
 snap and ease rule, the hold test, `CrusherComponent`, and the edge blocks. The research is in the item `NOTES.md`,
 "Camera rules research for `051c` and `051d`".
 
@@ -37,7 +37,7 @@ snap and ease rule, the hold test, `CrusherComponent`, and the edge blocks. The 
 
 1. **The limits stage, with no feature.** The first commit group. Levels play the same.
    - Split the room scan from `CameraRoomClamp`. Tracking stays first.
-   - A limits result: per axis a range or a pin. A zone that locks an axis is the first pin caller (item 3).
+   - A limits result: per axis a range. A zone locks an axis with a range of one view size (item 3).
    - The room supplies the target. The cut uses `currentGameRoom ?: priorGameRoom`, as the clamp does now. No limits
      stage in `CameraFollowMode.OFF`.
    - `CameraController.reset()` resets each `Resettable` part. The 3 call sites become 1 call.
@@ -47,7 +47,9 @@ snap and ease rule, the hold test, `CrusherComponent`, and the edge blocks. The 
    with no clamp, min wins in a short room, a rotated pan.
 3. **Zones.**
    - A layer `camera_sections` and a builder. A zone is data, not an entity, with `type=zone`. Properties `min_x`, `max_x`,
-     `min_y`, `max_y` (tiles) name each edge that it sets; other edges keep. Equal min and max on an axis make a pin.
+     `min_y`, `max_y` are references to Tiled objects and name each edge that it sets; other edges keep. A `min_*`
+     property reads the low edge of its object, and a `max_*` property reads the high edge. The numbers and the pin went
+     away on 2026-10-30 (owner decision), because world tiles with y up were hard to read in Tiled. No numeric form.
    - A part that folds the active zones in Tiled object order each frame. A zone is active while
      `getFocusPosition()` is inside it.
    - Zones never change `currentRoom`. The 25 reads stay the same.
@@ -104,6 +106,6 @@ snap and ease rule, the hold test, `CrusherComponent`, and the edge blocks. The 
 
 ## Open questions
 
-None. The owner accepted the 4 recommendations on 2026-10-30: a zone can set a pin; the hold test is in this branch; one
+None. The owner accepted the 4 recommendations on 2026-10-30: a zone can lock an axis; the hold test is in this branch; one
 layer `camera_sections` with `type`, and the property names in item 3; one default ease speed in `ConstVals` with a zone
 property that overrides it, with the value chosen in the first test room.
