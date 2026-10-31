@@ -223,7 +223,7 @@ The case updates during play if gravity changes.
 | Kept trailing edge | Automatic | Stays after the stop. A respawn works it out again |
 | Wait at a room edge, continue after a pan | Automatic | |
 | Waits for a gate, a camera turn and a dead player | Automatic | |
-| Running during a spawn, with edges off until the player is ready | Automatic | |
+| Wait until the player is ready, with edges off until then | Automatic | |
 | Ease back to the follow | Automatic | After the stop |
 
 `edge_blocks` replaces the block list for that section. A listed edge gets a block and no fall kill, and an edge left out gets no
