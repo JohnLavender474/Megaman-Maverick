@@ -95,6 +95,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | dropped | none | | 2026-10-31 |
 | 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | idea | none | | |
 | 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | idea | none | | |
+| 088 | [Web player (TeaVM Wasm)](items/088-web-player/ITEM.md) | feature | idea | `021`, `032` | | |
 | 089 | [Conditional crush surfaces](items/089-conditional-crush-surfaces/ITEM.md) | feature | idea | `051` | | |
 
 ## Branches
