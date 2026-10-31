@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: Tiled scroll sections that take control of the camera, with edge blocks, stop modes and chains
-- Done: `docs/SCOPE.md` approved.
-- Next: `docs/CONTRACT.md`. The branch starts from `mega-refactor-051-master`, not `master`.
+- Done: `docs/SCOPE.md` approved; branch start.
+- Next: `docs/CONTRACT.md`.
 - Blocked:
 
 ## Entries
