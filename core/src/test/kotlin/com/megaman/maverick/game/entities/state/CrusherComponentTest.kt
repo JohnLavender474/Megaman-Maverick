@@ -2,9 +2,6 @@ package com.megaman.maverick.game.entities.state
 
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.entities.body
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.setBodySense
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
@@ -27,24 +24,25 @@ class CrusherComponentTest : DescribeSpec({
             CrusherComponent({ rect(100f, 118f) }, { Direction.UP }, { false }).crushes(player) shouldBe false
         }
 
-        it("needs a solid on the opposite side when asked") {
+        it("needs the opposite side to touch when asked") {
             val player = crusherTestPlayer(100f, 100f)
-            val crusher = CrusherComponent({ rect(88f, 100f) }, { Direction.LEFT }, needsSolidOpposite = true)
+            var surface = rect(0f, 0f)
+            val crusher = CrusherComponent({ rect(88f, 100f) }, { Direction.LEFT }, oppositeTouches = { it.overlaps(surface) })
             crusher.crushes(player) shouldBe false
-            player.body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_RIGHT, true)
+            surface = rect(112f, 100f)
             crusher.crushes(player) shouldBe true
         }
 
-        it("reads the feet sense for a crush from above, and the head sense from below") {
+        it("reads the feet shape for a crush from above, and the head shape from below") {
             val player = crusherTestPlayer(100f, 100f)
-            val above = CrusherComponent({ rect(100f, 118f) }, { Direction.UP }, needsSolidOpposite = true)
-            above.crushes(player) shouldBe false
-            player.body.setBodySense(BodySense.FEET_ON_GROUND, true)
-            above.crushes(player) shouldBe true
-            val below = CrusherComponent({ rect(100f, 82f) }, { Direction.DOWN }, needsSolidOpposite = true)
-            below.crushes(player) shouldBe false
-            player.body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
-            below.crushes(player) shouldBe true
+            val floor = rect(100f, 82f)
+            val ceiling = rect(100f, 118f)
+            CrusherComponent({ ceiling }, { Direction.UP }, oppositeTouches = { it.overlaps(floor) })
+                .crushes(player) shouldBe true
+            CrusherComponent({ ceiling }, { Direction.UP }, oppositeTouches = { it.overlaps(ceiling) })
+                .crushes(player) shouldBe false
+            CrusherComponent({ floor }, { Direction.DOWN }, oppositeTouches = { it.overlaps(ceiling) })
+                .crushes(player) shouldBe true
         }
     }
 

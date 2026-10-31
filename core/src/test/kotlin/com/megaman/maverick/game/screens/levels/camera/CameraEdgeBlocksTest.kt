@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.screens.levels.camera
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.camera.CameraController
@@ -71,9 +72,21 @@ class CameraEdgeBlocksTest : DescribeSpec({
         }
     }
 
+    describe("movedIntoView") {
+        it("is true only when the edge moves into the view") {
+            movedIntoView(Direction.LEFT, 10f, 11f) shouldBe true
+            movedIntoView(Direction.LEFT, 10f, 9f) shouldBe false
+            movedIntoView(Direction.LEFT, 10f, 10f) shouldBe false
+            movedIntoView(Direction.DOWN, 10f, 11f) shouldBe true
+            movedIntoView(Direction.RIGHT, 10f, 9f) shouldBe true
+            movedIntoView(Direction.RIGHT, 10f, 11f) shouldBe false
+            movedIntoView(Direction.UP, 10f, 9f) shouldBe true
+        }
+    }
+
     describe("cameraEdgeBlockBounds") {
         fun bounds(direction: Direction) =
-            cameraEdgeBlockBounds(GameRectangle(), direction, 200f, 100f, 40f, 100f, 80f, 10f)
+            cameraEdgeBlockBounds(GameRectangle(), direction, 200f, Rectangle(50f, 0f, 100f, 80f), 10f)
 
         it("places a block outside the view, with its inner side on the edge") {
             bounds(Direction.RIGHT).getX() shouldBe 200f
@@ -82,9 +95,11 @@ class CameraEdgeBlocksTest : DescribeSpec({
             bounds(Direction.DOWN).getMaxY() shouldBe 200f
         }
 
-        it("covers the whole view edge") {
+        it("covers the extent, with its center on the extent") {
             bounds(Direction.RIGHT).getHeight() shouldBe 100f
+            bounds(Direction.RIGHT).getCenter(Vector2()).y shouldBe 40f
             bounds(Direction.UP).getWidth() shouldBe 120f
+            bounds(Direction.UP).getCenter(Vector2()).x shouldBe 100f
         }
     }
 })

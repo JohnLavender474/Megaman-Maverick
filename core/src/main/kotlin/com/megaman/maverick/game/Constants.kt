@@ -435,6 +435,7 @@ object ConstKeys {
     const val FOREGROUNDS = "foregrounds"
     const val GAME_ROOMS = "game_rooms"
     const val CAMERA_SECTIONS = "camera_sections"
+    const val CAMERA_SCROLLS = "camera_scrolls"
     const val BOUNDS = "bounds"
     const val RESIST_ON = "resist_on"
     const val GRAVITY_ON = "gravity_on"

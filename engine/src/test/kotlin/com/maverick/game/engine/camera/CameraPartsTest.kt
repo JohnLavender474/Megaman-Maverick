@@ -80,9 +80,30 @@ class CameraPartsTest : DescribeSpec({
 
         it("cuts a range to the outer range") {
             val limit = CameraAxisLimit().also { it.set(-50f, 500f) }
-            limit.resolve(0f, 100f)
+            limit.resolve(20f, 0f, 100f)
             limit.min shouldBe 0f
             limit.max shouldBe 100f
+        }
+
+        it("turns a pin into a range of one view size, cut to the outer range") {
+            val limit = CameraAxisLimit().also { it.setPin(50f) }
+            limit.resolve(20f, 0f, 100f)
+            limit.min shouldBe 40f
+            limit.max shouldBe 60f
+            val atEdge = CameraAxisLimit().also { it.setPin(95f) }
+            atEdge.resolve(20f, 0f, 100f)
+            atEdge.max shouldBe 100f
+        }
+
+        it("takes a pinned target at once, with no ease") {
+            val target = CameraAxisLimit().also {
+                it.setPin(500f)
+                it.resolve(20f, 0f, 1000f)
+            }
+            val limit = CameraAxisLimit().also { it.set(0f, 100f) }
+            limit.easeTo(target, 50f, 20f, 1f)
+            limit.min shouldBe 490f
+            limit.max shouldBe 510f
         }
 
         it("copies a limit") {

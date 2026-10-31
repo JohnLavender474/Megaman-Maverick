@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.entities.blocks
 
+import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.players.forEach
 import com.megaman.maverick.game.ConstKeys
@@ -20,6 +22,9 @@ class CameraEdgeBlock(services: MegaServices) : AbstractBlock(services) {
         const val TAG = "CameraEdgeBlock"
     }
 
+    var crushing = false
+    var crushSurfaces = Array<GameRectangle>()
+
     private lateinit var side: Direction
 
     override fun init(vararg params: Any) {
@@ -29,7 +34,8 @@ class CameraEdgeBlock(services: MegaServices) : AbstractBlock(services) {
         val crusher = CrusherComponent(
             { body.getBounds() },
             { worldToBodySide(side, it.body.direction) },
-            needsSolidOpposite = true
+            { crushing },
+            { shape -> crushSurfaces.any { shape.overlaps(it) } }
         )
         addComponent(crusher)
 
@@ -42,6 +48,8 @@ class CameraEdgeBlock(services: MegaServices) : AbstractBlock(services) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         side = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
+        crushing = false
+        crushSurfaces = Array()
 
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         spawnProps.put(ConstKeys.DRAW, false)

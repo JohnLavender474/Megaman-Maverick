@@ -33,6 +33,17 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
     val viewHeight: Float
         get() = if (direction.isVertical()) viewportHeight else viewportWidth
 
+    val blendedViewWidth: Float
+        get() = blendViewSize(startViewWidth, viewWidth)
+
+    val blendedViewHeight: Float
+        get() = blendViewSize(startViewHeight, viewHeight)
+
+    private var startViewWidth = 0f
+    private var startViewHeight = 0f
+    private var blendTime = 0f
+    private var blendDuration = 0f
+
     private var accumulator = 0f
     private var startRot = 0f
     private var rotAmount = 0f
@@ -44,6 +55,7 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
     override fun update(delta: Float) {
         if (rotFinished) return
 
+        blendTime += delta
         accumulator += delta
         var alpha = accumulator / rotTime
         alpha = MathUtils.clamp(alpha, 0f, 1f)
@@ -100,6 +112,11 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
                 "cam_rotated_bounds=${getRotatedBounds()}"
         )
 
+        startViewWidth = blendedViewWidth
+        startViewHeight = blendedViewHeight
+        blendTime = 0f
+        blendDuration = time - accumulator
+
         this.direction = direction
         startRotation(direction.rotation, time)
     }
@@ -111,6 +128,9 @@ class RotatableCamera(var onJustFinishedRotating: (() -> Unit)? = null, var prin
         rotFinished = true
         accumulator = 0f
     }
+
+    private fun blendViewSize(start: Float, end: Float) =
+        if (rotFinished) end else interpolation.apply(start, end, MathUtils.clamp(blendTime / blendDuration, 0f, 1f))
 
     private fun startRotation(degrees: Float, time: Float) {
         startRot = totRot
