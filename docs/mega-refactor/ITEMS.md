@@ -97,6 +97,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | idea | none | | |
 | 088 | [Web player (TeaVM Wasm)](items/088-web-player/ITEM.md) | feature | idea | `021`, `032` | | |
 | 089 | [Conditional crush surfaces](items/089-conditional-crush-surfaces/ITEM.md) | feature | idea | `051` | | |
+| 090 | [Branch name in the game window title](items/090-branch-window-title/ITEM.md) | tooling | planned | none | | |
+| 091 | [Check that a test room loads with no visible game window](items/091-room-load-check/ITEM.md) | tooling | planned | none | | |
 
 ## Branches
 
