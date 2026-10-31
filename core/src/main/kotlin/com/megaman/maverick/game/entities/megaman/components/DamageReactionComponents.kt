@@ -9,19 +9,15 @@ import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.input
-import com.megaman.maverick.game.entities.state.DamageRecoveryComponent
-import com.megaman.maverick.game.entities.state.FreezeComponent
-import com.megaman.maverick.game.entities.state.KnockbackComponent
-import com.megaman.maverick.game.entities.state.MashThawRule
-import com.megaman.maverick.game.entities.state.StunComponent
+import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 
-internal fun Megaman.defineKnockbackComponent() = KnockbackComponent(
+internal fun defineKnockbackComponent() = KnockbackComponent(
     MegamanValues.DMG_X * ConstVals.PPM,
     MegamanValues.DMG_Y * ConstVals.PPM,
-    objectSetOf<Any>(SpringHead::class)
+    objectSetOf(SpringHead::class)
 )
 
 internal fun Megaman.defineFreezeComponent() = FreezeComponent(
@@ -47,5 +43,5 @@ internal fun Megaman.defineStunComponent() = StunComponent(
     }
 )
 
-internal fun Megaman.defineDamageRecoveryComponent() =
+internal fun defineDamageRecoveryComponent() =
     DamageRecoveryComponent(MegamanValues.DAMAGE_RECOVERY_TIME, MegamanValues.DAMAGE_FLASH_DURATION)
