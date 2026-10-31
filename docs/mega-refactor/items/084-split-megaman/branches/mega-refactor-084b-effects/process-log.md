@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: Trail sprites, underwater bubbles, the death orbs and the out-of-bounds kill out of `Megaman`; the game plays the same.
-- Done: branch start (docs commit on `master`), worktree, scan, `docs/SCOPE.md` (approved 2026-10-30), `docs/CONTRACT.md` (approved 2026-10-31), `docs/PLAN.md` (approved 2026-10-31), plan steps 1-9, and step 10 up to the merge.
-- Next: the owner's approval of the merge.
+- Done: branch start (docs commit on `master`), worktree, scan, `docs/SCOPE.md` (approved 2026-10-30), `docs/CONTRACT.md` (approved 2026-10-31), `docs/PLAN.md` (approved 2026-10-31), plan steps 1-10, squash merge into `master`.
+- Next:
 - Blocked:
 
 ## Entries

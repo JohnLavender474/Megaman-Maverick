@@ -77,7 +77,7 @@ constraints", and `CONTRACT.md`, "Frame order". In steps 3-6, write the tests fi
 
 - Changes: none. This branch has no temporary suite.
 - Check: read the folders of the other active branches again. If `master` changed the same files, merge `master` and run the automated checks again. The merge needs the owner's explicit approval.
-- Done: checks run (2026-10-31); the merge waits for the owner's approval
+- Done: yes (2026-10-31)
 
 ## New API and its first caller
 

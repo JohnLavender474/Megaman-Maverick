@@ -1294,3 +1294,15 @@ newest entry at the bottom.
 - Follow-up: 2 bugs filed in `docs/issues/` (`CameraRoomTransition.cancel()` timers; a spawn in the start area). `031e` also
   changes `Constants.kt` and `MegaLevelScreen.kt`, so check them when it merges. `051d` starts from the parent. The owner plays
   the combined result before the parent merges into `master`.
+
+## 2026-10-31 — mega-refactor-084b-effects
+
+- Summary: the underwater bubbles and the trail sprite timer are player components (`BubbleEmitterComponent`, `TrailSpriteComponent`), with
+  hooks in `M/components/EffectComponents.kt`. Their timers keep the old rule and survive a respawn. The out-of-bounds rule is `isOutsideLevel`.
+  `ExplosionOrb.spawnRing` replaces the orb tables in `Megaman` and `AbstractBoss`. `EXPLOSION_ORB_SPEED` is now `DEFAULT_EXPLOSION_ORB_SPEED` in
+  `ExplosionOrb`, with an optional `ConstKeys.SPEED` spawn prop that no caller passes yet (the owner asked for it). New room `out_of_bounds` in
+  `RefactorTest084`. `Megaman.kt` has 672 lines (990 at the start of `084`). Squash commit `997b83db2`.
+- Contract check: the automated checks in the branch `docs/CONTRACT.md` pass (961 tests in `engine:test` and `core:test`, `lwjgl3:jar`, the 3 `grep`
+  checks, short launches). The branch had no temporary suite. The owner played the manual checks ("tests pass"). Merge approval (verbatim: "yes").
+- Follow-up: on the baseline code, Mega moved from the `out_of_bounds` spawn into the pit in 3 of 15 launches with no scripted input. The cause is not
+  proven (see the branch process log). No backlog or bug candidates. Item `084` stays active until the owner decides on the remaining bag keys.

@@ -7,7 +7,7 @@
 - Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)
   `mega-refactor-084d-damage-reaction` (merged 2026-10-30)
   `mega-refactor-084c-movement` (merged 2026-10-30)
-  `mega-refactor-084b-effects` (started 2026-10-30)
+  `mega-refactor-084b-effects` (merged 2026-10-31)
 
 ## Goal
 
@@ -28,7 +28,8 @@ Not approved. The branch `SCOPE.md` decides the final scope. The facts and line 
   `ConstKeys.ANIMATION_KEY` and `ConstKeys.SIDE`. `ConstKeys.FOCUS` belongs to `051`.
 - **Damage reaction as components:** done in `084d`.
 - **Movement support as components:** done in `084c`.
-- **Effects as components:** trail sprites, underwater bubbles, the death explosion orbs, and the out-of-bounds kill.
+- **Effects as components:** done in `084b`. The bubbles and the trail are components. The out-of-bounds rule is `isOutsideLevel`, and the
+  orbs are `ExplosionOrb.spawnRing`, with no component.
 - **The `AButtonTask` transitions:** done in `084c`, as `Megaman.updateAButtonTask()`, with no component.
 - **Resets:** each new component resets its own state in `reset()`, so its lines leave `onSpawn`. Exception:
   `PostActionMomentumComponent.reset()` also runs in `onSpawn` until `087` is done, because behaviors can write momentum after the
@@ -79,17 +80,16 @@ Not in this item (other items own these parts):
 - (2026-10-30, owner) `AButtonTask` has no component, until `060` shows that Proto Man needs one.
 - (2026-10-30, owner) `084c` also fixes the room-carry crash on a direction change, at the request of `051c`. This is the one
   gameplay change in this item so far (see the branch `docs/CONTRACT.md`, "Intended changes").
+- (2026-10-30, owner) The trail and bubble timers survive a respawn, so these 2 components have no `reset()`.
+- (2026-10-30, owner) The effects stay in this item, not in `042`.
+- (2026-10-30, owner) `EXPLOSION_ORB_SPEED` moved to `ExplosionOrb` as `DEFAULT_EXPLOSION_ORB_SPEED`, and the spawn props allow an
+  optional override.
 
 ## Open questions
 
 - Engine or core for each new component? Some are genre mechanisms (stun, knockback, momentum, room-transition carry);
   others are content (death orbs, trail sprites). `001` keeps Megaman Maverick content out of `engine/`.
 - Does the charge state (`chargingTimer`, `chargeStatus`, `shoot()`) move here or wait for `024`?
-- Do the effects (trail sprites, bubbles) belong here or in `042` (reusable components)?
-- Trail and bubble timers survive a respawn today. Keep that with a `reset()` that does nothing, or change the rule
-  that each component resets its state? Recommended: keep it.
-- `ExplosionOrb.spawnRing` moves `EXPLOSION_ORB_SPEED` out of `MegamanValues`, with no value change. Bosses share the
-  value. Recommended: yes.
 - Is the stun bounce direction (the `TODO` that assumes `UP`) kept as is? A fix changes gameplay, so it is a bug in
   `docs/issues/`, not part of this item.
 
