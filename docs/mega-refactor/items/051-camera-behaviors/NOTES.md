@@ -163,3 +163,68 @@ The last 2 are kill areas. `GravityBlock` is the real crush case.
 Mega Man X: limits usually sit at real walls and doors, with a player clamp. Super Mario Bros. 3: in auto-scroll, the
 screen edges act on the player. Sonic: the player stops at the camera limits in boss arenas. Hollow Knight: camera locks
 do not stop the player; real walls do.
+
+## Scroll section edges and settings (2026-10-31)
+
+Owner-approved reference. `CameraScroll`, `CameraScrollSection` and `CameraZone` carry the same rules in their KDoc.
+
+### Edge behavior by case
+
+The result depends on where the fall direction points relative to the scroll.
+
+| Case | Leading edge | Trailing edge | After the stop |
+|---|---|---|---|
+| A. Fall toward the leading edge | No block. A fall fully past it kills, except at a room edge | Block. It crushes if a sensor is there. Fully past it kills | Trailing block stays. The leading kill ends |
+| B. Fall toward the trailing edge | Block. It stops at a room edge | No block. Fully past it kills, also at a room edge | Trailing kill stays |
+| C. Fall across the scroll | Block. It stops at a room edge | Block. It crushes if a sensor is there. Fully past it kills | Trailing block stays |
+
+Edges across the scroll axis have no block in any case. That axis keeps its follow and its limits.
+
+### Case for each combination
+
+| Scroll direction | Normal gravity (falls down) | `down` switch (falls up) | `left` switch (falls right) | `right` switch (falls left) |
+|---|---|---|---|---|
+| `right` | C | C | A | B |
+| `left` | C | C | B | A |
+| `up` | B | A | C | C |
+| `down` | A | B | C | C |
+
+The case updates during play if gravity changes.
+
+### Examples in `RefactorTest051`
+
+| Room | Scroll | Gravity | Case |
+|---|---|---|---|
+| `scroll_corridor`, `scroll_left` | right, left | normal | C |
+| `scroll_up` | up | normal | B |
+| `scroll_down` | down | normal | A |
+| `scroll_flip_right` | right | `down` | C |
+| `scroll_flip_up` | up | `down` | A |
+| `scroll_flip_down` | down | `down` | B |
+| `scroll_side_up`, `scroll_side_down` | up, down | `right`, `left` | C |
+| `scroll_gravity_right` | right | `left` | A |
+
+### What is automatic, and what the designer sets
+
+| Setting | Who sets it | Value or default |
+|---|---|---|
+| Section rectangle | Designer, required | Sets the start, the far edge and the block length |
+| `type=scroll` | Designer, required | |
+| `direction` | Designer, required | `left`, `right`, `up` or `down` |
+| `speed` | Designer, required | Tiles per second |
+| `stop` | Designer, optional | Default `exit`. Use `arrive` at a corner |
+| `next` | Designer, optional | One-way object reference. With none, an overlapping section starts in Tiled order |
+| `edge_blocks` | Designer, optional | With none, the case table applies |
+| `crush_surface` objects | Designer, optional | With none, nothing crushes at that solid. Each needs a `section` reference |
+| A zone over the section | Designer, optional | For a lock on the other axis. It must reach one view past the far edge |
+| Blocks on the edges | Automatic | From the case table |
+| Fall-edge kill | Automatic | Follows gravity |
+| Block length | Automatic | From the section rectangle |
+| Kept trailing edge | Automatic | Stays after the stop. A respawn works it out again |
+| Wait at a room edge, continue after a pan | Automatic | |
+| Waits for a gate, a camera turn and a dead player | Automatic | |
+| Running during a spawn, with edges off until the player is ready | Automatic | |
+| Ease back to the follow | Automatic | After the stop |
+
+`edge_blocks` replaces the block list for that section. A listed edge gets a block and no fall kill, and an edge left out gets no
+block. With no block on a trailing edge, the "fully past it" kill also goes away. A fall edge left out stays a kill.
