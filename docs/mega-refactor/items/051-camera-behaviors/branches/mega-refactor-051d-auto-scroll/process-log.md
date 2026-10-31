@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged into `mega-refactor-051-master`
 - Goal: Tiled scroll sections that take control of the camera, with edge blocks, stop modes and chains
 - Done: `docs/SCOPE.md`, `docs/CONTRACT.md` and `docs/PLAN.md` approved; plan steps 1 to 11.
-- Next: owner approval to merge into `mega-refactor-051-master`.
+- Next: none.
 - Blocked:
 
 ## Entries
