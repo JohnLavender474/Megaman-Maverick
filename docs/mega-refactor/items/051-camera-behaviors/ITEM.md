@@ -4,7 +4,7 @@
 - Type: feature
 - Depends on: none
 - Related: `019`, `036`, `038`, `041`, `047`, `058`
-- Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30, merged into `master` 2026-10-30, squash `7370943a0`); `mega-refactor-051b-camera-behaviors` (started 2026-10-30, merged into `master` 2026-10-30, squash `7fe00b8b8`); `mega-refactor-051c-camera-zones` (started 2026-10-30)
+- Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30, merged into `master` 2026-10-30, squash `7370943a0`); `mega-refactor-051b-camera-behaviors` (started 2026-10-30, merged into `master` 2026-10-30, squash `7fe00b8b8`); `mega-refactor-051-master` (parent of `051c` and `051d`, started 2026-10-31); `mega-refactor-051c-camera-zones` (started 2026-10-30)
 
 ## Goal
 
@@ -160,6 +160,9 @@ here.
 - 2026-10-31 (owner): zone limits are references to Tiled objects, with no numeric form. A `min_*` property reads the low
   edge of its object, and a `max_*` property reads the high edge. `051c` removes the pin, so `051d` adds the form that its
   scroll needs.
+- 2026-10-31 (owner): this replaces the merge target of 2026-10-30 for `051c` and `051d`. Both merge into the parent
+  `mega-refactor-051-master`, cut from `master`, so that the owner can play them together before `master`. `051a` and `051b`
+  are already on `master`.
 
 ## Contract notes
 
