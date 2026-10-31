@@ -18,7 +18,8 @@ rules research for `051c` and `051d`".
 
 ## Current state
 
-- `051c` adds the limits result (ranges and pins), the Tiled layer, the hold test, the edge block and `CrusherComponent`.
+- `051c` adds the limits result (ranges), the Tiled layer, the hold test, the edge block and `CrusherComponent`. Zone limits
+  are Tiled object references, and `051c` has no pin.
 - X6 (`enemies/conveyor-belt.md`, "The forced scroll"): rightward only, min x = max x = camera x, and it writes current
   and target limits together, so it has no ease lag. A stage flag ends it.
 - `PipePortal.kt:92` and `CapsuleTeleporter.kt:124` link Tiled objects with a next key.
@@ -30,7 +31,8 @@ rules research for `051c` and `051d`".
 2. **The scroll part.**
    - The section starts when `getFocusPosition()` enters the rectangle. It takes control from the current camera
      position, with no jump.
-   - It writes a pin on its axis. The pin skips the ease, as in X6. The other axis keeps its follow and its limits.
+   - It writes a pin on its axis, which this branch adds to `CameraAxisLimit`. The pin skips the ease, as in X6. The other
+     axis keeps its follow and its limits.
    - The camera position is the scroll position, so a pan needs no stored state. The section keeps its own value in the
      frame, so that shake does not add to it.
    - One scroll is active at a time. A zone still applies on the other axis.

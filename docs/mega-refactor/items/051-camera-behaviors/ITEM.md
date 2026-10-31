@@ -157,6 +157,9 @@ here.
   `movementScalar` scales the run impulse and not the top speed (`ControllerComponent.kt:177-196`).
 - 2026-10-30 (owner): test rooms and play checks start from the basics and work up to edge cases. `051c` gets a plain
   `zone_hold` room and a new check order. `051d` starts with `scroll_corridor` and `scroll_turn`.
+- 2026-10-31 (owner): zone limits are references to Tiled objects, with no numeric form. A `min_*` property reads the low
+  edge of its object, and a `max_*` property reads the high edge. `051c` removes the pin, so `051d` adds the form that its
+  scroll needs.
 
 ## Contract notes
 
