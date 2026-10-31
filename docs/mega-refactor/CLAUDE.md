@@ -313,6 +313,9 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   owner knows the baseline behavior, so the contract does not ask for a baseline play-through of
   the manual checks. Ask for a baseline run only for a check whose current behavior is unclear,
   and say why.
+- **Experimental checks come first** (owner decision, 2026-10-30). List the checks of new or changed
+  behavior before the control checks, which show that existing behavior did not change. A problem
+  in an experimental check leads to a fix, and the fix means the control checks must run again.
 - **Test-only entities:** if no existing entity can trigger a behavior in a small room (for
   example a boss attack), the branch can add a small test entity. Its name starts with `Test`
   (for example `TestStunPulser`), it goes in the package of its `EntityType`, and only test maps
