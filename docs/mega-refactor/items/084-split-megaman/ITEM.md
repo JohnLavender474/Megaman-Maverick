@@ -7,6 +7,7 @@
 - Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)
   `mega-refactor-084d-damage-reaction` (merged 2026-10-30)
   `mega-refactor-084c-movement` (merged 2026-10-30)
+  `mega-refactor-084b-effects` (started 2026-10-30)
 
 ## Goal
 
