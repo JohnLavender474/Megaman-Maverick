@@ -13,12 +13,12 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.FocusComponent
 import com.megaman.maverick.game.players.GravityDeviceComponent
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
 import com.megaman.maverick.game.players.lightOrNull
 import com.megaman.maverick.game.players.onGravityDeviceSwitch
-import com.maverick.game.engine.camera.IFocusable
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -31,10 +31,7 @@ private class BareEntity : GameEntity(mockk(relaxed = true)) {
     override fun onDestroy() {}
 }
 
-private class PartsEntity(services: MegaServices) : MegaGameEntity(services), IDamageableEntity, IHealthEntity, IFocusable {
-    private val bounds = GameRectangle(0f, 0f, 2f, 2f)
-    override fun getFocusBounds() = bounds
-    override fun getFocusPosition(): Vector2 = bounds.getCenter(Vector2())
+private class PartsEntity(services: MegaServices) : MegaGameEntity(services), IDamageableEntity, IHealthEntity {
     override var invincible = false
     override fun getType() = EntityType.ENEMY
 }
@@ -69,8 +66,10 @@ class EntityQueriesTest : DescribeSpec({
             entity.addComponent(PointsComponent().also { it.putPoints(ConstKeys.HEALTH, Points(0, 10, 10)) })
             entity.addComponent(PlayerLightComponent { PlayerLight.JETPACK })
             entity.addComponent(GravityDeviceComponent { switches++ })
+            val focus = FocusComponent({ GameRectangle(0f, 0f, 2f, 2f) }, { Vector2() })
+            entity.addComponent(focus)
 
-            entity.focus shouldBeSameInstanceAs entity
+            entity.focus shouldBeSameInstanceAs focus
             entity.invincible shouldBe false
             entity.translateHealth(-4) shouldBe true
             entity.currentHealth shouldBe 6

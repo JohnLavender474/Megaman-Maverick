@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.audio.AudioComponent
-import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
@@ -49,8 +48,6 @@ import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
-import com.megaman.maverick.game.levels.LevelDefinition
-import com.megaman.maverick.game.levels.LevelRewards
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
@@ -59,20 +56,16 @@ import com.megaman.maverick.game.players.GravityDeviceComponent
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.state.IGameStateListener
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.startSmoothFollow
 import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
-import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
 class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity,
-    IAudioEntity, IScalableGravityEntity, IGameStateListener,
-    IEventListener, IFaceable, IDirectional, IFocusable, IDamagerEntity {
+    IAudioEntity, IScalableGravityEntity, IEventListener, IFaceable, IDirectional, IDamagerEntity {
 
     companion object {
         const val TAG = "Megaman"
@@ -295,6 +288,8 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         )
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
+        addComponent(defineFocusComponent())
+        addComponent(definePlayerProgressComponent())
         addComponent(defineMomentumComponent())
         addComponent(defineRoomTransitionCarryComponent())
         addComponent(defineBubbleEmitterComponent())
@@ -386,7 +381,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         require(PostActionMomentumComponent::class).reset()
         airDashConsumed = false
 
-        removeProperty(ConstKeys.FOCUS)
         services.cameraController.stopSmoothFollow()
 
         services.events.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
@@ -545,43 +539,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
             updateAButtonTask()
         }
-    }
-
-    override fun getFocusBounds() = body.getBounds()
-
-    override fun getFocusPosition(): Vector2 {
-        if (hasProperty(ConstKeys.FOCUS)) return getProperty(ConstKeys.FOCUS, Vector2::class)!!
-
-        val position = DirectionPositionMapper.getInvertedPosition(direction)
-        val focus = body.getBounds().getPositionPoint(position)
-        when (direction) {
-            Direction.UP -> focus.y += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-            Direction.DOWN -> focus.y -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-            Direction.LEFT -> focus.x -= MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-            Direction.RIGHT -> focus.x += MEGAMAN_BODY_HEIGHT * ConstVals.PPM / 2f
-        }
-        return focus
-    }
-
-    override fun onAddLevelDefeated(level: LevelDefinition) {
-        services.levelState.weaponsAttained = LevelRewards.weaponsFor(level)
-    }
-
-    override fun onAddHeartTank(heartTank: MegaHeartTank) = setMaxHealthFromHeartTanks()
-
-    override fun onRemoveHeartTank(heartTank: MegaHeartTank) = setMaxHealthFromHeartTanks()
-
-    // TODO: the max health is a stored copy that is set when a heart tank changes; a max that is read through from
-    //  the game state on each access needs a change to the engine Points (backlog candidate "max health read through
-    //  from the profile", item 029)
-    private fun setMaxHealthFromHeartTanks() {
-        val heartTanks = MegaHeartTank.entries.count { services.gameState.containsHeartTank(it) }
-        setMaxHealth(MegamanValues.START_HEALTH + heartTanks * MegaHeartTank.HEALTH_BUMP)
-    }
-
-    override fun onAddCurrency(value: Int) {
-        if (services.gameState.getCurrency() < services.gameState.getMaxCurrency())
-            requestToPlaySound(SoundAsset.CURRENCY_PICKUP_SOUND, false)
     }
 
     fun translateAmmo(ammo: Int, weapon: MegamanWeapon = currentWeapon): Int {

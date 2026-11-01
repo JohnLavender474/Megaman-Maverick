@@ -85,7 +85,6 @@ object ConstKeys {
     const val WEAPON = "weapon"
     const val ROCK = "rock"
     const val EXCEPTION = "exception"
-    const val FOCUS = "focus"
     const val CAN = "can"
     const val DEACTIVATED = "deactivated"
     const val WHOLE = "whole"

@@ -8,12 +8,13 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.state.FocusComponent
 import com.maverick.game.engine.camera.IFocusable
 
 private fun IGameEntity.missing(part: String): Nothing = throw IllegalStateException("$this has no $part")
 
 val IGameEntity.focus: IFocusable
-    get() = this as? IFocusable ?: missing("camera focus")
+    get() = getComponent(FocusComponent::class) ?: missing("camera focus")
 
 val IGameEntity.invincible: Boolean
     get() = (this as? IDamageableEntity)?.invincible ?: true

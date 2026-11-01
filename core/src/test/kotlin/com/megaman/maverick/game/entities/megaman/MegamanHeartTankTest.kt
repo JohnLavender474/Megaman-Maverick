@@ -7,6 +7,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.entities.megaman.components.definePlayerProgressComponent
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
@@ -28,7 +29,7 @@ class MegamanHeartTankTest : DescribeSpec({
         megaman.addComponent(PointsComponent().apply {
             putPoints(ConstKeys.HEALTH, ConstVals.MIN_HEALTH, MegamanValues.START_HEALTH, MegamanValues.START_HEALTH)
         })
-        state.addListener(megaman)
+        state.addListener(megaman.definePlayerProgressComponent())
     }
 
     afterEach { unmockkAll() }

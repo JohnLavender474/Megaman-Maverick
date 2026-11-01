@@ -36,6 +36,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.components.require
 import com.maverick.game.engine.controller.ControllerSystem
 import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.maverick.game.engine.controller.polling.IControllerPoller
@@ -89,6 +90,7 @@ import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.state.PlayerProgressComponent
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.input.FrameControllerPoller
 import com.megaman.maverick.game.input.GamepadInput
@@ -440,8 +442,8 @@ class MegamanMaverickGame(
         // manually call init and set initialized to true before megaman is spawned
         megaman.init()
         megaman.initialized = true
-        // add megaman as a game state listener
-        gameState.addListener(megaman)
+        // add megaman's progress component as a game state listener
+        gameState.addListener(megaman.require(PlayerProgressComponent::class))
 
         // TODO: a player that registers after progress exists keeps the base max health, because the heart tank
         //  max health is set only when a heart tank changes; a late join must set it from the game state (item 047)

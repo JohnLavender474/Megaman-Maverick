@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.SlashDissipation
 import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.explosions.SmokePuff
+import com.megaman.maverick.game.entities.focus
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
@@ -380,7 +381,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
                 if (!cluster.existenceState.liveNow) return@updateFunction
 
                 cluster.origin.lerp(
-                    megaman.getFocusPosition(),
+                    megaman.focus.getFocusPosition(),
                     min(1f, MegamanValues.SHIELD_GEM_LERP * ConstVals.PPM * delta)
                 )
 
