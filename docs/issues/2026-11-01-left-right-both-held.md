@@ -48,6 +48,8 @@ Owner decisions (2026-11-01). Fix branch: `fix/left-right-last-pressed`, off `ma
 - A tap of the other button during a run reverses Mega. Air dash and ground slide facing follow a tap.
 - The fix also closes `2026-11-01-rodent-claws-run-facing.md`.
 
+Accepted edge case (`TODO` in `RunComponent`): a press in a frame when the `ControllerSystem` does not process Mega (a pause, or Mega not spawned) does not set the tie value. With both held, the older press wins until the next press.
+
 `MegamanRunTest` pins the old rule in 3 blocks, which the fix changes. New tests: the tie, the release handover, a tap away, a held spawn, and the web presses.
 
 Play checks: `--level REFACTOR_TEST_029 --room movement`, also with `--weapons RODENT_CLAWS`, and `--level REFACTOR_TEST_029 --room gravity_switch`.
