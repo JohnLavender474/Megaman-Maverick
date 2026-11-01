@@ -23,6 +23,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 
@@ -121,16 +122,28 @@ class MegaPlayersTest : DescribeSpec({
         }
     }
 
-    describe("MegaPlayers.selectButtonAction") {
+    describe("MegaPlayers.settings") {
         it("starts as NEXT_WEAPON and keeps a value that is set") {
-            val players = MegaPlayers()
-            players.selectButtonAction shouldBe SelectButtonAction.NEXT_WEAPON
+            val settings = MegaPlayers().settings(PlayerSlot(0))
+            settings.selectButtonAction shouldBe SelectButtonAction.NEXT_WEAPON
 
-            players.selectButtonAction = SelectButtonAction.AIR_DASH
-            players.selectButtonAction shouldBe SelectButtonAction.AIR_DASH
+            settings.selectButtonAction = SelectButtonAction.AIR_DASH
+            settings.selectButtonAction shouldBe SelectButtonAction.AIR_DASH
 
-            players.selectButtonAction = SelectButtonAction.START
-            players.selectButtonAction shouldBe SelectButtonAction.START
+            settings.selectButtonAction = SelectButtonAction.START
+            settings.selectButtonAction shouldBe SelectButtonAction.START
+        }
+
+        it("has one settings object per slot, and a change to one does not change the other") {
+            val players = MegaPlayers(2)
+            val first = players.settings(PlayerSlot(0))
+            val second = players.settings(PlayerSlot(1))
+
+            first shouldNotBeSameInstanceAs second
+
+            first.selectButtonAction = SelectButtonAction.AIR_DASH
+
+            second.selectButtonAction shouldBe SelectButtonAction.NEXT_WEAPON
         }
     }
 

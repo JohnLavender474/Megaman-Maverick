@@ -10,6 +10,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -34,12 +35,12 @@ internal fun Megaman.airDashBehavior(): IBehavior {
         private val impulse = Vector2()
         private var lastFacing = Facing.RIGHT
 
-        private fun isAirDashButtonActivated() = when (services.players.selectButtonAction) {
+        private fun isAirDashButtonActivated() = when (services.players.settings(playerSlot!!).selectButtonAction) {
             SelectButtonAction.AIR_DASH -> input.isPressed(MegaControllerButton.SELECT)
             else -> input.isPressed(MegaControllerButton.A)
         }
 
-        private fun isAirDashButtonJustActivated() = when (services.players.selectButtonAction) {
+        private fun isAirDashButtonJustActivated() = when (services.players.settings(playerSlot!!).selectButtonAction) {
             SelectButtonAction.AIR_DASH -> input.isJustPressed(MegaControllerButton.SELECT)
             else -> input.isJustPressed(MegaControllerButton.A)
         }

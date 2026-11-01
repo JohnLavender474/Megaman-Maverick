@@ -9,6 +9,7 @@ import com.maverick.game.engine.controller.buttons.ButtonActuator
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -101,7 +102,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     )
 
     val select = ButtonActuator(onJustReleased = {
-        when (services.players.selectButtonAction) {
+        when (services.players.settings(playerSlot!!).selectButtonAction) {
             SelectButtonAction.NEXT_WEAPON -> {
                 if (!inPlay || damaged || teleporting) {
                     GameLogger.debug(

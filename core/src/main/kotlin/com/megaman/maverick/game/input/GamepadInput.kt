@@ -3,12 +3,12 @@ package com.megaman.maverick.game.input
 import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.utils.Array
 import com.megaman.maverick.game.controllers.ControllerUtils
-import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.getMapping
-import com.megaman.maverick.game.controllers.getPreferredControllerCode
+import com.megaman.maverick.game.players.PlayerSettings
+import com.megaman.maverick.game.players.PlayerSettingsStore
 
-class GamepadInput(private val buttons: ControllerButtons) {
+class GamepadInput(private val settings: PlayerSettings, private val store: PlayerSettingsStore) {
 
     companion object {
         const val TRIGGER_LEFT_AXIS = 4
@@ -29,14 +29,12 @@ class GamepadInput(private val buttons: ControllerButtons) {
         val first = if (pads.size > 0) pads[0] else null
 
         if (first !== primary) {
-            if (first != null) buttons.forEach {
-                val key = it.key as MegaControllerButton
-                val button = it.value
+            if (first != null) MegaControllerButton.entries.forEach {
                 var code: Int? = null
-                if (loadPrefsOnConnect) code = getPreferredControllerCode(first, key)
-                if (code == null) code = first.mapping.getMapping(key)
-                button.controllerCode = code
-            } else buttons.forEach { it.value.controllerCode = null }
+                if (loadPrefsOnConnect) code = store.readGamepadCode(first.name, it)
+                if (code == null) code = first.mapping.getMapping(it)
+                settings.padCodes[it.index] = code
+            } else settings.padCodes.fill(PlayerSettings.NO_CODE)
             primary = first
         }
 
@@ -44,18 +42,18 @@ class GamepadInput(private val buttons: ControllerButtons) {
         padsOfTick.addAll(pads)
 
         var held = 0L
-        val keys = buttons.orderedKeys()
+        val codes = settings.padCodes
         for (p in 0 until padsOfTick.size) {
             val pad = padsOfTick[p]
-            for (i in 0 until keys.size) {
-                val button = keys[i] as MegaControllerButton
-                val code = buttons[button].controllerCode ?: continue
+            for (i in codes.indices) {
+                val code = codes[i]
+                if (code == PlayerSettings.NO_CODE) continue
                 val pressed = when (code) {
                     TRIGGER_LEFT_CODE -> pad.getAxis(TRIGGER_LEFT_AXIS) >= TRIGGER_THRESHOLD
                     TRIGGER_RIGHT_CODE -> pad.getAxis(TRIGGER_RIGHT_AXIS) >= TRIGGER_THRESHOLD
                     else -> pad.getButton(code)
                 }
-                if (pressed) held = held or (1L shl button.index)
+                if (pressed) held = held or (1L shl i)
             }
 
             val mapping = pad.mapping

@@ -12,9 +12,7 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
-import com.megaman.maverick.game.controllers.ControllerUtils
 import com.megaman.maverick.game.controllers.ControllerUtils.getController
-import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.maverick.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -23,13 +21,19 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.controllers.*
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.input.GamepadInput
+import com.megaman.maverick.game.players.KeyCapture
+import com.megaman.maverick.game.players.PlayerSettings
+import com.megaman.maverick.game.players.PlayerSettingsStore
+import com.megaman.maverick.game.players.keyLabel
+import com.megaman.maverick.game.players.padLabel
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
 
 class ControllerSettingsScreen(
     game: MegamanMaverickGame,
-    private val controllerButtons: ControllerButtons,
+    private val settings: PlayerSettings,
+    private val store: PlayerSettingsStore,
     var isKeyboardSettings: Boolean,
     var backAction: () -> Boolean = backAction@{
         game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
@@ -61,6 +65,8 @@ class ControllerSettingsScreen(
     private var initialized = false
 
     private var actionOnNextUpdate: (() -> Unit)? = null
+    private var captureRefused = false
+    private var capturePad: Controller? = null
 
     override fun init(vararg params: Any) {
         if (initialized) return
@@ -71,28 +77,23 @@ class ControllerSettingsScreen(
             override fun keyDown(keycode: Int): Boolean {
                 if (selectedMegaButton == null) return true
 
-                val button = controllerButtons.get(selectedMegaButton!!)
-                GameLogger.debug(
-                    TAG,
-                    "Setting [$selectedMegaButton] keycode from [${button.keyboardCode}] to [$keycode]"
-                )
+                val capture = settings.captureKey(selectedMegaButton!!, keycode)
+                GameLogger.debug(TAG, "Capture of [$selectedMegaButton] with keycode [$keycode]: $capture")
 
-                // if any buttons match the keycode, then switch them
-                controllerButtons.values().forEach {
-                    if (it.keyboardCode == keycode) it.keyboardCode = button.keyboardCode
+                if (capture == KeyCapture.REFUSE) {
+                    game.audio.playSound(SoundAsset.ERROR_SOUND, false)
+                    captureRefused = true
+                    return true
                 }
-                button.keyboardCode = keycode
 
                 // save the keyboard codes to preferences
-                try {
-                    ControllerUtils.saveSettingsToPrefs(controllerButtons, true)
+                if (capture == KeyCapture.ACCEPT) try {
+                    store.saveKeyboard(settings)
                 } catch (e: Exception) {
                     GameLogger.error(TAG, "Failed to save controller preferences.", e)
                 }
 
-                Gdx.input.inputProcessor = oldInputProcessor
-                selectedMegaButton = null
-
+                endCapture()
                 delayOnChangeTimer.reset()
 
                 return true
@@ -119,28 +120,23 @@ class ControllerSettingsScreen(
                     return true
                 }
 
-                val button = controllerButtons.get(selectedMegaButton!!)
-                GameLogger.debug(
-                    TAG,
-                    "Setting [$selectedMegaButton] controller code from [${button.controllerCode}] to [$code]"
-                )
+                val codes = settings.padCodes
+                val index = selectedMegaButton!!.index
+                val oldCode = codes[index]
+                GameLogger.debug(TAG, "Setting [$selectedMegaButton] controller code from [$oldCode] to [$code]")
 
                 // if any buttons match the controller code, then switch them
-                controllerButtons.values().forEach {
-                    if (it.controllerCode == code) it.controllerCode = button.controllerCode
-                }
-                button.controllerCode = code
+                for (i in codes.indices) if (codes[i] == code) codes[i] = oldCode
+                codes[index] = code
 
                 // save the controller codes to preferences
                 try {
-                    ControllerUtils.saveSettingsToPrefs(controllerButtons, false)
+                    store.saveGamepad(controller.name, settings)
                 } catch (e: Exception) {
                     GameLogger.error(TAG, "Failed to save keyboard preferences.", e)
                 }
 
-                controller.removeListener(this)
-                selectedMegaButton = null
-
+                endCapture()
                 delayOnChangeTimer.reset()
 
                 return true
@@ -149,8 +145,9 @@ class ControllerSettingsScreen(
 
         hintFontHandle = MegaFontHandle(
             {
-                "Press any ${if (isKeyboardSettings) "keyboard key" else "controller button"}\n" +
-                    "to set a new code for\nthe button: $selectedMegaButton"
+                "Press any ${if (isKeyboardSettings) "keyboard key" else "controller\nbutton or trigger"}\n" +
+                    "to set a new code for\nthe button: $selectedMegaButton" +
+                    if (captureRefused) "\nRefused: reserved key" else ""
             },
             positionX =
                 ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
@@ -192,36 +189,19 @@ class ControllerSettingsScreen(
 
             override fun onSelect(delta: Float): Boolean {
                 if (isKeyboardSettings) {
-                    loadKeyboardSettingsFromPrefs(controllerButtons) { _, oldCode, newCode ->
-                        GameLogger.debug(TAG, "loadSavedSettings(): keyboard: oldCode=$oldCode, newCode=$newCode")
-                    }
+                    store.loadKeyboard(settings)
                 } else {
                     if (controller == null) {
                         GameLogger.error(TAG, "Controller is null, cannot load saved settings")
                         return false
                     }
 
-                    val controllerPreferences = getControllerPreferences(controller!!)
-
-                    MegaControllerButton.entries.forEach {
-                        controllerButtons[it]?.let { controllerButton ->
-                            var oldCode = controllerButton.controllerCode
-                            if (oldCode == null) oldCode = controller!!.mapping.getMapping(it)
-                            val newCode = controllerPreferences.getInteger(it.name, oldCode)
-
-                            controllerButton.controllerCode = newCode
-
-                            GameLogger.debug(
-                                TAG,
-                                "loadSavedSettings(): controller: oldCode=$oldCode, newCode=$newCode"
-                            )
-                        }
-                    }
+                    store.loadGamepad(controller!!.name, settings)
 
                     game.gamepadInput.loadPrefsOnConnect = true
                 }
 
-                loadSelectButtonActionFromPrefs(isKeyboardSettings)?.let { game.players.selectButtonAction = it }
+                store.loadSelectButtonAction()?.let { settings.selectButtonAction = it }
 
                 game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
 
@@ -248,8 +228,20 @@ class ControllerSettingsScreen(
         buttons.put(RESET_TO_DEFAULTS, object : IMenuButton {
 
             override fun onSelect(delta: Float): Boolean {
-                ControllerUtils.resetSettingsToDefaults(controllerButtons, isKeyboardSettings)
-                game.players.selectButtonAction = SelectButtonAction.NEXT_WEAPON
+                val pad = controller
+                if (isKeyboardSettings) MegaControllerButton.entries.forEach {
+                    settings.keyCodes[it.index] = it.defaultKeyboardKey
+                } else if (pad != null) MegaControllerButton.entries.forEach {
+                    settings.padCodes[it.index] = pad.mapping.getMapping(it)
+                }
+
+                try {
+                    if (isKeyboardSettings) store.clearKeyboard() else if (pad != null) store.clearGamepad(pad.name)
+                } catch (e: Exception) {
+                    GameLogger.error(TAG, "Failed to clear the saved settings.", e)
+                }
+
+                settings.selectButtonAction = SelectButtonAction.NEXT_WEAPON
                 game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
                 return false
             }
@@ -266,9 +258,11 @@ class ControllerSettingsScreen(
             row -= 1f
 
             val codeHintSupplier = {
-                val button = controllerButtons.get(b)
-                val code = if (isKeyboardSettings) button.keyboardCode else button.controllerCode
-                "${b.name}: $code"
+                val label = when {
+                    isKeyboardSettings -> keyLabel(settings.keyCodes[b.index])
+                    else -> padLabel(settings.padCodes[b.index])
+                }
+                "${b.name}: $label"
             }
             val buttonFontHandle = MegaFontHandle(
                 { codeHintSupplier() },
@@ -283,13 +277,17 @@ class ControllerSettingsScreen(
 
                 override fun onSelect(delta: Float): Boolean {
                     selectedMegaButton = b
+                    captureRefused = false
 
                     if (isKeyboardSettings) {
                         oldInputProcessor = Gdx.input.inputProcessor
                         Gdx.input.inputProcessor = keyboardListener
                     } else {
                         if (controller == null) return false
-                        actionOnNextUpdate = { controller!!.addListener(buttonListener) }
+                        actionOnNextUpdate = {
+                            capturePad = controller
+                            capturePad!!.addListener(buttonListener)
+                        }
                     }
 
                     return true
@@ -320,7 +318,7 @@ class ControllerSettingsScreen(
         row -= 1f
 
         val selectActionTextSupplier = {
-            "${SELECT_ACTION}: ${game.players.selectButtonAction.text}"
+            "${SELECT_ACTION}: ${settings.selectButtonAction.text}"
         }
         val selectActionFontHandle = MegaFontHandle(
             selectActionTextSupplier,
@@ -342,14 +340,14 @@ class ControllerSettingsScreen(
                 Direction.UP -> MegaControllerButton.SELECT.name
                 Direction.DOWN -> BACK
                 Direction.LEFT -> {
-                    game.players.selectButtonAction = game.players.selectButtonAction.previous()
-                    saveSelectButtonActionToPrefs(game.players.selectButtonAction, isKeyboardSettings)
+                    settings.selectButtonAction = settings.selectButtonAction.previous()
+                    store.saveSelectButtonAction(settings)
                     SELECT_ACTION
                 }
 
                 Direction.RIGHT -> {
-                    game.players.selectButtonAction = game.players.selectButtonAction.next()
-                    saveSelectButtonActionToPrefs(game.players.selectButtonAction, isKeyboardSettings)
+                    settings.selectButtonAction = settings.selectButtonAction.next()
+                    store.saveSelectButtonAction(settings)
                     SELECT_ACTION
                 }
             }
@@ -357,16 +355,16 @@ class ControllerSettingsScreen(
     }
 
     override fun show(props: Properties) {
-        if (props.containsKey("${ConstKeys.BACK}_${ConstKeys.ACTION}"))
-            backAction = props.get("${ConstKeys.BACK}_${ConstKeys.ACTION}") as () -> Boolean
+        val overPause = props.containsKey("${ConstKeys.BACK}_${ConstKeys.ACTION}")
+        if (overPause) backAction = props.get("${ConstKeys.BACK}_${ConstKeys.ACTION}") as () -> Boolean
         show()
+        if (!overPause) game.audio.stopMusic()
     }
 
     override fun show() {
         GameLogger.debug(TAG, "show()")
         if (!initialized) init()
         super.show()
-        game.audio.stopMusic()
         game.getUiCamera().setToDefaultPosition()
     }
 
@@ -386,6 +384,12 @@ class ControllerSettingsScreen(
             game.audio.playSound(SoundAsset.ERROR_SOUND, false)
             backAction.invoke()
             return
+        }
+
+        if (capturePad != null && capturePad !== controller) {
+            endCapture()
+            game.audio.playSound(SoundAsset.ERROR_SOUND, false)
+            delayOnChangeTimer.reset()
         }
 
         if (actionOnNextUpdate != null) {
@@ -425,8 +429,18 @@ class ControllerSettingsScreen(
         game.batch.end()
     }
 
+    private fun endCapture() {
+        capturePad?.removeListener(buttonListener)
+        capturePad = null
+        if (Gdx.input.inputProcessor === keyboardListener) Gdx.input.inputProcessor = oldInputProcessor
+        selectedMegaButton = null
+        actionOnNextUpdate = null
+        captureRefused = false
+    }
+
     override fun reset() {
         super.reset()
+        endCapture()
         backAction = backAction@{
             game.setCurrentScreen(ScreenEnum.MAIN_MENU_SCREEN.name)
             return@backAction true

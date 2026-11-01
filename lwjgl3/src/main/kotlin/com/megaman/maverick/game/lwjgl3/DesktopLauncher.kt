@@ -53,6 +53,7 @@ object DesktopLauncher {
     private const val DEFAULT_PATHFINDING = "async"
     private const val DEFAULT_AUTO_PERF = true
     private const val DEFAULT_LOAD_KEYBOARD_PREFS = false
+    private const val DEFAULT_RESET_BINDINGS = false
     private const val EXIT_CODE_BAD_ARGS = 2
 
     @JvmStatic
@@ -106,6 +107,7 @@ object DesktopLauncher {
         println("- Health Tanks: " + appArgs.healthTanks)
         println("- Auto Perf: " + appArgs.autoPerf)
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
+        println("- Reset Bindings: " + appArgs.resetBindings)
         println("- Performance: " + appArgs.performance)
         println("- Width: " + appArgs.width)
         println("- Height: " + appArgs.height)
@@ -155,6 +157,7 @@ object DesktopLauncher {
         params.worldContainer = appArgs.worldContainer
         params.pathfinding = appArgs.pathfinding
         params.loadKeyboardPrefs = appArgs.loadKeyboardPrefs
+        params.resetBindings = appArgs.resetBindings
         params.launchOptions = launchOptions
 
         val logLevels = appArgs.logLevels.replace(Regex("\\s+"), "").split(",").filter { !it.isBlank() }
@@ -424,5 +427,12 @@ object DesktopLauncher {
                 "keyboard settings screen. Default value = $DEFAULT_LOAD_KEYBOARD_PREFS."
         )
         var loadKeyboardPrefs = DEFAULT_LOAD_KEYBOARD_PREFS
+
+        @Parameter(
+            names = ["--resetBindings"],
+            description = "Clears the saved bindings and the saved select action, at every launch that passes this " +
+                "flag. Default value = $DEFAULT_RESET_BINDINGS."
+        )
+        var resetBindings = DEFAULT_RESET_BINDINGS
     }
 }

@@ -130,7 +130,7 @@ Removed: `E/controller/buttons/ControllerButton.kt`, `E/controller/buttons/Contr
   in `MegamanMaverickGame.kt` and `MLS` in this plan are old: find each place by its content.
 - Commit: none. The log entry and `docs/NOTES.md` go in the commit of step 3.
 - Contract checks: baseline for A1 to A4.
-- Done: no
+- Done: yes
 
 ### 3. `PlayerSettings` holds `selectButtonAction`
 
@@ -155,7 +155,7 @@ save still goes to the old files.
   `grep -n 'capacity' C/players/MegaPlayers.kt` shows the default `1`. Smoke launch.
 - Commit: `031e: PlayerSettings holds selectButtonAction, one per slot`
 - Contract checks: T55, T56, R8. Manual proof later: K8.
-- Done: no
+- Done: yes
 
 ### 4. `PlayerSettingsStore` and the new file, for `selectButtonAction`
 
@@ -178,7 +178,7 @@ save still goes to the old files.
 - Check: the build command passes. Core 307. Smoke launch.
 - Commit: `031e: PlayerSettingsStore saves selectButtonAction to one file per slot`
 - Contract checks: T7, T12 to T15; intended change 2. Manual proof later: G8, K8.
-- Done: no
+- Done: yes
 
 ### 5. Keyboard codes move to `PlayerSettings`
 
@@ -205,7 +205,7 @@ save still goes to the old files.
 - Check: the build command passes. Core 309. `grep -n 'Keyboard Preferences' C/Constants.kt` gives no output. Smoke launch.
 - Commit: `031e: keyboard codes move to PlayerSettings and the slot file`
 - Contract checks: T3, T9; intended change 1 (keyboard half). Manual proof later: K1, K2, K5, B1, B2, B3.
-- Done: no
+- Done: yes
 
 ### 6. Gamepad codes move to `PlayerSettings`
 
@@ -235,7 +235,7 @@ save still goes to the old files.
 - Commit: `031e: gamepad codes move to PlayerSettings and the slot file; game.buttons goes`
 - Contract checks: T1, T2, T4 to T6, T10, T11, T20, T47 to T52, R6; intended change 1 (gamepad half). Manual proof
   later: G1 to G4, G6, D1, D4 to D7.
-- Done: no
+- Done: yes
 
 ### 7. Delete the old storage
 
@@ -246,7 +246,7 @@ save still goes to the old files.
   them. Smoke launch.
 - Commit: `031e: delete ControllerButtons, ControllerButton and ControllerUtilsExtensions`
 - Contract checks: A6, A9, A10, A12, A13; the `game.buttons` and `loadControllerButtons` halves of A14.
-- Done: no
+- Done: yes
 
 ### 8. The saved `selectButtonAction` applies at boot
 
@@ -262,7 +262,7 @@ save still goes to the old files.
 - Check: the build command passes. Core 325. Smoke launch.
 - Commit: `031e: the saved selectButtonAction applies at boot`
 - Contract checks: T21, T22, T25, T26, the read half of R5; intended change 12. Manual proof later: B3, B4.
-- Done: no
+- Done: yes
 
 ### 9. `--resetBindings`
 
@@ -280,7 +280,7 @@ save still goes to the old files.
   the order in the agent's checks, and the owner proves the flag in B5 to B7.
 - Commit: `031e: --resetBindings clears the slot file before any read`
 - Contract checks: T16, T17, T23, T24, T54, R5; intended change 10. Manual proof later: B5, B6, B7.
-- Done: no
+- Done: yes
 
 ### 10. "RESET TO DEFAULTS" clears the saved values
 
@@ -296,7 +296,7 @@ save still goes to the old files.
 - Check: the build command passes. Core 334. Smoke launch.
 - Commit: `031e: RESET TO DEFAULTS also clears the saved table and the select action`
 - Contract checks: T8, T18, T19, T53; intended change 11. Manual proof later: K4, K6, K7, G7.
-- Done: no
+- Done: yes
 
 ### 11. Reserved keys in a key capture
 
@@ -319,7 +319,7 @@ save still goes to the old files.
 - Check: the build command passes. Core 347. Smoke launch, and a launch of `--screen KEYBOARD_SETTINGS_SCREEN`.
 - Commit: `031e: the key capture refuses the reserved keys`
 - Contract checks: T27 to T36, T38, T39, T41, R7; intended change 3. Manual proof later: K3, K4.
-- Done: no
+- Done: yes
 
 ### 12. A swap cannot move `Enter`
 
@@ -332,7 +332,7 @@ save still goes to the old files.
 - Check: the build command passes. Core 350. A11 gives no output.
 - Commit: `031e: a rebind cannot swap a reserved key to another button`
 - Contract checks: T37, T40, T42, A11; intended change 4. Manual proof later: K4.
-- Done: no
+- Done: yes
 
 ### 13. Labels
 
@@ -347,7 +347,7 @@ save still goes to the old files.
   `--screen KEYBOARD_SETTINGS_SCREEN`: no exception from the render of the rows.
 - Commit: `031e: readable labels for keys and triggers; the gamepad hint names triggers`
 - Contract checks: T43 to T46; intended change 9. Manual proof later: K5, K6, G5, B7.
-- Done: no
+- Done: yes
 
 ### 14. A capture ends when the player leaves or the pad goes
 
@@ -366,7 +366,7 @@ save still goes to the old files.
   menu, and the log has one `No controller found` line, as on `master`).
 - Commit: `031e: a capture ends when the screen goes or the primary pad changes`
 - Contract checks: R4; intended changes 7, 8. Manual proof later: G9, H6, D2, D3, D8.
-- Done: no
+- Done: yes
 
 ### 15. Back to pause
 
@@ -407,7 +407,7 @@ it out and leave steps 3 to 14.
   owner's.
 - Commit: `031e: leaving a bindings screen in a level goes back to pause, with no restart`
 - Contract checks: A15, R1, R2, R3; intended changes 5, 6. Manual proof later: H1 to H10, K9.
-- Done: no
+- Done: yes
 
 ### 16. Contract checks
 
@@ -430,7 +430,7 @@ it out and leave steps 3 to 14.
   Write each result in the process log. Then give the owner the manual list of step 17.
 - Commit: `031e: contract checks` (branch docs only).
 - Contract checks: A1 to A16, T1 to T56, R1 to R9.
-- Done: no
+- Done: yes
 
 ### 17. The owner's play test
 

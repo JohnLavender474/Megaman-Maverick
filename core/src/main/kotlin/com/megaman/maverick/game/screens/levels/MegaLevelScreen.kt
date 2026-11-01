@@ -51,6 +51,7 @@ import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.forEach
+import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.maverick.game.engine.screens.levels.tiledmap.TiledMapLoader
 import com.maverick.game.engine.world.WorldSystem
@@ -859,7 +860,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     private fun isPauseButtonRequested() = player.input.isJustReleased(MegaControllerButton.START) ||
-        (game.players.selectButtonAction == SelectButtonAction.START && player.input.isJustPressed(MegaControllerButton.SELECT))
+        (game.players.settings(player.playerSlot!!).selectButtonAction == SelectButtonAction.START &&
+            player.input.isJustPressed(MegaControllerButton.SELECT))
 
     override fun render(delta: Float) {
         /*

@@ -2,13 +2,12 @@ package com.megaman.maverick.game.input
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.players.PlayerSettings
 
-class KeyboardInput(private val buttons: ControllerButtons) {
+class KeyboardInput(private val settings: PlayerSettings) {
 
     companion object {
-        // TODO: a key that is bound to a button and is also an alias gives both buttons (for example a button bound to the up arrow also gives UP); 031e refuses the reserved keys on the bindings screen
         private val ALIAS_KEYS = intArrayOf(
             Input.Keys.ENTER,
             Input.Keys.NUMPAD_ENTER,
@@ -25,15 +24,15 @@ class KeyboardInput(private val buttons: ControllerButtons) {
             1L shl MegaControllerButton.LEFT.index,
             1L shl MegaControllerButton.RIGHT.index,
         )
+
+        fun isReservedKey(keycode: Int) = keycode == Input.Keys.ESCAPE || keycode in ALIAS_KEYS
     }
 
     fun held(): Long {
         var held = 0L
-        val keys = buttons.orderedKeys()
-        for (i in 0 until keys.size) {
-            val button = keys[i] as MegaControllerButton
-            val code = buttons[button].keyboardCode
-            if (Gdx.input.isKeyPressed(code)) held = held or (1L shl button.index)
+        val codes = settings.keyCodes
+        for (i in codes.indices) {
+            if (Gdx.input.isKeyPressed(codes[i])) held = held or (1L shl i)
         }
         for (i in ALIAS_KEYS.indices) {
             if (Gdx.input.isKeyPressed(ALIAS_KEYS[i])) held = held or ALIAS_BITS[i]

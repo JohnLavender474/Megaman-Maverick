@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.*
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -38,7 +39,6 @@ import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
 import com.maverick.game.engine.controller.ControllerSystem
-import com.maverick.game.engine.controller.buttons.ControllerButtons
 import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.cullables.CullablesSystem
 import com.maverick.game.engine.cullables.GameEntityCuller
@@ -77,12 +77,8 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.controllers.ControllerUtils
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.ScreenController
-import com.megaman.maverick.game.controllers.loadControllerButtons
-import com.megaman.maverick.game.controllers.loadKeyboardSettingsFromPrefs
-import com.megaman.maverick.game.controllers.loadSelectButtonActionFromPrefs
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -100,7 +96,9 @@ import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.players.PlayerSettingsStore
 import com.megaman.maverick.game.players.WorldGravity
+import com.megaman.maverick.game.players.applyBootSettings
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -150,6 +148,7 @@ class MegamanMaverickGameParams {
     var worldContainer: String = "simple"
     var pathfinding: String = "async"
     var loadKeyboardPrefs: Boolean = false
+    var resetBindings: Boolean = false
     var launchOptions: LaunchOptions = LaunchOptions()
 }
 
@@ -220,7 +219,7 @@ class MegamanMaverickGame(
     lateinit var batch: SpriteBatch
     lateinit var shapeRenderer: ShapeRenderer
 
-    lateinit var buttons: ControllerButtons
+    private lateinit var settingsStore: PlayerSettingsStore
     lateinit var controllerPoller: IControllerPoller
     lateinit var gamepadInput: GamepadInput
     private lateinit var keyboardInput: KeyboardInput
@@ -237,6 +236,8 @@ class MegamanMaverickGame(
     val gravity = WorldGravity(players)
 
     private var currentScreenKey: String? = null
+    private var heldLevelScreenKey: String? = null
+    private val heldUiCameraPosition = Vector3()
     private var screenController: ScreenController? = null
 
     private lateinit var debugText: MegaFontHandle
@@ -307,14 +308,12 @@ class MegamanMaverickGame(
         batch = SpriteBatch()
 
         checkInputButtons(MegaControllerButton.entries)
-        buttons = ControllerUtils.loadControllerButtons()
-        if (params.loadKeyboardPrefs) {
-            loadKeyboardSettingsFromPrefs(buttons)
-            loadSelectButtonActionFromPrefs(true)?.let { players.selectButtonAction = it }
-            GameLogger.log(TAG, "create(): loaded keyboard prefs")
-        }
-        keyboardInput = KeyboardInput(buttons)
-        gamepadInput = GamepadInput(buttons)
+        settingsStore = PlayerSettingsStore(PlayerSlot(0))
+        applyBootSettings(settingsStore, players.settings(PlayerSlot(0)), params.loadKeyboardPrefs, params.resetBindings)
+        if (params.resetBindings) GameLogger.log(TAG, "create(): cleared the saved bindings")
+        if (params.loadKeyboardPrefs) GameLogger.log(TAG, "create(): loaded keyboard prefs")
+        keyboardInput = KeyboardInput(players.settings(PlayerSlot(0)))
+        gamepadInput = GamepadInput(players.settings(PlayerSlot(0)), settingsStore)
         controllerPoller = FrameControllerPoller { players.inputs[PlayerSlot(0)] }
 
         events = EventsManager()
@@ -458,8 +457,8 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
         screens.put(ScreenEnum.GAME_OVER_SCREEN.name, GameOverScreen(this))
-        screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, true))
-        screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, buttons, false))
+        screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, players.settings(PlayerSlot(0)), settingsStore, true))
+        screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, players.settings(PlayerSlot(0)), settingsStore, false))
         screens.put(ScreenEnum.SELECT_DIFFICULTY_SCREEN.name, SelectDifficultyScreen(this))
         screens.put(ScreenEnum.LEVEL_SELECT_SCREEN.name, LevelSelectScreenV2(this))
         // screens.put(ScreenEnum.ROBOT_MASTER_INTRO_SCREEN.name, RobotMasterIntroScreenV2(this))
@@ -749,6 +748,7 @@ class MegamanMaverickGame(
     override fun resume() {
         GameLogger.log(TAG, "resume()")
         if (!clock.paused) return
+        if (heldLevelScreenKey != null) return
         clock.paused = false
         currentScreen?.resume()
     }
@@ -1015,6 +1015,31 @@ class MegamanMaverickGame(
             it.resize(Gdx.graphics.width, Gdx.graphics.height)
         }
         if (clock.paused) resume()
+    }
+
+    // TODO: the pause grid shows for 1 frame when the bindings screen opens from pause, because this call runs in the
+    //  frame of the pause screen (see item 013)
+    fun showOverPause(key: String, props: Properties) {
+        GameLogger.log(TAG, "showOverPause(): show screen with key = $key")
+        heldLevelScreenKey = currentScreenKey
+        heldUiCameraPosition.set(getUiCamera().position)
+        currentScreenKey = key
+        currentScreen?.let {
+            it.show(props)
+            it.resize(Gdx.graphics.width, Gdx.graphics.height)
+        }
+    }
+
+    fun closeOverPause() {
+        GameLogger.log(TAG, "closeOverPause(): back to screen with key = $heldLevelScreenKey")
+        currentScreen?.let {
+            it.hide()
+            it.reset()
+        }
+        currentScreenKey = heldLevelScreenKey
+        heldLevelScreenKey = null
+        getUiCamera().position.set(heldUiCameraPosition)
+        currentScreen?.resize(Gdx.graphics.width, Gdx.graphics.height)
     }
 
     fun startLevel(level: LevelDefinition? = null) {

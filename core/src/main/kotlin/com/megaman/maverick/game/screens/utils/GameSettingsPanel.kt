@@ -315,10 +315,10 @@ class GameSettingsPanel(
             override fun onSelect(delta: Float): Boolean {
                 if (isInLevelScreen) {
                     val backAction: () -> Boolean = backAction@{
-                        game.startLevel()
+                        game.closeOverPause()
                         return@backAction true
                     }
-                    game.setCurrentScreen(
+                    game.showOverPause(
                         ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name,
                         props("${ConstKeys.BACK}_${ConstKeys.ACTION}" pairTo backAction)
                     )
@@ -351,10 +351,10 @@ class GameSettingsPanel(
 
                 if (isInLevelScreen) {
                     val backAction: () -> Boolean = backAction@{
-                        game.startLevel()
+                        game.closeOverPause()
                         return@backAction true
                     }
-                    game.setCurrentScreen(
+                    game.showOverPause(
                         ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name,
                         props("${ConstKeys.BACK}_${ConstKeys.ACTION}" pairTo backAction)
                     )
