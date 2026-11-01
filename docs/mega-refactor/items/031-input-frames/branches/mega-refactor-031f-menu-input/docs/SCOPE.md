@@ -233,6 +233,9 @@ during a lock is a state that the game cannot reach with `START` by intent, but 
 
 - `MLS.isPauseButtonRequested` adds `|| game.systemInput.isJustPressed(SystemButton.BACK)`, with the `TODO` of the decision.
 - `MLS:876` adds `!game.inputLocked`, so a lock stops both keys (question 3). `game.inputLocked` reads `slot0FrameBuilder.locked`.
+- The queued pause at `MLS:878` tests the lock again: `game.runQueue.addLast { if (!game.inputLocked) game.pause() }`. A release in the
+  frame where a lock starts passes `MLS:876`, because `events.run()` sets `locked` after the screen render. The queued pause runs at the start of
+  the next frame, when `locked` is set, so it is dropped (question 3, trigger 2 of bug candidate 1).
 - `Esc` stays reserved. The capture refusal does not change.
 
 ### 5. Removals
@@ -246,7 +249,7 @@ See "Removed".
 | `SystemButton` (`BACK`) | `G.render` (builder), `MegaMenuScreen`, `MLS` |
 | `KeyboardInput.systemHeld()` | `G.render` |
 | `game.systemInput` | `MegaMenuScreen.backRequested`, `MLS.isPauseButtonRequested` |
-| `game.inputLocked` | `MLS:876` |
+| `game.inputLocked` | `MLS:876`, `MLS:878` |
 | `MegaPlayers.menuInput` (question 7) | `MegaMenuScreen`, 6 skip screens, `ScreenController` |
 | `AbstractMenuScreen.backRequested()`, `onBack(delta)` | `MegaMenuScreen`, `MainMenuScreen`, `LPS`, `SelectDifficultyScreen`, `ExtrasScreen`, `LevelSelectScreenV2`, `CSS`; called by `AbstractMenuScreen.render` |
 
@@ -281,8 +284,10 @@ Each item below is a change that `CONTRACT.md` names under "Intended changes":
    and side effects. From the bindings screen over pause, it goes back to the panel, in the same level state.
 4. `Esc` on `LevelSelectScreenV2` goes to `SAVE_GAME_SCREEN` (question 5). Today this screen has no way back.
 5. A pause under a lock can be left with `Esc`. Today this state has no way out (bug candidates 1 and 2).
-6. A `START` release that the lock makes no longer opens pause (question 3, bug candidate 1). A new issue file names this
-   change.
+6. A `START` release no longer opens pause in 2 cases: a release that the lock makes, and a real release in the frame where the lock
+   starts (question 3, bug candidate 1). A new issue file names this change. One case stays: a lock that a listener submits, for example
+   `MLS:755`, starts 1 frame later, so a real release at that moment can still pause. This is an inference, from reading. `Esc` leaves that pause;
+   a pad-only player has no way out. The new issue file names this case.
 7. The diagnostics label `"controllerPoller"` is now `"inputFrames"`. Old capture files keep the old label.
 
 ## What must stay the same
@@ -414,8 +419,15 @@ For `docs/TODO.md`. Files go on `master`. None is run in the game.
    `player.inPlay` is still `true`, because a transition does not change the phase. So `MLS:878` queues `game.pause()`. In `N+2`, the game
    pauses. All later frames are `RELEASED`, so the pause menu reads nothing. `MLS:912` stops `cameraController.update`, so the transition
    does not end, and `TURN_CONTROLLER_ON` (`LevelRoomHandler.kt:135`) never comes. The only way out is a flag that is off by default.
-   The same applies at `MLS:755` (boss defeated) and `WilyFinalBoss.kt:311`, in play. The sequence came through `031c` on purpose, so it is
-   older than this item. Question 3 fixes it here.
+   The same applies at `MLS:755` (boss defeated) and `WilyFinalBoss.kt:311`, in play. `MLS:755` submits from inside `events.run`, so its lock
+   starts 1 frame later.
+
+   Trigger 2 (research of 2026-11-01): a real `START` release in frame `N`. `MLS:876` queues the pause before `events.run()` sets `locked`, so the
+   pause runs at the start of `N+1` with the same dead menu.
+
+   Origin: `6aebae6c2` (2025-02-15) changed pause from press to release through `runQueue`, and added the dead menu. `39f4d3629` (2025-03-01)
+   removed the last default way out. `903c5d145` (2025-03-12) closed the way out that `c5339961f` had opened. `031a` and `031c` moved this logic
+   and changed no behavior. The older `ControllerPoller` has the same false release. Question 3 fixes it here.
 2. **Candidate 5 of the item `NOTES.md` is confirmed by reading:** a focus-loss or minimize pause in a lock gives the same dead menu. `Esc`
    gives a way out with this branch. The flags are off by default.
 3. **A press read carries a held button to the next screen.** Inference: `CreditsScreen:89` skips on press. `fullEndTimer` is 1.5 s (`:51`). If
@@ -454,7 +466,8 @@ Answered (owner, 2026-11-01, verbatim): "scope approved", as recommended: each q
 
 3. **The lock test at `MLS:876`, and bug candidate 1.**
    - a) One test, `!game.inputLocked`, on the whole line. `Esc` and `START` both obey it. It fixes the soft-lock. It is an intended change, with a new
-     issue file. It adds 1 condition, on the line that `Esc` changes anyway.
+     issue file. It adds 1 condition, on the line that `Esc` changes anyway. Owner decision of 2026-11-01 (verbatim: "Go ahead and fold the bug
+     fix in like you recommended"): the queued pause also tests the lock, for trigger 2 of bug candidate 1.
    - b) The test on `Esc` only. `START` plays as today, and the soft-lock stays, with a `fix/` branch later. This follows the rule that bugs are
      not refactors most closely.
    - c) No test. `Esc` pauses in a transition. This adds new states, and a resume turns on all systems.
