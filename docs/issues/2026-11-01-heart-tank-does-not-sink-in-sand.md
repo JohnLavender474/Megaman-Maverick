@@ -48,4 +48,4 @@ Fix branch: `fix/heart-tank-sinks-in-sand`, off `master`. It shares no file with
 
 - In `HeartTank`, override `defineBodyComponent()` and add a block filter for `FeetRiseSinkBlock`. Do not add it in `onSpawn`: filters stay on the pooled body.
 - A test that fails first: a new `HeartTankSandTest`, from `CartV2ItemTest`, with the real `WorldSystem` and `MegaCollisionHandler`. After N cycles, the bottom of the tank is below the top of the block.
-- Open for the owner: set `take_friction_sand=false` on the tank, as `DesertMan.kt:362` does, to restore the old sink speed. With friction, 6 tiles of sand take about 13 seconds.
+- Owner decision (2026-11-01): set `take_friction_sand=false` on the tank, as `DesertMan.kt:362` does, to restore the old sink speed. With friction, 6 tiles of sand take about 13 seconds.
