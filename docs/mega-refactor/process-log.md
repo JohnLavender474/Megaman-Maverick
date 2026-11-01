@@ -1325,3 +1325,13 @@ newest entry at the bottom.
   warnings, the baseline count). The owner played the manual checks ("The tests pass"). Merge approval (verbatim: "yes").
 - Follow-up: new item `089` from the backlog candidate. No bugs to file. The hold list has no play check for the boss health fill.
   `031e` also changes `Constants.kt` and `MegaLevelScreen.kt`. The owner plays the combined result before the parent merges into `master`.
+
+## 2026-11-01 — mega-refactor-051-fix-scroll-room-scope
+
+- Summary: merged into the parent `mega-refactor-051-master`. The combined play test found a death at the end of a pan down from
+  `basic_up`. A respawn now marks a section done only if the section overlaps the current room, a kept edge applies only in a room that
+  its section overlaps, and no block or kill acts on limits from the last room. Squash commit `285c734a4` on the parent.
+- Contract check: the automated checks pass in the parent worktree after `./gradlew clean` (engine 596, core 450, 0 failures, `lwjgl3:jar`,
+  96 unique warnings, the baseline count). Owner play test and merge approval (verbatim: "approved").
+- Follow-up: no backlog candidates and no bugs to file. A `TODO` in `CameraScroll.deriveDoneSections` marks the accepted case: after a
+  respawn in a later room, a walk back into an earlier section starts it again. The combined play test on the parent continues.
