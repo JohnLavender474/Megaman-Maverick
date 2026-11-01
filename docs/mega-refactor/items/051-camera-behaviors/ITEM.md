@@ -171,6 +171,32 @@ here.
 - 2026-10-31 (owner): a scroll waits until the player is ready. This replaces "scrolls run while a player spawns".
 - 2026-10-31 (owner): the view size blends over a camera turn, and a pin ignores the hold. Levels with no section can change by 1 tile
   or less for 0.75 s or less, near a room limit, in a turn that changes the view size.
+- 2026-11-01 (owner): `051e` goes before `046`. This replaces "with or after `046`".
+- 2026-11-01 (owner): the design must not assume that every camera can rotate, also though every camera in use now can.
+  `ICameraView` gets `rotating`. `CameraView` holds a nullable `CameraRotation`, and a camera with no rotation part gives
+  `rotating = false` and direction `UP`. The 40 reads become `services.gameCamera.rotating`. This replaces the typed
+  lookup for `rotating` in the 2026-10-30 decisions. Reason: `IBody.defaultDoUpdate()` reads `rotating` for each
+  non-player body in each frame, and `getPart` scans 8 parts with `KClass.isInstance`. `getPart` stays for requests.
+- 2026-11-01 (owner): `ICameraPart` and `CameraController` lose their type parameter:
+  `ICameraPart.update(camera: Camera, delta: Float)` and `CameraController(val camera: Camera)`. The parameter existed
+  because `core` parts needed `RotatableCamera`. After `051e`, every part reads only members of `Camera`, and nothing
+  reads `controller.camera` from outside. A cast to `OrthographicCamera` is acceptable if a part ever needs it.
+- 2026-11-01 (accepted with the `051e` write-up):
+  - The view sizes (`viewWidth`, `viewHeight`, `blendedViewWidth`, `blendedViewHeight`) go on `CameraView`, not on
+    `ICameraView`. With no part, they are the viewport sizes. `CameraLimitStage`, `CameraRoomClamp` and `CameraScroll`
+    read them from a `CameraView` in their constructors. The 2026-10-30 design has no home for them, because they came
+    with `051d`. These 3 parts are bound to one camera; they already hold state for one camera.
+  - `CameraRotation` is not `Resettable`. The screen snaps it where it snaps the camera now
+    (`MegaLevelScreen.kt:1077`). This replaces "a reset gives the default orientation"; a removed part still does.
+    Reason: `cameraController.reset()` at `MegaLevelScreen.kt:535` runs before each respawn. If it snapped the camera,
+    the test at `Megaman.kt:168` would fail, and a respawn in a turned room would lose the smooth turn, the movement
+    lock and `gravityOn = false`.
+  - A rotatable background owns a `CameraRotation` and calls a shared orientation write, with no controller. It cannot
+    share the game camera's rotation, because `MegaLevelScreen.kt:534` snaps backgrounds to `UP` and not the game camera.
+  - `CameraRoomTransition` keeps the raw viewport sizes (see the issue
+    `2026-11-01-camera-room-transition-raw-viewport-size.md`).
+  - `utils/CameraRotator.kt` has no callers, and `051e` deletes it.
+  - Merge target: `mega-refactor-051-master`, which takes in `master` first.
 
 ## Contract notes
 

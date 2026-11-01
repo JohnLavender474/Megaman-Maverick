@@ -1356,3 +1356,13 @@ newest entry at the bottom.
   0 failures, `lwjgl3:jar`, 96 unique warnings, the baseline count). A launch of `REFACTOR_TEST_084 --room cart` gives code 124 with no exception.
 - Follow-up: new item `093` from the backlog candidate. The old `Cart` candidate is covered by `092`. No bugs to file. `031e` shares
   `AirDashBehavior.kt` and `ControllerComponent.kt` with this branch, in the imports only.
+
+## 2026-11-01 — master (docs)
+
+- Summary: prepared the `051e` branch folder and added its row to `ITEMS.md`. New `051` decisions: `051e` goes before
+  `046`; `rotating` goes on `ICameraView`, with defaults for a camera with no rotation part; `ICameraPart` and
+  `CameraController` lose their type parameter; `CameraRotation` is not `Resettable`, so a respawn keeps its smooth turn.
+  Also recorded in `046`, and the stale open question in `058` is corrected.
+- Contract check: not needed (docs only).
+- Follow-up: filed the question `2026-11-01-camera-room-transition-raw-viewport-size.md`. The next step for `051e` is the
+  scan and `docs/SCOPE.md`.

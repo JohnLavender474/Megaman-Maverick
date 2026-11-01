@@ -42,7 +42,7 @@ here.
 
 ## Open questions
 
-- Who owns the rotation: the camera manager (`CameraManagerForRooms`), a level flow object (`013`), or `WorldGravity` with a separate rotation policy?
+- Who requests a rotation: a level flow object (`013`), or `WorldGravity` with a separate rotation policy? `051e` puts the rotation state in a `CameraRotation` part, and it does not change who starts a turn.
 - In split screen (`047`), is the rotation per camera?
 
 ## Sources

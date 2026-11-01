@@ -26,6 +26,11 @@ Answer to review item 46 (2026-10-22, verbatim):
 
 > yes, the 10,000 quads is a workaround because when Mega respawns I can't be sure that the background matches what it was before, so I create a ton of rows/cols to prevent the background from ever moving off screen and disappearing in a reasonable amount of time. I think there's a lot to learn from how X6 handles backgrounds that we can incorporate
 
+## Decisions
+
+- 2026-11-01 (owner): `051e` goes before this item. `051e` changes `Background.kt`: each rotatable background owns a
+  `CameraRotation`, and `RotatableCamera` goes. This item then starts from that code.
+
 ## Open questions
 
 - Was the respawn mismatch a wrong position, or a wrong visible/hidden background? The code suggests visibility.

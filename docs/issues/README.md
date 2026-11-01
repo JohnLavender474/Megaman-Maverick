@@ -102,3 +102,4 @@ related-items: [<mega-refactor item IDs>]
 | [Make the `BigAssMaverickRobot` hand motion less uniform](2026-10-30-big-ass-maverick-robot-hand-motion.md) | question | core | open |
 | [`CameraRoomTransition.cancel()` does not reset its timers](2026-10-30-camera-room-transition-cancel-timers.md) | no | core | open |
 | [A player spawn in the map's bottom-left area replaces the start spawn](2026-10-30-spawn-in-start-area-replaces-start-spawn.md) | yes | core | open |
+| [Question: `CameraRoomTransition` uses the raw viewport size on a turned camera](2026-11-01-camera-room-transition-raw-viewport-size.md) | question | engine | open |
