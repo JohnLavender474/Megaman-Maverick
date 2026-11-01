@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -8,7 +9,9 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraRoomTransition
+import com.maverick.game.engine.camera.CameraRotation
 import com.maverick.game.engine.camera.CameraShake
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -28,11 +31,12 @@ private class ScrollRig(
     y: Float = 200f,
     roomList: Array<RectangleMapObject> = Array.with(room("a", 0f, 0f, 3000f, 3000f))
 ) {
-    val camera = RotatableCamera(printDebug = false).also {
+    val camera = OrthographicCamera().also {
         it.viewportWidth = 100f
         it.viewportHeight = 80f
-        it.immediateRotation(Direction.UP)
     }
+    val rotation = CameraRotation().also { it.snap(Direction.UP) }
+    val view = CameraView(camera, rotation)
     val focus = ScrollFocus(x, y)
     val follow = CameraFollow(1f, { 1f })
     val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
@@ -42,8 +46,8 @@ private class ScrollRig(
     var fall = Direction.DOWN
     val shake = CameraShake(1f)
     val controller = CameraController(camera)
-    val scroll = CameraScroll(follow, roomBounds, controller.settledPosition, { fall }, { held })
-    val stage = CameraLimitStage(follow, roomBounds, controller.settledPosition, 100f, { stageHeld })
+    val scroll = CameraScroll(view, follow, roomBounds, controller.settledPosition, { fall }, { held })
+    val stage = CameraLimitStage(view, follow, roomBounds, controller.settledPosition, 100f, { stageHeld })
 
     init {
         if (section != null) {
@@ -59,7 +63,7 @@ private class ScrollRig(
             controller.addMover(follow)
         }
         controller.addMover(stage)
-        controller.addMover(CameraRoomClamp(stage))
+        controller.addMover(CameraRoomClamp(view, stage))
         controller.addMover(CameraRoomScan(roomBounds))
         controller.addEffect(shake)
         follow.setFocus(camera, focus)
@@ -154,13 +158,13 @@ class CameraScrollTest : DescribeSpec({
 
         it("keeps the pinned axis on the scroll position through a side turn") {
             val rig = ScrollRig(right())
-            rig.controller.addEffect(CameraRotationStep())
+            rig.controller.addEffect(rig.rotation)
             rig.run(1, 0f)
             rig.held = true
             rig.stageHeld = true
             rig.focus.x = 800f
             val x = rig.camera.position.x
-            rig.camera.startRotation(Direction.LEFT, 1f)
+            rig.rotation.start(Direction.LEFT, 1f)
             repeat(12) {
                 rig.controller.update(0.1f)
                 rig.camera.position.x shouldBe (x plusOrMinus 0.01f)

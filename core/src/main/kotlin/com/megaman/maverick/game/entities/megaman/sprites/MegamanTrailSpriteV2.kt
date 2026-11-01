@@ -86,7 +86,7 @@ class MegamanTrailSpriteV2(services: MegaServices) : MegaGameEntity(services), I
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (services.camera.rotating) {
+        if (services.gameCamera.rotating) {
             destroy()
             return@UpdatablesComponent
         }
@@ -103,7 +103,7 @@ class MegamanTrailSpriteV2(services: MegaServices) : MegaGameEntity(services), I
             val alpha = 1f - fadeTimer.getRatio()
             sprite.setAlpha(alpha)
             sprite.setFlip(flipX, flipY)
-            sprite.hidden = services.camera.rotating
+            sprite.hidden = services.gameCamera.rotating
         }
         return component
     }

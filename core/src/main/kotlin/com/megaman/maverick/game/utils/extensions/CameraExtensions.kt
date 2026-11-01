@@ -18,10 +18,10 @@ fun ICameraView.getRotatedBounds() = getRotatedBounds(GameObjectPools.fetch(Game
 
 fun ICameraView.toGameRectangle() = toGameRectangle(GameObjectPools.fetch(GameRectangle::class))
 
-fun CameraController<*>.startSmoothFollow() {
+fun CameraController.startSmoothFollow() {
     getPart(CameraFollow::class)?.startSmoothFollow()
 }
 
-fun CameraController<*>.stopSmoothFollow() {
+fun CameraController.stopSmoothFollow() {
     getPart(CameraFollow::class)?.stopSmoothFollow()
 }

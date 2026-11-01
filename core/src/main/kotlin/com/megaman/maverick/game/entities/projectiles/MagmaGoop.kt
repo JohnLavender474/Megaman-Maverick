@@ -134,7 +134,7 @@ class MagmaGoop(services: MegaServices) : AbstractProjectile(services), IAnimate
         body.physics.applyFrictionY = false
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            if (services.camera.rotating) body.physics.velocity.setZero()
+            if (services.gameCamera.rotating) body.physics.velocity.setZero()
             else body.physics.velocity.set(trajectory)
         }
 

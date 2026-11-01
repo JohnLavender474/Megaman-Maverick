@@ -115,7 +115,7 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
     private val releasePerchTimer = Timer(RELEASE_FROM_PERCH_DURATION)
 
     private val canMove: Boolean
-        get() = !services.camera.rotating && !frozen
+        get() = !services.gameCamera.rotating && !frozen
 
     private lateinit var type: String
     private lateinit var state: BatState

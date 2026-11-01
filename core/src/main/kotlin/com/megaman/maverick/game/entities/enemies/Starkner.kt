@@ -299,7 +299,7 @@ class Starkner(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
         updatablesComponent.add update@{ delta ->
             direction = targetPlayer.direction
 
-            if (services.camera.rotating) {
+            if (services.gameCamera.rotating) {
                 body.physics.velocity.setZero()
                 return@update
             }

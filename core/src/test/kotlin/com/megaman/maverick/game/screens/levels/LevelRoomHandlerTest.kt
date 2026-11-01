@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels
 
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -7,6 +8,8 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraRoomTransition
+import com.maverick.game.engine.camera.CameraRotation
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -23,7 +26,6 @@ import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
-import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContain
@@ -50,10 +52,12 @@ private class Keys : IEventListener {
 private class Rig(next: RectangleMapObject) {
     val services = testServices()
     val keys = Keys().also { services.events.addListener(it) }
-    val camera = RotatableCamera(printDebug = false).also {
+    val camera = OrthographicCamera().also {
         it.viewportWidth = 100f
         it.viewportHeight = 80f
     }
+    val rotation = CameraRotation()
+    val view = CameraView(camera, rotation)
     val follow = CameraFollow(1f, { 1f })
     val transition = CameraRoomTransition(follow, 20f, 0f, 0.01f)
     val first = RectangleMapObject(0f, 0f, 200f, 80f).also { it.name = "first" }
@@ -69,9 +73,9 @@ private class Rig(next: RectangleMapObject) {
         it.addMover(roomBounds)
         it.addMover(transition)
         it.addMover(follow)
-        val limitStage = CameraLimitStage(follow, roomBounds, it.settledPosition, 1f)
+        val limitStage = CameraLimitStage(view, follow, roomBounds, it.settledPosition, 1f)
         it.addMover(limitStage)
-        it.addMover(CameraRoomClamp(limitStage))
+        it.addMover(CameraRoomClamp(view, limitStage))
         it.addMover(CameraRoomScan(roomBounds))
     }
 

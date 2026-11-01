@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -7,6 +8,8 @@ import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraFollowMode
 import com.maverick.game.engine.camera.CameraRoomTransition
+import com.maverick.game.engine.camera.CameraRotation
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -23,11 +26,12 @@ private fun room(name: String, x: Float, y: Float, width: Float, height: Float) 
     RectangleMapObject(x, y, width, height).also { it.name = name }
 
 private class Rig(direction: Direction, rooms: Array<RectangleMapObject>, focusX: Float, focusY: Float) {
-    val camera = RotatableCamera(printDebug = false).also {
+    val camera = OrthographicCamera().also {
         it.viewportWidth = 100f
         it.viewportHeight = 80f
-        it.immediateRotation(direction)
     }
+    val rotation = CameraRotation().also { it.snap(direction) }
+    val view = CameraView(camera, rotation)
     val focus = Focus(focusX, focusY)
     val follow = CameraFollow(1f, { 1f })
     val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
@@ -36,9 +40,9 @@ private class Rig(direction: Direction, rooms: Array<RectangleMapObject>, focusX
         it.addMover(roomBounds)
         it.addMover(transition)
         it.addMover(follow)
-        val limitStage = CameraLimitStage(follow, roomBounds, it.settledPosition, 1f)
+        val limitStage = CameraLimitStage(view, follow, roomBounds, it.settledPosition, 1f)
         it.addMover(limitStage)
-        it.addMover(CameraRoomClamp(limitStage))
+        it.addMover(CameraRoomClamp(view, limitStage))
         it.addMover(CameraRoomScan(roomBounds))
     }
 

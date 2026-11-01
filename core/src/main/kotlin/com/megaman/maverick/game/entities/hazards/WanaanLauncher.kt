@@ -134,7 +134,7 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (isHealthDepleted() || services.camera.rotating) return@add
+            if (isHealthDepleted() || services.gameCamera.rotating) return@add
 
             if (wanaan != null && wanaan!!.comingDown && body.getBounds().contains(wanaan!!.cullPoint)) {
                 wanaan!!.destroy()

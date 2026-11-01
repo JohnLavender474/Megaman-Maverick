@@ -93,12 +93,10 @@ import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
-import com.megaman.maverick.game.screens.levels.camera.CameraRotationStep
 import com.megaman.maverick.game.screens.levels.camera.CameraScroll
 import com.megaman.maverick.game.screens.levels.camera.CameraScrollSection
 import com.megaman.maverick.game.screens.levels.camera.CameraZone
 import com.megaman.maverick.game.screens.levels.camera.CameraZones
-import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.levels.camera.isPastCameraEdge
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
@@ -214,7 +212,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private val checkpointTimer = Timer(CHECKPOINT_TIMER)
 
     private lateinit var uiCamera: OrthographicCamera
-    private lateinit var gameCamera: RotatableCamera
+    private lateinit var gameCamera: OrthographicCamera
     private lateinit var cameraFollow: CameraFollow
     private lateinit var roomTransition: CameraRoomTransition
     private lateinit var roomBounds: CameraRoomBounds
@@ -302,9 +300,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         game.cameraController.addMover(roomTransition)
         game.cameraController.addMover(cameraFollow)
         val cameraHold = {
-            game.camera.rotating || game.getSystem(WorldSystem::class)?.on == false || !player.inPlay
+            game.cameraView.rotating || game.getSystem(WorldSystem::class)?.on == false || !player.inPlay
         }
         val limitStage = CameraLimitStage(
+            game.cameraView,
             cameraFollow,
             roomBounds,
             game.cameraController.settledPosition,
@@ -314,6 +313,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         cameraZones = CameraZones(cameraFollow)
         limitStage.addRule(cameraZones)
         cameraScroll = CameraScroll(
+            game.cameraView,
             cameraFollow,
             roomBounds,
             game.cameraController.settledPosition,
@@ -323,9 +323,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         limitStage.addRule(cameraScroll)
         game.cameraController.addMover(cameraScroll)
         game.cameraController.addMover(limitStage)
-        game.cameraController.addMover(CameraRoomClamp(limitStage))
+        game.cameraController.addMover(CameraRoomClamp(game.cameraView, limitStage))
         game.cameraController.addMover(CameraRoomScan(roomBounds))
-        game.cameraController.addEffect(CameraRotationStep())
+        game.cameraController.addEffect(game.cameraRotation)
         game.cameraController.addEffect(cameraShake)
         game.cameraController.addEffect(cameraFollow.stopRule)
         game.cameraController.addEffect(
@@ -370,7 +370,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         engine.systems.forEach { it.on = true }
         music?.let { audioMan.playMusic(it, it.loop) }
 
-        game.camera.rotating = false
         game.levelState.roomsSupplier = { roomBounds.gameRooms }
         game.levelState.currentRoomSupplier = { roomBounds.currentGameRoom }
 
@@ -847,14 +846,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.START_GAME_CAM_ROTATION -> {
                 val direction = event.getProperty(ConstKeys.DIRECTION, Direction::class)!!
-                gameCamera.startRotation(direction, ConstVals.GAME_CAM_ROTATE_TIME)
+                game.cameraRotation.start(direction, ConstVals.GAME_CAM_ROTATE_TIME)
                 backgrounds.forEach { background ->
                     background.startRotation(
                         direction,
                         ConstVals.GAME_CAM_ROTATE_TIME
                     )
                 }
-                game.camera.rotating = true
             }
         }
     }
@@ -884,7 +882,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerStatsHandler.update(delta)
 
         if (!game.clock.paused) {
-            spawnCameraBounds.set(gameCamera.getRotatedBounds())
+            spawnCameraBounds.set(game.cameraView.getRotatedBounds())
             spawnsMan.update(delta)
 
             val spawnsIter = spawns.iterator()
@@ -1035,7 +1033,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
 
         if (game.params.debugShapes) {
-            val gameCamBounds = gameCamera.getRotatedBounds()
+            val gameCamBounds = game.cameraView.getRotatedBounds()
             gameCamBounds.translate(0.1f * ConstVals.PPM, 0.1f * ConstVals.PPM)
             gameCamBounds.translateSize(-0.2f * ConstVals.PPM, -0.2f * ConstVals.PPM)
 
@@ -1076,7 +1074,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         backgrounds.forEach { background -> background.reset() }
 
         game.cameraController.reset()
-        gameCamera.immediateRotation(Direction.UP)
+        game.cameraRotation.snap(Direction.UP)
+        game.cameraController.applyOrientation()
 
         audioMan.unsetMusic()
 

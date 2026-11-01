@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -7,7 +8,9 @@ import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraLimits
 import com.maverick.game.engine.camera.CameraRoomTransition
+import com.maverick.game.engine.camera.CameraRotation
 import com.maverick.game.engine.camera.CameraShake
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraLimitRule
 import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.enums.Direction
@@ -27,11 +30,12 @@ private class MaxX(var value: Float? = null) : ICameraLimitRule {
 }
 
 private class LimitRig(direction: Direction = Direction.UP, withZones: Boolean = false) {
-    val camera = RotatableCamera(printDebug = false).also {
+    val camera = OrthographicCamera().also {
         it.viewportWidth = 100f
         it.viewportHeight = 80f
-        it.immediateRotation(direction)
     }
+    val rotation = CameraRotation().also { it.snap(direction) }
+    val view = CameraView(camera, rotation)
     val focus = LimitFocus(50f, 40f)
     val follow = CameraFollow(1f, { 1f })
     val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
@@ -45,7 +49,7 @@ private class LimitRig(direction: Direction = Direction.UP, withZones: Boolean =
     val shake = CameraShake(1f)
     var held = false
     val controller = CameraController(camera)
-    val stage = CameraLimitStage(follow, roomBounds, controller.settledPosition, 100f, { held }).also {
+    val stage = CameraLimitStage(view, follow, roomBounds, controller.settledPosition, 100f, { held }).also {
         it.addRule(rule)
         if (withZones) it.addRule(CameraZones(follow))
     }
@@ -55,7 +59,7 @@ private class LimitRig(direction: Direction = Direction.UP, withZones: Boolean =
         controller.addMover(transition)
         controller.addMover(follow)
         controller.addMover(stage)
-        controller.addMover(CameraRoomClamp(stage))
+        controller.addMover(CameraRoomClamp(view, stage))
         controller.addMover(CameraRoomScan(roomBounds))
         controller.addEffect(shake)
         follow.setFocus(camera, focus)
@@ -124,8 +128,8 @@ class CameraLimitStageTest : DescribeSpec({
             rig.rule.value = 900f
             rig.controller.update(0.1f)
             rig.stage.limits.x.max shouldBe 400f
-            rig.camera.viewWidth shouldBe 80f
-            rig.camera.viewHeight shouldBe 100f
+            rig.view.viewWidth shouldBe 80f
+            rig.view.viewHeight shouldBe 100f
         }
 
         it("does not read a shaken position") {

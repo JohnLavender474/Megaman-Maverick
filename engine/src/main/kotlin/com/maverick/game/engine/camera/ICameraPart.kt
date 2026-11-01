@@ -2,7 +2,7 @@ package com.maverick.game.engine.camera
 
 import com.badlogic.gdx.graphics.Camera
 
-interface ICameraPart<in C : Camera> {
+interface ICameraPart {
 
-    fun update(camera: C, delta: Float): Boolean
+    fun update(camera: Camera, delta: Float): Boolean
 }

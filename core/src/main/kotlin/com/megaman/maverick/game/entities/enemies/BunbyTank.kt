@@ -191,7 +191,7 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
                 return@add
             }
 
-            if (services.camera.rotating) {
+            if (services.gameCamera.rotating) {
                 body.physics.velocity.setZero()
                 return@add
             }

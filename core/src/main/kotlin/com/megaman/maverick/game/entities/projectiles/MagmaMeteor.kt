@@ -136,7 +136,7 @@ class MagmaMeteor(services: MegaServices) : AbstractProjectile(services), IAnima
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (services.camera.rotating) body.physics.velocity.setZero()
+        if (services.gameCamera.rotating) body.physics.velocity.setZero()
         else body.physics.velocity.set(0f, METEOR_SPEED * ConstVals.PPM).rotateDeg(rotation)
     })
 

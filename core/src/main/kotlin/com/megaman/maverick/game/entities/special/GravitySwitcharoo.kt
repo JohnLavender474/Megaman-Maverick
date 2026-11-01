@@ -207,7 +207,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
         component.put(ConstKeys.TRIGGER) update@{ delta ->
             triggerArea.setCenter(body.getCenter())
 
-            if (services.camera.rotating) {
+            if (services.gameCamera.rotating) {
                 if (hasActiveDelay) on = false
                 return@update
             }
@@ -280,7 +280,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (!on || services.camera.rotating || services.gravity.direction == direction) ConstKeys.DEACTIVATED
+                    if (!on || services.gameCamera.rotating || services.gravity.direction == direction) ConstKeys.DEACTIVATED
                     else ConstKeys.ARROW
                 }
                 .applyToAnimations { animations ->

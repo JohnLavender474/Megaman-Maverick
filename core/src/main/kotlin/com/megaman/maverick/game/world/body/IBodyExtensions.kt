@@ -18,7 +18,7 @@ import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 
 fun IBody.defaultDoUpdate(): Boolean {
     val services = getEntity().services
-    if (getEntity().asPlayer == null && services.camera.rotating) return false
+    if (getEntity().asPlayer == null && services.gameCamera.rotating) return false
     return when (type) {
         // NOTE: an ABSTRACT body that can be spawned OUTSIDE the camera must have its velocity set in
         // `onSpawn`, not only in `body.preProcess`. The `preProcess` function runs only for bodies the

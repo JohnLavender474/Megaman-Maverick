@@ -16,7 +16,7 @@ class CameraRoomTransition(
     var distanceOnTransition: Float,
     transDelay: Float,
     transDuration: Float
-) : ICameraPart<Camera> {
+) : ICameraPart {
 
     companion object {
         const val TAG = "CameraRoomTransition"

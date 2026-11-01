@@ -319,8 +319,10 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                             override fun onSelect(delta: Float): Boolean {
                                 GameLogger.debug(TAG, "exit button: onSelect()")
 
-                                // the player can always exit an extra level
-                                if (game.levelState.isInExtraLevel || game.gameState.isLevelDefeated(game.levelState.currentLevel!!)) {
+                                // the player can always exit an extra level or a test level
+                                if (game.levelState.isInExtraLevel || game.levelState.isInTestLevel ||
+                                    game.gameState.isLevelDefeated(game.levelState.currentLevel!!)
+                                ) {
                                     game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
                                     game.audio.fadeOutMusic(EXIT_DUR)
                                     exiting = true

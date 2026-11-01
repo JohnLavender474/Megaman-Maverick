@@ -15,7 +15,7 @@ class GameCameraFieldTest : DescribeSpec({
         }
 
         it("starts with direction UP") {
-            MegamanMaverickGame().gameCamera.direction shouldBe Direction.UP
+            MegamanMaverickGame().cameraView.direction shouldBe Direction.UP
         }
     }
 })

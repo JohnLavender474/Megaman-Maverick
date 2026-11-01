@@ -256,7 +256,7 @@ class Asteroid(services: MegaServices) : AbstractProjectile(services), IOwnable<
         debugShapes.add { shieldFixture }
 
         body.preProcess.put(ConstKeys.IMPULSE) {
-            if (services.camera.rotating) body.physics.velocity.setZero() else body.physics.velocity.set(impulse)
+            if (services.gameCamera.rotating) body.physics.velocity.setZero() else body.physics.velocity.set(impulse)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

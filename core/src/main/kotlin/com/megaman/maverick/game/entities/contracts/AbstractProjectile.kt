@@ -16,7 +16,7 @@ abstract class AbstractProjectile(services: MegaServices, override var size: Siz
     override var owner: IGameEntity? = null
 
     open val canMove: Boolean
-        get() = !services.camera.rotating
+        get() = !services.gameCamera.rotating
 
     protected var onDamageInflictedTo: ((IDamageableEntity) -> Unit)? = null
     protected var movementScalar = 1f

@@ -62,7 +62,7 @@ class RocketPlatform(services: MegaServices) : Block(services), IParentEntity<Me
     override var children = Array<MegaGameEntity>()
 
     private val canMove: Boolean
-        get() = !services.camera.rotating
+        get() = !services.gameCamera.rotating
     private var hidden = false
 
     override fun init(vararg params: Any) {

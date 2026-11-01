@@ -227,7 +227,7 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
             freezeHandler.update(delta)
             if (frozen) return@add
 
-            if (services.camera.rotating) return@add
+            if (services.gameCamera.rotating) return@add
 
             if (flag?.existenceState?.liveAfterUpdate == false) flag = null
 

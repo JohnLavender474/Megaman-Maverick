@@ -86,7 +86,7 @@ class JetMet(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
     private val shootTimer = Timer(SHOOT_DELAY)
 
     private val canMove: Boolean
-        get() = !services.camera.rotating
+        get() = !services.gameCamera.rotating
 
     private lateinit var animations: ObjectMap<String, IAnimation>
     private lateinit var jetMetState: JetMetState

@@ -77,7 +77,7 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
     override lateinit var facing: Facing
 
     private val canMove: Boolean
-        get() = !services.camera.rotating
+        get() = !services.gameCamera.rotating
 
     private val turnTimer = Timer(TURN_DUR)
     private val turning: Boolean
