@@ -1345,3 +1345,14 @@ newest entry at the bottom.
   `./gradlew clean` (engine 596, core 450, 0 failures, `lwjgl3:jar`, 96 unique warnings, the baseline count).
 - Follow-up: the parent stays for `051e`. `031e` also changes `Constants.kt` and `MegaLevelScreen.kt`, so it must check both files when it
   reaches `master`.
+
+## 2026-11-01 — mega-refactor-084e-class-line
+
+- Summary: removed 5 of the 15 interfaces on `Megaman`, and the dead player code, so that a second playable entity gets the gate, cart and
+  sprite paths through `isPlayer` and component queries. Squash commit `647c24b56`.
+- Contract check: the owner's play test passes ("tests pass"), and merge approval (verbatim: "merge"). `051` reached `master` before the
+  squash, so `master` went into the branch. One conflict, the imports of `GravityBlock.kt`; `master`'s side kept. The play test was not
+  repeated on the merged code. The automated checks pass on the branch and on `master` after `./gradlew clean` (engine 600, core 461,
+  0 failures, `lwjgl3:jar`, 96 unique warnings, the baseline count). A launch of `REFACTOR_TEST_084 --room cart` gives code 124 with no exception.
+- Follow-up: new item `093` from the backlog candidate. The old `Cart` candidate is covered by `092`. No bugs to file. `031e` shares
+  `AirDashBehavior.kt` and `ControllerComponent.kt` with this branch, in the imports only.

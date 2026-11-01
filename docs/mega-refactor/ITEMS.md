@@ -100,6 +100,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 090 | [Branch name in the game window title](items/090-branch-window-title/ITEM.md) | tooling | planned | none | | |
 | 091 | [Check that a test room loads with no visible game window](items/091-room-load-check/ITEM.md) | tooling | planned | none | | |
 | 092 | [Remove old entity versions and the version suffixes](items/092-old-entity-versions/ITEM.md) | refactor | idea | `084e` | | |
+| 093 | [Use or remove `MegaRegionProcessor`](items/093-mega-region-processor/ITEM.md) | refactor | idea | none | | |
 
 ## Branches
 
@@ -155,4 +156,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-084d-damage-reaction`](items/084-split-megaman/branches/mega-refactor-084d-damage-reaction/process-log.md) | 084 | Stun, knockback, recovery flash and freeze as player components, one per mechanism | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-084c-movement`](items/084-split-megaman/branches/mega-refactor-084c-movement/process-log.md) | 084 | Post-action momentum, room-transition carry and the `AButtonTask` transitions out of `Megaman` | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-084b-effects`](items/084-split-megaman/branches/mega-refactor-084b-effects/process-log.md) | 084 | Trail sprites, underwater bubbles, the death orbs and the out-of-bounds kill out of `Megaman` | merged | 2026-10-30 | 2026-10-31 |
-| [`mega-refactor-084e-class-line`](items/084-split-megaman/branches/mega-refactor-084e-class-line/process-log.md) | 084 | Remove the interfaces on `Megaman` that have no reason left, and the dead player code | active | 2026-10-31 | |
+| [`mega-refactor-084e-class-line`](items/084-split-megaman/branches/mega-refactor-084e-class-line/process-log.md) | 084 | Remove the interfaces on `Megaman` that have no reason left, and the dead player code | merged | 2026-10-31 | 2026-11-01 |
