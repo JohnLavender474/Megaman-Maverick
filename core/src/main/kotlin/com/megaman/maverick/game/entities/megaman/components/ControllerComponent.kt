@@ -36,7 +36,10 @@ const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val left = ButtonActuator(
-        onJustPressed = { GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed") },
+        onJustPressed = {
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed")
+            require(RunComponent::class).lastPressedSide = Facing.LEFT
+        },
         onPressContinued = { delta -> run(delta, Facing.LEFT) },
         onJustReleased = {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
@@ -49,7 +52,10 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
     )
 
     val right = ButtonActuator(
-        onJustPressed = { GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed") },
+        onJustPressed = {
+            GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed")
+            require(RunComponent::class).lastPressedSide = Facing.RIGHT
+        },
         onPressContinued = { delta -> run(delta, Facing.RIGHT) },
         onJustReleased = {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
@@ -161,21 +167,27 @@ private fun Megaman.setToNextWeapon() {
     }
 }
 
-internal fun Megaman.run(delta: Float, side: Facing) {
-    val oppositeButton = if (side == Facing.LEFT) MegaControllerButton.RIGHT else MegaControllerButton.LEFT
-    val oppositePressed = input.isPressed(oppositeButton)
-    val runFacing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) side.opposite() else side
+private fun Facing.button() = if (this == Facing.LEFT) MegaControllerButton.LEFT else MegaControllerButton.RIGHT
 
-    if (!inPlay || !canMove || damaged || teleporting || oppositePressed ||
+internal fun Megaman.isRunSidePressed(side: Facing) = input.isPressed(side.button()) &&
+    (!input.isPressed(side.opposite().button()) || require(RunComponent::class).lastPressedSide == side)
+
+internal fun Megaman.run(delta: Float, side: Facing) {
+    if (!isRunSidePressed(side)) return
+
+    val runState = require(RunComponent::class)
+
+    val lastPressedJustReleased =
+        runState.lastPressedSide != side && input.isJustReleased(side.opposite().button())
+    val runFacing =
+        if (isBehaviorActive(BehaviorType.WALL_SLIDING) && !lastPressedJustReleased) side.opposite() else side
+
+    if (!inPlay || !canMove || damaged || teleporting ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround)
     ) {
-        if (!oppositePressed) running = false
+        running = false
 
-        // TODO: with both buttons pressed during a RODENT_CLAWS shot, only the right side sets the facing, so the
-        //  facing goes right and never left; the old runLeft and runRight differed here, and the fix changes
-        //  gameplay (see docs/issues/2026-11-01-rodent-claws-run-facing.md)
-        if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && (!oppositePressed || side == Facing.RIGHT))
-            facing = runFacing
+        if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting) facing = runFacing
 
         return
     }
@@ -185,7 +197,6 @@ internal fun Megaman.run(delta: Float, side: Facing) {
     running = !isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.GROUND_SLIDING, BehaviorType.CLIMBING)
     if (!running) return
 
-    val runState = require(RunComponent::class)
     runState.runTime += delta
 
     val threshold = getMaxRunSpeed()

@@ -5,9 +5,12 @@ import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
-import com.maverick.game.engine.controller.ControllerComponent
+import com.maverick.game.engine.controller.ControllerSystem
 import com.maverick.game.engine.controller.buttons.ButtonStatus
+import com.maverick.game.engine.entities.EntityExistenceState
+import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.input.InputFrame
+import com.maverick.game.engine.input.InputSource
 import com.maverick.game.engine.locks.LocksComponent
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.world.body.Body
@@ -18,6 +21,9 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
+import com.megaman.maverick.game.entities.megaman.behaviors.wallSlideBehavior
+import com.megaman.maverick.game.entities.megaman.components.defineControllerComponent
+import com.megaman.maverick.game.entities.megaman.components.defineMomentumComponent
 import com.megaman.maverick.game.entities.megaman.components.run
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -47,6 +53,7 @@ class MegamanRunTest : DescribeSpec({
     lateinit var megaman: Megaman
     lateinit var body: Body
     lateinit var behaviors: BehaviorsComponent
+    lateinit var controllerSystem: ControllerSystem
     var frame = InputFrame.RELEASED
 
     val airImpulse = MegamanValues.RUN_IMPULSE * DELTA * ConstVals.PPM
@@ -64,6 +71,29 @@ class MegamanRunTest : DescribeSpec({
     fun runWithBothPressed(side: Facing) {
         press(MegaControllerButton.LEFT, MegaControllerButton.RIGHT)
         megaman.run(DELTA, side)
+    }
+
+    fun runState() = megaman.getComponent(RunComponent::class)!!
+
+    fun step(left: ButtonStatus = ButtonStatus.RELEASED, right: ButtonStatus = ButtonStatus.RELEASED) {
+        frame = InputFrame.RELEASED
+            .with(MegaControllerButton.LEFT, left)
+            .with(MegaControllerButton.RIGHT, right)
+        controllerSystem.update(DELTA)
+    }
+
+    fun holdBoth(lastPressed: Facing) {
+        when (lastPressed) {
+            Facing.LEFT -> {
+                step(right = ButtonStatus.JUST_PRESSED)
+                step(left = ButtonStatus.JUST_PRESSED, right = ButtonStatus.PRESSED)
+            }
+
+            else -> {
+                step(left = ButtonStatus.JUST_PRESSED)
+                step(left = ButtonStatus.PRESSED, right = ButtonStatus.JUST_PRESSED)
+            }
+        }
     }
 
     fun setBehaviorActive(type: BehaviorType) {
@@ -93,13 +123,17 @@ class MegamanRunTest : DescribeSpec({
 
         body = Body(BodyType.DYNAMIC)
         megaman.addComponent(BodyComponent(body))
-        megaman.addComponent(ControllerComponent().also { it.input = com.maverick.game.engine.input.InputSource { frame } })
+        megaman.addComponent(megaman.defineControllerComponent().also { it.input = InputSource { frame } })
+        megaman.addComponent(megaman.defineMomentumComponent())
         megaman.addComponent(LocksComponent(MegaLockGroup.entries.size))
         megaman.addComponent(PlayPhaseComponent(PlayPhase.IN_PLAY))
         megaman.addComponent(TeleportableComponent())
         megaman.addComponent(RunComponent())
         behaviors = BehaviorsComponent()
         megaman.addComponent(behaviors)
+
+        controllerSystem = ControllerSystem()
+        controllerSystem.add(megaman)
     }
 
     afterEach { unmockkAll() }
@@ -234,12 +268,26 @@ class MegamanRunTest : DescribeSpec({
                     megaman.facing shouldBe other
                 }
 
-                it("keeps running as it is when the opposite button is pressed") {
+                it("changes nothing on the side that lost the tie") {
+                    val other = if (side == Facing.LEFT) Facing.RIGHT else Facing.LEFT
+                    runState().lastPressedSide = other
+                    megaman.facing = other
                     megaman.running = true
 
                     runWithBothPressed(side)
 
                     stopped() shouldBe true
+                    megaman.facing shouldBe other
+                    megaman.running shouldBe true
+                }
+
+                it("runs on the side that won the tie") {
+                    runState().lastPressedSide = side
+
+                    runWithBothPressed(side)
+
+                    stopped() shouldBe false
+                    megaman.facing shouldBe side
                     megaman.running shouldBe true
                 }
             }
@@ -311,22 +359,299 @@ class MegamanRunTest : DescribeSpec({
             body.physics.velocity.x shouldBe (airImpulse plusOrMinus TOLERANCE)
         }
 
-        it("with both buttons pressed during a shot, the right side sets the facing") {
-            slashOnGround()
-            megaman.facing = Facing.LEFT
-
-            runWithBothPressed(Facing.RIGHT)
-
-            megaman.facing shouldBe Facing.RIGHT
-        }
-
-        it("with both buttons pressed during a shot, the left side does not set the facing") {
+        it("with both buttons pressed during a shot, the facing follows the last press to the left") {
             slashOnGround()
             megaman.facing = Facing.RIGHT
 
-            runWithBothPressed(Facing.LEFT)
+            holdBoth(lastPressed = Facing.LEFT)
 
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+            megaman.facing shouldBe Facing.LEFT
+            stopped() shouldBe true
+        }
+
+        it("with both buttons pressed during a shot, the facing follows the last press to the right") {
+            slashOnGround()
+            megaman.facing = Facing.LEFT
+
+            holdBoth(lastPressed = Facing.RIGHT)
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
             megaman.facing shouldBe Facing.RIGHT
+            stopped() shouldBe true
+        }
+    }
+
+    describe("the last pressed button") {
+        it("a press of LEFT with RIGHT held runs left") {
+            holdBoth(lastPressed = Facing.LEFT)
+            body.physics.velocity.setZero()
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            body.physics.velocity.x shouldBe (-airImpulse plusOrMinus TOLERANCE)
+            megaman.facing shouldBe Facing.LEFT
+            megaman.running shouldBe true
+        }
+
+        it("a press of RIGHT with LEFT held runs right") {
+            holdBoth(lastPressed = Facing.RIGHT)
+            body.physics.velocity.setZero()
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            body.physics.velocity.x shouldBe (airImpulse plusOrMinus TOLERANCE)
+            megaman.facing shouldBe Facing.RIGHT
+            megaman.running shouldBe true
+        }
+
+        it("a press of both in the same frame runs right") {
+            megaman.facing = Facing.LEFT
+
+            step(left = ButtonStatus.JUST_PRESSED, right = ButtonStatus.JUST_PRESSED)
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            body.physics.velocity.x shouldBe (airImpulse plusOrMinus TOLERANCE)
+            megaman.facing shouldBe Facing.RIGHT
+        }
+
+        it("a release of the last pressed button hands the run to the held button") {
+            holdBoth(lastPressed = Facing.LEFT)
+            body.physics.velocity.setZero()
+
+            step(left = ButtonStatus.JUST_RELEASED, right = ButtonStatus.PRESSED)
+
+            body.physics.velocity.x shouldBe (airImpulse plusOrMinus TOLERANCE)
+            megaman.facing shouldBe Facing.RIGHT
+            megaman.running shouldBe true
+        }
+
+        it("a release of the other button keeps the run") {
+            holdBoth(lastPressed = Facing.LEFT)
+            body.physics.velocity.setZero()
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.JUST_RELEASED)
+
+            body.physics.velocity.x shouldBe (-airImpulse plusOrMinus TOLERANCE)
+            megaman.facing shouldBe Facing.LEFT
+            megaman.running shouldBe true
+        }
+
+        it("a tap of the other button reverses a run, and its release reverses it again") {
+            step(right = ButtonStatus.JUST_PRESSED)
+            step(right = ButtonStatus.PRESSED)
+            megaman.facing shouldBe Facing.RIGHT
+
+            step(left = ButtonStatus.JUST_PRESSED, right = ButtonStatus.PRESSED)
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+            megaman.facing shouldBe Facing.LEFT
+
+            step(left = ButtonStatus.JUST_RELEASED, right = ButtonStatus.PRESSED)
+            megaman.facing shouldBe Facing.RIGHT
+        }
+
+        it("a ground slide follows a tap") {
+            setBehaviorActive(BehaviorType.GROUND_SLIDING)
+            holdBoth(lastPressed = Facing.LEFT)
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            megaman.facing shouldBe Facing.LEFT
+            megaman.running shouldBe false
+        }
+
+        it("an air dash follows a tap") {
+            setBehaviorActive(BehaviorType.AIR_DASHING)
+            holdBoth(lastPressed = Facing.LEFT)
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            megaman.facing shouldBe Facing.LEFT
+        }
+    }
+
+    describe("the wall slide") {
+        lateinit var wallSlide: IBehavior
+
+        fun touchWall(side: Facing) = body.setBodySense(
+            if (side == Facing.LEFT) BodySense.SIDE_TOUCHING_BLOCK_LEFT else BodySense.SIDE_TOUCHING_BLOCK_RIGHT,
+            true
+        )
+
+        beforeEach {
+            megaman.existenceState = EntityExistenceState.LIVE
+            megaman.wallSlideNotAllowedTimer.setToEnd()
+            wallSlide = megaman.wallSlideBehavior()
+            behaviors.addBehavior(BehaviorType.WALL_SLIDING, wallSlide)
+        }
+
+        fun frame(left: ButtonStatus = ButtonStatus.RELEASED, right: ButtonStatus = ButtonStatus.RELEASED) {
+            step(left, right)
+            wallSlide.update(DELTA)
+        }
+
+        listOf(Facing.LEFT, Facing.RIGHT).forEach { wall ->
+            val away = wall.opposite()
+
+            fun statuses(wallStatus: ButtonStatus, awayStatus: ButtonStatus) = when (wall) {
+                Facing.LEFT -> wallStatus to awayStatus
+                else -> awayStatus to wallStatus
+            }
+
+            fun frameAt(wallStatus: ButtonStatus, awayStatus: ButtonStatus = ButtonStatus.RELEASED) {
+                val (left, right) = statuses(wallStatus, awayStatus)
+                frame(left, right)
+            }
+
+            describe("at a $wall wall") {
+                it("faces away from the wall on the first frame") {
+                    touchWall(wall)
+                    megaman.facing = wall
+
+                    frameAt(ButtonStatus.JUST_PRESSED)
+
+                    wallSlide.isActive() shouldBe true
+                    megaman.facing shouldBe away
+                }
+
+                it("starts when the wall button is the last pressed") {
+                    touchWall(wall)
+                    frameAt(ButtonStatus.RELEASED, ButtonStatus.JUST_PRESSED)
+                    frameAt(ButtonStatus.JUST_PRESSED, ButtonStatus.PRESSED)
+
+                    wallSlide.isActive() shouldBe true
+                    megaman.facing shouldBe away
+                }
+
+                it("does not start when the other button is the last pressed") {
+                    touchWall(wall)
+                    frameAt(ButtonStatus.JUST_PRESSED)
+                    wallSlide.update(DELTA)
+                    wallSlide.reset()
+
+                    frameAt(ButtonStatus.PRESSED, ButtonStatus.JUST_PRESSED)
+
+                    wallSlide.isActive() shouldBe false
+                }
+
+                it("leaves the wall on a tap away, and the facing stays away") {
+                    touchWall(wall)
+                    frameAt(ButtonStatus.JUST_PRESSED)
+                    frameAt(ButtonStatus.PRESSED)
+                    wallSlide.isActive() shouldBe true
+
+                    frameAt(ButtonStatus.PRESSED, ButtonStatus.JUST_PRESSED)
+                    wallSlide.isActive() shouldBe false
+                    megaman.facing shouldBe away
+
+                    frameAt(ButtonStatus.PRESSED, ButtonStatus.PRESSED)
+                    megaman.facing shouldBe away
+                    body.physics.velocity.x shouldBe (away.value * airImpulse plusOrMinus TOLERANCE)
+                }
+
+                it("keeps the facing away on a release of the wall button with both held") {
+                    touchWall(wall)
+                    frameAt(ButtonStatus.RELEASED, ButtonStatus.JUST_PRESSED)
+                    frameAt(ButtonStatus.JUST_PRESSED, ButtonStatus.PRESSED)
+                    frameAt(ButtonStatus.PRESSED, ButtonStatus.PRESSED)
+                    wallSlide.isActive() shouldBe true
+
+                    frameAt(ButtonStatus.JUST_RELEASED, ButtonStatus.PRESSED)
+
+                    wallSlide.isActive() shouldBe false
+                    megaman.facing shouldBe away
+                }
+
+                it("keeps the facing away on a release of the other button") {
+                    touchWall(wall)
+                    frameAt(ButtonStatus.RELEASED, ButtonStatus.JUST_PRESSED)
+                    frameAt(ButtonStatus.JUST_PRESSED, ButtonStatus.PRESSED)
+                    frameAt(ButtonStatus.PRESSED, ButtonStatus.PRESSED)
+
+                    frameAt(ButtonStatus.PRESSED, ButtonStatus.JUST_RELEASED)
+
+                    wallSlide.isActive() shouldBe true
+                    megaman.facing shouldBe away
+                }
+            }
+        }
+
+        it("starts at both walls on the side of the held button") {
+            touchWall(Facing.LEFT)
+            touchWall(Facing.RIGHT)
+            megaman.facing = Facing.LEFT
+
+            frame(right = ButtonStatus.JUST_PRESSED)
+
+            wallSlide.isActive() shouldBe true
+            megaman.facing shouldBe Facing.LEFT
+        }
+    }
+
+    describe("a button held through a respawn") {
+        it("runs with no press seen, for each side") {
+            listOf(Facing.LEFT, Facing.RIGHT).forEach { side ->
+                runState().reset()
+                body.physics.velocity.setZero()
+
+                when (side) {
+                    Facing.LEFT -> step(left = ButtonStatus.PRESSED)
+                    else -> step(right = ButtonStatus.PRESSED)
+                }
+
+                body.physics.velocity.x shouldBe (side.value * airImpulse plusOrMinus TOLERANCE)
+                megaman.facing shouldBe side
+                megaman.running shouldBe true
+            }
+        }
+
+        it("gives the tie to a later press of the other button") {
+            runState().reset()
+            step(right = ButtonStatus.PRESSED)
+
+            step(left = ButtonStatus.JUST_PRESSED, right = ButtonStatus.PRESSED)
+            body.physics.velocity.setZero()
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            body.physics.velocity.x shouldBe (-airImpulse plusOrMinus TOLERANCE)
+        }
+
+        it("reset sets the tie to RIGHT, so both held through a respawn run right") {
+            runState().lastPressedSide = Facing.LEFT
+
+            runState().reset()
+
+            runState().lastPressedSide shouldBe Facing.RIGHT
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+            body.physics.velocity.x shouldBe (airImpulse plusOrMinus TOLERANCE)
+        }
+    }
+
+    describe("the web presses") {
+        it("keeps both raw presses in the input frame after a tie") {
+            holdBoth(lastPressed = Facing.LEFT)
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            megaman.input.isPressed(MegaControllerButton.LEFT) shouldBe true
+            megaman.input.isPressed(MegaControllerButton.RIGHT) shouldBe true
+        }
+
+        it("keeps the raw release of the button that lost the tie") {
+            holdBoth(lastPressed = Facing.LEFT)
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.JUST_RELEASED)
+
+            megaman.input.isJustReleased(MegaControllerButton.RIGHT) shouldBe true
+            megaman.input.isPressed(MegaControllerButton.LEFT) shouldBe true
+        }
+
+        it("gives no release to a button that stays held and lost the tie") {
+            holdBoth(lastPressed = Facing.LEFT)
+
+            step(left = ButtonStatus.PRESSED, right = ButtonStatus.PRESSED)
+
+            megaman.input.isJustReleased(MegaControllerButton.RIGHT) shouldBe false
         }
     }
 })

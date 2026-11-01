@@ -3,17 +3,23 @@ package com.megaman.maverick.game.entities.megaman.behaviors
 import com.maverick.game.engine.behaviors.FunctionalBehaviorImpl
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.isRunSidePressed
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.world.body.*
 
 const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
+
+private fun Megaman.pressedWallSide() = when {
+    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isRunSidePressed(Facing.LEFT) -> Facing.LEFT
+    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isRunSidePressed(Facing.RIGHT) -> Facing.RIGHT
+    else -> null
+}
 
 internal fun Megaman.wallSlideBehavior(): IBehavior {
     return FunctionalBehaviorImpl(
@@ -23,11 +29,7 @@ internal fun Megaman.wallSlideBehavior(): IBehavior {
                 (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
             ) return@evaluate false
 
-            if ((body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) &&
-                    input.isPressed(MegaControllerButton.LEFT)) ||
-                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) &&
-                    input.isPressed(MegaControllerButton.RIGHT))
-            ) {
+            if (pressedWallSide() != null) {
                 if (damaged) {
                     GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "damaged")
                     return@evaluate false
@@ -53,6 +55,7 @@ internal fun Megaman.wallSlideBehavior(): IBehavior {
         },
         init = {
             aButtonTask = AButtonTask.JUMP
+            facing = pressedWallSide()!!.opposite()
             GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "init()")
         },
         act = {
