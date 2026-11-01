@@ -9,19 +9,14 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
-import com.megaman.maverick.game.entities.headFixture
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 import com.megaman.maverick.game.entities.state.BubbleEmitterComponent
 import com.megaman.maverick.game.entities.state.TrailSpriteComponent
-import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.entities.utils.isHeadUnderWater
 import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.getContactWater
-import com.megaman.maverick.game.world.body.isSensing
 
 internal fun Megaman.defineBubbleEmitterComponent() = BubbleEmitterComponent(
     MegamanValues.UNDER_WATER_BUBBLE_DELAY,
@@ -33,15 +28,6 @@ internal fun Megaman.defineTrailSpriteComponent() = TrailSpriteComponent(
     MegamanValues.TRAIL_SPRITE_DELAY,
     trySpawn = { tryToSpawnTrailSprite() }
 )
-
-private fun Megaman.isHeadUnderWater() =
-    body.isSensing(BodySense.IN_WATER) &&
-        !body.isSensing(BodySense.FORCE_APPLIED) &&
-        body.getContactWater().any { water ->
-            water.body.getBounds().contains(
-                this.headFixture.getShape().getCenter()
-            )
-        }
 
 private fun Megaman.spawnBubble() {
     val offsetY = if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) 0.05f else 0.1f
