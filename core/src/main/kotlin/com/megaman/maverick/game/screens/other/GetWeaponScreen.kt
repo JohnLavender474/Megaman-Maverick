@@ -55,12 +55,6 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
             }
         }
 
-        private val END_BUTTONS = gdxArrayOf<Any>(
-            MegaControllerButton.A,
-            MegaControllerButton.B,
-            MegaControllerButton.START
-        )
-
         private const val TEXT_X = 10f
         private const val TEXT_Y = 4f
 
@@ -240,7 +234,12 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                     blinkTextDelay.reset()
                 }
 
-                if (game.controllerPoller.isAnyJustReleased(END_BUTTONS)) {
+                if (game.players.menuInput.let {
+                        it.isJustReleased(MegaControllerButton.A) ||
+                            it.isJustReleased(MegaControllerButton.B) ||
+                            it.isJustReleased(MegaControllerButton.START)
+                    }
+                ) {
                     GameLogger.debug(TAG, "render(): end event: go to next screen")
                     game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
                 }

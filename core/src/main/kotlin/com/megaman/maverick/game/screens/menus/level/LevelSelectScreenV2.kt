@@ -236,6 +236,14 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         game.audio.playMusic(musicAsset, true)
     }
 
+    // TODO: after an extra level, currentLevel stays on that level, so a save load and then Esc opens SAVE_GAME_SCREEN
+    //  with the extras rows, and its MAIN MENU row clears the loaded progress from memory; the save file does not
+    //  change; follow-up in docs/issues/2026-11-01-level-select-back-after-extra-level.md (see 031f CONTRACT.md,
+    //  question 4)
+    override fun onBack(delta: Float) {
+        game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
+    }
+
     override fun onAnyMovement(direction: Direction) =
         game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND, false)
 

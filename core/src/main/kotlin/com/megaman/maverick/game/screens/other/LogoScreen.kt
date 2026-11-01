@@ -126,7 +126,7 @@ class LogoScreen(private val game: MegamanMaverickGame) : BaseScreen(), Initiali
     }
 
     override fun render(delta: Float) {
-        if (game.controllerPoller.isJustReleased(MegaControllerButton.START)) {
+        if (game.players.menuInput.isJustReleased(MegaControllerButton.START)) {
             onCompletion()
             return
         }

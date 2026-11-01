@@ -19,6 +19,10 @@ abstract class AbstractMenuScreen(protected var buttons: ObjectMap<String, IMenu
 
     protected abstract fun selectionRequested(): Boolean
 
+    protected open fun backRequested() = false
+
+    protected open fun onBack(delta: Float) {}
+
     protected open fun onAnyMovement(direction: Direction) {}
 
     protected open fun onAnySelection() {}
@@ -48,7 +52,7 @@ abstract class AbstractMenuScreen(protected var buttons: ObjectMap<String, IMenu
             if (selectionRequested()) {
                 selectionMade = button.onSelect(delta)
                 if (selectionMade) onAnySelection()
-            }
+            } else if (backRequested()) onBack(delta)
         }
     }
 }

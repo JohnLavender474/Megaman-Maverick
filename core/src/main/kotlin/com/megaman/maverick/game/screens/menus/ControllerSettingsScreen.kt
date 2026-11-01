@@ -368,6 +368,11 @@ class ControllerSettingsScreen(
         game.getUiCamera().setToDefaultPosition()
     }
 
+    override fun onBack(delta: Float) {
+        selectionMade = buttons[BACK].onSelect(delta)
+        if (selectionMade) onAnySelection()
+    }
+
     override fun onAnySelection() {
         GameLogger.debug(TAG, "onAnySelection()")
         game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)

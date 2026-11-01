@@ -173,7 +173,7 @@ Contract text that no longer fits is in open question 1. In short:
   them as they are: step 14.9 normalizes them.
 - Contract checks: the baseline for A1 to A4.
 - Commit, on the branch: `031f: baseline, overlaps and candidates`
-- Done: no
+- Done: yes
 
 ### 2. `MegaMenuScreen` reads a frame
 
@@ -199,7 +199,7 @@ Contract text that no longer fits is in open question 1. In short:
 - Contract checks: T17, T18, T27 to T31; R3 and R10 for this read; the `selectionButtons` part of A11; the `menuInput` part of
   A17. Manual proof later: V1 to V4.
 - Commit: `031f: MegaMenuScreen reads a frame through menuInput`
-- Done: no
+- Done: yes
 
 ### 3. The skip screens and `ScreenController` read a frame
 
@@ -226,7 +226,7 @@ R3 checks the buttons and edges.
   gives no output. Smoke launches: `--screen SIMPLE_INIT_GAME_SCREEN`, `--screen CREDITS_SCREEN`.
 - Contract checks: R3 (all 9 reads); A11 (first half); A17. Manual proof later: K1 to K6, W1.
 - Commit: `031f: the skip screens and ScreenController read a frame`
-- Done: no
+- Done: yes
 
 ### 4. The system frame
 
@@ -245,7 +245,7 @@ R3 checks the buttons and edges.
 - Contract checks: T11 to T16, R8, A12, the `InputFrameBuilder(SystemButton.entries)` part of A13, A14. Manual proof
   later: G1.
 - Commit: `031f: Esc has its own system frame, which the lock does not touch`
-- Done: no
+- Done: yes
 
 ### 5. The back action in the menu loop
 
@@ -268,7 +268,7 @@ This step changes no behavior: every `onBack` is empty until step 6.
 - Check: the build command passes. Engine `Eb + 10`. Core `Cb + 13`. No new warning line. Smoke launch: `--screen MAIN_MENU_SCREEN`.
 - Contract checks: T1 to T10; R2 (first half); the `M` line of A6; A2. Manual proof later: M1 to M8.
 - Commit: `031f: the menu loop has a back action, under the same guard as the confirm`
-- Done: no
+- Done: yes
 
 ### 6. `Esc` runs the back rows
 
@@ -297,7 +297,7 @@ This step changes no behavior: every `onBack` is empty until step 6.
   holds a copy of a row body. Smoke launches: `--screen EXTRAS_SCREEN`, `--screen KEYBOARD_SETTINGS_SCREEN`.
 - Contract checks: R1 (4 of 5 rows), R2 (`MainMenuScreen`), R5; intended change 3. Manual proof later: M1 to M5, C1 to C5.
 - Commit: `031f: Esc runs the back row of the main panel, difficulty, extras and the bindings screens`
-- Done: no
+- Done: yes
 
 ### 7. `Esc` on the pause screen
 
@@ -324,7 +324,7 @@ This step changes no behavior: every `onBack` is empty until step 6.
   `--level REFACTOR_TEST_029 --room movement` (it does not reach this path).
 - Contract checks: R1 (the fifth row), R2 (`LPS`), R4; intended changes 2, 3. Manual proof later: P1 to P7.
 - Commit: `031f: Esc closes the pause grid and leaves the pause panel`
-- Done: no
+- Done: yes
 
 ### 8. `Esc` on the level select screen
 
@@ -347,7 +347,7 @@ This step changes no behavior: every `onBack` is empty until step 6.
 - Check: the build command passes. Engine `Eb + 10`. Core `Cb + 13`. No new warning line. Smoke launch: `--screen LEVEL_SELECT_SCREEN`.
 - Contract checks: intended change 4. Manual proof later: M6, M7, M8, W2.
 - Commit: `031f: Esc on the level select screen goes to the save screen`
-- Done: no
+- Done: yes
 
 ### 9. The pause decision is a pure function
 
@@ -372,7 +372,7 @@ This step changes no behavior. `Esc` and the lock tests come in step 10.
   `--level REFACTOR_TEST_051 --room basic`.
 - Contract checks: T20, T23, T25 (`START` half). Manual proof later: V4.
 - Commit: `031f: the pause decision is a pure function, with no change in behavior`
-- Done: no
+- Done: yes
 
 ### 10. `Esc` in gameplay and the lock tests
 
@@ -411,7 +411,7 @@ areas and risks"), so no commit may hold one with no other.
 - Contract checks: T19, T21, T22, T24, T26, T32, T33, T25 (`Esc` half); R6, R7, R11; A13 (`inputLocked`), A14, A15, A16, A18; intended
   changes 1, 5, 6. Manual proof later: E1 to E3, L1 to L6, W1.
 - Commit: `031f: Esc pauses in gameplay; a lock stops every pause request and a queued pause`
-- Done: no
+- Done: yes
 
 ### 11. Removals
 
@@ -427,7 +427,7 @@ areas and risks"), so no commit may hold one with no other.
   `isAnyJust` grep gives no output (see "Line numbers and contract text"). Smoke launch: `--level REFACTOR_TEST_029 --room movement`.
 - Contract checks: A3, A6, A10, A11, A13 (label); intended change 7. Manual proof later: D1.
 - Commit: `031f: remove the controllerPoller facade; the diagnostics label is inputFrames`
-- Done: no
+- Done: yes
 
 ### 12. Contract checks
 
@@ -450,7 +450,7 @@ areas and risks"), so no commit may hold one with no other.
 - Check: all results pass, or a failure has a fix commit and the affected checks run again.
 - Contract checks: A1 to A18, T1 to T33, R1 to R11.
 - Commit: `031f: contract checks`
-- Done: no
+- Done: yes
 
 ### 13. The owner's play test
 

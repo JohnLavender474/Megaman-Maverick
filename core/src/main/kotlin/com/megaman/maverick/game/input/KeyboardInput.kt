@@ -39,4 +39,6 @@ class KeyboardInput(private val settings: PlayerSettings) {
         }
         return held
     }
+
+    fun systemHeld() = if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) 1L shl SystemButton.BACK.index else 0L
 }

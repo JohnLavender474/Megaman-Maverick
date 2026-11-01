@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.screens.other
 
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstVals
@@ -16,8 +15,6 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
 
     companion object {
         const val TAG = "SimpleInitGameScreen"
-        private val START_BUTTONS =
-            gdxArrayOf<Any>(MegaControllerButton.START, MegaControllerButton.A, MegaControllerButton.B)
     }
 
     private lateinit var startGameText: MegaFontHandle
@@ -56,7 +53,12 @@ class SimpleInitGameScreen(private val game: MegamanMaverickGame) : BaseScreen()
         startGameText.draw(game.batch)
         game.batch.end()
 
-        if (game.controllerPoller.isAnyJustReleased(START_BUTTONS)) {
+        if (game.players.menuInput.let {
+                it.isJustReleased(MegaControllerButton.START) ||
+                    it.isJustReleased(MegaControllerButton.A) ||
+                    it.isJustReleased(MegaControllerButton.B)
+            }
+        ) {
             GameLogger.debug(TAG, "render(): set to next screen")
             game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
             game.setCurrentScreen(ScreenEnum.LOGO_SCREEN.name)

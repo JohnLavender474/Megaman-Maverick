@@ -190,7 +190,7 @@ class ScreenController(private val game: MegamanMaverickGame) : Updatable, Resiz
 
     override fun update(delta: Float) {
         MegaControllerButton.entries.forEach {
-            val pressed = game.controllerPoller.isPressed(it)
+            val pressed = game.players.menuInput.isPressed(it)
             val region = when {
                 it.isDpadButton() -> if (pressed) dpadPressedRegion else dpadRegion
                 it.isActionButton() -> if (pressed) buttonPressedRegion else buttonRegion

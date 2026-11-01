@@ -64,8 +64,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
-import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.drawables.backgrounds.Background
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
@@ -82,6 +80,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.input.SystemButton
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
@@ -857,10 +856,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
     }
 
-    private fun isPauseButtonRequested() = player.input.isJustReleased(MegaControllerButton.START) ||
-        (game.players.settings(player.playerSlot!!).selectButtonAction == SelectButtonAction.START &&
-            player.input.isJustPressed(MegaControllerButton.SELECT))
-
     override fun render(delta: Float) {
         /*
         game.setDebugText(
@@ -871,9 +866,20 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
          */
 
         // do not allow pausing if Megaman is dead
-        if (!game.clock.paused && player.existenceState.liveAfterUpdate && player.inPlay && isPauseButtonRequested()) {
+        if (isPauseRequested(
+                paused = game.clock.paused,
+                alive = player.existenceState.liveAfterUpdate,
+                inPlay = player.inPlay,
+                locked = game.inputLocked,
+                playerFrame = player.input,
+                // TODO: Esc is pause in gameplay for now; consider another action for Esc in gameplay later (031
+                //  decision of 2026-10-25)
+                backStatus = game.systemInput.getStatus(SystemButton.BACK),
+                selectAction = game.players.settings(player.playerSlot!!).selectButtonAction
+            )
+        ) {
             GameLogger.debug(TAG, "render(): pause game")
-            game.runQueue.addLast { game.pause() }
+            queuePause(game.runQueue, { game.inputLocked }, { game.pause() })
         }
 
         // force resume game if megaman is dead

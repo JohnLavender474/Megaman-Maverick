@@ -82,7 +82,7 @@ class GameOverScreen(private val game: MegamanMaverickGame): BaseScreen(), Initi
             pressStartBlinkTimer.reset()
         }
 
-        if (game.controllerPoller.isJustReleased(MegaControllerButton.START))
+        if (game.players.menuInput.isJustReleased(MegaControllerButton.START))
             game.setCurrentScreen(ScreenEnum.SAVE_GAME_SCREEN.name)
     }
 

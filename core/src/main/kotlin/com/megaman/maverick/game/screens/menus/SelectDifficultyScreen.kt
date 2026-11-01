@@ -160,6 +160,11 @@ class SelectDifficultyScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, N
         batch.end()
     }
 
+    override fun onBack(delta: Float) {
+        selectionMade = buttons[BACK].onSelect(delta)
+        if (selectionMade) onAnySelection()
+    }
+
     override fun onAnyMovement(direction: Direction) {
         game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)
     }

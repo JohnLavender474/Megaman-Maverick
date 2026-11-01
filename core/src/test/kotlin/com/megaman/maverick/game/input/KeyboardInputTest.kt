@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.maverick.game.engine.controller.buttons.ButtonStatus
 import com.maverick.game.engine.input.InputFrameBuilder
+import com.maverick.game.engine.input.checkInputButtons
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.players.PlayerSettings
 import io.kotest.core.spec.style.DescribeSpec
@@ -111,6 +112,83 @@ class KeyboardInputTest : DescribeSpec({
 
             keysDown.remove(Input.Keys.W)
             builder.build(input.held()).getStatus(MegaControllerButton.UP) shouldBe ButtonStatus.PRESSED
+        }
+    }
+
+    describe("KeyboardInput.systemHeld") {
+        it("gives the bit of BACK for Esc") {
+            keysDown.add(Input.Keys.ESCAPE)
+
+            KeyboardInput(PlayerSettings()).systemHeld() shouldBe (1L shl SystemButton.BACK.index)
+        }
+
+        it("gives 0 for each other key, also the Android BACK key and Enter") {
+            Input.Keys.ESCAPE shouldBe 111
+            Input.Keys.BACK shouldBe 4
+
+            val input = KeyboardInput(PlayerSettings())
+            for (key in 0..255) {
+                if (key == Input.Keys.ESCAPE) continue
+                keysDown.clear()
+                keysDown.add(key)
+
+                input.systemHeld() shouldBe 0L
+            }
+
+            keysDown.clear()
+            keysDown.add(Input.Keys.BACK)
+            input.systemHeld() shouldBe 0L
+
+            keysDown.clear()
+            keysDown.add(Input.Keys.ENTER)
+            input.systemHeld() shouldBe 0L
+        }
+
+        it("keeps Esc and the key of A apart") {
+            keysDown.add(Input.Keys.ESCAPE)
+            keysDown.add(MegaControllerButton.A.defaultKeyboardKey)
+            val input = KeyboardInput(PlayerSettings())
+
+            input.held() shouldBe (1L shl MegaControllerButton.A.index)
+            input.systemHeld() shouldBe (1L shl SystemButton.BACK.index)
+        }
+
+        it("gives 1 press edge for a held Esc and 1 release edge, through a real builder") {
+            val input = KeyboardInput(PlayerSettings())
+            val builder = InputFrameBuilder(SystemButton.entries)
+
+            keysDown.add(Input.Keys.ESCAPE)
+            builder.build(input.systemHeld()).getStatus(SystemButton.BACK) shouldBe ButtonStatus.JUST_PRESSED
+            builder.build(input.systemHeld()).getStatus(SystemButton.BACK) shouldBe ButtonStatus.PRESSED
+            builder.build(input.systemHeld()).getStatus(SystemButton.BACK) shouldBe ButtonStatus.PRESSED
+
+            keysDown.remove(Input.Keys.ESCAPE)
+            builder.build(input.systemHeld()).getStatus(SystemButton.BACK) shouldBe ButtonStatus.JUST_RELEASED
+            builder.build(input.systemHeld()).getStatus(SystemButton.BACK) shouldBe ButtonStatus.RELEASED
+        }
+
+        it("gives a press of Esc in the system frame while a lock releases the slot frame") {
+            val input = KeyboardInput(PlayerSettings())
+            val slotBuilder = InputFrameBuilder(MegaControllerButton.entries)
+            val systemBuilder = InputFrameBuilder(SystemButton.entries)
+
+            keysDown.add(MegaControllerButton.A.defaultKeyboardKey)
+            slotBuilder.build(input.held())
+
+            slotBuilder.locked = true
+            slotBuilder.build(input.held())
+            keysDown.add(Input.Keys.ESCAPE)
+
+            slotBuilder.build(input.held()).getStatus(MegaControllerButton.A) shouldBe ButtonStatus.RELEASED
+            systemBuilder.build(input.systemHeld()).getStatus(SystemButton.BACK) shouldBe ButtonStatus.JUST_PRESSED
+        }
+    }
+
+    describe("SystemButton") {
+        it("has 1 entry, BACK, and passes the button check") {
+            SystemButton.entries shouldBe listOf(SystemButton.BACK)
+
+            checkInputButtons(SystemButton.entries)
         }
     }
 

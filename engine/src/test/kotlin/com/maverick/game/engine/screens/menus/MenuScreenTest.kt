@@ -18,6 +18,9 @@ class MenuScreenTest : DescribeSpec({
         var direction: Direction?
         var selectionRequested: Boolean
         var onAnyMovement = false
+        var backRequested = false
+        var interactionAllowed = true
+        val calls = ArrayList<String>()
 
         val firstButtonKey = "firstButtonKey"
         val secondButtonKey = "secondButtonKey"
@@ -47,6 +50,9 @@ class MenuScreenTest : DescribeSpec({
             direction = null
             selectionRequested = false
             onAnyMovement = false
+            backRequested = false
+            interactionAllowed = true
+            calls.clear()
 
             standardMenuScreen = spyk(
                 object : StandardMenuScreen(buttons, firstButtonKey) {
@@ -57,6 +63,15 @@ class MenuScreenTest : DescribeSpec({
 
                     override fun onAnyMovement(direction: Direction) {
                         onAnyMovement = true
+                        calls.add("navigate")
+                    }
+
+                    override fun isInteractionAllowed() = super.isInteractionAllowed() && interactionAllowed
+
+                    override fun backRequested() = backRequested
+
+                    override fun onBack(delta: Float) {
+                        calls.add("back $delta")
                     }
 
                     override fun getNavigationDirection() = direction
@@ -141,6 +156,125 @@ class MenuScreenTest : DescribeSpec({
                 verify(exactly = 1) { buttons[firstButtonKey]?.onSelect(0.0f) }
                 verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(0.0f) }
                 onAnyMovement shouldBe false
+            }
+        }
+
+        describe("back action") {
+            it("should run onBack once, with the delta of the frame, and nothing else") {
+                backRequested = true
+
+                standardMenuScreen.render(0.5f)
+
+                calls shouldBe listOf("back 0.5")
+                standardMenuScreen.selectionMade shouldBe false
+                standardMenuScreen.getCurrentButtonKey() shouldBe firstButtonKey
+                verify(exactly = 0) { buttons[firstButtonKey]?.onSelect(any()) }
+                verify(exactly = 0) { buttons[secondButtonKey]?.onSelect(any()) }
+            }
+
+            it("should not run onBack with no back request") {
+                standardMenuScreen.render(0.5f)
+
+                calls shouldBe emptyList()
+            }
+
+            it("should not run onBack when a selection is made") {
+                selectionRequested = true
+                standardMenuScreen.render(0.5f)
+                standardMenuScreen.selectionMade shouldBe true
+
+                selectionRequested = false
+                backRequested = true
+                standardMenuScreen.render(0.5f)
+
+                calls shouldBe emptyList()
+            }
+
+            it("should not run onBack when interaction is not allowed") {
+                interactionAllowed = false
+                backRequested = true
+
+                standardMenuScreen.render(0.5f)
+
+                standardMenuScreen.selectionMade shouldBe false
+                calls shouldBe emptyList()
+            }
+
+            it("should not run onBack when the current key is null") {
+                standardMenuScreen.setCurrentButtonKey(null)
+                backRequested = true
+
+                standardMenuScreen.render(0.5f)
+
+                calls shouldBe emptyList()
+            }
+
+            it("should not run onBack when the current key has no button") {
+                standardMenuScreen.setCurrentButtonKey("noButton")
+                backRequested = true
+
+                standardMenuScreen.render(0.5f)
+
+                calls shouldBe emptyList()
+            }
+
+            it("should run the confirm and not onBack in one frame when onSelect gives true") {
+                selectionRequested = true
+                backRequested = true
+
+                standardMenuScreen.render(0.5f)
+
+                verify(exactly = 1) { buttons[firstButtonKey]?.onSelect(0.5f) }
+                standardMenuScreen.selectionMade shouldBe true
+                calls shouldBe emptyList()
+            }
+
+            it("should run the confirm and not onBack in one frame when onSelect gives false") {
+                standardMenuScreen.setCurrentButtonKey(secondButtonKey)
+                selectionRequested = true
+                backRequested = true
+
+                standardMenuScreen.render(0.5f)
+
+                verify(exactly = 1) { buttons[secondButtonKey]?.onSelect(0.5f) }
+                standardMenuScreen.selectionMade shouldBe false
+                calls shouldBe emptyList()
+            }
+
+            it("should run a navigation first, then onBack, in one frame") {
+                direction = Direction.UP
+                backRequested = true
+
+                standardMenuScreen.render(0.5f)
+
+                calls shouldBe listOf("navigate", "back 0.5")
+                standardMenuScreen.getCurrentButtonKey() shouldBe secondButtonKey
+            }
+
+            it("should have no back request in a subclass with no override, and act as before") {
+                class NoBackScreen : StandardMenuScreen(buttons, firstButtonKey) {
+
+                    init {
+                        setCurrentButtonKey(firstButtonKey)
+                    }
+
+                    fun isBackRequested() = backRequested()
+
+                    override fun getNavigationDirection() = Direction.UP
+
+                    override fun selectionRequested() = true
+                }
+
+                val screen = NoBackScreen()
+
+                screen.isBackRequested() shouldBe false
+
+                screen.render(0.5f)
+
+                verify(exactly = 1) { buttons[firstButtonKey]?.onNavigate(Direction.UP, 0.5f) }
+                verify(exactly = 1) { buttons[firstButtonKey]?.onSelect(0.5f) }
+                screen.getCurrentButtonKey() shouldBe secondButtonKey
+                screen.selectionMade shouldBe true
             }
         }
     }

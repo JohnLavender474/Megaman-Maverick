@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.screens.BaseScreen
@@ -49,10 +48,6 @@ class CreditsScreen(
         private const val LERP_ALPHA = 10f
         private const val FADE_OUT_TIME = 1f
         private const val FULL_END_TIME = 1.5f
-        private val EARLY_EXIT_BUTTONS = gdxArrayOf<Any>(
-            MegaControllerButton.START,
-            MegaControllerButton.SELECT
-        )
     }
 
     private val delayTimer = Timer(DELAY_TIME)
@@ -85,8 +80,9 @@ class CreditsScreen(
         fadeOut.init()
     }
 
-    private fun shouldSkipCredits() =
-        game.controllerPoller.isAnyJustPressed(EARLY_EXIT_BUTTONS)
+    private fun shouldSkipCredits() = game.players.menuInput.let {
+        it.isJustPressed(MegaControllerButton.START) || it.isJustPressed(MegaControllerButton.SELECT)
+    }
 
     private fun setCreditsComplete() {
         GameLogger.debug(TAG, "setCreditsComplete()")

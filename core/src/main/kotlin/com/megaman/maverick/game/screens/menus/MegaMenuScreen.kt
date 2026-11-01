@@ -2,11 +2,11 @@ package com.megaman.maverick.game.screens.menus
 
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.common.enums.Direction
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.screens.menus.IMenuButton
 import com.maverick.game.engine.screens.menus.StandardMenuScreen
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.input.SystemButton
 
 abstract class MegaMenuScreen(
     protected val game: MegamanMaverickGame,
@@ -16,9 +16,7 @@ abstract class MegaMenuScreen(
     var playMusicOnResume: Boolean = true
 ) : StandardMenuScreen(buttons, firstButtonKey) {
 
-    protected val selectionButtons = gdxArrayOf<Any>(MegaControllerButton.START, MegaControllerButton.A)
-
-    override fun getNavigationDirection() = game.controllerPoller.let {
+    override fun getNavigationDirection() = game.players.menuInput.let {
         when {
             it.isJustReleased(MegaControllerButton.UP) -> Direction.UP
             it.isJustReleased(MegaControllerButton.DOWN) -> Direction.DOWN
@@ -28,7 +26,11 @@ abstract class MegaMenuScreen(
         }
     }
 
-    override fun selectionRequested() = game.controllerPoller.isAnyJustReleased(selectionButtons)
+    override fun selectionRequested() = game.players.menuInput.let {
+        it.isJustReleased(MegaControllerButton.START) || it.isJustReleased(MegaControllerButton.A)
+    }
+
+    override fun backRequested() = game.systemInput.isJustPressed(SystemButton.BACK)
 
     protected open fun undoSelection() {
         selectionMade = false

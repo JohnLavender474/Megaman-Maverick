@@ -41,7 +41,6 @@ import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
 import com.maverick.game.engine.controller.ControllerSystem
-import com.maverick.game.engine.controller.polling.IControllerPoller
 import com.maverick.game.engine.cullables.CullablesSystem
 import com.maverick.game.engine.cullables.GameEntityCuller
 import com.maverick.game.engine.diagnostics.RuntimeDiagnostics
@@ -90,9 +89,9 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.state.PlayerProgressComponent
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.input.FrameControllerPoller
 import com.megaman.maverick.game.input.GamepadInput
 import com.megaman.maverick.game.input.KeyboardInput
+import com.megaman.maverick.game.input.SystemButton
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelState
@@ -220,10 +219,12 @@ class MegamanMaverickGame(
     lateinit var shapeRenderer: ShapeRenderer
 
     private lateinit var settingsStore: PlayerSettingsStore
-    lateinit var controllerPoller: IControllerPoller
     lateinit var gamepadInput: GamepadInput
     private lateinit var keyboardInput: KeyboardInput
     private val slot0FrameBuilder = InputFrameBuilder(MegaControllerButton.entries)
+    private val systemFrameBuilder = InputFrameBuilder(SystemButton.entries)
+    val systemInput get() = systemFrameBuilder.frame
+    val inputLocked get() = slot0FrameBuilder.locked
 
     lateinit var assets: AssetManager
     lateinit var events: EventsManager
@@ -314,7 +315,6 @@ class MegamanMaverickGame(
         if (params.loadKeyboardPrefs) GameLogger.log(TAG, "create(): loaded keyboard prefs")
         keyboardInput = KeyboardInput(players.settings(PlayerSlot(0)))
         gamepadInput = GamepadInput(players.settings(PlayerSlot(0)), settingsStore)
-        controllerPoller = FrameControllerPoller { players.inputs[PlayerSlot(0)] }
 
         events = EventsManager()
         events.addListener(this)
@@ -569,8 +569,9 @@ class MegamanMaverickGame(
 
             diagnostics?.endEntry()
 
-            diagnostics?.beginEntry("controllerPoller")
+            diagnostics?.beginEntry("inputFrames")
             players.inputs[PlayerSlot(0)] = slot0FrameBuilder.build(keyboardInput.held() or gamepadInput.held())
+            systemFrameBuilder.build(keyboardInput.systemHeld())
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("screenController")

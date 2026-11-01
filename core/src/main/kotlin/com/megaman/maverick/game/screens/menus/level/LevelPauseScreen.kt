@@ -545,6 +545,13 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     override fun selectionRequested() = settingsScreenSlide.finished && super.selectionRequested()
 
+    override fun backRequested() = settingsScreenSlide.finished && super.backRequested()
+
+    override fun onBack(delta: Float) {
+        selectionMade = if (showingSettings) buttons[GameSettingsPanel.BACK_KEY].onSelect(delta) else true
+        if (selectionMade) onAnySelection()
+    }
+
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
         super.reset()

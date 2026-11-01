@@ -288,6 +288,14 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     override fun selectionRequested() = screenSlide.finished && super.selectionRequested()
 
+    override fun backRequested() = screenSlide.finished && super.backRequested()
+
+    override fun onBack(delta: Float) {
+        if (!GameSettingsPanel.ALL_KEYS.contains(buttonKey)) return
+        selectionMade = buttons[GameSettingsPanel.BACK_KEY].onSelect(delta)
+        if (selectionMade) onAnySelection()
+    }
+
     override fun onAnyMovement(direction: Direction) {
         GameLogger.debug(TAG, "Current button: $buttonKey")
         game.audio.playSound(SoundAsset.CURSOR_MOVE_BLOOP_SOUND)

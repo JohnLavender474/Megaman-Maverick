@@ -105,6 +105,11 @@ class ExtrasScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, BACK), Init
         batch.end()
     }
 
+    override fun onBack(delta: Float) {
+        selectionMade = buttons[BACK].onSelect(delta)
+        if (selectionMade) onAnySelection()
+    }
+
     override fun onNavigate(button: IMenuButton, direction: Direction, delta: Float) {
         val oldKey = buttonKey
         super.onNavigate(button, direction, delta)

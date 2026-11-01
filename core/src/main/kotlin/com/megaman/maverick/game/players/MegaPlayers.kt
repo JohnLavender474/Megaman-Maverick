@@ -18,6 +18,8 @@ class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(cap
 
     fun settings(slot: PlayerSlot) = settings[slot.index]
 
+    val menuInput get() = inputs[PlayerSlot(0)]
+
     override fun register(slot: PlayerSlot, entity: MegaGameEntity): MegaGameEntity {
         super.register(slot, entity)
         // TODO: unregistering a player does not unbind its input source; players who drop out are a co-op rule for

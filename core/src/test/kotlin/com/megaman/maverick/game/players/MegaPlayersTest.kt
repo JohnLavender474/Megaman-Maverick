@@ -147,6 +147,26 @@ class MegaPlayersTest : DescribeSpec({
         }
     }
 
+    describe("MegaPlayers.menuInput") {
+        it("gives the frame of slot 0, not of slot 1") {
+            val players = MegaPlayers(2)
+            val first = InputFrame.RELEASED.with(MegaControllerButton.A, ButtonStatus.JUST_PRESSED)
+            val second = InputFrame.RELEASED.with(MegaControllerButton.B, ButtonStatus.JUST_RELEASED)
+
+            players.inputs[PlayerSlot(0)] = first
+            players.inputs[PlayerSlot(1)] = second
+
+            players.menuInput shouldBe first
+        }
+
+        it("is RELEASED before any write, also with no registered player") {
+            val players = MegaPlayers()
+
+            players.get(PlayerSlot(0)) shouldBe null
+            players.menuInput shouldBe InputFrame.RELEASED
+        }
+    }
+
     describe("WorldGravity") {
         it("starts up, and set stores the direction and sets it on every registered player") {
             val players = MegaPlayers(2)
