@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: remove `RotatableCamera` and `GameCameraState`: plain cameras, a `CameraRotation` part, and `rotating` on `ICameraView`
-- Done: steps 1 to 9 of `docs/PLAN.md`
-- Next: the owner's merge approval, then the squash into `mega-refactor-051-master`
+- Done: all steps; squash `d8f2a4ec0` on the parent; the parent merged into `master` as `e12c880f5`
+- Next:
 - Blocked:
 
 ## Entries

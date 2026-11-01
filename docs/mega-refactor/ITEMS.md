@@ -58,7 +58,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 048 | [Replace entity inheritance with components](items/048-components-not-inheritance/ITEM.md) | refactor | planned | none | | |
 | 049 | [Reduce repetitive object-oriented patterns](items/049-reduce-repetitive-patterns/ITEM.md) | refactor | idea | none | | |
 | 050 | [Define entities in data files](items/050-entities-in-data-files/ITEM.md) | feature | planned | `021`, `022` | | |
-| 051 | [X-style camera bounds, auto-scroll and other camera behaviors](items/051-camera-behaviors/ITEM.md) | feature | active | none | 2026-10-30 | |
+| 051 | [X-style camera bounds, auto-scroll and other camera behaviors](items/051-camera-behaviors/ITEM.md) | feature | done | none | 2026-10-30 | 2026-11-01 |
 | 052 | [Make values configurable](items/052-configurable-values/ITEM.md) | refactor | idea | none | | |
 | 053 | [Clean up event-driven logic](items/053-event-cleanup/ITEM.md) | refactor | idea | none | | |
 | 054 | [Support web browsers and Android](items/054-web-and-android/ITEM.md) | feature | planned | `032`, `033`, `035` | | |
@@ -125,7 +125,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-031d-devices`](items/031-input-frames/branches/mega-refactor-031d-devices/process-log.md) | 031 | Devices: the keyboard aliases, every connected gamepad, the stick threshold, the triggers | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-031e-bindings`](items/031-input-frames/branches/mega-refactor-031e-bindings/process-log.md) | 031 | Per-slot bindings: one settings object per slot replaces `ControllerButtons`; the bindings screen rules; `--resetBindings` | merged | 2026-10-30 | 2026-11-01 |
 | [`mega-refactor-031f-menu-input`](items/031-input-frames/branches/mega-refactor-031f-menu-input/process-log.md) | 031 | Menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes | planned | | |
-| `mega-refactor-051-master` | 051 | Parent branch of `051c` and `051d`: collects them so that the owner can play them together before `master` | active | 2026-10-31 | |
+| `mega-refactor-051-master` | 051 | Parent branch of `051c`, `051d` and `051e`: collects them so that the owner can play them together before `master` | merged | 2026-10-31 | 2026-11-01 |
 | [`mega-refactor-051a-camera-read-interface`](items/051-camera-behaviors/branches/mega-refactor-051a-camera-read-interface/process-log.md) | 051 | Read-only camera interface in `engine`; `getGameCamera()` becomes a property | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-051b-camera-behaviors`](items/051-camera-behaviors/branches/mega-refactor-051b-camera-behaviors/process-log.md) | 051 | The camera built from behavior components; the level screen talks to a camera control interface; `GameCameraState` goes | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-051c-camera-zones`](items/051-camera-behaviors/branches/mega-refactor-051c-camera-zones/process-log.md) | 051 | Tiled camera zones, players-only edge blocks and `CrusherComponent`; levels with no zones play the same | merged | 2026-10-30 | 2026-10-31 |

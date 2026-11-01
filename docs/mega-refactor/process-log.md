@@ -1403,3 +1403,14 @@ newest entry at the bottom.
   (engine 621, core 521, 0 failures, `lwjgl3:jar`, 95 unique warnings, under the baseline count of 96).
 - Follow-up: no new items and no bugs to file. The issue `2026-11-01-camera-room-transition-raw-viewport-size.md` stays open.
   Item `051` stays active until the parent reaches `master`. Then apply the root `CLAUDE.md` text in the branch `docs/NOTES.md`.
+
+## 2026-11-01 — mega-refactor-051-master
+
+- Summary: the parent merged into `master` with `--no-ff`, merge commit `e12c880f5`. It carries `051e` (`d8f2a4ec0`). Item `051` is done, and the root
+  `CLAUDE.md` has the new camera text.
+- Contract check: `master` went into the parent first. The checks pass on the parent after `./gradlew clean` (engine 621, core 521, 0 failures,
+  `lwjgl3:jar`, 95 unique warnings). The code on `master` is identical to the parent, so the checks were not run a second time. `051e` is the only code on the
+  parent, so the owner's `051e` play test is the combined result. Merge approval (verbatim: "approved").
+- Follow-up: the parent worktree and branch are removed. The owner's uncommitted import removal in `CameraEdgeBlocks.kt` was saved as a patch for
+  the merge and restored; it stays uncommitted. `084g` is active, and any `services.camera.rotating` on that branch must become
+  `services.gameCamera.rotating`. Item `058` (who starts a turn) is next for the camera.
