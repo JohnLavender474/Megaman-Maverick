@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -50,3 +50,9 @@ Fix branch: `fix/heart-tank-sinks-in-sand`, off `master`. It shares no file with
 - A test that fails first: a new `HeartTankSandTest`, from `CartV2ItemTest`, with the real `WorldSystem` and `MegaCollisionHandler`. After N cycles, the bottom of the tank is below the top of the block.
 - Accepted edge case (`TODO` in `HeartTank`): `InfernoChainPlatform` is a subclass of `FeetRiseSinkBlock`, so a tank that lands on one falls through it. No live map puts a tank on one.
 - Owner decision (2026-11-01): set `take_friction_sand=false` on the tank, as `DesertMan.kt:362` does, to restore the old sink speed. With friction, 6 tiles of sand take about 13 seconds.
+
+## Resolution
+
+Fixed by `fix/heart-tank-sinks-in-sand` (squash `e882f320d`). `HeartTank` overrides `defineBodyComponent()` with a block filter for `FeetRiseSinkBlock` and puts `take_friction_sand=false` on the body. `HeartTankSandTest` proved the cause: the `STATIC` block pushed the tank back up in each cycle. With the filter only, the tank sank at 0.46 tiles per second. A forced sink of the block reproduced the dip and the lift. The owner's play test passes (2026-11-01), so the catch is fair at the restored speed.
+
+Found during the fix, not changed: the `HeartTank` branch in `DeathRule.deathShouldDestroy` never runs, because `AbstractItem` sets `ENTITY_KILLED_BY_DEATH_FIXTURE` to false and `DeathRule` returns first. Only the cull removes a tank under the sand. Not checked: whether a lost tank returns on a respawn or a new room entry.

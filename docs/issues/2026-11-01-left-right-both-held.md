@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -53,3 +53,7 @@ Accepted edge case (`TODO` in `RunComponent`): a press in a frame when the `Cont
 `MegamanRunTest` pins the old rule in 3 blocks, which the fix changes. New tests: the tie, the release handover, a tap away, a held spawn, and the web presses.
 
 Play checks: `--level REFACTOR_TEST_029 --room movement`, also with `--weapons RODENT_CLAWS`, and `--level REFACTOR_TEST_029 --room gravity_switch`.
+
+## Resolution
+
+Fixed by `fix/left-right-last-pressed` (squash `b094f8423`). `RunComponent.lastPressedSide` holds the tie value, and the run and the wall slide read `isRunSidePressed`. `RunComponent.reset()` sets the tie to `RIGHT`, so with both held through a respawn, `RIGHT` wins. A tap does not stop Mega at once: friction and the run impulse turn him, so he skids. With `LEFT` held and `RIGHT` just pressed, `LEFT` still acts for that one frame. The owner's play test passes (2026-11-01).

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -30,3 +30,7 @@ The same rule on both sides. With the last-pressed rule, the case with both held
 ## Notes
 
 `fix/left-right-last-pressed` closes this issue. See `2026-11-01-left-right-both-held.md`.
+
+## Resolution
+
+Fixed by `fix/left-right-last-pressed` (squash `b094f8423`). The side-specific condition and its `TODO` are gone, and the facing follows the last press on both sides. The owner's play test passes (2026-11-01).
