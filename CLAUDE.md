@@ -10,8 +10,13 @@ A multi-branch effort on `engine/` and `core/` is in progress. It includes refac
 - Each item links to at least one objective. Each objective gives the rules that the code must obey, and the current state of each rule.
 - `docs/mega-refactor/ITEMS.md` lists every item and branch with its status. Each item has a folder `docs/mega-refactor/items/<id>-<slug>/`.
 - Refactor branches are named `mega-refactor-<id><letter>-<slug>`, for example `mega-refactor-001a-package-rename`.
-- Worktrees for parallel branches go in `.worktrees/` (git-ignored).
 - Bugs and behavior questions go in `docs/issues/`, one file each. Read `docs/issues/README.md` first.
+
+## Branches
+
+- The main checkout stays on `master`. Never switch branches in it (`git switch`, `git checkout <branch>`).
+- Every other branch goes in its own worktree in `.worktrees/<branch>/` (git-ignored), whatever its type: `git worktree add -b <branch> .worktrees/<branch> master`.
+- `master` itself never goes in a worktree. Work that belongs on `master`, such as `docs/issues/`, is done in the main checkout.
 
 ## Modules
 
