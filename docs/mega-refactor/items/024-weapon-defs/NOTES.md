@@ -55,3 +55,7 @@ Item 28 (`IPlayer`, `CharacterDef`), 22 (damage tags), 24 (rewards in manifest),
 `MegamanValues.WEAPON_SPAWN_MAGIC_COLOR`. A `MegaRegionProcessor` reads the frames, finds the pixel with `MagicPixels.get`, stores its position by animation key in `weaponSpawns`, and clears
 the pixel to transparent. The weapons then spawn at the stored position. The block read the frame files `sprites/frames/Megaman_v2/${defKey}.png`, and 2 `TODO` lines wanted it to read from the
 frame region. The full text stays in the git history.
+
+## From `084h`: where a player's weapon state lives (2026-11-01)
+
+`084h` moves the charge timer into `WeaponChargeComponent` (`entities/state/`), with the reads in `entities/megaman/components/WeaponChargeComponent.kt`. The weapon rule `isChargeable` stays in those reads for this item. `shootAnimTimer`, `ammo` and the cooldowns stay for `024` (owner decision). When `024` defines where a player's weapon state lives, decide if `WeaponChargeComponent` folds into a larger component. A `WeaponDef` cannot hold the timer if characters share the def.

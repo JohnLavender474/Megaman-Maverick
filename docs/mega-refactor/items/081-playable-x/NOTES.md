@@ -27,3 +27,7 @@ reviews. Give the date and the `master` commit that each finding is based on.
 - `PlayerConst.java` values: `WALK_START`, `WALK`, `JUMP`, `FALL_MAX`, `FALL_GRAVITY`, `JUMP_GRAVITY`, `DASH_START`,
   `DASH_MIN`, `DASH_DECEL`, `DASH_TIME`, `WALL_SLIDE`, `WALL_KICK_UP`, `LADDER_FIRST`, `LADDER`, `BAR_MOVE`,
   `ROPE_MOVE`, `HANG_DASH`, `FALCON_DASH_TIME`, `MAX_HP`, the box offsets and half sizes, `FEET`.
+
+## From `084h`: X has 2 charges (2026-11-01)
+
+X has a buster charge and a special-weapon charge (`mmx-demake-tools/docs/players/attacks.md:31-32,100`), and an entity holds 1 component per class. So `WeaponChargeComponent` as it is cannot hold both. `081` decides the form: 2 timers in the part, or another form.
