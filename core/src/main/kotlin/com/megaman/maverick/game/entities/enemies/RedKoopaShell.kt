@@ -49,9 +49,6 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.KoopaShellTrailSprite
 import com.megaman.maverick.game.entities.feetFixture
 import com.megaman.maverick.game.entities.leftSideFixture
-import com.megaman.maverick.game.entities.megaman.components.feetFixture
-import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
-import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.rightSideFixture
 import com.megaman.maverick.game.entities.utils.DrawableShapesComponentBuilder

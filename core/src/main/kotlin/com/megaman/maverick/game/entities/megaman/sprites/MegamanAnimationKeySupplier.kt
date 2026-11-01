@@ -5,6 +5,8 @@ import com.maverick.game.engine.common.extensions.equalsAny
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -12,7 +14,6 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.roomTransitionPaused

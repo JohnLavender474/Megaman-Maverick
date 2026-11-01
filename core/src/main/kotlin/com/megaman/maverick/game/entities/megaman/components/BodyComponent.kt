@@ -14,6 +14,10 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isAnyBehaviorActive
+import com.maverick.game.engine.entities.isBehaviorActive
+import com.maverick.game.engine.entities.resetBehavior
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -26,7 +30,6 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.preserveMomentum
@@ -54,27 +57,6 @@ val BEHAVIORS_TO_END_ON_BOUNCE = gdxArrayOf(
     BehaviorType.CROUCHING
 )
 
-val Megaman.feetFixture: Fixture
-    get() = body.getProperty(ConstKeys.FEET) as Fixture
-
-val Megaman.feetGravityFixture: Fixture
-    get() = body.getProperty("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") as Fixture
-
-val Megaman.leftSideFixture: Fixture
-    get() = body.getProperty("${ConstKeys.LEFT}_${ConstKeys.SIDE}", Fixture::class)!!
-
-val Megaman.rightSideFixture: Fixture
-    get() = body.getProperty("${ConstKeys.RIGHT}_${ConstKeys.SIDE}", Fixture::class)!!
-
-val Megaman.headFixture: Fixture
-    get() = body.getProperty(ConstKeys.HEAD, Fixture::class)!!
-
-val Megaman.bodyFixture: Fixture
-    get() = body.getProperty(ConstKeys.BODY, Fixture::class)!!
-
-val Megaman.damageableFixture: Fixture
-    get() = body.getProperty(ConstKeys.DAMAGEABLE, Fixture::class)!!
-
 val Megaman.bodyOverGround: Boolean
     get() = (body.getProperty(ConstKeys.BODY_OVER_GROUND) as () -> Boolean).invoke()
 
@@ -101,10 +83,7 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
 
     val onBounce: () -> Unit = {
         BEHAVIORS_TO_END_ON_BOUNCE.forEach { behaviorType ->
-            if (isBehaviorActive(behaviorType)) {
-                val behavior = getBehavior(behaviorType)
-                if (behavior?.isActive() == true) behavior.reset()
-            }
+            if (isBehaviorActive(behaviorType)) resetBehavior(behaviorType)
         }
         wallSlideNotAllowedTimer.reset()
     }

@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.maverick.game.engine.common.extensions.objectSetOf
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -8,7 +10,6 @@ import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter

@@ -30,6 +30,10 @@ fun IGameEntity.isBehaviorActive(key: Any) = getComponent(BehaviorsComponent::cl
 fun IGameEntity.isAnyBehaviorActive(vararg keys: Any) =
     getComponent(BehaviorsComponent::class)?.isAnyBehaviorActive(*keys) == true
 
+fun IGameEntity.resetBehavior(key: Any) {
+    getComponent(BehaviorsComponent::class)?.getBehavior(key)?.reset()
+}
+
 val IGameEntity.input: InputFrame
     get() {
         val source = getComponent(ControllerComponent::class)?.input ?: return InputFrame.RELEASED

@@ -2,6 +2,7 @@ package com.maverick.game.engine.entities
 
 import com.maverick.game.engine.MockGameEntity
 import com.maverick.game.engine.behaviors.BehaviorsComponent
+import com.maverick.game.engine.behaviors.FunctionalBehaviorImpl
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
@@ -17,6 +18,7 @@ import com.maverick.game.engine.input.InputSource
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -77,6 +79,49 @@ class EntityQueriesTest : DescribeSpec({
             entity.isBehaviorActive("jump") shouldBe true
             entity.isAnyBehaviorActive("walk", "jump") shouldBe true
             entity.input shouldBe frame
+        }
+    }
+
+    describe("resetBehavior") {
+        fun entityWith(behavior: FunctionalBehaviorImpl) = MockGameEntity().also {
+            it.addComponent(BehaviorsComponent().also { behaviors -> behaviors.addBehavior("jump", behavior) })
+        }
+
+        it("ends an active behavior") {
+            var ended = 0
+            val behavior = FunctionalBehaviorImpl({ true }, end = { ended++ })
+            val entity = entityWith(behavior)
+            behavior.update(1f)
+
+            entity.resetBehavior("jump")
+
+            ended shouldBe 1
+            entity.isBehaviorActive("jump") shouldBe false
+        }
+
+        it("does nothing for an inactive behavior") {
+            var ended = 0
+            val entity = entityWith(FunctionalBehaviorImpl({ false }, end = { ended++ }))
+
+            entity.resetBehavior("jump")
+
+            ended shouldBe 0
+        }
+
+        it("does nothing for a missing behavior") {
+            var ended = 0
+            val behavior = FunctionalBehaviorImpl({ true }, end = { ended++ })
+            val entity = entityWith(behavior)
+            behavior.update(1f)
+
+            entity.resetBehavior("walk")
+
+            ended shouldBe 0
+            entity.isBehaviorActive("jump") shouldBe true
+        }
+
+        it("does nothing with no behaviors component") {
+            shouldNotThrowAny { MockGameEntity().resetBehavior("jump") }
         }
     }
 })

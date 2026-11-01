@@ -6,6 +6,9 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonActuator
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isAnyBehaviorActive
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
@@ -16,7 +19,6 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.shouldPreserveMomentum
 import com.megaman.maverick.game.entities.state.stopMomentum

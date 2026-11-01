@@ -20,8 +20,7 @@ class EntityContractsTest : DescribeSpec({
             IHazard::class,
             IOwnable::class,
             ITeleporterEntity::class,
-            ItemEntity::class,
-            IGateTrigger::class
+            ItemEntity::class
         ).forEach { contract ->
             it("${contract.simpleName} is an IMegaGameEntity") {
                 IMegaGameEntity::class.java.isAssignableFrom(contract.java) shouldBe true

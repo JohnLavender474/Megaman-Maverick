@@ -34,6 +34,7 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.isPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -48,7 +49,6 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -60,7 +60,6 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import java.util.*
 import kotlin.math.max
-import kotlin.reflect.KClass
 
 class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity,
     ICullableEntity, IDamagerEntity, IHazard, IDirectional {
@@ -80,8 +79,6 @@ class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEnt
 
         private const val SPAWN_BUBBLES_MIN_DELAY = 0.25f
         private const val SPAWN_BUBBLE_MAX_DELAY = 0.5f
-
-        private val ENTITIES_TO_BLOW = objectSetOf<KClass<out IBodyEntity>>(Megaman::class)
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -221,7 +218,7 @@ class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         blowFixture.attachedToBody = false
         blowFixture.setReceiver(Receivers.VELOCITY_ALTERATION) { fixture, delta, _ ->
             val entity = fixture.getEntity() as IBodyEntity
-            if (!ENTITIES_TO_BLOW.contains(entity::class)) return@setReceiver VelocityAlteration.addNone()
+            if (!entity.isPlayer) return@setReceiver VelocityAlteration.addNone()
 
             val isMax = when (direction) {
                 Direction.UP -> entity.body.physics.velocity.y >= MAX_FORCE_TO_APPLY * ConstVals.PPM

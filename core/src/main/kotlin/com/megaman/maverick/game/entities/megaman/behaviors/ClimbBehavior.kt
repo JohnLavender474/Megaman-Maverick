@@ -9,13 +9,15 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isAnyBehaviorActive
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
-import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle

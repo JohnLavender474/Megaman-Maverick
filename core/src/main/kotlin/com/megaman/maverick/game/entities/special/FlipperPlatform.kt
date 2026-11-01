@@ -39,7 +39,6 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.feetFixture
-import com.megaman.maverick.game.entities.megaman.components.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint

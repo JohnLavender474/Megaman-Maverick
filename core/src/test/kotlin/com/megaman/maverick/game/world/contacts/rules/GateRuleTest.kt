@@ -4,9 +4,10 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.entities.contracts.IGateTrigger
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.sensors.Gate
+import com.megaman.maverick.game.players.nonPlayer
+import com.megaman.maverick.game.players.registeredPlayer
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
@@ -24,22 +25,29 @@ class GateRuleTest : DescribeSpec({
     }
 
     describe("GateRule") {
-        it("triggers a triggerable gate for an IGateTrigger") {
+        it("triggers a triggerable gate for a player") {
             val gate = mockk<Gate>(relaxed = true)
             every { gate.isTriggerable() } returns true
-            val trigger = mockk<MegaGameEntity>(relaxed = true, moreInterfaces = arrayOf(IGateTrigger::class))
 
-            GateRule.onBegin(fixture(FixtureType.SIDE, trigger), fixture(FixtureType.GATE, gate), 0f)
+            GateRule.onBegin(fixture(FixtureType.SIDE, registeredPlayer()), fixture(FixtureType.GATE, gate), 0f)
 
             verify(exactly = 1) { gate.trigger() }
+        }
+
+        it("does not trigger the gate for a player if the gate is not triggerable") {
+            val gate = mockk<Gate>(relaxed = true)
+            every { gate.isTriggerable() } returns false
+
+            GateRule.onBegin(fixture(FixtureType.SIDE, registeredPlayer()), fixture(FixtureType.GATE, gate), 0f)
+
+            verify(exactly = 0) { gate.trigger() }
         }
 
         it("does not trigger the gate for another entity") {
             val gate = mockk<Gate>(relaxed = true)
             every { gate.isTriggerable() } returns true
-            val other = mockk<MegaGameEntity>(relaxed = true)
 
-            GateRule.onBegin(fixture(FixtureType.SIDE, other), fixture(FixtureType.GATE, gate), 0f)
+            GateRule.onBegin(fixture(FixtureType.SIDE, nonPlayer()), fixture(FixtureType.GATE, gate), 0f)
 
             verify(exactly = 0) { gate.trigger() }
         }

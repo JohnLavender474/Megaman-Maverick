@@ -32,9 +32,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
-import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
-import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteX
-import com.megaman.maverick.game.entities.megaman.components.shouldFlipSpriteY
+import com.megaman.maverick.game.entities.megaman.components.getMegamanSpritePriority
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.state.PlayPhase
@@ -101,7 +99,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamTransAnim = BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name)
 
             val priority = DrawingPriority()
-            beamSprite = GameSprite(beamRegion, (player as Megaman).getSpritePriority(priority))
+            beamSprite = GameSprite(beamRegion, getMegamanSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             initialized = true
@@ -176,7 +174,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamSprite.rotation = player.direction.rotation
             val position = DirectionPositionMapper.getInvertedPosition(player.direction)
             beamSprite.setPosition(player.body.getPositionPoint(position), position)
-            beamSprite.setFlip((player as Megaman).shouldFlipSpriteX(), (player as Megaman).shouldFlipSpriteY())
+            beamSprite.setFlip(player.facing == Facing.LEFT, false)
 
             beamTransitionTimer.reset()
 

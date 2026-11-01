@@ -6,6 +6,7 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
@@ -71,8 +72,8 @@ class MegamanTrailSpriteV2(services: MegaServices) : MegaGameEntity(services), I
             sprite.setOriginCenter()
             sprite.rotation = owner.getSpriteRotation()
         }
-        flipX = owner.shouldFlipSpriteX()
-        flipY = owner.shouldFlipSpriteY()
+        flipX = owner.facing == Facing.LEFT
+        flipY = false
 
         fadeTimer.reset()
 

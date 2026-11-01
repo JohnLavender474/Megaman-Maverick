@@ -19,6 +19,9 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.common.utils.OrbitUtils
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isAnyBehaviorActive
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -41,7 +44,6 @@ import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay

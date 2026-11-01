@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman

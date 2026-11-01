@@ -6,13 +6,14 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.entities.input
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
-import com.megaman.maverick.game.entities.megaman.input
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.killPostActionMomentum
 import com.megaman.maverick.game.entities.state.preserveMomentum

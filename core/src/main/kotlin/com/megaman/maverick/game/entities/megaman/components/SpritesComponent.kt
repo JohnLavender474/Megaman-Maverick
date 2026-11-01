@@ -1,14 +1,18 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.math.Vector2
+import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.components.require
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.*
+import com.maverick.game.engine.entities.isAnyBehaviorActive
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
@@ -46,10 +50,6 @@ fun Megaman.getSpriteDirection() = when {
     isBehaviorActive(BehaviorType.AIR_DASHING) -> getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
     else -> direction
 }
-
-fun Megaman.shouldFlipSpriteX() = isFacing(Facing.LEFT)
-
-fun Megaman.shouldFlipSpriteY() = false // getSpriteDirection() == Direction.DOWN
 
 fun Megaman.getSpriteRotation() = when (getSpriteDirection()) {
     Direction.UP -> 0f
@@ -92,7 +92,7 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
     }
 }
 
-fun Megaman.getSpritePriority(out: DrawingPriority): DrawingPriority {
+fun getMegamanSpritePriority(out: DrawingPriority): DrawingPriority {
     out.section = DrawingSection.PLAYGROUND
     out.value = 1
     return out
@@ -116,12 +116,12 @@ internal fun Megaman.defineSpritesComponent(): SpritesComponent {
 
 private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
     val priority = DrawingPriority()
-    val sprite = GameSprite(getSpritePriority(priority))
+    val sprite = GameSprite(getMegamanSpritePriority(priority))
     component.putSprite(MEGAMAN_SPRITE_KEY, sprite)
     component.putPreProcess(MEGAMAN_SPRITE_KEY) { _, player ->
         player.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
         val direction = getSpriteDirection()
-        player.setFlip(shouldFlipSpriteX(), shouldFlipSpriteY())
+        player.setFlip(facing == Facing.LEFT, false)
         player.setOriginCenter()
         player.rotation = getSpriteRotation()
         val position = DirectionPositionMapper.getInvertedPosition(direction)
@@ -161,7 +161,7 @@ private fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
 
 private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
     val region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, "MegamanDamageBurst")
-    val priority = getSpritePriority(DrawingPriority())
+    val priority = getMegamanSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value - 1))
     component.putSprite(DAMAGE_BURST_SPRITE_KEY, sprite)
     component.putPreProcess(DAMAGE_BURST_SPRITE_KEY) { _, burst ->
@@ -186,7 +186,7 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
             return@putPreProcess
         }
 
-        val animator = getAnimator(MEGAMAN_SPRITE_KEY) as Animator
+        val animator = require(AnimationsComponent::class).getAnimator(MEGAMAN_SPRITE_KEY) as Animator
         val animation = animator.currentAnimation
         if (animation == null) {
             burst.hidden = true
@@ -205,7 +205,7 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
 
 private fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
     val region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, "DesertTornado")
-    val priority = getSpritePriority(DrawingPriority())
+    val priority = getMegamanSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value + 1))
     component.putSprite(DESERT_TORNADO_SPRITE_KEY, sprite)
     component.putPreProcess(DESERT_TORNADO_SPRITE_KEY) { _, tornado ->

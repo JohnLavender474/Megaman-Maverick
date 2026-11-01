@@ -63,7 +63,6 @@ import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.invincible
-import com.megaman.maverick.game.entities.megaman.components.damageableFixture
 import com.megaman.maverick.game.entities.projectiles.*
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType

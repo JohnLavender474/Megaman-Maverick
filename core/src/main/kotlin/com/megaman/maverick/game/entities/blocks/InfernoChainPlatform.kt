@@ -32,7 +32,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.feetGravityFixture
-import com.megaman.maverick.game.entities.megaman.components.feetGravityFixture
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType

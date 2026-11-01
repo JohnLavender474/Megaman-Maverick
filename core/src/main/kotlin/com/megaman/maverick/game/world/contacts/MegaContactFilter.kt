@@ -3,6 +3,7 @@ package com.megaman.maverick.game.world.contacts
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.players.isPlayer
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactFilter
 import com.megaman.maverick.game.entities.EntityType
@@ -108,11 +109,11 @@ class MegaContactFilter : IContactFilter {
         val type2 = fixture2.getType()
 
         if ((type1 == FixtureType.GATE || type2 == FixtureType.GATE) &&
-            entity1.getType() != EntityType.MEGAMAN && entity2.getType() != EntityType.MEGAMAN
+            !entity1.isPlayer && !entity2.isPlayer
         ) return false
 
         if ((type1 == FixtureType.CART || type2 == FixtureType.CART) &&
-            entity1.getType() != EntityType.MEGAMAN && entity2.getType() != EntityType.MEGAMAN
+            !entity1.isPlayer && !entity2.isPlayer
         ) return false
 
         if (type1 == FixtureType.CONSUMER || type2 == FixtureType.CONSUMER) {

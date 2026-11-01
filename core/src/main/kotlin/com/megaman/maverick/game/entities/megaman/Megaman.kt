@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.badlogic.gdx.math.Vector2
+import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.camera.IFocusable
@@ -18,9 +19,10 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
-import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.contracts.*
+import com.maverick.game.engine.entities.isBehaviorActive
+import com.maverick.game.engine.entities.resetBehavior
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.locks.*
@@ -68,9 +70,9 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 
-class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity, IBehaviorsEntity,
-    IPointsEntity, IAudioEntity, IAnimatedEntity, IScalableGravityEntity, IGameStateListener,
-    IEventListener, IFaceable, IDirectional, IFocusable, IDamagerEntity, IGateTrigger, ICartRider {
+class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity,
+    IAudioEntity, IScalableGravityEntity, IGameStateListener,
+    IEventListener, IFaceable, IDirectional, IFocusable, IDamagerEntity {
 
     companion object {
         const val TAG = "Megaman"
@@ -119,7 +121,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         EventType.END_GAME_CAM_ROTATION
     )
 
-    internal lateinit var controllerComponent: ControllerComponent
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
     internal lateinit var jetpackHandler: MegamanJetpackHandler
 
@@ -190,7 +191,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
                     jumpGravity = MegamanValues.JUMP_GRAVITY
                     fallGravity = MegamanValues.FALL_GRAVITY
-                    wallSlideGravity = MegamanValues.WALL_SLIDE_GRAVITY
                     groundGravity = MegamanValues.GROUND_GRAVITY
                     iceGravity = MegamanValues.ICE_GRAVITY
                     waterGravity = MegamanValues.WATER_GRAVITY
@@ -205,7 +205,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
                     jumpGravity = -MegamanValues.JUMP_GRAVITY
                     fallGravity = -MegamanValues.FALL_GRAVITY
-                    wallSlideGravity = -MegamanValues.WALL_SLIDE_GRAVITY
                     groundGravity = -MegamanValues.GROUND_GRAVITY
                     iceGravity = -MegamanValues.ICE_GRAVITY
                     waterGravity = -MegamanValues.WATER_GRAVITY
@@ -247,7 +246,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     var movementScalar = 1f
         set(value) {
             field = value
-            forEachAnimator { _, _, animator ->
+            require(AnimationsComponent::class).forEachAnimator { _, _, animator ->
                 animator as Animator
                 animator.updateScalar = value
             }
@@ -259,7 +258,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     internal var wallJumpVel = 0f
     internal var fallGravity = 0f
     internal var jumpGravity = 0f
-    internal var wallSlideGravity = 0f
     internal var groundGravity = 0f
     internal var iceGravity = 0f
     internal var waterGravity = 0f
@@ -268,8 +266,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal var canMakeLandSound = false
     internal var applyMovementScalarToBullet = false
-
-    internal val spawningTimer = Timer(MegamanValues.SPAWNING_DUR)
 
     internal val wallSlideNotAllowedTimer = Timer(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY)
 
@@ -308,69 +304,11 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         addComponent(defineStunComponent())
         addComponent(damageRecovery)
         addComponent(defineBehaviorsComponent())
-        controllerComponent = defineControllerComponent()
-        addComponent(controllerComponent)
+        addComponent(defineControllerComponent())
         addComponent(defineSpritesComponent())
         addComponent(AudioComponent())
 
-        /*
-        val weaponSpawns = OrderedMap<String, IntPair>()
-
-        val weaponSpawnMagicColors = objectSetOf(MegamanValues.WEAPON_SPAWN_MAGIC_COLOR)
-        val magicColorsMap = OrderedMap<IntPair, Color>()
-        val regionProcessor = object : MegaRegionProcessor {
-
-            override fun process(
-                region: TextureRegion,
-                defKey: String,
-                fullKey: String,
-                rows: Int,
-                columns: Int,
-                durations: Array<Float>,
-                loop: Boolean,
-                index: Int
-            ): TextureRegion {
-                GameLogger.debug(TAG, "init(): regionProcessor: defKey=$defKey")
-
-                // TODO: val magical = MagicPixels.get(frame, weaponSpawnMagicColors, magicColorsMap)
-                val file = Gdx.files.internal("sprites/frames/Megaman_v2/${defKey}.png")
-                val r = TextureRegion(Texture(file)).splitAndFlatten(rows, columns, Array())[index]
-                val magical = MagicPixels.get(Pixmap(file), weaponSpawnMagicColors, magicColorsMap)
-
-                val region = when {
-                    magical -> {
-                        GameLogger.debug(
-                            TAG,
-                            "init(): regionProcessor: magical region found: map=$magicColorsMap, index=$index"
-                        )
-
-                        val data = r.texture.textureData // TODO: frame.texture.textureData
-                        if (!data.isPrepared) data.prepare()
-
-                        val pixmap = data.consumePixmap()
-
-                        // there should only be at most one magic color pixel per frame, so we'll just pick the first one
-                        magicColorsMap.keys().forEach { position ->
-                            val key = MegamanAnimations.splitFullKey(fullKey)[0]
-                            weaponSpawns.put(key, position)
-
-                            val (x, y) = position
-                            pixmap.drawPixel(x, y, Color.rgba8888(0f, 0f, 0f, 0f))
-                        }
-
-                        TextureRegion(Texture(pixmap))
-                    }
-
-                    else -> frame
-                }
-
-                magicColorsMap.clear()
-
-                return region
-            }
-        }
-         */
-        val animations = MegamanAnimations(services /*, regionProcessor */).get()
+        val animations = MegamanAnimations(services).get()
         addComponent(defineAnimationsComponent(animations))
 
         weaponsHandler = MegamanWeaponsHandler(this)
@@ -441,7 +379,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         shootAnimTimer.reset()
         wallJumpTimer.reset()
         chargingTimer.reset()
-        spawningTimer.reset()
 
         wallSlideNotAllowedTimer.reset()
         // TODO: a behavior that ends in the component reset pass can write momentum after the momentum component reset, so clear it
@@ -601,8 +538,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
             require(BubbleEmitterComponent::class).update(delta)
 
             require(TrailSpriteComponent::class).update(delta)
-
-            if (inPlay) spawningTimer.update(delta)
 
             require(FreezeComponent::class).update(delta)
 

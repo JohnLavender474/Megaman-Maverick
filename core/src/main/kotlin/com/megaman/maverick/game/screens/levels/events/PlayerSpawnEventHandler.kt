@@ -34,9 +34,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
-import com.megaman.maverick.game.entities.megaman.components.getSpritePriority
+import com.megaman.maverick.game.entities.megaman.components.getMegamanSpritePriority
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.events.EventType
@@ -95,7 +94,7 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
             beamRegion = atlas.findRegion(ConstKeys.BEAM)
             val priority = DrawingPriority()
-            beamSprite = GameSprite(beamRegion, (player as Megaman).getSpritePriority(priority))
+            beamSprite = GameSprite(beamRegion, getMegamanSpritePriority(priority))
             beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
 
             beamLandAnimation = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false)

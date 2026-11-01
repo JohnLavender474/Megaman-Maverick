@@ -1,9 +1,10 @@
 package com.megaman.maverick.game.world.contacts.rules
 
+import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.players.isPlayer
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.entities.contracts.ICartRider
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.special.Cart
 import com.megaman.maverick.game.world.body.*
@@ -18,7 +19,7 @@ object FeetCartRule : IContactRule {
         val feetEntity = feetFixture.getEntity()
         val cartEntity = cartFixture.getEntity() as IOwnable<*>
 
-        if (feetEntity is ICartRider && cartEntity is Cart) {
+        if (feetEntity.isPlayer && cartEntity is Cart) {
             cartEntity.owner = feetEntity
             feetEntity.body.setBodySense(BodySense.TOUCHING_CART, true)
             feetEntity.body.putProperty(ConstKeys.CART, cartEntity)
@@ -30,7 +31,7 @@ object FeetCartRule : IContactRule {
         val cartEntity = cartFixture.getEntity() as IOwnable<*>
         cartEntity.owner = null
 
-        if (feetEntity is ICartRider && cartEntity is Cart) {
+        if (feetEntity.isPlayer && cartEntity is Cart) {
             feetEntity.body.setBodySense(BodySense.TOUCHING_CART, false)
             feetEntity.body.removeProperty(ConstKeys.CART)
         }

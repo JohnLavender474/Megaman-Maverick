@@ -32,10 +32,6 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.feetFixture
 import com.megaman.maverick.game.entities.headFixture
 import com.megaman.maverick.game.entities.leftSideFixture
-import com.megaman.maverick.game.entities.megaman.components.feetFixture
-import com.megaman.maverick.game.entities.megaman.components.headFixture
-import com.megaman.maverick.game.entities.megaman.components.leftSideFixture
-import com.megaman.maverick.game.entities.megaman.components.rightSideFixture
 import com.megaman.maverick.game.entities.rightSideFixture
 import com.megaman.maverick.game.entities.state.TeleportableComponent
 import com.megaman.maverick.game.entities.state.beginTeleport
