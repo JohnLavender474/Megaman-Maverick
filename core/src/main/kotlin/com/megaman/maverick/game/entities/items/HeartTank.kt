@@ -24,6 +24,7 @@ import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
+import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -43,6 +44,7 @@ import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.Receivers
+import com.megaman.maverick.game.world.body.addBlockFilter
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.setReceiver
@@ -149,6 +151,20 @@ class HeartTank(services: MegaServices) : AbstractItem(services), ISpritesEntity
                 EventType.ATTAIN_HEART_TANK,
                 props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo player.playerSlot!!)
             ))
+    }
+
+    override fun defineBodyComponent(): BodyComponent {
+        val component = super.defineBodyComponent()
+        val body = component.body
+
+        body.putProperty("${ConstKeys.TAKE_FRICTION}_${ConstKeys.SAND}", false)
+
+        // TODO: a tank that lands on an InfernoChainPlatform (a FeetRiseSinkBlock subclass) falls through it. The live
+        //  tank in InfernoMan rests on a plain block, so this does not happen (see
+        //  docs/issues/2026-11-01-heart-tank-does-not-sink-in-sand.md)
+        body.addBlockFilter { block, _ -> block is FeetRiseSinkBlock }
+
+        return component
     }
 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
