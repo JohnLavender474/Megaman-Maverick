@@ -70,7 +70,7 @@ all other objectives are affected to one degree or another by how well our syste
 
 ## Current state
 
-Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script results, so they can include a few comments.
+Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no count in this table. Counts are `grep` or script results, so they can include a few comments.
 
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
@@ -85,7 +85,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 - `016`: not a rewrite, but its goal is not complete. `MegaEntityFactory` and `EntityFactories` are still statics, and 306 and 73 call lines depend on that access.
 - `029a`, `061a`: `Players.unregister` and `isLockedBy` need a production caller or removal (2 declarations). `047` is a possible caller for `unregister` (inference).
 - `014`: `BodyKeys` and the string-named `Receivers` keys change only if the owner reads `O1-R4` as covering typed keys in a bag.
-- No redo found in `051`, `062`, `063`, `064`, `084f` or `084g`.
+- No redo found in `051`, `062`, `063`, `064`, `084f`, `084g` or `084h`.
 
 ## Items
 
@@ -137,7 +137,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `051` | done | [X-style camera bounds, auto-scroll and other camera behaviors](../items/051-camera-behaviors/ITEM.md) |
 | `059` | idea | [Max health read through from the profile](../items/059-max-health-read-through/ITEM.md) |
 | `061` | done | [Thin player view; locks and signals as components and functions](../items/061-thin-player/ITEM.md) |
-| `084` | active | [Split `Megaman` into player components](../items/084-split-megaman/ITEM.md) |
+| `084` | done | [Split `Megaman` into player components](../items/084-split-megaman/ITEM.md) |
 | `096` | idea | [Session-owned entity factories and lists, in place of statics](../items/096-session-owned-entity-services/ITEM.md) (main) |
 | `097` | idea | [Stable order for event keys in `EventsManager`](../items/097-stable-event-key-order/ITEM.md) |
 | `098` | idea | [Typed fixture and body state in place of property bags](../items/098-typed-fixture-state/ITEM.md) (main) |

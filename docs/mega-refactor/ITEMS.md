@@ -91,7 +91,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | idea | `024`, `069`, `084` | | |
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | `O9` | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | `O1` | idea | none | | |
-| 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | `O8`, `O1` | active | none | 2026-10-30 | |
+| 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | `O8`, `O1` | done | none | 2026-10-30 | 2026-11-01 |
 | 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | `O1` | dropped | none | | 2026-10-31 |
 | 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | `O1` | idea | none | | |
@@ -169,4 +169,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-084e-class-line`](items/084-split-megaman/branches/mega-refactor-084e-class-line/process-log.md) | 084 | Remove the interfaces on `Megaman` that have no reason left, and the dead player code | merged | 2026-10-31 | 2026-11-01 |
 | [`mega-refactor-084f-focus-progress`](items/084-split-megaman/branches/mega-refactor-084f-focus-progress/process-log.md) | 084 | Move the camera focus and the game state listener off the `Megaman` class line (10 to 8 interfaces), and remove the dead `ConstKeys.FOCUS` reads | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-084g-movement-state`](items/084-split-megaman/branches/mega-refactor-084g-movement-state/process-log.md) | 084 | Movement state out of `Megaman`: `canMove`, the run state, the crouch timers, and typed values in place of 4 property bag lines | merged | 2026-11-01 | 2026-11-01 |
-| [`mega-refactor-084h-charge`](items/084-split-megaman/branches/mega-refactor-084h-charge/process-log.md) | 084 | Move the charge timer and the charge reads off the `Megaman` class; the charge rules stay for `024` | active | 2026-11-01 | |
+| [`mega-refactor-084h-charge`](items/084-split-megaman/branches/mega-refactor-084h-charge/process-log.md) | 084 | Move the charge timer and the charge reads off the `Megaman` class; the charge rules stay for `024` | merged | 2026-11-01 | 2026-11-01 |

@@ -56,18 +56,18 @@ them.
 
 ## Current state
 
-Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script results, so they can include a few comments.
+Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00ba`). Counts are `grep` or script results, so they can include a few comments.
 
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
 | `O8-R1` | `not checked` | No new character exists: 0 `ProtoMan` and 0 `CharacterDef`. A test entity shows that a player need not be `Megaman` (`SecondPlayerEntity.kt:13`). | `060`, `081` |
 | `O8-R2` | `partly` | 0 `is Megaman` lines. 14 `as Megaman` lines, for example `LevelPauseScreen.kt:562`, `PlayerStatsHandler.kt`. 13 gameplay `Megaman::class` lines in 9 files, for example `JoeBall.kt:151`. 32 files outside `entities/megaman/` import `Megaman`. | `024`, `030` |
 | `O8-R3` | `partly` | `081`, `068` and `069` name the modes. `060` `ITEM.md` does not. | `060` |
-| `O8-R4` | `broken` (waiting) | 0 `WeaponDef`. At least 5 `when` blocks on a weapon (`MegamanWeaponsHandler.kt:303,658`, `MegamanAnimationKeySupplier.kt:103`, `MegamanAnimations.kt:29`, `Megaman.kt:141`). 28 files name a `MegamanWeapon` value. The loadout is one session set (`GameState.kt:33`). | `024` |
+| `O8-R4` | `broken` (waiting) | 0 `WeaponDef`. At least 5 `when` blocks on a weapon (`MegamanWeaponsHandler.kt:303,658`, `MegamanAnimationKeySupplier.kt:105`, `MegamanAnimations.kt:29`, `Megaman.kt:119`). 28 files name a `MegamanWeapon` value. The loadout is one session set (`GameState.kt:33`). | `024` |
 
 ## Redo risk
 
-- `029g`, `084`: all 8 files in `entities/megaman/behaviors/` and all 10 in `components/` use the `Megaman` type. `060` plans this change for the behaviors.
+- `029g`, `084`: all 8 files in `entities/megaman/behaviors/` and all 11 in `components/` use the `Megaman` type. `060` plans this change for the behaviors. The state class `entities/state/WeaponChargeComponent.kt` does not use it, but the 5 charge reads and `stopCharging()` in `components/WeaponChargeComponent.kt` do.
 - `029e`: `GameState.weaponsOwned` must become per character or per loadout (`024`).
 
 ## Items
@@ -79,7 +79,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `068` | planned | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) (main) |
 | `069` | planned | [A dash button for X](../items/069-dash-button/ITEM.md) (main) |
 | `081` | idea | [Playable X for the extra levels, ported from `mmx-x6`](../items/081-playable-x/ITEM.md) (main) |
-| `084` | active | [Split `Megaman` into player components](../items/084-split-megaman/ITEM.md) (main) |
+| `084` | done | [Split `Megaman` into player components](../items/084-split-megaman/ITEM.md) (main) |
 | `029` | done | [`IPlayer` contract, players service and `CharacterDef`](../items/029-player-contract/ITEM.md) |
 | `030` | planned | [Faction and root owner instead of `owner == megaman`](../items/030-faction/ITEM.md) |
 | `061` | done | [Thin player view; locks and signals as components and functions](../items/061-thin-player/ITEM.md) |

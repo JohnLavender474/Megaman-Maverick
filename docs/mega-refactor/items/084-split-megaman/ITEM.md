@@ -1,6 +1,6 @@
 # 084: Split `Megaman` into player components
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O8`, `O1`
 - Depends on: none
@@ -12,7 +12,7 @@
   `mega-refactor-084e-class-line` (merged 2026-11-01)
   `mega-refactor-084f-focus-progress` (merged 2026-11-01)
   `mega-refactor-084g-movement-state` (merged 2026-11-01)
-  `mega-refactor-084h-charge` (active)
+  `mega-refactor-084h-charge` (merged 2026-11-01)
 
 ## Goal
 
@@ -40,7 +40,7 @@ Not approved. The branch `SCOPE.md` decides the final scope. The facts and line 
   component reset.
 - **Interfaces:** remove each interface on `Megaman` that has no reason left: `084e` (15 to 10) and `084f` (10 to 8). The rest goes to `048` and other owners
   (see `NOTES.md`, "Interfaces and a second playable entity").
-- **Further branches (planned):** `084f-focus-progress`, `084g-movement-state` (after `031e` merges), `084h-charge`.
+- **Further branches:** `084f-focus-progress`, `084g-movement-state` and `084h-charge`: all merged.
 
 Not in this item (other items own these parts):
 

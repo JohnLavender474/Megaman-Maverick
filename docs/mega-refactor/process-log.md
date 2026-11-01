@@ -1437,3 +1437,15 @@ newest entry at the bottom.
   match the `ITEM.md` lines.
 - Follow-up: new `idea` items `094` to `102`. Audit notes on `009`, `010`, `021`, `025`, `032`, `039` and `047`. Open: the conflict
   between `034` and `O9-R3`, the reference machine for `O5`, and the comparison games for `O4`. `084h` and `031f` keep their scope.
+
+## 2026-11-01 — mega-refactor-084h-charge
+
+- Summary: `WeaponChargeComponent` holds the charge timer, and the 5 charge reads and `stopCharging()` are `internal` extensions on `Megaman` in
+  `components/WeaponChargeComponent.kt`. The charge rules stay for `024`. `Megaman.kt` went from 555 to 528 lines and keeps 8 interfaces. The one intended
+  change: in `Test1.tmx`, a death during a charge no longer leaves the charge light until the respawn. Squash commit `d796e00ba`.
+- Contract check: the owner's play test passes ("tests pass"). Merge approval (verbatim: "yes"). The automated checks pass on the squash commit after
+  `./gradlew clean`, on a clean copy of the tree (engine 621, core 625, 0 failures, `lwjgl3:jar`, 95 unique warnings). A launch of
+  `REFACTOR_TEST_029 --room movement` gives code 124 with no exception.
+- Follow-up: no new items and no bugs. Item `084` is done, and the rest of the interface work moves to `048`. `O8` and `O1` have the new state, and their
+  status does not change. The `Objective check` of this branch came after the scope approval, because `db7a263a0` arrived during the branch. It records
+  `O5-R2` as `no effect` with no measurement; the owner can ask for a `--diagnostics` run. The 2 "Open questions" in the `084` `ITEM.md` stay open.
