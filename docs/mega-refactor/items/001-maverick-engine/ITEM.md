@@ -65,6 +65,7 @@ or an abstract class, as part of the engine, named `MaverickEngine`. Consider us
 - L (2026-10-22): the engine is not published. It stays in this repo.
 - N (2026-10-22): `GameEngine` keeps its name.
 - (2026-10-22) Do the package rename now, as branch `001a`, a practice round for the branch process.
+- (2026-11-01, owner gave the choice to the recommendation) The player components from `084` stay in `core`, also the genre mechanisms (stun, knockback, momentum, room-transition carry). Look at this again when `001b` or a second client needs a mechanism. The reason is in the `084` `ITEM.md`.
 
 ## Open questions
 

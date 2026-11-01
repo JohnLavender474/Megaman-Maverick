@@ -100,13 +100,15 @@ Not in this item (other items own these parts):
   - `048` owns `IFaceable`.
   - `084` closes after the agreed branches, and the rest of the interface work moves to `048`.
 - (2026-11-01, owner) The charge timer goes in a small `WeaponChargeComponent`, not `ChargeComponent`, because "charge" has at least 5 meanings in the game. `shootAnimTimer` and any larger weapon component stay in `024`.
+- (2026-11-01, owner gave the choice to the recommendation) All new player components stay in `core`. The engine has no second client (`001b` is blocked), so a
+  move has no caller that needs it. The 10 mechanism component classes in `entities/state/` have 0 `core` imports, so a later move is possible, but a mechanism
+  is the class and its functions, and `Stuns.kt`, `Knockbacks.kt`, `Freezes.kt` and `PostActionMomentum.kt` import `core`. Content (death orbs, trail
+  sprites) stays in `core` in all cases. Look at this again when `001b` or a second client needs a mechanism.
+- (2026-11-01, owner) The stun bounce direction is a bug, not a kept behavior: `docs/issues/2026-10-30-stun-bounce-assumes-up.md`.
 
 ## Open questions
 
-- Engine or core for each new component? Some are genre mechanisms (stun, knockback, momentum, room-transition carry);
-  others are content (death orbs, trail sprites). `001` keeps Megaman Maverick content out of `engine/`.
-- Is the stun bounce direction (the `TODO` that assumes `UP`) kept as is? A fix changes gameplay, so it is a bug in
-  `docs/issues/`, not part of this item.
+None open.
 
 ## Sources
 

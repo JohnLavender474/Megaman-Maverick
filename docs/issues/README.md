@@ -113,3 +113,4 @@ related-items: [<mega-refactor item IDs>]
 | [A press read carries a held button to the next screen](2026-11-01-press-read-carries-held-button.md) | no | core | open |
 | [A rebind of `START` or `A` with the key held past `0.25` s confirms the row again](2026-11-01-rebind-confirm-held-key.md) | no | core | open |
 | [`Esc` on the level select screen after an extra level opens the extras rows](2026-11-01-level-select-back-after-extra-level.md) | no | core | open |
+| [The stun bounce assumes that Mega's body direction is `UP`](2026-10-30-stun-bounce-assumes-up.md) | yes | core | open |
