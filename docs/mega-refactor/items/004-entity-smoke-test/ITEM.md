@@ -1,11 +1,11 @@
 # 004: Entity build-and-init smoke test
 
-- Status: planned
+- Status: active
 - Type: test
 - Objectives: `O6`
 - Depends on: `002`
 - Related: `005`, `006`, `021`, `028`, `039`
-- Branches: none yet
+- Branches: `mega-refactor-004a-entity-smoke-test` (active, started 2026-11-01)
 
 ## Goal
 
@@ -29,6 +29,7 @@ Answer to review item 3 (2026-10-22, verbatim):
 ## Decisions
 
 - B (2026-10-22): use a separate `smokeTest` JVM test suite in `core`.
+- Merge target (2026-11-01): each branch squash-merges directly into `master`, with no parent branch.
 
 ## Open questions
 

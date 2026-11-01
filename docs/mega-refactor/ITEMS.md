@@ -11,7 +11,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 001 | [Maverick Engine](items/001-maverick-engine/ITEM.md) | refactor | `O1` | active | `001b`: `016`, `010`, `032` | 2026-10-22 | |
 | 002 | [CI on every branch, one Gradle job, aligned test libraries](items/002-ci-all-branches/ITEM.md) | tooling | `O6` | done | none | 2026-10-22 | 2026-10-22 |
 | 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | `O6`, `O7` | planned | `002` | | |
-| 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | `O6` | planned | `002` | | |
+| 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | `O6` | active | `002` | 2026-11-01 | |
 | 005 | [Golden damage-table test](items/005-golden-damage-test/ITEM.md) | test | `O6` | planned | `004`, `002` | | |
 | 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | `O6` | idea | `002`, `004` | | |
 | 007 | [Versioned JSON save slots with legacy import](items/007-json-save-slots/ITEM.md) | feature | `O9` | planned | none | | |
@@ -172,3 +172,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-084f-focus-progress`](items/084-split-megaman/branches/mega-refactor-084f-focus-progress/process-log.md) | 084 | Move the camera focus and the game state listener off the `Megaman` class line (10 to 8 interfaces), and remove the dead `ConstKeys.FOCUS` reads | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-084g-movement-state`](items/084-split-megaman/branches/mega-refactor-084g-movement-state/process-log.md) | 084 | Movement state out of `Megaman`: `canMove`, the run state, the crouch timers, and typed values in place of 4 property bag lines | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-084h-charge`](items/084-split-megaman/branches/mega-refactor-084h-charge/process-log.md) | 084 | Move the charge timer and the charge reads off the `Megaman` class; the charge rules stay for `024` | merged | 2026-11-01 | 2026-11-01 |
+| [`mega-refactor-004a-entity-smoke-test`](items/004-entity-smoke-test/branches/mega-refactor-004a-entity-smoke-test/process-log.md) | 004 | Headless `smokeTest` suite: build and `init()` every entity class with real atlas data | active | 2026-11-01 | |
