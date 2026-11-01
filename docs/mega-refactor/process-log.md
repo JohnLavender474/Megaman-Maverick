@@ -1414,3 +1414,14 @@ newest entry at the bottom.
 - Follow-up: the parent worktree and branch are removed. The owner's uncommitted import removal in `CameraEdgeBlocks.kt` was saved as a patch for
   the merge and restored; it stays uncommitted. `084g` is active, and any `services.camera.rotating` on that branch must become
   `services.gameCamera.rotating`. Item `058` (who starts a turn) is next for the camera.
+
+## 2026-11-01 — mega-refactor-084g-movement-state
+
+- Summary: `RunComponent` holds the run state, and `run(delta, side)` replaces `runLeft` and `runRight`. The crouch timers moved into `crouchBehavior()`,
+  and `currentAnimKey` and `airDashDirection` are typed fields. 15 casts to `Megaman` remain. `canMove` stays a member, by owner decision, with a
+  `TODO` for `060`. Squash commit `87d512886`.
+- Contract check: the owner's play test passes ("tests pass"), apart from 2 bugs that exist on `master` too. Merge approval (verbatim: "yes"). The
+  automated checks pass on the squash commit after `./gradlew clean`, on a clean copy of the tree (engine 621, core 570, 0 failures, `lwjgl3:jar`, 95
+  unique warnings). A launch of `REFACTOR_TEST_029 --room movement` gives code 124 with no exception.
+- Follow-up: no new items. Filed `2026-11-01-rodent-claws-run-facing.md` and `2026-11-01-left-right-both-held.md`, both for `fix/left-right-last-pressed`,
+  and `2026-11-01-heart-tank-does-not-sink-in-sand.md` for `fix/heart-tank-sinks-in-sand`. The next branch of `084` is `084h`.

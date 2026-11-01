@@ -10,7 +10,7 @@
   `mega-refactor-084b-effects` (merged 2026-10-31)
   `mega-refactor-084e-class-line` (merged 2026-11-01)
   `mega-refactor-084f-focus-progress` (merged 2026-11-01)
-  `mega-refactor-084g-movement-state` (started 2026-11-01)
+  `mega-refactor-084g-movement-state` (merged 2026-11-01)
 
 ## Goal
 
