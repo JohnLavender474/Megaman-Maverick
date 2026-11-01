@@ -1,15 +1,18 @@
 # Plan: mega-refactor-051-fix-scroll-room-scope
 
-How to do the work in `SCOPE.md`. Write this file after `SCOPE.md` and `CONTRACT.md` are
-approved. The user approves it. When the plan changes, write the reason in the process log.
-
-- Status: draft
-- Approved: <date, or "no">
+- Status: approved
+- Approved: 2026-10-31
 
 ## Steps
 
-### 1. <step>
+### 1. The fix
 
-- Changes:
-- Check:
-- Done: no
+- Changes: the 3 items in `SCOPE.md`, with tests. A `TODO` for the known edge case.
+- Check: `engine:test core:test lwjgl3:jar` after `clean`. Short launches.
+- Done: yes
+
+### 2. Owner play test
+
+- Changes: none.
+- Check: the manual checks in `CONTRACT.md`.
+- Done: yes

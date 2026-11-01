@@ -45,9 +45,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.players
-import com.megaman.maverick.game.entities.depleteHealth
-import com.megaman.maverick.game.entities.headFixture
-import com.megaman.maverick.game.entities.megaman.components.headFixture
+import com.megaman.maverick.game.entities.state.CrusherComponent
 import com.megaman.maverick.game.entities.utils.getStandardBodyDoUpdatePredicate
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -210,12 +208,11 @@ class GravityBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnti
                 else -> body.physics.velocity.y = 0f
             }
         }
-        body.preProcess.put(ConstKeys.DEATH) {
-            players.forEach {
-                if (!body.isSensing(BodySense.FEET_ON_GROUND) && body.getBounds().overlaps(it.headFixture.getShape()))
-                    it.depleteHealth()
-            }
-        }
+        val crusher = CrusherComponent(
+            { body.getBounds() }, { Direction.UP }, { !body.isSensing(BodySense.FEET_ON_GROUND) }
+        )
+        addComponent(crusher)
+        body.preProcess.put(ConstKeys.DEATH) { players.forEach { crusher.crush(it) } }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 

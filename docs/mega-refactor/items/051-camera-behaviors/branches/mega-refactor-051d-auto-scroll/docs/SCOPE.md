@@ -49,7 +49,7 @@ rules research for `051c` and `051d`".
    - A per-section `edge_blocks` property overrides the defaults.
 5. **Spawn and holds.** The scroll runs while a player spawns. Edge blocks and crush stay off until `PLAYER_READY`. The
    scroll waits for a pan, a gate, the boss health fill, a camera turn and a dead player, through the `051c` hold test.
-6. **Chains**, a separate commit group. A `next` property starts the named section when this one stops, with no
+6. **Chains**, a separate commit group. A `next` object reference, one way, starts that section when this one stops, with no
    position test. Stop mode `arrive`: the leading edge reaches the far edge. A section with no `next` that overlaps
    another one starts after the first stops, in Tiled order.
 7. **Test rooms** in `RefactorTest051.tmx`. The basic rooms come first and are the first play checks (owner decision,
@@ -96,3 +96,24 @@ None. Answered on 2026-10-30:
    The designer chooses the spawn point.
 2. No event field until a level needs one (owner accepted the recommendation).
 3. The trailing edge kills in the direction of gravity, so the rule follows a rotated player.
+
+## Scope changes during the branch
+
+Owner approved on 2026-10-31, after the first play test:
+
+- A crush needs a marked `crush_surface` in place of any solid. `needsSolidOpposite` and the body sense go away, so a contact with
+  the floor cannot cause a death. An edge block crushes only in a frame where it moves into the view.
+- A sensor has a `section` object reference to a zone or a scroll section, because Tiled properties cannot hold a list. It is
+  active while that owner is active. There is no "in view" test, because a crush touches an edge block at the view edge.
+- A player fully past the trailing edge of a running section dies, so that an unmarked solid cannot cause a soft lock.
+- A block covers the rectangle of its section or zone across its edge, not the view. There is no property for this. If a level
+  needs a different extent, add one optional object reference then.
+- An edge in the fall direction has no block, and a player fully past it dies. This applies to the leading edge too, except at a room
+  edge, where the normal room transition takes over. A listed `edge_blocks` edge gets a block and no fall kill. This replaces item 4:
+  "A trailing edge in the direction of gravity kills". The tables are in the item `NOTES.md` and on `CameraScroll`.
+- The scroll waits until the player is ready. This replaces item 5, "The scroll runs while a player spawns". With the old rule, the
+  scroll moved during the beam and the spawn point could leave the view. The owner played the camera jump at the ready frame.
+- A pinned axis writes to the limits during a hold, and the view size blends over a camera turn, for the clamp, the target and the
+  out-of-view test. `viewWidth` and `viewHeight` stay final. Levels with no section can change by 1 tile or less for 0.75 s or less,
+  near a room limit, in a turn that changes the view size (owner approved). A snap of up to 1 tile can stay at the end of a turn near a
+  room cap or a stop position. It waits for a real level.
