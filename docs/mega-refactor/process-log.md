@@ -1384,5 +1384,22 @@ newest entry at the bottom.
   DEFAULTS" saved. `BACK` from the bindings screen in a level goes back to the pause screen. Squash commit `b22b232c9`.
 - Contract check: the owner's play test passes ("all tests passed"), and merge approval (verbatim: "yes"). `master` moved after the play test, so
   `master` went into the branch (`8ed39c993`). 2 conflicts, the imports of `AirDashBehavior.kt` and `ControllerComponent.kt`; both sides kept. The play
-  test was not repeated on the merged code, because `master`'s changes in the shared files do not touch pause, resume, viewports, music or input.
+  test was not repeated on the merged code, because `master`'s changes in the shared files do not touch pause, resume, viewports, music or input. The automated checks pass on the branch and on a clean copy of `master` at
+  `d28c60893` (engine 600, core 528, 0 failures, `lwjgl3:jar`, 76 unique warnings with the line numbers removed and no new line; 96 by the count of the `084f` entry, the baseline count).
 - Follow-up: 5 issues closed (4 fixed, `2026-10-22-saved-key-bindings-not-applied.md` as on purpose). Item `034` updated. No new items and no bugs to file. `031f` is now `planned`. The accepted 1-frame pause grid has a `TODO` at `showOverPause` (item `013`).
+
+## 2026-11-01 — mega-refactor-051e-camera-rotation
+
+- Summary: removed `RotatableCamera`, `GameCameraState`, `CameraRotationStep` and the dead `CameraRotator`. Cameras are plain
+  `OrthographicCamera`s. Rotation is an optional part: `CameraRotation` holds the turn and is not `Resettable`, `CameraView` gives
+  the reads and the defaults for a camera with no part, and `CameraOrientation` writes the angle when it changes. `ICameraView`
+  gets `rotating` (40 reads). `ICameraPart` and `CameraController` lose their type parameter. The pause exit also works in a
+  `TEST_LEVEL`. Squash commit `d8f2a4ec0` on `mega-refactor-051-master`. The code reaches `master` with the parent merge.
+- Contract check: the owner's play test passes on all 10 checks ("tests pass"), and merge approval (verbatim: "yes, merge").
+  The temporary equivalence suite passed until its last commit, and it found a real difference: a 180 degree turn is a tie, so
+  a float difference could spin a flip the other way; `CameraRotation` now uses the old float operation, and the angle is
+  exactly equal. An automated check changed after the contract approval: `up` within `0.001` of the old camera could not pass,
+  because the old camera drifts up to `0.0018` in 1000 turns. The automated checks pass on the parent after `./gradlew clean`
+  (engine 621, core 521, 0 failures, `lwjgl3:jar`, 95 unique warnings, under the baseline count of 96).
+- Follow-up: no new items and no bugs to file. The issue `2026-11-01-camera-room-transition-raw-viewport-size.md` stays open.
+  Item `051` stays active until the parent reaches `master`. Then apply the root `CLAUDE.md` text in the branch `docs/NOTES.md`.
