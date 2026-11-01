@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: refactor
+- Objectives: `O2`, `O6`, `O5`
 - Depends on: `011`, `017`
 - Related: `006`, `008`, `012`, `019`, `031`, `055`
 - Branches: none yet
@@ -31,6 +32,14 @@ Answer to review item 9 (2026-10-22, verbatim):
 - 2026-10-25: 60 FPS is the source of truth for how the game is meant to look and feel. The physics reference is
   the `MEDIUM` tier (60 fps, step 1/150 s). A unified step or tick must match the feel at 60 FPS; the other tiers
   may change to match it.
+
+## Objectives audit (2026-11-01)
+
+- Decision (owner, 2026-11-01): one fixed tick in all play (`O2-R3`). Tiers and auto-performance change only the frame rate and cosmetic budgets. Measure the cost split of simulation and render on a weak machine before the tick is decided.
+- This item owns the camera as part of the simulation: the camera moves on the tick, not in the render path (`MegaLevelScreen.kt:286,921`).
+- Input frames are built once per render (`MegamanMaverickGame.kt:573`); they must be built once per tick.
+- `timeSpawned` is wall-clock time, and it sorts weapons (`MegaGameEntity.kt:57`, `MegamanWeaponsHandler.kt:338`).
+- Async paths must apply on a set tick (`AsyncPathfindingSystem.kt`).
 
 ## Open questions
 

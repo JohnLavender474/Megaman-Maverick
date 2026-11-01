@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: refactor
+- Objectives: `O7`, `O3`
 - Depends on: none
 - Related: `003`, `004`, `022`, `023`, `032`, `039`
 - Branches: none yet
@@ -29,6 +30,11 @@ Answer to review item 20 (2026-10-22, verbatim):
 ## Decisions
 
 - (2026-10-22) The layer stops being a namespace. The object name resolves to an entity ID across the whole game, so layer names become free text. The old allowed-layer list stays only as a validator warning. Structural layers (`game_rooms`, `player`, tile layers, backgrounds) are recognized by their Tiled layer class, not by their name.
+
+## Objectives audit (2026-11-01)
+
+- The scope must also name `SensorsLayerBuilder.kt:30`, `GauntletMaster.kt:143`, `HeartTank.kt:143-146` and `GameEntityUtils.kt:123`.
+- "The layer stops being a namespace" makes 9 dead objects on real stages start to spawn (inference). The contract must decide this first.
 
 ## Open questions
 

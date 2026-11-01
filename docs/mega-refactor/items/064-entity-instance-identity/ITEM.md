@@ -2,6 +2,7 @@
 
 - Status: done
 - Type: refactor
+- Objectives: `O1`
 - Depends on: none
 - Related: `021`, `022`, `048`, `063`
 - Branches: `mega-refactor-064a-instance-identity` (merged 2026-10-28, squash `c86d67421`; groups), `mega-refactor-064b-map-object-id` (merged 2026-10-28, squash `897d87f27`; `id`)

@@ -4,9 +4,10 @@ Read this file before you do any work on the mega refactor.
 
 ## Goal
 
-Refactor `engine/` and `core/` so that the game is easier to change, configure and extend.
-The current gameplay is the contract. A branch merges into `master` only if the game still
-plays the same. Each branch writes its own contract in its `docs/CONTRACT.md`.
+Change `engine/` and `core/` so that the game reaches the objectives in
+`objectives/README.md`. The effort includes refactors and also new behavior. A branch keeps all
+behavior that its contract does not name as an intended change. Each branch writes its own
+contract in its `docs/CONTRACT.md`.
 
 Performance is also a goal. The game must play well on weak hardware, not only on the owner's
 laptop. So an optimization does not need proof of a slowdown on the owner's machine before it is
@@ -38,11 +39,34 @@ Rules:
 | `CLAUDE.md` | This file. Rules for the effort. | `master` only |
 | `ITEMS.md` | The index: one table of items and one table of branches, with status and dates. Nothing else. | `master` only |
 | `process-log.md` | One entry for each merged or dropped branch, and for each docs change to the setup. | `master` only |
+| `objectives/README.md` | The index of objectives and the always-on rules. | `master` only |
+| `objectives/O*.md` | One objective: problems, goal, rules, current state, redo risk, items. | `master` only |
+| `_templates/objective/` | The file to copy for a new objective. | `master` only |
 | `_templates/item/` | The files to copy for a new item. | `master` only |
 | `_templates/branch/` | The files to copy for a new branch folder. | `master` only |
 | `items/<id>-<slug>/ITEM.md` | The item: goal, proposed scope, owner's input, open questions. | `master` only |
 | `items/<id>-<slug>/NOTES.md` | Research for the item. | `master` only |
 | `items/<id>-<slug>/branches/<branch>/` | The docs of one branch. | `master` before the branch exists, then that branch only |
+
+## Objectives
+
+An objective is a larger result that items serve. Its rules say what must stay true in the code
+for the objective to stay possible.
+
+- Each item has at least one objective, in the `Objectives:` line of `ITEM.md` and in `ITEMS.md`.
+  The first ID is the main objective. If no objective fits, ask the owner.
+- A branch reads `objectives/README.md` and the file of each objective that its item links. It does
+  not read the other objective files.
+- Always-on rules apply to every branch. The other rules of an objective apply to its linked items.
+- A rule with `after <item>` waits for that item. Until the item merges, a branch may repeat the
+  current pattern, and the check says `waiting`. A new kind of violation is still a `conflict`.
+- **Conflict:** tell the owner before `SCOPE.md` approval. The owner chooses one of these: change
+  the scope, accept the gap, or change the rule. An accepted gap gets a row in the objective's
+  current state and a `TODO` comment at the code.
+- A conflict between two objectives goes to the owner, and the decision goes in both files. No
+  objective wins by default.
+- A branch does not edit `objectives/`. A change to a rule needs the owner's approval.
+- A technical recommendation in an objective cites its sources, or it is marked as inference.
 
 ## Items and IDs
 
@@ -90,6 +114,7 @@ Branch statuses:
 
 ## `ITEMS.md` columns
 
+- **Objectives:** the objective IDs of the item. The first is the main objective.
 - **Depends on:** the items that must be done first.
 - **Started:** the date the first branch of the item (or the branch) was created.
 - **Finished:** the date the item was done or dropped (or the branch merged or dropped).
@@ -107,8 +132,9 @@ that branch's work go in its `docs/NOTES.md` under "Decisions".
 
 Do these steps in a docs-only commit directly on `master`:
 
-1. Copy `_templates/item/` to `items/<id>-<slug>/` and fill in `ITEM.md`.
+1. Copy `_templates/item/` to `items/<id>-<slug>/` and fill in `ITEM.md`, with its objectives.
 2. Add a row to the items table in `ITEMS.md`.
+3. Add a row to the "Items" table of each linked objective.
 
 ### Prepare a branch folder ahead of time
 
@@ -155,13 +181,15 @@ Do these steps in this order, before you change code. Do not start a step until 
 approves the step before it.
 
 1. **Scan.** Read the code that the branch will touch. Find the classes, call sites, events and
-   data involved, how they connect, and their problems. Read the item `NOTES.md`. Read the
-   folders of the other active branches for overlap.
+   data involved, how they connect, and their problems. Read the item `NOTES.md`. Read
+   `objectives/README.md` and the file of each objective that the item links. Read the folders
+   of the other active branches for overlap.
 2. **`docs/SCOPE.md`.** Write what the scan found and what the branch will and will not change.
-   The user approves it.
-3. **`docs/CONTRACT.md`.** Write the gameplay that the branch must not change and how to check
-   it, for example the levels to play through and what to look for. Only include what the scope
-   can affect. The user approves it.
+   In "Objective check", list the always-on rules and the rules of the linked objectives that the
+   branch can affect, each with `helps`, `no effect`, `waiting` or `conflict`. The user approves it.
+3. **`docs/CONTRACT.md`.** Write the behavior that the branch changes on purpose, the behavior that
+   it must not change, and how to check them, for example the levels to play through and what to
+   look for. Only include what the scope can affect. The user approves it.
 4. **`docs/PLAN.md`.** Write the ordered steps to do the work. Give each step its own check. The
    user approves it.
 
@@ -233,6 +261,8 @@ alone does not need a new approval, but write the reason in the process log.
    the item needs no more branches, set the item to `done` and fill in its finish date.
 7. Make each "Backlog candidate" from the branch `docs/TODO.md` a new item (see "New item").
    File each "Bug candidate" (see "Bugs").
+   On `master`, update "Current state" and "Redo risk" in the file of each objective that the item
+   links, and the status in `objectives/README.md` if it changes.
 8. Remove the worktree (`git worktree remove .worktrees/<branch>`). Then delete the branch with
    `git branch -D <branch>`: after a squash, git does not see the branch as merged, so `-d`
    refuses. If an empty folder stays behind (Gradle can leave an empty `.gradle` folder in it),
@@ -348,13 +378,12 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
 
 ## Bugs
 
-Bugs are not refactors. A bug fix changes gameplay on purpose, so it does not belong in a branch
-whose contract is "plays the same as `master`".
-
 - Bugs go in `docs/issues/`, one Markdown file per bug (decision A in `items/000-bugs/ITEM.md`). The rules and
   the index are in `docs/issues/README.md`.
-- If a refactor branch must change buggy behavior, its `CONTRACT.md` names the bug under
-  "Intended changes".
+- If a branch must change buggy behavior, its `CONTRACT.md` names the bug under "Intended changes".
+- A `fix/` branch and a direct change on `master` read the always-on rules in
+  `objectives/README.md`. They do not need an "Objective check" section. A conflict goes in the
+  fix's short contract.
 
 ## Worktrees
 

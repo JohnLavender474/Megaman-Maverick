@@ -1425,3 +1425,15 @@ newest entry at the bottom.
   unique warnings). A launch of `REFACTOR_TEST_029 --room movement` gives code 124 with no exception.
 - Follow-up: no new items. Filed `2026-11-01-rodent-claws-run-facing.md` and `2026-11-01-left-right-both-held.md`, both for `fix/left-right-last-pressed`,
   and `2026-11-01-heart-tank-does-not-sink-in-sand.md` for `fix/heart-tank-sinks-in-sand`. The next branch of `084` is `084h`.
+
+## 2026-11-01 — master (docs)
+
+- Summary: added `objectives/` with 9 objectives and 39 rules, of which 23 are always on. Each of the 103 items links to at least
+  one objective, through an `Objectives:` line in `ITEM.md`, a column in `ITEMS.md` and an item table in each objective. The merged
+  code was audited against each rule (`master` at `1fa0be319` for `O2` and at `30d88f0b7` for the others). `CLAUDE.md`, the root
+  `CLAUDE.md`, `docs/issues/README.md` and the item and branch templates now use the objectives. The effort is no longer limited to
+  "plays the same": a branch keeps all behavior that its contract does not name as an intended change.
+- Contract check: docs only. The link checks pass: each item has a valid objective, each `ITEMS.md` row has one, and the item tables
+  match the `ITEM.md` lines.
+- Follow-up: new `idea` items `094` to `102`. Audit notes on `009`, `010`, `021`, `025`, `032`, `039` and `047`. Open: the conflict
+  between `034` and `O9-R3`, the reference machine for `O5`, and the comparison games for `O4`. `084h` and `031f` keep their scope.

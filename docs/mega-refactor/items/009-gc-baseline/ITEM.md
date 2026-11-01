@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: tooling
+- Objectives: `O5`, `O6`
 - Depends on: none
 - Related: `006`, `008`, `010`, `011`, `026`, `032`, `044`
 - Branches: none yet
@@ -25,6 +26,10 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 Answer to review item 8 (2026-10-22, verbatim):
 
 > Yes, GC has been a bain for certain hits to performance, so being able to easily record and benchmark that (without causing slowdown to the game runtime) would be ideal
+
+## Objectives audit (2026-11-01)
+
+- Give the list of hot paths that `O5-R2` needs.
 
 ## Open questions
 

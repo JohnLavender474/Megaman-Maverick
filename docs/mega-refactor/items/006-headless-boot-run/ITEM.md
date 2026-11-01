@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: test
+- Objectives: `O6`
 - Depends on: `002`, `004`
 - Related: `008`, `009`, `010`, `033`, `055`
 - Branches: none yet

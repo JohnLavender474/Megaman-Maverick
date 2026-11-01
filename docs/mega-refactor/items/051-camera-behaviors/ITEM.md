@@ -2,6 +2,7 @@
 
 - Status: done
 - Type: feature
+- Objectives: `O4`, `O1`, `O2`
 - Depends on: none
 - Related: `019`, `036`, `038`, `041`, `047`, `058`
 - Branches: `mega-refactor-051a-camera-read-interface` (started 2026-10-30, merged into `master` 2026-10-30, squash `7370943a0`); `mega-refactor-051b-camera-behaviors` (started 2026-10-30, merged into `master` 2026-10-30, squash `7fe00b8b8`); `mega-refactor-051-master` (parent of `051c` and `051d`, started 2026-10-31, merged into `master` 2026-11-01, merge commit `14caa4191`, then parent of `051e`, merged into `master` 2026-11-01, merge commit `e12c880f5`); `mega-refactor-051c-camera-zones` (started 2026-10-30, merged into `mega-refactor-051-master` 2026-10-31, squash `03c884d48`); `mega-refactor-051d-auto-scroll` (started 2026-10-31, from `mega-refactor-051-master`, merged into `mega-refactor-051-master` 2026-10-31, squash `4ed49c0f9`); `mega-refactor-051-fix-scroll-room-scope` (started 2026-10-31, from `mega-refactor-051-master`, merged into `mega-refactor-051-master` 2026-11-01, squash `285c734a4`); `mega-refactor-051e-camera-rotation` (started 2026-11-01, from `mega-refactor-051-master`, merged into `mega-refactor-051-master` 2026-11-01, squash `d8f2a4ec0`)

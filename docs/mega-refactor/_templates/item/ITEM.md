@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: <refactor | feature | test | tooling | research | bugs>
+- Objectives: <at least one objective ID; the first is the main objective>
 - Depends on: none
 - Related: none
 - Branches: none yet

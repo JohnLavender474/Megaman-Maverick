@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: feature
+- Objectives: `O8`
 - Depends on: `024`, `069`, `084`; `CharacterDef` (`060`, or this item if X comes first)
 - Related: `029`, `031`, `048`, `051`, `060`, `061`, `067`, `068`, `084`
 - Branches: none yet

@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: feature
+- Objectives: `O4`
 - Depends on: none
 - Related: `015`, `023`
 - Branches: none yet

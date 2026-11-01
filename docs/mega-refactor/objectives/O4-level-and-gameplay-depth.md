@@ -1,0 +1,96 @@
+# `O4`: Deeper level design, enemies and bosses, more variety
+
+- Status: active
+
+## Problem
+
+- `P1`: Some players criticize the level design as basic, in comparison with modern fan games and the classic Capcom
+  games. Robot master stages are fully linear (`078`).
+- `P2`: Some players criticize enemy and boss patterns as basic. For example, `Starkner` only runs toward Megaman, and
+  `Met` runs into a bottomless pit (`079`).
+- `P3`: Levels have too little variety, and some good mechanics get little use (`073`, `074`, `075`, `080`). Before
+  `051`, the camera could only follow within room bounds.
+
+## Goal
+
+Better, more intricate level design and gameplay that meets the standard of modern fan games and the classic Capcom
+titles, with more variety. The camera zones and scrolling camera are one example.
+
+## Done means
+
+- Each robot master stage has at least one section that the owner rates as more than linear.
+- Each robot master has its new attacks, including a panic attack (`077`).
+- A mechanic that a level introduces gets real use in that level.
+
+## Rules
+
+### `O4-R1`: Mechanics from Tiled
+
+- Rule: a level mechanic is usable from Tiled, with no code for one level.
+- Problem: `P3`
+- Check: search for level-identity checks in the branch diff. The mechanic has map properties.
+- Applies: `linked items`
+- Active: `now`
+
+### `O4-R2`: A test room for each mechanic
+
+- Rule: a new mechanic has a room in a test map, so that it can be tried with no full stage.
+- Problem: `P3`
+- Check: the branch `CONTRACT.md` names the room with `--level` and `--room`.
+- Applies: `linked items`
+- Active: `now`
+
+### `O4-R3`: Patterns as states
+
+- Rule: new enemy and boss behavior uses the common state machine.
+- Problem: `P2`
+- Check: review the new entity logic for sequential `if` chains and hand-run timers.
+- Applies: `linked items`
+- Active: after `015`
+
+## Current state
+
+Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script results, so they can include a few comments.
+
+| Rule | State | Evidence | Closing item |
+|------|-------|----------|--------------|
+| `O4-R1` | `partly` | `051` holds: `CameraSectionsLayerBuilder.kt:51-94` reads all zone, scroll and crush properties from the map. Old mechanics do not hold: low gravity is code for one level on 9 `MOON_MAN` lines (for example `AbstractItem.kt:112`, `BodyComponent.kt:432`), and the Inferno frozen variant is code (`FrozenBlock.kt:47`, `RisingLavaRiver.kt:165`). | `025` |
+| `O4-R2` | `holds` | `RefactorTest051.tmx` is live (`LevelDefinition.kt:157`). The `051` contracts name 37 rooms, and all 37 exist with a player spawn. All 12 rooms with a crush surface are in a contract. | none needed |
+| `O4-R3` | `not checked` (waiting) | The rule starts after `015`. `IState.kt:5-12` has transitions only. Of 158 enemy and boss files at `5b4d76c5a`, 24 use `StateMachine`, 30 use `Loop`, and 82 use `Timer(` with neither. 0 enemy or boss files were added since then. | `015` |
+
+## Redo risk
+
+None found. `051` is data-driven, and no merged work adds an enemy or boss that `015` must convert.
+
+## Items
+
+| Item | Status | Note |
+|------|--------|------|
+| `051` | done | [X-style camera bounds, auto-scroll and other camera behaviors](../items/051-camera-behaviors/ITEM.md) (main) |
+| `073` | idea | [More gravity-block puzzles in Moon Man's stage](../items/073-moon-man-gravity-puzzles/ITEM.md) (main) |
+| `074` | idea | [More Starkner sections in Moon Man's stage](../items/074-moon-man-starkner-sections/ITEM.md) (main) |
+| `075` | idea | [A larger oasis section in Desert Man's stage](../items/075-desert-man-oasis/ITEM.md) (main) |
+| `077` | idea | [New attacks and a panic attack for each robot master](../items/077-robot-master-attacks/ITEM.md) (main) |
+| `078` | idea | [Alt paths in the robot master stages](../items/078-robot-master-alt-paths/ITEM.md) (main) |
+| `079` | idea | [Smarter behavior for simple enemies](../items/079-smarter-enemies/ITEM.md) (main) |
+| `080` | idea | [A larger MockingBit and MockingByte section in Timber Woman's stage](../items/080-timber-woman-mocking-section/ITEM.md) (main) |
+| `089` | idea | [Conditional crush surfaces](../items/089-conditional-crush-surfaces/ITEM.md) (main) |
+| `015` | planned | [One entity state machine (enter/update/exit, state-owned timers)](../items/015-entity-fsm/ITEM.md) |
+| `026` | planned | [Per-level render layers and an allocation-free draw queue](../items/026-render-layers/ITEM.md) |
+| `036` | planned | [Checkpoints as typed Tiled data: respawn point, triggers, order](../items/036-checkpoints-as-data/ITEM.md) |
+| `042` | planned | [Split god classes and extract reusable motion and attack components](../items/042-reusable-components/ITEM.md) |
+| `058` | idea | [Camera rotation as its own mechanism, separate from gravity](../items/058-camera-rotation-mechanism/ITEM.md) |
+| `068` | planned | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) |
+| `076` | idea | [A new tileset for the final stage](../items/076-final-stage-tileset/ITEM.md) |
+| `086` | idea | [Player movement modifiers as a component](../items/086-player-movement-modifiers/ITEM.md) |
+| `099` | idea | [Use camera zones and scroll sections in real stages](../items/099-camera-sections-in-stages/ITEM.md) (main) |
+
+## Gaps with no item
+
+None. The objectives audit of 2026-11-01 gave each gap an item or a note on an existing item.
+
+## Decisions
+
+## Open questions
+
+- Which games are the standard for comparison? A named list would make "done" easier to judge.

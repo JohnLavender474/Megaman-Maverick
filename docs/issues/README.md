@@ -10,7 +10,8 @@ are items in `docs/mega-refactor/ITEMS.md`.
 - Create, change and close issue files only on `master`. A branch that finds a bug writes it in
   its `docs/TODO.md` under "Bug candidates". The issue is filed on `master` from there.
 - A fix goes in its own branch `fix/<slug>` off `master`, with a short contract: what changes and
-  what must not change.
+  what must not change, and the named checks for both. A fix reads the always-on rules in
+  `docs/mega-refactor/objectives/README.md`, and a conflict goes in the short contract.
 - A refactor branch that must change buggy behavior names the issue file in its `CONTRACT.md`
   under "Intended changes".
 - To close an issue, set `status: closed` and add a `## Resolution` section with the commit or

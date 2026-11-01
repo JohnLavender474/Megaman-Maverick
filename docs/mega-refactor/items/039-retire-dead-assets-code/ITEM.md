@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: tooling
+- Objectives: `O1`, `O3`
 - Depends on: none
 - Related: `003`, `021`, `025`, `033`, `040`, `043`
 - Branches: none yet
@@ -25,6 +26,10 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 Answer to review item 38 (2026-10-22, verbatim):
 
 > Instead of deleting "dead" assets, let's just put them into a "retired" location that's not bundled with the game. This way, I can still support versioning, experimentation, etc. For the dead code, we'll need to identify what is truly dead versus "not used yet" or "not used because another class/file offers a different version that the game currently uses". It might be case that it's all dead code, but I want to comb through it first
+
+## Objectives audit (2026-11-01)
+
+- Review `LocksComponent.isLockedBy`, which has only test callers (`O1-R5`).
 
 ## Open questions
 

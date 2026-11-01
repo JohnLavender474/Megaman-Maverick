@@ -1,12 +1,13 @@
 # CLAUDE.md
 
-Megaman Maverick is a non-commercial Mega Man fan game. It uses Kotlin and LibGDX. The game is in a complete state. Gameplay changes must keep the current behavior unless the task says otherwise.
+Megaman Maverick is a non-commercial Mega Man fan game. It uses Kotlin and LibGDX. The game is playable from start to end, and work continues on its design and its features. A change keeps all behavior that its task does not name as a change.
 
 ## Mega refactor (in progress)
 
-A multi-branch refactor of `engine/` and `core/` is in progress. The goal is to remove deep inheritance, global state (for example `game.megaman`), and fragile event ordering, and to make the game easier to configure and extend. Performance is also a goal: the game must play well on weak hardware. The current gameplay is the contract: a change merges into `master` only if the game still plays the same.
+A multi-branch effort on `engine/` and `core/` is in progress. It includes refactors and also new behavior. `docs/mega-refactor/objectives/README.md` lists the objectives: clean design, multiplayer, web play, deeper levels and gameplay, performance on weak hardware, safe change, content from data, more characters and modes, and player experience. A branch keeps all behavior that its contract does not name as an intended change.
 
 - All docs for this effort are in `docs/mega-refactor/`. Read `docs/mega-refactor/CLAUDE.md` before you do refactor work.
+- Each item links to at least one objective. Each objective gives the rules that the code must obey, and the current state of each rule.
 - `docs/mega-refactor/ITEMS.md` lists every item and branch with its status. Each item has a folder `docs/mega-refactor/items/<id>-<slug>/`.
 - Refactor branches are named `mega-refactor-<id><letter>-<slug>`, for example `mega-refactor-001a-package-rename`.
 - Worktrees for parallel branches go in `.worktrees/` (git-ignored).

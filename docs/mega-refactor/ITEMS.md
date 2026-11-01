@@ -5,102 +5,111 @@ statuses and column meanings are in `CLAUDE.md`.
 
 ## Items
 
-| ID | Item | Type | Status | Depends on | Started | Finished |
-|----|------|------|--------|------------|---------|----------|
-| 000 | [Bugs found during the review](items/000-bugs/ITEM.md) | bugs | done | none | 2026-10-22 | 2026-10-22 |
-| 001 | [Maverick Engine](items/001-maverick-engine/ITEM.md) | refactor | active | `001b`: `016`, `010`, `032` | 2026-10-22 | |
-| 002 | [CI on every branch, one Gradle job, aligned test libraries](items/002-ci-all-branches/ITEM.md) | tooling | done | none | 2026-10-22 | 2026-10-22 |
-| 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | planned | `002` | | |
-| 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | planned | `002` | | |
-| 005 | [Golden damage-table test](items/005-golden-damage-test/ITEM.md) | test | planned | `004`, `002` | | |
-| 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | idea | `002`, `004` | | |
-| 007 | [Versioned JSON save slots with legacy import](items/007-json-save-slots/ITEM.md) | feature | planned | none | | |
-| 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | active | none | 2026-10-22 | |
-| 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | planned | none | | |
-| 010 | [One simulation clock: fixed tick for gameplay, separate present phase](items/010-fixed-tick/ITEM.md) | refactor | idea | `011`, `017` | | |
-| 011 | [One seedable, interceptable random source with named streams](items/011-game-random/ITEM.md) | refactor | planned | none | | |
-| 012 | [Named, composable freezes with a reason table](items/012-named-freezes/ITEM.md) | refactor | planned | none | | |
-| 013 | [Level flow state machine; pause as an overlay](items/013-level-flow-fsm/ITEM.md) | refactor | planned | `015` | | |
-| 014 | [Table-driven contact and collision rules](items/014-contact-rules-table/ITEM.md) | refactor | done | none | 2026-10-22 | 2026-10-22 |
-| 015 | [One entity state machine (enter/update/exit, state-owned timers)](items/015-entity-fsm/ITEM.md) | refactor | planned | none | | |
-| 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | done | none | 2026-10-28 | 2026-10-30 |
-| 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | planned | none | | |
-| 018 | [Event-driven system membership; component IDs when needed](items/018-ecs-membership/ITEM.md) | refactor | idea | none | | |
-| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | active | none | 2026-10-22 | |
-| 020 | [Cheaper broad phase with stable contact order](items/020-broad-phase/ITEM.md) | refactor | planned | none | | |
-| 021 | [Entity registry with stable readable IDs and aliases](items/021-entity-registry/ITEM.md) | refactor | planned | none | | |
-| 022 | [Typed property schema per entity, exported to Tiled](items/022-spawn-prop-schema/ITEM.md) | feature | planned | `021` | | |
-| 023 | [Damage profiles keyed by damage tags](items/023-damage-profiles/ITEM.md) | refactor | planned | `005` | | |
-| 024 | [One `WeaponDef` per weapon; loadout per character](items/024-weapon-defs/ITEM.md) | refactor | planned | `029` | | |
-| 025 | [Level manifest: traits, variants and rewards instead of level-identity checks](items/025-level-manifest/ITEM.md) | refactor | idea | none | | |
-| 026 | [Per-level render layers and an allocation-free draw queue](items/026-render-layers/ITEM.md) | refactor | planned | none | | |
-| 027 | [Non-null APIs instead of `!!`](items/027-non-null-apis/ITEM.md) | refactor | planned | none | | |
-| 028 | [Game-owned texture and animation cache](items/028-texture-cache/ITEM.md) | refactor | planned | none | | |
-| 029 | [`IPlayer` contract, players service and `CharacterDef`](items/029-player-contract/ITEM.md) | refactor | done | none | 2026-10-23 | 2026-10-25 |
-| 030 | [Faction and root owner instead of `owner == megaman`](items/030-faction/ITEM.md) | refactor | planned | `029`, `005` | | |
-| 031 | [Input frames per player (`InputFrame`), devices and bindings](items/031-input-frames/ITEM.md) | refactor | active | `029` | 2026-10-25 | |
-| 032 | [Platform-neutral `engine` module](items/032-platform-neutral-engine/ITEM.md) | refactor | planned | none | | |
-| 033 | [Per-level asset manifests and texture budgets](items/033-per-level-assets/ITEM.md) | refactor | planned | `028` | | |
-| 034 | [Persisted settings file](items/034-persisted-settings/ITEM.md) | feature | planned | `007` | | |
-| 035 | [Aspect-ratio policy for phones](items/035-aspect-ratio/ITEM.md) | research | planned | none | | |
-| 036 | [Checkpoints as typed Tiled data: respawn point, triggers, order](items/036-checkpoints-as-data/ITEM.md) | feature | planned | none | | |
-| 037 | [Explicit respawn state and named `on_respawn` actions](items/037-respawn-state/ITEM.md) | refactor | planned | `036` | | |
-| 038 | [One ordered respawn routine instead of an event chain](items/038-respawn-routine/ITEM.md) | refactor | planned | none | | |
-| 039 | [Retire unused assets and review dead code](items/039-retire-dead-assets-code/ITEM.md) | tooling | planned | none | | |
-| 040 | [Atlas checks and one-command repack (keep TexturePacker)](items/040-atlas-checks/ITEM.md) | tooling | idea | none | | |
-| 041 | [Lifecycle policy per entity, room inferred from geometry](items/041-lifecycle-policy/ITEM.md) | refactor | planned | `021`, `022` | | |
-| 042 | [Split god classes and extract reusable motion and attack components](items/042-reusable-components/ITEM.md) | refactor | planned | none | | |
-| 043 | [Lighter clone without a history rewrite](items/043-lighter-clone/ITEM.md) | tooling | planned | none | | |
-| 044 | [Lazy debug and log strings](items/044-lazy-logging/ITEM.md) | refactor | planned | none | | |
-| 045 | [Clear ownership rules and debug checks for `GameObjectPools`](items/045-pool-ownership/ITEM.md) | refactor | planned | none | | |
-| 046 | [Backgrounds as pure functions of the camera, with visible-cell drawing](items/046-backgrounds/ITEM.md) | refactor | planned | none | | |
-| 047 | [Co-op with multiple controllers](items/047-co-op/ITEM.md) | feature | planned | `029`, `031` | | |
-| 048 | [Replace entity inheritance with components](items/048-components-not-inheritance/ITEM.md) | refactor | planned | none | | |
-| 049 | [Reduce repetitive object-oriented patterns](items/049-reduce-repetitive-patterns/ITEM.md) | refactor | idea | none | | |
-| 050 | [Define entities in data files](items/050-entities-in-data-files/ITEM.md) | feature | planned | `021`, `022` | | |
-| 051 | [X-style camera bounds, auto-scroll and other camera behaviors](items/051-camera-behaviors/ITEM.md) | feature | done | none | 2026-10-30 | 2026-11-01 |
-| 052 | [Make values configurable](items/052-configurable-values/ITEM.md) | refactor | idea | none | | |
-| 053 | [Clean up event-driven logic](items/053-event-cleanup/ITEM.md) | refactor | idea | none | | |
-| 054 | [Support web browsers and Android](items/054-web-and-android/ITEM.md) | feature | planned | `032`, `033`, `035` | | |
-| 055 | [Record and replay for contract checks](items/055-record-and-replay/ITEM.md) | feature | planned | `010`, `011`, `006`, `031` | | |
-| 056 | [Typed fixture receivers](items/056-typed-fixture-receivers/ITEM.md) | refactor | dropped | none | | 2026-10-22 |
-| 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | idea | none | | |
-| 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | idea | none | | |
-| 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | idea | none | | |
-| 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | idea | `024`, `084` | | |
-| 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
-| 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | done | none | 2026-10-26 | 2026-10-27 |
-| 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | done | none | 2026-10-27 | 2026-10-28 |
-| 064 | [Entity instance identity: `id` and `group`](items/064-entity-instance-identity/ITEM.md) | refactor | done | none | 2026-10-27 | 2026-10-28 |
-| 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | planned | none | | |
-| 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | idea | none | | |
-| 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | planned | none | | |
-| 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | planned | none | | |
-| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | planned | `031` | | |
-| 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | idea | `031` | | |
-| 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | idea | none | | |
-| 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | planned | `016` | | |
-| 073 | [More gravity-block puzzles in Moon Man's stage](items/073-moon-man-gravity-puzzles/ITEM.md) | feature | idea | none | | |
-| 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | idea | none | | |
-| 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | idea | none | | |
-| 076 | [A new tileset for the final stage](items/076-final-stage-tileset/ITEM.md) | feature | idea | none | | |
-| 077 | [New attacks and a panic attack for each robot master](items/077-robot-master-attacks/ITEM.md) | feature | idea | none | | |
-| 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | idea | none | | |
-| 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | idea | none | | |
-| 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | idea | none | | |
-| 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | idea | `024`, `069`, `084` | | |
-| 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | planned | `012`, `031` | | |
-| 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | idea | none | | |
-| 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | active | none | 2026-10-30 | |
-| 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | dropped | none | | 2026-10-31 |
-| 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | idea | none | | |
-| 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | idea | none | | |
-| 088 | [Web player (TeaVM Wasm)](items/088-web-player/ITEM.md) | feature | idea | `021`, `032` | | |
-| 089 | [Conditional crush surfaces](items/089-conditional-crush-surfaces/ITEM.md) | feature | idea | `051` | | |
-| 090 | [Branch name in the game window title](items/090-branch-window-title/ITEM.md) | tooling | planned | none | | |
-| 091 | [Check that a test room loads with no visible game window](items/091-room-load-check/ITEM.md) | tooling | planned | none | | |
-| 092 | [Remove old entity versions and the version suffixes](items/092-old-entity-versions/ITEM.md) | refactor | idea | `084e` | | |
-| 093 | [Use or remove `MegaRegionProcessor`](items/093-mega-region-processor/ITEM.md) | refactor | idea | none | | |
+| ID | Item | Type | Objectives | Status | Depends on | Started | Finished |
+|----|------|------|------------|--------|------------|---------|----------|
+| 000 | [Bugs found during the review](items/000-bugs/ITEM.md) | bugs | `O6` | done | none | 2026-10-22 | 2026-10-22 |
+| 001 | [Maverick Engine](items/001-maverick-engine/ITEM.md) | refactor | `O1` | active | `001b`: `016`, `010`, `032` | 2026-10-22 | |
+| 002 | [CI on every branch, one Gradle job, aligned test libraries](items/002-ci-all-branches/ITEM.md) | tooling | `O6` | done | none | 2026-10-22 | 2026-10-22 |
+| 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | `O6`, `O7` | planned | `002` | | |
+| 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | `O6` | planned | `002` | | |
+| 005 | [Golden damage-table test](items/005-golden-damage-test/ITEM.md) | test | `O6` | planned | `004`, `002` | | |
+| 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | `O6` | idea | `002`, `004` | | |
+| 007 | [Versioned JSON save slots with legacy import](items/007-json-save-slots/ITEM.md) | feature | `O9` | planned | none | | |
+| 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | `O6` | active | none | 2026-10-22 | |
+| 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | `O5`, `O6` | planned | none | | |
+| 010 | [One simulation clock: fixed tick for gameplay, separate present phase](items/010-fixed-tick/ITEM.md) | refactor | `O2`, `O6`, `O5` | idea | `011`, `017` | | |
+| 011 | [One seedable, interceptable random source with named streams](items/011-game-random/ITEM.md) | refactor | `O2`, `O6` | planned | none | | |
+| 012 | [Named, composable freezes with a reason table](items/012-named-freezes/ITEM.md) | refactor | `O1`, `O2` | planned | none | | |
+| 013 | [Level flow state machine; pause as an overlay](items/013-level-flow-fsm/ITEM.md) | refactor | `O1`, `O2` | planned | `015` | | |
+| 014 | [Table-driven contact and collision rules](items/014-contact-rules-table/ITEM.md) | refactor | `O1` | done | none | 2026-10-22 | 2026-10-22 |
+| 015 | [One entity state machine (enter/update/exit, state-owned timers)](items/015-entity-fsm/ITEM.md) | refactor | `O1`, `O4` | planned | none | | |
+| 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | `O1`, `O2` | done | none | 2026-10-28 | 2026-10-30 |
+| 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | `O1`, `O5` | planned | none | | |
+| 018 | [Event-driven system membership; component IDs when needed](items/018-ecs-membership/ITEM.md) | refactor | `O5`, `O1` | idea | none | | |
+| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | `O1`, `O2` | active | none | 2026-10-22 | |
+| 020 | [Cheaper broad phase with stable contact order](items/020-broad-phase/ITEM.md) | refactor | `O5`, `O2` | planned | none | | |
+| 021 | [Entity registry with stable readable IDs and aliases](items/021-entity-registry/ITEM.md) | refactor | `O7`, `O3` | planned | none | | |
+| 022 | [Typed property schema per entity, exported to Tiled](items/022-spawn-prop-schema/ITEM.md) | feature | `O7` | planned | `021` | | |
+| 023 | [Damage profiles keyed by damage tags](items/023-damage-profiles/ITEM.md) | refactor | `O1` | planned | `005` | | |
+| 024 | [One `WeaponDef` per weapon; loadout per character](items/024-weapon-defs/ITEM.md) | refactor | `O8`, `O1` | planned | `029` | | |
+| 025 | [Level manifest: traits, variants and rewards instead of level-identity checks](items/025-level-manifest/ITEM.md) | refactor | `O7`, `O1` | idea | none | | |
+| 026 | [Per-level render layers and an allocation-free draw queue](items/026-render-layers/ITEM.md) | refactor | `O5`, `O4` | planned | none | | |
+| 027 | [Non-null APIs instead of `!!`](items/027-non-null-apis/ITEM.md) | refactor | `O1` | planned | none | | |
+| 028 | [Game-owned texture and animation cache](items/028-texture-cache/ITEM.md) | refactor | `O1`, `O3` | planned | none | | |
+| 029 | [`IPlayer` contract, players service and `CharacterDef`](items/029-player-contract/ITEM.md) | refactor | `O2`, `O8`, `O1` | done | none | 2026-10-23 | 2026-10-25 |
+| 030 | [Faction and root owner instead of `owner == megaman`](items/030-faction/ITEM.md) | refactor | `O2`, `O8` | planned | `029`, `005` | | |
+| 031 | [Input frames per player (`InputFrame`), devices and bindings](items/031-input-frames/ITEM.md) | refactor | `O2`, `O9` | active | `029` | 2026-10-25 | |
+| 032 | [Platform-neutral `engine` module](items/032-platform-neutral-engine/ITEM.md) | refactor | `O3`, `O1` | planned | none | | |
+| 033 | [Per-level asset manifests and texture budgets](items/033-per-level-assets/ITEM.md) | refactor | `O3`, `O5` | planned | `028` | | |
+| 034 | [Persisted settings file](items/034-persisted-settings/ITEM.md) | feature | `O9` | planned | `007` | | |
+| 035 | [Aspect-ratio policy for phones](items/035-aspect-ratio/ITEM.md) | research | `O3` | planned | none | | |
+| 036 | [Checkpoints as typed Tiled data: respawn point, triggers, order](items/036-checkpoints-as-data/ITEM.md) | feature | `O7`, `O4` | planned | none | | |
+| 037 | [Explicit respawn state and named `on_respawn` actions](items/037-respawn-state/ITEM.md) | refactor | `O1` | planned | `036` | | |
+| 038 | [One ordered respawn routine instead of an event chain](items/038-respawn-routine/ITEM.md) | refactor | `O1`, `O2` | planned | none | | |
+| 039 | [Retire unused assets and review dead code](items/039-retire-dead-assets-code/ITEM.md) | tooling | `O1`, `O3` | planned | none | | |
+| 040 | [Atlas checks and one-command repack (keep TexturePacker)](items/040-atlas-checks/ITEM.md) | tooling | `O6` | idea | none | | |
+| 041 | [Lifecycle policy per entity, room inferred from geometry](items/041-lifecycle-policy/ITEM.md) | refactor | `O7` | planned | `021`, `022` | | |
+| 042 | [Split god classes and extract reusable motion and attack components](items/042-reusable-components/ITEM.md) | refactor | `O1`, `O4` | planned | none | | |
+| 043 | [Lighter clone without a history rewrite](items/043-lighter-clone/ITEM.md) | tooling | `O1` | planned | none | | |
+| 044 | [Lazy debug and log strings](items/044-lazy-logging/ITEM.md) | refactor | `O5` | planned | none | | |
+| 045 | [Clear ownership rules and debug checks for `GameObjectPools`](items/045-pool-ownership/ITEM.md) | refactor | `O1`, `O5` | planned | none | | |
+| 046 | [Backgrounds as pure functions of the camera, with visible-cell drawing](items/046-backgrounds/ITEM.md) | refactor | `O5`, `O1` | planned | none | | |
+| 047 | [Co-op with multiple controllers](items/047-co-op/ITEM.md) | feature | `O2` | planned | `029`, `031` | | |
+| 048 | [Replace entity inheritance with components](items/048-components-not-inheritance/ITEM.md) | refactor | `O1` | planned | none | | |
+| 049 | [Reduce repetitive object-oriented patterns](items/049-reduce-repetitive-patterns/ITEM.md) | refactor | `O1` | idea | none | | |
+| 050 | [Define entities in data files](items/050-entities-in-data-files/ITEM.md) | feature | `O7` | planned | `021`, `022` | | |
+| 051 | [X-style camera bounds, auto-scroll and other camera behaviors](items/051-camera-behaviors/ITEM.md) | feature | `O4`, `O1`, `O2` | done | none | 2026-10-30 | 2026-11-01 |
+| 052 | [Make values configurable](items/052-configurable-values/ITEM.md) | refactor | `O1`, `O7` | idea | none | | |
+| 053 | [Clean up event-driven logic](items/053-event-cleanup/ITEM.md) | refactor | `O1` | idea | none | | |
+| 054 | [Support web browsers and Android](items/054-web-and-android/ITEM.md) | feature | `O3` | planned | `032`, `033`, `035` | | |
+| 055 | [Record and replay for contract checks](items/055-record-and-replay/ITEM.md) | feature | `O6`, `O2` | planned | `010`, `011`, `006`, `031` | | |
+| 056 | [Typed fixture receivers](items/056-typed-fixture-receivers/ITEM.md) | refactor | `O1` | dropped | none | | 2026-10-22 |
+| 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | `O1` | idea | none | | |
+| 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
+| 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | `O2`, `O1` | idea | none | | |
+| 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | `O8` | idea | `024`, `084` | | |
+| 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | `O2`, `O8`, `O1` | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
+| 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | `O1` | done | none | 2026-10-26 | 2026-10-27 |
+| 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | `O1` | done | none | 2026-10-27 | 2026-10-28 |
+| 064 | [Entity instance identity: `id` and `group`](items/064-entity-instance-identity/ITEM.md) | refactor | `O1` | done | none | 2026-10-27 | 2026-10-28 |
+| 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | `O1` | planned | none | | |
+| 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | `O1` | idea | none | | |
+| 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | `O5`, `O3` | planned | none | | |
+| 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | `O8`, `O4` | planned | none | | |
+| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | `O8` | planned | `031` | | |
+| 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | `O9` | idea | `031` | | |
+| 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | `O1` | idea | none | | |
+| 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | `O1` | planned | `016` | | |
+| 073 | [More gravity-block puzzles in Moon Man's stage](items/073-moon-man-gravity-puzzles/ITEM.md) | feature | `O4` | idea | none | | |
+| 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | `O4` | idea | none | | |
+| 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | idea | none | | |
+| 076 | [A new tileset for the final stage](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
+| 077 | [New attacks and a panic attack for each robot master](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | idea | none | | |
+| 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
+| 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
+| 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
+| 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | idea | `024`, `069`, `084` | | |
+| 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | `O9` | planned | `012`, `031` | | |
+| 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | `O1` | idea | none | | |
+| 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | `O8`, `O1` | active | none | 2026-10-30 | |
+| 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | `O1` | dropped | none | | 2026-10-31 |
+| 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
+| 087 | [Reset order for components](items/087-component-reset-order/ITEM.md) | refactor | `O1` | idea | none | | |
+| 088 | [Web player (TeaVM Wasm)](items/088-web-player/ITEM.md) | feature | `O3` | idea | `021`, `032` | | |
+| 089 | [Conditional crush surfaces](items/089-conditional-crush-surfaces/ITEM.md) | feature | `O4` | idea | `051` | | |
+| 090 | [Branch name in the game window title](items/090-branch-window-title/ITEM.md) | tooling | `O6` | planned | none | | |
+| 091 | [Check that a test room loads with no visible game window](items/091-room-load-check/ITEM.md) | tooling | `O6` | planned | none | | |
+| 092 | [Remove old entity versions and the version suffixes](items/092-old-entity-versions/ITEM.md) | refactor | `O1`, `O7` | idea | `084e` | | |
+| 093 | [Use or remove `MegaRegionProcessor`](items/093-mega-region-processor/ITEM.md) | refactor | `O1` | idea | none | | |
+| 094 | [Split screen (`O2` phase 2)](items/094-split-screen/ITEM.md) | feature | `O2` | idea | `047`, `010` | | |
+| 095 | [Netplay with lockstep (`O2` phase 3)](items/095-netplay/ITEM.md) | feature | `O2` | idea | `094`, `010`, `011`, `055` | | |
+| 096 | [Session-owned entity factories and lists, in place of statics](items/096-session-owned-entity-services/ITEM.md) | refactor | `O1` | idea | none | | |
+| 097 | [Stable order for event keys in `EventsManager`](items/097-stable-event-key-order/ITEM.md) | refactor | `O2`, `O1` | idea | none | | |
+| 098 | [Typed fixture and body state in place of property bags](items/098-typed-fixture-state/ITEM.md) | refactor | `O1` | idea | none | | |
+| 099 | [Use camera zones and scroll sections in real stages](items/099-camera-sections-in-stages/ITEM.md) | feature | `O4` | idea | `051` | | |
+| 100 | [CI result before a merge](items/100-ci-before-merge/ITEM.md) | tooling | `O6` | idea | `002` | | |
+| 101 | [Typed Tiled fields and checks for camera sections and rooms](items/101-map-object-schema/ITEM.md) | tooling | `O7`, `O6` | idea | `022` | | |
+| 102 | [A game mode concept](items/102-game-modes/ITEM.md) | feature | `O8` | idea | none | | |
 
 ## Branches
 

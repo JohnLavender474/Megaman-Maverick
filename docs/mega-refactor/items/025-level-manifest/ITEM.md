@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: refactor
+- Objectives: `O7`, `O1`
 - Depends on: none
 - Related: `007`, `013`, `021`, `024`, `036`, `040`
 - Branches: none yet
@@ -26,6 +27,10 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 Answer to review item 24 (2026-10-22, verbatim):
 
 > let's discuss this further, what benefits would we see? examples?
+
+## Objectives audit (2026-11-01)
+
+- Add a test room for low gravity as a mechanic (`O4-R1`, `O4-R2`).
 
 ## Open questions
 

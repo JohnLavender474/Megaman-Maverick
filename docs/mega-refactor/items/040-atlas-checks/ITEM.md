@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: tooling
+- Objectives: `O6`
 - Depends on: none
 - Related: `002`, `004`, `028`, `033`, `039`
 - Branches: none yet

@@ -2,6 +2,7 @@
 
 - Status: active
 - Type: refactor
+- Objectives: `O8`, `O1`
 - Depends on: none
 - Related: `017`, `023`, `024`, `025`, `029`, `030`, `042`, `048`, `051`, `053`, `058`, `059`, `060`, `081`
 - Branches: `mega-refactor-084a-player-state` (merged 2026-10-30)

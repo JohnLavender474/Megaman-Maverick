@@ -28,4 +28,13 @@ The files and systems this branch touches, and what could break.
 
 ## Overlap with other branches
 
+## Objective check
+
+The always-on rules in `objectives/README.md` and the rules of the linked objectives that this branch
+can affect. Effect: `helps`, `no effect`, `waiting` or `conflict`. A conflict goes to the owner before
+approval.
+
+| Rule | Effect | Note |
+|------|--------|------|
+
 ## Open questions

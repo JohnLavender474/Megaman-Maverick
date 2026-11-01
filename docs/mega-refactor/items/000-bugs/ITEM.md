@@ -2,9 +2,12 @@
 
 - Status: done
 - Type: bugs
+- Objectives: `O6`
 - Depends on: none
 - Related: `012`, `018`, `019`, `036`, `007`, `008`, `032`, `034`, `040`
 - Branches: none yet
+
+Note (2026-11-01): the effort now includes new behavior, so "plays the same" is no longer the contract of every branch. See `CLAUDE.md`, "Goal" and "Bugs".
 
 ## Moved
 

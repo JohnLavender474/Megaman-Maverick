@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: refactor
+- Objectives: `O3`, `O1`
 - Depends on: none
 - Related: `001`, `002`, `009`, `011`, `021`, `033`, `035`, `044`, `054`
 - Branches: none yet
@@ -25,6 +26,10 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 Answer to review item 31 (2026-10-22, verbatim):
 
 > yes, the `engine` should work on desktop, mobile, android, etc.
+
+## Objectives audit (2026-11-01)
+
+- The scope must also name the `core` code: `DebugWindow.kt`, `AsyncFileWriter.kt`, the screenshot code (`MegamanMaverickGame.kt:604-608`), `EnumStateMachineBuilder.kt:11` and `FacingUtils.kt:28`.
 
 ## Open questions
 

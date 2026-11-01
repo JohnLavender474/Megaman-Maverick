@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: tooling
+- Objectives: `O6`
 - Depends on: none
 - Related: `003`, `006`, `008`, `090`
 - Branches: none yet

@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: feature
+- Objectives: `O9`
 - Depends on: `007`
 - Related: `008`, `031`, `032`
 - Branches: none yet

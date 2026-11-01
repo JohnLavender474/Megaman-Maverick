@@ -2,6 +2,7 @@
 
 - Status: done
 - Type: refactor
+- Objectives: `O1`
 - Depends on: none
 - Related: `019`, `021`, `038`, `047`, `048`, `061`
 - Branches: `mega-refactor-062a-entity-state` (merged), `mega-refactor-062b-spawn-order-guards` (merged), `mega-refactor-062c-existence-readers` (merged), `mega-refactor-062d-queued-spawn-query` (merged)

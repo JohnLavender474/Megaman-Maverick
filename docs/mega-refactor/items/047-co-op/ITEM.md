@@ -2,8 +2,9 @@
 
 - Status: planned
 - Type: feature
+- Objectives: `O2`
 - Depends on: `029`, `031`
-- Related: `007`, `008`, `013`, `030`, `038`, `051`
+- Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`
 - Branches: none yet
 
 ## Goal
@@ -34,6 +35,12 @@ Item `029` research (2026-10-23, verbatim):
   any free device" prompt when a player's gamepad is unplugged, and reconnect. `selectButtonAction` and bindings per
   slot for slots 2 to 4. Profiles (a named copy of a slot's settings) come during or after co-op. See item `031`
   `ITEM.md` "Decisions" and `NOTES.md`.
+
+## Objectives audit (2026-11-01)
+
+- Decision (owner, 2026-11-01): this item holds phase 1 of `O2`: two players on one machine, on one shared screen. Split screen is `094`, and netplay is `095`.
+- `MegaPlayers.targetFor` ignores the seeker (`MegaPlayers.kt:34`). Input is built for slot 0 only. Lives are one shared count (`GameState.kt:39`).
+- `Players.unregister` has only test callers. Leave during play is a possible first caller.
 
 ## Open questions
 

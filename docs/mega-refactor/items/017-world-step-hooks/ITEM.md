@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: refactor
+- Objectives: `O1`, `O5`
 - Depends on: none
 - Related: `010`, `015`, `018`, `048`, `084`
 - Branches: none yet

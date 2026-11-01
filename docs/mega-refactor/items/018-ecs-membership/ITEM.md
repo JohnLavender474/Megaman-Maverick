@@ -2,6 +2,7 @@
 
 - Status: idea
 - Type: refactor
+- Objectives: `O5`, `O1`
 - Depends on: none
 - Related: `009`, `017`, `048`
 - Branches: none yet

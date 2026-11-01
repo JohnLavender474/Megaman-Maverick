@@ -2,6 +2,7 @@
 
 - Status: done
 - Type: tooling
+- Objectives: `O6`
 - Depends on: none
 - Related: `003`, `004`, `005`, `006`
 - Branches: `mega-refactor-002a-ci-all-branches` (merged 2026-10-22, squash `52dde921f`)

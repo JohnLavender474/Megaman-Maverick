@@ -2,6 +2,7 @@
 
 - Status: dropped (2026-10-22): moved into item `014` as its first branch. The owner decided this on 2026-10-22. The scope and research below still apply, and `014` links to them.
 - Type: refactor
+- Objectives: `O1`
 - Depends on: none
 - Related: `014`, `029`
 - Branches: none (see `014`)

@@ -1,12 +1,14 @@
 # Contract: <branch>
 
-The gameplay that this branch must not change, and how to check it. Write this file during
+The behavior that this branch changes on purpose, the behavior that it must not change, and how to
+check them. Write this file during
 planning, before you change code. Do the checks before the branch merges, and write the result
 in the branch process log.
 
 ## Automated checks
 
 - [ ] `./gradlew engine:test` passes.
+- [ ] `./gradlew core:test` passes.
 - [ ] `./gradlew lwjgl3:jar` builds.
 
 ## Manual playthrough

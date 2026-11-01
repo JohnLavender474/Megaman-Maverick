@@ -2,6 +2,7 @@
 
 - Status: planned
 - Type: test
+- Objectives: `O6`
 - Depends on: `002`
 - Related: `005`, `006`, `021`, `028`, `039`
 - Branches: none yet

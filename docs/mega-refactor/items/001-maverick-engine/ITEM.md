@@ -2,6 +2,7 @@
 
 - Status: active
 - Type: refactor
+- Objectives: `O1`
 - Depends on: `001a`: none. `001b`: `016`, `010`, `032`
 - Related: `029`
 - Branches: `mega-refactor-001a-package-rename` (merged 2026-10-22, squash `1a61734b5`),
