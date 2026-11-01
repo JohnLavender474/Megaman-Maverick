@@ -114,3 +114,4 @@ related-items: [<mega-refactor item IDs>]
 | [A rebind of `START` or `A` with the key held past `0.25` s confirms the row again](2026-11-01-rebind-confirm-held-key.md) | no | core | open |
 | [`Esc` on the level select screen after an extra level opens the extras rows](2026-11-01-level-select-back-after-extra-level.md) | no | core | open |
 | [The stun bounce assumes that Mega's body direction is `UP`](2026-10-30-stun-bounce-assumes-up.md) | yes | core | open |
+| [Entities keep a pooled scratch object in a field, so `CeilingCrusher` teleports and kills at once](2026-11-01-stored-scratch-vector-in-entity-fields.md) | yes | core | open |
