@@ -1384,5 +1384,6 @@ newest entry at the bottom.
   DEFAULTS" saved. `BACK` from the bindings screen in a level goes back to the pause screen. Squash commit `b22b232c9`.
 - Contract check: the owner's play test passes ("all tests passed"), and merge approval (verbatim: "yes"). `master` moved after the play test, so
   `master` went into the branch (`8ed39c993`). 2 conflicts, the imports of `AirDashBehavior.kt` and `ControllerComponent.kt`; both sides kept. The play
-  test was not repeated on the merged code, because `master`'s changes in the shared files do not touch pause, resume, viewports, music or input.
+  test was not repeated on the merged code, because `master`'s changes in the shared files do not touch pause, resume, viewports, music or input. The automated checks pass on the branch and on a clean copy of `master` at
+  `d28c60893` (engine 600, core 528, 0 failures, `lwjgl3:jar`, 76 unique warnings with the line numbers removed and no new line; 96 by the count of the `084f` entry, the baseline count).
 - Follow-up: 5 issues closed (4 fixed, `2026-10-22-saved-key-bindings-not-applied.md` as on purpose). Item `034` updated. No new items and no bugs to file. `031f` is now `planned`. The accepted 1-frame pause grid has a `TODO` at `showOverPause` (item `013`).
