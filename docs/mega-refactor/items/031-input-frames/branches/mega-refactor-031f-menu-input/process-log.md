@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: the menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes
-- Done: the scan on `c6b8cecf7`, `docs/SCOPE.md` and `docs/CONTRACT.md` (approved)
-- Next: a draft `docs/PLAN.md`
+- Done: the scan on `c6b8cecf7`, `docs/SCOPE.md`, `docs/CONTRACT.md` and `docs/PLAN.md` (approved), plan step 0
+- Next: plan step 1
 - Blocked:
 
 ## Entries
@@ -60,3 +60,23 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 
 - The owner approved `docs/CONTRACT.md` (verbatim: "yes"), with the recommendations of questions 2 to 6. `docs/SCOPE.md` text corrected as question 5 says, with the 2 pause seams in its API table. No answer changed.
 - Issue filed on `master`: `docs/issues/2026-11-01-start-release-at-lock-start-pauses.md`.
+
+## 2026-11-01 (plan)
+
+- No branch exists yet. Draft `docs/PLAN.md` written on `master`, read at `5c02dc8aa`. No build, no launch, no commit. `~/.prefs` was not read. The 2
+  local edits of the owner were not touched.
+- 15 steps: 0 branch start, 1 baseline, 2 and 3 frames, 4 the system frame, 5 to 8 the back action, 9 and 10 the pause seam, `Esc` and the lock tests,
+  11 removals, 12 contract checks, 13 the owner's play test, 14 merge. The contract's own text says "plan step 1" for the baseline, so the
+  baseline is step 1 and the branch start is step 0.
+- All 109 checks have a line in the check map: 18 A, 33 T, 11 R, 45 manual, `S1` and `X1`.
+- `SCOPE.md` and `CONTRACT.md` line numbers were checked on the current code. The moved numbers are in the plan table. The contract and scope text that no
+  longer fits is plan open question 1. This session changed neither file.
+- Read at `084g` (`fd8e5e85a`, and its worktree docs): no shared file with A6, A7 or A8. `LevelRoomHandler.kt` is in the merge rule of step 14.
+- A design choice in the plan: `isPauseRequested` takes a `ButtonStatus` for `Esc`, not the system frame. So `MLS` keeps the `Esc` read and the `TODO`,
+  and A15, A16 and A18 stay true as written.
+
+## 2026-11-01 (plan approved, branch start)
+
+- The owner approved `docs/PLAN.md` (verbatim: "yes"), with a) on its 3 questions. `docs/CONTRACT.md` and `docs/SCOPE.md` text corrected as question 1 says: A2, A3, A11, R6, a note on the moved line numbers, section 4, the API table, "Measured size" and 2 question numbers. No answer changed.
+- The 2 line numbers of the boss-defeat lock in the issue file are now `:754`.
+- Plan step 0: branch start on `master`.

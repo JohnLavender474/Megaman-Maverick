@@ -26,7 +26,7 @@ Frame `N` is the frame where a room transition begins and submits `TURN_CONTROLL
 
 In both cases all later frames are `RELEASED`, so the pause menu reads nothing. The pause stops `cameraController.update`, so the transition does not end and `TURN_CONTROLLER_ON` never comes. The game cannot continue. With default flags there is no way out.
 
-The boss-defeat lock (`MegaLevelScreen.kt:755`) and the `WilyFinalBoss.kt:311` lock follow the same path.
+The boss-defeat lock (`MegaLevelScreen.kt:754`) and the `WilyFinalBoss.kt:311` lock follow the same path.
 
 ## Origin
 
@@ -44,4 +44,4 @@ The boss-defeat lock (`MegaLevelScreen.kt:755`) and the `WilyFinalBoss.kt:311` l
 
 The window is one frame per lock start, so a tap rarely hits it. A held key hits it every time.
 
-`mega-refactor-031f-menu-input` fixes both triggers as an intended change: the pause test and the queued pause each test the lock. One case stays: a lock submitted from a listener, for example `MegaLevelScreen.kt:755`, starts 1 frame later, so a real release at that moment can still pause (inference, from reading). `Esc` leaves that pause. A pad-only player has no way out.
+`mega-refactor-031f-menu-input` fixes both triggers as an intended change: the pause test and the queued pause each test the lock. One case stays: a lock submitted from a listener, for example `MegaLevelScreen.kt:754`, starts 1 frame later, so a real release at that moment can still pause (inference, from reading). `Esc` leaves that pause. A pad-only player has no way out.

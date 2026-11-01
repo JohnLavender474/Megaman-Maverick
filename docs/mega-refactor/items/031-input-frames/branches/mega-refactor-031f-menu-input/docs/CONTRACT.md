@@ -20,6 +20,9 @@ only docs. `E` = `engine/src/main/kotlin/com/maverick/game/engine/`,
 `C/screens/levels/MegaLevelScreen.kt`, `LPS` = `C/screens/menus/level/LevelPauseScreen.kt`, `CSS` =
 `C/screens/menus/ControllerSettingsScreen.kt`, `GSP` = `C/screens/utils/GameSettingsPanel.kt`.
 
+Line numbers moved after this contract was written. In `docs/PLAN.md`, the section "Line numbers and contract text" lists
+each one. For example, `MLS:876` and `:878` are now `:874` and `:876`, and `G:574` is `:573`.
+
 ## Where a real library differs from a mock
 
 In `031d` a mock hid a real bug. These are the cases for `031f`. Each case names its check. The source is `gdx`
@@ -73,10 +76,10 @@ Kotest here does not accept the Gradle `--tests` filter, so each run of one test
 ### Build and counts
 
 - [ ] A1. The command above passes.
-- [ ] A2. Engine: 600 tests plus the 10 new tests, so 610, 0 failures.
-- [ ] A3. Core: the minimum is 548, 0 failures: 528, minus the 3 cases of `FrameControllerPollerTest`, plus T11 to T33
-      (23 tests). No other old case is lost: the 13 `KeyboardInputTest` cases stay, also "gives no bit for Esc". If
-      open question 3 takes option b, T27 to T31 go, and the minimum is 543.
+- [ ] A2. Engine: `Eb` plus the 10 new tests, 0 failures. `Eb` is the count that plan step 1 measures.
+- [ ] A3. Core: the minimum is `Cb + 20`, 0 failures: `Cb` is the count that plan step 1 measures, minus the 3 cases of
+      `FrameControllerPollerTest`, plus T11 to T33 (23 tests). No other old case is lost: the 13 `KeyboardInputTest` cases
+      stay, also "gives no bit for Esc".
 - [ ] A4. Warnings: no new line against the sorted list of plan step 1. Count with
       `grep '^w:' build.log | sed -E 's/:[0-9]+:[0-9]+ / /' | sort -u | wc -l`. Compare the sorted lists, not only the
       counts. A line can leave the list.
@@ -110,8 +113,7 @@ changes.
 - [ ] A10. `grep -rnE 'controllerPoller|IControllerPoller|FrameControllerPoller' core/src engine/src lwjgl3/src` gives
       no output, and `ls engine/src/main/kotlin/com/maverick/game/engine/controller/polling` fails.
 - [ ] A11. `grep -rnE 'selectionButtons|START_BUTTONS|END_BUTTONS|EARLY_EXIT_BUTTONS' core/src` gives no output, and
-      `grep -rn 'isAnyJust' core/src engine/src lwjgl3/src` lists only `isAnyKeyJustPressed` lines in
-      `InputExtensions.kt`, which this branch does not touch.
+      `grep -rn 'isAnyJust' core/src engine/src lwjgl3/src` gives no output.
 - [ ] A12. `grep -rnE 'isKeyPressed|isKeyJustPressed' core/src/main lwjgl3/src/main` adds only 1 line against `master`:
       the `Esc` read in `C/input/KeyboardInput.kt`. `grep -rn 'ESCAPE' core/src/main lwjgl3/src/main` lists 2 lines,
       both in `C/input/KeyboardInput.kt`.
@@ -217,7 +219,7 @@ checks cover it.
 - [ ] R4. `LPS.onBack` on the grid does not write `currentWeapon`, does not call `setCurrentButtonKey`, and uses the guard
       `!exiting && settingsScreenSlide.finished`.
 - [ ] R5. `MainMenuScreen` root and `SaveGameScreen` have no back action. `SaveGameScreen.kt` does not change (A7).
-- [ ] R6. `MLS:876` keeps its order of tests and adds only `!game.inputLocked`. The queued pause at `:878` is
+- [ ] R6. `isPauseRequested` keeps the order of tests of `MLS:874` and adds only `!locked`. The queued pause at `:876` is
       `game.runQueue.addLast { if (!game.inputLocked) game.pause() }`, or the function of open question 3 with the same
       effect. The pause stays in the queued runnable. The test reads the lock when the runnable runs, not when it is
       added.

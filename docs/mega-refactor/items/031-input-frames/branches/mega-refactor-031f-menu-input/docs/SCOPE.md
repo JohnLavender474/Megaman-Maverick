@@ -231,7 +231,8 @@ during a lock is a state that the game cannot reach with `START` by intent, but 
 
 ### 4. `Esc` in gameplay
 
-- `MLS.isPauseButtonRequested` adds `|| game.systemInput.isJustPressed(SystemButton.BACK)`, with the `TODO` of the decision.
+- `LevelPauseRules.isPauseRequested` replaces `MLS.isPauseButtonRequested` and takes the status of `SystemButton.BACK`. `MLS` reads
+  `game.systemInput.getStatus(SystemButton.BACK)`, with the `TODO` of the decision.
 - `MLS:876` adds `!game.inputLocked`, so a lock stops both keys (question 3). `game.inputLocked` reads `slot0FrameBuilder.locked`.
 - The queued pause at `MLS:878` tests the lock again: `game.runQueue.addLast { if (!game.inputLocked) game.pause() }`. A release in the
   frame where a lock starts passes `MLS:876`, because `events.run()` sets `locked` after the screen render. The queued pause runs at the start of
@@ -248,7 +249,7 @@ See "Removed".
 |---|---|
 | `SystemButton` (`BACK`) | `G.render` (builder), `MegaMenuScreen`, `MLS` |
 | `KeyboardInput.systemHeld()` | `G.render` |
-| `game.systemInput` | `MegaMenuScreen.backRequested`, `MLS.isPauseButtonRequested` |
+| `game.systemInput` | `MegaMenuScreen.backRequested`, `MLS.render` |
 | `game.inputLocked` | `MLS:876`, `MLS:878` |
 | A pure function for the pause decision at `MLS:876` (contract question 3) | `MLS.render` |
 | A small function for the queued pause, which takes the queue, the lock read and the pause call (contract question 3) | `MLS.render` |
@@ -353,11 +354,11 @@ uses a fake `Gdx.input`.
 |---|---|---|
 | Engine, deleted | 1 | `IControllerPoller.kt`, 54 lines, 0 engine readers |
 | Engine, changed | 1 | `AbstractMenuScreen.kt` |
-| Core, new | 1 | `SystemButton.kt` |
+| Core, new | 2 | `SystemButton.kt`, `LevelPauseRules.kt` |
 | Core, deleted | 1 | `FrameControllerPoller.kt`, 18 lines |
 | Core, changed for frames | 8 | `MegaMenuScreen`, 6 skip screens, `ScreenController` |
 | Core, changed for `Esc` | 10 | `G`, `MLS`, `KeyboardInput`, `MegaPlayers`, `LPS`, `MainMenuScreen`, `SelectDifficultyScreen`, `ExtrasScreen`, `LevelSelectScreenV2`, `CSS` (`MegaMenuScreen` is in the row above) |
-| Tests | 4 | `FrameControllerPollerTest` deleted; `MenuScreenTest`, `KeyboardInputTest`, `MegaPlayersTest` changed |
+| Tests | 6 | `FrameControllerPollerTest` deleted; `MenuScreenTest`, `KeyboardInputTest`, `MegaPlayersTest` changed; `MegaMenuScreenTest`, `LevelPauseRulesTest` new |
 
 18 changed core files in all, 1 new, 1 deleted; 9 read sites change. No change to `lwjgl3/`. `SaveGameScreen` does not change.
 Docs to change at the merge: the skill line, the `082` lines, and the item records.
@@ -380,7 +381,7 @@ Docs to change at the merge: the skill line, the `082` lines, and the item recor
 - **A confirm and a back in one frame:** the confirm runs first if the plan keeps the loop order. If a confirm returns `false` (for example
   `SETTINGS`), the back runs also. The contract fixes the order.
 - **`CSS.render` keeps running after `closeOverPause()`** (the rest of `:400-429`). The `BACK` row does the same.
-- **No gamepad back:** a pad-only player has no `Esc` (question 6). The owner's PS3 and NES-style pads get no new input.
+- **No gamepad back:** a pad-only player has no `Esc` (question 10). The owner's PS3 and NES-style pads get no new input.
 - **`MLS` line numbers:** see the overlap with `051e`.
 
 ## Overlap with other branches
@@ -450,7 +451,7 @@ For `docs/TODO.md`. Files go on `master`. None is run in the game.
 - Remove the dead `ScreenController` path or give it a real use: `screenController`, `showScreenController`, `--showScreenController`
   (question 9). The `TODO` for mobile is the link.
 - Remove the dead `LevelSelectScreen`.
-- A gamepad back button (question 6), in `070`.
+- A gamepad back button (question 10), in `070`.
 
 ## Open questions
 
