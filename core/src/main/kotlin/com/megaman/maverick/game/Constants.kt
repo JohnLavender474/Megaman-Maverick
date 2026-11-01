@@ -350,7 +350,6 @@ object ConstKeys {
     const val KEY = "key"
     const val GAUNTLET = "gauntlet"
     const val WAVE = "wave"
-    const val ANIMATION_KEY = "${ANIMATION}_${KEY}"
     const val FACING = "facing"
     const val ROW = "row"
     const val ROWS = "rows"

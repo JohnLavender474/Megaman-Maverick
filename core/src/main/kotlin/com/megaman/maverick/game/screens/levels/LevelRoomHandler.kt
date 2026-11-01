@@ -19,7 +19,7 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
@@ -152,7 +152,7 @@ class LevelRoomHandler(
             setBehaviorsOn(true)
             services.levelState.roomTransition = false
 
-            services.players.forEach { (it as Megaman).running = false }
+            services.players.forEach { it.running = false }
         }
         roomBounds.onSetToRoomNoTrans = {
             GameLogger.debug(TAG, "on set to room no trans")

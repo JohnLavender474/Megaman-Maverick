@@ -84,6 +84,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         get() = damaged || damageRecovery.recovering || isLocked(MegaLockGroup.DAMAGE) || !existenceState.liveAfterUpdate || !inPlay
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
+    // TODO: a second player entity needs this same rule; extract one function when it exists (item 060)
     val canMove: Boolean
         get() = !isLocked(MegaLockGroup.MOVEMENT) && !stunned && !damaged && !frozen
 
@@ -97,13 +98,13 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         }
     ).setToEnd()
 
-    internal var runTime = 0f
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
 
     internal var airDashConsumed = false
+    internal var airDashDirection: Direction? = null
 
-    internal val groundSlideToCrouchDelay = Timer(MegamanValues.GROUND_SLIDE_TO_CROUCH_DELAY)
-    internal val buttonToCrouchDelay = Timer(MegamanValues.BUTTON_TO_CROUCH_DELAY)
+    var currentAnimKey: String? = null
+        internal set
 
     override val eventKeyMask = objectSetOf<Any>(
         EventType.BEGIN_ROOM_TRANS,
@@ -220,13 +221,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
             weapon = value
         }
 
-    private var runningFlag = false
-    var running: Boolean
-        get() = inPlay && runningFlag
-        set(value) {
-            runningFlag = value
-        }
-
     val slipSliding: Boolean
         get() = body.isSensing(BodySense.FEET_ON_GROUND) &&
             abs(
@@ -290,6 +284,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         addComponent(defineBodyComponent())
         addComponent(defineFocusComponent())
         addComponent(definePlayerProgressComponent())
+        addComponent(RunComponent())
         addComponent(defineMomentumComponent())
         addComponent(defineRoomTransitionCarryComponent())
         addComponent(defineBubbleEmitterComponent())
@@ -344,8 +339,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         body.physics.gravityOn = true
         body.forEachFixture { fixture -> fixture.setActive(true) }
 
-        runTime = 0f
-
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, ConstKeys.RIGHT, String::class).uppercase())
         services.gravity.set(
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -357,8 +350,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
         weaponsHandler.setAllToMaxAmmo()
         currentWeapon = MegamanWeapon.MEGA_BUSTER
-
-        running = false
 
         clearLocks(MegaLockGroup.MOVEMENT)
         require(TeleportableComponent::class).teleporter = null

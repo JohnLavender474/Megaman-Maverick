@@ -18,7 +18,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.MegamanKeys
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.entities.state.frozen
@@ -47,7 +46,7 @@ const val DESERT_TORNADO_OFFSET = -0.1f
 const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
 
 fun Megaman.getSpriteDirection() = when {
-    isBehaviorActive(BehaviorType.AIR_DASHING) -> getProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, Direction::class)!!
+    isBehaviorActive(BehaviorType.AIR_DASHING) -> airDashDirection!!
     else -> direction
 }
 

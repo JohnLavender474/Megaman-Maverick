@@ -4,6 +4,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.components.require
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonActuator
 import com.maverick.game.engine.entities.input
@@ -20,7 +21,9 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.entities.state.shouldPreserveMomentum
 import com.megaman.maverick.game.entities.state.stopMomentum
 import com.megaman.maverick.game.entities.state.stunned
@@ -34,7 +37,7 @@ const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 internal fun Megaman.defineControllerComponent(): ControllerComponent {
     val left = ButtonActuator(
         onJustPressed = { GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just pressed") },
-        onPressContinued = { delta -> runLeft(delta) },
+        onPressContinued = { delta -> run(delta, Facing.LEFT) },
         onJustReleased = {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "left actuator just released")
             if (!input.isPressed(MegaControllerButton.RIGHT)) {
@@ -47,7 +50,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
 
     val right = ButtonActuator(
         onJustPressed = { GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just pressed") },
-        onPressContinued = { delta -> runRight(delta) },
+        onPressContinued = { delta -> run(delta, Facing.RIGHT) },
         onJustReleased = {
             GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "right actuator just released")
             if (!input.isPressed(MegaControllerButton.LEFT)) {
@@ -158,26 +161,32 @@ private fun Megaman.setToNextWeapon() {
     }
 }
 
-private fun Megaman.runLeft(delta: Float) {
-    if (!inPlay || !canMove || damaged || teleporting ||
-        input.isPressed(MegaControllerButton.RIGHT) ||
+internal fun Megaman.run(delta: Float, side: Facing) {
+    val oppositeButton = if (side == Facing.LEFT) MegaControllerButton.RIGHT else MegaControllerButton.LEFT
+    val oppositePressed = input.isPressed(oppositeButton)
+    val runFacing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) side.opposite() else side
+
+    if (!inPlay || !canMove || damaged || teleporting || oppositePressed ||
         (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround)
     ) {
-        if (!input.isPressed(MegaControllerButton.RIGHT)) {
-            running = false
+        if (!oppositePressed) running = false
 
-            if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting)
-                facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
-        }
+        // TODO: with both buttons pressed during a RODENT_CLAWS shot, only the right side sets the facing, so the
+        //  facing goes right and never left; the old runLeft and runRight differed here, and the fix changes
+        //  gameplay (see docs/issues/2026-11-01-rodent-claws-run-facing.md)
+        if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && (!oppositePressed || side == Facing.RIGHT))
+            facing = runFacing
+
         return
     }
 
-    facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.RIGHT else Facing.LEFT
+    facing = runFacing
 
     running = !isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.GROUND_SLIDING, BehaviorType.CLIMBING)
     if (!running) return
 
-    runTime += delta
+    val runState = require(RunComponent::class)
+    runState.runTime += delta
 
     val threshold = getMaxRunSpeed()
 
@@ -185,54 +194,11 @@ private fun Megaman.runLeft(delta: Float) {
         if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
         else MegamanValues.RUN_IMPULSE
 
-    var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM *
-        (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f)
+    var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM * side.value
 
     impulse *= if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
-        runTime < MegamanValues.RUN_1_TIME -> MegamanValues.RUN_1_SCALAR
-        runTime < MegamanValues.RUN_2_TIME -> MegamanValues.RUN_2_SCALAR
-        else -> MegamanValues.RUN_3_SCALAR
-    } else 1f
-
-    when {
-        direction == Direction.UP && abs(body.physics.velocity.x) < threshold -> body.physics.velocity.x -= impulse
-        direction == Direction.DOWN && abs(body.physics.velocity.x) < threshold -> body.physics.velocity.x += impulse
-        direction == Direction.LEFT && abs(body.physics.velocity.y) < threshold -> body.physics.velocity.y -= impulse
-        direction == Direction.RIGHT && abs(body.physics.velocity.y) < threshold -> body.physics.velocity.y += impulse
-    }
-}
-
-private fun Megaman.runRight(delta: Float) {
-    if (!inPlay || !canMove || damaged || teleporting ||
-        input.isPressed(MegaControllerButton.LEFT) ||
-        (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround)
-    ) {
-        if (!input.isPressed(MegaControllerButton.LEFT)) running = false
-
-        if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting)
-            facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
-
-        return
-    }
-
-    facing = if (isBehaviorActive(BehaviorType.WALL_SLIDING)) Facing.LEFT else Facing.RIGHT
-
-    running = !isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.GROUND_SLIDING, BehaviorType.CLIMBING)
-    if (!running) return
-
-    runTime += delta
-
-    val threshold = getMaxRunSpeed()
-
-    val rawImpulse =
-        if (body.isSensing(BodySense.FEET_ON_ICE)) MegamanValues.ICE_RUN_IMPULSE
-        else MegamanValues.RUN_IMPULSE
-
-    var impulse = rawImpulse * delta * movementScalar * ConstVals.PPM *
-        (if (isBehaviorActive(BehaviorType.WALL_SLIDING)) -1f else 1f)
-    impulse *= if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
-        runTime < MegamanValues.RUN_1_TIME -> MegamanValues.RUN_1_SCALAR
-        runTime < MegamanValues.RUN_2_TIME -> MegamanValues.RUN_2_SCALAR
+        runState.runTime < MegamanValues.RUN_1_TIME -> MegamanValues.RUN_1_SCALAR
+        runState.runTime < MegamanValues.RUN_2_TIME -> MegamanValues.RUN_2_SCALAR
         else -> MegamanValues.RUN_3_SCALAR
     } else 1f
 
@@ -246,7 +212,7 @@ private fun Megaman.runRight(delta: Float) {
 
 private fun Megaman.onJustStopRunning() {
     if (!shouldPreserveMomentum(true)) stopMomentum(true)
-    runTime = 0f
+    require(RunComponent::class).runTime = 0f
 }
 
 private fun Megaman.onNotRunning() {

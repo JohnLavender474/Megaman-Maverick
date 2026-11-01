@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman.behaviors
 import com.maverick.game.engine.behaviors.AbstractBehaviorImpl
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
@@ -17,6 +18,9 @@ import kotlin.math.abs
 
 internal fun Megaman.crouchBehavior(): IBehavior {
     return object : AbstractBehaviorImpl() {
+
+        private val groundSlideToCrouchDelay = Timer(MegamanValues.GROUND_SLIDE_TO_CROUCH_DELAY)
+        private val buttonToCrouchDelay = Timer(MegamanValues.BUTTON_TO_CROUCH_DELAY)
 
         override fun evaluate(delta: Float): Boolean {
             when {

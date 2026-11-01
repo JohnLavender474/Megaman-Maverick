@@ -92,7 +92,7 @@ internal fun Megaman.airDashBehavior(): IBehavior {
                 Direction.RIGHT -> impulse.y = impulseValue * -facing.value
             }
             lastFacing = facing
-            putProperty(MegamanKeys.DIRECTION_ON_AIR_DASH, direction)
+            airDashDirection = direction
         }
 
         override fun act(delta: Float) {

@@ -16,12 +16,6 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey
 
-var Megaman.currentAnimKey: String?
-    get() = getProperty(ConstKeys.ANIMATION_KEY, String::class)
-    private set(value) {
-        putProperty(ConstKeys.ANIMATION_KEY, value)
-    }
-
 internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IAnimation>): AnimationsComponent {
     val megamanAnimKeySupplier: (String?) -> String? = supplier@{
         val key = getAnimationKey(currentAnimKey)

@@ -15,13 +15,17 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
+import com.megaman.maverick.game.entities.state.RunComponent
+import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.players.SecondPlayerEntity
 import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
@@ -107,6 +111,18 @@ class LevelRoomHandlerTest : DescribeSpec({
             rig.runTransition("next")
             rig.keys.keys shouldContain EventType.TURN_CONTROLLER_ON
             rig.behaviors shouldBe listOf(false, true)
+        }
+
+        it("stops the run of a player that is not Megaman") {
+            val rig = Rig(next())
+            val player = SecondPlayerEntity(rig.services)
+            player.addComponent(RunComponent())
+            rig.services.players.register(PlayerSlot(0), player)
+            player.running = true
+
+            rig.runTransition("next")
+
+            player.running shouldBe false
         }
 
         it("enters the boss room for event=boss") {

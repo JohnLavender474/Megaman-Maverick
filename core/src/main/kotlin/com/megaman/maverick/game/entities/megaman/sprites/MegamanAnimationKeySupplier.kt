@@ -17,6 +17,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.roomTransitionPaused
+import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.entities.state.stunned
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.teleporter
