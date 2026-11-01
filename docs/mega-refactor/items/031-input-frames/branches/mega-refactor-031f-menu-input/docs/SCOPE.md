@@ -250,6 +250,8 @@ See "Removed".
 | `KeyboardInput.systemHeld()` | `G.render` |
 | `game.systemInput` | `MegaMenuScreen.backRequested`, `MLS.isPauseButtonRequested` |
 | `game.inputLocked` | `MLS:876`, `MLS:878` |
+| A pure function for the pause decision at `MLS:876` (contract question 3) | `MLS.render` |
+| A small function for the queued pause, which takes the queue, the lock read and the pause call (contract question 3) | `MLS.render` |
 | `MegaPlayers.menuInput` (question 7) | `MegaMenuScreen`, 6 skip screens, `ScreenController` |
 | `AbstractMenuScreen.backRequested()`, `onBack(delta)` | `MegaMenuScreen`, `MainMenuScreen`, `LPS`, `SelectDifficultyScreen`, `ExtrasScreen`, `LevelSelectScreenV2`, `CSS`; called by `AbstractMenuScreen.render` |
 
@@ -315,11 +317,11 @@ No menu screen has a test today, and `MegaMenuScreen` needs a game. So:
 - With the real `InputFrameBuilder` and `KeyboardInput`: `Esc` held gives 1 `JUST_PRESSED` and then `PRESSED`; a lock on the slot-0
   builder does not change the system frame.
 - `MegaPlayersTest`: `menuInput` is the frame of slot 0.
-- If question 3 needs a seam: a pure function for the pause test, because `MLS` has no test. The plan decides.
+- 2 seams for the pause, because `MLS` has no test (see "New APIs"), and a new test file `MegaMenuScreenTest` (contract question 3).
 - `FrameControllerPollerTest` goes: 3 cases, so `core:test` falls by 3 before the new cases.
 - The other checks need a running game: each row of the `Esc` table, the lock case, and the screen changes. They are manual checks
   in `CONTRACT.md`. `REFACTOR_TEST_031` exists, but its rooms (`spring_bouncer`, `pipe_portal`, `ground_slide_blocker`) were made for
-  other checks. The contract chooses the room for the lock case.
+  other checks. The contract uses `REFACTOR_TEST_051 --room basic` for the lock case.
 - No temporary contract suite is needed for part 1, because the frame and the poller are the same value.
 
 ## Where a real library differs from a mock
@@ -364,11 +366,13 @@ Docs to change at the merge: the skill line, the `082` lines, and the item recor
 
 - **`Esc` on `ExtrasScreen` runs `resetPlayerProgress()`.** The `BACK` row does this today, and it is the first row. So `Esc` adds
   no new state, but it is 1 key. In-memory progress of an extra run goes. The save file does not change.
-- **`LevelSelectScreenV2` back opens a new route.** `SAVE_GAME_SCREEN` reads `isInExtraLevel` and `currentLevel` only on `CONTINUE`.
-  Inference: the screen works, because the old screen had this route. It needs a manual check.
+- **`LevelSelectScreenV2` back opens a new route.** `SAVE_GAME_SCREEN` reads `isInExtraLevel` in `show()`, on `CONTINUE` and in the
+  `MAIN MENU` row. After an extra level, `currentLevel` stays set, so a save load then `Esc` opens the screen with the extras rows, and `MAIN MENU`
+  there clears the loaded progress from memory. The save file does not change. Accepted, with a `TODO` at `LevelSelectScreenV2.onBack` and a bug
+  candidate (contract question 4). M8 shows this state.
 - **`Esc` during a lock:** without `!game.inputLocked`, `Esc` pauses in a room transition. The transition then stops, and a resume turns
-  on all systems (`LevelStateHandler.kt:25-26`). The guard prevents this.
-- **`Esc` from a pause under a lock** (only `--pauseOnFocusLost` or `--pauseOnMinimized`, both off by default and in no run script): the
+  on all systems (`LevelStateHandler.kt:25-26`). The 2 lock tests prevent this, except for the listener lock of intended change 6.
+- **`Esc` from a pause under a lock** (`--pauseOnFocusLost` or `--pauseOnMinimized`, both off by default and in no run script, or the listener lock of intended change 6): the
   resume turns on all systems during the lock sequence. A window focus event with `--resumeOnFocusGained` does this today.
 - **`onBack` on the `LPS` grid must use the same guard as `onAnySelection`** (`!exiting && settingsScreenSlide.finished`), and the
   health fill blocks it through `isInteractionAllowed`.
@@ -384,6 +388,10 @@ Docs to change at the merge: the skill line, the `082` lines, and the item recor
 Scan on `c6b8cecf7`. `git worktree list`: the main checkout, `mega-refactor-051-master` (`d28c60893`) and
 `mega-refactor-051e-camera-rotation` (`b79c6de35`). The other folders in `.worktrees/` are not registered worktrees. In `ITEMS.md`,
 only those 2 branches are active.
+
+Update at the contract approval: `051e` and its parent merged into `master` (`e12c880f5`), so the 2 items below on `051` are history. That merge also
+changes `LPS` at the `EXIT` row, and `EXIT` then works in a `TEST_LEVEL`; no check depends on it. `084g` is active in its own worktree. Read the
+line numbers of this file again on the current `master`.
 
 - **`mega-refactor-051e-camera-rotation` (active; next step is the owner's play test).** It changes `G` at the imports, `:189-201`, and the
   `services` build at `:423-434`. In `MLS`, its hunks start at `:93`, `:214`, `:302`, `:314`, `:323`, `:370`, `:847`, `:884`, `:1035` and

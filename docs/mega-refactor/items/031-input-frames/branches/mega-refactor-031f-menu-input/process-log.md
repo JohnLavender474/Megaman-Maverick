@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: the menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes
-- Done: the scan on `c6b8cecf7`, and `docs/SCOPE.md` (approved)
-- Next: a draft `docs/CONTRACT.md`
+- Done: the scan on `c6b8cecf7`, `docs/SCOPE.md` and `docs/CONTRACT.md` (approved)
+- Next: a draft `docs/PLAN.md`
 - Blocked:
 
 ## Entries
@@ -44,3 +44,19 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
     candidate 1, question 3).
 - Overlaps are in `docs/SCOPE.md`, because this session had leave to write only that file and this log. Copy them to `docs/NOTES.md`
   at branch start.
+
+## 2026-11-01 (contract)
+
+- No branch exists yet. Draft `docs/CONTRACT.md` written on `master`, read at `72be803bd`. The code is the same as at `a41a82ceb`: the commits
+  between them change only docs. The game was not launched, and `~/.prefs` was not read. The check counts: 18 automated, 33 named tests, 11 review,
+  45 manual, plus `S1` and `X1`.
+- The owner changed section 4 and intended change 6 of `docs/SCOPE.md` during this work (`72be803bd`). The contract follows the new text.
+- Lock room: `REFACTOR_TEST_051 --room basic`. The spawn is 12 tiles left of the open right edge, with no enemies. `REFACTOR_TEST_029` and
+  `REFACTOR_TEST_031` have no transition near a spawn.
+- No check needs a known prefs state, so the contract has no backup step. `S1` and `X1` compare file hashes, as a read-only proof.
+- Text in `docs/SCOPE.md` to correct is in the contract, open question 5. This session did not change that file.
+
+## 2026-11-01 (contract approved)
+
+- The owner approved `docs/CONTRACT.md` (verbatim: "yes"), with the recommendations of questions 2 to 6. `docs/SCOPE.md` text corrected as question 5 says, with the 2 pause seams in its API table. No answer changed.
+- Issue filed on `master`: `docs/issues/2026-11-01-start-release-at-lock-start-pauses.md`.
