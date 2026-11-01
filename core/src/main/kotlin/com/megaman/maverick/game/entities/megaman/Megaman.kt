@@ -15,7 +15,6 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
 import com.maverick.game.engine.damage.IDamagerEntity
@@ -91,13 +90,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
 
-    internal val chargingTimer = Timer(
-        MegamanValues.TIME_TO_FULLY_CHARGED,
-        TimeMarkedRunnable(MegamanValues.TIME_TO_HALFWAY_CHARGED) {
-            requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, false)
-        }
-    ).setToEnd()
-
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
 
     internal var airDashConsumed = false
@@ -118,20 +110,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
     internal lateinit var jetpackHandler: MegamanJetpackHandler
 
-    val canChargeCurrentWeapon: Boolean
-        get() = weaponsHandler.isChargeable(currentWeapon)
-    val chargeStatus: MegaChargeStatus
-        get() = when {
-            fullyCharged -> MegaChargeStatus.FULLY_CHARGED
-            charging -> MegaChargeStatus.HALF_CHARGED
-            else -> MegaChargeStatus.NOT_CHARGED
-        }
-    val charging: Boolean
-        get() = canChargeCurrentWeapon && chargingTimer.time >= MegamanValues.TIME_TO_HALFWAY_CHARGED
-    val halfCharged: Boolean
-        get() = chargeStatus == MegaChargeStatus.HALF_CHARGED
-    val fullyCharged: Boolean
-        get() = canChargeCurrentWeapon && chargingTimer.isFinished()
     var shooting: Boolean
         get() = !shootAnimTimer.isFinished()
         set(value) {
@@ -285,6 +263,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         addComponent(defineFocusComponent())
         addComponent(definePlayerProgressComponent())
         addComponent(RunComponent())
+        addComponent(defineWeaponChargeComponent())
         addComponent(defineMomentumComponent())
         addComponent(defineRoomTransitionCarryComponent())
         addComponent(defineBubbleEmitterComponent())
@@ -364,7 +343,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
         shootAnimTimer.reset()
         wallJumpTimer.reset()
-        chargingTimer.reset()
 
         wallSlideNotAllowedTimer.reset()
         // TODO: a behavior that ends in the component reset pass can write momentum after the momentum component reset, so clear it
@@ -510,7 +488,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
             jetpackHandler.update(delta)
 
             require(StunComponent::class).update(delta, body.isSensing(BodySense.FEET_ON_GROUND))
-            if (stunned || damaged) chargingTimer.reset()
+            clearChargeWhenHurt()
 
             damageRecovery.update(delta, damaged, damageTimer.isJustFinished())
 
@@ -536,11 +514,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         val remaining = weaponsHandler.translateAmmo(weapon, ammo)
         GameLogger.debug(TAG, "translateAmmo(): weapon=$weapon, ammo=$ammo, remaining=$remaining")
         return remaining
-    }
-
-    fun stopCharging() {
-        stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
-        chargingTimer.reset()
     }
 
     fun shoot(): Boolean {

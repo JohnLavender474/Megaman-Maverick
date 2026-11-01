@@ -22,6 +22,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.state.RunComponent
+import com.megaman.maverick.game.entities.state.WeaponChargeComponent
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.entities.state.shouldPreserveMomentum
@@ -82,7 +83,7 @@ internal fun Megaman.defineControllerComponent(): ControllerComponent {
                 else -> 1f
             }
 
-            chargingTimer.update(delta * scalar)
+            require(WeaponChargeComponent::class).update(delta * scalar)
         },
         onJustReleased = {
             if (stunned || damaged || services.gameCamera.rotating || teleporting || !inPlay ||
