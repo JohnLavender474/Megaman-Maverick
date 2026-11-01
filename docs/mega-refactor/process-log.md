@@ -1366,3 +1366,13 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: filed the question `2026-11-01-camera-room-transition-raw-viewport-size.md`. The next step for `051e` is the
   scan and `docs/SCOPE.md`.
+
+## 2026-11-01 — mega-refactor-084f-focus-progress
+
+- Summary: `Megaman` went from 10 to 8 interfaces. `FocusComponent` holds the camera focus, and `PlayerProgressComponent` is the game state
+  listener. The dead `ConstKeys.FOCUS` reads and the constant are gone, which is the `085` work. Squash commit `27c634d9c`.
+- Contract check: the owner's play test passes ("tests pass"), and merge approval (verbatim: "go for it"). The automated checks pass on the
+  squash commit after `./gradlew clean`, on a clean copy of the tree (engine 600, core 475, 0 failures, `lwjgl3:jar`, 96 unique warnings, the
+  baseline count). A launch of `REFACTOR_TEST_029 --room heart` gives code 124 with no exception.
+- Follow-up: no new items and no bugs to file. `git add -A` took the owner's local mute of `run-game-alpha.sh` into the branch; it was reverted
+  before the squash, so `master` has no change to that file. The next branch of `084` is `084g`, after `031e` merges.
