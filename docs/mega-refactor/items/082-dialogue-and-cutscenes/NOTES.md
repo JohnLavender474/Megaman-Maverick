@@ -39,9 +39,10 @@ Short paths: `C` = `core/src/main/kotlin/com/megaman/maverick/game`, `E` = `engi
 
 - **`TURN_CONTROLLER_*`:** handler at `C/MegamanMaverickGame.kt:650-667`. It sets `slot0FrameBuilder.locked` and
   `ControllerSystem.on`. 13 submits in 5 files (6 OFF, 7 ON).
-- **Constraint:** `game.controllerPoller` is `FrameControllerPoller { players.inputs[slot0] }`
-  (`C/MegamanMaverickGame.kt:299`), and menus read it (`S/menus/MegaMenuScreen.kt:21,31`). While the controller is
-  off, nothing can read buttons, so a dialogue box could not either. `031` must split gameplay input from UI input.
+- **Constraint:** `game.controllerPoller` is gone (`031f`). Menus read `players.menuInput`, which is the frame of
+  slot 0, so the lock still blinds it. While the controller is off, a dialogue box could not read buttons from that
+  frame. This item builds an unlocked frame when it has a caller, with the system frame (`game.systemInput`, a builder
+  that the lock does not touch) as the pattern. `031` does not do this split.
 - **Direct `GameSystem.on` writes:** 18 lines in 4 files (`MegamanMaverickGame`, `MegaLevelScreen` 8,
   `PlayerStatsHandler` 6, `LevelStateHandler`). Each writes absolute values; the last writer wins. `012` replaces them
   with named reasons. Known bug: a pause during a gate opening turns physics on again

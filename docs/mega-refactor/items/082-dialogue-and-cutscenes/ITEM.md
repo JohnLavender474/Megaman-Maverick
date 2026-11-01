@@ -71,8 +71,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   Each level is one named freeze reason in `012` (`DIALOGUE_PLAYER`, `DIALOGUE_WORLD`). In a `WORLD` freeze, enemies,
   hazards, platforms and all other objects stop in place and do not animate. The player and the other speakers and
   actors of the scene keep their animations; they are exempt, as with the X6 `0x08` flag (decision 5).
-- **Input:** the box reads its own buttons while gameplay input is locked. Today the lock also blinds
-  `game.controllerPoller`; `031` must split "gameplay input locked" from "UI input" before this item.
+- **Input:** the box reads its own buttons while gameplay input is locked. Menus read `players.menuInput`, which the
+  lock still blinds (`031f` `SCOPE.md`, question 6). This item builds an unlocked frame when it has a caller, with the
+  system frame (`game.systemInput`) as the pattern. `031` does not do this split.
 - **Actors:** a scene moves the real player through a scripted input source (`031` lists "cutscene script" as a source)
   or a held state. Other actors are normal entities, spawned by the scene or found by map object id. Move targets are
   named markers in Tiled.

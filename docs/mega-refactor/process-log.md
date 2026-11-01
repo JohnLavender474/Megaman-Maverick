@@ -1449,3 +1449,19 @@ newest entry at the bottom.
 - Follow-up: no new items and no bugs. Item `084` is done, and the rest of the interface work moves to `048`. `O8` and `O1` have the new state, and their
   status does not change. The `Objective check` of this branch came after the scope approval, because `db7a263a0` arrived during the branch. It records
   `O5-R2` as `no effect` with no measurement; the owner can ask for a `--diagnostics` run. The 2 "Open questions" in the `084` `ITEM.md` stay open.
+
+## 2026-11-01 — mega-refactor-031f-menu-input
+
+- Summary: the 9 poller reads move to frames through `MegaPlayers.menuInput`. A second, never-locked frame carries `Esc` (`SystemButton.BACK`, `game.systemInput`). `Esc` is back in the menus and pause in
+  gameplay, and it acts on press. `AbstractMenuScreen` has the back action. `game.controllerPoller`, `FrameControllerPoller` and the engine `IControllerPoller` go. The diagnostics label is `inputFrames`.
+  Intended change: the pause test and the queued pause each test the lock, which fixes the dead pause menu at the start of a lock (issue `2026-11-01-start-release-at-lock-start-pauses.md`, older than `031`).
+  Squash commit `df7028ed3`.
+- Contract check: the owner's play test is partial. The owner (verbatim): "Admittedly, I did not run each and every test just because it's so many of them. I tested some of the keyboard-only tests and found no
+  issues. I want to approve the changes". The owner did not name the checks, so no single manual check has a recorded pass. The 7 `[pad]` checks did not run. L1, L2, L6, M1 to M5, C1 to C5, S1 and X1 have no
+  recorded result. Merge approval is the same message. A1 to A18, T1 to T33 and R1 to R11 passed on the branch at step 12. The automated checks pass on the squash commit after `./gradlew clean`, on a clean copy of the
+  tree (engine 631, core 645, 0 failures, `lwjgl3:jar`, 75 unique warning lines with the line numbers removed, no new line). A launch of `REFACTOR_TEST_051 --room basic` gives code 124 with no exception.
+- Overlap: `master` merged into the branch once, for `084g` (`LevelRoomHandler.kt`). At the merge, `master` had `084h` and 2 `fix/` changes: the two sides share 0 paths, and the rule of plan step 14.2 matches 0 paths,
+  so no second merge. `084h` and the 2 fixes are not in a play test with this branch.
+- Follow-up: item `031` is done. New `idea` items `103` and `104`. A gamepad back button goes in `070`. 5 new open issues: the listener lock, a focus-loss pause under a lock, a press read that carries a held button, a rebind
+  with a held key and level select back after an extra level. `O2-R1` has no `031f` closing item now, and its text still names `controllerPoller`, as a rule text that only the owner changes. `O9-R1` names the pad gap. `O2`,
+  `O9` and `O1` keep their status. No performance capture ran, so the system frame has no measurement.

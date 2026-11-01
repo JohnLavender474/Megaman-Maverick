@@ -128,6 +128,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `087` | idea | [Reset order for components](../items/087-component-reset-order/ITEM.md) (main) |
 | `092` | idea | [Remove old entity versions and the version suffixes](../items/092-old-entity-versions/ITEM.md) (main) |
 | `093` | idea | [Use or remove `MegaRegionProcessor`](../items/093-mega-region-processor/ITEM.md) (main) |
+| `103` | idea | [Remove the dead `ScreenController` path or give it a real use](../items/103-dead-screen-controller/ITEM.md) (main) |
+| `104` | idea | [Remove the dead `LevelSelectScreen`](../items/104-dead-level-select-screen/ITEM.md) (main) |
 | `018` | idea | [Event-driven system membership; component IDs when needed](../items/018-ecs-membership/ITEM.md) |
 | `024` | planned | [One `WeaponDef` per weapon; loadout per character](../items/024-weapon-defs/ITEM.md) |
 | `025` | idea | [Level manifest: traits, variants and rewards instead of level-identity checks](../items/025-level-manifest/ITEM.md) |

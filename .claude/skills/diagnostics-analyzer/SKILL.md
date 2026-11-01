@@ -20,9 +20,10 @@ off there is no overhead beyond a null check.
 - `MegamanMaverickGame.render()` brackets the *entire* frame with `beginFrame()` /
   `endFrame()`, so the frame total is the real cost of the frame and the root
   entries account for essentially all of it. Roots are `clearScreen`, `runQueue`,
-  `autoPerf`, `controllerPoller`, `screenController`, `screen.render`,
+  `autoPerf`, `inputFrames`, `screenController`, `screen.render`,
   `screen.draw`, `screen.drawShapes`, `screenshot`, `eventsMan`, `audioMan`,
-  `updatables`, `debugText`, `notification`, `reclaimPools`. During asset loading
+  `updatables`, `debugText`, `notification`, `reclaimPools`. Old capture files
+  have the old label `controllerPoller` in place of `inputFrames`. During asset loading
   the roots are `assMan.update`, `postCreate`, and `loadingText` instead.
 - The game engine runs inside `screen.render()`, so the systems are one level
   below it, not roots. The instance is passed into most systems in

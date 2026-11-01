@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: no
 area: core
 gameplay-change: yes
@@ -45,3 +45,11 @@ The boss-defeat lock (`MegaLevelScreen.kt:754`) and the `WilyFinalBoss.kt:311` l
 The window is one frame per lock start, so a tap rarely hits it. A held key hits it every time.
 
 `mega-refactor-031f-menu-input` fixes both triggers as an intended change: the pause test and the queued pause each test the lock. One case stays: a lock submitted from a listener, for example `MegaLevelScreen.kt:754`, starts 1 frame later, so a real release at that moment can still pause (inference, from reading). `Esc` leaves that pause. A pad-only player has no way out.
+
+## Resolution
+
+Fixed by `df7028ed3` (`mega-refactor-031f-menu-input`). `isPauseRequested` tests the lock, which covers trigger 1. `queuePause` tests the lock again when the queued pause runs, which covers trigger 2. Automated tests T19, T26, T32 and T33 prove both. T19 and T32 failed before the code, and T32 failed on a mutation that reads the lock when the runnable is added.
+
+`verified` stays `no`, because no run of the old code exists. The manual checks L1 and L2 have no recorded result: the owner ran some keyboard-only checks, found no issue and did not name them.
+
+One case stays open: a lock that a listener submits, for example `MegaLevelScreen.kt:753`, starts 1 frame later, so a real release at that moment can still pause. This is an inference, from reading. `Esc` leaves that pause. A pad-only player has no way out. See `2026-11-01-listener-lock-start-release-pauses.md`.

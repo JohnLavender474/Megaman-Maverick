@@ -104,7 +104,12 @@ related-items: [<mega-refactor item IDs>]
 | [`CameraRoomTransition.cancel()` does not reset its timers](2026-10-30-camera-room-transition-cancel-timers.md) | no | core | open |
 | [A player spawn in the map's bottom-left area replaces the start spawn](2026-10-30-spawn-in-start-area-replaces-start-spawn.md) | yes | core | open |
 | [Question: `CameraRoomTransition` uses the raw viewport size on a turned camera](2026-11-01-camera-room-transition-raw-viewport-size.md) | question | engine | open |
-| [A `START` release at the start of a lock pauses the game, and the pause cannot be left](2026-11-01-start-release-at-lock-start-pauses.md) | no | core | open |
+| [A `START` release at the start of a lock pauses the game, and the pause cannot be left](2026-11-01-start-release-at-lock-start-pauses.md) | no | core | closed |
 | [A `HeartTank` that falls on quicksand does not sink](2026-11-01-heart-tank-does-not-sink-in-sand.md) | yes | core | closed |
 | [With left and right both held, Mega runs in place and can face a wall during a wall slide](2026-11-01-left-right-both-held.md) | yes | core | closed |
 | [With left and right both held during a `RODENT_CLAWS` shot, the facing goes right and never left](2026-11-01-rodent-claws-run-facing.md) | yes | core | closed |
+| [A `START` release at the start of a lock from a listener can still pause, with a dead menu](2026-11-01-listener-lock-start-release-pauses.md) | no | core | open |
+| [A focus-loss or minimize pause under a lock gives a pause menu that a pad cannot use](2026-11-01-focus-loss-pause-under-lock.md) | no | core | open |
+| [A press read carries a held button to the next screen](2026-11-01-press-read-carries-held-button.md) | no | core | open |
+| [A rebind of `START` or `A` with the key held past `0.25` s confirms the row again](2026-11-01-rebind-confirm-held-key.md) | no | core | open |
+| [`Esc` on the level select screen after an extra level opens the extras rows](2026-11-01-level-select-back-after-extra-level.md) | no | core | open |

@@ -741,7 +741,7 @@ Tests: no test checks how a behavior reacts to a button. Six core tests build `M
 
 ### Screens and settings
 
-- **Menus:** all 9 live menu instances read input through `MegaMenuScreen` (`C/screens/menus/MegaMenuScreen.kt:19-31`):
+- **Menus:** all 8 live menu instances read input through `MegaMenuScreen` (`C/screens/menus/MegaMenuScreen.kt:19-31`):
   navigation on `isJustReleased` of the d-pad, confirm on START or A just released. There is no back input: every
   "BACK" is a row to confirm. `LevelSelectScreenV2` has no way back at all.
 - **Pause menu** (`LevelPauseScreen`): confirming a weapon resumes the game; there is no dedicated "START unpauses".

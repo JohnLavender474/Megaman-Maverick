@@ -38,7 +38,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 028 | [Game-owned texture and animation cache](items/028-texture-cache/ITEM.md) | refactor | `O1`, `O3` | planned | none | | |
 | 029 | [`IPlayer` contract, players service and `CharacterDef`](items/029-player-contract/ITEM.md) | refactor | `O2`, `O8`, `O1` | done | none | 2026-10-23 | 2026-10-25 |
 | 030 | [Faction and root owner instead of `owner == megaman`](items/030-faction/ITEM.md) | refactor | `O2`, `O8` | planned | `029`, `005` | | |
-| 031 | [Input frames per player (`InputFrame`), devices and bindings](items/031-input-frames/ITEM.md) | refactor | `O2`, `O9` | active | `029` | 2026-10-25 | |
+| 031 | [Input frames per player (`InputFrame`), devices and bindings](items/031-input-frames/ITEM.md) | refactor | `O2`, `O9` | done | `029` | 2026-10-25 | 2026-11-01 |
 | 032 | [Platform-neutral `engine` module](items/032-platform-neutral-engine/ITEM.md) | refactor | `O3`, `O1` | planned | none | | |
 | 033 | [Per-level asset manifests and texture budgets](items/033-per-level-assets/ITEM.md) | refactor | `O3`, `O5` | planned | `028` | | |
 | 034 | [Persisted settings file](items/034-persisted-settings/ITEM.md) | feature | `O9` | planned | `007` | | |
@@ -110,6 +110,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 100 | [CI result before a merge](items/100-ci-before-merge/ITEM.md) | tooling | `O6` | idea | `002` | | |
 | 101 | [Typed Tiled fields and checks for camera sections and rooms](items/101-map-object-schema/ITEM.md) | tooling | `O7`, `O6` | idea | `022` | | |
 | 102 | [A game mode concept](items/102-game-modes/ITEM.md) | feature | `O8` | idea | none | | |
+| 103 | [Remove the dead `ScreenController` path or give it a real use](items/103-dead-screen-controller/ITEM.md) | refactor | `O1` | idea | none | | |
+| 104 | [Remove the dead `LevelSelectScreen`](items/104-dead-level-select-screen/ITEM.md) | refactor | `O1` | idea | none | | |
 
 ## Branches
 
@@ -133,7 +135,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-031c-input-pipeline`](items/031-input-frames/branches/mega-refactor-031c-input-pipeline/process-log.md) | 031 | A new input pipeline with the same behavior: device adapters, held masks, an engine edge builder with the lock; the poller goes | merged | 2026-10-26 | 2026-10-26 |
 | [`mega-refactor-031d-devices`](items/031-input-frames/branches/mega-refactor-031d-devices/process-log.md) | 031 | Devices: the keyboard aliases, every connected gamepad, the stick threshold, the triggers | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-031e-bindings`](items/031-input-frames/branches/mega-refactor-031e-bindings/process-log.md) | 031 | Per-slot bindings: one settings object per slot replaces `ControllerButtons`; the bindings screen rules; `--resetBindings` | merged | 2026-10-30 | 2026-11-01 |
-| [`mega-refactor-031f-menu-input`](items/031-input-frames/branches/mega-refactor-031f-menu-input/process-log.md) | 031 | Menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes | active | 2026-11-01 | |
+| [`mega-refactor-031f-menu-input`](items/031-input-frames/branches/mega-refactor-031f-menu-input/process-log.md) | 031 | Menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes | merged | 2026-11-01 | 2026-11-01 |
 | `mega-refactor-051-master` | 051 | Parent branch of `051c`, `051d` and `051e`: collects them so that the owner can play them together before `master` | merged | 2026-10-31 | 2026-11-01 |
 | [`mega-refactor-051a-camera-read-interface`](items/051-camera-behaviors/branches/mega-refactor-051a-camera-read-interface/process-log.md) | 051 | Read-only camera interface in `engine`; `getGameCamera()` becomes a property | merged | 2026-10-30 | 2026-10-30 |
 | [`mega-refactor-051b-camera-behaviors`](items/051-camera-behaviors/branches/mega-refactor-051b-camera-behaviors/process-log.md) | 051 | The camera built from behavior components; the level screen talks to a camera control interface; `GameCameraState` goes | merged | 2026-10-30 | 2026-10-30 |

@@ -28,6 +28,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - The setting is per player slot and stored with the bindings (`031e`, then `034`).
 - **Per-character overrides** at runtime, as `069` does for `SELECT` in an `X_LEVEL`: an override never writes the
   saved settings.
+- **A gamepad back button** (from `031f`, scope question 10): `Esc` is the only back input, so a pad-only player has no
+  back on `LevelSelectScreenV2` and no way out of a pause under a lock. On an NES-style pad, `B` is the only free button
+  in the menus. See `docs/issues/2026-11-01-listener-lock-start-release-pauses.md` and
+  `docs/issues/2026-11-01-focus-loss-pause-under-lock.md`.
 - The controls screen gets one row per optional button with its key and its action. The layout must not assume a
   fixed button count (now two values assume 8 buttons; see `069` `NOTES.md`).
 

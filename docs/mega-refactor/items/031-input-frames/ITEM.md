@@ -1,11 +1,11 @@
 # 031: Input frames per player (`InputFrame`), devices and bindings
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O2`, `O9`
 - Depends on: `029`
 - Related: `006`, `008`, `010`, `011`, `012`, `032`, `034`, `047`, `055`, `082`
-- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged), `mega-refactor-031c-input-pipeline` (merged); `mega-refactor-031d-devices` (merged), `mega-refactor-031e-bindings` (merged), `mega-refactor-031f-menu-input` (active)
+- Branches: `mega-refactor-031a-input-frame` (merged), `mega-refactor-031b-engine-input` (merged), `mega-refactor-031c-input-pipeline` (merged); `mega-refactor-031d-devices` (merged), `mega-refactor-031e-bindings` (merged), `mega-refactor-031f-menu-input` (merged)
 
 ## Goal
 
@@ -113,6 +113,18 @@ Answer to review item 30 (2026-10-22, verbatim):
   controller unusable, so the replug decision does not cover it); labels for triggers and keyboard key names; one
   LibGDX prefs file per slot; one branch, with a `fix/` branch for back to pause only if the play test fails. At the
   merge: close `2026-10-22-saved-key-bindings-not-applied.md` as "on purpose", and update item `034`.
+- 2026-11-01 (owner, on the `031f` scope, contract and plan; the branch docs have the questions and answers; each took
+  its recommendation): `Esc` reaches the readers through a second, never-locked frame, and it acts on press; `Esc` on the
+  pause grid resumes with the weapon unchanged; `LevelSelectScreenV2` goes back to `SAVE_GAME_SCREEN`; `SaveGameScreen`
+  and the main menu root do nothing on `Esc`; menus keep the slot frame through `MegaPlayers.menuInput`, and `082` builds
+  an unlocked frame when it has a caller; the back action lives on `AbstractMenuScreen`; a confirm wins over a back in
+  one frame; `Esc` only, with a pad back button in `070`; `ScreenController` gets the 1 read change and no more.
+- 2026-11-01 (owner, verbatim: "Go ahead and fold the bug fix in like you recommended"): `031f` fixes the dead pause
+  menu at the start of a lock, for both triggers. The listener case stays, in
+  `docs/issues/2026-11-01-listener-lock-start-release-pauses.md`.
+- 2026-11-01 (owner, at the `031f` merge, verbatim): "Admittedly, I did not run each and every test just because it's so
+  many of them. I tested some of the keyboard-only tests and found no issues. I want to approve the changes". The branch
+  `process-log.md` lists the checks with no recorded result.
 
 ## Open questions
 
