@@ -1335,3 +1335,13 @@ newest entry at the bottom.
   96 unique warnings, the baseline count). Owner play test and merge approval (verbatim: "approved").
 - Follow-up: no backlog candidates and no bugs to file. A `TODO` in `CameraScroll.deriveDoneSections` marks the accepted case: after a
   respawn in a later room, a walk back into an earlier section starts it again. The combined play test on the parent continues.
+
+## 2026-11-01 — mega-refactor-051-master
+
+- Summary: the parent merged into `master` with `--no-ff`, merge commit `14caa4191`. It carries `051c` (`03c884d48`), `051d` (`4ed49c0f9`) and
+  `mega-refactor-051-fix-scroll-room-scope` (`285c734a4`). Camera zones, scroll sections, crush surfaces and the view blend are on `master`.
+- Contract check: the owner played the combined result, with the control checks `MOON_MAN room6`, `WILY_STAGE_3 room5`, `INFERNO_MAN room5`
+  and `INTRO_STAGE room1` after the last fix ("tests pass"). Merge approval (verbatim: "merge"). The automated checks pass on `master` after
+  `./gradlew clean` (engine 596, core 450, 0 failures, `lwjgl3:jar`, 96 unique warnings, the baseline count).
+- Follow-up: the parent stays for `051e`. `031e` also changes `Constants.kt` and `MegaLevelScreen.kt`, so it must check both files when it
+  reaches `master`.
