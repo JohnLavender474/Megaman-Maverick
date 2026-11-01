@@ -28,6 +28,9 @@ class LevelState {
     val isInExtraLevel: Boolean
         get() = currentLevel?.type == LevelType.EXTRA_LEVEL
 
+    val isInTestLevel: Boolean
+        get() = currentLevel?.type == LevelType.TEST_LEVEL
+
     val currentRoom: RectangleMapObject?
         get() = currentRoomSupplier?.invoke()
 

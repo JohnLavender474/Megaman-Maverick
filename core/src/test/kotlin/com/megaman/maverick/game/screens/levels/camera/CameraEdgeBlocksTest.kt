@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -8,6 +9,8 @@ import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraLimits
 import com.maverick.game.engine.camera.CameraRoomTransition
+import com.maverick.game.engine.camera.CameraRotation
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraLimitRule
 import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.enums.Direction
@@ -30,24 +33,26 @@ private class EdgeRule(val maxX: Float?, val minX: Float?, val edge: Direction) 
 }
 
 private class EdgeRig(rule: ICameraLimitRule) {
-    val camera = RotatableCamera(printDebug = false).also {
+    val camera = OrthographicCamera().also {
         it.viewportWidth = 100f
         it.viewportHeight = 80f
     }
+    val rotation = CameraRotation()
+    val view = CameraView(camera, rotation)
     val follow = CameraFollow(1f, { 1f })
     val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
     val roomBounds = CameraRoomBounds(follow, transition, Vector2(50f, 50f)).also {
         it.gameRooms = Array.with(RectangleMapObject(0f, 0f, 400f, 80f).also { room -> room.name = "a" })
     }
     val controller = CameraController(camera)
-    val stage = CameraLimitStage(follow, roomBounds, controller.settledPosition, 100000f).also { it.addRule(rule) }
+    val stage = CameraLimitStage(view, follow, roomBounds, controller.settledPosition, 100000f).also { it.addRule(rule) }
 
     init {
         controller.addMover(roomBounds)
         controller.addMover(transition)
         controller.addMover(follow)
         controller.addMover(stage)
-        controller.addMover(CameraRoomClamp(stage))
+        controller.addMover(CameraRoomClamp(view, stage))
         follow.setFocus(camera, EdgeFocus(150f, 40f))
         controller.reset()
         repeat(3) { controller.update(0.1f) }

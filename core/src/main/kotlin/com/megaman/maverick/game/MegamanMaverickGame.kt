@@ -24,6 +24,8 @@ import com.maverick.game.engine.animations.AnimationsSystem
 import com.maverick.game.engine.audio.AudioSystem
 import com.maverick.game.engine.behaviors.BehaviorsSystem
 import com.maverick.game.engine.camera.CameraController
+import com.maverick.game.engine.camera.CameraRotation
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.common.GameLogLevel
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.LogReceiver
@@ -102,8 +104,6 @@ import com.megaman.maverick.game.players.applyBootSettings
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
-import com.megaman.maverick.game.screens.levels.camera.GameCameraState
-import com.megaman.maverick.game.screens.levels.camera.RotatableCamera
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreenV2
 import com.megaman.maverick.game.screens.other.*
@@ -189,13 +189,13 @@ class MegamanMaverickGame(
 
     val levelState = LevelState()
     val clock = GameClock()
-    val camera = GameCameraState()
-    val gameCamera: RotatableCamera = RotatableCamera(onJustFinishedRotating = {
-        camera.rotating = false
+    val cameraRotation = CameraRotation {
         cameraController.stopSmoothFollow()
         events.submitEvent(Event(EventType.END_GAME_CAM_ROTATION))
-    })
-    val cameraController: CameraController<RotatableCamera> = CameraController(gameCamera)
+    }
+    val gameCamera = OrthographicCamera()
+    val cameraView = CameraView(gameCamera, cameraRotation)
+    val cameraController = CameraController(gameCamera)
     val settings = GameSettings()
 
     lateinit var services: MegaServices
@@ -423,12 +423,11 @@ class MegamanMaverickGame(
             gravity,
             levelState,
             clock,
-            camera,
             settings,
             updatables,
             runQueue,
             getSystem(GroupsSystem::class)!!,
-            gameCamera,
+            cameraView,
             cameraController
         )
 

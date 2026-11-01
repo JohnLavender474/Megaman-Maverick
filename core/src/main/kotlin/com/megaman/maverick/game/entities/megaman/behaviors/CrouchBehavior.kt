@@ -31,7 +31,7 @@ internal fun Megaman.crouchBehavior(): IBehavior {
 
             if (!buttonToCrouchDelay.isFinished() || !groundSlideToCrouchDelay.isFinished()) return false
 
-            if (!existenceState.liveAfterUpdate || damaged || !inPlay || !canMove || services.camera.rotating ||
+            if (!existenceState.liveAfterUpdate || damaged || !inPlay || !canMove || services.gameCamera.rotating ||
                 isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.JETPACKING) ||
                 !body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.FEET_ON_SAND) ||
                 !input.isPressed(MegaControllerButton.DOWN) ||

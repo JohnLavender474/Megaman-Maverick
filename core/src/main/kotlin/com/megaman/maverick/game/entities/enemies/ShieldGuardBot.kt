@@ -73,7 +73,7 @@ class ShieldGuardBot(services: MegaServices) : AbstractEnemy(services, size = Si
     private val freezeHandler = FreezableEntityHandler(this)
 
     private val canMove: Boolean
-        get() = !services.camera.rotating && !frozen
+        get() = !services.gameCamera.rotating && !frozen
 
     private val turnTimer = Timer(TURN_DUR)
     private val turning: Boolean

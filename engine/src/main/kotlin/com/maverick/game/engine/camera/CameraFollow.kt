@@ -11,7 +11,7 @@ class CameraFollow(
     var interpolationValue: () -> Float,
     var minX: Float = 0f,
     var maxX: Float = Float.POSITIVE_INFINITY
-) : ICameraPart<Camera> {
+) : ICameraPart {
 
     var focus: IFocusable? = null
         private set
@@ -19,7 +19,7 @@ class CameraFollow(
     var smooth = false
         private set
 
-    val stopRule = object : ICameraPart<Camera> {
+    val stopRule = object : ICameraPart {
         override fun update(camera: Camera, delta: Float): Boolean {
             val focus = focus
             if (!smooth || focus == null) return false

@@ -9,6 +9,8 @@ interface ICameraView {
 
     val direction: Direction
 
+    val rotating: Boolean
+
     fun getRotatedBounds(out: GameRectangle): GameRectangle
 
     fun toGameRectangle(out: GameRectangle): GameRectangle

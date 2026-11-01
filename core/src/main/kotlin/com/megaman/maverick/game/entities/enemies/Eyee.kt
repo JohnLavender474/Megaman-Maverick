@@ -80,7 +80,7 @@ class Eyee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL),
         get() = loop.getCurrent()
 
     private val canMove: Boolean
-        get() = !services.camera.rotating
+        get() = !services.gameCamera.rotating
 
     private val waitTimer = Timer(WAIT_DUR)
 

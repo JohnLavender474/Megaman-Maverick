@@ -135,7 +135,7 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (services.camera.rotating) return@add
+            if (services.gameCamera.rotating) return@add
 
             val timer = timers[currentState]
             timer.update(delta)

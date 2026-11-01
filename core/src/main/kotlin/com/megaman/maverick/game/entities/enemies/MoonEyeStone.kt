@@ -217,7 +217,7 @@ class MoonEyeStone(services: MegaServices) : AbstractEnemy(services), IFreezable
 
             direction = targetPlayer.body.direction
 
-            if (services.camera.rotating) return@update
+            if (services.gameCamera.rotating) return@update
 
             if (currentState != MoonEyeStoneState.SEEK || !throwing) processAsteroids(delta)
 

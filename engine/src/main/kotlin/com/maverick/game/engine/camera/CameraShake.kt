@@ -3,7 +3,7 @@ package com.maverick.game.engine.camera
 import com.badlogic.gdx.graphics.Camera
 import com.maverick.game.engine.common.time.Timer
 
-class CameraShake(private val unit: Float) : ICameraPart<Camera> {
+class CameraShake(private val unit: Float) : ICameraPart {
 
     val isFinished: Boolean
         get() = durTimer.isFinished()

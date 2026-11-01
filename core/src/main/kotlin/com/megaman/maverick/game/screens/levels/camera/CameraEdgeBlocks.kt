@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.camera.ICameraPart
@@ -51,13 +52,13 @@ class CameraEdgeBlocks(
     private val stage: CameraLimitStage,
     private val enabled: () -> Boolean,
     private val killAtEdge: (Direction, Float) -> Unit = { _, _ -> }
-) : ICameraPart<RotatableCamera>, Resettable {
+) : ICameraPart, Resettable {
 
     private val blocks = ObjectMap<Direction, CameraEdgeBlock>()
     private val edges = ObjectMap<Direction, Float>()
     private val bounds = GameRectangle()
 
-    override fun update(camera: RotatableCamera, delta: Float): Boolean {
+    override fun update(camera: Camera, delta: Float): Boolean {
         val enabled = enabled()
 
         for (direction in Direction.entries) {

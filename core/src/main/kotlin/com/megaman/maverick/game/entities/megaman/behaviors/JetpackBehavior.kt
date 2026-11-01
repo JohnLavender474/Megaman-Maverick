@@ -23,7 +23,7 @@ internal fun Megaman.jetpackBehavior(): IBehavior {
                 !input.isPressed(MegaControllerButton.A) || !input.isPressed(MegaControllerButton.UP) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
                 weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) ||
-                services.camera.rotating
+                services.gameCamera.rotating
             ) return false
 
             return if (isBehaviorActive(BehaviorType.JETPACKING))
@@ -66,7 +66,7 @@ internal fun Megaman.jetpackBehavior(): IBehavior {
 
         override fun end() {
             jetpackHandler.reset()
-            if (!services.camera.rotating) body.physics.gravityOn = true
+            if (!services.gameCamera.rotating) body.physics.gravityOn = true
         }
     }
 }

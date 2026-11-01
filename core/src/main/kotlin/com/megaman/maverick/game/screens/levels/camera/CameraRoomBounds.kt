@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -23,7 +24,7 @@ class CameraRoomBounds(
     var transitionScannerDimensions: Vector2,
     var onSetToRoomNoTrans: (() -> Unit)? = null,
     var onFirstUpdateAfterReset: (() -> Unit)? = null
-) : ICameraPart<RotatableCamera>, Resettable {
+) : ICameraPart, Resettable {
 
     companion object {
         const val TAG = "CameraRoomBounds"
@@ -47,7 +48,7 @@ class CameraRoomBounds(
         reset = true
     }
 
-    override fun update(camera: RotatableCamera, delta: Float): Boolean {
+    override fun update(camera: Camera, delta: Float): Boolean {
         if (reset) {
             GameLogger.debug(TAG, "update(): reset")
 
@@ -105,7 +106,7 @@ class CameraRoomBounds(
         return false
     }
 
-    fun transitionToRoom(camera: RotatableCamera, roomName: String, transDirection: Direction? = null): Boolean {
+    fun transitionToRoom(camera: Camera, roomName: String, transDirection: Direction? = null): Boolean {
         if (currentGameRoom == null) throw IllegalStateException(
             "Cannot transition to room $roomName because the current game room is null"
         )
@@ -128,7 +129,7 @@ class CameraRoomBounds(
         return true
     }
 
-    fun scanForNextRoom(camera: RotatableCamera) {
+    fun scanForNextRoom(camera: Camera) {
         val focus = follow.focus ?: return
         val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle() ?: return
 

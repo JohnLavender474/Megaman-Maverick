@@ -19,14 +19,14 @@ private class TestFocus(var x: Float, var y: Float) : IFocusable {
 }
 
 private class TestPart(val log: MutableList<String>, val name: String, val hold: Boolean = false) :
-    ICameraPart<Camera> {
+    ICameraPart {
     override fun update(camera: Camera, delta: Float): Boolean {
         log.add(name)
         return hold
     }
 }
 
-private abstract class TestPartBase : ICameraPart<Camera> {
+private abstract class TestPartBase : ICameraPart {
     override fun update(camera: Camera, delta: Float) = false
 }
 

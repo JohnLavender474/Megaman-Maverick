@@ -168,7 +168,7 @@ class SniperJoe(services: MegaServices) : AbstractEnemy(services), IAnimatedEnti
     private var scaleBullet = true
 
     private val shouldUpdate: Boolean
-        get() = !services.camera.rotating
+        get() = !services.gameCamera.rotating
     private val shielded: Boolean
         get() = currentState != SniperJoeState.SHOOT
 

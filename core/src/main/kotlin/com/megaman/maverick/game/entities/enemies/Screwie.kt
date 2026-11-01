@@ -180,7 +180,7 @@ class Screwie(services: MegaServices) : AbstractEnemy(services, size = Size.SMAL
         updatablesComponent.add {
             freezeHandler.update(it)
 
-            if (frozen || services.camera.rotating) return@add
+            if (frozen || services.gameCamera.rotating) return@add
 
             when {
                 !downTimer.isFinished() -> {

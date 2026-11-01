@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -9,6 +10,7 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraLimits
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraLimitRule
 import com.maverick.game.engine.camera.ICameraPart
 import com.maverick.game.engine.common.enums.Direction
@@ -71,12 +73,13 @@ private class KeptEdge(val value: Float, val section: CameraScrollSection)
  * The case updates during play if gravity changes. The tables are also in the `051` item `NOTES.md`.
  */
 class CameraScroll(
+    private val view: CameraView,
     private val follow: CameraFollow,
     private val roomBounds: CameraRoomBounds,
     private val settledPosition: Vector3,
     private val fallDirection: () -> Direction,
     private val hold: () -> Boolean = { false }
-) : ICameraPart<RotatableCamera>, ICameraLimitRule, Resettable {
+) : ICameraPart, ICameraLimitRule, Resettable {
 
     var sections = Array<CameraScrollSection>()
 
@@ -96,7 +99,7 @@ class CameraScroll(
         deriveDone = true
     }
 
-    override fun update(camera: RotatableCamera, delta: Float): Boolean {
+    override fun update(camera: Camera, delta: Float): Boolean {
         val currentRoom = currentRoom()
 
         if (deriveDone && currentRoom != null) {
@@ -121,7 +124,7 @@ class CameraScroll(
 
         if (hold()) return false
 
-        val viewSize = viewSize(camera, active)
+        val viewSize = viewSize(active)
         val stop = stopPosition(active, viewSize)
 
         position += sign(active) * active.speed * delta
@@ -190,12 +193,12 @@ class CameraScroll(
 
     // TODO: after a respawn in a later room, a section in an earlier room does not count as done, so a player who walks
     //  back into it starts it again. Kept edges normally stop that walk back (see mega-refactor-051-fix-scroll-room-scope)
-    private fun deriveDoneSections(camera: RotatableCamera, currentRoom: RectangleMapObject) {
+    private fun deriveDoneSections(camera: Camera, currentRoom: RectangleMapObject) {
         for (i in 0 until sections.size) {
             val candidate = sections[i]
             if (!candidate.bounds.overlaps(currentRoom.rectangle)) continue
 
-            val viewSize = viewSize(camera, candidate)
+            val viewSize = viewSize(candidate)
             val stop = stopPosition(candidate, viewSize)
             val center = if (candidate.direction.isHorizontal()) camera.position.x else camera.position.y
 
@@ -246,8 +249,8 @@ class CameraScroll(
     private fun axisPosition(section: CameraScrollSection) =
         if (section.direction.isHorizontal()) settledPosition.x else settledPosition.y
 
-    private fun viewSize(camera: RotatableCamera, section: CameraScrollSection) =
-        if (section.direction.isHorizontal()) camera.viewWidth else camera.viewHeight
+    private fun viewSize(section: CameraScrollSection) =
+        if (section.direction.isHorizontal()) view.viewWidth else view.viewHeight
 
     private fun sign(section: CameraScrollSection) =
         if (section.direction == Direction.RIGHT || section.direction == Direction.UP) 1f else -1f

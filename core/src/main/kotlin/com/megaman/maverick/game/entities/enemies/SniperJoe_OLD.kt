@@ -120,7 +120,7 @@ class SniperJoe_OLD(services: MegaServices) : AbstractEnemy(services, size = Siz
         get() = sniperJoeState == SniperJoeState.WAITING_SHIELDED || sniperJoeState == SniperJoeState.SHOOTING_WITH_SHIELD
 
     private val shouldUpdate: Boolean
-        get() = !services.camera.rotating
+        get() = !services.gameCamera.rotating
     private val waitTimer = Timer(SHIELD_DUR)
     private val shootTimer = Timer(SHOOT_DUR)
     private val throwShieldTimer = Timer(THROW_SHIELD_DUR)

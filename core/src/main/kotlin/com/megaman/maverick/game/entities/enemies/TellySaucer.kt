@@ -148,7 +148,7 @@ class TellySaucer(services: MegaServices) : AbstractEnemy(services, size = Size.
         updatablesComponent.add update@{ delta ->
             direction = targetPlayer.direction
 
-            if (services.camera.rotating) {
+            if (services.gameCamera.rotating) {
                 body.physics.velocity.setZero()
 
                 rayTimer.setToEnd()
@@ -218,7 +218,7 @@ class TellySaucer(services: MegaServices) : AbstractEnemy(services, size = Size.
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (services.camera.rotating) "collapsed" else if (raying) "flash" else "spin" }
+                .setKeySupplier { if (services.gameCamera.rotating) "collapsed" else if (raying) "flash" else "spin" }
                 .addAnimations(
                     "flash" pairTo Animation(regions["flash"], 2, 1, 0.1f, true),
                     "spin" pairTo Animation(regions["spin"], 3, 2, 0.1f, true)

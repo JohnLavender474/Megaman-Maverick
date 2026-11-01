@@ -281,7 +281,7 @@ class InfernoMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
                 return@add
             }
 
-            if (services.camera.rotating) {
+            if (services.gameCamera.rotating) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
             } else body.physics.gravityOn = !frozen

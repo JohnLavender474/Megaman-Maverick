@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
@@ -8,6 +9,7 @@ import com.maverick.game.engine.camera.CameraAxisLimit
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraFollowMode
 import com.maverick.game.engine.camera.CameraLimits
+import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraLimitRule
 import com.maverick.game.engine.camera.ICameraPart
 import com.maverick.game.engine.common.enums.Direction
@@ -16,12 +18,13 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import kotlin.math.abs
 
 class CameraLimitStage(
+    private val view: CameraView,
     private val follow: CameraFollow,
     private val roomBounds: CameraRoomBounds,
     private val settledPosition: Vector3,
     private val defaultEaseSpeed: Float,
     private val hold: () -> Boolean = { false }
-) : ICameraPart<RotatableCamera>, Resettable {
+) : ICameraPart, Resettable {
 
     val limits = CameraLimits()
 
@@ -45,7 +48,7 @@ class CameraLimitStage(
         snap = true
     }
 
-    override fun update(camera: RotatableCamera, delta: Float): Boolean {
+    override fun update(camera: Camera, delta: Float): Boolean {
         val room = when (follow.mode) {
             CameraFollowMode.X_AND_Y -> roomBounds.currentGameRoom
             CameraFollowMode.X_ONLY -> roomBounds.priorGameRoom!!
@@ -64,8 +67,8 @@ class CameraLimitStage(
 
         for (i in 0 until rules.size) rules[i].apply(target)
 
-        target.x.resolve(camera.blendedViewWidth, bounds.x, bounds.x + bounds.width)
-        target.y.resolve(camera.blendedViewHeight, bounds.y, bounds.y + bounds.height)
+        target.x.resolve(view.blendedViewWidth, bounds.x, bounds.x + bounds.width)
+        target.y.resolve(view.blendedViewHeight, bounds.y, bounds.y + bounds.height)
 
         if (snap || room !== limitRoom) {
             limits.set(target)
@@ -74,12 +77,12 @@ class CameraLimitStage(
             return false
         }
 
-        if (focusOutOfView(camera)) limits.set(target)
+        if (focusOutOfView()) limits.set(target)
         else {
             val held = hold()
             val step = target.easeSpeed * delta
-            if (!held || target.x.pinned) limits.x.easeTo(target.x, settledPosition.x, camera.viewWidth, step)
-            if (!held || target.y.pinned) limits.y.easeTo(target.y, settledPosition.y, camera.viewHeight, step)
+            if (!held || target.x.pinned) limits.x.easeTo(target.x, settledPosition.x, view.viewWidth, step)
+            if (!held || target.y.pinned) limits.y.easeTo(target.y, settledPosition.y, view.viewHeight, step)
         }
 
         return false
@@ -116,9 +119,9 @@ class CameraLimitStage(
         Direction.UP -> limits.y.max
     }
 
-    private fun focusOutOfView(camera: RotatableCamera): Boolean {
+    private fun focusOutOfView(): Boolean {
         val focus = follow.focus?.getFocusPosition() ?: return false
-        return outOfView(limits.x, focus.x, camera.blendedViewWidth) || outOfView(limits.y, focus.y, camera.blendedViewHeight)
+        return outOfView(limits.x, focus.x, view.blendedViewWidth) || outOfView(limits.y, focus.y, view.blendedViewHeight)
     }
 
     private fun outOfView(limit: CameraAxisLimit, position: Float, viewSize: Float) =

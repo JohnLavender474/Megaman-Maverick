@@ -163,7 +163,7 @@ class SubmarineJoe(services: MegaServices) : AbstractEnemy(services), IAnimatedE
         get() = stateLoopHandler.getCurrentState()
 
     private val canMove: Boolean
-        get() = !services.camera.rotating && !frozen
+        get() = !services.gameCamera.rotating && !frozen
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")

@@ -107,7 +107,7 @@ class BunbyRedRocket(services: MegaServices) : AbstractProjectile(services), IAn
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
-        if (services.camera.rotating) body.physics.velocity.setZero()
+        if (services.gameCamera.rotating) body.physics.velocity.setZero()
         else body.physics.velocity.set(trajectory)
     })
 

@@ -118,7 +118,7 @@ internal fun Megaman.airDashBehavior(): IBehavior {
             minTimer.reset()
             maxTimer.reset()
 
-            if (!services.camera.rotating) {
+            if (!services.gameCamera.rotating) {
                 body.physics.gravityOn = true
 
                 if (!teleporting) {
