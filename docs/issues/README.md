@@ -104,3 +104,4 @@ related-items: [<mega-refactor item IDs>]
 | [A player spawn in the map's bottom-left area replaces the start spawn](2026-10-30-spawn-in-start-area-replaces-start-spawn.md) | yes | core | open |
 | [Question: `CameraRoomTransition` uses the raw viewport size on a turned camera](2026-11-01-camera-room-transition-raw-viewport-size.md) | question | engine | open |
 | [A `START` release at the start of a lock pauses the game, and the pause cannot be left](2026-11-01-start-release-at-lock-start-pauses.md) | no | core | open |
+| [A `HeartTank` that falls on quicksand does not sink](2026-11-01-heart-tank-does-not-sink-in-sand.md) | yes | core | open |
