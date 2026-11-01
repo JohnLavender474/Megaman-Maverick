@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -24,3 +24,7 @@ Boot applies the saved value.
 ## How to reproduce
 
 Change the select button action, restart the game.
+
+## Resolution
+
+Fixed by `mega-refactor-031e-bindings`, squash commit `b22b232c9`. The saved action applies at boot, from the slot file. The owner checked it in the `031e` play test (`B4`).

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -28,3 +28,7 @@ Change a key binding, save, restart the game. The default binding is active.
 ## Notes
 
 Ask the owner first. Item `034` covers settings.
+
+## Resolution
+
+Closed as on purpose. Owner decision of 2026-10-30: saved bindings do not load by default, so that a bad mapping cannot make a controller unusable. The player selects "LOAD SAVED SETTINGS". `--loadKeyboardPrefs` stays as a dev opt-in. `mega-refactor-031e-bindings` (squash commit `b22b232c9`) keeps this behavior.

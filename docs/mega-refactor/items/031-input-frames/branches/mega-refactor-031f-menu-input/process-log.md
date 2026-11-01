@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: blocked
+- State: planned
 - Goal: the menus and skip screens read frames, with `Esc` and the back action; the `controllerPoller` facade goes
 - Done:
-- Next: the scan and a draft `docs/SCOPE.md`, after `031e` merges
-- Blocked: by `031e` (bindings: it changes the bindings screen, which is one of the menus). `031d` merged.
+- Next: the scan and a draft `docs/SCOPE.md`
+- Blocked:
 
 ## Entries
 

@@ -1376,3 +1376,13 @@ newest entry at the bottom.
   baseline count). A launch of `REFACTOR_TEST_029 --room heart` gives code 124 with no exception.
 - Follow-up: no new items and no bugs to file. `git add -A` took the owner's local mute of `run-game-alpha.sh` into the branch; it was reverted
   before the squash, so `master` has no change to that file. The next branch of `084` is `084g`, after `031e` merges.
+
+## 2026-11-01 — mega-refactor-031e-bindings
+
+- Summary: one `PlayerSettings` per slot and the slot file `PlayerSettingsStore` replace `ControllerButtons` and the old prefs files, with no
+  migration. `--resetBindings`, reserved keys, key and trigger labels, the capture end on a pad loss, `selectButtonAction` at boot, and "RESET TO
+  DEFAULTS" saved. `BACK` from the bindings screen in a level goes back to the pause screen. Squash commit `b22b232c9`.
+- Contract check: the owner's play test passes ("all tests passed"), and merge approval (verbatim: "yes"). `master` moved after the play test, so
+  `master` went into the branch (`8ed39c993`). 2 conflicts, the imports of `AirDashBehavior.kt` and `ControllerComponent.kt`; both sides kept. The play
+  test was not repeated on the merged code, because `master`'s changes in the shared files do not touch pause, resume, viewports, music or input.
+- Follow-up: 5 issues closed (4 fixed, `2026-10-22-saved-key-bindings-not-applied.md` as on purpose). Item `034` updated. No new items and no bugs to file. `031f` is now `planned`. The accepted 1-frame pause grid has a `TODO` at `showOverPause` (item `013`).

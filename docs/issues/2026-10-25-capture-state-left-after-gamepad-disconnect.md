@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: no
@@ -30,3 +30,7 @@ Leaving the screen ends the capture: remove the listener and clear the capture s
 ## How to reproduce
 
 Open the gamepad settings, select a button row, unplug the gamepad, plug it in again, and open the gamepad settings.
+
+## Resolution
+
+Fixed by `mega-refactor-031e-bindings`, squash commit `b22b232c9`. The screen ends a capture when the primary pad is not the pad of the capture, and clears the capture state and the listener. The owner checked it in the `031e` play test (`G9`, `D2`, `D3`).

@@ -49,8 +49,8 @@ related-items: [<mega-refactor item IDs>]
 | [The room-music block on respawn reads the room before Mega moves, and can throw](2026-10-22-respawn-stale-room-music.md) | yes | core | open |
 | [A pause during a gate opening turns physics and behaviors on again when the game resumes](2026-10-22-pause-during-gate-reenables-physics.md) | yes | core | open |
 | [When a health fill ends during a pause, all systems turn on while the game is still paused](2026-10-22-health-fill-end-unpauses-systems.md) | no | core | open |
-| [Saved keyboard bindings are not applied at boot](2026-10-22-saved-key-bindings-not-applied.md) | yes | core | open |
-| [`selectButtonAction` resets at every boot although it is saved](2026-10-22-select-button-action-resets.md) | yes | core | open |
+| [Saved keyboard bindings are not applied at boot](2026-10-22-saved-key-bindings-not-applied.md) | yes | core | closed |
+| [`selectButtonAction` resets at every boot although it is saved](2026-10-22-select-button-action-resets.md) | yes | core | closed |
 | [Volume changes in game are not saved](2026-10-22-volume-not-saved.md) | yes | core | open |
 | [The save keeps which health tanks the player has, not how full they are](2026-10-22-health-tank-fill-not-saved.md) | yes | core | open |
 | [`runQueue` runs the last added runnable first](2026-10-22-run-queue-lifo.md) | yes | core | open |
@@ -80,11 +80,11 @@ related-items: [<mega-refactor item IDs>]
 | [`GameLine.rotate` sets `originY` to the `originX` value](2026-10-25-game-line-rotate-origin-y.md) | yes | engine | open |
 | [`isPerformanceSubpar()` is true for the high tiers and has no caller](2026-10-25-is-performance-subpar-inverted.md) | yes | core | open |
 | [A gamepad model with no saved bindings gets code `0` on all 8 buttons after "LOAD SAVED SETTINGS"](2026-10-25-preferred-controller-code-zero.md) | yes | core | closed |
-| [Leaving the keyboard or gamepad settings screen during a level restarts the level](2026-10-25-bindings-screen-restarts-level.md) | yes | core | open |
+| [Leaving the keyboard or gamepad settings screen during a level restarts the level](2026-10-25-bindings-screen-restarts-level.md) | yes | core | closed |
 | [Players cannot bind a button to the `P` key without causing screenshots](2026-10-25-p-key-binding-takes-screenshots.md) | yes | core | open |
 | [After gamepad 0 is unplugged while another gamepad stays, the game keeps the old gamepad's codes](2026-10-25-gamepad-index-shift-keeps-old-codes.md) | yes | core | closed |
-| ["RESET TO DEFAULTS" in the key and gamepad settings is not saved](2026-10-25-reset-to-defaults-not-saved.md) | yes | core | open |
-| [A gamepad disconnect during a button capture leaves the capture state and the listener behind](2026-10-25-capture-state-left-after-gamepad-disconnect.md) | yes | core | open |
+| ["RESET TO DEFAULTS" in the key and gamepad settings is not saved](2026-10-25-reset-to-defaults-not-saved.md) | yes | core | closed |
+| [A gamepad disconnect during a button capture leaves the capture state and the listener behind](2026-10-25-capture-state-left-after-gamepad-disconnect.md) | yes | core | closed |
 | [`jamepadVersion` in `gradle.properties` does not match the Jamepad version that the build uses](2026-10-25-jamepad-version-mismatch.md) | yes | build | open |
 | [Five enemies in `DESERT_MAN` are on layers where they cannot spawn](2026-10-27-desert-man-enemies-on-wrong-layers.md) | question | content | open |
 | [A `DuoBallCanon` in `WILY_STAGE_1` is on the `blocks` layer and never spawns](2026-10-27-wily-stage-1-duoballcanon-on-blocks-layer.md) | question | content | open |

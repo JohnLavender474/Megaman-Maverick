@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -34,3 +34,7 @@ In a level, open pause, open the settings, open the keyboard settings, select "B
 The fix must keep the level state while another screen is shown, or show the bindings screen as an overlay on the
 pause menu. Item `031` plans an input menu and a bindings screen that the mouse and the system keys can reach; the
 fix can come with it or before it.
+
+## Resolution
+
+Fixed by `mega-refactor-031e-bindings`, squash commit `b22b232c9`. The bindings screen opens over the held level screen (`showOverPause` and `closeOverPause`), and `BACK` goes back to the pause screen. The owner checked it in the `031e` play test (`H1` to `H10`). The pause grid shows for 1 frame at the open; the `TODO` at `showOverPause` names item `013` as the follow-up.

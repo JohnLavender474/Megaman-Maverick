@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: no
@@ -33,3 +33,7 @@ Rebind a key, select "RESET TO DEFAULTS", then select "LOAD SAVED SETTINGS": the
 ## Notes
 
 Item `031` plans a reset that saves at once as part of the escape hatch for bad bindings.
+
+## Resolution
+
+Fixed by `mega-refactor-031e-bindings`, squash commit `b22b232c9`. The reset row removes the saved table of the screen and `SELECT_BUTTON_ACTION` from the slot file. The owner's `031e` play test passes.
