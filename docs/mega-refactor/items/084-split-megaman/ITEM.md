@@ -12,6 +12,7 @@
   `mega-refactor-084e-class-line` (merged 2026-11-01)
   `mega-refactor-084f-focus-progress` (merged 2026-11-01)
   `mega-refactor-084g-movement-state` (merged 2026-11-01)
+  `mega-refactor-084h-charge` (active)
 
 ## Goal
 
@@ -98,6 +99,7 @@ Not in this item (other items own these parts):
   - The commented `regionProcessor` block in `Megaman.kt` goes, and its idea is in the `024` `NOTES.md`.
   - `048` owns `IFaceable`.
   - `084` closes after the agreed branches, and the rest of the interface work moves to `048`.
+- (2026-11-01, owner) The charge timer goes in a small `WeaponChargeComponent`, not `ChargeComponent`, because "charge" has at least 5 meanings in the game. `shootAnimTimer` and any larger weapon component stay in `024`.
 
 ## Open questions
 
