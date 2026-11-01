@@ -379,6 +379,55 @@ class CameraScrollTest : DescribeSpec({
         }
     }
 
+    describe("CameraScroll room scope") {
+        fun up(x: Float) = CameraScrollSection(Rectangle(x, 0f, 500f, 400f), Direction.UP, 100f)
+
+        it("does not count a section in another room as done after a respawn") {
+            val rig = ScrollRig(
+                up(2000f), 300f, 900f,
+                Array.with(room("a", 0f, 0f, 1000f, 1000f))
+            )
+            rig.run(3)
+            rig.stage.killEdge(Direction.DOWN).shouldBeNull()
+            rig.stage.limits.y.min shouldBe 0f
+        }
+
+        it("does not apply a kept edge in a room that the section does not overlap") {
+            val rig = ScrollRig(
+                CameraScrollSection(Rectangle(200f, 0f, 300f, 1000f), Direction.RIGHT, 100f),
+                300f, 500f,
+                Array.with(room("a", 0f, 0f, 1000f, 1000f), room("b", 1000f, 0f, 1000f, 1000f))
+            )
+            rig.run(1, 0f)
+            rig.focus.x = 900f
+            rig.run(60)
+            rig.stage.edgeLimit(Direction.LEFT) shouldBe 500f
+            rig.focus.x = 997f
+            rig.run(1, 0.01f)
+            while (rig.transition.transitioning) rig.controller.update(0.01f)
+            rig.focus.x = 1100f
+            rig.run(3, 0.01f)
+            rig.stage.edgeLimit(Direction.LEFT).shouldBeNull()
+        }
+
+        it("gives no edge at the end of a pan, while the limits are from the last room") {
+            val rig = ScrollRig(
+                CameraScrollSection(Rectangle(0f, 0f, 1000f, 2000f), Direction.UP, 100f),
+                500f, 1500f,
+                Array.with(room("a", 0f, 0f, 1000f, 1000f), room("b", 0f, 1000f, 1000f, 1000f))
+            )
+            rig.run(2, 0f)
+            rig.stage.killEdge(Direction.DOWN) shouldBe rig.stage.limits.y.min
+            rig.focus.y = 1003f
+            rig.held = true
+            rig.run(1, 0.01f)
+            rig.transition.transitioning shouldBe true
+            while (rig.transition.transitioning) rig.controller.update(0.01f)
+            rig.stage.limits.y.min shouldBe (1460f plusOrMinus 100f)
+            rig.stage.killEdge(Direction.DOWN).shouldBeNull()
+        }
+    }
+
     describe("CameraScroll chains") {
         it("starts next when a section stops, with no position test, and only one way") {
             val up = CameraScrollSection(Rectangle(600f, 0f, 500f, 3000f), Direction.UP, 100f)

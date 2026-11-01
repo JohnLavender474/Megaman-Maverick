@@ -97,6 +97,7 @@ class CameraLimitStage(
     private fun activeEdge(direction: Direction): Float? {
         val bounds = limitRoom?.rectangle
         if (!active || bounds == null) return null
+        if (limitRoom !== (roomBounds.currentGameRoom ?: roomBounds.priorGameRoom)) return null
 
         if (target.keptEdges.contains(direction)) return edge(direction)
 

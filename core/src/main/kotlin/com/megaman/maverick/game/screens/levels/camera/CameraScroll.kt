@@ -97,13 +97,14 @@ class CameraScroll(
     }
 
     override fun update(camera: RotatableCamera, delta: Float): Boolean {
-        if (deriveDone) {
+        val currentRoom = currentRoom()
+
+        if (deriveDone && currentRoom != null) {
             deriveDone = false
-            deriveDoneSections(camera)
+            deriveDoneSections(camera, currentRoom)
         }
 
         val focus = follow.focus?.getFocusPosition() ?: return false
-        val currentRoom = roomBounds.currentGameRoom ?: roomBounds.priorGameRoom
 
         if (section == null) startAt(focus, currentRoom)
 
@@ -133,7 +134,11 @@ class CameraScroll(
     }
 
     override fun apply(target: CameraLimits) {
-        keptEdges.forEach { applyKeptEdge(target, it.key, it.value) }
+        val currentRoom = currentRoom()
+        keptEdges.forEach {
+            if (currentRoom != null && it.value.section.bounds.overlaps(currentRoom.rectangle))
+                applyKeptEdge(target, it.key, it.value)
+        }
 
         val active = section ?: return
 
@@ -181,9 +186,15 @@ class CameraScroll(
         return null
     }
 
-    private fun deriveDoneSections(camera: RotatableCamera) {
+    private fun currentRoom() = roomBounds.currentGameRoom ?: roomBounds.priorGameRoom
+
+    // TODO: after a respawn in a later room, a section in an earlier room does not count as done, so a player who walks
+    //  back into it starts it again. Kept edges normally stop that walk back (see mega-refactor-051-fix-scroll-room-scope)
+    private fun deriveDoneSections(camera: RotatableCamera, currentRoom: RectangleMapObject) {
         for (i in 0 until sections.size) {
             val candidate = sections[i]
+            if (!candidate.bounds.overlaps(currentRoom.rectangle)) continue
+
             val viewSize = viewSize(camera, candidate)
             val stop = stopPosition(candidate, viewSize)
             val center = if (candidate.direction.isHorizontal()) camera.position.x else camera.position.y
