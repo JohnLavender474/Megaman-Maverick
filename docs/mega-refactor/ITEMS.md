@@ -119,6 +119,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 109 | [PvP modes](items/109-pvp-mode/ITEM.md) | feature | `O2`, `O8` | idea | `047`, `102`, `030` | | |
 | 110 | [Co-op in the main campaign](items/110-co-op-campaign/ITEM.md) | feature | `O2` | idea | `108`, `109` | | |
 | 111 | [PvP across multiple rooms](items/111-pvp-multi-room/ITEM.md) | feature | `O2` | idea | `109`, `094` | | |
+| 112 | [Targeting as a policy that each entity owns](items/112-targeting-policies/ITEM.md) | refactor | `O1`, `O2` | planned | `047b` | | |
 
 ## Branches
 

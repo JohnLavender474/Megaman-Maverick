@@ -228,6 +228,7 @@ Not a redo, but new work that is larger than the table shows:
 | `109` | idea | [PvP modes](../items/109-pvp-mode/ITEM.md) (main) |
 | `110` | idea | [Co-op in the main campaign](../items/110-co-op-campaign/ITEM.md) (main) |
 | `111` | idea | [PvP across multiple rooms](../items/111-pvp-multi-room/ITEM.md) (main) |
+| `112` | planned | [Targeting as a policy that each entity owns](../items/112-targeting-policies/ITEM.md) |
 
 ## Gaps with no item
 
