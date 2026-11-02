@@ -68,23 +68,23 @@ Branch: `fix/quicksand-two-players`. This settles the open points in "Recommende
 
 Intended changes, with `--players 2`:
 
-- A `FeetRiseSinkBlock` with the map property `per_player` spawns one copy for each player after slot 0. The map block acts for slot 0 and each entity that is not a player. A copy acts only for its player.
-- The 20 sand blocks in `DesertMan_16x14_v4.tmx`, `WilyStage1_v2.tmx` and `Test1.tmx` get `per_player=true`. The `RodentMan` plates and `InfernoChainPlatform` stay shared.
-- The copies spawn with the map block, for each registered player, so they exist before a player reaches the sand. They do not cull on their own: the map block destroys them.
-- Contacts and collisions between a player and the block of another player do not occur. This includes the feet consumer that drives `bodyOverGround`, so a player cannot jump off the block of the other player.
+- A `FeetRiseSinkBlock` with the map property `per_entity` has a sensor area, 1 tile wider on each side and 1 tile above its top. The first feet of a sinkable entity in the area spawn one copy for that entity (owner decision, 2026-11-02: spawn lazily, not one per player at level start). This covers players and `PushableBlock`, also a player who joins during play. The sensor is off until a second player is registered.
+- The map block acts for slot 0 and each entity that cannot sink. A copy acts only for its owner.
+- The 20 sand blocks in `DesertMan_16x14_v4.tmx`, `WilyStage1_v2.tmx` and `Test1.tmx` get `per_entity=true`. The `RodentMan` plates and `InfernoChainPlatform` stay shared.
+- A copy stays until the map block is destroyed. It does not cull on its own.
+- Contacts and collisions between a sinkable entity and the block of another entity do not occur. This includes the player's feet consumer that drives `bodyOverGround`, so a player cannot jump off the block of the other player.
 
 Accepted, with a `TODO` at the code:
 
-- `PushableBlock` gets no copy, because no map has one on sand, so a copy for it has no caller (`O1-R5`).
 - An enemy or an item rests on the map block, so with 2 players it moves with slot 0 only. An enemy's consumer fixture can sense a copy.
-- A player who joins during play gets no copy (`047f`).
+- With 1 player, all sinkable entities share the map block, as today. No map has a `PushableBlock` on sand.
 
 Must not change: without `--players 2`, no copy spawns, and the sand plays as it does today. `RodentMan` and `InfernoMan` do not change.
 
 Checks:
 
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
-- New tests: with 2 players, each player sinks and rises alone; with 1 player, no copy spawns; a block with no `per_player` spawns no copy; a destroyed map block destroys its copies.
+- New tests: a copy spawns only when the feet of the second entity enter the area, and only once; with 2 players, each player sinks and rises alone; with 1 player, no copy spawns; a block with no `per_entity` spawns no copy; a destroyed map block destroys its copies. No test covers `PushableBlock` or the feet consumer, so the owner's play check covers the consumer.
 - A launch of `DESERT_MAN` `room1` from the built jar, with and without `--players 2`, gives no exception.
 - The owner plays the case in "How to reproduce" and a pass over the sand in `DESERT_MAN` with 1 player.
 
