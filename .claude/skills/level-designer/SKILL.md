@@ -211,6 +211,11 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 14. **Quicksand is recessed**: the top of the sand is at least 1 tile below the top of the blocks
     on each side, as in `DesertMan_16x14_v4.tmx` and `WilyStage1_v2.tmx`. Never put sand level with
     the floor around it.
+15. **A `PushableBlock` must not reach a wall that the player needs to push from.** The player pushes
+    or shoots the block only from the side they stand on, so a block pushed flush against a wall
+    cannot come back. Put a 2×1 block bump on the floor beside the block, between it and the wall.
+    The bump stops the block, and it is only 1 tile high, so Mega Man can stand on it and still
+    push or shoot the block the other way. Check each direction that the block can travel.
 
 ## Notes Block Format
 

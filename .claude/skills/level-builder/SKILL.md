@@ -70,7 +70,7 @@ the room topology with the user before adding any content.
 Add floors, walls, ceilings, and platforms with `add-block`. Blocks may span across
 room boundaries. Confirm before moving on.
 
-Follow the design rules in the `level-designer` skill (Rules 6–14). In particular, for a
+Follow the design rules in the `level-designer` skill (Rules 6–15). In particular, for a
 bottomless pit, the `Death` rectangle is off-screen: `y` = room bottom + 48 px, height
 16 px, `instant=true`. `add-death` takes whole tiles only, so set this `y` and height on
 the object after you add it. Extend floors, ceilings and outer walls past the room edges.
@@ -82,6 +82,12 @@ a tile on every cell that a block covers. The CLI cannot paint tiles; add the la
 script or by hand, and raise `nextlayerid`. Use a tile from a tileset the map already has, for
 example tile 175 of `Tileset1.tsx`, the most common floor tile in `Test1.tmx`. See the `tiles`
 layer of `Test1.tmx` for the format.
+
+#### Pushable blocks
+
+A `PushableBlock` needs a 2×1 block bump between it and any wall that it can reach
+(`level-designer` Rule 15). Add the bump with `add-block --w 2 --h 1`, on the floor, flush with the
+block's start or its stop point. If a spawn stood on those tiles, move the spawn up onto the bump.
 
 #### Quicksand
 
