@@ -163,3 +163,4 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - `level-analyzer`: read and analyze an existing TMX level.
 - `gauntlet-stages`: gauntlet stages that use `GauntletMaster`.
 - `diagnostics-analyzer`: analyze `*-diagnostics.txt` files from `--diagnostics` runs.
+- `sprite-slicer`: cut a tightly packed sprite sheet into fixed-size animation strips and an atlas.

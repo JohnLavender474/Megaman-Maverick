@@ -42,14 +42,14 @@ empty columns and count from 0, left to right.
 
 | Key | Where | Meaning |
 |---|---|---|
-| `merge` | `rows` | Joins detected frames into one frame, as first and last index. Use it for detached pixels. |
+| `merge` | `rows` | Joins detected frames into one frame, as first and last index. Use it for detached pixels. The indexes count the frames after `split_at`. |
 | `split_at` | `rows` | Cuts touching frames. The right part starts at this sheet column. |
 | `frames` | animation | First and last frame in the row. |
 | `anchor_y` | defaults, animation | `bottom` puts the lowest pixel on the last cell row. `center` centers the frame. |
 | `align_x` | defaults, animation | `overlap` finds the position with the most equal pixels. `center` centers the frame. |
 | `align_to` | defaults, animation | With `overlap`, the first frame aligns to frame 0 of this strip. |
 | `twin` | animation | With `overlap`, each frame aligns to the same frame of this strip. Use it for shoot strips. |
-| `offsets` | animation | A manual shift of one frame as `index: [x, y]`. Positive `y` moves it down. |
+| `offsets` | animation | A manual shift of one frame as `index: [x, y]`, after the placement. The index is the frame in the strip, not in the row. Positive `y` moves it down. |
 
 With `overlap`, a frame with no `twin` aligns to the frame before it. A frame that shares no equal
 pixels with its reference is centered.
