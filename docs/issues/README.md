@@ -120,3 +120,4 @@ related-items: [<mega-refactor item IDs>]
 | [`TreeStump` `init()` throws: it passes the enum name as the atlas path](2026-11-01-tree-stump-wrong-atlas-key.md) | yes | core | open |
 | [10 entity classes that no live map uses fail `init()`](2026-11-01-unused-entities-fail-init.md) | yes | content | open |
 | [4 entities in live maps have a missing region, and `init()` does not throw](2026-11-01-silent-missing-regions.md) | no | content | open |
+| [With `--players 2`, two players on one quicksand area cannot jump out](2026-11-01-two-players-stuck-in-quicksand.md) | yes | core | open |

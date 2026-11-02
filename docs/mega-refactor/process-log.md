@@ -1478,3 +1478,9 @@ newest entry at the bottom.
 - Summary: a code scan added open questions for multiplayer to 12 `ITEM.md` files, including the owner's question on culling for several players. The owner then changed `O2`: Spec Ops and PvP are the crux of the objective, co-op in the main campaign is optional and comes after them, and the first PvP target is one large room. `O2` "Goal", "Done means", `O2-R6`, "Decisions" and "Open questions" change, with the owner's approval. `O8` names the modes. The mission and PvP questions move from `102` to the new items.
 - Contract check: not needed (docs only).
 - Follow-up: new `idea` items `108`, `109`, `110`, `111`. The `047` branch list must be reviewed against `108` and `109` before `047b`. Open: does PvP need rollback (`095`), and does PvP need `094` from its start (`109`).
+
+## 2026-11-01 — mega-refactor-047a-second-slot
+
+- Summary: with `--players 2`, a second tinted `Megaman` plays in a level on its own device (squash commit `fda6509f4`). The branch adds the `--players` flag, capacity `MAX_PLAYERS` (2), one `InputFrameBuilder` per slot, `PadShare` in `GamepadInput`, the slot 1 spawn (`slotSpawnProps`, with the `player_2` reference), the death rule for slot 0 and slot 1, all-player spawn and level-end locks, a debug tint and the `REFACTOR_TEST_047` map.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch with `master` merged in. The owner's play test passes (all experimental and control checks).
+- Follow-up: bug filed: `docs/issues/2026-11-01-two-players-stuck-in-quicksand.md` (owner decision: each sinkable entity sinks and rises on their own). The branch list of `047` must be reviewed against `108` and `109` before `047b`. The `O2-R9` accepted gap stays until `038`.
