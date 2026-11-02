@@ -115,3 +115,8 @@ related-items: [<mega-refactor item IDs>]
 | [`Esc` on the level select screen after an extra level opens the extras rows](2026-11-01-level-select-back-after-extra-level.md) | no | core | open |
 | [The stun bounce assumes that Mega's body direction is `UP`](2026-10-30-stun-bounce-assumes-up.md) | yes | core | open |
 | [Entities keep a pooled scratch object in a field, so `CeilingCrusher` teleports and kills at once](2026-11-01-stored-scratch-vector-in-entity-fields.md) | yes | core | open |
+| [`JetMet` `init()` throws: the atlas has no frozen region, and a live map uses it](2026-11-01-jet-met-no-frozen-region.md) | yes | content | open |
+| [`ColtonJoe` `init()` throws: the atlas has no `ColtonJoe/frozen` region](2026-11-01-colton-joe-no-frozen-region.md) | yes | content | open |
+| [`TreeStump` `init()` throws: it passes the enum name as the atlas path](2026-11-01-tree-stump-wrong-atlas-key.md) | yes | core | open |
+| [10 entity classes that no live map uses fail `init()`](2026-11-01-unused-entities-fail-init.md) | yes | content | open |
+| [4 entities in live maps have a missing region, and `init()` does not throw](2026-11-01-silent-missing-regions.md) | no | content | open |

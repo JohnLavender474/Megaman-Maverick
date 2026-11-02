@@ -60,9 +60,9 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
-| `O6-R1` | `partly` | `ci.yml:3-5,30` runs on a push to any branch, but only 7 CI runs exist, and 1 of 52 merged branches has a result. `HEAD` is 94 commits past `origin/master`. `master` has no required check. Merges use local checks. | `100` |
+| `O6-R1` | `partly` | `ci.yml:3-5,30` runs on a push to any branch, but only 7 CI runs exist, and 1 of 52 merged branches has a result. `HEAD` is 94 commits past `origin/master`. `master` has no required check. Merges use local checks. Update of 2026-11-01: `004a` has a CI result (run `41368452607`), and CI also runs `core:smokeTest`. `master` is 112 commits past `origin/master`. | `100` |
 | `O6-R2` | `partly` | All 50 merged branches with a folder have a `CONTRACT.md`. 8 `fix/*` squashes have none; `docs/issues/README.md:12` asks for a short contract. The contracts were not read line by line. On 2026-11-01 the branch contract template gained `core:test`, and the `fix/` rule gained named checks. | none needed |
-| `O6-R3` | `holds` | 0 test files use `Lwjgl3Application` or `HeadlessApplication`, and `ci.yml` has no `xvfb` line. `P4` stays open: a room check still opens a window. | `091` |
+| `O6-R3` | `holds` | 0 test files use `Lwjgl3Application`. `HeadlessHarness.kt` uses `HeadlessApplication`, with no window: `core:smokeTest` passes with no `DISPLAY` and no `WAYLAND_DISPLAY`. `ci.yml` has no `xvfb` line. `P4` stays open: a room check still opens a window. | `091` |
 | `O6-R4` | `broken` (waiting) | A bad name logs an error and skips the object (`SpawnersLayerBuilder.kt:77-82`). A name scan finds 14 objects in 7 live maps that do not resolve, which matches `docs/issues/2026-10-22-misplaced-tmx-objects.md`. | `003` |
 
 ## Redo risk
@@ -76,7 +76,7 @@ None found.
 | `000` | done | [Bugs found during the review](../items/000-bugs/ITEM.md) (main) |
 | `002` | done | [CI on every branch, one Gradle job, aligned test libraries](../items/002-ci-all-branches/ITEM.md) (main) |
 | `003` | planned | [Level content validator (local tool in `utils/`, CI test)](../items/003-level-validator/ITEM.md) (main) |
-| `004` | planned | [Entity build-and-init smoke test](../items/004-entity-smoke-test/ITEM.md) (main) |
+| `004` | done | [Entity build-and-init smoke test](../items/004-entity-smoke-test/ITEM.md) (main) |
 | `005` | planned | [Golden damage-table test](../items/005-golden-damage-test/ITEM.md) (main) |
 | `006` | idea | [Headless boot-and-run per level (stage A)](../items/006-headless-boot-run/ITEM.md) (main) |
 | `008` | active | [Dev launch options and level staging](../items/008-dev-launch-options/ITEM.md) (main) |
@@ -89,6 +89,9 @@ None found.
 | `011` | planned | [One seedable, interceptable random source with named streams](../items/011-game-random/ITEM.md) |
 | `100` | idea | [CI result before a merge](../items/100-ci-before-merge/ITEM.md) (main) |
 | `101` | idea | [Typed Tiled fields and checks for camera sections and rooms](../items/101-map-object-schema/ITEM.md) |
+| `105` | idea | [Fail a test task that runs 0 tests](../items/105-empty-test-run-check/ITEM.md) (main) |
+| `106` | idea | [Make a new line in the known-failures list visible](../items/106-known-failures-growth-check/ITEM.md) (main) |
+| `107` | idea | [Tighter floor on the entity class count in the smoke test](../items/107-tighter-entity-class-floor/ITEM.md) (main) |
 
 ## Gaps with no item
 

@@ -1,11 +1,11 @@
 # 004: Entity build-and-init smoke test
 
-- Status: active
+- Status: done
 - Type: test
 - Objectives: `O6`
 - Depends on: `002`
-- Related: `005`, `006`, `021`, `028`, `039`
-- Branches: `mega-refactor-004a-entity-smoke-test` (active, started 2026-11-01)
+- Related: `005`, `006`, `021`, `028`, `039`, `105`, `106`, `107`
+- Branches: `mega-refactor-004a-entity-smoke-test` (merged 2026-11-01)
 
 ## Goal
 
@@ -30,11 +30,13 @@ Answer to review item 3 (2026-10-22, verbatim):
 
 - B (2026-10-22): use a separate `smokeTest` JVM test suite in `core`.
 - Merge target (2026-11-01): each branch squash-merges directly into `master`, with no parent branch.
+- Real textures (2026-11-01): the suite decodes the real PNGs and has no stub code. The measured load time was the same as with stubs, and a missing PNG now fails.
+- Silent misses (2026-11-01): a `findRegion` miss fails the test, also when `init()` does not throw. A miss through `containsRegion` does not count.
+- Known failures (2026-11-01): the 18 classes that failed went on `known-entity-failures.txt`, with bugs filed. The branch fixed none of them. Retired classes are on the same list, so no separate list is needed.
 
 ## Open questions
 
-- Stub textures (fast, checks names) or real PNG decode (slower)?
-- Which entity classes are known to be retired? They go on the allowlist (see `039`).
+None. The two open questions closed with the decisions above.
 
 ## Sources
 

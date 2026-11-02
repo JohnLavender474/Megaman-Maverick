@@ -46,3 +46,14 @@ Title: Entity build-and-init smoke test (headless integration suite)
 
 (6) Dependencies: item 1. It helps 20 (the registry replaces scanning), 27 (texture cache) and 38 (finds dead classes). Items 4 and 5 build on its harness.
 ````
+
+## Corrections from `004a` (2026-11-01)
+
+The review text above is kept as written. Three of its facts are wrong:
+
+- The headless backend does not set `Gdx.gl`. It stays null, so `HeadlessHarness` sets a `GL20` mock.
+- The PNGs in `assets/sprites/sprite_sheets/` are 2.5 MB on disk, not about 253 MB. The 253 MB is not a sprite sheet size.
+- Entities need no FreeType natives. No entity builds a font.
+
+Items `005` and `006` can use `HeadlessHarness`. It holds only what `004` calls, so they extend it. `006` needs the
+FreeType natives if a screen builds a font.

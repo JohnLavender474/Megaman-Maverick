@@ -9,6 +9,7 @@ in the branch process log.
 
 - [ ] `./gradlew engine:test` passes.
 - [ ] `./gradlew core:test` passes.
+- [ ] `./gradlew core:smokeTest` passes.
 - [ ] `./gradlew lwjgl3:jar` builds.
 
 ## Manual playthrough
