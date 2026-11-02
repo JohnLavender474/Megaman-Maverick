@@ -29,7 +29,9 @@ There is no soft lock: a block on a sliver stays grounded, so a push or a shot m
 
 ## What should happen
 
-A block with a support of 16 px or less leaves the ledge at once, at all tiers, with no dependence on rest. A block with more support stays. The value needs the owner's decision.
+A block with a support of 16 px or less leaves the ledge at once, at all tiers, with no dependence on rest. A block with more support stays. The first fall has a fixed speed.
+
+Owner decisions, 2026-11-02 (verbatim): "go with 16 px and the fixed first fall". So the tolerance is 16 px, and this fix also clears `velocity.y` at rest, after the tolerance is in, and closes `2026-11-02-pushable-block-velocity-builds-at-rest.md`.
 
 ## How to reproduce
 
@@ -39,7 +41,7 @@ A block with a support of 16 px or less leaves the ledge at once, at all tiers, 
 
 Depends on `fix/quicksand-two-players`: `PushableBlock.kt` filters the block's own inner block from its feet there, and without that a narrower `FEET` has no effect.
 
-Proposed fix, not approved, in `fix/pushable-block-ledge-sliver` after the quicksand merge: a `FEET` fixture that is 16 px shorter at each end, plus a block filter on the block. With no feet on a block, and a corner overlap of 16 px or less, the filter stops the up push and slides the block by the depth it sank. Only `PushableBlock.kt` changes: 1 constant, 1 changed line and about 8 new lines. Calculated: clear of the ledge in at most 0.107 s, largest x move in 1 step 7.4 px. With this, `velocity.y` can clear at rest, which closes `2026-11-02-pushable-block-velocity-builds-at-rest.md`.
+Chosen fix, in `fix/pushable-block-ledge-sliver` after the quicksand merge: a `FEET` fixture that is 16 px shorter at each end, plus a block filter on the block. With no feet on a block, and a corner overlap of 16 px or less, the filter stops the up push and slides the block by the depth it sank. Only `PushableBlock.kt` changes: 1 constant, 1 changed line and about 8 new lines. Calculated: clear of the ledge in at most 0.107 s, largest x move in 1 step 7.4 px. With this, `velocity.y` can clear at rest, which closes `2026-11-02-pushable-block-velocity-builds-at-rest.md`.
 
 Sketch, not compiled:
 
