@@ -1532,3 +1532,9 @@ newest entry at the bottom.
 - Summary: owner decision. Gauntlet 2 is out of the game, so `JetMet`, `ColtonJoe`, `GapingFish` and `TreeStump` are in no live stage (squash commit `3747c6dd4`). The level entry and the 4 classes are commented out, each with a `TODO` that names the issue. `Gauntlet2.tmx` stays. `CeilingCrusher` stays active, because `Compactor.tmx` on `compactor-level` uses it.
 - Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes (`engine` 631 tests, `core` 693 tests, 0 failures). `TEST_1` and `GAUNTLET_1` launch from the built jar with no exception, and `--level GAUNTLET_2` exits with code 2. The owner approved the merge after the Extras screen check.
 - Follow-up: 5 issues closed. `ROADMAP.md` updated. The owner decides on `CeilingCrusher` before `compactor-level` merges.
+
+## 2026-11-02 — master (docs)
+
+- Summary: new `idea` item `115` (partial sink and stuck behavior in sand). The quicksand contract adds `SandComponent`: enemies with feet and a `DYNAMIC` body sink, and they die at a `Death` sensor.
+- Contract check: not needed (docs only).
+- Follow-up: none.

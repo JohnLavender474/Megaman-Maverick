@@ -122,6 +122,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 112 | [Targeting as a policy that each entity owns](items/112-targeting-policies/ITEM.md) | refactor | `O1`, `O2` | planned | `047b` | | |
 | 113 | [Character select screen](items/113-character-select/ITEM.md) | feature | `O8`, `O9` | idea | `081` | | |
 | 114 | [Gravity from components](items/114-gravity-components/ITEM.md) | refactor | `O1` | idea | none | | |
+| 115 | [Partial sink and stuck behavior in sand](items/115-partial-sink-stuck-in-sand/ITEM.md) | feature | `O4`, `O1` | idea | none | | |
 
 ## Branches
 

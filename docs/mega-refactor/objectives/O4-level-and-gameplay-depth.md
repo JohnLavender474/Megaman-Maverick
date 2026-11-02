@@ -84,6 +84,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `076` | idea | [A new tileset for the final stage](../items/076-final-stage-tileset/ITEM.md) |
 | `086` | idea | [Player movement modifiers as a component](../items/086-player-movement-modifiers/ITEM.md) |
 | `099` | idea | [Use camera zones and scroll sections in real stages](../items/099-camera-sections-in-stages/ITEM.md) (main) |
+| `115` | idea | [Partial sink and stuck behavior in sand](../items/115-partial-sink-stuck-in-sand/ITEM.md) (main) |
 
 ## Gaps with no item
 
