@@ -1,0 +1,215 @@
+MegamanX.png
+size: 300, 918
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+air_damaged
+  rotate: false
+  xy: 51, 773
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+climb
+  rotate: false
+  xy: 101, 339
+  size: 48, 192
+  orig: 48, 192
+  offset: 0, 0
+  index: -1
+climb_finish
+  rotate: false
+  xy: 151, 533
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+climb_shoot
+  rotate: false
+  xy: 151, 827
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb_start
+  rotate: false
+  xy: 201, 729
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+crouch
+  rotate: false
+  xy: 151, 631
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+crouch_shoot
+  rotate: false
+  xy: 101, 679
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+damaged
+  rotate: false
+  xy: 201, 485
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+dash
+  rotate: false
+  xy: 101, 777
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+dash_shoot
+  rotate: false
+  xy: 201, 631
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+death
+  rotate: false
+  xy: 1, 675
+  size: 48, 240
+  orig: 48, 240
+  offset: 0, 0
+  index: -1
+death_orb
+  rotate: false
+  xy: 201, 291
+  size: 48, 192
+  orig: 48, 192
+  offset: 0, 0
+  index: -1
+jump
+  rotate: false
+  xy: 151, 1
+  size: 48, 288
+  orig: 48, 288
+  offset: 0, 0
+  index: -1
+jump_shoot
+  rotate: false
+  xy: 201, 1
+  size: 48, 288
+  orig: 48, 288
+  offset: 0, 0
+  index: -1
+land
+  rotate: false
+  xy: 251, 729
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+land_shoot
+  rotate: false
+  xy: 201, 779
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+low_health
+  rotate: false
+  xy: 251, 1
+  size: 48, 240
+  orig: 48, 240
+  offset: 0, 0
+  index: -1
+r13_unknown
+  rotate: false
+  xy: 251, 779
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+run
+  rotate: false
+  xy: 51, 1
+  size: 48, 384
+  orig: 48, 384
+  offset: 0, 0
+  index: -1
+run_shoot
+  rotate: false
+  xy: 51, 387
+  size: 48, 384
+  orig: 48, 384
+  offset: 0, 0
+  index: -1
+run_trans
+  rotate: false
+  xy: 201, 829
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+run_trans_shoot
+  rotate: false
+  xy: 251, 829
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+spawn_in
+  rotate: false
+  xy: 1, 1
+  size: 48, 672
+  orig: 48, 672
+  offset: 0, 0
+  index: -1
+spawn_out
+  rotate: false
+  xy: 101, 1
+  size: 48, 336
+  orig: 48, 336
+  offset: 0, 0
+  index: -1
+stand
+  rotate: false
+  xy: 251, 243
+  size: 48, 240
+  orig: 48, 240
+  offset: 0, 0
+  index: -1
+victory
+  rotate: false
+  xy: 151, 291
+  size: 48, 240
+  orig: 48, 240
+  offset: 0, 0
+  index: -1
+walljump
+  rotate: false
+  xy: 251, 485
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+walljump_shoot
+  rotate: false
+  xy: 101, 533
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+wallslide
+  rotate: false
+  xy: 251, 631
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+wallslide_shoot
+  rotate: false
+  xy: 151, 729
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1

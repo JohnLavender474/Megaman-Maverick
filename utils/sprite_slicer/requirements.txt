@@ -1,0 +1,3 @@
+numpy>=1.21
+Pillow>=9
+PyYAML>=5.4

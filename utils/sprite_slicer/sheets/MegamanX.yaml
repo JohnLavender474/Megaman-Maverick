@@ -1,0 +1,56 @@
+name: MegamanX
+sheet: 1LMX.png
+
+defaults:
+  cell: [48, 48]
+  anchor_y: bottom
+  align_x: overlap
+  align_to: stand
+
+rows:
+  6: {merge: [[4, 8]]}
+  14: {split_at: [52]}
+
+animations:
+  - {name: crouch, row: 1, frames: [0, 1]}
+  - {name: crouch_shoot, row: 1, frames: [2, 3], twin: crouch}
+
+  - {name: damaged, row: 2, frames: [0, 2]}
+  - {name: air_damaged, row: 3, frames: [0, 2]}
+
+  - {name: death, row: 4, frames: [0, 4]}
+  - {name: death_orb, row: 4, frames: [5, 8], anchor_y: center, align_x: center}
+
+  - {name: dash, row: 5, frames: [0, 1]}
+  - {name: dash_shoot, row: 5, frames: [2, 3], twin: dash}
+
+  - {name: spawn_out, row: 6, frames: [0, 6], align_x: center}
+
+  - {name: low_health, row: 7, frames: [0, 4]}
+  - {name: stand, row: 8, frames: [0, 4], align_to: null}
+
+  - {name: spawn_in, row: 9, frames: [0, 13], align_x: center}
+
+  - {name: jump, row: 10, frames: [0, 5]}
+  - {name: land, row: 10, frames: [6, 6]}
+  - {name: jump_shoot, row: 11, frames: [0, 5], twin: jump}
+  - {name: land_shoot, row: 11, frames: [6, 6], twin: land}
+
+  - {name: climb_start, row: 12, frames: [0, 0]}
+  - {name: climb, row: 12, frames: [1, 4]}
+  - {name: climb_shoot, row: 12, frames: [5, 5], offsets: {0: [3, 0]}}
+  - {name: climb_finish, row: 12, frames: [6, 7]}
+
+  - {name: r13_unknown, row: 13, frames: [0, 0]}
+
+  - {name: victory, row: 14, frames: [0, 4]}
+
+  - {name: run_trans, row: 15, frames: [0, 0]}
+  - {name: run, row: 15, frames: [1, 8]}
+  - {name: run_trans_shoot, row: 16, frames: [0, 0], twin: run_trans}
+  - {name: run_shoot, row: 16, frames: [1, 8], twin: run}
+
+  - {name: wallslide, row: 17, frames: [0, 1]}
+  - {name: walljump, row: 17, frames: [2, 4]}
+  - {name: wallslide_shoot, row: 18, frames: [0, 1], twin: wallslide}
+  - {name: walljump_shoot, row: 18, frames: [2, 4], twin: walljump}

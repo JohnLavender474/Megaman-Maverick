@@ -56,6 +56,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r utils/level_analyzer/requirements-test.txt
           pip install -r utils/level_builder/requirements-test.txt
+          pip install -r utils/sprite_slicer/requirements-test.txt
 
       - name: Run level-analyzer tests
         run: python -m pytest
@@ -64,6 +65,10 @@ jobs:
       - name: Run level-builder tests
         run: python -m pytest
         working-directory: utils/level_builder
+
+      - name: Run sprite-slicer tests
+        run: python -m pytest
+        working-directory: utils/sprite_slicer
 
       - name: Run diagnostics tests
         run: ./run_tests.sh

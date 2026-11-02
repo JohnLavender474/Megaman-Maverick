@@ -35,9 +35,9 @@ X has a buster charge and a special-weapon charge (`mmx-demake-tools/docs/player
 ## `1LMX` sprite sheet (2026-11-01, `master` at `ed04d966c`)
 
 The artist's sheet `1LMX.png` is cut into 30 strips with 110 frames in 48x48 cells. The feet are on `y=47`, as in
-`Megaman_v3`. The work is on the branch `megaman-x-sprites`, which is not merged: `utils/sprite_slicer/` (the tool and
-`sheets/MegamanX.yaml`), `assets/sprites/frames/MegamanX/`, and `MegamanX.png` and `MegamanX.txt` in
-`assets/sprites/sprite_sheets/`. There is no `TextureAsset` entry yet, because no code reads the atlas.
+`Megaman_v3`. The work is on `master`: `utils/sprite_slicer/` (the tool and `sheets/MegamanX.yaml`),
+`assets/sprites/frames/MegamanX/`, and `MegamanX.png` and `MegamanX.txt` in `assets/sprites/sprite_sheets/`. There is
+no `TextureAsset` entry yet, because no code reads the atlas.
 
 For the code that adds X:
 
