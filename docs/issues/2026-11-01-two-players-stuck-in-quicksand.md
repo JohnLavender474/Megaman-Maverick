@@ -60,33 +60,35 @@ So a jump alone loses depth when the other player stays on the block. Only jumps
 
 Each player and each sinkable entity sinks and rises on their own, as if alone on the sand (owner decision, 2026-11-01). The sinkable entities are the ones that `shouldListenToFeet()` accepts: players and `PushableBlock`.
 
-Without `--players 2`, nothing changes.
+Owner, 2026-11-02 (verbatim), which replaces the rule that nothing changes with 1 player: "I want this change in single player too. Each and every single sinkable entity gets its own private block, end of story."
 
 ## Short contract
 
-Branch: `fix/quicksand-two-players`. This settles the open points in "Recommended fix".
+Branch: `fix/quicksand-two-players`. This replaces "Recommended fix" below: the owner chose that `QuickSand` owns the blocks, so `FeetRiseSinkBlock` has no owner and no copy logic.
 
-Intended changes, with `--players 2`:
+Intended changes, in all games:
 
-- A `FeetRiseSinkBlock` with the map property `per_entity` has a sensor area, 1 tile wider on each side and 1 tile above its top. The first feet of a sinkable entity in the area spawn one copy for that entity (owner decision, 2026-11-02: spawn lazily, not one per player at level start). This covers players and `PushableBlock`, also a player who joins during play. The sensor is off until a second player is registered.
-- The map block acts for slot 0 and each entity that cannot sink. A copy acts only for its owner.
-- The 20 sand blocks in `DesertMan_16x14_v4.tmx`, `WilyStage1_v2.tmx` and `Test1.tmx` get `per_entity=true`. The `RodentMan` plates and `InfernoChainPlatform` stay shared.
-- A copy stays until the map block is destroyed. It does not cull on its own.
-- Contacts and collisions between a sinkable entity and the block of another entity do not occur. This includes the player's feet consumer that drives `bodyOverGround`, so a player cannot jump off the block of the other player.
+- `QuickSand` owns the floors of its area. The 20 `FeetRiseSinkBlock` map objects in `DesertMan_16x14_v4.tmx`, `WilyStage1_v2.tmx` and `Test1.tmx` go, and their `fall`, `rise`, `min` and `fixture_labels` move to the `QuickSand` objects.
+- `QuickSand` has a sensor area, 1 tile wider on each side and 1 tile above its floor. Feet of a sinkable entity in the area spawn a private `FeetRiseSinkBlock` for that entity. This includes slot 0, a `PushableBlock`, and a player who joins during play. The block is destroyed when the feet leave the area.
+- A private block touches only its entity. `QuickSand` passes the filter in, through spawn props.
+- `QuickSand` also spawns one shared `Block` at the surface for entities that cannot sink. It never moves, and sinkable entities do not touch it.
+- So an enemy or an item on sand no longer rides down with a player. This is a change in single player too.
+- Floors do not cull on their own: `QuickSand` destroys them. `QuickSand` has no cull, so the shared floor of a `spawn_now` area stays live.
+- The player's feet consumer that drives `bodyOverGround` respects a block's contact filter, so a player cannot jump off the block of another entity.
 
 Accepted, with a `TODO` at the code:
 
-- An enemy or an item rests on the map block, so with 2 players it moves with slot 0 only. An enemy's consumer fixture can sense a copy.
-- With 1 player, all sinkable entities share the map block, as today. No map has a `PushableBlock` on sand.
+- An enemy's consumer fixture can sense a private block.
 
-Must not change: without `--players 2`, no copy spawns, and the sand plays as it does today. `RodentMan` and `InfernoMan` do not change.
+Must not change: a player alone on sand sinks, rises and jumps out as today. `RodentMan` and `InfernoMan` do not change. `FeetRiseSinkBlock.kt` has no change.
 
 Checks:
 
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
-- New tests: a copy spawns only when the feet of the second entity enter the area, and only once; with 2 players, each player sinks and rises alone; with 1 player, no copy spawns; a block with no `per_entity` spawns no copy; a destroyed map block destroys its copies. No test covers `PushableBlock` or the feet consumer, so the owner's play check covers the consumer.
+- New tests: a private block spawns when feet enter the area, once, and goes when they leave; 1 player sinks and rises; 2 players sink and rise alone; an entity that cannot sink rests on the shared floor and does not sink; a sinkable entity ignores the shared floor; a destroyed `QuickSand` destroys its floors. No test covers `PushableBlock` or the feet consumer, so the owner's play check covers the consumer.
 - A launch of `DESERT_MAN` `room1` from the built jar, with and without `--players 2`, gives no exception.
-- The owner plays the case in "How to reproduce" and a pass over the sand in `DESERT_MAN` with 1 player.
+- `--diagnostics` in `DESERT_MAN` `room1` with no `--players`, against `master`.
+- The owner plays the case in "How to reproduce", and sand in `DESERT_MAN` and `WILY_STAGE_1` with 1 player.
 
 ## How to reproduce
 
