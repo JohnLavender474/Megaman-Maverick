@@ -12,6 +12,11 @@ are items in `docs/mega-refactor/ITEMS.md`.
 - A fix goes in its own branch `fix/<slug>` off `master`, with a short contract: what changes and
   what must not change, and the named checks for both. A fix reads the always-on rules in
   `docs/mega-refactor/objectives/README.md`, and a conflict goes in the short contract.
+- A fix that changes gameplay lists its play checks in the short contract, with each full command
+  and what to look at. Use the format in "Test maps" in `docs/mega-refactor/CLAUDE.md`: a list, the
+  worktree path first, experimental checks before control checks, and a `--level` and `--room` on
+  each check. List a control check for each live level that the change can affect. When the scope
+  of a fix grows, update the short contract and its checks in the same session.
 - A refactor branch that must change buggy behavior names the issue file in its `CONTRACT.md`
   under "Intended changes".
 - To close an issue, set `status: closed` and add a `## Resolution` section with the commit or
