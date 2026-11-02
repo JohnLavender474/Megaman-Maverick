@@ -76,7 +76,7 @@ Reason: these items need most of the stages above.
 
 These items do not block the stages. Many are `idea`, so they are not agreed yet.
 
-- Performance: `018`, `020`, `026`, `044`, `045`, `046`, `067`
+- Performance: `018`, `020`, `026`, `044`, `045`, `046`, `067`, `116`
 - Saves and checkpoints: `007` → `034`; `036` → `037`
 - Tooling: `003`, `008`, `039`, `040`, `043`, `090`, `100`
 - Cleanup: `027`, `066`, `071`, `083`, `087`, `092`, `093`, `096`, `097`, `098`, `103`, `104`

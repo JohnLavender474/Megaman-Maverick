@@ -146,6 +146,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `112` | planned | [Targeting as a policy that each entity owns](../items/112-targeting-policies/ITEM.md) (main) |
 | `114` | idea | [Gravity from components](../items/114-gravity-components/ITEM.md) (main) |
 | `115` | idea | [Partial sink and stuck behavior in sand](../items/115-partial-sink-stuck-in-sand/ITEM.md) |
+| `116` | idea | [Body senses as typed state, then a sense history](../items/116-body-senses/ITEM.md) (main) |
 
 ## Gaps with no item
 

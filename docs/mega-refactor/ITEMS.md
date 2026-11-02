@@ -123,6 +123,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 113 | [Character select screen](items/113-character-select/ITEM.md) | feature | `O8`, `O9` | idea | `081` | | |
 | 114 | [Gravity from components](items/114-gravity-components/ITEM.md) | refactor | `O1` | idea | none | | |
 | 115 | [Partial sink and stuck behavior in sand](items/115-partial-sink-stuck-in-sand/ITEM.md) | feature | `O4`, `O1` | idea | none | | |
+| 116 | [Body senses as typed state, then a sense history](items/116-body-senses/ITEM.md) | refactor | `O1`, `O5` | idea | none | | |
 
 ## Branches
 

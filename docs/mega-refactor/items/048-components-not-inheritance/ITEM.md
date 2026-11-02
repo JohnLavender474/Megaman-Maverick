@@ -29,6 +29,7 @@ From the first request (summary): entities get health by extending `AbstractHeal
   scan of this item, including the 4 getters that are constants and replace the base rule.
 - (2026-10-31, owner, from `084`) This item owns `IFaceable`, not `063`. It also takes the interfaces that stay on `Megaman` after `084`: see `084` `NOTES.md`,
   "Who owns each interface".
+- (2026-11-02, from `fix/quicksand-two-players`) The target for item drops is an `ItemDropComponent` and a system that decides the drop in `onEntityLeft`, which runs before the component reset, so body senses are still live. This replaces the `dropItemOnDeath` var and the drop runnable in `AbstractEnemy`, and it fixes `docs/issues/2026-11-02-enemy-drop-block-check-never-true.md`. The sand drop rule in `AbstractEnemy` has a `TODO` that links this item and `116`.
 
 ## Open questions
 
