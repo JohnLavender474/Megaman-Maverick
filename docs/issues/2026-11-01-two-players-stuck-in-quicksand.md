@@ -82,22 +82,39 @@ Intended changes, in all games:
 - Floors do not cull on their own: `QuickSand` destroys them. `QuickSand` has no cull, so the shared floor of a `spawn_now` area stays live.
 - `QuickSand` keeps its body updating while it has a private floor, also off camera and during a camera turn. If not, the sensor contact ends, and the floor goes while an entity stands on it.
 - The player's feet consumer that drives `bodyOverGround` respects a block's contact filter, so a player cannot jump off the block of another entity.
+- The `FEET` of a `PushableBlock` do not touch its own inner block. Before, the block counted as grounded with no ground under it until its stored y velocity broke that contact. So it floated sideways off a ledge after a short rest, and on sand it waited before it sank (owner's play test, 2026-11-02). This changes `RodentMan` too: a block now leaves a ledge at full gravity after any rest.
+- The inner block of a `PushableBlock` moves inside the world cycle, in its own `preProcess`, so its position delta is real. An entity on the block now moves with it in every direction, also down and also sideways. Before, the block sank away from Mega Man, and he dropped and landed in small steps (owner's play test, 2026-11-02). This changes `RodentMan` too.
+- A private floor ignores another feet block only if that block's top is at or above the floor's top. So an entity on a sinking `PushableBlock` does not stop at the sand surface. It replaces the rule "with another block under the feet" above.
+- `QuickSand` decides `SUBMERGE` from the private floor's position, not from the body position, which depends on y velocity. A block stays until its top is 0.5 tile under the sand, after any rest.
 
 Accepted, with a `TODO` at the code:
 
 - An enemy's consumer fixture can sense a private block.
 - With no private floor, the sensor runs only while the sand overlaps the camera, so an entity that reaches off-camera sand falls through it. The map block had the same limit, because it culled off camera.
 - In a sand area with no `Death` sensor (`DesertMan` 656, `WilyStage1` 408), an enemy stops at the bottom and lives. No enemy reaches these areas today.
+- The y velocity of a `PushableBlock` still grows at rest (`2026-11-02-pushable-block-velocity-builds-at-rest.md`), and a block can stay on a sliver of a ledge, as on `master` (`2026-11-02-pushable-block-ledge-sliver.md`). The hole in `RodentMan` `room9` needs that velocity, so this branch keeps it.
 
-Must not change: a player alone on sand sinks, rises and jumps out as today. `RodentMan` and `InfernoMan` do not change. `FeetRiseSinkBlock.kt` has no change, except that `shouldListenToFeet` can be overridden already, so it needs none.
+Must not change: a player alone on sand sinks, rises and jumps out as today. `InfernoMan` does not change. In `RodentMan`, each `PushableBlock` puzzle still works: the block reaches its hole, drops in and hits the button. `FeetRiseSinkBlock.kt` needs no change, because `shouldListenToFeet` can be overridden already.
 
 Checks:
 
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
-- New tests: a private block spawns when feet enter the area, once, and goes when they leave; 1 player sinks and rises; 2 players sink and rise alone; an entity that cannot sink rests on the shared floor and does not sink; a sinkable entity ignores the shared floor; a destroyed `QuickSand` destroys its floors; an entity with `SINK` sinks and one with no component or `SURFACE` does not; an `ABSTRACT` body gets no private floor; an enemy turns off `dropItemOnDeath` when its destroy is queued in sand, because body senses reset before `onDestroy`. No test covers `PushableBlock`, the feet consumer, or a `Death` sensor that kills a sunken enemy, so the owner's play check covers them.
+- New tests: a private block spawns when feet enter the area, once, and goes when they leave; 1 player sinks and rises; 2 players sink and rise alone; an entity that cannot sink rests on the shared floor and does not sink; a sinkable entity ignores the shared floor; a destroyed `QuickSand` destroys its floors; an entity with `SINK` sinks and one with no component or `SURFACE` does not; an `ABSTRACT` body gets no private floor; an enemy turns off `dropItemOnDeath` when its destroy is queued in sand, because body senses reset before `onDestroy`. `PushableBlockTest` covers the ledge fall, the sink on sand, a rider, the hole of the block's own width and the submerge depth. No test covers the feet consumer, or a `Death` sensor that kills a sunken enemy, so the owner's play check covers them.
 - A launch of `DESERT_MAN` `room1` from the built jar, with and without `--players 2`, gives no exception.
 - `--diagnostics` in `DESERT_MAN` `room1` with no `--players`, against `master`.
-- The owner plays the case in "How to reproduce", and sand in `DESERT_MAN` and `WILY_STAGE_1` with 1 player.
+- The owner runs the play checks below, from `.worktrees/fix-quicksand-two-players`.
+
+Play checks, experimental first:
+
+- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_players --players 2`: Each player sinks, rises and jumps out alone. One player's jump does not lift the other.
+- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_entities --weapons MOON_SCYTHES`: Rest the block for about 30 s, push it off the ledge, and stand on it. It falls straight down and sinks at once. It stays until its top is fully under the sand, and Mega Man sinks with it with no shake and no stop. Die, and do the same with a push at once after the respawn. The `Met` sinks and dies with no drop, `SniperJoe` sinks, `HealthBulb` stays on the sand, and `HeartTank` drops from its box as before.
+- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_level_ledge`: Sand level with the ground: walk from the ground onto the sand and back. With the feet on both, Mega Man does not bounce. The small pose on the last edge of the ledge is accepted (`2026-11-02-ledge-sliver-jump-pose.md`).
+- `./run-game-alpha.sh --level DESERT_MAN --room room1 --players 2 --logTags FeetRiseSinkBlock`: The case in "How to reproduce". Stay on the first sand for 2 s, and jump with one player only. That player gets out, and the other sinks alone.
+- `./run-game-alpha.sh --level DESERT_MAN --room room1`: Control. Sand in `room1` and `room2` acts as before with 1 player: sink, rise, jump out, `Death`.
+- `./run-game-alpha.sh --level DESERT_MAN --room room13`: Control. Sand in `room13` to `room15`.
+- `./run-game-alpha.sh --level WILY_STAGE_1 --room room7`: Control. Sand in `room7` and `room8` with 1 player.
+- `./run-game-alpha.sh --level RODENT_MAN --room room8`: Control for each `PushableBlock` puzzle. Walk through `room9`, `room10` and `room11`. Wait a few seconds, then push the block into its hole. It drops in and hits the button. Pushing, stopping at walls, standing on the block, and the reset after a death act as before.
+- `./run-game-alpha.sh --level INFERNO_MAN --room room1`: Control. `InfernoChainPlatform`s sink and rise as before.
 
 ## How to reproduce
 
