@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`
-- Branches: `047a` (merged), `047b` (active)
+- Branches: `047a` (merged), `047b` (merged)
 
 ## Goal
 
@@ -63,6 +63,8 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 | `047f` | Join and leave during play, device claim, unplug prompt, settings for slot 1 |
 
 `038` comes before the end of phase 1 if a death must not reset the room for the other player.
+
+`047e` depends on the first branch of `112`: a boss that keeps one target through an attack, and parts that share a target, need its targeting policy.
 
 ## Objectives audit (2026-11-01)
 

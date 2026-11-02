@@ -121,6 +121,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 111 | [PvP across multiple rooms](items/111-pvp-multi-room/ITEM.md) | feature | `O2` | idea | `109`, `094` | | |
 | 112 | [Targeting as a policy that each entity owns](items/112-targeting-policies/ITEM.md) | refactor | `O1`, `O2` | planned | `047b` | | |
 | 113 | [Character select screen](items/113-character-select/ITEM.md) | feature | `O8`, `O9` | idea | `081` | | |
+| 114 | [Gravity from components](items/114-gravity-components/ITEM.md) | refactor | `O1` | idea | none | | |
 
 ## Branches
 
@@ -183,4 +184,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-084h-charge`](items/084-split-megaman/branches/mega-refactor-084h-charge/process-log.md) | 084 | Move the charge timer and the charge reads off the `Megaman` class; the charge rules stay for `024` | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-004a-entity-smoke-test`](items/004-entity-smoke-test/branches/mega-refactor-004a-entity-smoke-test/process-log.md) | 004 | Headless `smokeTest` suite: build and `init()` every entity class with real atlas data | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-047a-second-slot`](items/047-co-op/branches/mega-refactor-047a-second-slot/process-log.md) | 047 | With `--players 2`, a second `Megaman` plays in a level on its own device | merged | 2026-11-01 | 2026-11-01 |
-| [`mega-refactor-047b-player-rules`](items/047-co-op/branches/mega-refactor-047b-player-rules/process-log.md) | 047 | Session rules, friendly fire, targeting, `ChargedShot` and pickups | active | 2026-11-01 | |
+| [`mega-refactor-047b-player-rules`](items/047-co-op/branches/mega-refactor-047b-player-rules/process-log.md) | 047 | Session rules, friendly fire, targeting, `ChargedShot` and pickups | merged | 2026-11-01 | 2026-11-02 |

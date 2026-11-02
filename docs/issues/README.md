@@ -121,3 +121,7 @@ related-items: [<mega-refactor item IDs>]
 | [10 entity classes that no live map uses fail `init()`](2026-11-01-unused-entities-fail-init.md) | yes | content | open |
 | [4 entities in live maps have a missing region, and `init()` does not throw](2026-11-01-silent-missing-regions.md) | no | content | open |
 | [With `--players 2`, two players on one quicksand area cannot jump out](2026-11-01-two-players-stuck-in-quicksand.md) | yes | core | open |
+| [A Koopa shell takes its roll direction from the target, not from the player who kicked it](2026-11-02-koopa-shell-rolls-toward-target.md) | no | core | open |
+| [Question: enemies copy their direction from the target player](2026-11-02-enemy-direction-from-target.md) | question | core | open |
+| [With `--players 2`, a dead slot 1 still counts at the `players.any` sites](2026-11-02-players-any-counts-dead-slot.md) | yes | core | open |
+| [`DarknessV4` loops while its iterator has no next entry](2026-11-02-darkness-v4-inverted-iterator-loop.md) | no | core | open |

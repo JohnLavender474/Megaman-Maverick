@@ -17,16 +17,14 @@ is deleted. `MegaGameEntity` keeps `ITaggable` and `ITypable<EntityType>`; `IPro
 Not approved. The branch `SCOPE.md` decides the final scope. From the research in `NOTES.md` (option (c), done after
 `016`):
 
-- Before: `016` removes `game` from the contracts (only `IFreezableEntity` (`FreezableEntityHandler.kt:53`) and
-  `ILightSource` (`LightSourceUtils.kt:56`) need it through the interface), and `029`/`047` move `targetPlayer` and
-  `players`. Then the removal is a type-only change of about 20 files and 40 lines, with no casts back.
-- The 3 default methods (`getGameCamera`, `playSoundNow`, `stopSoundNow`) and the extensions (`players`,
-  `targetPlayer`, `IBodyEntity.overlapsGameCamera()`) move to their new homes from `016`/`029`/`047`.
+- Done before this item: `016` removed `game` and the 3 default methods from the interface, and `047b` moved `players`
+  and `targetPlayer` to `MegaGameEntity.kt`.
+- The removal is a type-only change of 14 files and 15 lines (2026-11-02, after `047b`): the definition,
+  `MegaGameEntity`, 11 contracts and `EntityContractsTest`. No parameter, cast or generic bound uses the interface.
+- `overlapsGameCamera()` moves to `MegaGameEntity.kt`, in the same package, so its 69 imports stay.
 - Every `getType()` and `getTag()` value stays the same (for example `BulletBill` keeps `ENEMY` over the
   `IProjectileEntity` default `PROJECTILE`). `EntityContractsTest` changes its assertion to `IGameEntity`.
 - No game content goes into `engine`.
-- Optional trims now, with real callers: remove the hidden cast in `overlapsGameCamera` with a receiver bound to both
-  `IMegaGameEntity` and `IBodyEntity`.
 
 ## Owner's input
 
@@ -36,6 +34,8 @@ entity."
 
 2026-10-28 (verbatim, about the goal): "both. Fewer interfaces, as well as the goal of 016" and "Yes, record as a new
 item."
+
+2026-11-02 (verbatim): "This interface shouldn't exist". This closes "decide again at the end of `016`" in `NOTES.md`.
 
 ## Decisions
 

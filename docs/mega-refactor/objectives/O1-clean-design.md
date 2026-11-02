@@ -144,6 +144,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `097` | idea | [Stable order for event keys in `EventsManager`](../items/097-stable-event-key-order/ITEM.md) |
 | `098` | idea | [Typed fixture and body state in place of property bags](../items/098-typed-fixture-state/ITEM.md) (main) |
 | `112` | planned | [Targeting as a policy that each entity owns](../items/112-targeting-policies/ITEM.md) (main) |
+| `114` | idea | [Gravity from components](../items/114-gravity-components/ITEM.md) (main) |
 
 ## Gaps with no item
 

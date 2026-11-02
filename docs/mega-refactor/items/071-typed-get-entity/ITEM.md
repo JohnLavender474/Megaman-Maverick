@@ -4,14 +4,15 @@
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
-- Related: `063`, `064`
+- Related: `063`, `064`, `072`
 - Branches: none yet
 
 ## Goal
 
 `IFixture.getEntity()` and `IBody.getEntity()` (`core/.../world/body/IFixtureExtensions.kt:17`,
-`IBodyExtensions.kt:65`) cast the stored entity to `MegaGameEntity`. Callers could use an entity type
-(`IMegaGameEntity` or a contract type) with no hidden cast, or the cast could move to the few places that need it.
+`IBodyExtensions.kt:65`) cast the stored entity to `MegaGameEntity`. Callers could use a contract type with no hidden
+cast, or the cast could move to the few places that need it. `IMegaGameEntity` is not an option, because `072` deletes
+it.
 
 ## Proposed scope
 

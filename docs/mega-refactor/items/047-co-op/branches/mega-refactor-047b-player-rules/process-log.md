@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged (squash commit `cb1f0e6ed`, 2026-11-02)
 - Goal: session rules with a friendly fire toggle, a nearest-player default, correct `ChargedShot` facing, and pickups by slot
 - Done: plan steps 1 to 11
-- Next: the owner's approval to merge
+- Next: none
 - Blocked:
 
 ## Entries
