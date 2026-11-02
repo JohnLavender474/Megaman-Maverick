@@ -4,7 +4,7 @@
 - Type: feature
 - Objectives: `O4`
 - Depends on: none
-- Related: `015`, `074`
+- Related: `015`, `074`, `117`
 - Branches: none yet
 
 ## Goal

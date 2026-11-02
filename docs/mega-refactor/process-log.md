@@ -1544,3 +1544,9 @@ newest entry at the bottom.
 - Summary: new `idea` item `116` (body senses as typed state, then a sense history). `048` records the target for item drops: an `ItemDropComponent` and a system.
 - Contract check: not needed (docs only).
 - Follow-up: the owner decides if edge features such as coyote time are wanted, which gives `116` its later callers.
+
+## 2026-11-02 — master (docs)
+
+- Summary: new `idea` item `117` (crush with a falling pushable block), from the owner's question in the play test of `sand_entities`.
+- Contract check: not needed (docs only).
+- Follow-up: none.
