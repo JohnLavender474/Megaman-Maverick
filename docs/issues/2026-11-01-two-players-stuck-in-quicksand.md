@@ -62,6 +62,32 @@ Each player and each sinkable entity sinks and rises on their own, as if alone o
 
 Without `--players 2`, nothing changes.
 
+## Short contract
+
+Branch: `fix/quicksand-two-players`. This settles the open points in "Recommended fix".
+
+Intended changes, with `--players 2`:
+
+- A `FeetRiseSinkBlock` with the map property `per_player` spawns one copy for each player after slot 0. The map block acts for slot 0 and each entity that is not a player. A copy acts only for its player.
+- The 20 sand blocks in `DesertMan_16x14_v4.tmx`, `WilyStage1_v2.tmx` and `Test1.tmx` get `per_player=true`. The `RodentMan` plates and `InfernoChainPlatform` stay shared.
+- The copies spawn with the map block, for each registered player, so they exist before a player reaches the sand. They do not cull on their own: the map block destroys them.
+- Contacts and collisions between a player and the block of another player do not occur. This includes the feet consumer that drives `bodyOverGround`, so a player cannot jump off the block of the other player.
+
+Accepted, with a `TODO` at the code:
+
+- `PushableBlock` gets no copy, because no map has one on sand, so a copy for it has no caller (`O1-R5`).
+- An enemy or an item rests on the map block, so with 2 players it moves with slot 0 only. An enemy's consumer fixture can sense a copy.
+- A player who joins during play gets no copy (`047f`).
+
+Must not change: without `--players 2`, no copy spawns, and the sand plays as it does today. `RodentMan` and `InfernoMan` do not change.
+
+Checks:
+
+- `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
+- New tests: with 2 players, each player sinks and rises alone; with 1 player, no copy spawns; a block with no `per_player` spawns no copy; a destroyed map block destroys its copies.
+- A launch of `DESERT_MAN` `room1` from the built jar, with and without `--players 2`, gives no exception.
+- The owner plays the case in "How to reproduce" and a pass over the sand in `DESERT_MAN` with 1 player.
+
 ## How to reproduce
 
 Run from the `047a` worktree, or from `master` after `047a` merges:
