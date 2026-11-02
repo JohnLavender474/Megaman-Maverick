@@ -6,6 +6,7 @@ import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.MegamanMaverickGame
+import com.megaman.maverick.game.MAX_PLAYERS
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.testServices
@@ -27,7 +28,7 @@ class GamePlayersFieldsTest : DescribeSpec({
 
             game.players shouldBeSameInstanceAs game.players
             game.gravity shouldBeSameInstanceAs game.gravity
-            game.players.capacity shouldBe 1
+            game.players.capacity shouldBe MAX_PLAYERS
             game.gravity.direction shouldBe Direction.UP
         }
 

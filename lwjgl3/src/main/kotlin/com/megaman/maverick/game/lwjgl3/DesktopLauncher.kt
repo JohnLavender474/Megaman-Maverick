@@ -86,7 +86,8 @@ object DesktopLauncher {
             weapons = appArgs.weapons,
             heartTanks = appArgs.heartTanks,
             healthTanks = appArgs.healthTanks,
-            autoPerf = appArgs.autoPerf
+            autoPerf = appArgs.autoPerf,
+            players = appArgs.players
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
 
@@ -106,6 +107,7 @@ object DesktopLauncher {
         println("- Heart Tanks: " + appArgs.heartTanks)
         println("- Health Tanks: " + appArgs.healthTanks)
         println("- Auto Perf: " + appArgs.autoPerf)
+        println("- Players: " + appArgs.players)
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Reset Bindings: " + appArgs.resetBindings)
         println("- Performance: " + appArgs.performance)
@@ -413,6 +415,12 @@ object DesktopLauncher {
                 "When given, the game does not write the save file."
         )
         var healthTanks: String? = null
+
+        @Parameter(
+            names = ["--players"],
+            description = "Dev option: the number of players at start, 1 or 2. Default value = 1."
+        )
+        var players: String? = null
 
         @Parameter(
             names = ["--autoPerf"],

@@ -2,15 +2,23 @@ package com.megaman.maverick.game.input
 
 import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.utils.Array
+import com.maverick.game.engine.common.GameLogger
 import com.megaman.maverick.game.controllers.ControllerUtils
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.getMapping
 import com.megaman.maverick.game.players.PlayerSettings
 import com.megaman.maverick.game.players.PlayerSettingsStore
 
-class GamepadInput(private val settings: PlayerSettings, private val store: PlayerSettingsStore) {
+enum class PadShare { ALL, ALL_BUT_LAST, LAST_ONLY }
+
+class GamepadInput(
+    private val settings: PlayerSettings,
+    private val store: PlayerSettingsStore,
+    private val share: PadShare = PadShare.ALL
+) {
 
     companion object {
+        const val TAG = "GamepadInput"
         const val TRIGGER_LEFT_AXIS = 4
         const val TRIGGER_RIGHT_AXIS = 5
         const val TRIGGER_LEFT_CODE = 1004
@@ -23,10 +31,24 @@ class GamepadInput(private val settings: PlayerSettings, private val store: Play
 
     private var primary: Controller? = null
     private val padsOfTick = Array<Controller>()
+    private var noPadReported = false
 
     fun held(): Long {
         val pads = ControllerUtils.getControllers()
-        val first = if (pads.size > 0) pads[0] else null
+        // TODO: the split is read each frame, so a pad that connects or disconnects during play moves the other pad to
+        //  the other player; the device claim in item 047 (branch 047f) replaces this rule
+        val start = if (share == PadShare.LAST_ONLY) maxOf(0, pads.size - 1) else 0
+        val count = when (share) {
+            PadShare.ALL -> pads.size
+            PadShare.ALL_BUT_LAST -> maxOf(0, pads.size - 1)
+            PadShare.LAST_ONLY -> minOf(1, pads.size)
+        }
+        val first = if (count > 0) pads[start] else null
+
+        if (share == PadShare.LAST_ONLY) {
+            if (first == null && !noPadReported) GameLogger.error(TAG, "held(): no pad for this player")
+            noPadReported = first == null
+        }
 
         if (first !== primary) {
             if (first != null) MegaControllerButton.entries.forEach {
@@ -39,7 +61,7 @@ class GamepadInput(private val settings: PlayerSettings, private val store: Play
         }
 
         padsOfTick.clear()
-        padsOfTick.addAll(pads)
+        padsOfTick.addAll(pads, start, count)
 
         var held = 0L
         val codes = settings.padCodes

@@ -34,6 +34,7 @@ class LevelCompletionScreensTest : DescribeSpec({
         LevelDefinition.REFACTOR_TEST_084 to ScreenEnum.SAVE_GAME_SCREEN,
         LevelDefinition.REFACTOR_TEST_016 to ScreenEnum.SAVE_GAME_SCREEN,
         LevelDefinition.REFACTOR_TEST_051 to ScreenEnum.SAVE_GAME_SCREEN,
+        LevelDefinition.REFACTOR_TEST_047 to ScreenEnum.SAVE_GAME_SCREEN,
         LevelDefinition.SMB3_1 to ScreenEnum.LEVEL_SCREEN,
         LevelDefinition.GAUNTLET_1 to ScreenEnum.EXTRAS_SCREEN,
         LevelDefinition.GAUNTLET_2 to ScreenEnum.EXTRAS_SCREEN

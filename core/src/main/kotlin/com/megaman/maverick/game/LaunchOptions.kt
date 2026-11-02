@@ -8,5 +8,6 @@ data class LaunchOptions(
     val weapons: String? = null,
     val heartTanks: String? = null,
     val healthTanks: String? = null,
-    val autoPerf: Boolean = true
+    val autoPerf: Boolean = true,
+    val players: String? = null
 )

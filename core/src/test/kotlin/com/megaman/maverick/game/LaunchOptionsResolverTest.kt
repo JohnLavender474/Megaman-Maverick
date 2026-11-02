@@ -24,6 +24,25 @@ class LaunchOptionsResolverTest : DescribeSpec({
         }
     }
 
+    describe("--players") {
+        it("is 1 by default") {
+            resolve(LaunchOptions()).resolved!!.players shouldBe 1
+        }
+
+        it("accepts 1 and 2") {
+            resolve(LaunchOptions(players = "1")).resolved!!.players shouldBe 1
+            resolve(LaunchOptions(players = "2")).resolved!!.players shouldBe 2
+        }
+
+        it("rejects other values") {
+            listOf("0", "3", "-1", "two").forEach {
+                val result = resolve(LaunchOptions(players = it))
+                result.isValid shouldBe false
+                result.errors[0] shouldContain "Invalid --players '$it'"
+            }
+        }
+    }
+
     describe("--level") {
         it("starts the level, case-insensitively") {
             val result = resolve(LaunchOptions(level = "moon_man"))

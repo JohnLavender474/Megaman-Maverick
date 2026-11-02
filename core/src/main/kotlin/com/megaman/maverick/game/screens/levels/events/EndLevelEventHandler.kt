@@ -24,6 +24,7 @@ import com.maverick.game.engine.entities.facing
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.players.forEach
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -111,8 +112,12 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         beamSprite.hidden = true
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * -ConstVals.PPM)
 
-        player.lock(MegaLockGroup.DAMAGE, MegaLockReason.LEVEL_END)
-        player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.LEVEL_END)
+        game.players.forEach {
+            if (it.existenceState.liveNow) {
+                it.lock(MegaLockGroup.DAMAGE, MegaLockReason.LEVEL_END)
+                it.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.LEVEL_END)
+            }
+        }
 
         game.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
         game.levelState.megamanBeam = true
@@ -163,7 +168,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
         if (preBeamTimer.isFinished()) {
             GameLogger.debug(TAG, "pre-beam timer just finished")
 
-            player.setPlayPhase(PlayPhase.POST_PLAY)
+            game.players.forEach { it.setPlayPhase(PlayPhase.POST_PLAY) }
 
             val weaponKey = (player as Megaman).currentWeapon.name
             beamRegion = BEAM_REGIONS.get(weaponKey) ?: BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)

@@ -23,7 +23,8 @@ data class ResolvedLaunch(
     val autoPerf: Boolean,
     val weapons: Set<MegamanWeapon>,
     val heartTanks: Set<MegaHeartTank>,
-    val healthTanks: Set<MegaHealthTank>
+    val healthTanks: Set<MegaHealthTank>,
+    val players: Int = 1
 ) {
 
     val savesAllowed: Boolean
@@ -39,6 +40,8 @@ class LaunchResult(val resolved: ResolvedLaunch?, val errors: List<String>) {
 private const val LOG_ALL_TAGS = "all"
 
 private const val ALL_ENTRIES = "all"
+
+const val MAX_PLAYERS = 2
 
 private val SCREENS_THAT_NEED_A_LEVEL = setOf(ScreenEnum.LEVEL_SCREEN, ScreenEnum.ROBOT_MASTER_INTRO_SCREEN)
 
@@ -58,6 +61,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val weapons = parseEnumListOption<MegamanWeapon>("--weapons", options.weapons, errors)
     val heartTanks = parseEnumListOption<MegaHeartTank>("--heartTanks", options.heartTanks, errors)
     val healthTanks = parseEnumListOption<MegaHealthTank>("--healthTanks", options.healthTanks, errors)
+    val players = parsePlayers(options.players, errors)
 
     if (errors.isNotEmpty()) return LaunchResult(null, errors)
 
@@ -72,9 +76,21 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val logTags = tags.filterNot { it.equals(LOG_ALL_TAGS, ignoreCase = true) }.toSet()
 
     return LaunchResult(
-        ResolvedLaunch(start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks),
+        ResolvedLaunch(start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players),
         errors
     )
+}
+
+private fun parsePlayers(value: String?, errors: MutableList<String>): Int {
+    val text = value?.trim()
+    if (text.isNullOrEmpty()) return 1
+
+    val players = text.toIntOrNull()
+    if (players == null || players !in 1..MAX_PLAYERS) {
+        errors.add("Invalid --players '$value'. Allowed: 1 to $MAX_PLAYERS")
+        return 1
+    }
+    return players
 }
 
 private inline fun <reified E : Enum<E>> parseEnumListOption(

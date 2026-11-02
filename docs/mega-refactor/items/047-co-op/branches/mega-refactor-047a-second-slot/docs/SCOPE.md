@@ -94,8 +94,8 @@ Friendly fire (decision 2026-11-01) is in `047b`. The join step, one claimed dev
    - The split is read each frame. If a second pad connects during play, the first pad moves from player 2 to player 1,
      and the new pad goes to player 2. If a pad disconnects, the split changes again. A `TODO` at the split names this
      edge case and points to the device claim in `047f`.
-   - "Last" is the last entry of `Controllers.getControllers()`. Check at plan time that this order is the connection
-     order.
+   - "Last" is the last entry of `Controllers.getControllers()`. This is the connection order: the desktop library
+     appends a pad on connect (`JamepadControllerManager`, `gdx-controllers-desktop` 2.2.3).
    - A second key set on one keyboard is not in scope. The decision of 2026-10-25 says that two players never share a
      keyboard.
 6. **Spawn:** slot 1 spawns in `PLAYER_SPAWN_INIT`, at a point that the map can set.
@@ -126,7 +126,8 @@ Friendly fire (decision 2026-11-01) is in `047b`. The join step, one claimed dev
 9. **Tint:** slot 1 draws its main sprite with a debug tint. Effect sprites, for example the jetpack flame, have no
    tint.
 10. **Test map:** `RefactorTest047.tmx`, with a `LevelDefinition` entry `REFACTOR_TEST_047`. It has rooms for the default
-    point, a `player_2` reference, and a spawn with `direction=left`.
+    point and a `player_2` reference. The contract uses `REFACTOR_TEST_051 --room edge_rotated` for a spawn with
+    `direction=left`.
 11. **Tests:** the launch option check, the pad split in `GamepadInput`, the slot 1 spawn point with a reference and for
     each direction with no reference, and the slot filter on the death event, if it can be tested with `testServices()`.
 
@@ -176,8 +177,8 @@ options stay as a `TODO`.
 - **`STUN_PLAYER`, room transitions and carts:** these reach slot 1 through the existing listeners. I did not test them
   with two players.
 - **Spawn points:** the live maps have 174 `player` layer spawns, and I did not check the tile beside each one. Some
-  defaults can put slot 1 in a block or over a pit. Of these spawns, 2 use `direction=left`, and no spawn in a live map
-  uses `down`.
+  defaults can put slot 1 in a block or over a pit. Of these spawns, 2 use `direction=left`. Both are in `RefactorTest051.tmx`, so no
+  real stage uses them. No spawn in a live map uses `down`.
 - **Checkpoints:** `PlayerLayerBuilder` makes every rectangle in the `player` layer a checkpoint. A `player_2` target in
   that layer by mistake becomes a checkpoint with no error.
 - **Input cost:** the pad split must not allocate per frame (`O5-R1`).

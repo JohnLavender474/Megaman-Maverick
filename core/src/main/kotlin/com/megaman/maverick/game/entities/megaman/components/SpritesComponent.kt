@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.components
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
@@ -13,6 +14,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.*
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
@@ -44,6 +46,8 @@ const val DESERT_TORNADO_SPRITE_SIZE = 3f
 const val DESERT_TORNADO_OFFSET = -0.1f
 
 const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
+
+private val SECOND_PLAYER_TINT = Color.ORANGE
 
 fun Megaman.getSpriteDirection() = when {
     isBehaviorActive(BehaviorType.AIR_DASHING) -> airDashDirection!!
@@ -127,6 +131,8 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
         player.setPosition(body.getPositionPoint(position), position)
         player.translateX(getSpriteXTranslation() * ConstVals.PPM)
         player.translateY(getSpriteYTranslation() * ConstVals.PPM)
+        // TODO: a debug marker for the second player, for now; a real marker is an open choice in item 047
+        if ((playerSlot?.index ?: 0) > 0) player.setColor(SECOND_PLAYER_TINT)
         player.setAlpha(if (damageRecovery.flash) 0f else 1f)
         player.hidden = shouldHideSprite()
     }

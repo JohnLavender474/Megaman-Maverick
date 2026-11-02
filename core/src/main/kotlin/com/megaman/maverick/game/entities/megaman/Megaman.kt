@@ -352,7 +352,10 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
         services.cameraController.stopSmoothFollow()
 
-        services.events.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
+        // TODO: only slot 0 submits this event, because its listeners use it as a level reset, which must run once; a
+        //  later slot has no spawn event until item 038 splits it into a spawn event per player and a level reset
+        if (playerSlot!!.index == 0)
+            services.events.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
     }
 
     override fun onDestroy() {

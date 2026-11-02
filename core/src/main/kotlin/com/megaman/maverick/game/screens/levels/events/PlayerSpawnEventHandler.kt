@@ -26,6 +26,7 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -122,10 +123,12 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
 
-        player.setPlayPhase(PlayPhase.PRE_PLAY)
-        player.lock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
-        player.body.physics.gravityOn = false
-        player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
+        game.players.forEach {
+            it.setPlayPhase(PlayPhase.PRE_PLAY)
+            it.lock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
+            it.body.physics.gravityOn = false
+            it.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
+        }
 
         game.events.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
         game.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
@@ -204,10 +207,12 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         if (beamTransitionTimer.isJustFinished()) {
             GameLogger.debug(TAG, "beamTrans(): just finished")
 
-            player.body.physics.gravityOn = true
-            player.unlock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
-            player.setPlayPhase(PlayPhase.IN_PLAY)
-            player.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
+            game.players.forEach {
+                it.body.physics.gravityOn = true
+                it.unlock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
+                it.setPlayPhase(PlayPhase.IN_PLAY)
+                it.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
+            }
 
             game.events.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
             game.events.submitEvent(Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo playerSlot())))

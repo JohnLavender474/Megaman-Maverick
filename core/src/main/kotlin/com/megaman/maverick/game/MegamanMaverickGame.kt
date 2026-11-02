@@ -91,6 +91,7 @@ import com.megaman.maverick.game.entities.state.PlayerProgressComponent
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.input.GamepadInput
 import com.megaman.maverick.game.input.KeyboardInput
+import com.megaman.maverick.game.input.PadShare
 import com.megaman.maverick.game.input.SystemButton
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelOverride
@@ -220,11 +221,12 @@ class MegamanMaverickGame(
 
     private lateinit var settingsStore: PlayerSettingsStore
     lateinit var gamepadInput: GamepadInput
+    private var slot1GamepadInput: GamepadInput? = null
     private lateinit var keyboardInput: KeyboardInput
-    private val slot0FrameBuilder = InputFrameBuilder(MegaControllerButton.entries)
+    private val frameBuilders = List(MAX_PLAYERS) { InputFrameBuilder(MegaControllerButton.entries) }
     private val systemFrameBuilder = InputFrameBuilder(SystemButton.entries)
     val systemInput get() = systemFrameBuilder.frame
-    val inputLocked get() = slot0FrameBuilder.locked
+    val inputLocked get() = frameBuilders[0].locked
 
     lateinit var assets: AssetManager
     lateinit var events: EventsManager
@@ -233,7 +235,7 @@ class MegamanMaverickGame(
     lateinit var engine: GameEngine
     lateinit var gameState: GameState
 
-    val players = MegaPlayers()
+    val players = MegaPlayers(MAX_PLAYERS)
     val gravity = WorldGravity(players)
 
     private var currentScreenKey: String? = null
@@ -314,7 +316,11 @@ class MegamanMaverickGame(
         if (params.resetBindings) GameLogger.log(TAG, "create(): cleared the saved bindings")
         if (params.loadKeyboardPrefs) GameLogger.log(TAG, "create(): loaded keyboard prefs")
         keyboardInput = KeyboardInput(players.settings(PlayerSlot(0)))
-        gamepadInput = GamepadInput(players.settings(PlayerSlot(0)), settingsStore)
+        val slot0Pads = if (launch.players > 1) PadShare.ALL_BUT_LAST else PadShare.ALL
+        gamepadInput = GamepadInput(players.settings(PlayerSlot(0)), settingsStore, slot0Pads)
+        if (launch.players > 1) slot1GamepadInput = GamepadInput(
+            players.settings(PlayerSlot(1)), PlayerSettingsStore(PlayerSlot(1)), PadShare.LAST_ONLY
+        )
 
         events = EventsManager()
         events.addListener(this)
@@ -436,16 +442,18 @@ class MegamanMaverickGame(
         // TODO: should replace EntityFactories with MegaEntityFactory
         EntityFactories.initialize(services)
 
-        val megaman = Megaman(services)
-        // manually call init and set initialized to true before megaman is spawned
-        megaman.init()
-        megaman.initialized = true
-        // add megaman's progress component as a game state listener
-        gameState.addListener(megaman.require(PlayerProgressComponent::class))
-
         // TODO: a player that registers after progress exists keeps the base max health, because the heart tank
         //  max health is set only when a heart tank changes; a late join must set it from the game state (item 047)
-        players.register(PlayerSlot(0), megaman)
+        for (i in 0 until launch.players) {
+            val megaman = Megaman(services)
+            // manually call init and set initialized to true before megaman is spawned
+            megaman.init()
+            megaman.initialized = true
+            // add megaman's progress component as a game state listener
+            gameState.addListener(megaman.require(PlayerProgressComponent::class))
+
+            players.register(PlayerSlot(i), megaman)
+        }
 
         val levelScreen = MegaLevelScreen(this)
         levelScreen.init()
@@ -570,7 +578,8 @@ class MegamanMaverickGame(
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("inputFrames")
-            players.inputs[PlayerSlot(0)] = slot0FrameBuilder.build(keyboardInput.held() or gamepadInput.held())
+            players.inputs[PlayerSlot(0)] = frameBuilders[0].build(keyboardInput.held() or gamepadInput.held())
+            slot1GamepadInput?.let { players.inputs[PlayerSlot(1)] = frameBuilders[1].build(it.held()) }
             systemFrameBuilder.build(keyboardInput.systemHeld())
             diagnostics?.endEntry()
 
@@ -678,7 +687,7 @@ class MegamanMaverickGame(
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.TURN_CONTROLLER_OFF -> {
-                slot0FrameBuilder.locked = true
+                frameBuilders.forEach { it.locked = true }
                 val turnSystemOff =
                     event.getOrDefaultProperty(
                         "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}", true, Boolean::class
@@ -687,7 +696,7 @@ class MegamanMaverickGame(
             }
 
             EventType.TURN_CONTROLLER_ON -> {
-                slot0FrameBuilder.locked = false
+                frameBuilders.forEach { it.locked = false }
                 val turnSystemOn =
                     event.getOrDefaultProperty(
                         "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.ON}", true, Boolean::class

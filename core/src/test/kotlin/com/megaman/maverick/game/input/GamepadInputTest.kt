@@ -152,6 +152,58 @@ class GamepadInputTest : DescribeSpec({
         }
     }
 
+    describe("the pad share") {
+        fun press(pad: Controller, button: MegaControllerButton) =
+            every { pad.getButton(code(button)) } returns true
+
+        fun heldBy(share: PadShare) = GamepadInput(PlayerSettings(), store, share).held()
+
+        it("reads nothing with no pad, for each share") {
+            connect()
+
+            PadShare.entries.forEach { heldBy(it) shouldBe 0L }
+        }
+
+        it("gives 1 pad to ALL and to LAST_ONLY, and none to ALL_BUT_LAST") {
+            val pad = mockControllerWithMapping()
+            press(pad, MegaControllerButton.A)
+            connect(pad)
+
+            heldBy(PadShare.ALL) shouldBe bit(MegaControllerButton.A)
+            heldBy(PadShare.LAST_ONLY) shouldBe bit(MegaControllerButton.A)
+            heldBy(PadShare.ALL_BUT_LAST) shouldBe 0L
+        }
+
+        it("splits 2 pads: LAST_ONLY reads the last, ALL_BUT_LAST reads the first, and ALL reads both") {
+            val first = mockControllerWithMapping("First")
+            val last = mockControllerWithMapping("Last")
+            press(first, MegaControllerButton.A)
+            press(last, MegaControllerButton.B)
+            connect(first, last)
+
+            heldBy(PadShare.LAST_ONLY) shouldBe bit(MegaControllerButton.B)
+            heldBy(PadShare.ALL_BUT_LAST) shouldBe bit(MegaControllerButton.A)
+            heldBy(PadShare.ALL) shouldBe bit(MegaControllerButton.A, MegaControllerButton.B)
+        }
+
+        it("moves the first pad to ALL_BUT_LAST when a second pad connects") {
+            val first = mockControllerWithMapping("First")
+            val last = mockControllerWithMapping("Last")
+            press(first, MegaControllerButton.A)
+            connect(first)
+
+            val slot0 = GamepadInput(PlayerSettings(), store, PadShare.ALL_BUT_LAST)
+            val slot1 = GamepadInput(PlayerSettings(), store, PadShare.LAST_ONLY)
+            slot0.held() shouldBe 0L
+            slot1.held() shouldBe bit(MegaControllerButton.A)
+
+            connect(first, last)
+
+            slot0.held() shouldBe bit(MegaControllerButton.A)
+            slot1.held() shouldBe 0L
+        }
+    }
+
     describe("on disconnect after being connected") {
         it("clears every code back to NO_CODE") {
             val controller = mockControllerWithMapping()

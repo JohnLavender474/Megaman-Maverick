@@ -102,6 +102,7 @@ import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
+import com.megaman.maverick.game.screens.levels.spawns.slotSpawnProps
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
 import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuilders
@@ -546,6 +547,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     playerSpawnsMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
                 GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
                 engine.spawn(player, spawnProps)
+                for (i in 1 until game.players.capacity) {
+                    val slot = PlayerSlot(i)
+                    game.players.get(slot)?.let { engine.spawn(it, slotSpawnProps(slot, spawnProps)) }
+                }
 
                 if (!cameraShake.isFinished) cameraShake.stop()
 
@@ -571,10 +576,19 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player just died --> init death handler"
                 )
 
+                // TODO: the death of slot 0 resets the level for all players, and any other death changes nothing until
+                //  that reset. This must become configurable with two more options: the level does not reset until all
+                //  slots die; or players respawn at once until all lives are gone, with no level reset (co-op only).
+                //  See "Decisions" in docs/mega-refactor/items/047-co-op/ITEM.md
+                val slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!
+                if (slot != PlayerSlot(0)) return
+
+                game.players.forEach { if (it != player) engine.destroy(it) }
+
                 audioMan.unsetMusic()
                 audioMan.stopAllLoopingSounds()
 
-                game.gameState.removeLife(event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!)
+                game.gameState.removeLife(slot)
 
                 playerDeathEventHandler.init()
 
