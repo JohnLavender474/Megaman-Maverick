@@ -1,215 +1,66 @@
 MegamanX.png
-size: 300, 918
+size: 250, 1742
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
+pma: false
 air_damaged
-  rotate: false
-  xy: 51, 773
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
+  bounds: 201, 149, 48, 144
 climb
-  rotate: false
-  xy: 101, 339
-  size: 48, 192
-  orig: 48, 192
-  offset: 0, 0
-  index: -1
+  bounds: 1, 295, 96, 144
 climb_finish
-  rotate: false
-  xy: 151, 533
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
+  bounds: 101, 51, 48, 96
 climb_shoot
-  rotate: false
-  xy: 151, 827
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
+  bounds: 1, 1, 48, 48
 climb_start
-  rotate: false
-  xy: 201, 729
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
+  bounds: 51, 1, 48, 48
 crouch
-  rotate: false
-  xy: 151, 631
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
+  bounds: 151, 51, 48, 96
 crouch_shoot
-  rotate: false
-  xy: 101, 679
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
+  bounds: 201, 51, 48, 96
 damaged
-  rotate: false
-  xy: 201, 485
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
+  bounds: 99, 295, 48, 144
 dash
-  rotate: false
-  xy: 101, 777
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
+  bounds: 1, 149, 48, 96
 dash_shoot
-  rotate: false
-  xy: 201, 631
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
+  bounds: 51, 149, 48, 96
 death
-  rotate: false
-  xy: 1, 675
-  size: 48, 240
-  orig: 48, 240
-  offset: 0, 0
-  index: -1
+  bounds: 51, 441, 48, 240
 death_orb
-  rotate: false
-  xy: 201, 291
-  size: 48, 192
-  orig: 48, 192
-  offset: 0, 0
-  index: -1
+  bounds: 1, 441, 48, 192
 jump
-  rotate: false
-  xy: 151, 1
-  size: 48, 288
-  orig: 48, 288
-  offset: 0, 0
-  index: -1
+  bounds: 1, 683, 48, 288
 jump_shoot
-  rotate: false
-  xy: 201, 1
-  size: 48, 288
-  orig: 48, 288
-  offset: 0, 0
-  index: -1
+  bounds: 51, 683, 48, 288
 land
-  rotate: false
-  xy: 251, 729
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
+  bounds: 101, 1, 48, 48
 land_shoot
-  rotate: false
-  xy: 201, 779
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
+  bounds: 151, 1, 48, 48
 low_health
-  rotate: false
-  xy: 251, 1
-  size: 48, 240
-  orig: 48, 240
-  offset: 0, 0
-  index: -1
+  bounds: 101, 441, 48, 240
 r13_unknown
-  rotate: false
-  xy: 251, 779
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
+  bounds: 201, 1, 48, 48
 run
-  rotate: false
-  xy: 51, 1
-  size: 48, 384
-  orig: 48, 384
-  offset: 0, 0
-  index: -1
+  bounds: 151, 683, 48, 384
 run_shoot
-  rotate: false
-  xy: 51, 387
-  size: 48, 384
-  orig: 48, 384
-  offset: 0, 0
-  index: -1
+  bounds: 201, 683, 48, 384
 run_trans
-  rotate: false
-  xy: 201, 829
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
+  bounds: 1, 51, 48, 48
 run_trans_shoot
-  rotate: false
-  xy: 251, 829
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
+  bounds: 51, 51, 48, 48
 spawn_in
-  rotate: false
-  xy: 1, 1
-  size: 48, 672
-  orig: 48, 672
-  offset: 0, 0
-  index: -1
+  bounds: 1, 1069, 48, 672
 spawn_out
-  rotate: false
-  xy: 101, 1
-  size: 48, 336
-  orig: 48, 336
-  offset: 0, 0
-  index: -1
+  bounds: 101, 683, 48, 336
 stand
-  rotate: false
-  xy: 251, 243
-  size: 48, 240
-  orig: 48, 240
-  offset: 0, 0
-  index: -1
+  bounds: 151, 441, 48, 240
 victory
-  rotate: false
-  xy: 151, 291
-  size: 48, 240
-  orig: 48, 240
-  offset: 0, 0
-  index: -1
+  bounds: 201, 441, 48, 240
 walljump
-  rotate: false
-  xy: 251, 485
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
+  bounds: 149, 295, 48, 144
 walljump_shoot
-  rotate: false
-  xy: 101, 533
-  size: 48, 144
-  orig: 48, 144
-  offset: 0, 0
-  index: -1
+  bounds: 199, 295, 48, 144
 wallslide
-  rotate: false
-  xy: 251, 631
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
+  bounds: 101, 149, 48, 96
 wallslide_shoot
-  rotate: false
-  xy: 151, 729
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
+  bounds: 151, 149, 48, 96
