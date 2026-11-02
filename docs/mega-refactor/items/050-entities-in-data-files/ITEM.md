@@ -4,7 +4,7 @@
 - Type: feature
 - Objectives: `O7`
 - Depends on: `021`, `022`
-- Related: `015`, `023`, `028`
+- Related: `015`, `023`, `028`, `048`
 - Branches: none yet
 
 ## Goal
@@ -14,6 +14,10 @@ Let other developers and level creators build new entities from JSON or YAML, wi
 ## Owner's input
 
 From the first request (summary): other developers and level creators should be able to define entities in JSON or YAML.
+
+## Decisions
+
+- (2026-11-02, owner, from `048`) `048` keeps the per-enemy Kotlin classes for now. Any move to enemies built from definitions belongs to this item, not to `048`.
 
 ## Open questions
 

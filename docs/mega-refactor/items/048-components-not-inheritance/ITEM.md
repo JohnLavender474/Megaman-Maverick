@@ -4,12 +4,32 @@
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
-- Related: `017`, `018`, `023`, `029`, `030`, `084`
+- Related: `005`, `015`, `017`, `018`, `023`, `029`, `030`, `041`, `042`, `050`, `065`, `084`, `087`, `112`, `116`
 - Branches: none yet
 
 ## Goal
 
-Replace the `AbstractHealthEntity` / `AbstractEnemy` / `AbstractBoss` layers and the type checks on them with components (for example a health component).
+Replace the `AbstractHealthEntity` / `AbstractEnemy` / `AbstractBoss` / `AbstractProjectile` layers and the type checks on them with components (for example a health component). Each entity keeps its Kotlin class, which extends `MegaGameEntity` and gets its abilities from the components that it adds.
+
+## Proposed scope
+
+Not approved. The branch `SCOPE.md` decides the final scope. The measurements are in `NOTES.md`.
+
+Move the logic out first, and keep each base class as a thin shell until it is empty. Then each branch can ship alone.
+
+1. Add the safety nets: `005`, and a snapshot of the components of each entity.
+2. Move health, taking damage and dealing damage into components. `023` owns the damage amounts.
+3. Move hit feedback and culling into parts that enemies and projectiles share.
+4. Move enemy death and the helpers. Item drops go in `ItemDropComponent` and its system (see "Decisions").
+5. Replace the enemy and boss identity checks with capability checks.
+6. Move the boss flow and its readers (`MegaLevelScreen`, `Gate`, `IBossListener`).
+7. Migrate the enemy and boss classes in batches.
+8. Delete `AbstractHealthEntity`, `AbstractEnemy` and `AbstractBoss`.
+9. In separate branches, do the projectile steps: move the hit hooks and `owner` into `ProjectileComponent`, replace the projectile type checks, migrate the 69 classes in batches, and delete `AbstractProjectile` and `IProjectileEntity`.
+
+The 5 classes with mixed roles (`PreciousGem`, `DarkSerketClaw`, `GroundPebble`, `SealionBall`, `BulletBill`) migrate last.
+
+Out of scope: `MegaGameEntity` stays, so `onSpawn` and `onDestroy` overrides stay. `EntityType` stays as a label and for the Tiled package lookup; only the checks on it change. `WilyFinalBoss` stays in `042`.
 
 ## Owner's input
 
@@ -30,10 +50,17 @@ From the first request (summary): entities get health by extending `AbstractHeal
 - (2026-10-31, owner, from `084`) This item owns `IFaceable`, not `063`. It also takes the interfaces that stay on `Megaman` after `084`: see `084` `NOTES.md`,
   "Who owns each interface".
 - (2026-11-02, from `fix/quicksand-two-players`) The target for item drops is an `ItemDropComponent` and a system that decides the drop in `onEntityLeft`, which runs before the component reset, so body senses are still live. This replaces the `dropItemOnDeath` var and the drop runnable in `AbstractEnemy`, and it fixes `docs/issues/2026-11-02-enemy-drop-block-check-never-true.md`. The sand drop rule in `AbstractEnemy` has a `TODO` that links this item and `116`.
+- (2026-11-02, owner) The per-enemy Kotlin classes stay for now. This item does not build enemies from definitions; that stays with `050`.
+- (2026-11-02, owner) `AbstractProjectile` is in this item, as separate branches.
 
 ## Open questions
 
-None yet. The scan for the first branch will find them.
+- Must this item depend on `005`? The proposed scope assumes yes.
+- What is the order between this item and `023`? Both change `canBeDamagedBy` and the damage negotiators.
+- Does the projectile branch move `owner` with no change in meaning, and does `030` then change the component? The proposed scope assumes yes.
+- What is the merge target? The proposed scope assumes directly into `master`, because each branch can ship alone. The owner chooses before the first branch starts.
+- What form replaces the OR gates, and what form replaces the 4 `invincible` constants? See `NOTES.md`, "Risks".
+- What identifies an enemy after `AbstractEnemy` goes: a marker component or another capability? `addComponent` keys on the exact class, so a boss cannot use a subclass of an enemy component.
 
 ## Sources
 
