@@ -216,7 +216,7 @@ class RedKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceable
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
 
                 // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for the
-                //  second playable character (Proto Man item)
+                //  second playable character (item 081)
                 player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 requestToPlaySound(SoundAsset.SWIM_SOUND, false)
             }

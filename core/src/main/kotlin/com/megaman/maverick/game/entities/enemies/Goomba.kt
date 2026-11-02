@@ -178,7 +178,7 @@ class Goomba(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
                 spawnFloatingPoints()
 
                 // TODO: every player bounces with Mega Man's jump velocity; a bounce for each character is for the
-                //  second playable character (Proto Man item)
+                //  second playable character (item 081)
                 player.body.physics.velocity.y = MegamanValues.JUMP_VEL * ConstVals.PPM / 2f
                 requestToPlaySound(SoundAsset.SWIM_SOUND, false)
 

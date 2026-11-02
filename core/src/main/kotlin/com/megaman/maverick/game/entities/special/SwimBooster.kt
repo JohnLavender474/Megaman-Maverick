@@ -56,7 +56,7 @@ class SwimBooster(services: MegaServices) : MegaGameEntity(services), ICullableE
         GameLogger.debug(TAG, "onEvent(): event=$event")
         if (event.key == EventType.END_ROOM_TRANS) {
             // TODO: the boost uses Mega Man's swim velocity for the target player; a value for each character is for
-            //  the second playable character (Proto Man item)
+            //  the second playable character (item 081)
             if (targetPlayer.body.isSensing(BodySense.IN_WATER))
                 targetPlayer.body.physics.velocity.y = MegamanValues.SWIM_VEL_Y * ConstVals.PPM
             destroy()

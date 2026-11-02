@@ -78,12 +78,12 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal val damageRecovery = defineDamageRecoveryComponent()
 
-    // TODO: a second player entity needs this same rule; extract one function when it exists (item 060)
+    // TODO: a second player entity needs this same rule; extract one function when it exists (item 081)
     override val invincible: Boolean
         get() = damaged || damageRecovery.recovering || isLocked(MegaLockGroup.DAMAGE) || !existenceState.liveAfterUpdate || !inPlay
     override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
-    // TODO: a second player entity needs this same rule; extract one function when it exists (item 060)
+    // TODO: a second player entity needs this same rule; extract one function when it exists (item 081)
     val canMove: Boolean
         get() = !isLocked(MegaLockGroup.MOVEMENT) && !stunned && !damaged && !frozen
 
