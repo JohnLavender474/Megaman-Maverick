@@ -216,6 +216,11 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     cannot come back. Put a 2×1 block bump on the floor beside the block, between it and the wall.
     The bump stops the block, and it is only 1 tile high, so Mega Man can stand on it and still
     push or shoot the block the other way. Check each direction that the block can travel.
+16. **Leave clearance where the player must pass.** Mega Man's body is 1.5 tiles tall, so a 1-tile gap
+    stops him, and a jump needs more room than a walk. Leave at least 3 clear tiles above a
+    platform, pillar or ledge that the player jumps from or across. Check each gap along the route,
+    including the gap between a new object and the objects under or beside it, also when you
+    add the object after the route is laid out.
 
 ## Notes Block Format
 
