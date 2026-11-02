@@ -128,4 +128,5 @@ related-items: [<mega-refactor item IDs>]
 | [Retire Gauntlet 2 and 4 entities that only it or test maps use](2026-11-02-retire-gauntlet-2.md) | yes | core | closed |
 | [The `BODY_TOUCHING_BLOCK` check on an enemy's item drop is never true](2026-11-02-enemy-drop-block-check-never-true.md) | yes | core | open |
 | [The y velocity of a `PushableBlock` grows with no limit while it rests](2026-11-02-pushable-block-velocity-builds-at-rest.md) | yes | core | open |
+| [A `PushableBlock` stays over a hole on a sliver of the ledge](2026-11-02-pushable-block-ledge-sliver.md) | yes | core | open |
 | [On the last 1.6 px of a ledge, Mega Man stays up in the jump pose](2026-11-02-ledge-sliver-jump-pose.md) | no | core | open |

@@ -110,7 +110,8 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - Input and menus: `P` key, held press, `START` or `A` rebind, `Esc` on level select
 - Other core: `isPerformanceSubpar`, Needle Spin bounce, stun bounce, `RobotMasterIntroScreen.dispose`, `Saw` type `t`,
   `CameraRoomTransition.cancel`, raw viewport size, `runQueue` order, end-level beam flag, `DarknessV4`, enemy drop block check,
-  `PushableBlock` rest velocity, ledge sliver pose (`fix/ledge-sliver-nudge`, after `fix/quicksand-two-players`)
+  `PushableBlock` rest velocity and ledge sliver (`fix/pushable-block-ledge-sliver`, after `fix/quicksand-two-players`),
+  ledge sliver pose (`fix/ledge-sliver-nudge`, after `fix/quicksand-two-players`)
 
 ### Waiting for an owner decision
 
