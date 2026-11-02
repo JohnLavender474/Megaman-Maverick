@@ -32,4 +32,6 @@ Leave a `PushableBlock` on a ledge for about 10 s, then push it off, and compare
 
 ## Notes
 
-Do not clear `velocity.y` without a check on a sinking sand floor: the block follows the floor down with that velocity and with the stick translate in `FeetBlockRule`.
+Do not clear `velocity.y` at rest. A puzzle depends on it. In `RodentMan_16x14.tmx` `room9`, the hole is exactly as wide as the block, and the player can stop pushing with a sliver of the block still on the ledge. The stored velocity makes the sink per step larger than the width of the sliver, so `StandardCollisionHandler` pushes the block sideways into the hole. `fix/quicksand-two-players` tried to clear the velocity, and the block then stayed above the hole (found in the owner's play test). `PushableBlockTest` now covers this case.
+
+A fix must keep a sideways tolerance for that hole, at all performance tiers. The same dependence means that a block pushed soon after it spawns has less tolerance than a block that rested.
