@@ -40,7 +40,7 @@ Branch: `fix/pushable-block-ledge-sliver`, off `master`, in `.worktrees/fix/push
 Intended changes:
 
 - `FEET` of a `PushableBlock` is 32 px wide, not 64 px. So the block is grounded only with more than 16 px of support.
-- A block filter on the block: with no feet on a block, and a corner overlap of 16 px or less, the filter stops the up push and slides the block away from the ledge by the depth it sank. The block leaves the ledge at all tiers, with no dependence on rest.
+- A block filter on the block: with no feet on a solid block, and a corner overlap of 16 px or less, the filter stops the up push and slides the block away from the ledge by the depth it sank. A `PrivateSandFloor` does not count as solid, so a sliver next to sand also ends (found in the final review). The block leaves the ledge at all tiers, with no dependence on rest.
 - `velocity.y` clears while `FEET_ON_GROUND` is true. So the first fall has a fixed speed, and the sink per step at rest no longer grows. The `TODO` at `PushableBlock.kt:213-215` goes.
 - From the point above: a block on a support of 16 px or less cannot be pushed back, because `velocity.x` is 0 while it is not grounded (`PushableBlock.kt:185`).
 - Block 219 drops on the shot that leaves 16 px or less (4 shots from spawn, not 5). Block 301 drops on 1 shot, not 2.
@@ -68,13 +68,14 @@ Checks, in `PushableBlockTest`, at all 4 fixed steps:
 - The speed of the first fall is the same after 1 s and 8 s of rest.
 - A block that rests on a `FeetRiseSinkBlock` stays on it while it sinks, and the plate stays down.
 - A block pushed from a ledge onto sand starts to sink.
+- `s` of 0.5 to 16 px next to sand leaves the ledge and sinks within 60 steps.
 - All tests in `PushableBlockTest` that exist today pass with no change.
 - Break the code and confirm that each new test can fail (`core/src/test/CLAUDE.md`).
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
 Always-on rules:
 
-- `O5-R2`: measure `resolveCollisions` with `--diagnostics` before and after, and write the numbers here.
+- `O5-R2`: `resolveCollisions` with `--diagnostics`, `REFACTOR_TEST_029` room `push_flip`, a capture of about 1000 entries with the block at rest. Before: 1 capture, mean 0.0121 ms, p50 0.008 ms, p95 0.030 ms. After: 2 captures, mean 0.0133 and 0.0147 ms, p50 0.009 and 0.010 ms, p95 0.030 and 0.038 ms. The 1 capture before gives no noise range, so the rise of 0.001 to 0.003 ms is not proved to be from this change.
 - `O5-R1`: the filter allocates nothing. It reads floats, and the lambda is made once in `defineBodyComponent()`.
 - `O1-R3`: no new order. The filter reads `FEET_ON_GROUND` in the same cycle, because `processContacts` runs before `resolveCollisions`.
 - `O1-R4`, `O1-R5`, `O7-R3`: no conflict. No new key, no code with no production caller, and no level check.
@@ -86,6 +87,7 @@ Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktree
 - `./run-game-alpha.sh --level RODENT_MAN --room room8 --performance high --autoPerf false`: the same steps, with the same result.
 - `./run-game-alpha.sh --level RODENT_MAN --room room8`: in `room9`, push block 219 slowly on foot, and stop near the hole. The block stays or drops, and it never floats with more than a thin edge past the ledge in view. Then in `room10`, drop blocks 229 and 279 into their holes. In `room11`, block 301 drops on 1 shot, and block 308 drops into its hole.
 - `./run-game-alpha.sh --level RODENT_MAN --room room8`: control. Each block that lands on its plate holds the plate down, the `SwitchGate` of the plate acts as before, and Mega Man can stand on the block and on the plate. Play from `room9` to `room12` with no stuck block.
+- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_entities`: shoot the block so that it stops with a thin edge on the ledge and the rest over the sand. It leaves the ledge and sinks, and it does not bob.
 - `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_entities`: control. The block sinks in the sand, carries a rider, and goes when its top is 0.5 tile under.
 - `./run-game-alpha.sh --level REFACTOR_TEST_029 --room push_flip`: control. Push and shoot the block from both sides. It moves as before.
 
