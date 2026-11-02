@@ -26,7 +26,9 @@ Rules for the history, from the research in `NOTES.md`:
 - `WorldSystem` marks the frames, before its `if (!on) return`, so that it reaches each body.
 - Review this against `010` first: a fixed tick removes most frames with no step.
 
-First callers: the sand drop rule in `AbstractEnemy`, the `BODY_TOUCHING_BLOCK` drop check (`docs/issues/2026-11-02-enemy-drop-block-check-never-true.md`), `BabySpider` (prior step) and `SuicideBummer` (frame edge). Leave `Petaspark` and `SuctionRoller` as they are: their state comes from `facing`, and a swap changes their wall hop.
+First callers: the sand drop rule in `AbstractEnemy`, the `BODY_TOUCHING_BLOCK` drop check (`docs/issues/2026-11-02-enemy-drop-block-check-never-true.md`), `BabySpider` (prior step), `SuicideBummer` (frame edge) and `BigJumpingJoe` (frame edge). `BigJumpingJoe` needs a contract note and a test: its flag starts true, and a freeze holds an edge. Leave `Petaspark` and `SuctionRoller` as they are: their state comes from `facing`, and a swap changes their wall hop.
+
+Migrate these callers in the same branch as the history. After that branch, code that needs the past of a sense reads the history, and no new hand-written `was` flag for a sense is added.
 
 ## Owner's input
 
