@@ -59,7 +59,7 @@ related-items: [<mega-refactor item IDs>]
 | [`superRandom()` makes a new clock-seeded `Random` on each call](2026-10-22-super-random-reseeds.md) | yes | engine | open |
 | [The frame delta is not clamped](2026-10-22-frame-delta-not-clamped.md) | yes | core | open |
 | [`Float.round` throws in comma-decimal locales](2026-10-22-float-round-locale.md) | yes | engine | open |
-| [`GapingFish` crashes on spawn: the atlas has no `GapingFish/frozen` region](2026-10-23-gaping-fish-missing-frozen-region.md) | yes | content | open |
+| [`GapingFish` crashes on spawn: the atlas has no `GapingFish/frozen` region](2026-10-23-gaping-fish-missing-frozen-region.md) | yes | content | closed |
 | [`engine` pins `gdx-freetype:1.11.0` against `gdxVersion` 1.14.2 and pulls the unused `gdx-tools:1.6.3`](2026-10-22-engine-gradle-dependencies.md) | yes | build | open |
 | [12 TexturePacker projects point to missing source folders, and 3 atlases have no project](2026-10-22-stale-tps-files.md) | yes | content | open |
 | [`WILY_CASTLE_SCREEN` is in `ScreenEnum` but not registered](2026-10-22-wily-castle-screen-not-registered.md) | yes | core | open |
@@ -115,9 +115,9 @@ related-items: [<mega-refactor item IDs>]
 | [`Esc` on the level select screen after an extra level opens the extras rows](2026-11-01-level-select-back-after-extra-level.md) | no | core | open |
 | [The stun bounce assumes that Mega's body direction is `UP`](2026-10-30-stun-bounce-assumes-up.md) | yes | core | open |
 | [Entities keep a pooled scratch object in a field, so `CeilingCrusher` teleports and kills at once](2026-11-01-stored-scratch-vector-in-entity-fields.md) | yes | core | open |
-| [`JetMet` `init()` throws: the atlas has no frozen region, and a live map uses it](2026-11-01-jet-met-no-frozen-region.md) | yes | content | open |
-| [`ColtonJoe` `init()` throws: the atlas has no `ColtonJoe/frozen` region](2026-11-01-colton-joe-no-frozen-region.md) | yes | content | open |
-| [`TreeStump` `init()` throws: it passes the enum name as the atlas path](2026-11-01-tree-stump-wrong-atlas-key.md) | yes | core | open |
+| [`JetMet` `init()` throws: the atlas has no frozen region, and a live map uses it](2026-11-01-jet-met-no-frozen-region.md) | yes | content | closed |
+| [`ColtonJoe` `init()` throws: the atlas has no `ColtonJoe/frozen` region](2026-11-01-colton-joe-no-frozen-region.md) | yes | content | closed |
+| [`TreeStump` `init()` throws: it passes the enum name as the atlas path](2026-11-01-tree-stump-wrong-atlas-key.md) | yes | core | closed |
 | [10 entity classes that no live map uses fail `init()`](2026-11-01-unused-entities-fail-init.md) | yes | content | open |
 | [4 entities in live maps have a missing region, and `init()` does not throw](2026-11-01-silent-missing-regions.md) | no | content | open |
 | [With `--players 2`, two players on one quicksand area cannot jump out](2026-11-01-two-players-stuck-in-quicksand.md) | yes | core | open |
@@ -125,4 +125,4 @@ related-items: [<mega-refactor item IDs>]
 | [Question: enemies copy their direction from the target player](2026-11-02-enemy-direction-from-target.md) | question | core | open |
 | [With `--players 2`, a dead slot 1 still counts at the `players.any` sites](2026-11-02-players-any-counts-dead-slot.md) | yes | core | open |
 | [`DarknessV4` loops while its iterator has no next entry](2026-11-02-darkness-v4-inverted-iterator-loop.md) | no | core | open |
-| [Retire Gauntlet 2 and 4 entities that only it or test maps use](2026-11-02-retire-gauntlet-2.md) | yes | core | open |
+| [Retire Gauntlet 2 and 4 entities that only it or test maps use](2026-11-02-retire-gauntlet-2.md) | yes | core | closed |

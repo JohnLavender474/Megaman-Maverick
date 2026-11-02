@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: content
 gameplay-change: no
@@ -31,3 +31,7 @@ Remove `enemies.ColtonJoe` from `core/src/smokeTest/resources/known-entity-failu
 ## Notes
 
 This is the same fault as `2026-10-23-gaping-fish-missing-frozen-region.md`.
+
+## Resolution
+
+`ColtonJoe` is commented out, because no live stage used it. To use it again, restore the class and give it a frozen region. Squash commit `3747c6dd4` (`fix/retire-gauntlet-2`).

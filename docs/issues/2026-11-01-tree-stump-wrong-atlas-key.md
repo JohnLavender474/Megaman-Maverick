@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: no
@@ -26,3 +26,7 @@ The call passes `TextureAsset.ENVIRONS_1.name`, not `.source`, so `init()` throw
 
 Remove `decorations.TreeStump` from `core/src/smokeTest/resources/known-entity-failures.txt` and run
 `./gradlew core:smokeTest`.
+
+## Resolution
+
+`TreeStump` is commented out, because no live map used it. To use it again, restore the class and fix the atlas path. Squash commit `3747c6dd4` (`fix/retire-gauntlet-2`).

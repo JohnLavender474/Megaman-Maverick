@@ -1526,3 +1526,9 @@ newest entry at the bottom.
 - Summary: new `ROADMAP.md`, the recommended order of the work in stages and parallel tracks. It holds only the order, and it is advice, not a rule. `CLAUDE.md` lists the file, and "Branch merge" step 6 now updates it.
 - Contract check: not needed (docs only).
 - Follow-up: `010` and `102` are `idea`, and they must be `planned` before stages 3 and 4.
+
+## 2026-11-02 — fix/retire-gauntlet-2
+
+- Summary: owner decision. Gauntlet 2 is out of the game, so `JetMet`, `ColtonJoe`, `GapingFish` and `TreeStump` are in no live stage (squash commit `3747c6dd4`). The level entry and the 4 classes are commented out, each with a `TODO` that names the issue. `Gauntlet2.tmx` stays. `CeilingCrusher` stays active, because `Compactor.tmx` on `compactor-level` uses it.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes (`engine` 631 tests, `core` 693 tests, 0 failures). `TEST_1` and `GAUNTLET_1` launch from the built jar with no exception, and `--level GAUNTLET_2` exits with code 2. The owner approved the merge after the Extras screen check.
+- Follow-up: 5 issues closed. `ROADMAP.md` updated. The owner decides on `CeilingCrusher` before `compactor-level` merges.

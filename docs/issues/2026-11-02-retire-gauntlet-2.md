@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -48,3 +48,7 @@ Checks:
 ## How to reproduce
 
 `EntityInitSmokeTest` lists the 4 classes in `known-entity-failures.txt`.
+
+## Resolution
+
+Done as specified. The owner checked the Extras screen and approved the merge. To restore Gauntlet 2, restore `JetMet` first. Squash commit `3747c6dd4` (`fix/retire-gauntlet-2`).

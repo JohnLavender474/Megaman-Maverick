@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: content
 gameplay-change: no
@@ -35,3 +35,7 @@ Remove `enemies.JetMet` from `core/src/smokeTest/resources/known-entity-failures
 ## Notes
 
 When this is fixed, remove the line from the list. The test fails until the line goes.
+
+## Resolution
+
+`JetMet` is commented out with Gauntlet 2, the only live level that used it. To play it again, restore the class and give it a frozen region. Squash commit `3747c6dd4` (`fix/retire-gauntlet-2`).

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: content
 gameplay-change: no
@@ -37,3 +37,7 @@ that room with `./run-game-alpha.sh --level REFACTOR_TEST_029 --room <room>`.
 ## Notes
 
 Found while building the `enemy_contact` test room for `029b`; the room uses a `Coldier` instead.
+
+## Resolution
+
+`GapingFish` is commented out, because no live stage used it. To use it again, restore the class and give it a frozen region. Squash commit `3747c6dd4` (`fix/retire-gauntlet-2`).

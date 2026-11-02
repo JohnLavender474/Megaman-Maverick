@@ -23,10 +23,10 @@ them. `091` also gives a reliable check that a room loads.
 
 | Crashes | Co-op faults | Small items |
 |---|---|---|
-| `JetMet`, `ColtonJoe` and `GapingFish` frozen regions | Quicksand | `072` remove `IMegaGameEntity` |
-| `TreeStump` atlas path | Dead slot 1 at `players.any` | `091` check that a room loads with no window |
-| `CeilingCrusher` pooled scratch object | Koopa shell roll direction | `065` every `init()` calls `super.init()` |
-| 4 silent missing regions | | `105`, `106`, `107` smoke test checks |
+| `CeilingCrusher` pooled scratch object | Quicksand | `072` remove `IMegaGameEntity` |
+| 4 silent missing regions | Dead slot 1 at `players.any` | `091` check that a room loads with no window |
+| | Koopa shell roll direction | `065` every `init()` calls `super.init()` |
+| | | `105`, `106`, `107` smoke test checks |
 
 ## Stage 2: foundations
 
