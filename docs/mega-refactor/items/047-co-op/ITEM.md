@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`
-- Branches: `047a` (merged)
+- Branches: `047a` (merged), `047b` (active)
 
 ## Goal
 
@@ -43,15 +43,19 @@ Item `029` research (2026-10-23, verbatim):
 
 - 2026-11-01: each `047` branch merges directly into `master`, with no parent branch. Each branch stays behind `--players 2`, so each one is safe to ship alone.
 - 2026-11-01: Spec Ops (`108`) and PvP (`109`) are the crux of `O2`. Co-op in the main campaign is optional, and it comes after them (`110`). This changes the campaign target in the owner's 2026-10-23 words. The 2026-10-23 save decision applies only to `110`.
+- 2026-11-01: gameplay rules such as friendly fire are a suite of toggles, and each toggle has a value for single player, co-op and PvP. `047b` builds a small rules object now, and `102` extends it later.
+- 2026-11-01: for now, only CLI flags choose the rules. `--mode coop|pvp` chooses them, `--players 2` defaults to co-op, and `--mode pvp` with 1 player is a launch error.
+- 2026-11-01: for the first pass, an enemy chooses the nearest live player on each read. The owner expects this rule to need much more refinement later.
+- 2026-11-01: health and weapon energy go to the player who collects them. Lives, currency, heart tanks and health tanks stay shared.
 
 ## Branch split
 
-Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which can still change this list. This list was written for the main stages. Review it against `108` and `109` before `047b` starts.
+Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which can still change this list. This list was written for the main stages. The `047b` scan reviewed it against `108` and `109`: the `047b` row fits both modes. The later rows are not reviewed yet.
 
 | Branch | Goal |
 |---|---|
 | `047a` `second-slot` | With `--players 2`, a second `Megaman` plays in a level on its own device |
-| `047b` | Targeting, friendly fire, `ChargedShot` and pickups |
+| `047b` `player-rules` | Session rules, friendly fire, targeting, `ChargedShot` and pickups |
 | `047c` | Player 2 death and respawn near the lead |
 | `047d` | HUD and pause |
 | `047e` | Bosses and gauntlets |

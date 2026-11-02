@@ -26,12 +26,9 @@ The objectives audit of 2026-11-01 found this gap.
 ## Decisions
 
 - 2026-11-01: co-op and multiplayer are extra modes, not part of the main game. Players play co-op or PvP on one machine or on the net. Spec Ops (`108`) and PvP (`109`) are the two named modes. Co-op in the main campaign is optional, and it comes after them (`110`).
+- 2026-11-01: `047b` goes first. It builds a small rules object, chosen by CLI flags, and this item extends it. The co-op rules are toggles with a value for single player, co-op and PvP.
 
 ## Open questions
-
-### Order
-
-- Which goes first, the mode concept or `047b`? `047a` adds `--players`, and the later `047` branches were planned for the main stages.
 
 ### What a mode is
 
