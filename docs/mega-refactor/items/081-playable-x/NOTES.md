@@ -31,3 +31,23 @@ reviews. Give the date and the `master` commit that each finding is based on.
 ## From `084h`: X has 2 charges (2026-11-01)
 
 X has a buster charge and a special-weapon charge (`mmx-demake-tools/docs/players/attacks.md:31-32,100`), and an entity holds 1 component per class. So `WeaponChargeComponent` as it is cannot hold both. `081` decides the form: 2 timers in the part, or another form.
+
+## `1LMX` sprite sheet (2026-11-01, `master` at `ed04d966c`)
+
+The artist's sheet `1LMX.png` is cut into 30 strips with 110 frames in 48x48 cells. The feet are on `y=47`, as in
+`Megaman_v3`. The work is on the branch `megaman-x-sprites`, which is not merged: `utils/sprite_slicer/` (the tool and
+`sheets/MegamanX.yaml`), `assets/sprites/frames/MegamanX/`, and `MegamanX.png` and `MegamanX.txt` in
+`assets/sprites/sprite_sheets/`. There is no `TextureAsset` entry yet, because no code reads the atlas.
+
+For the code that adds X:
+
+- **`wallslide_shoot` is mirrored:** X's arm extends left, and Megaman's extends right (`x=7-36` against `x=12-38`).
+  The code must flip this strip for X, or X shoots into the wall. `walljump_shoot` has its arm on the right.
+- **The burst frames sit high:** frame 2 of `damaged` and of `air_damaged` is a burst. On the sheet, the burst is
+  centered on the body and extends 5 pixels below the feet. In a cell with the feet on `y=47` there is no room below
+  the feet, so the burst is about 6 pixels higher than on the sheet. See open question 5.
+- **Names follow `Megaman_v3` where a name exists:** `run_trans`, `climb_finish`, `wallslide`. `run` has 8 frames
+  (Megaman has 4), so X needs its own `AnimationDef` values. `r13_unknown` is a pose with no name yet.
+- **No art for the buster charge:** the sheet has no `charge_half` or `charge_full` body versions, and this item's
+  scope has charge levels. A recolor by script is possible, because the sheet has 12 colors.
+- **No art for** `swim`, `cartin`, `pipe_portal_*`. X needs these only if the extra levels use these features.

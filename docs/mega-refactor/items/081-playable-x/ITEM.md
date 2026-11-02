@@ -41,10 +41,14 @@ approximation of X in the X6 reimplementation (@~/IdeaProjects/mmx-x6)."
 2026-10-29: the first X6-based extra level is the intro stage, or a section of it. Slopes (`068`) must support both
 Megaman and X.
 
+2026-11-01 (verbatim): "The sheet is an 8-bit rendition of Mega Man X. He will be a new playable character".
+
 ## Decisions
 
 - (2026-10-30, from `084`) This item depends on `084` (split `Megaman` into player components). The split of
   `Megaman.kt` is a refactor with the contract "plays the same"; it must not mix with the new gameplay of this item.
+- (2026-11-01, owner) X's art is the 8-bit sheet `1LMX.png` from the artist, not `mmx-x6` data. See `NOTES.md`,
+  "`1LMX` sprite sheet".
 
 ## Open questions
 
@@ -53,8 +57,8 @@ Megaman and X.
 2. Can Megaman also play the extra levels, or are they X only?
 3. Which X6 moves are in the first version, and which wait (sabre, falcon dash, ropes, bars, armor)?
 4. Does X come before or after Proto Man (`060`)? The first of the two adds `CharacterDef`.
-5. X's art: X6 art is 16-bit. Is X drawn as a new sprite in the Maverick style, or taken from `mmx-x6`? (The `mmx-x6`
-   data cannot be committed to this repo; see `docs/mega-refactor/CLAUDE.md`, "Inspiration".)
+5. The burst frames in `damaged` and `air_damaged`: do they stay in these strips, or move to their own strips, drawn
+   as an effect over X? See `NOTES.md`, "`1LMX` sprite sheet".
 
 ## Sources
 
