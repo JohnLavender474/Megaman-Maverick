@@ -38,6 +38,7 @@ Rules:
 |------|---------|----------------|
 | `CLAUDE.md` | This file. Rules for the effort. | `master` only |
 | `ITEMS.md` | The index: one table of items and one table of branches, with status and dates. Nothing else. | `master` only |
+| `ROADMAP.md` | The recommended order of the work: stages and parallel tracks. Advice, not a rule. | `master` only |
 | `process-log.md` | One entry for each merged or dropped branch, and for each docs change to the setup. | `master` only |
 | `objectives/README.md` | The index of objectives and the always-on rules. | `master` only |
 | `objectives/O*.md` | One objective: problems, goal, rules, current state, redo risk, items. | `master` only |
@@ -258,7 +259,8 @@ alone does not need a new approval, but write the reason in the process log.
    separate commit on `master`. Branch SHAs do not exist on `master` after a squash.
 5. On `master`, add an entry to `process-log.md`. Use the entry format in that file.
 6. On `master`, in `ITEMS.md`, set the branch row to `merged` and fill in its finish date. If
-   the item needs no more branches, set the item to `done` and fill in its finish date.
+   the item needs no more branches, set the item to `done` and fill in its finish date. In
+   `ROADMAP.md`, remove what the branch finished.
 7. Make each "Backlog candidate" from the branch `docs/TODO.md` a new item (see "New item").
    File each "Bug candidate" (see "Bugs").
    On `master`, update "Current state" and "Redo risk" in the file of each objective that the item
