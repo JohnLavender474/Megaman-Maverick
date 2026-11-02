@@ -1,0 +1,22 @@
+# Entity classes that fail EntityInitSmokeTest today. This list may only shrink.
+# Do not add a class to make a test pass: fix the class.
+# A listed class that passes fails the test, so remove its line when you fix it.
+
+blocks.ConveyorBelt # silent: no ConveyorBelt/RightPart-MoveRight region
+bosses.DesertMan # silent: no DesertMan/init region
+bosses.PenguinMiniBoss # no region
+bosses.SigmaRat # no SigmaRat regions
+bosses.SigmaRatClaw # no SigmaRat regions
+decorations.TreeStump # passes TextureAsset.ENVIRONS_1.name, not .source
+enemies.BombPenguinBot # not implemented
+enemies.BulbBlaster # silent: no BulbBlaster/frozen region
+enemies.CanonMet # not implemented
+enemies.Coldier # silent: no Coldier/frozen region
+enemies.ColtonJoe # no ColtonJoe/frozen region
+enemies.GapingFish # no GapingFish/frozen region, see docs/issues/2026-10-23-gaping-fish-missing-frozen-region.md
+enemies.JetMet # no frozen region
+enemies.Merserker # no regions
+enemies.SniperJoe_OLD # no regions
+enemies.SpikeBot_OLD # no regions
+explosions.SigmaRatElectricBallExplosion # no SigmaRat regions
+projectiles.SigmaRatElectricBall # no SigmaRat regions

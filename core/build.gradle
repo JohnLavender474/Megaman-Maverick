@@ -30,3 +30,37 @@ test {
     exceptionFormat = "full"
   }
 }
+
+testing {
+  suites {
+    smokeTest(JvmTestSuite) {
+      useJUnitJupiter()
+      dependencies {
+        implementation project()
+        implementation project(':engine')
+        implementation sourceSets.test.output
+        implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation "io.kotest:kotest-runner-junit5:$kotestVersion"
+        implementation "io.kotest:kotest-assertions-core:$kotestVersion"
+        implementation "io.mockk:mockk:$mockkVersion"
+        runtimeOnly "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+      }
+      targets {
+        all {
+          testTask.configure {
+            workingDir = rootProject.file('assets')
+            inputs.dir(rootProject.file('assets/sprites/sprite_sheets')).withPropertyName('spriteSheets')
+            testLogging {
+              events "skipped", "failed"
+              showStandardStreams = false
+              exceptionFormat = "full"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+tasks.named('check') { dependsOn testing.suites.smokeTest }
