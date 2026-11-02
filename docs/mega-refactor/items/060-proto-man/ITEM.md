@@ -1,37 +1,26 @@
-# 060: Proto Man as a second playable character, with `CharacterDef`
+# 060: Proto Man as a playable character
 
 - Status: idea
 - Type: feature
 - Objectives: `O8`
-- Depends on: `024`, `084`
-- Related: `029`, `031`, `047`, `048`, `084`
+- Depends on: `024`, `081`, `084`
+- Related: `029`, `031`, `047`, `048`
 - Branches: none yet
 
 ## Goal
 
-Add Proto Man as a second playable character. With Mega and Proto as its two callers, add `CharacterDef`: the
-data that makes one character different from another (values, ability set and order, and later the body,
-sprites, sounds, loadout and damage reaction). The second character shows which parts are really shared, so the
-def gets its shape from two real callers, not from a guess.
+Add Proto Man as a third playable character, after X (`081`). He uses the shared player parts and `CharacterDef`
+from `081`, as its third caller.
 
 ## Proposed scope
 
 Not approved. The branch `SCOPE.md` decides the final scope.
 
-- `CharacterDef` in core (package `characters/` recommended), with `MegamanDef` and a Proto Man def.
-- The values reach the code through parameters or primitive suppliers (`FloatSupplier`) on the behavior
-  factories (`entities/megaman/behaviors/`, from `029g`) and on the body and controller definitions. Mega's
-  numbers stay in `MegamanValues`; Proto Man gets his own values file.
-- The prerequisites in item `029` `NOTES.md`, "What a second character needs first": jump, gravity and run
-  values; a body def; sprites, animations and sounds; a loadout (`024`); an ability-set contract (the
-  `BehaviorType` keys that outside code expects, `setBehaviorAllowed` on a missing key, the `aButtonTask`
-  transitions); a damage reaction; the remaining Mega-named API (`IHazard.getDamageToMegaman`).
-- The 6 places where a new player class compiles and then plays wrongly: `084` `NOTES.md`, "Silent failures for `060`".
-- The 8 behaviors stay on the `Megaman` receiver until this item and `024`. This item also owns `CharacterDef`, the shared `onSpawn`,
-  `onEvent`, schedule and `invincible` functions, and the signed table.
-- Readers that apply Mega's values to any player (the stomp bounce in 6 enemies, `SwimBooster`) read the
-  contact player's own value (their `TODO`s point here).
-- How the game picks the character (a select screen, a dev flag) is open.
+- A Proto Man def on `CharacterDef`, and his own values file.
+- His own sprites, animations and sounds, loadout (`024`) and damage reaction.
+- Any change that `CharacterDef` needs for a third caller. `081` owns the first shape, and the work that was planned
+  here for `CharacterDef`.
+- How the game picks the character: `113`.
 
 ## Owner's input
 
@@ -48,16 +37,19 @@ waits for it.
   `Megaman.kt` is a refactor with the contract "plays the same"; it must not mix with the new gameplay of this item.
 - (2026-10-31, owner, from `084`) The working direction is a thin `Megaman` and `Protoman` that share components and functions. The choice between that
   and one `PlayerEntity(services, def)` class stays open for this item, because it has the second real caller. See `084` `NOTES.md`.
+  (2026-11-01: this choice moved to `081`.)
 - (2026-10-31, owner, from `084`) `AButtonTask` has no component until this item shows a need. `IEventListener` stays on the player class, and this item
   shares the handler body as one function.
+- (2026-11-01, owner, from `081`) X comes before Proto Man. `CharacterDef` moves to `081`, and this item depends on
+  `081`. This replaces the 2026-10-25 input above that `CharacterDef` waits for this item.
 
 ## Open questions
 
 - Does Proto Man share the slide and ladder rules (X6 shares the step routines)?
-- How does the player pick a character, and can each co-op slot pick its own (`047`)?
-- Is `CharacterDef` moved to the engine once two characters show the shared shape?
+- Moved to `113`: how does the player pick a character, and can each co-op slot pick its own (`047`)?
 
 ## Sources
 
 - `NOTES.md` in this folder.
+- `081` `ITEM.md`.
 - Item `029` `NOTES.md`, "`CharacterDef` design".

@@ -1479,8 +1479,38 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: new `idea` items `108`, `109`, `110`, `111`. The `047` branch list must be reviewed against `108` and `109` before `047b`. Open: does PvP need rollback (`095`), and does PvP need `094` from its start (`109`).
 
+## 2026-11-01 — master (docs)
+
+- Summary: `O6-R1` names `core:smokeTest`, with the owner's approval, because CI runs it since `004a`. `O6` "Decisions" records the change.
+- Contract check: not needed (docs only).
+- Follow-up: none. This closes the `O6-R1` question in the `004a` entry.
+
 ## 2026-11-01 — mega-refactor-047a-second-slot
 
 - Summary: with `--players 2`, a second tinted `Megaman` plays in a level on its own device (squash commit `fda6509f4`). The branch adds the `--players` flag, capacity `MAX_PLAYERS` (2), one `InputFrameBuilder` per slot, `PadShare` in `GamepadInput`, the slot 1 spawn (`slotSpawnProps`, with the `player_2` reference), the death rule for slot 0 and slot 1, all-player spawn and level-end locks, a debug tint and the `REFACTOR_TEST_047` map.
 - Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch with `master` merged in. The owner's play test passes (all experimental and control checks).
 - Follow-up: bug filed: `docs/issues/2026-11-01-two-players-stuck-in-quicksand.md` (owner decision: each sinkable entity sinks and rises on their own). The branch list of `047` must be reviewed against `108` and `109` before `047b`. The `O2-R9` accepted gap stays until `038`.
+
+## 2026-11-01 — master (docs)
+
+- Summary: owner decisions on the character order. X (`081`) comes before Proto Man (`060`), and `CharacterDef` moves from `060` to `081`, so `060` now depends on `081`. `081` is `planned`, and it has a proposed branch split: X in slot 1 behind a dev flag, with the buster only. `081` no longer depends on `024` to start, and `047` has an exception for this dev flag. An NES-style pad is not enough to play as X: `069` no longer has this goal, and `O9-R1` has an exception for X, with the owner's approval.
+- Contract check: not needed (docs only).
+- Follow-up: `069` open question 7: does the `SELECT` override stay? See the next entry.
+
+## 2026-11-01 — master (docs and direct change)
+
+- Summary: the owner removed the `069` `SELECT` override and `LevelType.X_LEVEL`, because every pad having a dash input is no longer a goal. For X, `SELECT` is always `NEXT_WEAPON`, whatever the option says, and `R` is the only dash input and exists only for X. `selectButtonAction` and `AIR_DASH` are specific to Megaman and Proto Man. `068`, `070` and `081` no longer rely on them. `GAUNTLET_1` and `GAUNTLET_2` stay Megaman levels, so the `O9-R1` exception can affect only the new X6-based extra levels. Direct change to `master`: 9 `TODO` comments in 8 files now name item `081` in place of `060` or "Proto Man item". It changes comments only, and it did not go through a branch because the owner asked for this small cleanup after the move of `CharacterDef`.
+- Contract check: not needed for the docs. The comment change runs the build and the tests before its commit.
+- Follow-up: `081` open question 2 stays open: can Megaman also play the new X6-based extra levels? See the next entry.
+
+## 2026-11-01 — master (docs)
+
+- Summary: owner decision on `081` open question 2. For now, the X6-based extra levels are playable only by X, but the code must not block Megaman from playing them later. X-specific rules are done on a player basis, not on a level basis. `068` supports slopes for all entities. `069`, `081` and `O9` record this.
+- Contract check: not needed (docs only).
+- Follow-up: `081` open question 1 stays open: how does a level pick its character? The X-only limit must be level data (`O7-R3`).
+
+## 2026-11-01 — master (docs)
+
+- Summary: new `idea` item `113` (character select screen). `081` open question 1 has a proposed `characters` field on `LevelDefinition`. The `081` branch split changes: `047b` comes first, because enemies target slot 0 today, and `069` comes after the first X branch, because only X reads its button. So `081` depends on `047b` and `084`, and `069` depends on `031` and `081a`.
+- Contract check: not needed (docs only).
+- Follow-up: none.

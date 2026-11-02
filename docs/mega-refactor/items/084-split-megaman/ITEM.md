@@ -52,7 +52,7 @@ Not in this item (other items own these parts):
 - Level checks such as `MARIO_LEVEL` in `onHealthDepleted`: `025`.
 - `AbstractHealthEntity` and the state-only contracts for all entities (`IFreezableEntity`, `IScalableGravityEntity`):
   `048`. This item can do the player side first, if `048` has not started.
-- The values that make a character different (`CharacterDef`): `060`. This item moves logic, not numbers; Mega's
+- The values that make a character different (`CharacterDef`): `081`. This item moves logic, not numbers; Mega's
   numbers stay in `MegamanValues`.
 
 ## Owner's input

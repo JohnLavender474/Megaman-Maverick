@@ -44,7 +44,7 @@ These rules apply to every branch, whatever the item's objectives are. The full 
 | `O6-R2` | Named checks for kept and changed behavior | now |
 | `O7-R3` | No level-identity checks | now |
 | `O8-R2` | Capabilities, not character checks | now |
-| `O9-R1` | Fully playable with an NES-style pad | now |
+| `O9-R1` | Fully playable with an NES-style pad, except as X | now |
 | `O9-R2` | Saves stay loadable | after `007` |
 
 ## How to use this folder

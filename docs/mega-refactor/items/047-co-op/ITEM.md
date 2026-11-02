@@ -36,6 +36,7 @@ Item `029` research (2026-10-23, verbatim):
   slot for slots 2 to 4. Profiles (a named copy of a slot's settings) come during or after co-op. See item `031`
   `ITEM.md` "Decisions" and `NOTES.md`.
 - 2026-11-01: for the first pass, each player is a copy of `Megaman`. A new character for a co-op slot waits for `060`.
+- 2026-11-01 (from `081`): one exception to the decision above. X can play in slot 1 behind a dev flag, for his development in `081`, before `060`. A character choice for co-op players still waits.
 - 2026-11-01: for now, the death of slot 0 resets the level for all players. The behavior must become configurable later, with these 3 options: slot 0 death resets the level; the level does not reset until all slots die; players respawn at once until all lives are gone, with no level reset (co-op only). Only the first option is built now. The other two are `TODO`s.
 - 2026-11-01: for now, friendly fire is off, and shots pass through teammates.
 - 2026-11-01: for now, player 2 has a debug tint as a marker.

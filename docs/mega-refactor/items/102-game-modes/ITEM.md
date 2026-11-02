@@ -34,7 +34,7 @@ The objectives audit of 2026-11-01 found this gap.
 
 - What does a mode hold, and where does it live? `LevelType` mixes content and rules: `EXTRA_LEVEL` is a gauntlet and also the X6-style target (`068` `NOTES.md`), and `MARIO_LEVEL` changes the HUD (`MegaLevelScreen.kt:986`). Options: a field on `LevelDefinition`, an extended `LevelOverride`, a new session object.
 - Are the co-op rules part of a mode? `LivesPolicy` is "by game mode" (`047` decision H), but no mode exists. The same applies to the 3 death options, friendly fire and the target rule. Who chooses them, and can they change when a player joins?
-- Which characters can each mode use (`O8-R3`, `081` question 2, `060`)? Can each slot pick its own character?
+- Which characters can each mode use (`O8-R3`, `081`, `060`)? Can each slot pick its own character (`113`)?
 
 ### Menu and start
 

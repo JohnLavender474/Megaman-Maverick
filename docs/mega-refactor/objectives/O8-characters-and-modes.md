@@ -67,7 +67,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 
 ## Redo risk
 
-- `029g`, `084`: all 8 files in `entities/megaman/behaviors/` and all 11 in `components/` use the `Megaman` type. `060` plans this change for the behaviors. The state class `entities/state/WeaponChargeComponent.kt` does not use it, but the 5 charge reads and `stopCharging()` in `components/WeaponChargeComponent.kt` do.
+- `029g`, `084`: all 8 files in `entities/megaman/behaviors/` and all 11 in `components/` use the `Megaman` type. `081` plans this change for the behaviors. The state class `entities/state/WeaponChargeComponent.kt` does not use it, but the 5 charge reads and `stopCharging()` in `components/WeaponChargeComponent.kt` do.
 - `029e`: `GameState.weaponsOwned` must become per character or per loadout (`024`).
 
 ## Items
@@ -75,10 +75,10 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | Item | Status | Note |
 |------|--------|------|
 | `024` | planned | [One `WeaponDef` per weapon; loadout per character](../items/024-weapon-defs/ITEM.md) (main) |
-| `060` | idea | [Proto Man as a second playable character, with `CharacterDef`](../items/060-proto-man/ITEM.md) (main) |
+| `060` | idea | [Proto Man as a playable character](../items/060-proto-man/ITEM.md) (main) |
 | `068` | planned | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) (main) |
 | `069` | planned | [A dash button for X](../items/069-dash-button/ITEM.md) (main) |
-| `081` | idea | [Playable X for the extra levels, ported from `mmx-x6`](../items/081-playable-x/ITEM.md) (main) |
+| `081` | planned | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](../items/081-playable-x/ITEM.md) (main) |
 | `084` | done | [Split `Megaman` into player components](../items/084-split-megaman/ITEM.md) (main) |
 | `029` | done | [`IPlayer` contract, players service and `CharacterDef`](../items/029-player-contract/ITEM.md) |
 | `030` | planned | [Faction and root owner instead of `owner == megaman`](../items/030-faction/ITEM.md) |
@@ -86,6 +86,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `102` | idea | [A game mode concept](../items/102-game-modes/ITEM.md) (main) |
 | `108` | idea | [Spec Ops co-op missions](../items/108-spec-ops-mode/ITEM.md) |
 | `109` | idea | [PvP modes](../items/109-pvp-mode/ITEM.md) |
+| `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) (main) |
 
 ## Gaps with no item
 
@@ -93,7 +94,9 @@ None. The objectives audit of 2026-11-01 gave each gap an item or a note on an e
 
 ## Decisions
 
+- 2026-11-01 (owner): X (`081`) comes before Proto Man (`060`), and `081` adds `CharacterDef`. The first X branch plays X in slot 1 behind a dev flag, and it does not wait for `024`.
+
 ## Open questions
 
 - The code has no game mode concept, only `DifficultyMode`. Does a mode need its own item?
-- How does a player pick a character, and does each co-op slot pick its own? (`060`)
+- How does a player pick a character, and does each co-op slot pick its own? (`113`)

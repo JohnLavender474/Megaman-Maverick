@@ -9,8 +9,9 @@
 
 ## Goal
 
-Support X6-style floor slopes, so that "extra" levels built from X6 stages can use them. These levels are for a
-future playable X (ported from X6). The main levels must not get slopes (the 8-bit games have none), and they must
+Support X6-style floor slopes for all entities, not only X, so that "extra" levels built from X6 stages can use them.
+For now, only a future playable X (ported from X6) plays these levels, but slopes must not block Megaman. The main
+levels must not get slopes (the 8-bit games have none), and they must
 play exactly as now. Slopes are a feature that a level turns on.
 
 ## Proposed scope
@@ -58,7 +59,7 @@ Slopes must support both Megaman (as he plays now) and the future playable X (`0
   steep slope, in X6 pixels).
 - 2026-10-28: all slope code goes in core, with one generic engine step after `resolveCollisions`. No level flag:
   the stick probe is always on, guarded by "last floor was a slope". The other proposals in this file are agreed.
-  (Item `069` adds `LevelType.X_LEVEL` for the select-button override; slopes do not depend on it.)
+  (2026-11-01: `069` no longer adds `LevelType.X_LEVEL`. Slopes never depended on it.)
 - 2026-10-29: X (`081`) is not a prerequisite. The first branch is built and play-tested with Megaman.
 - 2026-10-29 (merge target): the first branch is `mega-refactor-068a-slopes`. It squash-merges directly into
   `master` (the code is new, and the main maps have no slopes).
@@ -67,6 +68,8 @@ Slopes must support both Megaman (as he plays now) and the future playable X (`0
 - 2026-10-29: `068a` adds the test map `RefactorTest068.tmx` (`REFACTOR_TEST_068`), with one room per check.
 - 2026-10-29: the intro-stage section is not part of `068a`. It is a separate item or branch, because it also needs
   the X6 converter (`mmx-demake-tools`).
+- 2026-11-01 (owner, from `081`): this item supports slopes for all entities, not only X. A level being X only for now
+  does not limit this. A rule that is specific to X stays on the player, not in the slope code.
 
 ## Open questions
 

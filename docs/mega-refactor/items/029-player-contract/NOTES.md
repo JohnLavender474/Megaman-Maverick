@@ -1103,6 +1103,7 @@ The owner asked whether a policy returns one player or several.
 
 From the `029g` planning (branch `docs/NOTES.md`, "Decisions" and "Review"). `029g` only splits the behaviors
 into factory functions. `CharacterDef` waits for the Proto Man item, so that two characters show its shape.
+(2026-11-01: X comes first, so `CharacterDef` moved to `081`. The two characters are now Mega and X.)
 
 ### Decisions so far
 

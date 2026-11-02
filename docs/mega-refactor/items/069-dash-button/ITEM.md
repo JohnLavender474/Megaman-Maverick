@@ -3,15 +3,15 @@
 - Status: planned
 - Type: feature
 - Objectives: `O8`
-- Depends on: `031`
+- Depends on: `031`, `081a` (the first X branch, because only X reads the new button)
 - Related: `010`, `024`, `029`, `034`, `047`, `055`, `060`, `068`, `070`, `081`
 - Branches: none yet
 
 ## Goal
 
 X (a future playable character, ported from X6) needs a separate dash button, as in X6: a ground dash, an air dash,
-the dash jump and the dash wall kick. Megaman's controls must not change. A player with an NES-style pad must still
-be able to play X.
+the dash jump and the dash wall kick. Megaman's controls must not change. An NES-style pad is not enough to play as
+X, because `SELECT` is its only free button, and `SELECT` is not usable as a dash in real play.
 
 ## Proposed scope
 
@@ -21,7 +21,7 @@ Not approved. The branch `SCOPE.md` decides the final scope. Facts are in `NOTES
   - The input frame has room (`MAX_BUTTONS = 32`). Megaman's `ControllerComponent` and behaviors read named
     buttons only, so his controls do not change.
   - A per-character control layout from `CharacterDef` (option b) does not fit item `031`: bindings belong to the
-    player slot, not the character, and `CharacterDef` does not exist yet (`060`). The character decides which
+    player slot, not the character, and `CharacterDef` does not exist yet (`081`). The character decides which
     buttons it reads; the binding decides which key gives the button.
 - **Fixes the new entry needs:**
   - `ControllerMappingExtensions.kt` is an exhaustive `when`: the new entry needs a pad default (compile error
@@ -30,19 +30,19 @@ Not approved. The branch `SCOPE.md` decides the final scope. Facts are in `NOTES
     Y (hard-coded `1.6`) and its "up" target (`SELECT`). Both must move.
   - Tests that check the buttons (`MegaControllerButtonTest`: index equals ordinal).
 - **Defaults:** keyboard `U` (free; above `J`, next to the action keys `J`, `K`, `L`); pad `R1` (free).
-- **One dash input, as in X6 (option B):** the dash input is `R` or `SELECT`. It starts the ground dash and the air
-  dash. `A` is only jump and wall kick. An NES pad has 4 buttons for X (`A` jump, `B` shoot, `SELECT` dash, `START`
-  pause): the SNES X layout without L/R weapon switching, which X1 also did from the pause menu.
-- **`SELECT` is always "dash" in X levels:** a new `LevelType.X_LEVEL`. In a level of that type, the select action
-  is "dash" for the whole level, whatever the saved `selectButtonAction` is. This is a runtime override only: it does
-  not write the setting, and the saved setting applies again in all other levels.
-- **No `DOWN` + `A` fallback** and no double-tap. With `SELECT` always "dash", every pad has a dash input. X6 on foot
-  has no double-tap (only the Ride Armor has one).
+- **One dash input, as in X6 (option B):** the only dash input is `R`, and only X has it. It starts the ground dash
+  and the air dash. `A` is only jump and wall kick.
+- **`SELECT` is always `NEXT_WEAPON` for X,** whatever the saved `selectButtonAction` is. X has his own rules, so his
+  own controller reads no `selectButtonAction`. This does not write the setting. This item adds no new `LevelType`.
+- **`selectButtonAction` is for Megaman, and for Proto Man when he exists.** `AIR_DASH` is specific to these
+  characters.
+- **No `DOWN` + `A` fallback** and no double-tap. An NES-style pad is not a target for X, so it needs no fallback. X6
+  on foot has no double-tap (only the Ride Armor has one).
 - **No input buffer.** X6 has none: a dash jump is "jump pressed in the same update as the dash start, or while dash
   is held or a ground dash runs". The dash wall kick is "dash held when the wall kick starts". These are all reads of
   the current frame, which Maverick already gives.
 - **Behaviors:** X's air dash reuses `AirDashBehavior` with values and a dash-input check passed in (suppliers, as
-  `060` proposes). The ground dash is a new behavior, because its speed curve differs (X6: 6.5, then slows by
+  `081` proposes). The ground dash is a new behavior, because its speed curve differs (X6: 6.5, then slows by
   0.1875 per update down to 4.125).
 
 ## Owner's input
@@ -60,23 +60,31 @@ Megaman's controls must not change.
   must not overwrite the saved settings. The owner's words: "dash" instead of "air dash", "because dashing as X is
   both air dashing and ground dashing".
 - 2026-10-28: the proposals in this file are agreed, with the changes above.
+- 2026-11-01 (owner): an NES-style pad is not enough to play as X. The only dash button on it would be `SELECT`, and
+  that is not feasible in real play. This replaces the first goal of this item, that a player with an NES-style pad
+  can play X. `O9-R1` records the exception.
+- 2026-11-01 (owner): the `SELECT` override and `LevelType.X_LEVEL` are removed. This replaces the 2026-10-28 decision
+  above. The override existed so that every pad has a dash input, and that is no longer a goal. For X, `SELECT` is
+  always `NEXT_WEAPON`, whatever the option says, and `R` is the only dash input. `AIR_DASH` is specific to Megaman
+  and Proto Man. This closes open questions 1, 2 and 7.
+- 2026-11-01 (owner, from `081`): the rules for `SELECT` and the dash are done on a player basis, not on a level
+  basis. If Megaman plays an X6-based extra level later, he keeps his own controls there.
+- 2026-11-01 (owner, from `081`): X is the second caller of `CharacterDef`, before Proto Man (`060`). This closes
+  open question 5.
 
 ## Open questions
 
-1. In an `X_LEVEL`, `SELECT` loses its usual action (`NEXT_WEAPON` or `START`). Is weapon switching from the pause
-   menu enough for X? (2026-10-28: the owner opened item `070` for dedicated buttons such as a weapon switch; this
-   question waits for it.)
-2. What does the controls screen show for "SELECT ACTION" while the override is on (for example during pause in an
-   `X_LEVEL`): the saved value, or "DASH" with the row locked?
+1. Closed 2026-11-01: `SELECT` is always `NEXT_WEAPON` for X (see "Decisions").
+2. Closed 2026-11-01: the controls screen shows the saved value. That value applies to Megaman and Proto Man, not to X.
 3. Does the controls screen show the new row always, or only when X is available? Always is simpler; a hidden row
    needs a "which characters exist" check in a menu.
 4. Item `010` (fixed tick) is an idea. Input is read once per render frame, and the frame rate changes with the
    performance tier. X6 rules that count updates (dash time 30 updates, air dash 18) must become seconds, or wait for
    `010`. Which?
-5. Does X come as a third character after Proto Man (`060`), or does X become the second caller that shapes
-   `CharacterDef`?
+5. Closed 2026-11-01: X is the second caller of `CharacterDef` (see "Decisions").
 6. Should saved bindings load at boot first (`034`)? Now they load only from the "LOAD SAVED SETTINGS" menu item, so
    a remapped dash key is lost on restart until `034`.
+7. Closed 2026-11-01: the override is removed (see "Decisions").
 
 ## Sources
 

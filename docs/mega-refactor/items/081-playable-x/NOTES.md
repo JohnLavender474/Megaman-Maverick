@@ -1,4 +1,4 @@
-# Notes: 081 Playable X for the extra levels, ported from `mmx-x6`
+# Notes: 081 Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`
 
 Research for this item: scans, counts, options, X6 facts (name the file and section) and
 reviews. Give the date and the `master` commit that each finding is based on.
@@ -8,6 +8,7 @@ reviews. Give the date and the `master` commit that each finding is based on.
 ### What already exists in the items
 
 - `069`: the dash button, the `LevelType.X_LEVEL` select-button override, the NES-pad layout. Input only.
+  (2026-11-01: `069` removed the override, `X_LEVEL` and the NES-pad layout.)
 - `060`: Proto Man and `CharacterDef`. The nearest model for a second character.
 - `029` `NOTES.md`, "What a second character needs first": values; body def; sprites, animations and sounds;
   loadout (`024`); an ability-set contract (`BehaviorType` keys, `setBehaviorAllowed`, `aButtonTask`); damage

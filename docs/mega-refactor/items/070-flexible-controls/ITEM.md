@@ -13,7 +13,8 @@ The controller settings are too restrictive now. A player with a keyboard or a m
 an NES pad, but cannot use them: for example, they cannot have a dedicated button for the next weapon and another
 for the previous weapon. The only flexible part is `SELECT`, whose action is one setting (`selectButtonAction`:
 `NEXT_WEAPON`, `AIR_DASH` or `START`). Compatibility with an NES pad stays important: the game must stay fully
-playable with only the d-pad, `A`, `B`, `START` and `SELECT`. Extra buttons add customizability on top.
+playable with only the d-pad, `A`, `B`, `START` and `SELECT`, except as X (`O9-R1`). Extra buttons add customizability
+on top.
 
 ## Proposed scope
 
@@ -26,8 +27,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   `DASH`, `START`. The input frame stays keyed by button (`031`); the per-player setting says what each optional
   button does, as `selectButtonAction` does now.
 - The setting is per player slot and stored with the bindings (`031e`, then `034`).
-- **Per-character overrides** at runtime, as `069` does for `SELECT` in an `X_LEVEL`: an override never writes the
-  saved settings.
+- **Per-character rules:** a character can ignore a setting, and this never writes the saved settings. X is the first
+  case: for X, `SELECT` is always `NEXT_WEAPON`, and only X has the dash on `R` (`069`). `selectButtonAction` and
+  `AIR_DASH` apply to Megaman and Proto Man.
 - **A gamepad back button** (from `031f`, scope question 10): `Esc` is the only back input, so a pad-only player has no
   back on `LevelSelectScreenV2` and no way out of a pause under a lock. On an NES-style pad, `B` is the only free button
   in the menus. See `docs/issues/2026-11-01-listener-lock-start-release-pauses.md` and
@@ -43,15 +45,16 @@ weapons? The compatibility with an NES controller is important, but as such ther
 available to those using a keyboard or advanced controller."
 
 Context: item `069` question 1. In an `X_LEVEL`, `SELECT` is always "dash", so X loses `SELECT`'s usual action.
+(2026-11-01: `069` removed this override and `X_LEVEL`. For X, `SELECT` is always `NEXT_WEAPON`.)
 
 ## Open questions
 
 1. Which optional buttons, and how many: `L` and `R` only (SNES), or also `X` and `Y` (modern pads)?
-2. Is the action list the same for every character, or does each character have its own list (X has "dash",
-   Megaman has "air dash")? Does an action a character does not have do nothing?
+2. X ignores the `SELECT` setting and has "dash" on `R` (2026-11-01, see `069`). Do the optional button settings apply
+   to X at all, or only to Megaman and Proto Man? Does an action a character does not have do nothing?
 3. Does `069` wait for this item (so `R` is one optional button whose default action for X is "dash"), or does `069`
    add `R` first and this item builds on it?
-4. Can two buttons have the same action (for example `SELECT` and `R` both "dash" for X)?
+4. Can two buttons have the same action (for example `SELECT` and `L` both `NEXT_WEAPON`)?
 5. Do the default bindings for a keyboard and a modern pad give the optional buttons actions at once, or does the
    player turn them on?
 

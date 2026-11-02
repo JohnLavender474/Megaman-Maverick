@@ -24,7 +24,7 @@ A large change is safe because a check finds the break, not because a person hap
 
 ### `O6-R1`: CI passes
 
-- Rule: `engine:test`, `core:test` and `lwjgl3:jar` pass on each branch before a merge.
+- Rule: `engine:test`, `core:test`, `core:smokeTest` and `lwjgl3:jar` pass on each branch before a merge.
 - Problem: `P1`
 - Check: the CI result of the branch.
 - Applies: `always-on`
@@ -98,5 +98,7 @@ None found.
 None. The objectives audit of 2026-11-01 gave each gap an item or a note on an existing item.
 
 ## Decisions
+
+- 2026-11-01: `O6-R1` names `core:smokeTest`, because CI runs it since `004a`. The owner approved the change.
 
 ## Open questions

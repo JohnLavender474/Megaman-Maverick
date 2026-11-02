@@ -67,7 +67,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | `O1` | idea | none | | |
 | 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | `O2`, `O1` | idea | none | | |
-| 060 | [Proto Man as a second playable character, with `CharacterDef`](items/060-proto-man/ITEM.md) | feature | `O8` | idea | `024`, `084` | | |
+| 060 | [Proto Man as a playable character](items/060-proto-man/ITEM.md) | feature | `O8` | idea | `024`, `081`, `084` | | |
 | 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | `O2`, `O8`, `O1` | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
 | 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | `O1` | done | none | 2026-10-26 | 2026-10-27 |
 | 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | `O1` | done | none | 2026-10-27 | 2026-10-28 |
@@ -76,7 +76,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | `O1` | idea | none | | |
 | 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | `O5`, `O3` | planned | none | | |
 | 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | `O8`, `O4` | planned | none | | |
-| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | `O8` | planned | `031` | | |
+| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | `O8` | planned | `031`, `081a` | | |
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | `O9` | idea | `031` | | |
 | 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | `O1` | idea | none | | |
 | 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | `O1` | planned | `016` | | |
@@ -88,7 +88,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
-| 081 | [Playable X for the extra levels, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | idea | `024`, `069`, `084` | | |
+| 081 | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | planned | `047b`, `084` | | |
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | `O9` | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | `O1` | idea | none | | |
 | 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | `O8`, `O1` | done | none | 2026-10-30 | 2026-11-01 |
@@ -120,6 +120,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 110 | [Co-op in the main campaign](items/110-co-op-campaign/ITEM.md) | feature | `O2` | idea | `108`, `109` | | |
 | 111 | [PvP across multiple rooms](items/111-pvp-multi-room/ITEM.md) | feature | `O2` | idea | `109`, `094` | | |
 | 112 | [Targeting as a policy that each entity owns](items/112-targeting-policies/ITEM.md) | refactor | `O1`, `O2` | planned | `047b` | | |
+| 113 | [Character select screen](items/113-character-select/ITEM.md) | feature | `O8`, `O9` | idea | `081` | | |
 
 ## Branches
 

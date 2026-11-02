@@ -98,3 +98,7 @@ Fact: for Megaman, `SelectButtonAction.AIR_DASH` replaces `A` for the air dash (
     wall kick work with either dash input.
   - Cons: with default settings, an NES pad has no air dash for X; the same setting does a little more for X than
     for Megaman.
+
+2026-11-01: the NES pad points above no longer apply. An NES-style pad is not a target for X. Option B is kept, but
+its `SELECT` input is not: `R` is X's only dash input, and `SELECT` is always `NEXT_WEAPON` for X (see `ITEM.md`,
+"Decisions").

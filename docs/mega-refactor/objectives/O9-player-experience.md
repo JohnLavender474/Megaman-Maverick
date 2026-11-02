@@ -19,14 +19,16 @@ The parts of the game around the levels feel complete: saves, settings, controls
 
 - A save from an old version loads in a new version.
 - A setting that a player changes is still there after a restart.
-- A player can use the extra buttons of a modern pad, and the game stays fully playable with an NES-style pad.
+- A player can use the extra buttons of a modern pad, and the game stays fully playable with an NES-style pad, except
+  as X.
 - The game has dialogue scenes and cutscenes.
 
 ## Rules
 
 ### `O9-R1`: NES-style pad
 
-- Rule: the game stays fully playable with only the d-pad, `A`, `B`, `START` and `SELECT`.
+- Rule: the game stays fully playable with only the d-pad, `A`, `B`, `START` and `SELECT`. Exception: playing as X
+  needs a dash button, so these buttons are not enough for X.
 - Problem: `P3`
 - Check: the branch `CONTRACT.md` names a check with those buttons, if the branch changes controls.
 - Applies: `always-on`
@@ -72,12 +74,15 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `076` | idea | [A new tileset for the final stage](../items/076-final-stage-tileset/ITEM.md) (main) |
 | `082` | planned | [Dialogue boxes, in-level dialogue scenes and cutscenes](../items/082-dialogue-and-cutscenes/ITEM.md) (main) |
 | `031` | done | [Input frames per player (`InputFrame`), devices and bindings](../items/031-input-frames/ITEM.md) |
+| `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) |
 
 ## Gaps with no item
 
 None. The objectives audit of 2026-11-01 gave each gap an item or a note on an existing item.
 
 ## Decisions
+
+- 2026-11-01 (owner): `O9-R1` has an exception for X. The only dash button on an NES-style pad would be `SELECT`, and that is not feasible in real play. See `069` and `081`. `GAUNTLET_1` and `GAUNTLET_2` stay Megaman levels, so the exception affects only the new X6-based extra levels. These levels are X only for now, so an NES-style pad cannot play them. The code must not block Megaman from playing them later (`081`).
 
 ## Open questions
 
