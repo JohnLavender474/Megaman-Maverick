@@ -61,7 +61,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
 | `O8-R1` | `not checked` | No new character exists: 0 `ProtoMan` and 0 `CharacterDef`. A test entity shows that a player need not be `Megaman` (`SecondPlayerEntity.kt:13`). | `060`, `081` |
-| `O8-R2` | `partly` | 0 `is Megaman` lines. 14 `as Megaman` lines, for example `LevelPauseScreen.kt:562`, `PlayerStatsHandler.kt`. 13 gameplay `Megaman::class` lines in 9 files, for example `JoeBall.kt:151`. 32 files outside `entities/megaman/` import `Megaman`. | `024`, `030` |
+| `O8-R2` | `partly` | 0 `is Megaman` lines. 10 `as Megaman` and `as? Megaman` lines (recount 2026-11-02), for example `LevelPauseScreen.kt:569`, `PlayerStatsHandler.kt`. 13 gameplay `Megaman::class` lines in 9 files, for example `JoeBall.kt:151`. 32 files outside `entities/megaman/` import `Megaman`. | `024`, `030` |
 | `O8-R3` | `partly` | `081`, `068` and `069` name the modes. `060` `ITEM.md` does not. | `060` |
 | `O8-R4` | `broken` (waiting) | 0 `WeaponDef`. At least 5 `when` blocks on a weapon (`MegamanWeaponsHandler.kt:303,658`, `MegamanAnimationKeySupplier.kt:105`, `MegamanAnimations.kt:29`, `Megaman.kt:119`). 28 files name a `MegamanWeapon` value. The loadout is one session set (`GameState.kt:33`). | `024` |
 
@@ -87,6 +87,9 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `108` | idea | [Spec Ops co-op missions](../items/108-spec-ops-mode/ITEM.md) |
 | `109` | idea | [PvP modes](../items/109-pvp-mode/ITEM.md) |
 | `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) (main) |
+| `120` | idea | [A player that turns hostile and comes back](../items/120-hostile-player/ITEM.md) (main) |
+| `121` | idea | [Enemy clones of a playable character](../items/121-playable-character-clones/ITEM.md) |
+| `122` | idea | [Human-driven boss](../items/122-human-driven-boss/ITEM.md) (main) |
 
 ## Gaps with no item
 

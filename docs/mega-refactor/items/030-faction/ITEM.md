@@ -4,7 +4,7 @@
 - Type: refactor
 - Objectives: `O2`, `O8`
 - Depends on: `029`, `005`
-- Related: `014`, `023`, `045`
+- Related: `014`, `023`, `045`, `048`, `120`, `121`
 - Branches: none yet
 
 ## Goal
@@ -29,6 +29,14 @@ Answer to review item 29 (2026-10-22, verbatim):
 Item `029` research (2026-10-23, verbatim):
 
 > This might be outside the scope of the current item, but it seems to me a mistake that entities like projectiles can have only one `owner`.
+
+## Decisions
+
+- (2026-11-02, owner, from `048`) One side per entity. No entity needs 2 different side values. `BulletBill` needs no special case: its side as an actor is enemy, and its source is a launcher that is not a player, so the 2 answers agree.
+- (2026-11-02, owner, from `048`) Storage stays apart. The actor side is in `FactionComponent`. The source side is a snapshot beside `owner`, in the owner part that `048` step 9 moves. Slot identity for friendly fire is a third, separate fact (`SessionRules.kt:13`). The reasons do not depend on `BulletBill`: a shot needs a side fixed at fire time, and `FactionComponent` can mean "is an actor" only if shots do not have it. Readers such as `CartV2.kt:151`, `ToxicWaterfall.kt:137` and `CeilingCrusher.kt:160` ask that question.
+- (2026-11-02, owner, from `048`) `FactionComponent` goes on actors only: players, enemies, bosses and boss parts. It answers hostility and actor tests only. Its first readers are the 14 lines in 8 files in `048` `NOTES.md`.
+- (2026-11-02, owner, from `048`) Hazards get no side yet. `SmokePuff` keeps `IHazard`. A source with no faction must not count as neutral, or the 11 hazard shots with `OWNER pairTo this` fail.
+- (2026-11-02, owner, from `120`) `DamagePolicy` (`120`) reads the faction. For a slot entity, the faction derives from the capture value, so "both" cannot be stored. The side stays read-only until `120`.
 
 ## Open questions
 

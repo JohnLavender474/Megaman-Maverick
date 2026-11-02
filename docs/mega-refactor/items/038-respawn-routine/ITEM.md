@@ -4,7 +4,7 @@
 - Type: refactor
 - Objectives: `O1`, `O2`
 - Depends on: none
-- Related: `012`, `013`, `029`, `047`, `057`, `036`, `037`, `051`, `053`
+- Related: `012`, `013`, `029`, `047`, `057`, `036`, `037`, `051`, `053`, `118`, `119`
 - Branches: none yet
 
 ## Goal
@@ -36,6 +36,8 @@ Item `029` research (2026-10-23, verbatim):
 ## Decisions
 
 - 2026-10-23 (from `029`): `PLAYER_SPAWN` must split into a spawn event for each player and a separate level reset. This item does the split. Motivation: with respawn per player (co-op), one player's respawn must not reset the room for everyone.
+- 2026-11-02 (owner, from `119`): the entity keeps the entity fact (`PLAYER_DESTROYED`), and the routine sends the level fact (`LEVEL_FAILED`). If the routine took over the entity submit, slot 1 and fight deaths would lose their event.
+- 2026-11-02 (from `118`): the routine can reuse the `Step` and `Routine` type of `118a`. It need not.
 
 ## Open questions
 

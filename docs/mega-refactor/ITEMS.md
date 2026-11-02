@@ -125,6 +125,11 @@ statuses and column meanings are in `CLAUDE.md`.
 | 115 | [Partial sink and stuck behavior in sand](items/115-partial-sink-stuck-in-sand/ITEM.md) | feature | `O4`, `O1` | idea | none | | |
 | 116 | [Body senses as typed state, then a sense history](items/116-body-senses/ITEM.md) | refactor | `O1`, `O5` | idea | none | | |
 | 117 | [Crush with a falling pushable block](items/117-pushable-block-crush/ITEM.md) | feature | `O4` | idea | none | | |
+| 118 | [Boss fights as routines, rules and leases](items/118-boss-fight-routines/ITEM.md) | refactor | `O1`, `O4`, `O2` | planned | none | | |
+| 119 | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](items/119-player-left-world-event/ITEM.md) | refactor | `O2`, `O1` | planned | none | | |
+| 120 | [A player that turns hostile and comes back](items/120-hostile-player/ITEM.md) | feature | `O8`, `O2` | idea | `030`, `047c`, `047e`, `112`, `118`, `119` | | |
+| 121 | [Enemy clones of a playable character](items/121-playable-character-clones/ITEM.md) | feature | `O4`, `O8` | idea | `081` | | |
+| 122 | [Human-driven boss](items/122-human-driven-boss/ITEM.md) | feature | `O8`, `O2` | idea | `102` | | |
 
 ## Branches
 

@@ -138,3 +138,13 @@ related-items: [<mega-refactor item IDs>]
 | [The y velocity of a `PushableBlock` grows with no limit while it rests](2026-11-02-pushable-block-velocity-builds-at-rest.md) | yes | core | open |
 | [A `PushableBlock` stays over a hole on a sliver of the ledge](2026-11-02-pushable-block-ledge-sliver.md) | yes | core | open |
 | [On the last 1.6 px of a ledge, Mega Man stays up in the jump pose](2026-11-02-ledge-sliver-jump-pose.md) | no | core | open |
+| [With `--players 2`, the death of slot 1 destroys P1's gems and resets a gauntlet](2026-11-02-slot-1-death-acts-on-p1-objects.md) | yes | core | open |
+| [With `--players 2`, only slot 0 dies past a camera edge](2026-11-02-slot-1-no-camera-edge-death.md) | yes | core | open |
+| [A dead player's weapon `spawned` sets are not cleared](2026-11-02-weapon-spawned-sets-survive-death.md) | no | core | open |
+| [`throwAxe` runs after a `0.1` s delay with no live check](2026-11-02-throw-axe-no-live-check.md) | no | core | open |
+| [The factory preload runs `init()` twice for 25 `Bullet` and 25 `Block`](2026-11-02-entity-factory-preload-runs-init-twice.md) | yes | core | open |
+| [`LocksComponent.reset()` does not call its change hook](2026-11-02-locks-reset-skips-change-hook.md) | no | engine | open |
+| [Question: the screen and the boss read `mini` and `end` from different sources](2026-11-02-boss-props-have-two-sources.md) | question | core | open |
+| [The check that stops an item drop on a cart kill is always true](2026-11-02-cart-kill-drop-check-always-true.md) | yes | core | open |
+| [Question: a moving `CartV2` kills a boss in one hit](2026-11-02-cart-kills-boss-in-one-hit.md) | question | core | open |
+| [Question: a player shot in flight can hit a boss during its intro](2026-11-02-boss-takes-hits-during-intro.md) | question | core | open |

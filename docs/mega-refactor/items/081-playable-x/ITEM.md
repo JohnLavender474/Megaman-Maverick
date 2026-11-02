@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `047b`, `084`; `069` from step 2 of "Branch split"; `024` only before X moves to slot 0 or gets more than
   the buster
-- Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`
+- Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`, `120`, `121`, `122`
 - Branches: none yet
 
 ## Goal
@@ -122,6 +122,7 @@ Megaman and X.
 5. The burst frames in `damaged` and `air_damaged`: do they stay in these strips, or move to their own strips, drawn
    as an effect over X? See `NOTES.md`, "`1LMX` sprite sheet".
 6. Is `CharacterDef` moved to the engine once two characters show the shared shape? (from `060`)
+7. Thin classes or one `PlayerEntity(def)`? Decide this before any swap work. One class needs a way to rebuild on a change of def, because `init()` is not safe to repeat, and it does not fit a per-class pool for `121` clones. A level that picks its character needs a spawn-time `setFocus` in place of the once-only `MegaLevelScreen.kt:337` (`047` `NOTES.md`, "Can `Megaman` be pooled?"). (from `047`, 2026-11-02)
 
 ## Sources
 

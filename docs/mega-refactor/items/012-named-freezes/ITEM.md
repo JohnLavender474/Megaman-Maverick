@@ -4,7 +4,7 @@
 - Type: refactor
 - Objectives: `O1`, `O2`
 - Depends on: none
-- Related: `010`, `013`, `031`, `038`, `082`
+- Related: `010`, `013`, `031`, `038`, `082`, `118`
 - Branches: none yet
 
 ## Goal
@@ -34,6 +34,9 @@ Answer to review item 11 (2026-10-22, verbatim):
    scene are exempt and keep their animations. The owner: "this matches the gameplay in X where X and the other
    interlocutors will be animated, but enemies (as well as hazards, platforms, and other objects) will be unanimated
    and frozen in place."
+2. 2026-11-02 (from `118`): `012` and `118a` can go in either order. If `012` comes first, the `HoldWorld` step calls
+   the freeze controller. If `118a` comes first, the system writes at `MegaLevelScreen.kt:743-745,753` move to one
+   file, and `012` changes that file only.
 
 ## Open questions
 

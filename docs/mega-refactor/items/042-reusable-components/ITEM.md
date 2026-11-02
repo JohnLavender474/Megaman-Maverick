@@ -4,7 +4,7 @@
 - Type: refactor
 - Objectives: `O1`, `O4`
 - Depends on: none
-- Related: `006`, `011`, `015`, `026`, `029`, `030`, `039`, `084`
+- Related: `006`, `011`, `015`, `026`, `029`, `030`, `039`, `084`, `118`, `122`
 - Branches: none yet
 
 ## Goal
@@ -19,7 +19,7 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - `LimbMotion` (launch, hold, return), used by GutsTankFist, BigAssMaverickRobotHand, SigmaRatClaw and WilyCapsuleTentacle.
 - `LinkChain` along a path (straight, pendulum, rotating line, wavy joints), used by SpikeBall, Saw, SwingingPlatform, InfernoChainPlatform, FireballBar and the tentacle.
 - `DriftMotion` (an `IMotion`) and an `addPendulum` helper. Remove the tentacle test copies.
-- Later: `BossPhases` / `HealthCurve` and `ShotPattern`.
+- Later: `BossPhases` / `HealthCurve` and `ShotPattern`. `BossPhases` covers phases inside one entity. Phases across entities and the fight flow belong to `118`.
 
 ## Owner's input
 

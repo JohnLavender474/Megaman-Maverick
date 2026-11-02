@@ -304,3 +304,284 @@ The layer builders are in `C/screens/levels/tiled/layers/MegaMapLayerBuilders.kt
 Recommendation: the `sensors` layer, with the entity `entities/sensors/TalkZone`. Tiled can select the talk zones by
 the object name. If the owner wants talk zones in their own layer, a `dialogue` layer that reuses
 `SensorsLayerBuilder` is a one-line change in `builderFactories`.
+
+## Agent report: Scripted control, player holds, locks and `isPlayer` (2026-11-02)
+
+Note: The hostile half of this report belongs to `120`. `capturedBy` there is a plain value released through a `118` lease, because `Fight` is not an entity.
+
+### Player "hold" design: scenes, locks, naming
+
+Master at `b3e792bc4`. I only read and searched. I changed no file.
+
+Short paths:
+- `C` = `/home/johnlavender/IdeaProjects/Megaman-Maverick/core/src/main/kotlin/com/megaman/maverick/game`
+- `E` = `/home/johnlavender/IdeaProjects/Megaman-Maverick/engine/src/main/kotlin/com/maverick/game/engine`
+
+Line counts come from grep. They exclude imports and comment lines, unless I say otherwise.
+
+**The main result:** the proposed `heldBy` is correct for a hostile takeover, but wrong for a scene. A scene needs "who drives the input". The hostile case needs "this slot is not on the players' side". These are two separate facts. The repo has a home for the first one already: `ControllerComponent.input`.
+
+#### 1. Scripted control today
+
+There is no scene system. `grep -il cutscene` finds nothing in `C`. No code walks a player by script. `MegaPlayers.kt:31` is the only production line that sets an `InputSource`. The "level-end walk" does not exist: the player stands and a beam plays. I also found no boss-intro walk.
+
+| Case | Who takes control | Input | Damage | Movement | Camera | How it ends |
+|---|---|---|---|---|---|---|
+| Spawn beam | `PlayerSpawnEventHandler.kt:126-134`, all slots | `TURN_CONTROLLER_OFF` | `DAMAGE/SPAWN`, `PRE_PLAY` | `BEHAVIORS/SPAWN`, `gravityOn=false` | `cameraHold` when slot 0 is not in play (`MegaLevelScreen.kt:302-304`) | `:210-217`: unlock, `IN_PLAY`, `TURN_CONTROLLER_ON` |
+| Death | `PlayerDeathEventHandler.kt:58-61`, slot 0 only | OFF | `POST_PLAY` | `gravityOn=false` | same | `PLAYER_DONE_DYIN` (`MegaLevelScreen.kt:604-619`), then spawn or game over. `:586` destroys the other slots. |
+| Level end | `EndLevelEventHandler.kt:115-124`, `:171` | OFF | `DAMAGE/LEVEL_END` | `BEHAVIORS/LEVEL_END` | `POST_PLAY` | `END_LEVEL` (`MegaLevelScreen.kt:823-833`). No `unlock` exists. `LocksComponent.reset()` clears the locks at `engine.reset()`. |
+| Room transition | `LevelRoomHandler.kt:54`, `setBehaviorsOn(false)` | OFF | none | `Megaman.kt:396` writes `body.setCenter`, `:400` turns gravity off | camera parts | `LevelRoomHandler.kt:135` ON, unless the room has an event |
+| Gate | `MegaLevelScreen.kt:663-676`: World, Motion, Behaviors and Pathfinding off | not locked (known pause bug) | none | systems off | none | `GATE_INIT_CLOSING` (`:678-689`) |
+| Boss intro | `:691-714`, `BossSpawnEventHandler`, `:743-745` | stays OFF from the transition | none | all systems off except Sprites and Animations | none | `END_BOSS_SPAWN` (`:750-754`) |
+| Boss defeat | `:766-776` | OFF with the controller system left on | `DAMAGE/BOSS_DEFEATED` | none | none | `INTERMEDIATE_BOSS_DEAD` (`:798-804`) or `VICTORY_EVENT` |
+| Wily end | `WilyFinalBoss.kt:304-310`, `DrWily` | OFF | `DAMAGE/WILY_FINAL_BOSS` | none | none | `GAME_COMPLETE` (`MegaLevelScreen.kt:835-839`) and `reset()` (`:1105`), or `PLAYER_DONE_DYIN` (`DrWily.kt:121`) |
+| `PipePortal`, `PortalHopper`, `CapsuleTeleporter` | `beginTeleport` (`Teleports.kt:12`), `Megaman.kt:253-264`, `GameEntityUtils.kt:140-162` | no lock. Actuators test `teleporting` (`ControllerComponent.kt:73,186`). | `DAMAGE/TELEPORT` | velocity zero, collision off, gravity off, fixtures off, sprites hidden | smooth follow | `endTeleport` (`PipePortal.kt:228`, `PortalHopper.kt:252`, `CapsuleTeleporter.kt:258`) |
+| Camera rotation | `Megaman.kt:154` setter | none | none | `MOVEMENT/CAMERA_ROTATION` | rotates | `Megaman.kt:425-428` |
+| `SpiderWeb` | `SpiderWeb.kt:157-160` | stays human, mash to escape (`:191`) | none | `MOVEMENT`, `BEHAVIORS`, gravity off | none | `onDestroy` (`:125-128`). `PLAYER_JUST_DIED` destroys the web (`:138`). |
+| Stat fill, pause | `PlayerStatsHandler.kt:140,175,319`, `LevelStateHandler.kt:13-27` | systems off | none | systems off | none | "all on" writes |
+
+Two cases are not takeovers:
+- `Cart` and `CartV2` take no control. `FeetCartRule` only sets an owner and a sense, and nothing outside the rule reads `TOUCHING_CART` or `ConstKeys.CART`.
+- `GetWeaponScreen` moves its own `megamanSprite` (`:84`). Inference: no player entity is involved, because I did not read the file in full.
+
+How the sites do it: a mix of 5 mechanisms.
+- Global input lock: 13 `TURN_CONTROLLER_*` submits in 6 files (6 OFF, 7 ON). The last writer wins.
+- Lock reasons per entity.
+- `PlayPhase`.
+- Direct `body.physics` writes.
+- Absolute `system.on` writes.
+
+#### 2. Does a scene player stop being a player?
+
+No. Item `082` says that the scripted input "presses the same buttons as a person, so the player moves with the normal physics" (`082` `ITEM.md:82-83`). That rule needs every world reader to keep working.
+
+| Group | Sites | Hostile wants | Scene wants | Same? |
+|---|---|---|---|---|
+| Gates | `GateRule.kt:15`, `MegaContactFilter.kt:112`, `Gate.kt:346` | no | yes | no |
+| Carts, platforms | `MegaContactFilter.kt:116`, `FeetCartRule.kt:22`, `CartV2.kt:115`, `PushableBlock`, `FlipperPlatform` | no | yes | no |
+| Items | `PlayerItemRule.kt:14` | no | yes (inference) | no |
+| Targets | 591 `targetPlayer` lines in 142 files (imports not excluded), 37 live `players.any` lines | no | yes in a `PLAYER` freeze, where the world runs | no |
+| Friend tests | `SessionRules.kt:11-12`, `Megaman.kt:435`, 38 `owner.asPlayer` lines | flip | must not flip | no |
+| Boss landing gates | `ElecDevil.kt:339`, `GutsTank.kt:280,333`, `WilyFinalBoss.kt:448` | filter is useful | must count the player | no |
+| Kill loops | `PlayerDeath.kt:46`, `GravityBlock.kt:214`, `CameraEdgeBlock.kt:42` | every slot | every slot | yes |
+| Level flow, gravity | spawn, end, `WorldGravity.kt:14` | every slot | every slot | yes |
+| `PLAYER_JUST_DIED` | `Megaman.kt:374`, `GauntletMaster.kt:168`, `SpiderWeb.kt:138`, `PreciousGem.kt:215`, `PreciousGemCluster.kt:109`, `MegaLevelScreen.kt:584` | not a player death | a normal player death | no |
+
+Two groups agree and seven do not.
+
+**Design errors in the field, stated plainly:**
+
+1. **`heldBy` joins two facts.** "Who drives" and "which side" go in one value, and `isPlayer` reads that value. A scene hold then removes the player from gates, carts, items, targets and friend tests.
+
+2. **`heldBy` does not take the input.** As specified, it does not touch `ControllerComponent.input`. `MegaPlayers.kt:31` and `ControllerSystem` still dispatch the slot frame. So it does not do what a scene needs, and it does what a scene must not do.
+
+3. **Friendly fire during a scene.** A scene holds all players in co-op, and a shot from P1 is in flight. `source.rootPlayer` is null, so `isFriendlyFire` gives false (`SessionRules.kt:11`). `Megaman.kt:435` then returns true, so the shot hurts P2. Inference from reading the code.
+
+4. **Vacuous `all`.** When all players are held, the filtered `players.all` is true. The `082b` boss talk runs before `BOSS_READY`, so these gates can pass before the player lands: `GutsTank.kt:280,333`, `ElecDevil.kt:339`, `WilyFinalBoss.kt:448`. Inference.
+
+5. **Crash on a held hit.** `Megaman.kt:456` calls `this.asPlayer!!`. The first hit on a held entity throws. This happens in the hostile fight itself and in the `082a` room `death_during_scene`. `ReceiverRules.kt:109` has the same risk on 3 receivers (`SmallIceCube`, `SmallGrass`, `Togglee`).
+
+6. **Faults that exist in the hostile case too:**
+   - `Megaman.kt:435-436`: with `friendlyFire` off, P1 cannot damage a held P2. The test reads the damager's root and never looks at the target.
+   - `Megaman.kt:435`: the `source != this` guard is skipped, because `rootPlayer` is null. A held P2 can be hit by its own shots if they touch it. Inference.
+   - `BodyGravityChangeRule.kt:24` and `PortalHopper.kt:206`: the `else` path writes `entity.direction`. That setter can start a shared camera rotation (`Megaman.kt:145-154`).
+   - `CameraEdgeBlock.kt:59`: a held entity passes through the view edge. This reader needs the raw slot.
+   - `CeilingCrusher.kt:160` and `ToxicWaterfall.kt:137,151` test "player or `AbstractEnemy`". A held `Megaman` is neither.
+   - `Players.kt:16` must read the raw slot. If it reads `isPlayer`, a second `register` passes and replaces the component.
+   - `MegaLevelScreen.kt:584` tests slot 0. A held slot 0 that dies costs a life and resets the level.
+
+7. **The holder can go stale.** The field does not clear in `reset()`, and holders are pooled. `030` `NOTES.md` warns about this risk for owners. If a holder forgets to release, `isPlayer` stays false for that slot. `destroyNow` always calls `onDestroy` (`GameEngine.kt:191-192`), so a release there is reliable.
+
+8. **The name `hold` is already taken.** It collides with `held()` input masks, `cameraHold`, `heldLevelScreenKey`, and "held (stand)" in `082`.
+
+**What is right in the proposal:**
+- Read-through is correct. `collectContacts` runs before `processContacts` (`WorldSystem.kt:191-196`), and the rules read at process time. A per-frame recompute would be late.
+- `PlayPhaseComponent.reset()` is also empty, so "does not clear in `reset()`" has a precedent.
+
+#### 3. `LocksComponent`, `PlayPhase`, `inputLocked`
+
+**Locks.** A lock says "this capability of this entity is off, for these reasons".
+- 3 groups: `DAMAGE`, `MOVEMENT`, `BEHAVIORS`.
+- 7 reasons, in a bit set per group (`LocksComponent.kt:15`).
+- 10 `lock` lines, 7 `unlock` lines, 2 `clearLocks` lines, 3 `isLocked` lines, in 7 files.
+- Readers: `Megaman.kt:89,94`, `SmallIceCube.kt:228`, and the `BEHAVIORS` hook.
+- Only `Megaman` has the component (`Megaman.kt:268`).
+
+| Reason | Groups |
+|---|---|
+| `SPAWN`, `LEVEL_END` | `DAMAGE`, `BEHAVIORS` |
+| `TELEPORT`, `BOSS_DEFEATED`, `WILY_FINAL_BOSS` | `DAMAGE` |
+| `CAMERA_ROTATION` | `MOVEMENT` |
+| `SPIDER_WEB` | `MOVEMENT`, `BEHAVIORS` |
+
+**Is a hold a lock?**
+- A scene: yes, in part. Its damage and stand needs fit one new reason.
+- A hostile takeover: no. It blocks nothing. The entity acts freely and takes damage.
+
+**Can a hostile hold be a lock reason?** No, for four reasons:
+- `LocksComponent.reset()` clears all bits at destroy, and `Megaman.kt:340,342` clear 2 groups at spawn. The hold must survive these.
+- A bit names no holder.
+- The engine `isPlayer` cannot read a game lock group.
+- `lock` requires the component, and only `Megaman` has it.
+
+**Bits or one reference?**
+- Bits are better when reasons overlap.
+- One reference is better for "who owns this slot".
+- Two holders with one reason share a bit, so the first release frees both. `061` chose a set, and `SpiderWeb.kt:125` guards this with a list.
+- One reference has no stack. If a scene writes `heldBy` over a fight holder and then releases, P2 becomes friendly in mid-fight. So keep them apart. A second capture of one slot must throw, as `Players.kt:15` does.
+
+**One trap.** `LocksComponent.reset()` does not fire `onChange`, and `BehaviorsComponent.reset()` does not restore allowed behaviors. A cleared `BEHAVIORS` lock leaves behaviors off until the next `unlock` reaches zero. Today `PlayerSpawnEventHandler.kt:214` does that.
+
+**`PlayPhase`.** One value per entity, 4 writer lines, 36 reader lines in 27 files.
+- `!inPlay` stops behaviors, pause and camera follow, and removes the entity from `isLive`, so from `targetFor`.
+- Neither a scene nor a hostile takeover should use it. It also makes the entity invincible (`Megaman.kt:89`).
+
+**`inputLocked`.** It is `frameBuilders[0].locked`, one global flag.
+- There is no slot and no reason. Any `TURN_CONTROLLER_ON` ends it.
+- It blinds every slot (`MegamanMaverickGame.kt:691,700`). `isPauseRequested` reads it (`LevelPauseRules.kt:17`).
+- A scripted source bypasses it. A stray ON cannot give control back to the human while a script source is on the entity.
+
+#### 4. Design options
+
+| Option | Scene | Hostile | Facts against |
+|---|---|---|---|
+| A. One `heldBy` | fails | works after the fixes above | Section 2: 7 of 9 groups disagree. |
+| B. `controlledBy` plus role fields | works | works | `controlledBy` has no reader, so it fails `O1-R5`. It copies `ControllerComponent.input`, so two values can disagree. |
+| C. Lock bits only | partly | fails | No input group. Input is a global frame flag. Section 3. |
+| D. Scene entity, existing input source, lock reason, freeze reason, plus one narrow field for capture | works | works | Needs the fixes in section 2, error 6, before capture. |
+
+**Recommend D.** The repo already chose this split. `031` `NOTES.md` lists "Driver, Slot binding, Side" as 3 concerns (`:921-931`), and `:993` lists "cutscene script" as an input source.
+
+The owner's "parent entity" idea is correct, and it has precedents. `SpiderWeb` locks a player and releases in `onDestroy`. `DrWily` and `AbstractBoss` destroy themselves on a player event. `IParentEntity` already exists. The parent should own control, not change identity.
+
+**Scene: who writes and who reads**
+
+| Fact | Writer | Reader |
+|---|---|---|
+| Driver | scene entity, through `MegaPlayers` | `ControllerSystem`, `entity.input` (`EntityQueries.kt:37`). All input readers see the script with no change. |
+| Damage | scene entity, `DAMAGE/SCENE` | `invincible` |
+| World freeze | scene entity, `012` reason | systems |
+| Side | not written | `isPlayer` stays true |
+
+A scripted walk must not lock `BEHAVIORS` or `MOVEMENT`, because jump and run need them. A stand hold is an idle source that gives no presses (inference: a climb or other active behavior needs its own step).
+
+**Multi-player.** The scene entity loops over every slot with `forEach`, and each slot gets its own script source. `082` already says this in its "All players" rule. Which slot advances the text stays open in `082`.
+
+**Every exit route.** One `end(skipped)` function does all the release.
+
+| Route | What happens |
+|---|---|
+| Normal end, skip | Steps finish or stop, then `end`, then `destroy()`. |
+| Slot 0 death | `PLAYER_JUST_DIED` destroys the scene, as in `SpiderWeb.kt:138`. |
+| Slot 1 death | Today this changes nothing until a reset. `047c` must set the rule. |
+| Level exit, game over, game complete | `setCurrentScreen` calls `reset()` (`MegamanMaverickGame.kt:1016-1021`), then `engine.reset()`, then `onDestroy`. `showOverPause` does not reset, which is correct. |
+| Pause | Updatables stop, so the scene stops. `LevelStateHandler.kt:26` turns all systems on at resume, which breaks a `WORLD` freeze until `012`. `pause_in_scene` needs `inputLocked` true or a new pause term. |
+| Room change | `onBegin` sets OFF and destroys enemies. `onEnd` sets ON (`LevelRoomHandler.kt:54,72,135`). The scene type must not be `ENEMY`. The scene waits for `END_ROOM_TRANS`. |
+
+**Note on `ControllerComponent`.** It has no `reset()`, so a script source survives a respawn unless the scene restores it. This is the same stale-reference risk as `heldBy`. Save the prior source, because a captured slot may have an AI source.
+
+**New APIs.** None has a production caller today.
+
+| API | First real caller | Status |
+|---|---|---|
+| `MegaLockReason.SCENE` | `082a` scene entity | no caller today |
+| `MegaPlayers` set and restore input source | `082a` room `boss_walk` | no caller today |
+| Scripted `InputSource` with its own `InputFrameBuilder` | `082a` | no caller today |
+| `PlayerComponent.capturedBy`, `Players.capture`, `Players.release` | the hostile fight entity | no caller, and no item exists for it |
+| `forEachSlot` | 17 lines, once a filter exists | real lines, no purpose before capture |
+
+Inference: the scene track needs no engine change. `ControllerComponent.input` and `InputFrameBuilder` are public.
+
+**Dependencies:**
+- Scene track: `012`, then `082a`. This matches `082`.
+- Capture track: a new item, because a grep of `docs/` finds no hostile takeover item. Later `047` rows are not reviewed. `030` is not a blocker, but it changes the friend tests.
+
+**`forEach` default.** 17 of 20 lines change if `forEach` filters. The inverse is a raw `forEach` and a new filtered name, which changes 3 lines. But then `forEach` differs from `any` and `all`. This is a choice for the owner, not an error.
+
+#### 5. Naming
+
+**Readers of `isPlayer`:**
+- Engine: 1 line (`Players.kt:16`).
+- Core: 7 lines, 9 reads, 5 files (`PlayerExtensions.kt:9`, `GateRule.kt:15`, `MegaContactFilter.kt:112,116`, `FeetCartRule.kt:22,34`, `UnderwaterFan.kt:221`).
+- Tests: 4 lines in 2 files.
+
+**Through `asPlayer`:** 89 lines in 63 files.
+- 38 owner lines (side).
+- 10 `damageable` lines (reaction).
+- 41 other lines (contact, device, body, input).
+
+`rootPlayer` has 3 outside reads.
+
+**What readers ask:** "Does the world treat this entity as one of the players now?" They do not ask who presses the buttons. No reader asks "is this a human?"
+
+| Case | Readers need | `isPlayer` (with capture) | `isPlayable` | `isPlayerControlled` | `isPlayerSide` | `isActivePlayer` |
+|---|---|---|---|---|---|---|
+| Normal | true | true | true | true | true | true |
+| PvP opponent | true | true | true | true | true | true |
+| AI in a slot | true | true | unclear | false, wrong | true | true |
+| Scene | true | true | false, wrong | false, wrong | true | true |
+| Captured, human drives | false | false | unclear | true, wrong | false | true, wrong |
+| Captured, AI drives | false | false | false | false | false | true, wrong |
+
+- `isPlayable`: the docs already use "playable" in 3 other senses. Character (`O8`, `060`, `081`), phase (the owner in `082` `ITEM.md:181-182`: "before he becomes playable"), and "the game stays fully playable" (`O9`). It also reads like `inPlay`.
+- `isActivePlayer`: reads like `isLive` or `PlayPhase`. A shot from a dead player still needs a true owner test.
+- `isPlayerSide`: accurate, and it matches `030` `Faction`. But `030` has an open question on PvP teams.
+
+**The answer changes after question 4.** With one hold, `isPlayable` looked close, because a scene flipped the value. After the split, a scene never flips it. Only capture does, and "P2 is not a player now" is true in plain English.
+
+#### Direct answers
+
+1. **Scenes:** no, not the same hold. A parent entity that manages players is a good idea, but it must take the driver, not the identity.
+2. **`LocksComponent`:** it relates to scenes and it does not conflict. A scene uses one new lock reason. A hostile capture is not a lock. Keep the field and the bits apart, because they stack differently and clear at different times.
+3. **`isPlayer`:** not outdated. Do not rename to `isPlayable`. Keep `isPlayer`, with a doc comment that says it is not a human test and that `playerSlot` is the raw slot. If the owner wants a rename, use `isPlayerSide` with `030`.
+
+#### Recommendation
+
+1. Do not build `heldBy` for scenes.
+2. Build scenes under `082`: scene entity, input source swap, `DAMAGE/SCENE`, `012` reasons. Add nothing to `PlayerComponent`.
+3. Build the hostile field later, in its own item, with the narrow name `capturedBy`. It means only "this slot is against the players".
+4. Before capture is on, fix:
+   - `Megaman.kt:435-436,456`
+   - `ReceiverRules.kt:109`
+   - `Players.kt:16`
+   - `BodyGravityChangeRule.kt:24`
+   - `PortalHopper.kt:206`
+   - `CameraEdgeBlock.kt:59`
+   - `IBodyExtensions.kt:22`
+5. Do the release in one place. `MegaPlayers.capture` can add a `runnablesOnDestroy` entry to the holder (`MegaGameEntity.kt:23`), so no holder can forget.
+
+#### Risks
+
+- Read-through through `asPlayer` changes 89 lines at once. Only the 7 lines above are reviewed for capture. The 41 "other" lines need a line-by-line check.
+- `targetFor` falls back to slot 0 if all slots are captured (`MegaPlayers.kt:39-40,79-82`, with a filtered `forEach`).
+- A stray `TURN_CONTROLLER_ON` ends a frame lock during a scene until `012`. This affects pause blocking and the other slots.
+- The holder's `EntityType` decides which sweeps destroy it (`LevelRoomHandler.kt:72`, `MegaLevelScreen.kt:544`). A capture can end at a room change with no fight result.
+- A script with no mash leaves a player stuck in `SpiderWeb` (`:191`) or a freeze. The `082` limits must cover this.
+
+#### Open questions for the owner
+
+1. Who drives a captured slot: its human or an AI? The proposal does not say. Recommend naming this first, because it decides if capture needs an input swap.
+2. Can slot 0 be captured? Recommend no for the first pass, because of `MegaLevelScreen.kt:584` and the camera focus on slot 0.
+3. Does a captured death count as a player death? Recommend no: `Megaman.kt:374` keeps the event, and the 4 entity listeners check the side.
+4. Do enemies and a captured slot fight each other? Today enemies hit it, and it cannot hurt them (`AbstractEnemy.kt:273`). Recommend deciding this in the new item.
+5. What does a room change do to a scene: pause it or end it? Recommend pause until `END_ROOM_TRANS`, with the `082` time limit as the fallback.
+6. Keep `isPlayer`, or `isPlayerSide` with `030`? Recommend keep now.
+7. `forEach` raw or filtered? Recommend filtered only if capture is built, so that a new call site is safe by default.
+
+#### Not read in full
+
+- `Megaman.kt`, `MegaLevelScreen.kt`, `MegamanMaverickGame.kt`, `WilyFinalBoss.kt`: only the cited parts.
+- `DrWily`, `Cart`, `CartV2`, `PortalHopper`, `PlayerStatsHandler`, `GetWeaponScreen`: parts or grep only.
+- `NOTES.md` of `029`, `031`, `047`, `081`, `084`: parts or grep only. I read `012` and `082` notes in full, and the first part of the `030` notes.
+- Pause-menu exit to the main menu: not traced. `screens/levels` has only 3 `setCurrentScreen` lines, all in `MegaLevelScreen`.
+- I did not recheck which 17 of the 20 `forEach` lines mean "every slot". I confirmed the count of 20.
+- I did not classify the 41 "other" `asPlayer` lines one by one.
+- Nothing was run. All behavior claims come from reading the code.
+
+##### Critical Files for Implementation
+
+- `/home/johnlavender/IdeaProjects/Megaman-Maverick/engine/src/main/kotlin/com/maverick/game/engine/players/PlayerComponent.kt`
+- `/home/johnlavender/IdeaProjects/Megaman-Maverick/core/src/main/kotlin/com/megaman/maverick/game/players/MegaPlayers.kt`
+- `/home/johnlavender/IdeaProjects/Megaman-Maverick/core/src/main/kotlin/com/megaman/maverick/game/entities/megaman/Megaman.kt`
+- `/home/johnlavender/IdeaProjects/Megaman-Maverick/core/src/main/kotlin/com/megaman/maverick/game/locks/MegaLockReason.kt`
+- `/home/johnlavender/IdeaProjects/Megaman-Maverick/docs/mega-refactor/items/082-dialogue-and-cutscenes/ITEM.md`

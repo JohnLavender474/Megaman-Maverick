@@ -4,7 +4,7 @@
 - Type: feature
 - Objectives: `O2`
 - Depends on: `029`, `031`
-- Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`
+- Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
 - Branches: `047a` (merged), `047b` (merged)
 
 ## Goal
@@ -48,6 +48,9 @@ Item `029` research (2026-10-23, verbatim):
 - 2026-11-01: for now, only CLI flags choose the rules. `--mode coop|pvp` chooses them, `--players 2` defaults to co-op, and either mode with 1 player is a launch error.
 - 2026-11-01: for the first pass, an enemy chooses the nearest live player on each read. The owner expects this rule to need much more refinement later.
 - 2026-11-01: health and weapon energy go to the player who collects them. Lives, currency, heart tanks and health tanks stay shared.
+- 2026-11-02: a player entity is slot-owned, not pooled: one entity per slot, created and released by the slot's owner, not by `destroy`. The old reason ("one singleton") is out of date, but a pool does not fit, because it treats `destroy` as release and a slot keeps its player through death. The real need is "the entity in a slot can change" (`047f`, `081`). See `NOTES.md`, "Can `Megaman` be pooled?". Only 2 sites bind one instance for the session: `MegamanMaverickGame.kt:454` and `MegaLevelScreen.kt:337`.
+- 2026-11-02: a released player object stays for a rejoin, unregistered. Slot 1 is built at a load point or a lobby, not in play. Slot 0 cannot leave until "What happens when the lead player leaves?" closes. A leave does not fire `PLAYER_DESTROYED` as a death.
+- 2026-11-02 (from `119`): `047c` owns any listener filter that `119` does not finish.
 
 ## Branch split
 
@@ -57,10 +60,10 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 |---|---|
 | `047a` `second-slot` | With `--players 2`, a second `Megaman` plays in a level on its own device |
 | `047b` `player-rules` | Session rules, friendly fire, targeting, `ChargedShot` and pickups |
-| `047c` | Player 2 death and respawn near the lead |
+| `047c` | Player 2 death and respawn near the lead. Also fixes `2026-11-02-weapon-spawned-sets-survive-death.md` and `2026-11-02-throw-axe-no-live-check.md` |
 | `047d` | HUD and pause |
-| `047e` | Bosses and gauntlets |
-| `047f` | Join and leave during play, device claim, unplug prompt, settings for slot 1 |
+| `047e` | Bosses and gauntlets, as present-player steps in `118` plans |
+| `047f` | Join and leave during play, device claim, unplug prompt, settings for slot 1. Adds the first production callers of `Players.unregister` and `GameState.removeListener` |
 
 `038` comes before the end of phase 1 if a death must not reset the room for the other player.
 

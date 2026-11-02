@@ -81,6 +81,9 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 - Tooling: `003`, `008`, `039`, `040`, `043`, `090`, `100`
 - Cleanup: `027`, `066`, `071`, `083`, `087`, `092`, `093`, `096`, `097`, `098`, `103`, `104`
 - Design: `025`, `042`, `048`, `049`, `052`, `053`, `057`, `058`, `059`, `070`, `086`, `114`
+- Boss fights: `118a` needs none of `012`, `013`, `015`, `030` or `048`. `118a` → `082b`. `118c` before `048` step 6. `118a` before `013` and `047e`
+- Death events: `119` before `047c`
+- Later features: `120` after `030`, `047c`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`
 - Content: `068`, `073` to `080`, `089`, `099`, `115`, `117`
 
 ## Issues
@@ -98,11 +101,14 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - `007`, `034`: volume not saved, health tank fill not saved
 - `058`, `114`: `down` gravity camera, `BLOCK`-`GRAVITY_CHANGE` rule
 - `030`: explosions from Mega's shots
+- `118`: boss props with two sources
+- `119`: slot 1 death acts on P1's objects
+- `047c`: weapon `spawned` sets, `throwAxe` live check
 
 ### Separate fixes, in parallel at any time
 
 - Engine: `CullablesSystem`, `InsertionOrderPriorityQueue.size`, `retainAll`, `GameLine.rotate`, `Float.round`,
-  `PathfindingComponent`, the `replace` regex
+  `PathfindingComponent`, the `replace` regex, `LocksComponent.reset` hook
 - Build: `engine` Gradle dependencies, `jamepadVersion`, JDK 25
 - Content: 14 unspawned TMX objects, 5 `DESERT_MAN` enemies, `DuoBallCanon`, 12 TexturePacker projects, background
   `section`, bottom-left spawn, 10 unused classes, `WILY_CASTLE_SCREEN`
@@ -111,10 +117,13 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - Other core: `isPerformanceSubpar`, Needle Spin bounce, stun bounce, `RobotMasterIntroScreen.dispose`, `Saw` type `t`,
   `CameraRoomTransition.cancel`, raw viewport size, `runQueue` order, end-level beam flag, `DarknessV4`, enemy drop block check,
   `PushableBlock` rest velocity and ledge sliver (`fix/pushable-block-ledge-sliver`),
-  ledge sliver pose (`fix/ledge-sliver-nudge`)
+  ledge sliver pose (`fix/ledge-sliver-nudge`), double `init()` in the factory preload, slot 1 camera-edge death,
+  cart kill drop check
 
 ### Waiting for an owner decision
 
 - The final Dr. Wily fight
 - The `BigAssMaverickRobot` hand motion
 - Enemies that copy the target's direction
+- A cart that kills a boss in one hit
+- Hits on a boss during its intro

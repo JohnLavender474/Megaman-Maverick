@@ -4,7 +4,7 @@
 - Type: feature
 - Objectives: `O9`
 - Depends on: `012`, `031`
-- Related: `007`, `013`, `015`, `026`, `029`, `038`, `047`, `050`, `051`, `057`, `060`, `081`
+- Related: `007`, `013`, `015`, `026`, `029`, `038`, `047`, `050`, `051`, `057`, `060`, `081`, `118`, `120`
 - Branches: none yet
 
 ## Goal
@@ -111,8 +111,8 @@ Not approved. The branch `SCOPE.md` decides the final scope.
     dialogue: the talk opens only if the Up press did not start another action (see decision 3). The hint is a small
     "!" icon in the lower right corner of the screen, as in X6, with one `CURSOR_MOVE_BLOOP_SOUND` when it first appears (decisions 7, 11). A
     placeholder sprite is enough for now.
-- **Boss pre-fight talk:** an optional scene between `ENTER_BOSS_ROOM` and the health fill. The boss waits until the
-  scene ends before `BOSS_READY`. The boss music starts after the scene, as in X6.
+- **Boss pre-fight talk:** an optional `say` step in a `118` `FightPlan`, before the health fill. The boss music
+  starts after the scene, as in X6.
 - **Events:** any `EventType` (and later the typed channels of `057`) can start a scene, for example a room entry.
 - **Entity code:** an entity can start a scene (for example `DrWily` after the final boss).
 
@@ -154,7 +154,8 @@ locked.
      - `play_once`: walking back into a seen forced zone does not play it again.
      - `mid_line_event`: an actor moves while a line types (the `{event=name}` token).
      - `pause_in_scene`: Start during a scene that cannot be skipped does nothing; pause works again after the scene.
-2. `082b`: the boss pre-fight talk hook in `AbstractBoss`, with a first real boss talk.
+2. `082b`: the boss pre-fight talk as a `say` step in a `118` plan, with a first real boss talk. It needs no hook in
+   `AbstractBoss`. It is the first variation after `118a`.
 3. `082c`: `CutsceneScreen`; `EndingScreen` moved onto it.
 4. `082d`: the other screens with sequenced or typed text moved onto the box: `RobotMasterIntroScreen`,
    `GetWeaponScreen`, and `CreditsScreen` if it fits. `RobotMasterIntroScreenV2` stays as it is
@@ -251,6 +252,22 @@ dialogue. Yes, write it as decision 3"
     and no new builder (`NOTES.md`, "Tiled layer for talk zones").
 11. 2026-10-29: no typing sound. The only dialogue sound for now is one `CURSOR_MOVE_BLOOP_SOUND` when the "!" icon of
     an optional talk first appears.
+12. 2026-11-02 (owner, from `120`): a scene entity is the parent that manages the players. It takes the driver, not
+    the identity. A scene player stays a player, so gates, carts, items, targets and friend tests keep working. The
+    disagreement with a hostile takeover is 7 of 9 reader groups (`NOTES.md`, "Scripted control, player holds, locks
+    and `isPlayer`"). No change to `PlayerComponent`, and no change to `isPlayer`.
+13. 2026-11-02 (owner, from `120`): the scene writes these facts. The driver: a script `InputSource` with its own
+    `InputFrameBuilder`, for each slot, through a `MegaPlayers` set and restore that saves the prior source.
+    Damage: one new lock reason, `DAMAGE/SCENE`. World freeze: a `012` reason. A scripted walk locks neither
+    `BEHAVIORS` nor `MOVEMENT`, because jump and run need them. A stand hold is an idle source that gives no presses.
+14. 2026-11-02 (owner, from `120`): `LocksComponent` and a scene do not conflict. A lock says "this ability is off,
+    for these reasons", and a scene uses one reason. A hostile capture is not a lock (`120`). `PlayPhase` stays out of
+    scenes, because it stops behaviors and makes the entity invincible.
+15. 2026-11-02 (owner): one `end(skipped)` function does all the release. A scene ends on a normal end, a skip, a slot
+    0 death and a level exit. At a room change, a scene waits for `END_ROOM_TRANS`, with the time limit as the
+    fallback. The scene type must not be `ENEMY`, or `LevelRoomHandler.kt:72` destroys it.
+16. 2026-11-02 (owner, from `118`): `118a` adds the shared `Step` and `Routine` type, and `082a` reuses it. A second
+    runner would be a duplicate.
 
 ## Open questions
 

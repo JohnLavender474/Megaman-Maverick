@@ -4,7 +4,7 @@
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
-- Related: `012`, `013`, `019`, `029`, `038`, `057`
+- Related: `012`, `013`, `019`, `029`, `038`, `057`, `118`, `119`
 - Branches: none yet
 
 ## Goal

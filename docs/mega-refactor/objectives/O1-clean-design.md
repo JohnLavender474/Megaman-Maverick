@@ -75,7 +75,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
 | `O1-R1` | `partly` | Entity packages have 0 live `MegamanMaverickGame` lines, and `game.megaman` has 0 live lines. Statics still hold session objects: `MegaEntityFactory.kt:27` (306 lines in 185 files), `EntityFactories.kt:14-22` (73 lines in 52 files), `MegaGameEntities.kt:12-15` (62 lines in 45 files), `ToxicWater.kt:76,87`. Per-level state in companions: `Starkner.kt:74`, `AstroAssAssaulter.kt:61`, `SpiderWeb.kt:75`. Companion texture regions: 428 lines in 363 files. | `096`, `028`, `021` |
-| `O1-R2` | `holds` for new code | 53 `abstract` and `open` classes at `5b4d76c5a` and 53 now. No new entity layer. Old layers remain: 9 abstract classes under `entities/`, 128 `AbstractEnemy`, 69 `AbstractProjectile` and 17 `AbstractBoss` subclasses. | `048`, `042` |
+| `O1-R2` | `holds` for new code | 53 `abstract` and `open` classes at `5b4d76c5a` and 53 now. No new entity layer. Old layers remain: 9 abstract classes under `entities/`, 124 or 125 direct `AbstractEnemy`, 69 `AbstractProjectile` and 18 `AbstractBoss` subclasses (recount 2026-11-02). | `048`, `042` |
 | `O1-R3` | `partly` | 0 new listeners since `5b4d76c5a`. 1 new `EventType` (`GAME_COMPLETE`). Old chains remain: 9 `submitEvent` lines in `MegaLevelScreen.onEvent`, and a submit during `events.run()` waits for the next frame (`EventsManager.kt:30`). The added `submitEvent` lines were not reviewed one by one, because the `016` rename hides them. | `038`, `013`, `053`, `057` |
 | `O1-R4` | `partly` | `ConstKeys` went from 409 to 395 keys. `putProperty` lines went from 339 to 286. New string-named keys from code: `BodyKeys.kt:7,9`, `Receivers.kt:55-61`, `HeartTank.kt:160`. | `098`, `057`, `024` |
 | `O1-R5` | `partly` | 15 of 17 branch folders changed since 2026-10-30 have an API and caller table. 2 APIs have only test callers: `Players.kt:22` `unregister`, `LocksComponent.kt:37` `isLockedBy`. The scan misses properties and common names, and it does not check each table row. | `047` (`unregister`), `039` (`isLockedBy`) |
@@ -147,6 +147,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `114` | idea | [Gravity from components](../items/114-gravity-components/ITEM.md) (main) |
 | `115` | idea | [Partial sink and stuck behavior in sand](../items/115-partial-sink-stuck-in-sand/ITEM.md) |
 | `116` | idea | [Body senses as typed state, then a sense history](../items/116-body-senses/ITEM.md) (main) |
+| `118` | planned | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) (main) |
+| `119` | planned | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](../items/119-player-left-world-event/ITEM.md) |
 
 ## Gaps with no item
 
