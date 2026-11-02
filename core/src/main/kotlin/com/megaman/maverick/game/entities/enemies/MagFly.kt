@@ -34,6 +34,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.damaged
 import com.megaman.maverick.game.players.asPlayer
@@ -193,10 +194,11 @@ class MagFly(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
                 forceFlashTimer.reset()
             }
 
-            val slow = targetPlayer.body.getBounds().overlaps(forceFixture.getShape())
+            val slow = players.anyLive { it.body.getBounds().overlaps(forceFixture.getShape()) }
 
-            if (!slow && targetPlayer.body.getY() < body.getY() && !facingAndMMDirMatch())
-                facing = if (targetPlayer.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
+            val target = targetPlayer
+            if (!slow && target.body.getY() < body.getY() && !facingAndMMDirMatch(target))
+                facing = if (target.body.getX() > body.getX()) Facing.RIGHT else Facing.LEFT
 
             when {
                 (facing == Facing.LEFT && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
@@ -218,7 +220,7 @@ class MagFly(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
     private fun getCarryVelocity(target: Float, gravity: Float, friction: Float, delta: Float) =
         (target - gravity * delta) / exp(-friction * delta)
 
-    private fun facingAndMMDirMatch() =
-        (targetPlayer.body.getX() > body.getX() && facing == Facing.RIGHT) ||
-            (targetPlayer.body.getX() < body.getX() && facing == Facing.LEFT)
+    private fun facingAndMMDirMatch(target: MegaGameEntity) =
+        (target.body.getX() > body.getX() && facing == Facing.RIGHT) ||
+            (target.body.getX() < body.getX() && facing == Facing.LEFT)
 }

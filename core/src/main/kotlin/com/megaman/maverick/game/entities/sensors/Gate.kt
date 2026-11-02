@@ -47,7 +47,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -341,12 +340,13 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
             val position = DirectionPositionMapper.getPosition(direction)
             gate.positionOnPoint(body.getPositionPoint(position), position)
 
-            // If the distance between Mega Man and the Gate is too far, then
+            // If the distance between every player and the Gate is too far, then
             // set the Gate's body and fixtures to inactive as an optimization.
-            // This assumes that ONLY Mega Man can ever make contact with a Gate.
-            val active = body.getBounds().getCenter()
-                .dst(targetPlayer.body.getBounds().getCenter())
-                .lessThan(MAX_MEGA_MAN_DIST * ConstVals.PPM)
+            // This assumes that ONLY a player can ever make contact with a Gate.
+            val active = players.anyLive {
+                body.getBounds().getCenter().dst(it.body.getBounds().getCenter())
+                    .lessThan(MAX_MEGA_MAN_DIST * ConstVals.PPM)
+            }
             body.physics.collisionOn = active
             body.forEachFixture { fixture -> fixture.setActive(active) }
         }

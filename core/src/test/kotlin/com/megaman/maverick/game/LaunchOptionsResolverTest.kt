@@ -5,6 +5,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.state.GameMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -40,6 +41,56 @@ class LaunchOptionsResolverTest : DescribeSpec({
                 result.isValid shouldBe false
                 result.errors[0] shouldContain "Invalid --players '$it'"
             }
+        }
+    }
+
+    describe("--mode") {
+        it("is single with 1 player and co-op with 2 players by default") {
+            resolve(LaunchOptions()).resolved!!.mode shouldBe GameMode.SINGLE
+            resolve(LaunchOptions(players = "2")).resolved!!.mode shouldBe GameMode.COOP
+        }
+
+        it("accepts coop and pvp with 2 players") {
+            resolve(LaunchOptions(players = "2", mode = "coop")).resolved!!.mode shouldBe GameMode.COOP
+            resolve(LaunchOptions(players = "2", mode = "pvp")).resolved!!.mode shouldBe GameMode.PVP
+        }
+
+        it("rejects either mode with 1 player") {
+            listOf("coop", "pvp").forEach {
+                val result = resolve(LaunchOptions(mode = it))
+                result.isValid shouldBe false
+                result.errors[0] shouldContain "--mode $it needs --players 2"
+            }
+        }
+
+        it("rejects other values") {
+            val result = resolve(LaunchOptions(players = "2", mode = "bad"))
+            result.isValid shouldBe false
+            result.errors[0] shouldContain "Invalid --mode 'bad'"
+        }
+
+        it("ignores case, as the other options do") {
+            resolve(LaunchOptions(players = "2", mode = "PVP")).resolved!!.mode shouldBe GameMode.PVP
+        }
+
+        it("rejects single, and does not offer it") {
+            val result = resolve(LaunchOptions(players = "2", mode = "single"))
+            result.isValid shouldBe false
+            result.errors[0] shouldContain "Allowed: COOP, PVP"
+        }
+
+        it("gives only the --players error when that value is bad") {
+            val result = resolve(LaunchOptions(players = "9", mode = "pvp"))
+            result.errors.size shouldBe 1
+            result.errors[0] shouldContain "Invalid --players '9'"
+        }
+    }
+
+    describe("the rules of each mode") {
+        it("has friendly fire only in PvP") {
+            GameMode.SINGLE.rules.friendlyFire shouldBe false
+            GameMode.COOP.rules.friendlyFire shouldBe false
+            GameMode.PVP.rules.friendlyFire shouldBe true
         }
     }
 

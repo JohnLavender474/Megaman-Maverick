@@ -4,7 +4,6 @@ import com.maverick.game.engine.common.enums.ProcessState.BEGIN
 import com.maverick.game.engine.common.enums.ProcessState.CONTINUE
 import com.maverick.game.engine.common.enums.ProcessState.END
 import com.maverick.game.engine.entities.body
-import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.players.any
 import com.maverick.game.engine.world.body.FixtureTypeSet
 import com.maverick.game.engine.world.body.IFixture
@@ -13,7 +12,7 @@ import com.maverick.game.engine.world.contacts.ContactRulesBuilder
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
-import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.state.SessionRules
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.FixtureType.*
 import com.megaman.maverick.game.world.contacts.rules.*
@@ -21,9 +20,11 @@ import com.megaman.maverick.game.world.contacts.rules.*
 fun megaContactRules(
     players: MegaPlayers,
     gravity: WorldGravity,
+    rules: SessionRules,
     debugFilter: (IFixture, IFixture) -> Boolean
 ): ContactRuleTable =
     ContactRulesBuilder(FixtureTypeSet.of(FixtureType.entries)).apply {
+        val projectileRule = ProjectileRule(rules)
         wildcard(ContactRuleIds.CONSUMER, CONSUMER, ConsumerRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.DAMAGE, DAMAGER, DAMAGEABLE, DamageRule(debugFilter), BEGIN, CONTINUE)
         sets(ContactRuleIds.DEATH, setOf(DEATH), setOf(FEET, SIDE, HEAD, BODY), DeathRule, BEGIN, CONTINUE)
@@ -55,23 +56,17 @@ fun megaContactRules(
         //  camera, so gravity and camera rotation are forced into sync; camera rotation should have its own mechanism
         //  so that gravity and camera can be configured separately per entity and level (backlog candidate in the
         //  029d branch TODO.md)
-        pair(
-            ContactRuleIds.BODY_GRAVITY_CHANGE, BODY, GRAVITY_CHANGE,
-            BodyGravityChangeRule { entity, direction ->
-                if (entity.asPlayer != null) gravity.set(direction) else entity.direction = direction
-            },
-            BEGIN, CONTINUE
-        )
+        pair(ContactRuleIds.BODY_GRAVITY_CHANGE, BODY, GRAVITY_CHANGE, BodyGravityChangeRule(gravity), BEGIN, CONTINUE)
         pair(ContactRuleIds.BLOCK_GRAVITY_CHANGE, BLOCK, GRAVITY_CHANGE, BlockGravityChangeRule, BEGIN, CONTINUE)
         pair(ContactRuleIds.BODY_PLAYER, BODY, PLAYER, BodyPlayerRule, BEGIN)
         sets(
             ContactRuleIds.PROJECTILE,
             setOf(PROJECTILE),
             setOf(BLOCK, BODY, SHIELD, WATER, SAND, EXPLOSION),
-            ProjectileRule,
+            projectileRule,
             BEGIN
         )
-        pair(ContactRuleIds.PROJECTILE, PROJECTILE, PROJECTILE, ProjectileRule, BEGIN)
+        pair(ContactRuleIds.PROJECTILE, PROJECTILE, PROJECTILE, projectileRule, BEGIN)
         pair(ContactRuleIds.PLAYER_ITEM, PLAYER, ITEM, PlayerItemRule, BEGIN)
         pair(ContactRuleIds.FEET_CART, FEET, CART, FeetCartRule, BEGIN, END)
         pair(ContactRuleIds.TELEPORTER, TELEPORTER_LISTENER, TELEPORTER, TeleporterRule, BEGIN, CONTINUE)

@@ -25,6 +25,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.special.QuickSand
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
+import com.megaman.maverick.game.state.GameMode
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBlockFilters
@@ -67,7 +68,7 @@ class HeartTankSandTest : DescribeSpec({
             ppm = ConstVals.PPM,
             fixedStep = STEP,
             worldContainerSupplier = { worldContainer },
-            contactListener = ContactRuleDispatcher(megaContactRules(players, gravity) { _, _ -> false }),
+            contactListener = ContactRuleDispatcher(megaContactRules(players, gravity, GameMode.SINGLE.rules) { _, _ -> false }),
             collisionHandler = MegaCollisionHandler(),
             contactFilter = MegaContactFilter()
         )

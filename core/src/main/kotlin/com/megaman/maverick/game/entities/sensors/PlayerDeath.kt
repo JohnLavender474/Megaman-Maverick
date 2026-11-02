@@ -12,7 +12,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.world.body.getBounds

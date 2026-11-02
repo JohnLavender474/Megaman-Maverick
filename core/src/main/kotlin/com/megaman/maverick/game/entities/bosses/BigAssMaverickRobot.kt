@@ -486,11 +486,10 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
                 if (launchedHand == null) {
                     launchHandDelay.update(delta)
                     if (launchHandDelay.isFinished()) {
-                        val handToLaunch = allHands.filter { !it.isBeingStoodUpon() }.let { hands ->
-                            when {
-                                hands.isEmpty -> throw IllegalStateException(
-                                    "Megaman cannot be standing on both hands at the same time when calculating " + "which hand to launch. The hands need to be spaced more apart."
-                                )
+                        val hands = allHands.filter { !it.isBeingStoodUpon() }
+                        if (hands.isEmpty) launchHandDelay.reset()
+                        else {
+                            val handToLaunch = when {
                                 hands.size == 1 -> hands[0]
                                 getRandom(0, 100) <= CLOSEST_HAND_CHANCE -> {
                                     hands.sort { h1, h2 ->
@@ -501,10 +500,10 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
                                 }
                                 else -> hands.random()
                             }
-                        }
 
-                        handToLaunch.launch()
-                        launchedHand = handToLaunch
+                            handToLaunch.launch()
+                            launchedHand = handToLaunch
+                        }
                     }
                 } else if (launchedHand!!.state == BigAssMaverickRobotHandState.ROTATE) {
                     launchedHand = null

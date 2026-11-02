@@ -205,6 +205,7 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
 
     override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (!super.canBeDamagedBy(damager)) return false
+        if (services.rules.isFriendlyFire(damager, this)) return false
         if (damager is IProjectileEntity) return damager.owner != owner
         return true
     }

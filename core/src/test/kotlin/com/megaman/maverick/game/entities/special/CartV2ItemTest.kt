@@ -35,6 +35,7 @@ import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.megaContactRules
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
+import com.megaman.maverick.game.state.GameMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.floats.shouldBeGreaterThan
@@ -84,7 +85,7 @@ class CartV2ItemTest : DescribeSpec({
             ppm = ConstVals.PPM,
             fixedStep = STEP,
             worldContainerSupplier = { worldContainer },
-            contactListener = ContactRuleDispatcher(megaContactRules(players, gravity) { _, _ -> false }),
+            contactListener = ContactRuleDispatcher(megaContactRules(players, gravity, GameMode.SINGLE.rules) { _, _ -> false }),
             collisionHandler = MegaCollisionHandler(),
             contactFilter = MegaContactFilter()
         )

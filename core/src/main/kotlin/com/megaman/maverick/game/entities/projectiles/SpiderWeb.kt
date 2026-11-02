@@ -43,8 +43,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.events.EventType
@@ -72,6 +72,7 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
             MegaControllerButton.A,
             MegaControllerButton.B
         )
+        // TODO: all webs share this one set for every player and every spawner, as static state (item 096)
         private val WEBS_STUCK_TO_MEGAMAN = ObjectSet<SpiderWeb>()
         private var blinkWhiteRegion: TextureRegion? = null
         private var grayRegion: TextureRegion? = null
@@ -81,7 +82,7 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
 
     private val blinkWhiteTimer = Timer(BLINK_WHITE_DUR)
     private val trajectory = Vector2()
-    private var stuckToMegaman = false
+    private var stuckPlayer: MegaGameEntity? = null
     private var presses = 0
 
     override fun init(vararg params: Any) {
@@ -109,7 +110,7 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
         trajectory.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
-        stuckToMegaman = false
+        stuckPlayer = null
         presses = 0
 
         blinkWhiteTimer.setToEnd()
@@ -117,16 +118,14 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
 
     override fun onDestroy() {
         services.events.removeListener(this)
-        if (stuckToMegaman) {
+        stuckPlayer?.let { player ->
             explode()
             WEBS_STUCK_TO_MEGAMAN.remove(this)
-            if (WEBS_STUCK_TO_MEGAMAN.isEmpty) {
-                stuckToMegaman = false
-                targetPlayer.let {
-                    it.unlock(MegaLockGroup.MOVEMENT, MegaLockReason.SPIDER_WEB)
-                    it.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPIDER_WEB)
-                    it.body.physics.gravityOn = true
-                }
+            stuckPlayer = null
+            if (WEBS_STUCK_TO_MEGAMAN.none { it.stuckPlayer == player }) {
+                player.unlock(MegaLockGroup.MOVEMENT, MegaLockReason.SPIDER_WEB)
+                player.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPIDER_WEB)
+                player.body.physics.gravityOn = true
             }
         }
         super.onDestroy()
@@ -134,6 +133,8 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
 
     override fun onEvent(event: Event) {
         when (event.key) {
+            // TODO: each web reacts to any player death, so the death of one player also frees the other player from
+            //  a web (item 047e)
             EventType.PLAYER_JUST_DIED -> destroy()
         }
     }
@@ -147,18 +148,16 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
         explosion.spawn(props)
     }
 
-    private fun stickToMegaman() {
-        stuckToMegaman = true
+    private fun stickTo(player: MegaGameEntity) {
+        stuckPlayer = player
 
-        body.setCenter(targetPlayer.body.getCenter())
+        body.setCenter(player.body.getCenter())
         trajectory.setZero()
 
-        targetPlayer.let {
-            it.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPIDER_WEB)
-            it.body.physics.velocity.setZero()
-            it.body.physics.gravityOn = false
-            it.lock(MegaLockGroup.MOVEMENT, MegaLockReason.SPIDER_WEB)
-        }
+        player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPIDER_WEB)
+        player.body.physics.velocity.setZero()
+        player.body.physics.gravityOn = false
+        player.lock(MegaLockGroup.MOVEMENT, MegaLockReason.SPIDER_WEB)
 
         WEBS_STUCK_TO_MEGAMAN.add(this)
     }
@@ -170,7 +169,7 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>({ body.getBounds() })
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocity.set(trajectory)
-            if (!stuckToMegaman) {
+            if (stuckPlayer == null) {
                 val oldCenter = body.getCenter()
                 val sizeIncrease = SIZE_INCREASE_PER_SECOND * services.settings.performance.fixedStep * ConstVals.PPM
                 body.setSize(body.getWidth() + sizeIncrease, body.getHeight() + sizeIncrease)
@@ -183,18 +182,17 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
         blinkWhiteTimer.update(it)
-        when {
-            !stuckToMegaman && targetPlayer.existenceState.liveAfterUpdate && body.getBounds().overlaps(targetPlayer.body.getBounds()) ->
-                stickToMegaman()
-
-            stuckToMegaman -> {
-                body.setCenter(targetPlayer.body.getCenter())
-                if (BUTTONS_TO_GET_UNSTUCK.any { targetPlayer.input.isJustReleased(it) }) {
-                    presses++
-                    blinkWhiteTimer.reset()
-                    if (overlapsGameCamera()) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
-                    if (presses >= PRESSES_TO_GET_UNSTUCK) destroy()
-                }
+        val player = stuckPlayer
+        if (player == null) players.forEachLive {
+            if (stuckPlayer == null && it.existenceState.liveAfterUpdate && body.getBounds().overlaps(it.body.getBounds()))
+                stickTo(it)
+        } else {
+            body.setCenter(player.body.getCenter())
+            if (BUTTONS_TO_GET_UNSTUCK.any { button -> player.input.isJustReleased(button) }) {
+                presses++
+                blinkWhiteTimer.reset()
+                if (overlapsGameCamera()) requestToPlaySound(SoundAsset.THUMP_SOUND, false)
+                if (presses >= PRESSES_TO_GET_UNSTUCK) destroy()
             }
         }
     })

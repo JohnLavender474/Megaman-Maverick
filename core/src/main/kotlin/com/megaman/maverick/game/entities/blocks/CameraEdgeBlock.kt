@@ -9,7 +9,6 @@ import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.players.forEach
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.state.CrusherComponent
 import com.megaman.maverick.game.entities.state.worldToBodySide
 import com.megaman.maverick.game.players.asPlayer

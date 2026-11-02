@@ -48,6 +48,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.ChargedShotResidual
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
@@ -113,10 +114,10 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
 
         shotDownFromJump = spawnProps.getOrDefault("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", false, Boolean::class)
 
-        // TODO: the direction and facing come from the target player, which is the shooter while there is one
-        //  player; they should come from the owner (item 030)
-        megamanDirOnShoot = targetPlayer.direction
-        megamanFacingOnShoot = targetPlayer.facing
+        // TODO: a shot with an owner that is not a player takes the direction and facing of the target player (item 030)
+        val shooter = owner.asPlayer ?: targetPlayer
+        megamanDirOnShoot = shooter.direction
+        megamanFacingOnShoot = shooter.facing
 
         bounced = 0
         spawnResidual()

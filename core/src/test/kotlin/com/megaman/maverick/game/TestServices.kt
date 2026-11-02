@@ -17,9 +17,11 @@ import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.state.GameClock
+import com.megaman.maverick.game.state.GameMode
 import com.megaman.maverick.game.state.GameSettings
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.state.Performance
+import com.megaman.maverick.game.state.SessionRules
 import io.mockk.mockk
 
 fun testServices(
@@ -37,7 +39,8 @@ fun testServices(
     runQueue: Queue<() -> Unit> = Queue(),
     groups: GroupsSystem = GroupsSystem(),
     gameCamera: ICameraView = CameraView(OrthographicCamera()),
-    cameraController: CameraController = CameraController(OrthographicCamera())
+    cameraController: CameraController = CameraController(OrthographicCamera()),
+    rules: SessionRules = GameMode.SINGLE.rules
 ) = MegaServices(
     engine,
     events,
@@ -53,5 +56,6 @@ fun testServices(
     runQueue,
     groups,
     gameCamera,
-    cameraController
+    cameraController,
+    rules
 )

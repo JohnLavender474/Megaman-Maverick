@@ -24,6 +24,8 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
     val runnablesOnDestroyQueued = OrderedMap<String, () -> Unit>()
     private val runnablesToRun = Array<() -> Unit>()
 
+    val players get() = services.players
+
     var timeSpawned = 0L
         private set
 
@@ -77,3 +79,8 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
     override fun toString() = "{ ${this::class.simpleName}:[" +
         "mapObjectId=$mapObjectId, existenceState=$existenceState, hashCode=${hashCode()}] }"
 }
+
+// TODO: every entity gets this extension, but only entities with a target need it, and each one targets in its own
+//  way; it moves to the entities that need it (see the TODO at MegaPlayers.targetFor; item 112)
+val MegaGameEntity.targetPlayer: MegaGameEntity
+    get() = services.players.targetFor(this)

@@ -13,17 +13,20 @@ import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
+import com.megaman.maverick.game.state.SessionRules
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGdxRectangle
 import com.megaman.maverick.game.world.body.*
 
-object ProjectileRule : IContactRule {
+class ProjectileRule(private val rules: SessionRules) : IContactRule {
 
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = begin(a, b)
 
     private fun begin(projectileFixture: IFixture, otherFixture: IFixture) {
         val projectile1 = projectileFixture.getEntity() as IProjectileEntity
+
+        if (rules.isFriendlyFire(projectile1, otherFixture.getEntity())) return
 
         if (otherFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION) &&
             otherFixture.receiver(Receivers.NO_PROJECTILE_COLLISION_EXCEPTION)

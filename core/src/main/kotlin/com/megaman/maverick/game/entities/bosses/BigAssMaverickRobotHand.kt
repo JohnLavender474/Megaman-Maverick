@@ -245,7 +245,7 @@ class BigAssMaverickRobotHand(services: MegaServices) : MegaGameEntity(services)
         returnTarget.set(body.getCenter())
     }
 
-    internal fun isBeingStoodUpon() = targetPlayer.feetFixture.getShape().overlaps(block!!.body.getBounds())
+    internal fun isBeingStoodUpon() = players.anyLive { it.feetFixture.getShape().overlaps(block!!.body.getBounds()) }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (!defeated) for (i in 0 until armOrbs.size) {

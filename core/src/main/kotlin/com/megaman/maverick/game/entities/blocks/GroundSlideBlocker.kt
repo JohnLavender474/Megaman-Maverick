@@ -10,7 +10,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.entities.contracts.targetPlayer
 
 class GroundSlideBlocker(services: MegaServices): AbstractBlock(services) {
 
@@ -43,6 +42,9 @@ class GroundSlideBlocker(services: MegaServices): AbstractBlock(services) {
         return component
     }
 
-    private fun isActive() = !targetPlayer.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) &&
-        !targetPlayer.input.isPressed(MegaControllerButton.DOWN)
+    // TODO: a slide by one player turns the block off for all players; a rule for each player is not done (item 047)
+    private fun isActive() = !players.anyLive {
+        it.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) ||
+            it.input.isPressed(MegaControllerButton.DOWN)
+    }
 }

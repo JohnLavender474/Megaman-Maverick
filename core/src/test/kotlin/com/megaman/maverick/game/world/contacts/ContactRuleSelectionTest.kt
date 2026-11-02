@@ -8,6 +8,7 @@ import com.maverick.game.engine.world.body.FixtureTypeSet
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
+import com.megaman.maverick.game.state.GameMode
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -52,7 +53,7 @@ private fun interface Selector {
 
 private fun tableSelector(): Selector {
     val players = MegaPlayers()
-    val table = megaContactRules(players, WorldGravity(players)) { _, _ -> false }
+    val table = megaContactRules(players, WorldGravity(players), GameMode.SINGLE.rules) { _, _ -> false }
     return Selector { phase, fixture1, fixture2 ->
         table.select(ProcessState.valueOf(phase), fixture1, fixture2)?.let { Selection(it.ruleId, it.roleA) }
     }

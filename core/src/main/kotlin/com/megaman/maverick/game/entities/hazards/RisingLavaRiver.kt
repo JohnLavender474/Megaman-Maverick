@@ -442,6 +442,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
         emberDelay.resetDuration(duration)
     }
 
+    // TODO: this reads the nearest player, so with 2 players the speed-up can change from frame to frame (item 047e)
     private fun shouldIncreaseRiseSpeed() = allowSpeedUp &&
         targetPlayer.body.getBounds().getY() > fullBounds.getMaxY() + DIST_TRIGGER_SPEED_UP * ConstVals.PPM
 

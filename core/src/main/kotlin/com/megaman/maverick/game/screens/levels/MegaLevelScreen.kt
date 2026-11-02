@@ -620,12 +620,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.ADD_WEAPON_ENERGY -> {
                 val ammo = event.getProperty(ConstKeys.VALUE, Int::class)!!
-                playerStatsHandler.addWeaponEnergy(ammo)
+                val slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!
+                playerStatsHandler.addWeaponEnergy(game.players.get(slot) as Megaman, ammo)
             }
 
             EventType.ADD_PLAYER_HEALTH -> {
                 val health = event.properties.get(ConstKeys.VALUE) as Int
-                playerStatsHandler.addHealth(health)
+                val slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!
+                playerStatsHandler.addHealth(game.players.get(slot)!!, health)
             }
 
             EventType.ADD_CURRENCY -> {

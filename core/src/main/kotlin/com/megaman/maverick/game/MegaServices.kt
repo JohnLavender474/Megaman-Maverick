@@ -16,6 +16,7 @@ import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.state.GameClock
 import com.megaman.maverick.game.state.GameSettings
 import com.megaman.maverick.game.state.GameState
+import com.megaman.maverick.game.state.SessionRules
 
 class MegaServices(
     val engine: GameEngine,
@@ -32,5 +33,6 @@ class MegaServices(
     val runQueue: Queue<() -> Unit>,
     val groups: GroupsSystem,
     val gameCamera: ICameraView,
-    val cameraController: CameraController
+    val cameraController: CameraController,
+    val rules: SessionRules
 )

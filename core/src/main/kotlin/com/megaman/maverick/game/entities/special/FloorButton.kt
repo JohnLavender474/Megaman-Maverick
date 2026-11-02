@@ -48,7 +48,6 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.blocks.PushableBlock
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.feetFixture
 import com.megaman.maverick.game.entities.headFixture
 import com.megaman.maverick.game.entities.leftSideFixture

@@ -1,6 +1,8 @@
 package com.megaman.maverick.game.entities.contracts
 
-interface IOwnable<T> : IMegaGameEntity {
+import com.maverick.game.engine.entities.IGameEntity
+
+interface IOwnable<T : IGameEntity> : IMegaGameEntity {
 
     var owner: T?
 }

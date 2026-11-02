@@ -40,7 +40,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.Snow
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.state.mapObjectId
@@ -165,9 +164,10 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (state) {
             FallingIcicleState.STILL -> {
-                if (targetPlayer.body.getY() < body.getMaxY() &&
-                    targetPlayer.body.getMaxX() > body.getX() &&
-                    targetPlayer.body.getX() < body.getMaxX()
+                if (players.anyLive {
+                        it.body.getY() < body.getMaxY() && it.body.getMaxX() > body.getX() &&
+                            it.body.getX() < body.getMaxX()
+                    }
                 ) state = FallingIcicleState.SHAKE
             }
 

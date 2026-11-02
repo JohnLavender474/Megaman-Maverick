@@ -7,17 +7,22 @@ import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.players.WorldGravity
+import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 
-class BodyGravityChangeRule(
-    private val changeDirection: (entity: IDirectional, direction: Direction) -> Unit
-) : IContactRule {
+class BodyGravityChangeRule(private val gravity: WorldGravity) : IContactRule {
 
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = begin(a, b)
 
     override fun onContinue(a: IFixture, b: IFixture, delta: Float) = continueContact(a, b)
+
+    private fun <T> changeDirection(entity: T, direction: Direction) where T : MegaGameEntity, T : IDirectional {
+        if (entity.asPlayer != null) gravity.set(direction) else entity.direction = direction
+    }
 
     private fun begin(bodyFixture: IFixture, gravityChangeFixture: IFixture) {
         val body = bodyFixture.getBody()

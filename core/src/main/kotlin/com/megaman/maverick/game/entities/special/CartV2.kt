@@ -35,7 +35,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.feetFixture
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic

@@ -5,6 +5,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.state.GameMode
 
 sealed interface LaunchStart {
 
@@ -24,7 +25,8 @@ data class ResolvedLaunch(
     val weapons: Set<MegamanWeapon>,
     val heartTanks: Set<MegaHeartTank>,
     val healthTanks: Set<MegaHealthTank>,
-    val players: Int = 1
+    val players: Int = 1,
+    val mode: GameMode = GameMode.SINGLE
 ) {
 
     val savesAllowed: Boolean
@@ -62,6 +64,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val heartTanks = parseEnumListOption<MegaHeartTank>("--heartTanks", options.heartTanks, errors)
     val healthTanks = parseEnumListOption<MegaHealthTank>("--healthTanks", options.healthTanks, errors)
     val players = parsePlayers(options.players, errors)
+    val mode = parseMode(options.mode, players, errors)
 
     if (errors.isNotEmpty()) return LaunchResult(null, errors)
 
@@ -76,19 +79,30 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val logTags = tags.filterNot { it.equals(LOG_ALL_TAGS, ignoreCase = true) }.toSet()
 
     return LaunchResult(
-        ResolvedLaunch(start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players),
+        ResolvedLaunch(
+            start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players!!, mode
+        ),
         errors
     )
 }
 
-private fun parsePlayers(value: String?, errors: MutableList<String>): Int {
+private fun parseMode(value: String?, players: Int?, errors: MutableList<String>): GameMode {
+    val text = value?.trim()
+    if (text.isNullOrEmpty()) return if (players != null && players > 1) GameMode.COOP else GameMode.SINGLE
+
+    val mode = parseEnumOption("--mode", text, errors, arrayOf(GameMode.COOP, GameMode.PVP)) ?: return GameMode.SINGLE
+    if (players == 1) errors.add("--mode $text needs --players 2.")
+    return mode
+}
+
+private fun parsePlayers(value: String?, errors: MutableList<String>): Int? {
     val text = value?.trim()
     if (text.isNullOrEmpty()) return 1
 
     val players = text.toIntOrNull()
     if (players == null || players !in 1..MAX_PLAYERS) {
         errors.add("Invalid --players '$value'. Allowed: 1 to $MAX_PLAYERS")
-        return 1
+        return null
     }
     return players
 }
@@ -104,8 +118,12 @@ private inline fun <reified E : Enum<E>> parseEnumListOption(
     return if (names.any { it.equals(ALL_ENTRIES, ignoreCase = true) }) enumValues<E>().toSet() else named.toSet()
 }
 
-inline fun <reified E : Enum<E>> parseEnumOption(optionName: String, value: String, errors: MutableList<String>): E? {
-    val entries = enumValues<E>()
+inline fun <reified E : Enum<E>> parseEnumOption(
+    optionName: String,
+    value: String,
+    errors: MutableList<String>,
+    entries: Array<E> = enumValues<E>()
+): E? {
     entries.firstOrNull { it.name.equals(value.trim(), ignoreCase = true) }?.let { return it }
 
     val names = entries.map { it.name }

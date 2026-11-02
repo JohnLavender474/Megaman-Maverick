@@ -60,6 +60,7 @@ import com.megaman.maverick.game.players.GravityDeviceComponent
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.players.rootPlayer
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.startSmoothFollow
 import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
@@ -430,11 +431,8 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     override fun canBeDamagedBy(damager: IDamagerEntity): Boolean {
         if (!existenceState.liveAfterUpdate || !super.canBeDamagedBy(damager)) return false
-        if (damager is IOwnable<*>) {
-            if (damager.owner == this) return false
-            if (damager.owner is IOwnable<*> && (damager.owner as IOwnable<*>).owner == this) return false
-        }
-        return true
+        val source = damager.rootPlayer ?: return true
+        return source != this && services.rules.friendlyFire
     }
 
     override fun getDamageDuration(damager: IDamagerEntity) = MegamanValues.DAMAGE_DURATION

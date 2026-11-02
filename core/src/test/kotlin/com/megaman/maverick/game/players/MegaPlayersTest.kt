@@ -7,6 +7,7 @@ import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonStatus
 import com.maverick.game.engine.damage.IDamagerEntity
+import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.input.InputFrame
 import com.maverick.game.engine.players.PlayerSlot
@@ -19,6 +20,8 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.PlayPhase
+import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -58,7 +61,6 @@ class MegaPlayersTest : DescribeSpec({
             entity.asPlayer shouldBeSameInstanceAs entity
             entity.playerSlot shouldBe PlayerSlot(0)
             TestPlayerEntity(services).asPlayer shouldBe null
-            "not an entity".asPlayer shouldBe null
             null.asPlayer shouldBe null
         }
 
@@ -84,7 +86,7 @@ class MegaPlayersTest : DescribeSpec({
             entity0.input shouldBe InputFrame.RELEASED
         }
 
-        it("targetFor gives the first player with a body") {
+        it("targetFor gives the first player with a body when no player is live") {
             val players = MegaPlayers(2)
             players.register(PlayerSlot(0), playerEntity(withBody = false))
             val withBody = players.register(PlayerSlot(1), playerEntity())
@@ -97,6 +99,100 @@ class MegaPlayersTest : DescribeSpec({
             val entity = players.register(PlayerSlot(0), playerEntity())
 
             entity.existenceState.liveNow shouldBe false
+
+            players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs entity
+        }
+
+        describe("targetFor with 2 players") {
+            lateinit var players: MegaPlayers
+            lateinit var left: MegaGameEntity
+            lateinit var right: MegaGameEntity
+
+            fun livePlayer(slot: Int, x: Float): MegaGameEntity {
+                val entity = playerEntity()
+                entity.getComponent(BodyComponent::class)!!.body.setPosition(x, 0f)
+                entity.existenceState = EntityExistenceState.LIVE
+                return players.register(PlayerSlot(slot), entity)
+            }
+
+            fun seekerAt(x: Float) = TestPlayerEntity(services).also {
+                it.addComponent(BodyComponent(Body(BodyType.DYNAMIC, x, 0f, 0f, 0f)))
+            }
+
+            beforeEach {
+                players = MegaPlayers(2)
+                left = livePlayer(0, 0f)
+                right = livePlayer(1, 100f)
+            }
+
+            it("gives the nearest live player") {
+                players.targetFor(seekerAt(10f)) shouldBeSameInstanceAs left
+                players.targetFor(seekerAt(90f)) shouldBeSameInstanceAs right
+            }
+
+            it("gives the lower slot on a tie") {
+                players.targetFor(seekerAt(50f)) shouldBeSameInstanceAs left
+            }
+
+            it("skips a dead player") {
+                left.existenceState = EntityExistenceState.UNSPAWNED
+                players.targetFor(seekerAt(10f)) shouldBeSameInstanceAs right
+            }
+
+            it("skips a player who is not in play") {
+                left.addComponent(PlayPhaseComponent(PlayPhase.PRE_PLAY))
+                players.targetFor(seekerAt(10f)) shouldBeSameInstanceAs right
+            }
+
+            it("gives the first live player to a seeker with no body") {
+                players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs left
+                left.existenceState = EntityExistenceState.UNSPAWNED
+                players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs right
+            }
+
+            it("gives slot 0 when no player is live") {
+                left.existenceState = EntityExistenceState.UNSPAWNED
+                right.existenceState = EntityExistenceState.UNSPAWNED
+                players.targetFor(seekerAt(90f)) shouldBeSameInstanceAs left
+            }
+
+            it("anyLive and forEachLive skip a dead player while the other player is live") {
+                left.existenceState = EntityExistenceState.UNSPAWNED
+                val visited = ArrayList<MegaGameEntity>()
+
+                players.forEachLive { visited.add(it) }
+
+                visited shouldBe listOf(right)
+                players.anyLive { it == left } shouldBe false
+                players.anyLive { it == right } shouldBe true
+            }
+
+            it("anyLive and forEachLive skip a player who is not in play while the other player is live") {
+                left.addComponent(PlayPhaseComponent(PlayPhase.POST_PLAY))
+                val visited = ArrayList<MegaGameEntity>()
+
+                players.forEachLive { visited.add(it) }
+
+                visited shouldBe listOf(right)
+                players.anyLive { it == left } shouldBe false
+            }
+
+            it("anyLive and forEachLive visit every player when no player is live") {
+                left.existenceState = EntityExistenceState.UNSPAWNED
+                right.addComponent(PlayPhaseComponent(PlayPhase.PRE_PLAY))
+                val visited = ArrayList<MegaGameEntity>()
+
+                players.forEachLive { visited.add(it) }
+
+                visited shouldBe listOf(left, right)
+                players.anyLive { it == left } shouldBe true
+            }
+        }
+
+        it("targetFor with 1 live player gives that player and does not read the body of the seeker") {
+            val players = MegaPlayers(2)
+            val entity = playerEntity().also { it.existenceState = EntityExistenceState.LIVE }
+            players.register(PlayerSlot(0), entity)
 
             players.targetFor(TestPlayerEntity(services)) shouldBeSameInstanceAs entity
         }

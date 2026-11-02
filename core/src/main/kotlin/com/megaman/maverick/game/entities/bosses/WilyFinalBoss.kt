@@ -67,7 +67,6 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.O
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss.Phase1ConstVals.STATE_QUEUE_MAX_SIZE
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
-import com.megaman.maverick.game.entities.contracts.players
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.damaged
 import com.megaman.maverick.game.entities.decorations.WarningSign

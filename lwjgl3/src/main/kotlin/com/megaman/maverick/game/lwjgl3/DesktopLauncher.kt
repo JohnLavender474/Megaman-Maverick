@@ -87,7 +87,8 @@ object DesktopLauncher {
             heartTanks = appArgs.heartTanks,
             healthTanks = appArgs.healthTanks,
             autoPerf = appArgs.autoPerf,
-            players = appArgs.players
+            players = appArgs.players,
+            mode = appArgs.mode
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
 
@@ -108,6 +109,7 @@ object DesktopLauncher {
         println("- Health Tanks: " + appArgs.healthTanks)
         println("- Auto Perf: " + appArgs.autoPerf)
         println("- Players: " + appArgs.players)
+        println("- Mode: " + appArgs.mode)
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Reset Bindings: " + appArgs.resetBindings)
         println("- Performance: " + appArgs.performance)
@@ -421,6 +423,12 @@ object DesktopLauncher {
             description = "Dev option: the number of players at start, 1 or 2. Default value = 1."
         )
         var players: String? = null
+
+        @Parameter(
+            names = ["--mode"],
+            description = "Dev option: the rules of a session with 2 players, coop or pvp. Default value = coop."
+        )
+        var mode: String? = null
 
         @Parameter(
             names = ["--autoPerf"],

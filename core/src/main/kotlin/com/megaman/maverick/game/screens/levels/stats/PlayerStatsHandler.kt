@@ -142,6 +142,8 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             .setRunOnJustFinished {
                 state.addHeartTank(heartTank)
 
+                // TODO: a heart tank heals only slot 0, also when slot 1 collects it; who gets the heal is a rewards
+                //  rule (item 047, open questions, "Rewards")
                 eventsMan.submitEvent(
                     Event(
                         EventType.ADD_PLAYER_HEALTH, props(
@@ -180,19 +182,19 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         timerQueue.addLast(timer)
     }
 
-    fun addWeaponEnergy(ammo: Int) {
+    fun addWeaponEnergy(megaman: Megaman, ammo: Int) {
         GameLogger.debug(TAG, "addWeaponEnergy(): ammo=$ammo")
 
-        if (!MegamanWeapon.entries.any { canAddWeaponEnergyTo(it) }) {
+        if (!MegamanWeapon.entries.any { canAddWeaponEnergyTo(megaman, it) }) {
             GameLogger.debug(TAG, "addWeaponEnergy(): no weapons to add energy to")
             return
         }
 
-        val currentWeapon = (player as Megaman).currentWeapon
+        val currentWeapon = megaman.currentWeapon
         var remainingAmmo = ammo
 
         if (currentWeapon != MegamanWeapon.MEGA_BUSTER) {
-            remainingAmmo = addWeaponEnergyTo(currentWeapon, ammo)
+            remainingAmmo = addWeaponEnergyTo(megaman, currentWeapon, ammo)
 
             GameLogger.debug(
                 TAG, "addWeaponEnergy(): " +
@@ -202,7 +204,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
 
         val weapons = MegamanWeapon.entries.toOrderedSet()
         weapons.remove(MegamanWeapon.MEGA_BUSTER)
-        weapons.remove((player as Megaman).currentWeapon)
+        weapons.remove(megaman.currentWeapon)
 
         for (weapon in weapons) {
             if (remainingAmmo <= 0) {
@@ -215,7 +217,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
                 continue
             }
 
-            remainingAmmo = addWeaponEnergyTo(weapon, remainingAmmo)
+            remainingAmmo = addWeaponEnergyTo(megaman, weapon, remainingAmmo)
 
             GameLogger.debug(
                 TAG, "addWeaponEnergy(): loop: added ammo to weapon $weapon: remainingAmmo=$remainingAmmo"
@@ -227,13 +229,13 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
     }
 
-    private fun canAddWeaponEnergyTo(weapon: MegamanWeapon) =
+    private fun canAddWeaponEnergyTo(megaman: Megaman, weapon: MegamanWeapon) =
         weapon != MegamanWeapon.MEGA_BUSTER &&
             state.containsWeapon(weapon) &&
-            (player as Megaman).weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
+            megaman.weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
 
-    private fun addWeaponEnergyTo(weapon: MegamanWeapon, ammoToAdd: Int): Int {
-        val currentAmmo = (player as Megaman).weaponsHandler.getAmmo(weapon)
+    private fun addWeaponEnergyTo(megaman: Megaman, weapon: MegamanWeapon, ammoToAdd: Int): Int {
+        val currentAmmo = megaman.weaponsHandler.getAmmo(weapon)
         val maxAmmo = MegamanValues.MAX_WEAPON_AMMO
 
         GameLogger.debug(
@@ -247,16 +249,16 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             return ammoToAdd
         }
 
-        val remaining = (player as Megaman).translateAmmo(ammoToAdd, weapon)
+        val remaining = megaman.translateAmmo(ammoToAdd, weapon)
         GameLogger.debug(
             TAG, "addWeaponEnergyTo(): " +
-                "weapon energy now: ${(player as Megaman).weaponsHandler.getAmmo(weapon)}, remaining=$remaining"
+                "weapon energy now: ${megaman.weaponsHandler.getAmmo(weapon)}, remaining=$remaining"
         )
         return remaining
     }
 
-    fun addHealth(value: Int) {
-        val healthMegamanNeeds = player.maxHealth - player.currentHealth
+    fun addHealth(collector: MegaGameEntity, value: Int) {
+        val healthMegamanNeeds = collector.maxHealth - collector.currentHealth
 
         GameLogger.debug(TAG, "addHealth(): healthMegamanNeeds=$healthMegamanNeeds, value=$value")
 
@@ -298,7 +300,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
 
             timeMarkedRunnables.add(TimeMarkedRunnable(time) {
                 GameLogger.debug(TAG, "addHealth(): timer: translate health by one")
-                player.translateHealth(1)
+                collector.translateHealth(1)
                 audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND)
             })
         }

@@ -25,6 +25,7 @@ import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
+import com.megaman.maverick.game.state.GameMode
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
@@ -84,7 +85,7 @@ class MegaContactRulesTest : DescribeSpec({
         players = MegaPlayers()
         gravity = WorldGravity(players)
         services = testServices(engine = mockk<GameEngine>(relaxed = true), players = players, gravity = gravity)
-        table = megaContactRules(players, gravity) { _, _ -> false }
+        table = megaContactRules(players, gravity, GameMode.SINGLE.rules) { _, _ -> false }
         splash = mockk(relaxed = true)
         mockkObject(EntityFactories)
         every { EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH) } returns splash
