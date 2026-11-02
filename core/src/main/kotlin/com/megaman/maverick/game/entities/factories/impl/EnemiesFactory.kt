@@ -26,7 +26,6 @@ class EnemiesFactory(private val services: MegaServices) : EntityFactory() {
         const val MATASABURO = "Matasaburo"
         const val SPRING_HEAD = "SpringHead"
         const val SWINGIN_JOE = "SwinginJoe"
-        const val GAPING_FISH = "GapingFish"
         const val FLOATING_CAN = "FloatingCan"
         const val FLOATING_CAN_HOLE = "FloatingCanHole"
         const val SUCTION_ROLLER = "SuctionRoller"
@@ -58,7 +57,6 @@ class EnemiesFactory(private val services: MegaServices) : EntityFactory() {
         const val ANGRY_FLAME_BALL = "AngryFlameBall"
         const val POPOHELI = "Popoheli"
         const val POPUP_CANON = "PopupCanon"
-        const val JET_MET = "JetMet"
         const val BUNBY_TANK = "BunbyTank"
         const val FIRE_MET = "FireMet"
         const val FIRE_MET_SPAWNER = "FireMetSpawner"
@@ -71,7 +69,6 @@ class EnemiesFactory(private val services: MegaServices) : EntityFactory() {
         const val TOTEM_POLEM = "TotemPolem"
         const val CARRI_CARRY = "CarriCarry"
         const val CACTUS_LAUNCHER = "CactusLauncher"
-        const val COLTON_JOE = "ColtonJoe"
         const val TURN_BLASTER = "TurnBlaster"
         const val JETPACK_ICE_BLASTER = "JetpackIceBlaster"
         const val SPIKE_BOT = "SpikeBot"
@@ -102,7 +99,6 @@ class EnemiesFactory(private val services: MegaServices) : EntityFactory() {
         pools.put(FLOATING_CAN_HOLE, GameEntityPoolCreator.create { FloatingCanHole(services) })
         pools.put(DRAGON_FLY, GameEntityPoolCreator.create { DragonFly(services) })
         pools.put(FLY_BOY, GameEntityPoolCreator.create { FlyBoy(services) })
-        pools.put(GAPING_FISH, GameEntityPoolCreator.create { GapingFish(services) })
         pools.put(SPRING_HEAD, GameEntityPoolCreator.create { SpringHead(services) })
         pools.put(SUCTION_ROLLER, GameEntityPoolCreator.create { SuctionRoller(services) })
         pools.put(MAG_FLY, GameEntityPoolCreator.create { MagFly(services) })
@@ -142,7 +138,6 @@ class EnemiesFactory(private val services: MegaServices) : EntityFactory() {
         pools.put(ANGRY_FLAME_BALL, GameEntityPoolCreator.create { AngryFlameBall(services) })
         pools.put(POPOHELI, GameEntityPoolCreator.create { Popoheli(services) })
         pools.put(POPUP_CANON, GameEntityPoolCreator.create { PopupCanon(services) })
-        pools.put(JET_MET, GameEntityPoolCreator.create { JetMet(services) })
         pools.put(BUNBY_TANK, GameEntityPoolCreator.create { BunbyTank(services) })
         pools.put(FIRE_MET, GameEntityPoolCreator.create { FireMet(services) })
         pools.put(FIRE_MET_SPAWNER, GameEntityPoolCreator.create { FireMetSpawner(services) })
@@ -155,7 +150,6 @@ class EnemiesFactory(private val services: MegaServices) : EntityFactory() {
         pools.put(TOTEM_POLEM, GameEntityPoolCreator.create { TotemPolem(services) })
         pools.put(CARRI_CARRY, GameEntityPoolCreator.create { CarriCarry(services) })
         pools.put(CACTUS_LAUNCHER, GameEntityPoolCreator.create { CactusLauncher(services) })
-        pools.put(COLTON_JOE, GameEntityPoolCreator.create { ColtonJoe(services) })
         pools.put(TURN_BLASTER, GameEntityPoolCreator.create { TurnBlaster(services) })
         pools.put(JETPACK_ICE_BLASTER, GameEntityPoolCreator.create { JetpackBlaster(services) })
         pools.put(SPIKE_BOT, GameEntityPoolCreator.create { SpikeBot_OLD(services) })

@@ -941,7 +941,6 @@
   <object id="14" name="FloatingCan" x="544" y="160" width="32" height="32"/>
   <object id="15" name="DragonFly" x="704" y="160" width="32" height="32"/>
   <object id="16" name="FlyBoy" x="800" y="128" width="32" height="32"/>
-  <object id="20" name="GapingFish" x="1552" y="304" width="32" height="32"/>
   <object id="21" name="SpringHead" x="1984" y="416" width="32" height="32"/>
   <object id="29" name="SuctionRoller" x="3136" y="384" width="32" height="32"/>
   <object id="42" name="Matasaburo" x="4640" y="320" width="32" height="32"/>
@@ -1068,7 +1067,6 @@
   </object>
   <object id="252" name="TotemPolem" x="30016" y="256" width="32" height="32"/>
   <object id="255" name="CarriCarry" x="29856" y="256" width="32" height="32"/>
-  <object id="258" name="ColtonJoe" x="27328" y="384" width="32" height="32"/>
   <object id="260" name="CactusLauncher" x="27488" y="384" width="32" height="32"/>
   <object id="265" name="TurnBlaster" x="30560" y="256" width="32" height="32">
    <properties>
