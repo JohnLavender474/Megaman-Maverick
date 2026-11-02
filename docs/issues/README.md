@@ -127,3 +127,4 @@ related-items: [<mega-refactor item IDs>]
 | [`DarknessV4` loops while its iterator has no next entry](2026-11-02-darkness-v4-inverted-iterator-loop.md) | no | core | open |
 | [Retire Gauntlet 2 and 4 entities that only it or test maps use](2026-11-02-retire-gauntlet-2.md) | yes | core | closed |
 | [The `BODY_TOUCHING_BLOCK` check on an enemy's item drop is never true](2026-11-02-enemy-drop-block-check-never-true.md) | yes | core | open |
+| [The y velocity of a `PushableBlock` grows with no limit while it rests](2026-11-02-pushable-block-velocity-builds-at-rest.md) | yes | core | open |
