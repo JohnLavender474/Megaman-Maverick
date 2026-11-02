@@ -23,9 +23,9 @@ them. `091` also gives a reliable check that a room loads.
 
 | Crashes | Co-op faults | Small items |
 |---|---|---|
-| `CeilingCrusher` pooled scratch object | Quicksand | `072` remove `IMegaGameEntity` |
-| 4 silent missing regions | Dead slot 1 at `players.any` | `091` check that a room loads with no window |
-| | Koopa shell roll direction | `065` every `init()` calls `super.init()` |
+| `CeilingCrusher` pooled scratch object | Dead slot 1 at `players.any` | `072` remove `IMegaGameEntity` |
+| 4 silent missing regions | Koopa shell roll direction | `091` check that a room loads with no window |
+| | | `065` every `init()` calls `super.init()` |
 | | | `105`, `106`, `107` smoke test checks |
 
 ## Stage 2: foundations
@@ -110,8 +110,8 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - Input and menus: `P` key, held press, `START` or `A` rebind, `Esc` on level select
 - Other core: `isPerformanceSubpar`, Needle Spin bounce, stun bounce, `RobotMasterIntroScreen.dispose`, `Saw` type `t`,
   `CameraRoomTransition.cancel`, raw viewport size, `runQueue` order, end-level beam flag, `DarknessV4`, enemy drop block check,
-  `PushableBlock` rest velocity and ledge sliver (`fix/pushable-block-ledge-sliver`, after `fix/quicksand-two-players`),
-  ledge sliver pose (`fix/ledge-sliver-nudge`, after `fix/quicksand-two-players`)
+  `PushableBlock` rest velocity and ledge sliver (`fix/pushable-block-ledge-sliver`),
+  ledge sliver pose (`fix/ledge-sliver-nudge`)
 
 ### Waiting for an owner decision
 

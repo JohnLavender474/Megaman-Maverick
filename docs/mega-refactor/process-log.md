@@ -1550,3 +1550,9 @@ newest entry at the bottom.
 - Summary: new `idea` item `117` (crush with a falling pushable block), from the owner's question in the play test of `sand_entities`.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-11-02 — fix/quicksand-two-players
+
+- Summary: 2 players on one `QuickSand` area now sink, rise and jump out alone (squash commit `44a4c7e61`). `QuickSand` owns its floors: a private floor for each sinkable entity and a shared floor at the surface. The 20 `FeetRiseSinkBlock` map objects are gone. `SandReactionComponent` sets `SINK`, `SUBMERGE` or `SURFACE`. Enemies with feet and a `DYNAMIC` body sink, and an enemy that dies in sand drops no item. `PushableBlock` no longer counts its own inner block as ground, and it sinks in sand with a rider.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch and on `master` (`engine` 631 tests, `core` 717 tests, 0 failures). `DESERT_MAN` `room1` launches from the built jar with and without `--players 2`, with no exception. `--diagnostics` in `DESERT_MAN` `room1` with no input, 2 runs each: mean `resolveCollisions` 0.086 to 0.097 ms on the branch and 0.081 to 0.093 ms on `master`, so the ranges overlap; median frame 2.84 to 3.18 ms and 2.48 to 2.61 ms, and each branch run went first. These runs do not touch sand. The owner reports that the play checks pass and approved the merge.
+- Follow-up: `2026-11-02-pushable-block-ledge-sliver.md` is next, and it also closes `2026-11-02-pushable-block-velocity-builds-at-rest.md`. `2026-11-02-ledge-sliver-jump-pose.md` waits for an owner decision.

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -181,3 +181,9 @@ Dependency: the test and the play check need capacity 2 and `--players 2`, so th
 ### Relation to `047a`
 
 This does not need to block the `047a` merge. It is a good entry for "Known wrong with `--players 2`" in the `047a` `CONTRACT.md`, with a link to this file. The fix can be `fix/quicksand-two-players` off `master`, after `047a` merges, or a part of a later `047` branch.
+
+## Resolution
+
+Fixed by `fix/quicksand-two-players` (squash `44a4c7e61`). `QuickSand` owns the floors of its area, as the short contract says: each sinkable entity gets a private floor, and a shared floor holds the entities that do not sink. The owner's play checks pass (2026-11-02).
+
+Still open, from the same work: `2026-11-02-pushable-block-velocity-builds-at-rest.md`, `2026-11-02-pushable-block-ledge-sliver.md` and `2026-11-02-ledge-sliver-jump-pose.md`.
