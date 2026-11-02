@@ -17,6 +17,9 @@ are items in `docs/mega-refactor/ITEMS.md`.
   worktree path first, experimental checks before control checks, and a `--level` and `--room` on
   each check. List a control check for each live level that the change can affect. When the scope
   of a fix grows, update the short contract and its checks in the same session.
+- Each time a commit on `master` changes the issue file or the short contract of an open fix branch,
+  merge `master` into that branch at once (`git merge master` in its worktree), so that the copy in
+  the branch stays current. A docs-only merge needs no test run.
 - A refactor branch that must change buggy behavior names the issue file in its `CONTRACT.md`
   under "Intended changes".
 - To close an issue, set `status: closed` and add a `## Resolution` section with the commit or
