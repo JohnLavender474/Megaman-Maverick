@@ -9,17 +9,17 @@
 
 ## Goal
 
-An entity can sink partway into sand and stop, or be stuck in sand with no sinking. Today `SandComponent` gives one of two modes, `SINK` and `SURFACE`. `fix/quicksand-two-players` adds them.
+An entity can sink partway into sand and stop, or be stuck in sand with no sinking. Today `SandReactionComponent` gives one of two modes, `SINK` and `SURFACE`. `fix/quicksand-two-players` adds them.
 
 ## Proposed scope
 
 Not approved. The branch `SCOPE.md` decides the final scope.
 
-Height and movement are separate questions, so these are not new `SandMode` values. Add one field for each question, with a default, so that no existing declaration changes:
+Height and movement are separate questions, so these are not new `SandReaction` values. Add one field for each question, with a default, so that no existing declaration changes:
 
 ```kotlin
-class SandComponent(
-    val mode: SandMode,
+class SandReactionComponent(
+    val reaction: SandReaction,
     val maxDepth: Float? = null,
     val stuck: Boolean = false
 ) : IGameComponent

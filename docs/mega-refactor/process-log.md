@@ -1535,6 +1535,6 @@ newest entry at the bottom.
 
 ## 2026-11-02 — master (docs)
 
-- Summary: new `idea` item `115` (partial sink and stuck behavior in sand). The quicksand contract adds `SandComponent`: enemies with feet and a `DYNAMIC` body sink, and they die at a `Death` sensor.
+- Summary: new `idea` item `115` (partial sink and stuck behavior in sand). The quicksand contract adds `SandReactionComponent`: enemies with feet and a `DYNAMIC` body sink, and they die at a `Death` sensor.
 - Contract check: not needed (docs only).
 - Follow-up: none.
