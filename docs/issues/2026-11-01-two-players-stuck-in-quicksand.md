@@ -76,6 +76,7 @@ Intended changes, in all games:
 - `QuickSand` also spawns one shared floor at the surface for entities with no private floor. It is a `FeetRiseSinkBlock` subclass, because `HeartTank` passes through only that type, and it never moves, because it listens to no feet. Its filters test if an entity has a private floor, not the mode.
 - Private floors are a `FeetRiseSinkBlock` subclass that listens to all feet that reach it. `RodentMan` plates and `InfernoChainPlatform` keep the rule in `FeetRiseSinkBlock`.
 - So an item on sand no longer rides down with a player. This is a change in single player too.
+- An enemy with `SINK` that dies with its feet on sand drops no item (owner decision, 2026-11-02). In play, a drop from a sunken `Met` spawned inside the ground and snapped across the room into a wall.
 - Floors do not cull on their own: `QuickSand` destroys them. `QuickSand` has no cull, so the shared floor of a `spawn_now` area stays live.
 - `QuickSand` keeps its body updating while it has a private floor, also off camera and during a camera turn. If not, the sensor contact ends, and the floor goes while an entity stands on it.
 - The player's feet consumer that drives `bodyOverGround` respects a block's contact filter, so a player cannot jump off the block of another entity.
@@ -91,7 +92,7 @@ Must not change: a player alone on sand sinks, rises and jumps out as today. `Ro
 Checks:
 
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
-- New tests: a private block spawns when feet enter the area, once, and goes when they leave; 1 player sinks and rises; 2 players sink and rise alone; an entity that cannot sink rests on the shared floor and does not sink; a sinkable entity ignores the shared floor; a destroyed `QuickSand` destroys its floors; an entity with `SINK` sinks and one with no component or `SURFACE` does not; an `ABSTRACT` body gets no private floor; a `Death` sensor kills a sunken enemy. No test covers `PushableBlock` or the feet consumer, so the owner's play check covers them.
+- New tests: a private block spawns when feet enter the area, once, and goes when they leave; 1 player sinks and rises; 2 players sink and rise alone; an entity that cannot sink rests on the shared floor and does not sink; a sinkable entity ignores the shared floor; a destroyed `QuickSand` destroys its floors; an entity with `SINK` sinks and one with no component or `SURFACE` does not; an `ABSTRACT` body gets no private floor; an enemy records that it is in sand when its destroy is queued, because body senses reset before `onDestroy`; a `Death` sensor kills a sunken enemy. No test covers `PushableBlock` or the feet consumer, so the owner's play check covers them.
 - A launch of `DESERT_MAN` `room1` from the built jar, with and without `--players 2`, gives no exception.
 - `--diagnostics` in `DESERT_MAN` `room1` with no `--players`, against `master`.
 - The owner plays the case in "How to reproduce", and sand in `DESERT_MAN` and `WILY_STAGE_1` with 1 player.

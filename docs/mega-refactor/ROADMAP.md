@@ -109,7 +109,7 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - Contacts: `MagmaWave`, `PLAYER`-`DEATH`, unused hooks, `hitExplosion` shapes, `BouncingPebble`
 - Input and menus: `P` key, held press, `START` or `A` rebind, `Esc` on level select
 - Other core: `isPerformanceSubpar`, Needle Spin bounce, stun bounce, `RobotMasterIntroScreen.dispose`, `Saw` type `t`,
-  `CameraRoomTransition.cancel`, raw viewport size, `runQueue` order, end-level beam flag, `DarknessV4`
+  `CameraRoomTransition.cancel`, raw viewport size, `runQueue` order, end-level beam flag, `DarknessV4`, enemy drop block check
 
 ### Waiting for an owner decision
 
