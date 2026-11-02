@@ -3,6 +3,88 @@
 Research for this item: scans, counts, options, X6 facts (name the file and section) and
 reviews. Give the date and the `master` commit that each finding is based on.
 
+## Connection types (2026-11-01, `master` at `3e05f8cff`)
+
+This section comes from general netcode knowledge and the `095` and `O2` docs. No new web research supports it, so all of it is inference. No owner decision follows from it yet.
+
+A connection type says which machines talk to each other. The netcode, such as lockstep or rollback, says what they send. The two choices are mostly independent.
+
+| Type | Who connects to whom | Who runs the game | Server needed |
+|---|---|---|---|
+| Peer-to-peer | Each player to each other player | All players | Only to help players find each other |
+| Listen server | All players to one player, the host | The host (and in lockstep, all players) | Same as peer-to-peer |
+| Relay | All players to a server, which forwards packets | All players | Yes, but it only forwards data |
+| Dedicated server | All players to a server | The server | Yes, and it runs the full game |
+
+### How a dedicated server works
+
+1. The server runs the game with no window, graphics or sound.
+2. Each client sends only its inputs, such as "jump" or "shoot".
+3. The server runs the game at a fixed tick and decides what really happens.
+4. The server sends state to each client, such as positions, health and new entities.
+5. The client draws that state.
+
+The state takes time to arrive, so without more work your own character would feel late. The usual fix is client prediction: the client moves your character at once, then corrects it if the server disagrees. Other players are usually drawn slightly in the past, between 2 known positions.
+
+### What each type means for this game
+
+- **Peer-to-peer:** the simplest fit for the 2-player goal of this item. Home routers can block direct connections, so it often needs a helper server to set up the connection. A browser cannot open a raw UDP socket, so web play would use WebRTC, which still needs a server for setup. `O3` already says that web needs its own transport.
+- **Listen server:** this makes one player the authority or the coordinator. The host usually gets the best connection, and the session can end if the host leaves.
+- **Relay:** this solves router problems and hides player IP addresses. It adds some delay, but it needs no game logic on the server, so it works well with lockstep. A relay can also put all inputs in one order. This is the sequencing server in "Does PvP need rollback?".
+- **Dedicated server:** this gives the strongest protection against cheating, and one slow player does not stall the others. It does not need determinism, the main demand of lockstep.
+
+### Costs of a dedicated server
+
+- **Headless game:** the simulation must run without rendering. `core:smokeTest` already builds entities headless, which is a good start. However, `O2` lists 17 animation reads for review, and any that affect gameplay must also run on the server.
+- **New netcode:** the game would need state sync, prediction and correction, which is a different system from lockstep. Fast contact with enemies, projectiles and bosses needs this correction logic to feel good.
+- **Hosting:** someone must pay for and run the servers, and that is a real burden for a non-commercial fan game. Players could instead run the server program themselves.
+
+### Recommendation (inference)
+
+Keep lockstep as the first target. Start with peer-to-peer plus a relay fallback, and let PvP use the same transport. Add dedicated servers only if public matches with strangers become a target. This depends on the same open question as rollback.
+
+## Two-window test (2026-11-01, `master` at `3e05f8cff`)
+
+Two game windows on one device, one window for each player, are a feasible first test of netplay. Inference, except the code facts in the table. This test has not been run on this game, because the game cannot yet connect two processes. It comes before the first test over the web, and it does not replace tests on two machines or in a browser.
+
+Run two separate game processes, not two windows in one process. Each process then has its own game state, as two real machines do. They connect through `127.0.0.1`, so the code path is the same as for real net play.
+
+### What the code does today
+
+Nothing in the game can connect two processes yet. `--players 2` does not help, because it runs both players in one process with no network. The test needs new launch options to host and to join a session.
+
+| Area | Today | Effect on two windows |
+|---|---|---|
+| Background window speed | `DesktopLauncher.kt:128` sets the idle FPS equal to the foreground FPS | No change needed: an unfocused window should keep full speed |
+| Pause on focus loss | `--pauseOnFocusLost` calls `game.pause()` (`DesktopLauncher.kt:180`). The default is off (`:37`). | Keep it off, because each click on the other window would pause the game |
+| Keyboard | The OS sends key presses to the focused window only | One keyboard can drive only one window at a time |
+| Gamepads | Both processes can possibly see the same pad. Not tested. | Each window needs a filter or a set pad, or one press can reach both players |
+| Save and settings | Both processes use the same prefs files (`MegamanMaverickGame.kt:861`, `PlayerSettingsStore.kt:19`) | The last write wins, so a session must not save, or each process needs its own folder |
+| Log file | `LOG_FILE_NAME` is the fixed name `logs.txt` (`MegamanMaverickGame.kt:166`), and `AsyncFileWriter` deletes an old file at start | With `--writeLogsToFile`, the two processes use one file, so each needs its own log name |
+| Audio | Both windows play sound | Each sound plays twice, so a mute option on one window helps |
+
+Testing alone needs one more thing: a way to feed scripted inputs into one window. Otherwise the tester must switch focus or hold a pad in each hand. Scripted inputs also make tests repeatable, and a desync check needs that.
+
+### What it tests
+
+- **Desyncs from hash order:** two processes can order some hash-based collections differently, so this can catch problems in the 34 declarations that `O2` lists. Two sessions in one process could hide some of these.
+- **Core session flow:** session start, input exchange, the desync check and a peer that leaves.
+- **Game feel with delay:** only with fake delay, because the local connection has almost none. On Linux, `tc netem` can add delay, jitter and packet loss.
+
+### What it does not test
+
+- **Differences between machines:** both processes use the same CPU, OS and JDK, so a desync from those differences stays hidden.
+- **A real slow peer:** both windows share one machine, so they do not behave like one fast PC and one weak PC.
+- **Web play:** a browser build uses a different transport and runtime, so `O3` still needs its own tests.
+- **Real networks:** router problems and real connection changes do not occur.
+
+### Recommended test order (inference)
+
+1. Two windows on one device, with fake delay and packet loss.
+2. Two PCs on a home network, with different hardware if possible.
+3. Two PCs over the internet.
+4. Web.
+
 ## What rollback is (2026-11-01)
 
 Web claims come from page extracts, not a line-by-line read. The example with `Megaman` is an illustration, not a design.

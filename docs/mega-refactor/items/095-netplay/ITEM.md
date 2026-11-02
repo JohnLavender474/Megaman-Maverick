@@ -21,6 +21,7 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - A desync check that compares state for each tick.
 - The review of the 34 hash-collection declarations and the 17 animation reads in `O2`.
 - The transport. Web needs its own transport (see `O3`).
+- A two-window test on one device as the first test, before two PCs, the internet and web (see "Two-window test" in `NOTES.md`). It needs options to host and join a session, scripted inputs for one window, and fake delay and packet loss.
 
 ## Owner's input
 
@@ -32,6 +33,10 @@ None yet. The objectives audit of 2026-11-01 found this gap.
 
 - The owner's decision of 2026-11-01 puts Spec Ops (`108`) and PvP (`109`) on the net. Questions marked **(mode)** become smaller, because a mode session need not touch the save file.
 - PvP adds a new need: input delay matters more in a fight between players. Is lockstep with input delay still the correct target for PvP, or does PvP make rollback necessary? Rollback is now "a possible later upgrade" (`O2`). The research of 2026-11-01 is in `NOTES.md`. Two product questions remain: are matches with strangers or at about 150 ms ping or more a target, and is 4 or more players on the net a first target?
+
+### Connection type
+
+- Which connection type does the first version use: peer-to-peer, listen server, relay or dedicated server? `NOTES.md` compares them and recommends peer-to-peer plus a relay fallback with lockstep. A dedicated server would replace lockstep with state sync and prediction, and it needs hosting. This depends on the first product question above: are matches with strangers a target?
 
 ### Views
 
