@@ -33,6 +33,62 @@ A block with a support of 16 px or less leaves the ledge at once, at all tiers, 
 
 Owner decisions, 2026-11-02 (verbatim): "go with 16 px and the fixed first fall". So the tolerance is 16 px, and this fix also clears `velocity.y` at rest, after the tolerance is in, and closes `2026-11-02-pushable-block-velocity-builds-at-rest.md`.
 
+## Short contract
+
+Branch: `fix/pushable-block-ledge-sliver`, off `master`, in `.worktrees/fix/pushable-block-ledge-sliver`. This fix also closes `2026-11-02-pushable-block-velocity-builds-at-rest.md`. The dependency in "Notes" is met: `44a4c7e61` has the quicksand fix.
+
+Intended changes:
+
+- `FEET` of a `PushableBlock` is 32 px wide, not 64 px. So the block is grounded only with more than 16 px of support.
+- A block filter on the block: with no feet on a block, and a corner overlap of 16 px or less, the filter stops the up push and slides the block away from the ledge by the depth it sank. The block leaves the ledge at all tiers, with no dependence on rest.
+- `velocity.y` clears while `FEET_ON_GROUND` is true. So the first fall has a fixed speed, and the sink per step at rest no longer grows. The `TODO` at `PushableBlock.kt:213-215` goes.
+- From the point above: a block on a support of 16 px or less cannot be pushed back, because `velocity.x` is 0 while it is not grounded (`PushableBlock.kt:185`).
+- Block 219 drops on the shot that leaves 16 px or less (4 shots from spawn, not 5). Block 301 drops on 1 shot, not 2.
+- A block no longer crosses a level gap of its own width. Rooms 9 to 11 have no such gap on a block's path.
+
+Only `PushableBlock.kt` and `PushableBlockTest.kt` change. Production change: 1 new constant, 1 changed `FEET` line, the filter and its function (about 8 lines), 1 line for the velocity clear, and 3 `TODO` lines removed. `MegaCollisionHandler.kt` and `engine/` do not change.
+
+Not changed:
+
+- A block with more than 16 px of support stays, at all tiers. The smallest support at spawn is 32 px (block 301).
+- A grounded block rides a `FeetRiseSinkBlock` as it does today, because `FeetBlockRule` moves it by the delta of the block under it. So the clear does not detach it. The plate stays down under the block, and the narrower `FEET` still touches it: each hole is 64 px wide, and its plate is 96 px wide.
+- Push by a player, a shot impulse, a `SwitchGate` stop, the room reset, and an entity that rides the block.
+- `Megaman` and all other dynamic bodies. The jump pose at a ledge is `2026-11-02-ledge-sliver-jump-pose.md`, in its own branch.
+
+Accepted, with a `TODO` at the code:
+
+- With 2 players, a player on the far side no longer stops a sliver move of up to 16 px, because the `velocity.x` test does not see a translate.
+- With support of 16 px or less on both sides of a gap, the two filter calls cancel, so the block has no up push and can sink through both ledges. This needs a gap narrower than the block. On the tile grid it needs a 1-tile gap and exactly 16 px on each side. A block path in `RodentMan_16x14.tmx` has no such gap.
+- The filter runs before the one-way block rules in `MegaCollisionHandler.kt`, so a one-way block acts as a solid ledge for this test. No `PushableBlock` in `RodentMan_16x14.tmx`, `RefactorTest029.tmx` or `RefactorTest047.tmx` can reach one. The one `LadderTop` in rooms 9 to 11 is behind the wall of block 308.
+
+Checks, in `PushableBlockTest`, at all 4 fixed steps:
+
+- `s` of 0.5 to 16 px leaves the ledge within 0.15 s after no rest, and after 900 steps of rest. This includes the case with a wall on the far side of the hole.
+- `s` of 16.5 to 32 px stays for 900 steps.
+- The speed of the first fall is the same after 1 s and 8 s of rest.
+- A block that rests on a `FeetRiseSinkBlock` stays on it while it sinks, and the plate stays down.
+- A block pushed from a ledge onto sand starts to sink.
+- All tests in `PushableBlockTest` that exist today pass with no change.
+- Break the code and confirm that each new test can fail (`core/src/test/CLAUDE.md`).
+- `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
+
+Always-on rules:
+
+- `O5-R2`: measure `resolveCollisions` with `--diagnostics` before and after, and write the numbers here.
+- `O5-R1`: the filter allocates nothing. It reads floats, and the lambda is made once in `defineBodyComponent()`.
+- `O1-R3`: no new order. The filter reads `FEET_ON_GROUND` in the same cycle, because `processContacts` runs before `resolveCollisions`.
+- `O1-R4`, `O1-R5`, `O7-R3`: no conflict. No new key, no code with no production caller, and no level check.
+- `O2-R5`: the first accepted case above. It is a gap, not a new assumption of one player: the far-side test exists today and only misses the translate.
+
+Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/pushable-block-ledge-sliver`. Rooms 9 to 11 have no player spawn, so `RODENT_MAN` checks start in `room8`, the nearest room with one.
+
+- `./run-game-alpha.sh --level RODENT_MAN --room room8 --performance low --autoPerf false`: in `room9`, stand left of block 219 and shoot it 4 times. The block drops on the shot that leaves it over the hole, and it does not float.
+- `./run-game-alpha.sh --level RODENT_MAN --room room8 --performance high --autoPerf false`: the same steps, with the same result.
+- `./run-game-alpha.sh --level RODENT_MAN --room room8`: in `room9`, push block 219 slowly on foot, and stop near the hole. The block stays or drops, and it never floats with more than a thin edge past the ledge in view. Then in `room10`, drop blocks 229 and 279 into their holes. In `room11`, block 301 drops on 1 shot, and block 308 drops into its hole.
+- `./run-game-alpha.sh --level RODENT_MAN --room room8`: control. Each block that lands on its plate holds the plate down, the `SwitchGate` of the plate acts as before, and Mega Man can stand on the block and on the plate. Play from `room9` to `room12` with no stuck block.
+- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_entities`: control. The block sinks in the sand, carries a rider, and goes when its top is 0.5 tile under.
+- `./run-game-alpha.sh --level REFACTOR_TEST_029 --room push_flip`: control. Push and shoot the block from both sides. It moves as before.
+
 ## How to reproduce
 
 `./run-game-alpha.sh --level RODENT_MAN --room room8`, go to `room9`, stand left of block 219, and shoot it 4 times with no push. The block stops over the hole, about 13 px from the wall. A 5th shot drops it.

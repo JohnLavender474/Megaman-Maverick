@@ -31,22 +31,22 @@ All paths are under `core/src/main/kotlin/com/megaman/maverick/game/`, except th
 
 Let `o` be the width of the body that is still over the block. The body is 32 px wide. `feetGravity` is 0.9 tile wide, so it stops 1.6 px from each body edge. `FEET` stops 8 px from each body edge.
 
-| Zone | `o` | `FEET_ON_GROUND` | `bodyOverGround` | Result |
-|---|---|---|---|---|
-| A | above 8 px | true | true | Normal ground |
-| B | 1.6 to 8 px | false | true | Ground gravity, stand or run pose, can jump. This is the ledge tolerance. |
-| C | 0 to 1.6 px | false | false | Fall gravity, jump pose, sprite 0.25 tile lower, no jump |
+| Zone | `o`         | `FEET_ON_GROUND` | `bodyOverGround` | Result                                                                    |
+|------|-------------|------------------|------------------|---------------------------------------------------------------------------|
+| A    | above 8 px  | true             | true             | Normal ground                                                             |
+| B    | 1.6 to 8 px | false            | true             | Ground gravity, stand or run pose, can jump. This is the ledge tolerance. |
+| C    | 0 to 1.6 px | false            | false            | Fall gravity, jump pose, sprite 0.25 tile lower, no jump                  |
 
 In zone C, the body sinks by `h` in a step. `StandardCollisionHandler` pushes it up while `o > h`, and it does not change the velocity. When `h` reaches `o`, the handler pushes the body to the side by `o`, away from the block, and the body falls. So zone C ends by itself if the sink per step can reach `o`. It holds with no time limit if friction limits `h` to less than `o`.
 
 Calculated for `o` = 1.6 px, with no x motion:
 
-| Case | `VERY_LOW` (1/75 s) | `LOW` (1/112.5 s) | `MEDIUM` (1/150 s) | `HIGH` (1/225 s) |
-|---|---|---|---|---|
-| Normal fall, `FALL_GRAVITY` | 5 steps, 0.067 s | 10, 0.089 s | 19, 0.127 s | 51, 0.227 s |
-| Moon, `gravity_scalar` 0.35 | 16, 0.213 s | 52, 0.462 s | holds for `o` above 1.42 px | holds for `o` above 0.94 px |
-| Water, gravity `-37.5 * 0.5` | 29, 0.387 s | holds for `o` above 1.36 px | holds for `o` above 1.01 px | holds for `o` above 0.67 px |
-| Sand friction, 36.8 per second | holds for `o` above 1.10 px | holds above 0.68 px | holds above 0.49 px | holds above 0.31 px |
+| Case                           | `VERY_LOW` (1/75 s)         | `LOW` (1/112.5 s)           | `MEDIUM` (1/150 s)          | `HIGH` (1/225 s)            |
+|--------------------------------|-----------------------------|-----------------------------|-----------------------------|-----------------------------|
+| Normal fall, `FALL_GRAVITY`    | 5 steps, 0.067 s            | 10, 0.089 s                 | 19, 0.127 s                 | 51, 0.227 s                 |
+| Moon, `gravity_scalar` 0.35    | 16, 0.213 s                 | 52, 0.462 s                 | holds for `o` above 1.42 px | holds for `o` above 0.94 px |
+| Water, gravity `-37.5 * 0.5`   | 29, 0.387 s                 | holds for `o` above 1.36 px | holds for `o` above 1.01 px | holds for `o` above 0.67 px |
+| Sand friction, 36.8 per second | holds for `o` above 1.10 px | holds above 0.68 px         | holds above 0.49 px         | holds above 0.31 px         |
 
 The fall speed also builds while the body is held, up to 361 px/s in the normal `HIGH` case. The body takes this speed with it when it leaves the block.
 
@@ -81,6 +81,8 @@ If the owner saw a longer pose on a normal ledge in a normal level, this file do
 ### Owner's words
 
 2026-11-02 (verbatim): "I think the 'nudge' fixtures is a reasonable option to explore. Use /subtask to explore and probe the proposal, as well as determine if it should be its own fix/item."
+
+2026-11-02 (verbatim): "I saw it occur only briefly a while ago. It's rare but still occurs, probably in Moon Man's stage in below-MEDIUM performance"
 
 ### Proposal b1: a block filter, with no new fixture
 
@@ -155,20 +157,20 @@ Each design question:
 
 ### Why not `a1`
 
-| Check | `a1` (fixture and `preProcess`) | `b1` (block filter) |
-|---|---|---|
-| New fixtures | 1, added to the 13 of `Megaman` | 0 |
-| Added grid queries | 1 for each step, for each player: 75 to 225 per second (2.5 per frame) | 0 |
-| Added contacts | 1 or 2 for each step on the ground, each with `CONSUMER` receiver calls | 0 |
-| Added call | `preProcess` branch on each step | 1 lambda call for each body-block overlap, about 1 to 3 in each step. It stops after 2 tests in zones A and B. |
-| Value of `bodyOverGround` | From the prior cycle | From this cycle, because `processContacts` runs before `resolveCollisions` (`WorldSystem.kt:196-200`) |
-| Block that the body left | The set keeps it for 1 cycle after a side push | The filter runs only on a real overlap |
-| Fixture sees a block with no body overlap | Yes. A fixture of `feetGravity` height reaches 1.6 px below the body, so it can touch a block while the body is still in the air. It needs a second test. | No |
-| Private sand floor of another player | Must copy the `Receivers.FILTER` test from `BodyComponent.kt:147-149` | No code. Static filters run first (`MegaCollisionHandler.kt:28-31`). |
-| `physics.collisionOn` false | Needs a test | No code. `MegaCollisionHandler.kt:15` returns first. |
-| Exact `o` | Must compute it from the current bounds | Computes it at the collision |
-| `O1-R3` | Reads contact data across a cycle | Reads it in the same cycle |
-| `O1-R4` | A property or a typed field for the set | No new key. `BLOCK_FILTERS` exists. |
+| Check                                     | `a1` (fixture and `preProcess`)                                                                                                                           | `b1` (block filter)                                                                                            |
+|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| New fixtures                              | 1, added to the 13 of `Megaman`                                                                                                                           | 0                                                                                                              |
+| Added grid queries                        | 1 for each step, for each player: 75 to 225 per second (2.5 per frame)                                                                                    | 0                                                                                                              |
+| Added contacts                            | 1 or 2 for each step on the ground, each with `CONSUMER` receiver calls                                                                                   | 0                                                                                                              |
+| Added call                                | `preProcess` branch on each step                                                                                                                          | 1 lambda call for each body-block overlap, about 1 to 3 in each step. It stops after 2 tests in zones A and B. |
+| Value of `bodyOverGround`                 | From the prior cycle                                                                                                                                      | From this cycle, because `processContacts` runs before `resolveCollisions` (`WorldSystem.kt:196-200`)          |
+| Block that the body left                  | The set keeps it for 1 cycle after a side push                                                                                                            | The filter runs only on a real overlap                                                                         |
+| Fixture sees a block with no body overlap | Yes. A fixture of `feetGravity` height reaches 1.6 px below the body, so it can touch a block while the body is still in the air. It needs a second test. | No                                                                                                             |
+| Private sand floor of another player      | Must copy the `Receivers.FILTER` test from `BodyComponent.kt:147-149`                                                                                     | No code. Static filters run first (`MegaCollisionHandler.kt:28-31`).                                           |
+| `physics.collisionOn` false               | Needs a test                                                                                                                                              | No code. `MegaCollisionHandler.kt:15` returns first.                                                           |
+| Exact `o`                                 | Must compute it from the current bounds                                                                                                                   | Computes it at the collision                                                                                   |
+| `O1-R3`                                   | Reads contact data across a cycle                                                                                                                         | Reads it in the same cycle                                                                                     |
+| `O1-R4`                                   | A property or a typed field for the set                                                                                                                   | No new key. `BLOCK_FILTERS` exists.                                                                            |
 
 The existing `BODY` contact (`MegaContactRules.kt:31`) can also give the block, through `Receivers.HIT_BY_BLOCK` on the body fixture (`BlockBodyRule.kt:23`, `:33`). It adds no fixture, but contact order is not fixed against `feetGravity` in the same cycle, and the block must wait for `preProcess`. So it has the stale value of `a1`. `NO_BODY_TOUCHIE` blocks also skip it. A world query in `preProcess` also adds no fixture, but it adds one grid query for each airborne step. A "position did not move while the velocity says fall" test needs no block, but then it cannot give the side.
 
@@ -184,34 +186,34 @@ It also stops a nudge at each run off a ledge, and at each run over a 1-tile pit
 
 "No" means that the code does not reach the translate.
 
-| Case | Triggers | Result |
-|---|---|---|
-| Jump start at a ledge | No | The body rises, so `intoSurface` is false, and there is no overlap |
-| Jump apex at a ledge, with x motion | No | Along-surface guard |
-| Jump apex, straight down on the last 1.6 px | Yes | He falls at once. Today he falls within the table times. See "Remaining false triggers". |
-| Wall jump, wall slide | No | Side guard. A wall gives `overlap.height` above `overlap.width`, so the `across <= down` test also stops it. |
-| Ladder, climb | No | `CLIMBING` guard, so a climb down past a corner stays as it is |
-| `LadderTop`, one-way blocks | No | Label guard. No hold exists on them. |
-| `CartV2` (a `Block`) | Moving: no. Still: yes | Moving: block guard. Still: as a ledge. |
-| Conveyor | No while the force moves him | Along-surface guard. The `BODY`-to-`FORCE` contact gives x speed. |
-| Ice | No while he slides | Along-surface guard. It fires when he stops, as on a ledge. |
-| Moving platform, along the surface | No | Block guard. A landing on the front edge stays as it is. |
-| Rising or sinking block, `FeetRiseSinkBlock` | Yes, if in zone C | He falls off the edge. The handler does this today when `h` reaches `o`. |
-| Private sand floor of the other entity | No | Static filter first |
-| Own private sand floor | Yes, if in zone C | As a ledge. The floor spans the sand, so its edges are at walls. |
-| `PushableBlock`, inner block | Moving: no. Still: yes | As a ledge |
-| `CameraEdgeBlock` | Yes, only on its top | Static filter allows a player. The push is small, and the same as today. |
-| Knockback | No | Along-surface guard |
-| Damage, stun, frozen | Yes, if `x` speed is 0 in zone C | He falls. Today he falls within the table times, or 3 to 29 steps with `iceGravity`. |
-| Teleport, spawn | No | Velocity is 0 and gravity is off (`BodyComponent.kt:340-344`), so `intoSurface` is false |
-| Room transition, camera turn | No | `gravityOn` is false and velocity is 0 (`Megaman.kt:160-161`, `:400`) |
-| Rush Jet, air dash, jetpack | No | Gravity is off and `intoSurface` is false |
-| Ground slide, crouch | No | Slide: gravity is 0, and the behavior ends at `!bodyOverGround` (`GroundSlideBehavior.kt:49`). Crouch needs `FEET_ON_GROUND`. |
-| Swim | Rising: no. Sinking: yes | Sinking in zone C is the water hold. This is the intended case. |
-| Turned gravity, all 4 directions | Same as `UP` | The code uses rotated bounds and world axes. The feet are at `+x` for `LEFT` and at `-x` for `RIGHT` (gravity signs in `Megaman.kt:167-189`). |
-| Slopes | Not today | `grep` finds no `Slope` in `core/src/main`. See "Items". |
-| 2 players | No shared state | One filter on each body. Dynamic bodies do not collide with each other (`MegaCollisionHandler.kt:17-24`). |
-| Low tiers | Same | At `VERY_LOW` a run step is 2.56 px, so a run can skip zone C. |
+| Case                                         | Triggers                         | Result                                                                                                                                        |
+|----------------------------------------------|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| Jump start at a ledge                        | No                               | The body rises, so `intoSurface` is false, and there is no overlap                                                                            |
+| Jump apex at a ledge, with x motion          | No                               | Along-surface guard                                                                                                                           |
+| Jump apex, straight down on the last 1.6 px  | Yes                              | He falls at once. Today he falls within the table times. See "Remaining false triggers".                                                      |
+| Wall jump, wall slide                        | No                               | Side guard. A wall gives `overlap.height` above `overlap.width`, so the `across <= down` test also stops it.                                  |
+| Ladder, climb                                | No                               | `CLIMBING` guard, so a climb down past a corner stays as it is                                                                                |
+| `LadderTop`, one-way blocks                  | No                               | Label guard. No hold exists on them.                                                                                                          |
+| `CartV2` (a `Block`)                         | Moving: no. Still: yes           | Moving: block guard. Still: as a ledge.                                                                                                       |
+| Conveyor                                     | No while the force moves him     | Along-surface guard. The `BODY`-to-`FORCE` contact gives x speed.                                                                             |
+| Ice                                          | No while he slides               | Along-surface guard. It fires when he stops, as on a ledge.                                                                                   |
+| Moving platform, along the surface           | No                               | Block guard. A landing on the front edge stays as it is.                                                                                      |
+| Rising or sinking block, `FeetRiseSinkBlock` | Yes, if in zone C                | He falls off the edge. The handler does this today when `h` reaches `o`.                                                                      |
+| Private sand floor of the other entity       | No                               | Static filter first                                                                                                                           |
+| Own private sand floor                       | Yes, if in zone C                | As a ledge. The floor spans the sand, so its edges are at walls.                                                                              |
+| `PushableBlock`, inner block                 | Moving: no. Still: yes           | As a ledge                                                                                                                                    |
+| `CameraEdgeBlock`                            | Yes, only on its top             | Static filter allows a player. The push is small, and the same as today.                                                                      |
+| Knockback                                    | No                               | Along-surface guard                                                                                                                           |
+| Damage, stun, frozen                         | Yes, if `x` speed is 0 in zone C | He falls. Today he falls within the table times, or 3 to 29 steps with `iceGravity`.                                                          |
+| Teleport, spawn                              | No                               | Velocity is 0 and gravity is off (`BodyComponent.kt:340-344`), so `intoSurface` is false                                                      |
+| Room transition, camera turn                 | No                               | `gravityOn` is false and velocity is 0 (`Megaman.kt:160-161`, `:400`)                                                                         |
+| Rush Jet, air dash, jetpack                  | No                               | Gravity is off and `intoSurface` is false                                                                                                     |
+| Ground slide, crouch                         | No                               | Slide: gravity is 0, and the behavior ends at `!bodyOverGround` (`GroundSlideBehavior.kt:49`). Crouch needs `FEET_ON_GROUND`.                 |
+| Swim                                         | Rising: no. Sinking: yes         | Sinking in zone C is the water hold. This is the intended case.                                                                               |
+| Turned gravity, all 4 directions             | Same as `UP`                     | The code uses rotated bounds and world axes. The feet are at `+x` for `LEFT` and at `-x` for `RIGHT` (gravity signs in `Megaman.kt:167-189`). |
+| Slopes                                       | Not today                        | `grep` finds no `Slope` in `core/src/main`. See "Items".                                                                                      |
+| 2 players                                    | No shared state                  | One filter on each body. Dynamic bodies do not collide with each other (`MegaCollisionHandler.kt:17-24`).                                     |
+| Low tiers                                    | Same                             | At `VERY_LOW` a run step is 2.56 px, so a run can skip zone C.                                                                                |
 
 ### Remaining false triggers
 
@@ -279,7 +281,7 @@ This is a bug fix: `fix/ledge-sliver-nudge`, off `master`, with a short contract
 
 ### Questions for the owner
 
-1. How long did the pose last on the ordinary ledge, in which level, and at which performance tier? The calculation gives at most 0.227 s. A longer pose has another cause.
+1. Answered (2026-11-02): brief, and probably in `MOON_MAN` below `MEDIUM`. This agrees with the moon row of the table: at `VERY_LOW` and `LOW`, the pose ends by itself in at most 0.213 s and 0.462 s. No other cause is needed. It is not proof, because nothing was run.
 2. Is the fix worth it, against the pose-only change or no change? The pose in normal levels ends by itself, and the holds are only on the moon, in water and in sand.
 3. Is the moon hold a defect? A player can stand there on purpose, and it is no use to them. The proposal removes it.
 4. Does the loss of the tap-back on a straight landing (first entry in "Remaining false triggers") matter?
