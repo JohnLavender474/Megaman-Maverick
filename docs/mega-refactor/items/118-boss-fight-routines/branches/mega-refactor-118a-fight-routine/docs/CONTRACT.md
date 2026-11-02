@@ -66,6 +66,7 @@ Rows:
 - [ ] `PLAYER_SPAWN` during the intro.
 - [ ] `PLAYER_SPAWN` during the fill.
 - [ ] `PLAYER_SPAWN` during the fight.
+- [ ] A game over with a fight in progress: `reset()` cancels it.
 
 Both the suite and the frozen copy are deleted in the last commit before the merge.
 

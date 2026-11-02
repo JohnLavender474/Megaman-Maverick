@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow
-- Done: scan; `SCOPE.md` and `CONTRACT.md` approved
-- Next: owner approves `PLAN.md`, then the branch starts
+- Done: scan; `SCOPE.md`, `CONTRACT.md` and `PLAN.md` approved
+- Next: step 2 of `PLAN.md`
 - Blocked:
 
 ## Entries

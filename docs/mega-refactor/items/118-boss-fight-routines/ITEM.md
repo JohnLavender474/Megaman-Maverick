@@ -1,11 +1,11 @@
 # 118: Boss fights as routines, rules and leases
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Objectives: `O1`, `O4`, `O2`
 - Depends on: none
 - Related: `005`, `006`, `012`, `013`, `015`, `023`, `030`, `038`, `042`, `047`, `048`, `050`, `053`, `055`, `057`, `082`, `102`, `108`, `109`, `120`
-- Branches: none yet
+- Branches: `118a` (active)
 
 ## Goal
 

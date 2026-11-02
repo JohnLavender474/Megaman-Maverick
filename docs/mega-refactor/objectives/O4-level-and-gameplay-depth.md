@@ -86,7 +86,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `099` | idea | [Use camera zones and scroll sections in real stages](../items/099-camera-sections-in-stages/ITEM.md) (main) |
 | `115` | idea | [Partial sink and stuck behavior in sand](../items/115-partial-sink-stuck-in-sand/ITEM.md) (main) |
 | `117` | idea | [Crush with a falling pushable block](../items/117-pushable-block-crush/ITEM.md) (main) |
-| `118` | planned | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) |
+| `118` | active | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) |
 | `121` | idea | [Enemy clones of a playable character](../items/121-playable-character-clones/ITEM.md) (main) |
 
 ## Gaps with no item

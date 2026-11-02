@@ -125,7 +125,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 115 | [Partial sink and stuck behavior in sand](items/115-partial-sink-stuck-in-sand/ITEM.md) | feature | `O4`, `O1` | idea | none | | |
 | 116 | [Body senses as typed state, then a sense history](items/116-body-senses/ITEM.md) | refactor | `O1`, `O5` | idea | none | | |
 | 117 | [Crush with a falling pushable block](items/117-pushable-block-crush/ITEM.md) | feature | `O4` | idea | none | | |
-| 118 | [Boss fights as routines, rules and leases](items/118-boss-fight-routines/ITEM.md) | refactor | `O1`, `O4`, `O2` | planned | none | | |
+| 118 | [Boss fights as routines, rules and leases](items/118-boss-fight-routines/ITEM.md) | refactor | `O1`, `O4`, `O2` | active | none | 2026-11-02 | |
 | 119 | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](items/119-player-left-world-event/ITEM.md) | refactor | `O2`, `O1` | planned | none | | |
 | 120 | [A player that turns hostile and comes back](items/120-hostile-player/ITEM.md) | feature | `O8`, `O2` | idea | `030`, `047c`, `047e`, `112`, `118`, `119` | | |
 | 121 | [Enemy clones of a playable character](items/121-playable-character-clones/ITEM.md) | feature | `O4`, `O8` | idea | `081` | | |
@@ -135,7 +135,7 @@ statuses and column meanings are in `CLAUDE.md`.
 
 | Branch | Item | Goal | Status | Started | Finished |
 |--------|------|------|--------|---------|----------|
-| [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | planned | | |
+| [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | active | 2026-11-02 | |
 | [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-001b-host-contract`](items/001-maverick-engine/branches/mega-refactor-001b-host-contract/process-log.md) | 001 | Add `IMaverickGame` and `MaverickGame` | blocked | | |
 | [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | merged | 2026-10-22 | 2026-10-22 |

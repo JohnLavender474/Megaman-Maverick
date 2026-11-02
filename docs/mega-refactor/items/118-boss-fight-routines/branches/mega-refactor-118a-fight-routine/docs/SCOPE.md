@@ -81,7 +81,7 @@ Total: 25 fights.
 4. The `stageBoss` preset and its steps: spawn, `AwaitReady`, `HoldWorld`, `FillBar`, `ReleaseWorld`, `ControllerOn`, `DefeatLock`, `NotifyListeners`, `HideBar`, `AwaitDefeatEnd`, `LevelVictory`.
 5. A route at `ENTER_BOSS_ROOM`: a boss with a plan starts a `Fight`, and a boss with no plan takes the old flow.
 6. A guard in the old screen branches, so that they do not also act on a boss that a `Fight` owns.
-7. One director tick in the screen, before the `when` at `MegaLevelScreen.kt:920`, and one cancel at `PLAYER_SPAWN_INIT`.
+7. One director tick in the screen, before the `when` at `MegaLevelScreen.kt:920`, and a cancel at `PLAYER_SPAWN_INIT` and in `reset()`. The spawn stays in the `ENTER_BOSS_ROOM` branch, so item 4 has no spawn step. Both changes came with `PLAN.md`.
 8. Remove `BigAssMaverickRobot.kt:211`, the forced music line.
 9. A temporary contract suite with a frozen copy of the 6 screen branches, and a permanent suite for `Routine`, leases and `resolve`.
 
