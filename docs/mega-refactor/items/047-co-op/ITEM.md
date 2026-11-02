@@ -1,11 +1,11 @@
 # 047: Co-op with multiple controllers
 
-- Status: planned
+- Status: active
 - Type: feature
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`
-- Branches: none yet
+- Branches: `047a` (active)
 
 ## Goal
 
@@ -35,6 +35,28 @@ Item `029` research (2026-10-23, verbatim):
   any free device" prompt when a player's gamepad is unplugged, and reconnect. `selectButtonAction` and bindings per
   slot for slots 2 to 4. Profiles (a named copy of a slot's settings) come during or after co-op. See item `031`
   `ITEM.md` "Decisions" and `NOTES.md`.
+- 2026-11-01: for the first pass, each player is a copy of `Megaman`. A new character for a co-op slot waits for `060`.
+- 2026-11-01: for now, the death of slot 0 resets the level for all players. The behavior must become configurable later, with these 3 options: slot 0 death resets the level; the level does not reset until all slots die; players respawn at once until all lives are gone, with no level reset (co-op only). Only the first option is built now. The other two are `TODO`s.
+- 2026-11-01: for now, friendly fire is off, and shots pass through teammates.
+- 2026-11-01: for now, player 2 has a debug tint as a marker.
+- 2026-11-01: for the first pass, a player spawn object can have an object property that points to the spawn of player 2, in place of a left-or-right flag. With no property, player 2 spawns 1 tile to the right of the player 1 spawn, relative to the gravity direction. The details are in the `047a` `SCOPE.md`.
+
+- 2026-11-01: each `047` branch merges directly into `master`, with no parent branch. Each branch stays behind `--players 2`, so each one is safe to ship alone.
+
+## Branch split
+
+Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which can still change this list.
+
+| Branch | Goal |
+|---|---|
+| `047a` `second-slot` | With `--players 2`, a second `Megaman` plays in a level on its own device |
+| `047b` | Targeting, friendly fire, `ChargedShot` and pickups |
+| `047c` | Player 2 death and respawn near the lead |
+| `047d` | HUD and pause |
+| `047e` | Bosses and gauntlets |
+| `047f` | Join and leave during play, device claim, unplug prompt, settings for slot 1 |
+
+`038` comes before the end of phase 1 if a death must not reset the room for the other player.
 
 ## Objectives audit (2026-11-01)
 

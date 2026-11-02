@@ -158,7 +158,7 @@ Audit of `master` at `1fa0be319`, 2026-11-01. Counts are `grep` line counts, so 
 | `O2-R6` | `broken` (waiting) | One `gameCamera` in `MegaServices.kt:34`. 178 entity files read it directly or through a helper. The helpers carry much of it: `overlapsGameCamera` has 162 entity lines and one body (`IMegaGameEntity.kt:21`), and `getGameCameraCullingLogic` has 2 bodies (`GameEntityUtils.kt:57,60`). 115 lines in 87 entity files read `gameCamera` directly. | `094` |
 | `O2-R7` | `partly` | Gameplay reads the camera: cull, spawn and `CameraScroll` deaths. The camera moves in the render path, after `engine.update` (`MegaLevelScreen.kt:908`, `:921`), with a speed from `Gdx.graphics.deltaTime` (`MegaLevelScreen.kt:286`). 17 lines read an animation `isFinished`; most are cosmetic (`SmokePuff.kt:93`), and they are not reviewed one by one. | `010`, `095` |
 | `O2-R8` | `partly` | Bindings stay out of the simulation: the device adapters turn them into held masks. `selectButtonAction` is read per slot (`ControllerComponent.kt:114`, `AirDashBehavior.kt:38,43`), so session data can supply it. The pause screen changes gameplay directly, not through inputs: weapon (`LevelPauseScreen.kt:562`) and health tanks (`LevelPauseScreen.kt:578`). | `013`, `095` |
-| `O2-R9` | `partly` | Player life-cycle events carry `PlayerEventKeys.SLOT` (`Megaman.kt:377,386`). Lives are one shared count; the calls take a slot, but the value is not per slot (`GameState.kt:39,270`). `TURN_CONTROLLER_OFF` and `TURN_CONTROLLER_ON` have no slot, and act on all players (`LevelRoomHandler.kt:54`). | `047` |
+| `O2-R9` | `partly` | Player life-cycle events carry `PlayerEventKeys.SLOT` (`Megaman.kt:377,386`). Lives are one shared count; the calls take a slot, but the value is not per slot (`GameState.kt:39,270`). `TURN_CONTROLLER_OFF` and `TURN_CONTROLLER_ON` have no slot, and act on all players (`LevelRoomHandler.kt:54`). Accepted gap (owner, 2026-11-01): in `047a`, only slot 0 submits `PLAYER_SPAWN`, because that event acts as a level reset until `038`. | `047`, `038` |
 | `O2-R10` | `broken` (waiting) | 22 lines write a system `on` flag: 8 in `MegaLevelScreen.kt`, 6 in `PlayerStatsHandler.kt`, 2 in `LevelStateHandler.kt`, 2 in `MegamanMaverickGame.kt`, 3 in `WilyFinalBoss.kt`, 1 in `Laser.kt`. | `012` |
 
 ## Redo risk
@@ -197,7 +197,7 @@ Not a redo, but new work that is larger than the table shows:
 | `029` | done | [`IPlayer` contract, players service and `CharacterDef`](../items/029-player-contract/ITEM.md) (main) |
 | `030` | planned | [Faction and root owner instead of `owner == megaman`](../items/030-faction/ITEM.md) (main) |
 | `031` | done | [Input frames per player (`InputFrame`), devices and bindings](../items/031-input-frames/ITEM.md) (main) |
-| `047` | planned | [Co-op with multiple controllers](../items/047-co-op/ITEM.md) (main) |
+| `047` | active | [Co-op with multiple controllers](../items/047-co-op/ITEM.md) (main) |
 | `059` | idea | [Max health read through from the profile](../items/059-max-health-read-through/ITEM.md) (main) |
 | `061` | done | [Thin player view; locks and signals as components and functions](../items/061-thin-player/ITEM.md) (main) |
 | `051` | done | [X-style camera bounds, auto-scroll and other camera behaviors](../items/051-camera-behaviors/ITEM.md) |

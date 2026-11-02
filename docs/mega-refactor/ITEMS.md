@@ -54,7 +54,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 044 | [Lazy debug and log strings](items/044-lazy-logging/ITEM.md) | refactor | `O5` | planned | none | | |
 | 045 | [Clear ownership rules and debug checks for `GameObjectPools`](items/045-pool-ownership/ITEM.md) | refactor | `O1`, `O5` | planned | none | | |
 | 046 | [Backgrounds as pure functions of the camera, with visible-cell drawing](items/046-backgrounds/ITEM.md) | refactor | `O5`, `O1` | planned | none | | |
-| 047 | [Co-op with multiple controllers](items/047-co-op/ITEM.md) | feature | `O2` | planned | `029`, `031` | | |
+| 047 | [Co-op with multiple controllers](items/047-co-op/ITEM.md) | feature | `O2` | active | `029`, `031` | 2026-11-01 | |
 | 048 | [Replace entity inheritance with components](items/048-components-not-inheritance/ITEM.md) | refactor | `O1` | planned | none | | |
 | 049 | [Reduce repetitive object-oriented patterns](items/049-reduce-repetitive-patterns/ITEM.md) | refactor | `O1` | idea | none | | |
 | 050 | [Define entities in data files](items/050-entities-in-data-files/ITEM.md) | feature | `O7` | planned | `021`, `022` | | |
@@ -173,3 +173,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-084g-movement-state`](items/084-split-megaman/branches/mega-refactor-084g-movement-state/process-log.md) | 084 | Movement state out of `Megaman`: `canMove`, the run state, the crouch timers, and typed values in place of 4 property bag lines | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-084h-charge`](items/084-split-megaman/branches/mega-refactor-084h-charge/process-log.md) | 084 | Move the charge timer and the charge reads off the `Megaman` class; the charge rules stay for `024` | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-004a-entity-smoke-test`](items/004-entity-smoke-test/branches/mega-refactor-004a-entity-smoke-test/process-log.md) | 004 | Headless `smokeTest` suite: build and `init()` every entity class with real atlas data | active | 2026-11-01 | |
+| [`mega-refactor-047a-second-slot`](items/047-co-op/branches/mega-refactor-047a-second-slot/process-log.md) | 047 | With `--players 2`, a second `Megaman` plays in a level on its own device | active | 2026-11-01 | |
