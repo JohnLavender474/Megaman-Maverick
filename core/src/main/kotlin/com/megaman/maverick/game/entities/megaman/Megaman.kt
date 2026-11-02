@@ -246,6 +246,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         super.init()
 
         addComponent(PlayPhaseComponent())
+        addComponent(SandReactionComponent(SandReaction.SINK))
         addComponent(
             TeleportableComponent(
                 onStart = { _: ITeleporterEntity ->

@@ -57,6 +57,9 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.entities.shooting
 import com.megaman.maverick.game.entities.special.CartV2
+import com.megaman.maverick.game.entities.state.SandReactionComponent
+import com.megaman.maverick.game.entities.state.sandReaction
+import com.megaman.maverick.game.entities.state.SandReaction
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
@@ -133,9 +136,19 @@ abstract class AbstractEnemy(
         addComponent(CullablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+        addComponent(SandReactionComponent(SandReaction.SINK))
 
         invinciblePredicates.add { isSpawnBlinking() }
         canDamagePredicates.add { !isSpawnBlinking() }
+
+        // An enemy that dies in sand drops nothing. Its center is below the surface, so a drop spawns inside the solid
+        // ground around the sand, and the collision handler snaps the drop across the room into a wall.
+        // TODO: body senses reset before onDestroy, so this rule reads the sense when the destroy is queued, and it
+        //  counts only the end of the last step. It moves to the item drop system (item 048), and it reads "any step of
+        //  the last frame" from the sense history (item 116)
+        runnablesOnDestroyQueued.put(ConstKeys.SAND) {
+            if (sandReaction == SandReaction.SINK && body.isSensing(BodySense.FEET_ON_SAND)) dropItemOnDeath = false
+        }
 
         runnablesOnDestroy.put(ConstKeys.ITEMS) {
             if (isHealthDepleted() && canSpawnItemOnHealthDepleted()) {

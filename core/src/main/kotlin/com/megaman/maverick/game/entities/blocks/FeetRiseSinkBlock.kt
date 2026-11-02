@@ -4,13 +4,11 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.ProcessState
-import com.maverick.game.engine.common.extensions.isAny
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
@@ -32,7 +30,6 @@ open class FeetRiseSinkBlock(services: MegaServices) : Block(services) {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-
         super.init()
 
         body.preProcess.put(ConstKeys.MOVE) {

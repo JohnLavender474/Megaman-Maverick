@@ -284,6 +284,7 @@ object ConstKeys {
     const val ON_DAMAGE_INFLICTED_TO = "on_damage_inflicted_to"
     const val DROP_ITEM_ON_DEATH = "drop_item_on_death"
     const val BLOCK_FILTERS = "block_filters"
+    const val BLOCK_CONTACT_FILTER = "block_contact_filter"
     const val CLOSE = "close"
     const val FIXTURE_LABELS = "fixture_labels"
     const val FRONT = "front"

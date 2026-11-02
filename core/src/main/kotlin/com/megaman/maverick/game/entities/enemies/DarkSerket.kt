@@ -49,6 +49,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.DarkSerketClaw
+import com.megaman.maverick.game.entities.state.SandReactionComponent
+import com.megaman.maverick.game.entities.state.SandReaction
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -149,6 +151,7 @@ class DarkSerket(services: MegaServices) : AbstractEnemy(services), IFreezableEn
         }
         super.init()
         addComponent(defineAnimationsComponent())
+        addComponent(SandReactionComponent(SandReaction.SURFACE))
         stateMachine = buildStateMachine()
     }
 

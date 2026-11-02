@@ -169,14 +169,6 @@
   <object id="179" x="21824" y="320" width="112" height="128"/>
   <object id="180" x="21760" y="352" width="128" height="96"/>
   <object id="181" x="21728" y="384" width="128" height="64"/>
-  <object id="189" name="FeetRiseSinkBlock" x="24064" y="352" width="480" height="32">
-   <properties>
-    <property name="fall" type="float" value="-0.5"/>
-    <property name="fixture_labels" value="no_projectile_collision"/>
-    <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
-   </properties>
-  </object>
   <object id="190" x="23872" y="288" width="96" height="192"/>
   <object id="191" x="23776" y="352" width="128" height="128"/>
   <object id="193" x="23936" y="320" width="128" height="160"/>
@@ -500,14 +492,6 @@
   <object id="595" x="48160" y="288" width="128" height="32"/>
   <object id="597" x="48480" y="320" width="128" height="32"/>
   <object id="598" x="47968" y="192" width="128" height="32"/>
-  <object id="599" name="FeetRiseSinkBlock" x="47968" y="448" width="640" height="32">
-   <properties>
-    <property name="fall" type="float" value="-0.5"/>
-    <property name="fixture_labels" value="no_projectile_collision"/>
-    <property name="min" type="float" value="2"/>
-    <property name="rise" type="float" value="3"/>
-   </properties>
-  </object>
   <object id="609" x="48768" y="64" width="128" height="512"/>
   <object id="610" x="48896" y="320" width="256" height="256"/>
   <object id="611" x="49152" y="512" width="320" height="64"/>
@@ -659,7 +643,14 @@
     <property name="gravity" type="float" value="1"/>
    </properties>
   </object>
-  <object id="192" name="QuickSand" x="24064" y="352" width="480" height="96"/>
+  <object id="192" name="QuickSand" x="24064" y="352" width="480" height="96">
+   <properties>
+    <property name="fall" type="float" value="-0.5"/>
+    <property name="fixture_labels" value="no_projectile_collision"/>
+    <property name="min" type="float" value="2"/>
+    <property name="rise" type="float" value="3"/>
+   </properties>
+  </object>
   <object id="228" name="CapsuleTeleporter" x="26784" y="288" width="64" height="128">
    <properties>
     <property name="child" type="object" value="230"/>
@@ -768,6 +759,10 @@
   <object id="570" name="Ladder" x="46048" y="192" width="32" height="256"/>
   <object id="601" name="QuickSand" x="47968" y="448" width="640" height="128">
    <properties>
+    <property name="fall" type="float" value="-0.5"/>
+    <property name="fixture_labels" value="no_projectile_collision"/>
+    <property name="min" type="float" value="2"/>
+    <property name="rise" type="float" value="3"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>

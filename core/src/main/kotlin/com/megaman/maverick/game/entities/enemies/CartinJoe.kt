@@ -47,6 +47,8 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
+import com.megaman.maverick.game.entities.state.SandReactionComponent
+import com.megaman.maverick.game.entities.state.SandReaction
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -105,6 +107,7 @@ class CartinJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
         }
         super.init()
         addComponent(defineAnimationsComponent())
+        addComponent(SandReactionComponent(SandReaction.SURFACE))
     }
 
     override fun onSpawn(spawnProps: Properties) {

@@ -144,7 +144,9 @@ internal fun Megaman.defineBodyComponent(): BodyComponent {
     // fixture and the other feet fixture.
     val feetGravityRect = GameRectangle().setHeight(0.1f * ConstVals.PPM)
     val feetGravityFixture = Fixture(body, FixtureType.CONSUMER, feetGravityRect)
-    feetGravityFixture.setReceiver(Receivers.FILTER) { it.getType() == FixtureType.BLOCK }
+    feetGravityFixture.setReceiver(Receivers.FILTER) {
+        it.getType() == FixtureType.BLOCK && it.receiver(Receivers.FILTER)?.invoke(feetGravityFixture) != false
+    }
     val feetGravitySet = ObjectSet<IFixture>()
     feetGravityFixture.putProperty(ConstKeys.SET, feetGravitySet)
     feetGravityFixture.setReceiver(Receivers.CONSUMER) consumer@{ processState, fixture ->

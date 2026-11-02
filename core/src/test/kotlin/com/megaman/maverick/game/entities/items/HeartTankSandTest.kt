@@ -19,6 +19,8 @@ import com.maverick.game.engine.world.contacts.ContactRuleDispatcher
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.blocks.FeetRiseSinkBlock
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -56,7 +58,6 @@ class HeartTankSandTest : DescribeSpec({
 
     lateinit var engine: GameEngine
     lateinit var services: MegaServices
-    lateinit var sinkBlock: FeetRiseSinkBlock
 
     fun step(cycles: Int) = repeat(cycles) { engine.update(STEP) }
 
@@ -88,21 +89,16 @@ class HeartTankSandTest : DescribeSpec({
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
         every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
 
-        sinkBlock = FeetRiseSinkBlock(services)
-        sinkBlock.spawn(
-            props(
-                ConstKeys.BOUNDS pairTo GameRectangle(SAND_LEFT * PPM, SAND_TOP - PPM, SAND_WIDTH * PPM, PPM),
-                ConstKeys.FALL pairTo -0.5f,
-                ConstKeys.RISE pairTo 3f,
-                ConstKeys.MIN pairTo 2f
-            )
-        ) shouldBe true
+        MegaEntityFactory.init(services)
 
         QuickSand(services).spawn(
             props(
                 ConstKeys.BOUNDS pairTo GameRectangle(
                     SAND_LEFT * PPM, SAND_TOP - SAND_DEPTH * PPM, SAND_WIDTH * PPM, SAND_DEPTH * PPM
-                )
+                ),
+                ConstKeys.FALL pairTo -0.5f,
+                ConstKeys.RISE pairTo 3f,
+                ConstKeys.MIN pairTo 2f
             )
         ) shouldBe true
 
@@ -110,10 +106,15 @@ class HeartTankSandTest : DescribeSpec({
             props(ConstKeys.BOUNDS pairTo GameRectangle(FLOOR_LEFT * PPM, SAND_TOP - PPM, SAND_WIDTH * PPM, PPM))
         ) shouldBe true
 
-        step(1)
+        step(2)
     }
 
-    afterEach { engine.reset() }
+    afterEach {
+        engine.reset()
+        MegaEntityFactory.reset()
+    }
+
+    fun sinkBlock() = MegaGameEntities.getOfTag(Block.TAG).filterIsInstance<FeetRiseSinkBlock>().first()
 
     fun tankProps(x: Float) = props(
         ConstKeys.POSITION pairTo Vector2(x * PPM, SAND_TOP + 2f * PPM),
@@ -140,7 +141,7 @@ class HeartTankSandTest : DescribeSpec({
             step(FALL_CYCLES)
 
             tank.body.isSensing(BodySense.FEET_ON_SAND) shouldBe true
-            tank.body.getY() shouldBeLessThan sinkBlock.body.getMaxY() - PPM
+            tank.body.getY() shouldBeLessThan sinkBlock().body.getMaxY() - PPM
         }
 
         it("sinks at the speed limit of the tank, with no sand friction") {
@@ -157,7 +158,7 @@ class HeartTankSandTest : DescribeSpec({
             step(FALL_CYCLES)
 
             tank.body.isSensing(BodySense.FEET_ON_SAND) shouldBe true
-            sinkBlock.body.getMaxY() shouldBe SAND_TOP
+            sinkBlock().body.getMaxY() shouldBe SAND_TOP
         }
 
         it("still sinks on a second spawn of the pooled tank") {
@@ -171,7 +172,7 @@ class HeartTankSandTest : DescribeSpec({
             step(FALL_CYCLES)
 
             tank.body.getBlockFilters()!!.size shouldBe filterCount
-            tank.body.getY() shouldBeLessThan sinkBlock.body.getMaxY() - PPM
+            tank.body.getY() shouldBeLessThan sinkBlock().body.getMaxY() - PPM
             measureSinkSpeed(tank) shouldBe (EXPECTED_SINK_SPEED plusOrMinus 0.1f)
         }
     }

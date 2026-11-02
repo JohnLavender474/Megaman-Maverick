@@ -48,6 +48,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
     protected val debugShapeSuppliers = Array<() -> IDrawableShape?>()
 
     private val fixturesToRemove = ObjectSet<Fixture>()
+    private var hasContactFilter = false
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -216,6 +217,12 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
             }
         }
 
+        val contactFilter = spawnProps.get(ConstKeys.BLOCK_CONTACT_FILTER) as ((MegaGameEntity) -> Boolean)?
+        if (contactFilter != null) {
+            blockFixture.setReceiver(Receivers.FILTER) { contactFilter.invoke(it.getEntity()) }
+            hasContactFilter = true
+        }
+
         val customPreProcess = spawnProps.get(ConstKeys.CUSTOM_PRE_PROCESS) as ((Body) -> Unit)?
         if (customPreProcess != null) body.preProcess.put(ConstKeys.CUSTOM_PRE_PROCESS, customPreProcess)
         else body.preProcess.remove(ConstKeys.CUSTOM_PRE_PROCESS)
@@ -235,6 +242,11 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
         fixturesToRemove.forEach { body.removeFixture(it) }
         fixturesToRemove.clear()
+
+        if (hasContactFilter) {
+            blockFixture.removeProperty(Receivers.FILTER)
+            hasContactFilter = false
+        }
 
         GameLogger.debug(
             TAG,

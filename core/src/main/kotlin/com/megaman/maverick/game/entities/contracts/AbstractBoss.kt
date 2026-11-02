@@ -34,6 +34,8 @@ import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.state.SandReactionComponent
+import com.megaman.maverick.game.entities.state.SandReaction
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerDamaged
 import com.megaman.maverick.game.players.asPlayer
@@ -110,6 +112,11 @@ abstract class AbstractBoss(
     private var end = true
 
     private val playerDamagedListener: (PlayerDamaged) -> Unit = { onPlayerDamaged(it.damager, it.player) }
+
+    override fun init(vararg params: Any) {
+        super.init()
+        addComponent(SandReactionComponent(SandReaction.SURFACE))
+    }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")

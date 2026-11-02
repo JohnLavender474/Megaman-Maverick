@@ -36,6 +36,8 @@ import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.rightSideFixture
+import com.megaman.maverick.game.entities.state.SandReactionComponent
+import com.megaman.maverick.game.entities.state.SandReaction
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -106,6 +108,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())
         addComponent(defineUpdatablesComponent())
+        addComponent(SandReactionComponent(SandReaction.SUBMERGE))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -123,12 +126,11 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                 ConstKeys.FIXTURE_LABELS pairTo objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE),
-                ConstKeys.BOUNDS pairTo GameRectangle().setSize(
-                    BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM
-                ),
+                ConstKeys.BOUNDS pairTo GameRectangle(body),
                 ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
                     blockFilter(entity, block)
                 },
+                ConstKeys.CUSTOM_PRE_PROCESS pairTo { blockBody: Body -> blockBody.set(body) },
             )
         )
 
@@ -150,7 +152,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this, objectSetOf(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS), cull@{ event ->
                     val room = services.levelState.currentRoom?.name
-                    val cull = room != spawnRoom
+                    val cull = event.key == EventType.PLAYER_SPAWN || room != spawnRoom
                     GameLogger.debug(
                         TAG,
                         "defineCullablesComponent(): event=$event, currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"
@@ -162,8 +164,6 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     )
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        block!!.body.set(body)
-
         if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
             players.any {
                 it.leftSideFixture.overlaps(body.getBounds()) &&
@@ -198,6 +198,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         val feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(BODY_WIDTH * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
+        feetFixture.setReceiver(Receivers.FILTER) { it.getEntity() != block }
         body.addFixture(feetFixture)
         debugShapes.add { feetFixture }
 
@@ -209,6 +210,9 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
             }
             body.physics.gravity.y = -gravity * ConstVals.PPM
 
+            // TODO: y velocity grows with no limit while the block rests, so its first fall is faster after a long rest.
+            //  Do not clear it: this stored velocity lets a block drop into a hole of its own width, as in Rodent Man
+            //  room9 (docs/issues/2026-11-02-pushable-block-velocity-builds-at-rest.md)
             if (services.levelState.roomTransition) body.physics.velocity.setZero()
 
             val velocity = body.physics.velocity

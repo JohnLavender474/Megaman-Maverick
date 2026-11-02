@@ -9,9 +9,12 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
+import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.objects.Matrix
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
@@ -28,25 +31,48 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
+import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.blocks.PrivateSandFloor
+import com.megaman.maverick.game.entities.blocks.SharedSandFloor
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.SandReaction
+import com.megaman.maverick.game.entities.state.sandReaction
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.Receivers
+import com.megaman.maverick.game.world.body.defaultDoUpdate
+import com.megaman.maverick.game.world.body.getBody
+import com.megaman.maverick.game.world.body.getEntity
+import com.megaman.maverick.game.world.body.setReceiver
+import kotlin.math.abs
+import kotlin.math.max
 
 class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IAnimatedEntity {
 
     companion object {
         const val TAG = "QuickSand"
         private const val ATLAS_KEY_SUFFIX = "_v2"
+        private const val SINKER_AREA_MARGIN = 1f
+        private const val SUBMERGE_DEPTH = 0.5f
+        private const val SUBMERGE_MARGIN = 0.1f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private val matrix = Matrix<GameRectangle>()
+    private val privateFloors = ObjectMap<MegaGameEntity, PrivateSandFloor>()
+    private var privateFloorProps: Properties? = null
+
+    private var sharedFloor: SharedSandFloor? = null
+
+    private lateinit var sinkerArea: Fixture
+
+    private val tempSpriteMatrix = Matrix<GameRectangle>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -62,9 +88,9 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
             }
         }
         super.init()
-        addComponent(defineBodyComponent())
         addComponent(SpritesComponent())
         addComponent(AnimationsComponent())
+        addComponent(defineBodyComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -75,7 +101,9 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         body.set(bounds)
         body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).set(bounds) }
 
-        defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat(), matrix))
+        defineDrawables(bounds.splitByCellSize(ConstVals.PPM.toFloat(), tempSpriteMatrix))
+
+        defineFloors(spawnProps, bounds)
     }
 
     override fun onDestroy() {
@@ -85,6 +113,73 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         sprites.clear()
         animators.clear()
         clearSpritePreProcess()
+
+        sharedFloor?.destroy()
+        sharedFloor = null
+
+        privateFloors.values().forEach { it.destroy() }
+        privateFloors.clear()
+        privateFloorProps = null
+
+        sinkerArea.setActive(false)
+    }
+
+    private fun defineFloors(spawnProps: Properties, bounds: GameRectangle) {
+        val floorBounds =
+            GameRectangle(bounds.getX(), bounds.getMaxY() - ConstVals.PPM, bounds.getWidth(), ConstVals.PPM.toFloat())
+
+        val floorProps = props(ConstKeys.BOUNDS pairTo floorBounds, ConstKeys.CULL_OUT_OF_BOUNDS pairTo false)
+        spawnProps.get(ConstKeys.FIXTURE_LABELS)?.let { floorProps.put(ConstKeys.FIXTURE_LABELS, it) }
+
+        val min = abs(spawnProps.get(ConstKeys.MIN, Float::class)!!)
+        floorProps.put(ConstKeys.FALL, spawnProps.get(ConstKeys.FALL, Float::class)!!)
+        floorProps.put(ConstKeys.RISE, spawnProps.get(ConstKeys.RISE, Float::class)!!)
+        floorProps.put(ConstKeys.MIN, min)
+        privateFloorProps = floorProps
+
+        val sharedProps = floorProps.copy()
+        sharedProps.put(
+            ConstKeys.BLOCK_FILTERS, { entity: MegaGameEntity, _: MegaGameEntity -> privateFloors.containsKey(entity) }
+        )
+        sharedProps.put(ConstKeys.BLOCK_CONTACT_FILTER, { entity: MegaGameEntity -> !privateFloors.containsKey(entity) })
+        val floor = MegaEntityFactory.fetch(SharedSandFloor::class)!!
+        floor.spawn(sharedProps)
+        sharedFloor = floor
+
+        val margin = SINKER_AREA_MARGIN * ConstVals.PPM
+        val bottom = floorBounds.getY() - min * ConstVals.PPM - 2f * margin
+        (sinkerArea.rawShape as GameRectangle).set(
+            bounds.getX() - margin, bottom, bounds.getWidth() + 2f * margin, bounds.getMaxY() + margin - bottom
+        )
+        sinkerArea.setActive(true)
+    }
+
+    private fun spawnPrivateFloor(entity: MegaGameEntity, entityBody: IBody) {
+        if (privateFloors.containsKey(entity) || entity.sandReaction == SandReaction.SURFACE ||
+            entityBody.type != BodyType.DYNAMIC
+        ) return
+
+        val floorProps = privateFloorProps!!.copy()
+        floorProps.put(ConstKeys.BLOCK_FILTERS, { other: MegaGameEntity, _: MegaGameEntity -> other != entity })
+        floorProps.put(ConstKeys.BLOCK_CONTACT_FILTER, { other: MegaGameEntity -> other == entity })
+        if (entity.sandReaction == SandReaction.SUBMERGE) {
+            val min = floorProps.get(ConstKeys.MIN, Float::class)!!
+            floorProps.put(ConstKeys.MIN, max(min, entityBody.getHeight() / ConstVals.PPM + SUBMERGE_DEPTH + SUBMERGE_MARGIN))
+        }
+
+        val floor = MegaEntityFactory.fetch(PrivateSandFloor::class)!!
+        floor.spawn(floorProps)
+        privateFloors.put(entity, floor)
+    }
+
+    private fun destroyIfSubmerged(entity: MegaGameEntity, entityBody: IBody) {
+        if (entity.sandReaction != SandReaction.SUBMERGE || !entity.existenceState.liveAfterUpdate) return
+
+        val floor = privateFloors[entity] ?: return
+        if (!floor.existenceState.liveNow) return
+
+        val restingTop = floor.body.getMaxY() + entityBody.getHeight()
+        if (restingTop <= body.getMaxY() - SUBMERGE_DEPTH * ConstVals.PPM) entity.destroy()
     }
 
     private fun defineBodyComponent(): BodyComponent {
@@ -97,9 +192,29 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         body.addFixture(sandFixture)
         debugShapes.add { sandFixture }
 
+        // TODO: an enemy's consumer fixture can sense a private floor, because only the floor's own fixture filter
+        //  and the player's feet consumer test it (docs/issues/2026-11-01-two-players-stuck-in-quicksand.md)
+        sinkerArea = Fixture(body, FixtureType.CONSUMER, GameRectangle(), active = false, attachedToBody = false)
+        sinkerArea.setReceiver(Receivers.FILTER) { it.getType() == FixtureType.FEET }
+        sinkerArea.setReceiver(Receivers.CONSUMER) { state, other ->
+            val entity = other.getEntity()
+            when (state) {
+                ProcessState.END -> privateFloors.remove(entity)?.destroy()
+                else -> {
+                    spawnPrivateFloor(entity, other.getBody())
+                    destroyIfSubmerged(entity, other.getBody())
+                }
+            }
+        }
+        body.addFixture(sinkerArea)
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
-        return BodyComponentCreator.create(this, body)
+        // TODO: with no private floor, the sensor runs only while the sand overlaps the camera, so an entity that
+        //  reaches off-camera sand falls through it, as it did with the culled map block (item 094)
+        return BodyComponentCreator.create(
+            this, body, doUpdate = { !privateFloors.isEmpty || body.defaultDoUpdate() }
+        )
     }
 
     private fun defineDrawables(cells: Matrix<GameRectangle>) {
