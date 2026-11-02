@@ -37,6 +37,7 @@ Answer to review item 35 (2026-10-22, verbatim):
 
 - Should the "CHECKPOINT n" text show the index or a name?
 - Fix the ReactorMan and DesertMan same-name "4" pairs (the far-side spawn likely wins today)?
+- The default `camera` activation rule assumes one view. See `047` (level-wide or per player) and `094` (which view activates a checkpoint).
 
 ## Sources
 

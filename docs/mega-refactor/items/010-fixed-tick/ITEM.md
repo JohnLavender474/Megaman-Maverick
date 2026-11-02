@@ -50,6 +50,8 @@ Answer to review item 9 (2026-10-22, verbatim):
 - Is a small physics retune acceptable when the step is unified?
 - Must replays reproduce real player sessions, or only scripted inputs?
 - On slow PCs, slow down like X6, or skip time?
+- `ICameraView.overlaps` tests the libGDX frustum, which changes only at `viewport.apply()` in the draw (`051` decision, 2026-10-30). Gameplay uses it, for example `Beezee.kt:167`, `DragonFly.kt:215`, `CannoHoney.kt:226` and `PreciousGemCluster.kt:141`. With ticks that run with no draw, or with 2 views (`094`), the frustum is stale or belongs to the wrong view. Is a change to a rectangle test accepted here? `051` calls that a behavior change that needs its own contract check.
+- `O2-R3` applies an async path on a set tick. What happens if the path is not ready on that tick? Options: wait and stop the simulation, use the old path, or use sync pathfinding in a net session. Today a wall-clock timeout decides (`AsyncPathfindingSystem.kt:66`).
 
 ## Sources
 

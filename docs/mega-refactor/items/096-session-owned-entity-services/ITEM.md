@@ -24,6 +24,9 @@ None yet. The objectives audit of 2026-11-01 found this gap.
 
 ## Open questions
 
+- Must two sessions run in one JVM? A desync check for `095` can run both peers in one process. This needs no shared statics, so it adds `GameObjectPools` to the list of `MegaEntityFactory` and `MegaGameEntities`.
+- `SpiderWeb.WEBS_STUCK_TO_MEGAMAN` is one set for all players, and the unlock acts on `targetPlayer` (`SpiderWeb.kt:75,123`). Does it move to the session, or to a component on each player?
+
 ## Sources
 
 - `NOTES.md` in this folder.

@@ -37,6 +37,10 @@ Motivation from `029`: co-op needs one owner for level-wide steps (level reset, 
 - Must a boss fight and a room transition ever overlap (for example X-style camera zones during a boss)?
   `051` decision (2026-10-30): a zone in a boss room is plain data and needs no overlap with a transition. The camera
   rules read one hold test, which a level flow state can replace later.
+- The proposed states include `spawning` and `dying` as level states. With `047` death options 2 and 3, one player can die
+  while the level plays. Are spawn and death states of each player, with a level state for "all dead"? The current
+  handlers act on slot 0 (`MegaLevelScreen.kt:904-909`).
+- Does a mode (`102`) change the flow? A PvP match has no boss, no level reset and its own end condition.
 
 ## Sources
 

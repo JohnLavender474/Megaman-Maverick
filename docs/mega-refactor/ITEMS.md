@@ -109,12 +109,16 @@ statuses and column meanings are in `CLAUDE.md`.
 | 099 | [Use camera zones and scroll sections in real stages](items/099-camera-sections-in-stages/ITEM.md) | feature | `O4` | idea | `051` | | |
 | 100 | [CI result before a merge](items/100-ci-before-merge/ITEM.md) | tooling | `O6` | idea | `002` | | |
 | 101 | [Typed Tiled fields and checks for camera sections and rooms](items/101-map-object-schema/ITEM.md) | tooling | `O7`, `O6` | idea | `022` | | |
-| 102 | [A game mode concept](items/102-game-modes/ITEM.md) | feature | `O8` | idea | none | | |
+| 102 | [A game mode concept](items/102-game-modes/ITEM.md) | feature | `O8`, `O2` | idea | none | | |
 | 103 | [Remove the dead `ScreenController` path or give it a real use](items/103-dead-screen-controller/ITEM.md) | refactor | `O1` | idea | none | | |
 | 104 | [Remove the dead `LevelSelectScreen`](items/104-dead-level-select-screen/ITEM.md) | refactor | `O1` | idea | none | | |
 | 105 | [Fail a test task that runs 0 tests](items/105-empty-test-run-check/ITEM.md) | test | `O6` | idea | `004` | | |
 | 106 | [Make a new line in the known-failures list visible](items/106-known-failures-growth-check/ITEM.md) | test | `O6` | idea | `004` | | |
 | 107 | [Tighter floor on the entity class count in the smoke test](items/107-tighter-entity-class-floor/ITEM.md) | test | `O6` | idea | `004` | | |
+| 108 | [Spec Ops co-op missions](items/108-spec-ops-mode/ITEM.md) | feature | `O2`, `O8` | idea | `047`, `102` | | |
+| 109 | [PvP modes](items/109-pvp-mode/ITEM.md) | feature | `O2`, `O8` | idea | `047`, `102`, `030` | | |
+| 110 | [Co-op in the main campaign](items/110-co-op-campaign/ITEM.md) | feature | `O2` | idea | `108`, `109` | | |
+| 111 | [PvP across multiple rooms](items/111-pvp-multi-room/ITEM.md) | feature | `O2` | idea | `109`, `094` | | |
 
 ## Branches
 

@@ -12,8 +12,8 @@
 
 ## Goal
 
-More than one playable character, each with its own abilities and physics, and modes such as extra levels that use
-them.
+More than one playable character, each with its own abilities and physics, and modes such as extra levels, Spec Ops
+missions and PvP that use them.
 
 ## Done means
 
@@ -84,6 +84,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `030` | planned | [Faction and root owner instead of `owner == megaman`](../items/030-faction/ITEM.md) |
 | `061` | done | [Thin player view; locks and signals as components and functions](../items/061-thin-player/ITEM.md) |
 | `102` | idea | [A game mode concept](../items/102-game-modes/ITEM.md) (main) |
+| `108` | idea | [Spec Ops co-op missions](../items/108-spec-ops-mode/ITEM.md) |
+| `109` | idea | [PvP modes](../items/109-pvp-mode/ITEM.md) |
 
 ## Gaps with no item
 

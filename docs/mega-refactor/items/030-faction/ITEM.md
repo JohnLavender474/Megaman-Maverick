@@ -34,6 +34,8 @@ Item `029` research (2026-10-23, verbatim):
 
 - Must Mega's own projectile explosions damage enemies? Today the default `explodeAndDie` path says no. (Decision E.)
 - In co-op, can player shots hurt or push other players?
+- Is `Faction { PLAYER, ENEMY, NEUTRAL }` enough if PvP comes (`102`)? All players are one faction in that enum. Do teams go in the faction, or in a separate team ID?
+- This item plans to read enhancements and score from "the owning player's profile". `007` and `047` plan one session profile, so `ownerPlayerIndex` selects nothing for enhancements. What must credit go to: the slot for score only, or nothing?
 - Do reflected shots switch faction, as `ReactorManProjectile` does today?
 - One `owner` per entity is probably not enough (owner's input, 2026-10-23). Keep an instigator (the player or entity responsible) and a causer (the entity that hit), or an owner chain? Examples: a reflected shot, an explosion spawned by a projectile, a shot from a turret that a player placed. See `029` `NOTES.md`, "Co-op gaps and ideas", and the `owners` idea in `NOTES.md` here.
 

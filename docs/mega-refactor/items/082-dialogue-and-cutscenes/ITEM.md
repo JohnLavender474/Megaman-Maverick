@@ -254,7 +254,7 @@ dialogue. Yes, write it as decision 3"
 
 ## Open questions
 
-None now.
+- With more players (`047`): which player's input advances or skips a scene, and which player can open an optional talk with Up? Do all players count as "the player" who is exempt from a `WORLD` freeze (decision 5)? Must a scripted move use each player? If co-op stays out of the main game (`102`), this question can become smaller.
 
 ## Sources
 

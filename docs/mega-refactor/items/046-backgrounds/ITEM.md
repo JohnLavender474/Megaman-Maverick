@@ -37,6 +37,7 @@ Answer to review item 46 (2026-10-22, verbatim):
 - Was the respawn mismatch a wrong position, or a wrong visible/hidden background? The code suggests visibility.
 - Do any backgrounds need non-linear motion (capped catch-up after a teleport)?
 - Must a background change by checkpoint (X6 stage 7), or only by triggers?
+- Must one background draw for more than one view in a frame (`094`)? Today each `Background` has its own viewport and camera, moves by the game camera delta (`MegaLevelScreen.kt:933-935`), and owns a `CameraRotation`. If yes, no per-camera state can stay in a `Background`. If no, each view gets its own set.
 
 ## Sources
 

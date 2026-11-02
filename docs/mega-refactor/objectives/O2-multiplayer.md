@@ -15,12 +15,18 @@
 
 ## Goal
 
-Local play where two or more players share one screen, split screen and netplay. From the owner: "Our design should
-be able to handle all of these."
+Two dedicated multiplayer modes, separate from the main game: Spec Ops co-op missions (`108`) and PvP (`109`). These are
+the crux of this objective, and they are the only two named multiplayer modes (owner, 2026-11-01). Players play them on
+one machine or on the net. The technology under them is local play where two or more players share one screen, split
+screen and netplay. From the owner: "Our design should be able to handle all of these."
+
+Co-op in the main campaign is optional, and it comes after these modes (`110`). From the owner: "Redesigning the
+campaign with co-op in mind is a huge undertaking, while having dedicated modes for multiplayer makes the scope much
+more manageable".
 
 ## Phases
 
-Each phase ships alone (owner, 2026-11-01).
+Each phase ships alone (owner, 2026-11-01). The phases are technical steps, and the two modes are their content.
 
 1. **Phase 1:** two players on one machine, on one shared screen, with no split screen. Item `047`. This is the first
    target. Each player has their own input device.
@@ -28,14 +34,20 @@ Each phase ships alone (owner, 2026-11-01).
 3. **Phase 3:** netplay with lockstep. Players are fixed at session start. Settings that change gameplay go to all
    peers at session start. Pause and pause-menu actions are inputs in the frames, so all peers stop together.
 
+The first PvP target is one large room. Multi-room PvP comes after it (`111`).
+
 The design must scale to 4 or more players. In local play, players can join and leave during play. Saves do not
 depend on the player count.
 
 ## Done means
 
-- Phase 1: two players finish the main campaign on one machine, and a second player can join and leave during play.
+- Phase 1: two players finish a Spec Ops mission and play a PvP match on one machine, and a second player can join and
+  leave during play.
 - Phase 2: the same with two views.
-- Phase 3: two machines finish a level with no desync. A check compares the state of both machines for each tick.
+- Phase 3: two machines finish a Spec Ops mission and a PvP match with no desync. A check compares the state of both
+  machines for each tick.
+
+Co-op in the main campaign (`110`) is not part of "done".
 
 ## Rules
 
@@ -96,7 +108,7 @@ phase 3 possible, but it is never a reason to build phase 3 work early.
 ### `O2-R6`: No single-view logic
 
 - Rule: gameplay does not depend on one camera. Spawn and cull ask about a set of views. All views of a session are in
-  the same room.
+  the same room, until `111` lifts this limit for PvP.
 - Problem: `P2`
 - Phase: 2
 - Check: count the direct `gameCamera` reads and the camera overlap helpers in entity code.
@@ -211,6 +223,11 @@ Not a redo, but new work that is larger than the table shows:
 | `094` | idea | [Split screen (`O2` phase 2)](../items/094-split-screen/ITEM.md) (main) |
 | `095` | idea | [Netplay with lockstep (`O2` phase 3)](../items/095-netplay/ITEM.md) (main) |
 | `097` | idea | [Stable order for event keys in `EventsManager`](../items/097-stable-event-key-order/ITEM.md) (main) |
+| `102` | idea | [A game mode concept](../items/102-game-modes/ITEM.md) |
+| `108` | idea | [Spec Ops co-op missions](../items/108-spec-ops-mode/ITEM.md) (main) |
+| `109` | idea | [PvP modes](../items/109-pvp-mode/ITEM.md) (main) |
+| `110` | idea | [Co-op in the main campaign](../items/110-co-op-campaign/ITEM.md) (main) |
+| `111` | idea | [PvP across multiple rooms](../items/111-pvp-multi-room/ITEM.md) (main) |
 
 ## Gaps with no item
 
@@ -225,8 +242,18 @@ None. The objectives audit of 2026-11-01 gave each gap an item or a note on an e
 - 2026-11-01: split-screen players stay in the same room.
 - 2026-11-01: settings that change gameplay go to all peers at session start, and pause-menu actions are inputs.
 - 2026-11-01: the first netplay target is the same build on the same platform.
+- 2026-11-01: Spec Ops (`108`) and PvP (`109`) are the crux of this objective. They are separate from the main game,
+  and they run on one machine or on the net.
+- 2026-11-01: co-op in the main campaign is optional, and it comes after these modes (`110`). This replaces the goal of
+  phase 1 that two players finish the main campaign.
+- 2026-11-01: the first PvP target is one large room. Multi-room PvP comes after it (`111`).
 
 ## Open questions
+
+- Does PvP change the netplay plan? `095` asks if PvP needs rollback.
+- Does a lobby replace "players can join and leave during play" in the modes? See `102`.
+- Does PvP need `094` from its start? A room larger than one view cannot show all players on one shared screen. See
+  `109`.
 
 - Phase 1 rules from `047` and `029`: the camera rule, the off-screen rule, who triggers a room transition, and what
   happens when one player dies. The owner leans to "the camera follows the lead player".

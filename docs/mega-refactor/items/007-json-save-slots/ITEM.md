@@ -32,6 +32,7 @@ Answer to review item 6 (2026-10-22, verbatim):
 - I (2026-10-22): the slot count is a config value, default 10. It must scale with no hard limit (`SaveStorage.list()` finds the slots; the UI pages).
 
 - 2026-10-23 (from `029` and `047`): a save does not depend on the player count. Two players can play a save on one day, and one player can continue it on the next day. The save holds one session profile (what the lead player earns is shared), not one profile for each player.
+- 2026-11-01: co-op in the main campaign is now optional, and it comes after the dedicated modes (`110`). The 2026-10-23 decision above applies to that item. `102` asks if the dedicated modes touch the save file.
 
 ## Open questions
 

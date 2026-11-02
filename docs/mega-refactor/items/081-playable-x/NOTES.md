@@ -46,9 +46,10 @@ For the code that adds X:
 - **The burst frames sit high:** frame 2 of `damaged` and of `air_damaged` is a burst. On the sheet, the burst is
   centered on the body and extends 5 pixels below the feet. In a cell with the feet on `y=47` there is no room below
   the feet, so the burst is about 6 pixels higher than on the sheet. See open question 5.
-- **`spawn_out` has alignment faults:** a glow goes 5 pixels below the feet in frames 1 to 4, so the feet move from
-  `y=47` in frame 0 to `y=42` in frame 1, and the body also shifts 3 pixels sideways. Frames 5 and 6 are identical
-  because the bottom anchor removes their 3-pixel difference on the sheet. `MegamanX.yaml` needs `offsets`.
+- **`spawn_out` rises 5 pixels at frame 1:** a glow goes 5 pixels below the feet in frames 1 to 4, and a cell has no
+  room below `y=47`. Frame 0 stays on `y=47` to join `victory`, so the feet are on `y=42` in frames 1 to 4. `offsets`
+  in `MegamanX.yaml` set the sideways position of frame 0 and put the beam in frames 5 and 6 on its sheet lines. The
+  owner chose the rise at frame 1 (2026-11-01).
 - **Names follow `Megaman_v3` where a name exists:** `run_trans`, `climb_finish`, `wallslide`. `run` has 8 frames
   (Megaman has 4), so X needs its own `AnimationDef` values. `r13_unknown` is a pose with no name yet.
 - **No art for the buster charge:** the sheet has no `charge_half` or `charge_full` body versions, and this item's

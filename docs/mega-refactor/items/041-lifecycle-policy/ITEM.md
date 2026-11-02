@@ -33,6 +33,7 @@ Answer to review item 40 (2026-10-22, verbatim):
   `051` decision (2026-10-30): zones never change `currentRoom`, so rooms stay the unit. An enemy that spawns behind a
   zone limit is still culled by the camera; a level must use camera spawns there until this item decides.
 - Should a killed enemy respawn when the room is entered again (today: yes)?
+- The `CAMERA` and `ROOM` lifecycles must fit the owner's two cull classes for split screen. See the seed example in `094`.
 
 ## Sources
 

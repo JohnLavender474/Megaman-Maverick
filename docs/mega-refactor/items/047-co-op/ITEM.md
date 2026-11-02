@@ -4,12 +4,12 @@
 - Type: feature
 - Objectives: `O2`
 - Depends on: `029`, `031`
-- Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`
+- Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`
 - Branches: `047a` (active)
 
 ## Goal
 
-Support more than one controller and a co-op mode.
+Support more than one controller and a co-op mode. The target content is now the dedicated modes `108` and `109`, not the main campaign (owner, 2026-11-01).
 
 ## Owner's input
 
@@ -42,10 +42,11 @@ Item `029` research (2026-10-23, verbatim):
 - 2026-11-01: for the first pass, a player spawn object can have an object property that points to the spawn of player 2, in place of a left-or-right flag. With no property, player 2 spawns 1 tile to the right of the player 1 spawn, relative to the gravity direction. The details are in the `047a` `SCOPE.md`.
 
 - 2026-11-01: each `047` branch merges directly into `master`, with no parent branch. Each branch stays behind `--players 2`, so each one is safe to ship alone.
+- 2026-11-01: Spec Ops (`108`) and PvP (`109`) are the crux of `O2`. Co-op in the main campaign is optional, and it comes after them (`110`). This changes the campaign target in the owner's 2026-10-23 words. The 2026-10-23 save decision applies only to `110`.
 
 ## Branch split
 
-Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which can still change this list.
+Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which can still change this list. This list was written for the main stages. Review it against `108` and `109` before `047b` starts.
 
 | Branch | Goal |
 |---|---|
@@ -72,6 +73,66 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 - Respawn with drop-in and drop-out: is a respawn routine behind an interface (`038`) enough?
 - The other shared-screen rules: see `029` `NOTES.md`, "Co-op gaps and ideas".
 - Boss intro landing checks (`GutsTank`, `ElecDevil`, `WilyFinalBoss`) use `players.all { landed }` after `029c`. A dead player or one who waits to respawn never lands, so the boss would never start. Rule needed: skip players who are not present? (`TODO` comments at the four sites.)
+
+### Effect of the dedicated modes
+
+- The owner's decision of 2026-11-01 puts multiplayer in dedicated modes (`108`, `109`). Co-op in the main stages moves to the optional `110`.
+- Questions marked **(mode)** below, and the lead player, shared earnings and save-related questions above, wait for `110` if `108` and `109` do not need them. Content made for co-op can avoid these cases by design, for example with one-screen rooms. Each question stays here until a mode shows that it does or does not apply.
+- `102` asks if the co-op rules (`LivesPolicy`, the death options, friendly fire) belong to a mode, and if a lobby replaces the join flow.
+
+### Camera and off-screen
+
+- Off-screen rule, if the camera follows the lead: a player outside the view has no floor. Of the 2827 blocks in the live stages, 2270 spawn by camera and cull after 1 s out of view (`Block.kt:75`, `getGameCameraCullingLogic`). Enemies are absent there too, and `InfernoDeath` is off out of view (`InfernoDeath.kt:34`). Options: hold the player at the view edge (as `CameraEdgeBlock` does), warp the player to the lead, damage the player, or use a group camera. **(mode)**
+- With a block at the view edge, the moving view can pin a follower against a wall. Is a pinned follower warped, or crushed? Today a crush needs a `crush_surface` (`051`). **(mode)**
+- Who is the camera focus when the lead dies and the level does not reset (death options 2 and 3)? `cameraFollow.setFocus` runs once (`MegaLevelScreen.kt:336`), and `cameraHold` stops the camera when slot 0 is not in play (`:302`).
+- Scroll sections: the kill at a camera edge tests only slot 0 (`MegaLevelScreen.kt:332`). Does it apply to each player? Does a scroll wait for all players to be ready, or only the lead (`:320`)? **(mode)**
+- Smooth follow requests come from any player (`Megaman.kt:137`, `PipePortal.kt:126,148`). See the `051` question about whose focus the request changes.
+
+### Rooms
+
+- Who triggers a room transition? Today two paths exist. The room scan tests only the focus (`CameraRoomBounds.kt:91,138`). `GateRule` lets any player open a `Gate`, and the `Gate` then moves the camera (`Gate.kt:265`). Options: the lead, any player, all players at the edge. **(mode)**
+- What happens to the other players in a transition? Each `Megaman` sets its center to the one transition point (`Megaman.kt:386`), so all players stack. Inference: "wait behind" does not work, because the transition destroys the enemies (`LevelRoomHandler.kt:72`), and 465 blocks spawn by room. Options: all stack, all keep their offset, warp at the end. **(mode)**
+- Teleports move one player: `PipePortal` (4 in live stages) and `CapsuleTeleporter` (2). If the lead goes, do the others follow? If another player goes, does the off-screen rule apply at once? **(mode)**
+
+### Gravity
+
+- Is gravity one value for the world, or per player? `WorldGravity.set` writes all players (`WorldGravity.kt:12`). So one player at any of the 30 `GravitySwitcharoo` objects, or at a `CapsuleTeleporter` (`CapsuleTeleporter.kt:210`), turns the other player too, and stops their movement during the turn (`Megaman.kt:148-155`). See also `058`. **(mode)**
+- `MoonMan` changes gravity only while its target is alive (`MoonMan.kt:526`). With more players, does a dead target stop the change?
+
+### Death, lives and respawn
+
+- Death options 2 and 3 are `TODO`s, but each needs more rules before it is built. Does the music stop at the first death (`MegaLevelScreen.kt:574`)? Does each death remove a life? What is the game-over test (`livesExhausted`, `:597`)? What resets when all players are dead?
+- A slot 1 respawn near the lead (`047c`): what does it cost? Today a slot 1 death is free, and it removes no life. Where does it land if the lead is in the air or over a pit? Options: the lead's last safe ground, the current checkpoint, a drop on the lead.
+- Are checkpoints level-wide or per player? `PlayerSpawnsManager` holds one current spawn. With one shared camera, a checkpoint activates for all (`036`).
+- Do `GauntletMaster` waves reset on any player's death, or only when all are dead (`GauntletMaster.kt:168`)? Today any `PLAYER_JUST_DIED` resets them. The 16 objects are in the extra levels, so this question stays under the `102` direction.
+- `SpiderWeb` and `PreciousGem` react to any `PLAYER_JUST_DIED`. Must only the death of the stuck or the owning player count? `SpiderWeb` also keeps one set of stuck webs for all players (`SpiderWeb.kt:75`, see `096`).
+
+### Rewards
+
+- Whose state sets the drop odds: the killer, the lowest player, or the shared pool? `AbstractEnemy.kt:99` reads the target's lives and health.
+- Who gets a one-up from floating points (`AbstractEnemy.kt:330`): the killer's slot or the pool? `029` `NOTES.md` asks this too, and `LivesPolicy` can answer it.
+- Does a health or weapon fill still stop the world for all players? `PlayerStatsHandler.kt:317` turns off all systems but sprites. `029` `NOTES.md` calls this "acceptable", but with 2 players it stops play more often. See `012`.
+
+### Enemies and bosses
+
+- How often does an enemy choose its target? `047b` plans the nearest present player. If the choice runs each frame, a target can change on each frame between 2 players. Options: each frame, sticky for a time, at set points of the enemy's behavior. What does `targetFor` give when no player is present (`MegaPlayers.kt:38`)?
+- Do enemies and bosses scale with the player count? Nothing reads the count now. If a boss scales its health, what happens when a player joins or leaves in the fight? **(mode)**
+- What happens to a player outside a boss room when the `Gate` closes, and to a player who joins in a fight? `AbstractBoss` destroys itself on any `PLAYER_SPAWN` (`AbstractBoss.kt:167`), so a late spawn must not use that event (`038`). **(mode)**
+
+### Shared objects
+
+- What does the second player do at a one-rider object? `CartV2` (3 in live stages) carries one player, `Cart` allows one at a time (`Cart.kt:83`), and `Lift` reacts only to its target (`Lift.kt:119`). Options: one cart for each player, the other player rides along, the other player warps to the end. **(mode)**
+
+### HUD, pause and level flow
+
+- HUD layout: bars side by side, one corner for each player, or a compact co-op bar? It must scale to 4. `PlayerStatsHandler` draws one set for slot 0.
+- Who can pause, who drives the menu, and are the weapon and health tank choices per player? Today all of these are slot 0 (`isPauseRequested` input, `MegaPlayers.menuInput`, `LevelPauseScreen.kt:562,578`).
+- Is the beam one effect or one for each player? `047a` keeps one beam on slot 0. `levelState.megamanBeam` holds one value, and `DarknessV4.kt:557` lights one beam center.
+
+### Join and leave
+
+- When and where can a player join: only in a safe state, or also in a boss fight, a scroll or a transition? Where do they appear? With which health and weapon energy? Ammo is on the entity (`MegamanWeaponsHandler`), and capacity is fixed at startup. See also `102`, "Menu and start".
+- When a player leaves, what happens to their shots, their `Cart` and their locks? `MegaPlayers.register` has a `TODO`: unregister does not unbind the input.
 
 ## Sources
 
