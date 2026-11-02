@@ -51,10 +51,18 @@ Presets for today's game, from 25 live fights: `stageBoss` (11), `midBoss` (8), 
 
 ### Proposed branches
 
-1. `118a` `fight-routine`: move the 6 branches at `MegaLevelScreen.kt:691-804` (114 lines) into steps and presets. The screen keeps 1 `start` call and 1 `update` call. Add `Step`, `Routine`, `Fight`, `FightPlan`, `FightDirector`, `FightPlans.resolve`, the 3 presets, `Lease` and `FightRule.AllDefeated`. Remove the 12 forced prop lines, and `BOSS_READY`, `BOSS_DEAD` and `BEGIN_BOSS_SPAWN`. Keep `END_BOSS_SPAWN`, `BOSS_DEFEATED`, `INTERMEDIATE_BOSS_DEAD`, the 14 hooks, `isReady` and `betweenReadyAndEndBossSpawnEvent`. All 25 live fights are its real callers. No boss AI changes.
-2. `118b`: `HudBars`, `BarSpec` and `BarSource`. `FillBar` replaces `BossHealthHandler`, and `HealthFillType` goes.
-3. `118c`: the `finalBoss` preset, and `BossComponent` replaces `ready`, `betweenReadyAndEndBossSpawnEvent` and `onReady`. Shared with `048` step 6. It changes AI gating by up to 1 or 2 frames in 10 files, so its contract keeps the same window or names the change.
-4. `118d`: key-based gate unlock for `GauntletMaster` and bosses (`Gate.kt:196-226`). `GauntletMaster` does not become a `Fight`.
+Phased (owner, 2026-11-02): one boss first, then batches. The old flow stays until the last batch, so each branch ships alone. The batches and their reasons are in the `118a` `SCOPE.md`, "Later branches".
+
+1. `118a` `fight-routine`: the core types and the `stageBoss` preset, with `BigAssMaverickRobot` as the only boss on the new flow. A route at `ENTER_BOSS_ROOM` sends every other boss to the old flow.
+2. `118b`: `TimberWoman`, `MoonMan`, `ReactorMan` (6 fights). Adds `midBoss`.
+3. `118c`: `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan`, `PreciousWoman` (10 fights).
+4. `118d`: `ElecDevil`, `GutsTank`, `SigmaRat` (2 fights).
+5. `118e`: `MoonHead`, `MechaDragon`, `ReactorMonkey`, `Bospider`, `PenguinMiniBoss` (5 fights). Adds `miniBoss`.
+6. `118f`: `WilyFinalBoss` (1 fight). Adds `finalBoss`, and removes the `wily_room` check.
+7. `118g`: remove the old screen branches, the route, the guards, and `BOSS_READY`, `BOSS_DEAD` and `BEGIN_BOSS_SPAWN`. Keep `END_BOSS_SPAWN`, `BOSS_DEFEATED`, `INTERMEDIATE_BOSS_DEAD`, the 14 hooks, `isReady` and `betweenReadyAndEndBossSpawnEvent`.
+8. `118h`: `HudBars`, `BarSpec` and `BarSource`. `FillBar` replaces `BossHealthHandler`, and `HealthFillType` goes.
+9. `118i`: `BossComponent` replaces `ready`, `betweenReadyAndEndBossSpawnEvent` and `onReady`. Shared with `048` step 6. It changes AI gating by up to 1 or 2 frames in 10 files, so its contract keeps the same window or names the change.
+10. `118j`: key-based gate unlock for `GauntletMaster` and bosses (`Gate.kt:196-226`). `GauntletMaster` does not become a `Fight`.
 
 ### Possible later, with no caller yet
 
@@ -80,13 +88,17 @@ No test covers boss timing. Layers 1 to 5 of `NOTES.md`, "Behavior check for the
 2. A matrix for that suite: 3 presets, the `Wily` `null` exit, the level-defeated skip, slot 0 dead at defeat and at dead, `PLAYER_SPAWN` during the intro, gate unlock.
 3. A permanent suite: routine order, each lease released on interrupt, one `resolve` call per fight.
 4. An ordered log diff for one play of each preset.
-5. An owner play test on `RefactorTest118.tmx`, then control fights.
+5. An owner play test in the real boss rooms of the batch, then control fights. `RefactorTest118.tmx` comes only if a check needs a room that a real stage cannot give.
 
 ## Owner's input
 
 2026-11-02, about the result "add no boolean; keep `mini`" (verbatim):
 
 > This whole setup is bad and forces a narrow set of things that we can do. Dispatch an agent to probe deep into redesigning this significantly. Check to see if an item already exists for it.
+
+2026-11-02, about the rollout (verbatim):
+
+> Let's start the scoping for 118. The approach should be phased: just one boss (the intro-stage boss for simplicity), then batches of other bosses so it's easy to review and test.
 
 2026-11-02, about a health refill at the start of a fight (verbatim):
 
@@ -100,7 +112,8 @@ No test covers boss timing. Layers 1 to 5 of `NOTES.md`, "Behavior check for the
 - (2026-11-02, owner) `013` loses its boss states. A fight runs inside `PLAYING` and across transitions. `013` calls `cancelAll()` at the level reset.
 - (2026-11-02, owner) `118a` adds `Step`, and `082a` reuses it. They are one shared type in `engine`, next to `state`.
 - (2026-11-02, owner) The first variation after `118a` is the `082b` boss talk, as a `say` step in a plan. `082b` needs no hook in `AbstractBoss`.
-- (2026-11-02, owner) `118a` removes the `isLevelDefeated` check for `wily_room`, as a named intended change. The research infers that normal play cannot reach it: the write at `MegaLevelScreen.kt:829` runs on `END_LEVEL`, and `Wily` ends with `GAME_COMPLETE`.
+- (2026-11-02, owner) The work is phased: `BigAssMaverickRobot` first, then batches. This replaces "move all 25 fights in `118a`".
+- (2026-11-02, owner) The `WilyFinalBoss` batch removes the `isLevelDefeated` check for `wily_room`, as a named intended change. The research infers that normal play cannot reach it: the write at `MegaLevelScreen.kt:829` runs on `END_LEVEL`, and `Wily` ends with `GAME_COMPLETE`.
 - (2026-11-02, owner) `GauntletMaster` does not become a `Fight`. It shares only the key-based gate unlock in `118d`.
 - (2026-11-02, owner) Each branch merges directly into `master`, because each one ships alone.
 
