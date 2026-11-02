@@ -18,7 +18,9 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
 import com.maverick.game.engine.damage.IDamagerEntity
-import com.maverick.game.engine.entities.contracts.*
+import com.maverick.game.engine.entities.contracts.IAudioEntity
+import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.entities.resetBehavior
 import com.maverick.game.engine.events.Event
@@ -37,7 +39,10 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.*
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.megaman.components.*
-import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
