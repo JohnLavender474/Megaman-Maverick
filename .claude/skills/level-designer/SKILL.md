@@ -175,7 +175,10 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 8. **Special floors float**: conveyor belts (and similar special platforms) are separate floating
    platforms. Never make them part of the floor line.
 9. **Player spawns** (`0`, `1`, `2`…) stand only on plain solid blocks, never on conveyors, ice,
-   crumbling blocks or other special floors.
+   crumbling blocks or other special floors. This also applies to the second player: with no
+   `player_2` property, slot 1 spawns 1 tile to the right of the spawn, so that tile must be plain
+   ground too. If it is not, give the spawn a `player_2` object property that points to a rectangle
+   on plain ground, in a layer with no builder (for example `player_slot_spawns`).
 10. **Enemy placement accounts for size and behaviour**: read the enemy's body size and movement
     before you place it.
     - Jumpers need clear headroom (jump rise + body height) and a clear runway in their jump
@@ -205,6 +208,9 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       under the terrain so that the flame comes out flush with the surface (a vent). All ovens in
       a room fire together: 1 s cold, 1 s warning, 1 s hot. Do not paint tiles on the post blocks;
       the oven sprite draws them. Reference: `InfernoMan_16x14_v3.tmx`.
+14. **Quicksand is recessed**: the top of the sand is at least 1 tile below the top of the blocks
+    on each side, as in `DesertMan_16x14_v4.tmx` and `WilyStage1_v2.tmx`. Never put sand level with
+    the floor around it.
 
 ## Notes Block Format
 
