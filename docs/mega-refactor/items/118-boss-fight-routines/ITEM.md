@@ -60,7 +60,7 @@ Phased (owner, 2026-11-02): one boss first, then batches. The old flow stays unt
 5. `118e`: `MoonHead`, `MechaDragon`, `ReactorMonkey`, `Bospider`, `PenguinMiniBoss` (5 fights). Adds `miniBoss`.
 6. `118f`: `WilyFinalBoss` (1 fight). Adds `finalBoss`, and removes the `wily_room` check.
 7. `118g`: remove the old screen branches, the route, the guards, and `BOSS_READY`, `BOSS_DEAD` and `BEGIN_BOSS_SPAWN`. Keep `END_BOSS_SPAWN`, `BOSS_DEFEATED`, `INTERMEDIATE_BOSS_DEAD`, the 14 hooks, `isReady` and `betweenReadyAndEndBossSpawnEvent`.
-8. `118h`: `HudBars`, `BarSpec` and `BarSource`. `FillBar` replaces `BossHealthHandler`, and `HealthFillType` goes.
+8. `118h`: `HudBars`, `BarSpec` and `BarSource`. `FillBossHealthBar` replaces `BossHealthHandler`, and `HealthFillType` goes.
 9. `118i`: `BossComponent` replaces `ready`, `betweenReadyAndEndBossSpawnEvent` and `onReady`. Shared with `048` step 6. It changes AI gating by up to 1 or 2 frames in 10 files, so its contract keeps the same window or names the change.
 10. `118j`: key-based gate unlock for `GauntletMaster` and bosses (`Gate.kt:196-226`). `GauntletMaster` does not become a `Fight`.
 
@@ -70,6 +70,7 @@ Phased (owner, 2026-11-02): one boss first, then batches. The old flow stays unt
 
 | Type | First caller |
 |---|---|
+| `Fight.cast` in place of `Fight.boss`, so that a fight has more than one boss at once; `AllDefeated` reads the whole cast, with an optional `group` | not named. `118a` holds 1 boss (`Fight.boss`), and `AllDefeated` has a `TODO` that points here |
 | `say` step, `parallel`, `Routine.skip` | `082a`, `082b` |
 | Second bar, group `BarSource` | not named |
 | `setHealth` step, `FightMemory` (partial or carried-over health, rematch rule) | not named |

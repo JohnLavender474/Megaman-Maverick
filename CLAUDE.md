@@ -158,7 +158,8 @@ The owner started this practice long after most of the repo was built, so most p
 - **Also write one** when a branch makes a large change to an old package, if the design is not clear from the code.
 - **Skip it** for a package of similar classes (for example `entities/enemies/`), a single class, or a design that the code already shows.
 - **Contents:** the purpose and why the design is as it is; the current status (for example which parts are not moved yet); the parts and how they connect; the life cycle or the order in a frame; how to change the package; the rules a change must keep. Leave out what each class or function does line by line: that belongs in the code.
-- **Diagrams:** plain text in `text` code blocks, so that they read the same in the IDE and on GitHub.
+- **Stay generic:** show the design with a hypothetical example, and name only the core types that define it. Do not list the current steps, entries, counts or call sites, because they drift. Point to the file that holds the real list.
+- **Diagrams:** Mermaid in `mermaid` code blocks: `flowchart` for parts, `stateDiagram-v2` for a life cycle, `sequenceDiagram` for an order in time.
 - **Links:** point to the item folder in `docs/mega-refactor/` for the research and the decisions. Do not copy them.
 - **Keep it true:** a branch that changes the design of a package with a README updates the README in the same branch.
 
