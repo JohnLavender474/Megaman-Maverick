@@ -148,7 +148,11 @@ class BigAssMaverickRobotHand(services: MegaServices) : MegaGameEntity(services)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        owner = spawnProps.get(ConstKeys.OWNER, BigAssMaverickRobot::class)!!
+        val owner = spawnProps.get(ConstKeys.OWNER, BigAssMaverickRobot::class)!!
+        this.owner = owner
+
+        val ownerCenter = owner.body.getCenter()
+        body.setCenter(ownerCenter.x, ownerCenter.y)
 
         rotateSpeedSupplier =
             spawnProps.get("${ConstKeys.ROTATION}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}") as () -> Float
@@ -183,8 +187,9 @@ class BigAssMaverickRobotHand(services: MegaServices) : MegaGameEntity(services)
                     FixtureLabel.NO_PROJECTILE_COLLISION
                 ),
                 "${ConstKeys.FEET}_${ConstKeys.SOUND}" pairTo false,
-                ConstKeys.WIDTH pairTo BLOCK_WIDTH * ConstVals.PPM,
-                ConstKeys.HEIGHT pairTo BLOCK_HEIGHT * ConstVals.PPM,
+                ConstKeys.BOUNDS pairTo GameRectangle()
+                    .setSize(BLOCK_WIDTH * ConstVals.PPM, BLOCK_HEIGHT * ConstVals.PPM)
+                    .setTopCenterToPoint(blockTarget),
                 ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY)
             )
         )
