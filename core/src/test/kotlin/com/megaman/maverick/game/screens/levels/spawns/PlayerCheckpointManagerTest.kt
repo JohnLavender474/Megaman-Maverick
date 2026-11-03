@@ -8,7 +8,7 @@ import com.megaman.maverick.game.ConstKeys
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
-class PlayerSpawnsManagerTest : DescribeSpec({
+class PlayerCheckpointManagerTest : DescribeSpec({
 
     fun spawn(name: String, x: Float, y: Float = 0f, size: Float = 32f): RectangleMapObject {
         val spawn = RectangleMapObject(x, y, size, size)
@@ -34,14 +34,14 @@ class PlayerSpawnsManagerTest : DescribeSpec({
 
     describe("set") {
         it("makes the spawn whose name sorts first the current spawn") {
-            val manager = PlayerSpawnsManager(camera(farAway))
+            val manager = PlayerCheckpointManager(camera(farAway))
             manager.set(spawns(spawn("2", 1000f), spawn("0", 0f), spawn("1", 500f)))
 
             manager.currentSpawnProps!!.get(ConstKeys.NAME) shouldBe "0"
         }
 
         it("sorts the names as strings, so '10' comes before '2'") {
-            val manager = PlayerSpawnsManager(camera(farAway))
+            val manager = PlayerCheckpointManager(camera(farAway))
             manager.set(spawns(spawn("2", 0f), spawn("10", 1000f)))
 
             manager.currentSpawnProps!!.get(ConstKeys.NAME) shouldBe "10"
@@ -50,13 +50,13 @@ class PlayerSpawnsManagerTest : DescribeSpec({
 
     describe("currentSpawnProps") {
         it("is null before set") {
-            PlayerSpawnsManager(camera(farAway)).currentSpawnProps shouldBe null
+            PlayerCheckpointManager(camera(farAway)).currentSpawnProps shouldBe null
         }
 
         it("holds the name, the bounds and the object properties of the current spawn") {
             val start = spawn("0", 64f, 96f)
             start.properties.put(ConstKeys.FACING, "left")
-            val manager = PlayerSpawnsManager(camera(farAway))
+            val manager = PlayerCheckpointManager(camera(farAway))
             manager.set(spawns(start))
 
             val props = manager.currentSpawnProps!!
@@ -72,7 +72,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
         it("changes the current spawn when the camera overlaps a remaining spawn") {
             val camera = camera(farAway)
             var changed: Pair<String?, String?>? = null
-            val manager = PlayerSpawnsManager(camera) { new, old -> changed = new?.name to old?.name }
+            val manager = PlayerCheckpointManager(camera) { new, old -> changed = new?.name to old?.name }
             manager.set(spawns(spawn("0", 0f), spawn("1", 2000f)))
 
             camera.position.set(2000f, 0f, 0f)
@@ -84,7 +84,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
 
         it("does nothing when the camera overlaps no remaining spawn") {
             var calls = 0
-            val manager = PlayerSpawnsManager(camera(farAway)) { _, _ -> calls++ }
+            val manager = PlayerCheckpointManager(camera(farAway)) { _, _ -> calls++ }
             manager.set(spawns(spawn("0", 0f), spawn("1", 2000f)))
 
             manager.run()
@@ -95,7 +95,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
 
         it("activates each spawn only once") {
             val camera = camera(farAway)
-            val manager = PlayerSpawnsManager(camera)
+            val manager = PlayerCheckpointManager(camera)
             manager.set(spawns(spawn("0", 0f), spawn("1", 2000f), spawn("2", 4000f)))
 
             camera.position.set(2000f, 0f, 0f)
@@ -110,7 +110,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
 
         it("never activates the first spawn again after set") {
             val camera = camera(farAway)
-            val manager = PlayerSpawnsManager(camera)
+            val manager = PlayerCheckpointManager(camera)
             manager.set(spawns(spawn("0", 0f), spawn("1", 2000f)))
 
             camera.position.set(2000f, 0f, 0f)
@@ -125,7 +125,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
     describe("startAt") {
         it("makes the given spawn the current spawn") {
             val start = spawn("2", 4000f)
-            val manager = PlayerSpawnsManager(camera(farAway))
+            val manager = PlayerCheckpointManager(camera(farAway))
             manager.set(spawns(spawn("0", 0f), spawn("1", 2000f), start))
 
             manager.startAt(start)
@@ -136,7 +136,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
         it("keeps spawns that sort before the start spawn from activating") {
             val start = spawn("2", 4000f)
             val camera = camera(farAway)
-            val manager = PlayerSpawnsManager(camera)
+            val manager = PlayerCheckpointManager(camera)
             manager.set(spawns(spawn("0", 0f), spawn("1", 2000f), start))
             manager.startAt(start)
 
@@ -151,7 +151,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
         it("lets spawns that sort after the start spawn activate") {
             val start = spawn("1", 2000f)
             val camera = camera(farAway)
-            val manager = PlayerSpawnsManager(camera)
+            val manager = PlayerCheckpointManager(camera)
             manager.set(spawns(spawn("0", 0f), start, spawn("2", 4000f)))
             manager.startAt(start)
 
@@ -165,7 +165,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
     describe("remove") {
         it("keeps a removed spawn from activating") {
             val camera = camera(farAway)
-            val manager = PlayerSpawnsManager(camera)
+            val manager = PlayerCheckpointManager(camera)
             manager.set(spawns(spawn("0", 0f), spawn("4", 2000f), spawn("4", 4000f)))
 
             manager.remove("4")
@@ -179,7 +179,7 @@ class PlayerSpawnsManagerTest : DescribeSpec({
     describe("reset") {
         it("clears the current spawn and the remaining spawns") {
             val camera = camera(farAway)
-            val manager = PlayerSpawnsManager(camera)
+            val manager = PlayerCheckpointManager(camera)
             manager.set(spawns(spawn("0", 0f), spawn("1", 2000f)))
 
             manager.reset()

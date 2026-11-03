@@ -103,7 +103,7 @@ import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
 import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
-import com.megaman.maverick.game.screens.levels.spawns.PlayerSpawnsManager
+import com.megaman.maverick.game.screens.levels.spawns.PlayerCheckpointManager
 import com.megaman.maverick.game.screens.levels.spawns.slotSpawnProps
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 import com.megaman.maverick.game.screens.levels.stats.PlayerStatsHandler
@@ -111,7 +111,6 @@ import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuilder
 import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuildersParams
 import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.spawns.ISpawner
-import com.megaman.maverick.game.spawns.Spawn
 import com.megaman.maverick.game.spawns.SpawnsManager
 import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -191,7 +190,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     lateinit var screenOnCompletion: (LevelState) -> ScreenEnum
 
     private lateinit var spawnsMan: SpawnsManager
-    private lateinit var playerSpawnsMan: PlayerSpawnsManager
+    private lateinit var playerCheckpointMan: PlayerCheckpointManager
 
     private lateinit var playerStatsHandler: PlayerStatsHandler
     private lateinit var bossHealthHandler: BossHealthHandler
@@ -231,7 +230,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private val gameCameraPriorPosition = Vector3()
     private var camerasSetToGameCamera = false
 
-    private val spawns = Array<Spawn>()
     private val spawnCameraBounds = GameRectangle()
 
     private val pauseScreen = LevelPauseScreen(game)
@@ -262,16 +260,16 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         )
         checkpointTimer.setToEnd()
 
-        spawnsMan = SpawnsManager(spawns)
-        playerSpawnsMan = PlayerSpawnsManager(gameCamera) { current, old ->
+        spawnsMan = SpawnsManager { entity, props -> engine.spawn(entity, props) }
+        playerCheckpointMan = PlayerCheckpointManager(gameCamera) { current, old ->
             if (current != null && player.inPlay) {
-                GameLogger.debug(TAG, "playerSpawnsMan(): onChangeSpawn(): current=${current.name}, old=${old?.name}")
+                GameLogger.debug(TAG, "playerCheckpointMan(): onChangeSpawn(): current=${current.name}, old=${old?.name}")
 
                 checkpointText.setText("CHECKPOINT ${current.name}")
                 checkpointTimer.reset()
 
                 val duplicate = current.properties.get(ConstKeys.DUPLICATE, false, Boolean::class.java)
-                if (duplicate) playerSpawnsMan.remove(current.name)
+                if (duplicate) playerCheckpointMan.remove(current.name)
             } else {
                 checkpointText.setText("")
                 checkpointTimer.setToEnd()
@@ -452,7 +450,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     override fun getLayerBuilders() =
-        MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnsMan, spawnCameraBounds))
+        MegaMapLayerBuilders(MegaMapLayerBuildersParams(game, spawnCameraBounds))
 
     override fun buildLevel(result: Properties) {
         backgrounds = result.get(ConstKeys.BACKGROUNDS) as Array<Background>? ?: Array()
@@ -465,7 +463,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         val playerSpawns =
             result.get("${ConstKeys.PLAYER}_${ConstKeys.SPAWNS}") as Array<RectangleMapObject>? ?: Array()
-        playerSpawnsMan.set(playerSpawns)
+        playerCheckpointMan.set(playerSpawns)
 
         val gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
         roomBounds.gameRooms = gameRooms
@@ -506,7 +504,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
 
         GameLogger.log(TAG, "startAtLaunchRoom(): room=$roomName, spawn=${spawn.name}")
-        playerSpawnsMan.startAt(spawn)
+        playerCheckpointMan.startAt(spawn)
     }
 
     override fun onEvent(event: Event) {
@@ -549,7 +547,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
 
                 val spawnProps =
-                    playerSpawnsMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
+                    playerCheckpointMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
                 GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
                 engine.spawn(player, spawnProps)
                 for (i in 1 until game.players.capacity) {
@@ -925,13 +923,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             spawnCameraBounds.set(game.cameraView.getRotatedBounds())
             spawnsMan.update(delta)
 
-            val spawnsIter = spawns.iterator()
-            while (spawnsIter.hasNext()) {
-                val spawn = spawnsIter.next()
-                if (!engine.spawn(spawn.entity, spawn.properties)) spawn.onRejected?.invoke()
-                spawnsIter.remove()
-            }
-
             fights.update()
 
             // Because I'm not good at software design, there's some tight coupling in this block
@@ -950,14 +941,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         engine.update(delta)
 
         if (!game.clock.paused) {
-            playerSpawnsMan.run()
-
-            val spawnsIter = spawns.iterator()
-            while (spawnsIter.hasNext()) {
-                val spawn = spawnsIter.next()
-                if (!engine.spawn(spawn.entity, spawn.properties)) spawn.onRejected?.invoke()
-                spawnsIter.remove()
-            }
+            playerCheckpointMan.run()
 
             backgrounds.forEach { it.update(delta) }
             game.cameraController.update(delta)
@@ -1105,9 +1089,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         fights.cancel()
         engine.reset()
 
-        spawns.clear()
         spawnsMan.reset()
-        playerSpawnsMan.reset()
+        playerCheckpointMan.reset()
 
         playerSpawnEventHandler.reset()
         playerDeathEventHandler.setToEnd()

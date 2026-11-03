@@ -31,28 +31,16 @@ class SpawnerReleaseTest : DescribeSpec({
 
     lateinit var engine: GameEngine
     lateinit var services: MegaServices
-    lateinit var spawns: Array<Spawn>
     lateinit var spawnsMan: SpawnsManager
 
     beforeEach {
         engine = GameEngine()
         services = testServices(engine = engine)
-        spawns = Array()
-        spawnsMan = SpawnsManager(spawns)
-    }
-
-    fun spawnPass() {
-        spawnsMan.update(0f)
-        val iter = spawns.iterator()
-        while (iter.hasNext()) {
-            val spawn = iter.next()
-            if (!engine.spawn(spawn.entity, spawn.properties)) spawn.onRejected?.invoke()
-            iter.remove()
-        }
+        spawnsMan = SpawnsManager { entity, props -> engine.spawn(entity, props) }
     }
 
     fun frame(duringUpdate: () -> Unit = {}, events: List<Event> = emptyList(), listener: SpawnerForEvent? = null) {
-        spawnPass()
+        spawnsMan.update(0f)
         duringUpdate()
         engine.update(0f)
         events.forEach { listener?.onEvent(it) }

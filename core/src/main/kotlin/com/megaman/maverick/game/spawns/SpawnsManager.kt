@@ -3,8 +3,10 @@ package com.megaman.maverick.game.spawns
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.objects.Properties
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
-class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
+class SpawnsManager(private val spawn: (MegaGameEntity, Properties) -> Boolean) : Updatable, Resettable {
 
     companion object {
         const val TAG = "SpawnsManager"
@@ -30,9 +32,8 @@ class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
             }
 
             if (spawner.shouldTest(delta) && spawner.test(delta)) {
-                val spawn = spawner.get()
-                spawn?.onRejected = spawner::onSpawnRejected
-                spawns.add(spawn)
+                val newSpawn = spawner.get()!!
+                if (!spawn(newSpawn.entity, newSpawn.properties)) spawner.onSpawnRejected()
 
                 if (!spawner.respawnable) {
                     spawner.reset()
@@ -45,6 +46,5 @@ class SpawnsManager(val spawns: Array<Spawn>) : Updatable, Resettable {
     override fun reset() {
         spawners.forEach { it.reset() }
         spawners.clear()
-        spawns.clear()
     }
 }

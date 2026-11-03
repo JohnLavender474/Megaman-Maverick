@@ -9,7 +9,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 
-class PlayerSpawnsManager(
+class PlayerCheckpointManager(
     private val camera: Camera,
     private val onChangeSpawn: ((RectangleMapObject?, RectangleMapObject?) -> Unit)? = null
 ) : Runnable, Resettable {
