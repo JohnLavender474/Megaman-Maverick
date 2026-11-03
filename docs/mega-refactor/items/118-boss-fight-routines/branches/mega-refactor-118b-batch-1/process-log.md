@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: `TimberWoman`, `MoonMan` and `ReactorMan` (6 fights) on the fight flow
-- Done: scan; `SCOPE.md`, `CONTRACT.md` and `PLAN.md` approved; plan steps 1 to 7; owner play test passed
-- Next: owner approves the merge (plan step 8)
+- Done: scan; `SCOPE.md`, `CONTRACT.md` and `PLAN.md` approved; all plan steps; merged into `master` as `cd1af498b`
+- Next: none
 - Blocked:
 
 ## Entries
@@ -28,3 +28,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Step 5: the `fights` README has a generic mid-level example, the map props choice, the supplier for a value that the screen can change, and the rule that a fight can stay open for the `run` that delivers its last event.
 - Step 6: one 12 s launch of the jar for each of `TIMBER_WOMAN room14`, `MOON_MAN room14`, `REACTOR_MAN room14`, `WILY_STAGE_1 room6` and `WILY_STAGE_3 room6`. Each one ran until the time limit, with no exception. The only error line is the known `DuoBallCanon` spawner error in `WILY_STAGE_1`.
 - Step 7: the owner ran the play checks in `CONTRACT.md` (7 experimental, 4 control). All passed. No fix was needed.
+- Step 8: the owner approved the merge. Squash commit `cd1af498b` on `master`.
