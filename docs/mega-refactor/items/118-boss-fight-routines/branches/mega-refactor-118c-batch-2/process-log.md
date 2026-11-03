@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` (10 fights) on the fight flow
-- Done: scan; `SCOPE.md` and `CONTRACT.md` approved
-- Next: owner approves `PLAN.md`
+- Done: scan; `SCOPE.md`, `CONTRACT.md` and `PLAN.md` approved; branch start
+- Next: plan step 2 (tests first)
 - Blocked:
 
 ## Entries
@@ -18,3 +18,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - The owner asked why the cancel in `FightDirector.start` was needed for `WILY_STAGE_3`. The trace showed that a second fight cannot start while one is open today, and that no lease would stay held (`docs/NOTES.md`). The owner dropped the cancel and chose no `TODO`. The rule goes in the README, and a decision in the `118` `ITEM.md` asks `118e` and `118f` to check it.
 - The owner approved `SCOPE.md`, and asked for a short warning in the README next to `FightDirector` as well.
 - The owner approved `CONTRACT.md`. Draft `PLAN.md`. `master` moved to `14b33c39c` (`068a`, `019c`); neither touches the fight route.
+- The owner approved `PLAN.md`. Branch start on `master`, and the worktree from `master`.
