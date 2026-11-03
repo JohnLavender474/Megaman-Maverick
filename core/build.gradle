@@ -23,6 +23,7 @@ dependencies {
 
 test {
   useJUnitPlatform()
+  maxHeapSize = '1g'
   if (project.hasProperty('updateContactRuleSelection')) systemProperty 'updateContactRuleSelection', 'true'
   testLogging {
     events "passed", "skipped", "failed"

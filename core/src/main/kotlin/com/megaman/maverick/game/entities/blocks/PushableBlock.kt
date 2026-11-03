@@ -44,6 +44,8 @@ import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.max
+import kotlin.math.min
 
 class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, ICullableEntity {
 
@@ -63,6 +65,9 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
 
         private const val BODY_WIDTH = 2f
         private const val BODY_HEIGHT = 2f
+
+        private const val LEDGE_TOLERANCE = 0.5f
+        private const val REST_GAP = 0.01f
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -147,6 +152,26 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
         entity == this && block == this.block
 
+    // TODO: with 2 players, a player on the far side does not stop this move, because the velocity test in preProcess
+    //  does not see a translate (docs/issues/2026-11-02-pushable-block-ledge-sliver.md)
+    // TODO: a gap narrower than this block, with 16 px or less on each side, cancels the slides, so the block can sink
+    //  through both ledges (docs/issues/2026-11-02-pushable-block-ledge-sliver.md)
+    // TODO: this filter runs before the one-way rules in MegaCollisionHandler, so a one-way block acts as a solid ledge
+    //  (docs/issues/2026-11-02-pushable-block-ledge-sliver.md)
+    private fun slideOffLedge(ledge: IBody): Boolean {
+        val across = min(body.getMaxX(), ledge.getMaxX()) - max(body.getX(), ledge.getX())
+        val down = ledge.getMaxY() - body.getY()
+        if (down <= 0f || across > LEDGE_TOLERANCE * ConstVals.PPM || across <= down) return false
+        for (block in body.getFeetBlocks()) if (block !is PrivateSandFloor) return false
+        body.translate(if (body.getX() > ledge.getX()) down else -down, 0f)
+        return true
+    }
+
+    private fun restsOnFeetBlock(): Boolean {
+        for (block in body.getFeetBlocks()) if (body.getY() - block.body.getMaxY() <= REST_GAP) return true
+        return false
+    }
+
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
@@ -195,8 +220,13 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         val debugShapes = Array<() -> IDrawableShape?>()
         debugShapes.add { body.getBounds() }
 
-        val feetFixture =
-            Fixture(body, FixtureType.FEET, GameRectangle().setSize(BODY_WIDTH * ConstVals.PPM, 0.1f * ConstVals.PPM))
+        body.addBlockFilter { other, _ -> other is Block && slideOffLedge(other.body) }
+
+        val feetFixture = Fixture(
+            body,
+            FixtureType.FEET,
+            GameRectangle().setSize((BODY_WIDTH - 2f * LEDGE_TOLERANCE) * ConstVals.PPM, 0.1f * ConstVals.PPM)
+        )
         feetFixture.offsetFromBodyAttachment.y = -ConstVals.PPM.toFloat()
         feetFixture.setReceiver(Receivers.FILTER) { it.getEntity() != block }
         body.addFixture(feetFixture)
@@ -210,9 +240,8 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
             }
             body.physics.gravity.y = -gravity * ConstVals.PPM
 
-            // TODO: y velocity grows with no limit while the block rests, so its first fall is faster after a long rest.
-            //  Do not clear it: this stored velocity lets a block drop into a hole of its own width, as in Rodent Man
-            //  room9 (docs/issues/2026-11-02-pushable-block-velocity-builds-at-rest.md)
+            if (restsOnFeetBlock()) body.physics.velocity.y = 0f
+
             if (services.levelState.roomTransition) body.physics.velocity.setZero()
 
             val velocity = body.physics.velocity

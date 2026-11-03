@@ -34,6 +34,7 @@ import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.state.GameMode
+import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
@@ -43,12 +44,14 @@ import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.megaContactRules
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.floats.shouldBeGreaterThan
 import io.kotest.matchers.floats.shouldBeLessThan
 import io.kotest.matchers.ints.shouldBeLessThan as intShouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import kotlin.math.ceil
 
 private const val PPM = ConstVals.PPM.toFloat()
 private const val STEP = 1f / 150f
@@ -84,14 +87,22 @@ class PushableBlockTest : DescribeSpec({
 
     lateinit var engine: GameEngine
     lateinit var services: MegaServices
+    lateinit var world: WorldSystem
+    var cycleStep = STEP
 
-    fun step(cycles: Int) = repeat(cycles) { engine.update(STEP) }
+    fun step(cycles: Int) = repeat(cycles) { engine.update(cycleStep) }
+
+    fun useTier(tier: Performance) {
+        world.fixedStep = tier.fixedStep
+        cycleStep = tier.fixedStep
+    }
 
     beforeEach {
+        cycleStep = STEP
         val players = MegaPlayers(2)
         val gravity = WorldGravity(players)
         val container = SimpleGridWorldContainer(ConstVals.PPM)
-        val worldSystem = WorldSystem(
+        world = WorldSystem(
             ppm = ConstVals.PPM,
             fixedStep = STEP,
             worldContainerSupplier = { container },
@@ -102,7 +113,7 @@ class PushableBlockTest : DescribeSpec({
             contactFilter = MegaContactFilter()
         )
         engine = GameEngine(Array<GameSystem>().apply {
-            add(worldSystem)
+            add(world)
             add(UpdatablesSystem())
         })
         val camera = OrthographicCamera().apply {
@@ -125,6 +136,10 @@ class PushableBlockTest : DescribeSpec({
         Block(services).spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(-10f * PPM, -PPM, 10f * PPM, PPM))) shouldBe true
     }
 
+    fun wall() {
+        Block(services).spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(2f * PPM, -PPM, 2f * PPM, 3f * PPM))) shouldBe true
+    }
+
     fun block(x: Float): PushableBlock {
         val block = PushableBlock(services)
         val spawnProps = props(
@@ -136,6 +151,241 @@ class PushableBlockTest : DescribeSpec({
     }
 
     describe("a pushable block") {
+        Performance.entries.forEach { tier ->
+            listOf(0.5f, 8f, 16f).forEach { s ->
+                listOf(0, 900).forEach { rest ->
+                    it("leaves a support of $s px within 0.15 s at $tier after $rest steps of rest") {
+                        useTier(tier)
+                        ledge()
+                        wall()
+                        val block = block(-2f)
+                        step(3 + rest)
+
+                        block.body.setX(-s)
+                        step(ceil(0.15f / cycleStep).toInt())
+
+                        block.body.getX() shouldBeGreaterThan -0.01f
+                        block.body.getY() shouldBeLessThan -1f
+                    }
+                }
+            }
+
+            listOf(16.5f, 24f, 32f).forEach { s ->
+                it("stays on a support of $s px at $tier") {
+                    useTier(tier)
+                    ledge()
+                    wall()
+                    val block = block(-2f)
+                    step(3)
+
+                    block.body.setX(-s)
+                    step(900)
+
+                    block.body.getX() shouldBe -s
+                    block.body.getY() shouldBeGreaterThan -1f
+                    block.body.isSensing(BodySense.FEET_ON_GROUND) shouldBe true
+                }
+            }
+        }
+
+        it("slides off when it lands on a corner") {
+            ledge()
+            val block = block(-2f)
+            step(1)
+            block.body.setY(2f * PPM)
+            block.body.setX(-16f)
+            step(150)
+
+            block.body.getX() shouldBeGreaterThan -0.01f
+            block.body.getY() shouldBeLessThan -1f
+        }
+
+        it("crosses a seam between 2 blocks at the same height") {
+            ledge()
+            Block(services).spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(0f, -PPM, 10f * PPM, PPM))) shouldBe true
+            val block = block(-2f)
+            step(3)
+
+            while (block.body.getX() < 0f) {
+                block.body.physics.velocity.x = 4f * PPM
+                step(1)
+                block.body.isSensing(BodySense.FEET_ON_GROUND) shouldBe true
+                kotlin.math.abs(block.body.getY()) shouldBeLessThan 1f
+            }
+        }
+
+        listOf(-8f, -56f).forEach { x ->
+            it("does not creep when it rests over a seam at x = $x") {
+                ledge()
+                Block(services).spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(0f, -PPM, 10f * PPM, PPM))) shouldBe true
+                val block = block(-2f)
+                step(3)
+
+                block.body.setX(x)
+                step(900)
+
+                block.body.getX() shouldBe x
+            }
+        }
+
+        it("stays at a wall that it is pushed into") {
+            ledge()
+            Block(services).spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(-2f * PPM, 0f, PPM, 3f * PPM))) shouldBe true
+            val block = block(-4f)
+            step(3)
+
+            repeat(120) {
+                block.body.physics.velocity.x = 4f * PPM
+                step(1)
+            }
+
+            kotlin.math.abs(block.body.getMaxX() + 2f * PPM) shouldBeLessThan 1f
+            kotlin.math.abs(block.body.getY()) shouldBeLessThan 1f
+            block.body.isSensing(BodySense.FEET_ON_GROUND) shouldBe true
+        }
+
+        it("keeps its height under a ceiling corner") {
+            ledge()
+            Block(services).spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(-3f * PPM, 2f * PPM, 3f * PPM, PPM))) shouldBe true
+            val block = block(-6f)
+            step(3)
+
+            while (block.body.getMaxX() <= -2f * PPM) {
+                block.body.physics.velocity.x = 2f * PPM
+                step(1)
+                kotlin.math.abs(block.body.getY()) shouldBeLessThan 1f
+            }
+        }
+
+        it("carries a rider when it slides off") {
+            ledge()
+            val block = block(-2f)
+            step(3)
+            block.body.setX(-20f)
+            step(3)
+            val rider = Rider(services)
+            rider.spawn(props(ConstKeys.POSITION pairTo Vector2(block.body.getX() + PPM, block.body.getMaxY()))) shouldBe true
+            step(3)
+
+            block.body.translate(12f, 0f)
+            rider.body.translate(12f, 0f)
+            repeat(60) {
+                step(1)
+                rider.body.getY() shouldBeGreaterThan block.body.getMaxY() - PPM
+            }
+            block.body.getY() shouldBeLessThan -1f
+        }
+
+        it("falls at the same speed after a short and a long rest") {
+            ledge()
+            val long = block(-2f)
+            step(1050)
+            val short = block(-6f)
+            step(150)
+
+            long.body.setX(1f * PPM)
+            short.body.setX(4f * PPM)
+            step(10)
+
+            long.body.physics.velocity.y shouldBe (short.body.physics.velocity.y plusOrMinus 0.01f)
+        }
+
+        Performance.entries.forEach { tier ->
+            it("drops onto the plate in a hole and rests on it with no jitter at $tier") {
+                useTier(tier)
+                ledge()
+                wall()
+                Block(services).spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(0f, -3f * PPM, 2f * PPM, PPM))) shouldBe true
+                val plate = FeetRiseSinkBlock(services)
+                plate.spawn(
+                    props(
+                        ConstKeys.BOUNDS pairTo GameRectangle(-0.5f * PPM, -1.5f * PPM, 3f * PPM, 0.5f * PPM),
+                        ConstKeys.FALL pairTo 3f,
+                        ConstKeys.RISE pairTo 3f,
+                        ConstKeys.MIN pairTo 0.25f
+                    )
+                ) shouldBe true
+                val block = block(-2f)
+                step(3)
+
+                block.body.setX(-1f)
+                step(ceil(1f / cycleStep).toInt())
+
+                val restY = block.body.getY()
+                repeat(ceil(1f / cycleStep).toInt()) {
+                    step(1)
+                    block.body.isSensing(BodySense.FEET_ON_GROUND) shouldBe true
+                    kotlin.math.abs(block.body.getY() - restY) shouldBeLessThan 0.01f
+                }
+                kotlin.math.abs(plate.body.getMaxY() + 1.25f * PPM) shouldBeLessThan 0.1f
+                kotlin.math.abs(block.body.getY() - plate.body.getMaxY()) shouldBeLessThan 0.1f
+            }
+        }
+
+        it("stays on a sinking plate and holds it down") {
+            val plate = FeetRiseSinkBlock(services)
+            plate.spawn(
+                props(
+                    ConstKeys.BOUNDS pairTo GameRectangle(-2f * PPM, -0.5f * PPM, 3f * PPM, 0.5f * PPM),
+                    ConstKeys.FALL pairTo 3f,
+                    ConstKeys.RISE pairTo 3f,
+                    ConstKeys.MIN pairTo 0.25f
+                )
+            ) shouldBe true
+            val block = block(-1.5f)
+            step(300)
+
+            block.body.isSensing(BodySense.FEET_ON_GROUND) shouldBe true
+            plate.body.getMaxY() shouldBeLessThan -0.2f * PPM
+            kotlin.math.abs(block.body.getY() - plate.body.getMaxY()) shouldBeLessThan 1f
+        }
+
+        listOf(0.5f, 8f, 16f).forEach { s ->
+            it("leaves a support of $s px next to sand") {
+                ledge()
+                val sand = QuickSand(services)
+                sand.spawn(
+                    props(
+                        ConstKeys.BOUNDS pairTo GameRectangle(0f, -PPM, 6f * PPM, PPM),
+                        ConstKeys.FALL pairTo -0.5f,
+                        ConstKeys.RISE pairTo 3f,
+                        ConstKeys.MIN pairTo 2f
+                    )
+                ) shouldBe true
+                val block = block(-2f)
+                step(3)
+
+                block.body.setX(-s)
+                step(60)
+
+                block.body.getX() shouldBeGreaterThan -0.01f
+                block.body.getY() shouldBeLessThan -0.1f * PPM
+            }
+        }
+
+        it("starts to sink when it is pushed from a ledge onto sand") {
+            ledge()
+            val sand = QuickSand(services)
+            sand.spawn(
+                props(
+                    ConstKeys.BOUNDS pairTo GameRectangle(0f, -PPM, 6f * PPM, PPM),
+                    ConstKeys.FALL pairTo -0.5f,
+                    ConstKeys.RISE pairTo 3f,
+                    ConstKeys.MIN pairTo 2f
+                )
+            ) shouldBe true
+            val block = block(-2f)
+            step(3)
+
+            while (block.body.getX() < 0f) {
+                block.body.physics.velocity.x = 4f * PPM
+                step(1)
+            }
+            step(60)
+
+            block.body.getY() shouldBeLessThan -0.1f * PPM
+        }
+
         it("falls at full gravity and stops its x velocity after a short rest on a ledge") {
             ledge()
             val block = block(-2f)
