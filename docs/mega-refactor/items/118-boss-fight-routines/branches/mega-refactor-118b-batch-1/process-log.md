@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: `TimberWoman`, `MoonMan` and `ReactorMan` (6 fights) on the fight flow
-- Done: scan; draft `SCOPE.md`
-- Next: owner approves `SCOPE.md`
+- Done: scan; `SCOPE.md` approved
+- Next: owner approves `CONTRACT.md`
 - Blocked:
 
 ## Entries
