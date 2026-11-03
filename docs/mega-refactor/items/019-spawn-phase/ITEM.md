@@ -32,10 +32,11 @@ Answer to review item 18 (2026-10-22, verbatim):
 - K (2026-10-22): research found no entity that needs the second `spawnsMan.update` pass. The pass after `engine.update` is the original; commit `aea69ae3a` (2024-09-12) added the pass before it. No version of the pass ever gave a same-frame spawn. It only refreshes spawner state one frame early. See `NOTES.md`.
 - (2026-10-22) The owner agrees with the destroy-notification design.
 - (2026-10-22) Remove the second call first, in its own small branch `mega-refactor-019a-remove-second-spawn-pass`.
+- (2026-11-03) A destroyed entity does not respawn in the tick of its `destroy()` call. It respawns in the next tick at the earliest. This is the behavior on `master` after `019b`: `spawnsMan.update` runs once per frame, before `engine.update`, so a spawner that is released during frame N can spawn only in frame N+1. The engine needs no spawn flush at the end of the update. `019c` must keep this rule and must not add a spawner pass after `engine.update`.
 
 ## Open questions
 
-- Must a destroyed entity be able to respawn in the same tick?
+None.
 
 ## Sources
 
