@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -35,3 +35,7 @@ Leave a `PushableBlock` on a ledge for about 10 s, then push it off, and compare
 Do not clear `velocity.y` at rest. A puzzle depends on it. In `RodentMan_16x14.tmx` `room9`, the hole is exactly as wide as the block, and the player can stop pushing with a sliver of the block still on the ledge. The stored velocity makes the sink per step larger than the width of the sliver, so `StandardCollisionHandler` pushes the block sideways into the hole. `fix/quicksand-two-players` tried to clear the velocity, and the block then stayed above the hole (found in the owner's play test). `PushableBlockTest` now covers this case.
 
 A fix must keep a sideways tolerance for that hole, at all performance tiers. The owner chose a fixed first fall (2026-11-02): `2026-11-02-pushable-block-ledge-sliver.md` adds the tolerance and then clears the velocity, and that fix closes this issue. The same dependence means that a block pushed soon after it spawns has less tolerance than a block that rested.
+
+## Resolution
+
+Fixed by `fix/pushable-block-ledge-sliver` (squash `6bdacead9`). `velocity.y` clears while the block rests on its feet block, and the 16 px ledge tolerance keeps the drop into a hole of the block's own width (`2026-11-02-pushable-block-ledge-sliver.md`).

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -134,3 +134,9 @@ Effects to accept:
 - With 2 players, a player on the far side no longer stops a sliver move of up to 16 px. This needs a `TODO` at the code.
 
 Tests, in `PushableBlockTest`, at all 4 steps: `s` of 0.5 to 16 px leaves the ledge within 0.15 s after no rest; `s` of 16.5 to 32 px stays for 900 steps. Measure `resolveCollisions` with `--diagnostics` before and after (`O5-R2`).
+
+## Resolution
+
+Fixed by `fix/pushable-block-ledge-sliver` (squash `6bdacead9`), as the short contract says. The final review found that a sand floor held a block on a sliver next to sand, and the owner's play test found that the block jittered on the `room9` plate. Both are fixed in the branch, with tests. The owner's play checks pass (2026-11-02). The block in `room9` stops on the plate, as on the old code, not on the hole floor.
+
+Accepted, with a `TODO` at the code: the 2-player far-side move, a gap narrower than the block with 16 px or less on each side, and a one-way block as a ledge.
