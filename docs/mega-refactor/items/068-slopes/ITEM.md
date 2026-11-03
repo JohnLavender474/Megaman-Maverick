@@ -1,11 +1,11 @@
 # 068: Floor slopes for extra levels
 
-- Status: planned
+- Status: active
 - Type: feature
 - Objectives: `O8`, `O4`
 - Depends on: none
 - Related: `003`, `010`, `017`, `051`, `058`, `060`, `067`, `069`, `081`
-- Branches: none yet
+- Branches: `mega-refactor-068a-slopes` (active, started 2026-11-03)
 
 ## Goal
 
