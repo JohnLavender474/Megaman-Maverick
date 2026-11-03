@@ -21,33 +21,33 @@ The recommended order of the work. Change this file only on `master`.
 Reason: these are small and independent. They fix live crashes and known co-op faults before more co-op work builds on
 them. `091` also gives a reliable check that a room loads.
 
-| Crashes | Co-op faults | Small items |
-|---|---|---|
-| `CeilingCrusher` pooled scratch object | Dead slot 1 at `players.any` | `072` remove `IMegaGameEntity` |
-| 4 silent missing regions | Koopa shell roll direction | `091` check that a room loads with no window |
-| | | `065` every `init()` calls `super.init()` |
-| | | `105`, `106`, `107` smoke test checks |
+| Crashes                                               | Co-op faults                 | Small items                                  |
+|-------------------------------------------------------|------------------------------|----------------------------------------------|
+| `CeilingCrusher` pooled scratch object                | Dead slot 1 at `players.any` | `072` remove `IMegaGameEntity`               |
+| 4 silent missing regions                              | Koopa shell roll direction   | `091` check that a room loads with no window |
+|                                                       |                              | `065` every `init()` calls `super.init()`    |
+|                                                       |                              | `105`, `106`, `107` smoke test checks        |
 
 ## Stage 2: foundations
 
 Reason: most later work waits for these items.
 
-| Co-op | Determinism | Logic structure | Safety and data | Characters |
-|---|---|---|---|---|
-| `038` → `047c` | `011` random source | `015` state machine | `005` damage test | `081` playable X |
-| | `019c` spawn phase | `012` freezes | `021` entity registry | |
-| | `017` world-step hooks | | `009` allocation baseline | |
+| Co-op          | Determinism            | Logic structure     | Safety and data           | Characters       |
+|----------------|------------------------|---------------------|---------------------------|------------------|
+| `038` → `047c` | `011` random source    | `015` state machine | `005` damage test         | `081` playable X |
+|                | `019c` spawn phase     | `012` freezes       | `021` entity registry     |                  |
+|                | `017` world-step hooks |                     | `009` allocation baseline |                  |
 
 ## Stage 3: what the foundations unlock
 
 Reason: each item here depends on an item in stage 2. `047e` and the first `112` branch run together, because the boss
 parts are the first real callers of the policy.
 
-| Co-op | Time | Logic | Data | Characters |
-|---|---|---|---|---|
-| `047d` HUD and pause | `010` fixed tick | `013` level flow | `022` → `041`, `050`, `101` | `069` dash button |
-| `047e` with first `112` branch | | `023` damage profiles | | `113` character select |
-| `030` factions, then rest of `112` | | `082` dialogue | | |
+| Co-op                              | Time             | Logic                 | Data                        | Characters             |
+|------------------------------------|------------------|-----------------------|-----------------------------|------------------------|
+| `047d` HUD and pause               | `010` fixed tick | `013` level flow      | `022` → `041`, `050`, `101` | `069` dash button      |
+| `047e` with first `112` branch     |                  | `023` damage profiles |                             | `113` character select |
+| `030` factions, then rest of `112` |                  | `082` dialogue        |                             |                        |
 
 `010` is an `idea`, and it must be `planned` before this stage.
 
@@ -55,10 +55,10 @@ parts are the first real callers of the policy.
 
 Reason: the modes need the finished co-op rules, `030` and `102`. Replay needs `010`.
 
-| Modes | Replay | Characters |
-|---|---|---|
+| Modes                                        | Replay                                        | Characters                          |
+|----------------------------------------------|-----------------------------------------------|-------------------------------------|
 | `102` game modes → `108` Spec Ops, `109` PvP | `006` headless boot → `055` record and replay | `024` `WeaponDef` → `060` Proto Man |
-| `047f` join and leave | | |
+| `047f` join and leave                        |                                               |                                     |
 
 `102` is an `idea`, and it must be `planned` before this stage.
 
@@ -66,11 +66,11 @@ Reason: the modes need the finished co-op rules, `030` and `102`. Replay needs `
 
 Reason: these items need most of the stages above.
 
-| Multiplayer | Platforms |
-|---|---|
-| `094` split screen | `032` neutral engine, with `001b` host contract |
-| `110` campaign co-op, `111` multi-room PvP | `028` → `033` assets |
-| `095` netplay | `035` → `054` web and Android, `088` web player |
+| Multiplayer                                | Platforms                                       |
+|--------------------------------------------|-------------------------------------------------|
+| `094` split screen                         | `032` neutral engine, with `001b` host contract |
+| `110` campaign co-op, `111` multi-room PvP | `028` → `033` assets                            |
+| `095` netplay                              | `035` → `054` web and Android, `088` web player |
 
 ## Any time
 
