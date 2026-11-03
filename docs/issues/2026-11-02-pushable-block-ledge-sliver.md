@@ -41,12 +41,12 @@ Intended changes:
 
 - `FEET` of a `PushableBlock` is 32 px wide, not 64 px. So the block is grounded only with more than 16 px of support.
 - A block filter on the block: with no feet on a solid block, and a corner overlap of 16 px or less, the filter stops the up push and slides the block away from the ledge by the depth it sank. A `PrivateSandFloor` does not count as solid, so a sliver next to sand also ends (found in the final review). The block leaves the ledge at all tiers, with no dependence on rest.
-- `velocity.y` clears while `FEET_ON_GROUND` is true. So the first fall has a fixed speed, and the sink per step at rest no longer grows. The `TODO` at `PushableBlock.kt:213-215` goes.
+- `velocity.y` clears while the block rests on a feet block, with its bottom at that block's top. A clear at the first `FEET` contact stopped the block in the air above a plate, and the block jittered on the plate in `room9` (owner's play test, 2026-11-02). So the first fall has a fixed speed, and the sink per step at rest no longer grows. The `TODO` at `PushableBlock.kt:213-215` goes.
 - From the point above: a block on a support of 16 px or less cannot be pushed back, because `velocity.x` is 0 while it is not grounded (`PushableBlock.kt:185`).
 - Block 219 drops on the shot that leaves 16 px or less (4 shots from spawn, not 5). Block 301 drops on 1 shot, not 2.
 - A block no longer crosses a level gap of its own width. Rooms 9 to 11 have no such gap on a block's path.
 
-Only `PushableBlock.kt` and `PushableBlockTest.kt` change. Production change: 1 new constant, 1 changed `FEET` line, the filter and its function (about 8 lines), 1 line for the velocity clear, and 3 `TODO` lines removed. `MegaCollisionHandler.kt` and `engine/` do not change.
+Only `PushableBlock.kt` and `PushableBlockTest.kt` change, and `core/build.gradle` sets the `core` test heap to 1 GB: before this branch the suite already held 521 of 524 MB, so new tests ran out of memory. Production change: 1 new constant, 1 changed `FEET` line, the filter and its function (about 8 lines), 1 line for the velocity clear, and 3 `TODO` lines removed. `MegaCollisionHandler.kt` and `engine/` do not change.
 
 Not changed:
 
