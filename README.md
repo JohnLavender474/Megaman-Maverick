@@ -275,6 +275,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Precious Woman Stage - [MMX2 Crystal Snail 8-Bit](https://youtu.be/1qrbYy9qQdE)
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
   - Wily Stage 3 - [MMX6 Gate Laboratory 8-Bit](https://youtu.be/Zdtp6f57E_c?list=RDZdtp6f57E_c)
+  - X6 Intro Stage - [MMX6 Intro Stage 8-Bit](https://youtu.be/EZrqRIRTA2I)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Main Menu
   - Intro Stage 
