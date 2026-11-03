@@ -16,6 +16,7 @@
 - An entity that was not spawned has a running damage timer, so `canBeDamagedBy` is false for it. A test that expects `false` can pass for the wrong reason. Check the case that expects `true` too.
 - An entity with no `PlayPhaseComponent` counts as in play. With a player in play, `FeetSandRule` spawns a splash through `EntityFactories`, which a test does not start. Give a test player `PlayPhaseComponent(PlayPhase.PRE_PLAY)`.
 - `MegaEntityFactory` is global. Call `MegaEntityFactory.init(services)` in `beforeEach` and `reset()` in `afterEach`.
+- A relaxed MockK entity returns a mock for `getComponent(...)`, not `null`, and the mock has the wrong type. So an extension such as `mapObjectId` throws a `ClassCastException` on it. Stub the call: `every { entity.getComponent(MapObjectComponent::class) } returns null`. This matters when code under test builds an exception message from the entity.
 
 ## Check that a test can fail
 

@@ -128,6 +128,30 @@ The CLI cannot paint part 3; paint the tiles with a small script or by hand, as 
 Some older stages use a wider `LadderTop` (40 px, 8 px of it on the ledge). Use the 32 px form
 for new ladders.
 
+#### Slopes
+
+Slopes are for extra levels only (X6-style). The main stages have no slopes. A slope is a
+`GroundSlope` block (`entities/blocks/GroundSlope.kt`): a straight, stepped floor run.
+
+1. Put each slope in an object layer named `blocks_slopes` or `blocks_slopes_<n>`. These layers go
+   to the blocks builder, and a separate layer lets you see the slopes by a toggle of the layer.
+2. Each slope is a plain rectangle object named `GroundSlope`, the bounding box of one run. An
+   object with no name in a `blocks_*` layer spawns as a plain `Block`, a full solid box.
+3. Give it the string property `side`: `right` if the run rises to the right, `left` if it rises
+   to the left (the high side).
+4. Height / width is 1/4 (shallow, for example 8×2 or 4×1 tiles) or 1/2 (steep, for example 4×2 or
+   2×1). Another ratio logs an error, and the game uses the nearer of the two.
+5. The low end of the run touches a floor whose top is the bottom of the rectangle. The high end
+   touches a flat block whose top is the top of the rectangle, or a wall. Put solid blocks under
+   the rectangle, unless the slope is a floating platform.
+6. Two runs can touch to make a chain, for example a shallow run that goes on as a steep run.
+7. Keep every slope layer visible when you save. The game builds only visible layers.
+
+The CLI cannot make a named object with a property in a custom layer. Add the slopes with a small
+script (unique ids, raise `nextobjectid`, and `nextlayerid` for a new layer) or by hand in Tiled.
+A `GroundSlope` draws its own filled triangle, so do not paint tiles in its box. See
+`RefactorTest068.tmx` for examples of each case.
+
 ### Iteration 3 — Player spawns
 Add the stage-start spawn `0` and any respawn points `1..n` with `add-spawn`, each a
 single tile placed directly above a plain block (never a conveyor or other special

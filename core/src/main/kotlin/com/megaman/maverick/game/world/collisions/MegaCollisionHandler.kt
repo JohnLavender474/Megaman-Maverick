@@ -6,10 +6,19 @@ import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IBody
 import com.maverick.game.engine.world.collisions.ICollisionHandler
 import com.maverick.game.engine.world.collisions.StandardCollisionHandler
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.blocks.GroundSlope
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.abs
 
 class MegaCollisionHandler : ICollisionHandler {
+
+    companion object {
+        private const val SLOPE_EDGE_TOLERANCE = 0.01f * ConstVals.PPM
+    }
 
     private fun trySpecialCollission(body1: IBody, body2: IBody): Boolean {
         if (!body1.physics.collisionOn || !body2.physics.collisionOn) return true
@@ -25,15 +34,29 @@ class MegaCollisionHandler : ICollisionHandler {
             dynamicBody = body1
         } else return false
 
+        val staticEntity = staticBody.getEntity()
+        val dynamicEntity = dynamicBody.getEntity()
+
         val staticBodyFilters = staticBody.getBlockFilters()
         if (staticBodyFilters != null &&
-            staticBodyFilters.any { it.invoke(dynamicBody.getEntity(), staticBody.getEntity()) }
+            staticBodyFilters.any { it.invoke(dynamicEntity, staticEntity) }
         ) return true
 
         val dynamicBodyFilters = dynamicBody.getBlockFilters()
         if (dynamicBodyFilters != null &&
-            dynamicBodyFilters.any { it.invoke(staticBody.getEntity(), dynamicBody.getEntity()) }
+            dynamicBodyFilters.any { it.invoke(staticEntity, dynamicEntity) }
         ) return true
+
+        if (staticBody.hasBodyLabel(BodyLabel.SLOPE)) {
+            val slope = try {
+                staticEntity as GroundSlope
+            } catch (e: ClassCastException) {
+                throw InvalidSlopeLabelException(staticEntity, e)
+            }
+            if (directionOf(dynamicEntity) != Direction.UP) return false
+            collideWithSlope(dynamicBody, staticBody, slope)
+            return true
+        }
 
         if (staticBody.hasBodyLabel(BodyLabel.PRESS_UP_FALL_THRU) &&
             dynamicBody.getProperty(BodyKeys.FALL_THROUGH_PRESS_UP)?.invoke() == true
@@ -45,15 +68,11 @@ class MegaCollisionHandler : ICollisionHandler {
         if (staticBody.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY)) {
             if (dynamicBody.getProperty(BodyKeys.PASS_THROUGH_ONE_WAY)?.invoke() == true) return true
 
-            val dynamicBodyEntity = dynamicBody.getEntity()
-            val dynamicBodyDirection =
-                if (dynamicBodyEntity is IDirectional) dynamicBodyEntity.direction else Direction.UP
-
-            when (dynamicBodyDirection) {
+            when (directionOf(dynamicEntity)) {
                 Direction.UP -> {
                     if (dynamicBody.physics.velocity.y > 0f) return true
 
-                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
+                    if (dynamicBody.hasFeetBlock(staticEntity as Block)) {
                         dynamicBody.setY(staticBody.getMaxY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
@@ -64,7 +83,7 @@ class MegaCollisionHandler : ICollisionHandler {
                 Direction.DOWN -> {
                     if (dynamicBody.physics.velocity.y < 0f) return true
 
-                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
+                    if (dynamicBody.hasFeetBlock(staticEntity as Block)) {
                         dynamicBody.setMaxY(staticBody.getY())
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
@@ -75,7 +94,7 @@ class MegaCollisionHandler : ICollisionHandler {
                 Direction.LEFT -> {
                     if (dynamicBody.physics.velocity.x < 0f) return true
 
-                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
+                    if (dynamicBody.hasFeetBlock(staticEntity as Block)) {
                         dynamicBody.setMaxX(staticBody.getX())
                         dynamicBody.physics.frictionOnSelf.y += staticBody.physics.frictionToApply.y
                         return true
@@ -86,7 +105,7 @@ class MegaCollisionHandler : ICollisionHandler {
                 Direction.RIGHT -> {
                     if (dynamicBody.physics.velocity.x > 0f) return true
 
-                    if (dynamicBody.hasFeetBlock(staticBody.getEntity() as Block)) {
+                    if (dynamicBody.hasFeetBlock(staticEntity as Block)) {
                         dynamicBody.setX(staticBody.getMaxX())
                         dynamicBody.physics.frictionOnSelf.y += staticBody.physics.frictionToApply.y
                         return true
@@ -107,6 +126,47 @@ class MegaCollisionHandler : ICollisionHandler {
             }
 
             return dynamicBody.getMaxY() > staticBody.getY()
+        }
+
+        if (standsOnSlopeBeside(dynamicBody, dynamicEntity, staticBody)) return true
+
+        return false
+    }
+
+    private fun directionOf(entity: MegaGameEntity) =
+        if (entity is IDirectional) entity.direction else Direction.UP
+
+    private fun bottomCenterX(body: IBody) = body.getX() + body.getWidth() / 2f
+
+    private fun collideWithSlope(dynamicBody: IBody, staticBody: IBody, slope: GroundSlope) {
+        val x = bottomCenterX(dynamicBody)
+        if (x < staticBody.getX() || x > staticBody.getMaxX()) return
+        if (dynamicBody.physics.velocity.y > 0f) return
+
+        val surface = slope.surfaceAt(x)
+        if (dynamicBody.getY() < surface) {
+            dynamicBody.setY(surface)
+            if (dynamicBody.physics.receiveFrictionX)
+                dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
+        }
+    }
+
+    private fun standsOnSlopeBeside(dynamicBody: IBody, dynamicEntity: MegaGameEntity, staticBody: IBody): Boolean {
+        if (!dynamicBody.hasProperty(ConstKeys.FEET_BLOCKS)) return false
+        if (directionOf(dynamicEntity) != Direction.UP) return false
+
+        val x = bottomCenterX(dynamicBody)
+        for (block in dynamicBody.getFeetBlocks()) {
+            if (block !is GroundSlope) continue
+
+            val slopeBody = block.body
+            if (x < slopeBody.getX() || x > slopeBody.getMaxX()) continue
+            if (abs(staticBody.getMaxY() - slopeBody.getMaxY()) > SLOPE_EDGE_TOLERANCE) continue
+
+            val touchesHighSide =
+                if (block.highOnRight) abs(staticBody.getX() - slopeBody.getMaxX()) <= SLOPE_EDGE_TOLERANCE
+                else abs(staticBody.getMaxX() - slopeBody.getX()) <= SLOPE_EDGE_TOLERANCE
+            if (touchesHighSide) return true
         }
 
         return false

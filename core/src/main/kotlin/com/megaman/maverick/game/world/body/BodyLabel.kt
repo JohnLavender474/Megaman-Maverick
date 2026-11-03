@@ -7,7 +7,8 @@ import com.megaman.maverick.game.ConstKeys
 enum class BodyLabel {
     COLLIDE_DOWN_ONLY,
     COLLIDE_UP_ONLY,
-    PRESS_UP_FALL_THRU
+    PRESS_UP_FALL_THRU,
+    SLOPE
 }
 
 fun IBody.addBodyLabel(bodyLabel: BodyLabel) {

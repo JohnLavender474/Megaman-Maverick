@@ -13,10 +13,11 @@ object BlockSideRule : IContactRule {
 
     override fun onContinue(a: IFixture, b: IFixture, delta: Float) = continueContact(a, b)
 
-    override fun onEnd(a: IFixture, b: IFixture, delta: Float) = end(b)
+    override fun onEnd(a: IFixture, b: IFixture, delta: Float) = end(a, b)
 
     private fun begin(blockFixture: IFixture, sideFixture: IFixture, delta: Float) {
         if (blockFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE)) return
 
         val body = sideFixture.getBody()
 
@@ -32,6 +33,7 @@ object BlockSideRule : IContactRule {
 
     private fun continueContact(blockFixture: IFixture, sideFixture: IFixture) {
         if (blockFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE)) return
 
         val body = sideFixture.getBody()
 
@@ -49,7 +51,9 @@ object BlockSideRule : IContactRule {
         }
     }
 
-    private fun end(sideFixture: IFixture) {
+    private fun end(blockFixture: IFixture, sideFixture: IFixture) {
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE)) return
+
         val body = sideFixture.getBody()
 
         val sideType = sideFixture.getProperty(ConstKeys.SIDE)
