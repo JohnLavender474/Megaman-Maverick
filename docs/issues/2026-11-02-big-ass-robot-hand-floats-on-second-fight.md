@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -64,3 +64,9 @@ Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktree
 ## Notes
 
 The same fault can exist in other entities that spawn a pooled `Block` with no position. This fix does not check them.
+
+## Resolution
+
+Fixed by `fix/big-ass-robot-hand-block-position` (squash `8e7ae7af0`). At spawn, a hand puts its body at the boss center and spawns its block with `BOUNDS` under the hand, as the short contract says. The owner's play checks pass (2026-11-02).
+
+Not checked: other entities that spawn a pooled `Block` with no position (see "Notes").

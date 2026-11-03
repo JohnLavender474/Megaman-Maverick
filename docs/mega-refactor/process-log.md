@@ -1562,3 +1562,9 @@ newest entry at the bottom.
 - Summary: research on the enemy and boss design, in 12 agent reports, kept in full in the item notes. New items: `118` (boss fights as routines, rules and leases), `119` (`PLAYER_DESTROYED` and `LEVEL_FAILED`), `120` (a player that turns hostile and comes back), `121` (enemy clones of a playable character), `122` (human-driven boss). Owner decisions in `048`, `030`, `013`, `018`, `012`, `038`, `047` and `082`: no enemy or boss flag; `BossComponent` holds fight data only; `Fight` is a plain object; `013` has no boss states; no membership recompute on a component change; a scene takes the driver and not the identity; a player is slot-owned, not pooled. 10 new issues. Recounts in `O1`, `O2` and `O8`. The root `CLAUDE.md` says "slot-owned".
 - Contract check: not needed (docs only). No game or build was run for this research.
 - Follow-up: `118a` and `119` can start. `120`, `121` and `122` stay `idea` until they have a real caller.
+
+## 2026-11-02 — fix/big-ass-robot-hand-block-position
+
+- Summary: on a second `BigAssMaverickRobot` fight after a death, a hand no longer floats in midair while the boss falls (squash commit `8e7ae7af0`). A hand puts its body at the boss center at spawn, and it spawns its platform block with `BOUNDS` under the hand, so a pooled block no longer starts at its old position. Found in the owner's play test of `118a`; the bug was older than `118a`.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch (`engine` 631 tests, `core` 718 tests, 0 failures). The new test fails with each half of the fix taken out. The owner reports that the play checks pass and approved the merge.
+- Follow-up: other entities that spawn a pooled `Block` with no position are not checked. `118a` takes this fix through a merge of `master`.
