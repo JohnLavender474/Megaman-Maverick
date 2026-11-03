@@ -40,7 +40,7 @@ None yet. The objectives audit of 2026-11-01 found this gap.
 - Spawn on view: `SpawnerForBoundsEntered` fires on the first overlap with one rectangle (`spawnCameraBounds`). With two views, does the test use "any view"? If a view still holds the point, a killed enemy cannot respawn when the other view comes back. Is that correct, or does each view have its own trigger?
 - Activity gates: some entities act only in view, for example `defaultDoUpdate` for `ABSTRACT` bodies (`IBodyExtensions.kt:29`), `Saw.kt:245`, `FlipperPlatform.kt:139` and `InfernoDeath.kt:34`. Is the rule "any view", or the view of the nearest player?
 - Placement: some entities use the camera as a position, for example `Jetto.kt:214` (returns at a view edge), `AsteroidsSpawner.kt:133`, `RisingLavaRiver.kt:343`, `WilyFinalBoss.kt:1711` and `Rain.kt:258`. Which view does such an entity use? Options: the view of its target, the nearest view, one instance for each view.
-- Checkpoints: `PlayerSpawnsManager.shouldPop` tests one camera. Does any view activate a checkpoint for all players, or only the lead's view (`036`)? **(mode)**
+- Checkpoints: `PlayerCheckpointManager.shouldPop` tests one camera. Does any view activate a checkpoint for all players, or only the lead's view (`036`)? **(mode)**
 
 ### Views
 

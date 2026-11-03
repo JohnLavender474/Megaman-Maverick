@@ -11,7 +11,7 @@ related-items: [036]
 
 ## Where
 
-`ReactorMan_v3.tmx` (ids 200 and 201, `room7`), `DesertMan_16x14_v4.tmx`, `PlayerSpawnsManager.kt:45-59`, `MegaLevelScreen.kt:237`
+`ReactorMan_v3.tmx` (ids 200 and 201, `room7`), `DesertMan_16x14_v4.tmx`, `PlayerCheckpointManager.kt:45-59`, `MegaLevelScreen.kt:237`
 
 ## What happens
 

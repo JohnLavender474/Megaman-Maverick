@@ -35,7 +35,7 @@ Reason: most later work waits for these items.
 | Co-op          | Determinism            | Logic structure     | Safety and data           | Characters       |
 |----------------|------------------------|---------------------|---------------------------|------------------|
 | `038` → `047c` | `011` random source    | `015` state machine | `005` damage test         | `081` playable X |
-|                | `019c` spawn phase     | `012` freezes       | `021` entity registry     |                  |
+|                |                        | `012` freezes       | `021` entity registry     |                  |
 |                | `017` world-step hooks |                     | `009` allocation baseline |                  |
 
 ## Stage 3: what the foundations unlock
@@ -95,7 +95,6 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - `011`: `superRandom`, `OrderedSet.random`
 - `010`: frame delta clamp
 - `012`, `013`: pause during a gate, health fill during a pause, `START` release, focus-loss pause
-- `019c`: spawner that drops `BEGIN_ROOM_TRANS`
 - `038`: respawn room music, coins on respawn, `SPAWN` damage lock
 - `036`: silent checkpoint change, same-name "4" spawns
 - `007`, `034`: volume not saved, health tank fill not saved

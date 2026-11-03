@@ -98,7 +98,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `015` | planned | [One entity state machine (enter/update/exit, state-owned timers)](../items/015-entity-fsm/ITEM.md) (main) |
 | `016` | done | [Narrow services instead of `game` everywhere](../items/016-narrow-services/ITEM.md) (main) |
 | `017` | planned | [Shared entity logic as systems and world-step hooks](../items/017-world-step-hooks/ITEM.md) (main) |
-| `019` | active | [One spawn phase per tick with destroy notifications](../items/019-spawn-phase/ITEM.md) (main) |
+| `019` | done | [One spawn phase per tick with destroy notifications](../items/019-spawn-phase/ITEM.md) (main) |
 | `023` | planned | [Damage profiles keyed by damage tags](../items/023-damage-profiles/ITEM.md) (main) |
 | `027` | planned | [Non-null APIs instead of `!!`](../items/027-non-null-apis/ITEM.md) (main) |
 | `028` | planned | [Game-owned texture and animation cache](../items/028-texture-cache/ITEM.md) (main) |

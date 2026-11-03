@@ -2,6 +2,8 @@
 
 Item numbers in the review text are the numbers of the review list from 2026-10-22. The new ID is the review number plus 1, except review item 45, which is part of `026`. Line numbers refer to `master` at `9f3917b6a`. Check them again before the work starts.
 
+Rename (2026-11-03, `019c`): `PlayerSpawnsManager` is now `PlayerCheckpointManager` (`PlayerCheckpointManager.kt`), and the field `playerSpawnsMan` is now `playerCheckpointMan`. The notes below keep the old names.
+
 ## Review: Data-driven design (2026-10-22)
 
 Copied as written from the review section "ITEMS 35 + 36: CHECKPOINTS AS DATA, EXPLICIT RESPAWN STATE".

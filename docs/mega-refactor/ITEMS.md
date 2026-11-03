@@ -26,7 +26,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | `O1`, `O2` | done | none | 2026-10-28 | 2026-10-30 |
 | 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | `O1`, `O5` | planned | none | | |
 | 018 | [Event-driven system membership; component IDs when needed](items/018-ecs-membership/ITEM.md) | refactor | `O5`, `O1` | idea | none | | |
-| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | `O1`, `O2` | active | none | 2026-10-22 | |
+| 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | `O1`, `O2` | done | none | 2026-10-22 | 2026-11-03 |
 | 020 | [Cheaper broad phase with stable contact order](items/020-broad-phase/ITEM.md) | refactor | `O5`, `O2` | planned | none | | |
 | 021 | [Entity registry with stable readable IDs and aliases](items/021-entity-registry/ITEM.md) | refactor | `O7`, `O3` | planned | none | | |
 | 022 | [Typed property schema per entity, exported to Tiled](items/022-spawn-prop-schema/ITEM.md) | feature | `O7` | planned | `021` | | |
@@ -132,6 +132,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 122 | [Human-driven boss](items/122-human-driven-boss/ITEM.md) | feature | `O8`, `O2` | idea | `102` | | |
 | 123 | [X6 flat step-down off a slope](items/123-slope-flat-step-down/ITEM.md) | feature | `O4`, `O8` | idea | `017`, `068` | | |
 | 124 | [Slope pass-through from below](items/124-slope-pass-through/ITEM.md) | feature | `O4` | idea | `068` | | |
+| 125 | [Spatial or room index for spawners, if a measure shows a cost](items/125-spawner-index/ITEM.md) | refactor | `O5` | idea | none | | |
 
 ## Branches
 
@@ -146,7 +147,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-002a-ci-all-branches`](items/002-ci-all-branches/branches/mega-refactor-002a-ci-all-branches/process-log.md) | 002 | CI on every branch push, one Gradle job, aligned test libraries, JDK toolchain | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-008a-dev-launch-options`](items/008-dev-launch-options/branches/mega-refactor-008a-dev-launch-options/process-log.md) | 008 | Dev launch options and level staging | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-019b-destroy-notification`](items/019-spawn-phase/branches/mega-refactor-019b-destroy-notification/process-log.md) | 019 | Tell a spawner at once when its entity is destroyed; one spawn phase per tick | merged | 2026-10-27 | 2026-10-27 |
-| [`mega-refactor-019c-merge-spawn-queues`](items/019-spawn-phase/branches/mega-refactor-019c-merge-spawn-queues/process-log.md) | 019 | Merge the four spawn queues into one spawn phase | active | 2026-11-03 | |
+| [`mega-refactor-019c-merge-spawn-queues`](items/019-spawn-phase/branches/mega-refactor-019c-merge-spawn-queues/process-log.md) | 019 | Map spawns go straight to the engine; one spawn queue; `PlayerCheckpointManager` rename | merged | 2026-11-03 | 2026-11-03 |
 | [`mega-refactor-029a-player-seam`](items/029-player-contract/branches/mega-refactor-029a-player-seam/process-log.md) | 029 | Player slot, player view and players service; `Megaman` in slot 0 | merged | 2026-10-23 | 2026-10-23 |
 | [`mega-refactor-029b-enemy-players`](items/029-player-contract/branches/mega-refactor-029b-enemy-players/process-log.md) | 029 | Enemies use the players service in place of `megaman` | merged | 2026-10-23 | 2026-10-23 |
 | [`mega-refactor-029c-boss-players`](items/029-player-contract/branches/mega-refactor-029c-boss-players/process-log.md) | 029 | Bosses and the boss damage listener use the players service | merged | 2026-10-23 | 2026-10-23 |

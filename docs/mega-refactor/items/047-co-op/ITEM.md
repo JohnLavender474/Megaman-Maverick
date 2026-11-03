@@ -113,7 +113,7 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 
 - Death options 2 and 3 are `TODO`s, but each needs more rules before it is built. Does the music stop at the first death (`MegaLevelScreen.kt:574`)? Does each death remove a life? What is the game-over test (`livesExhausted`, `:597`)? What resets when all players are dead?
 - A slot 1 respawn near the lead (`047c`): what does it cost? Today a slot 1 death is free, and it removes no life. Where does it land if the lead is in the air or over a pit? Options: the lead's last safe ground, the current checkpoint, a drop on the lead.
-- Are checkpoints level-wide or per player? `PlayerSpawnsManager` holds one current spawn. With one shared camera, a checkpoint activates for all (`036`).
+- Are checkpoints level-wide or per player? `PlayerCheckpointManager` holds one current spawn. With one shared camera, a checkpoint activates for all (`036`).
 - Do `GauntletMaster` waves reset on any player's death, or only when all are dead (`GauntletMaster.kt:168`)? Today any `PLAYER_JUST_DIED` resets them. The 16 objects are in the extra levels, so this question stays under the `102` direction.
 - `SpiderWeb` and `PreciousGem` react to any `PLAYER_JUST_DIED`. Must only the death of the stuck or the owning player count? `SpiderWeb` also keeps one set of stuck webs for all players (`SpiderWeb.kt:75`, see `096`).
 

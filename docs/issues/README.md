@@ -72,7 +72,7 @@ related-items: [<mega-refactor item IDs>]
 | [12 TexturePacker projects point to missing source folders, and 3 atlases have no project](2026-10-22-stale-tps-files.md) | yes | content | open |
 | [`WILY_CASTLE_SCREEN` is in `ScreenEnum` but not registered](2026-10-22-wily-castle-screen-not-registered.md) | yes | core | open |
 | [The TMX background `section` property has no effect](2026-10-22-background-section-ignored.md) | yes | core | open |
-| [An event spawner may drop `BEGIN_ROOM_TRANS` for enemies that the room transition destroyed](2026-10-22-spawner-drops-room-transition-event.md) | no | core | open |
+| [An event spawner may drop `BEGIN_ROOM_TRANS` for enemies that the room transition destroyed](2026-10-22-spawner-drops-room-transition-event.md) | yes | core | closed |
 | [The same-name "4" spawns in ReactorMan and DesertMan likely activate the far-side spawn](2026-10-22-duplicate-checkpoint-4.md) | no | content | open |
 | [Question: explosions from Mega's own shots do not hurt `AbstractEnemy`](2026-10-22-mega-explosions-do-not-hurt-enemies.md) | question | core | open |
 | [Question: a checkpoint can change silently while Mega is not ready](2026-10-22-checkpoint-changes-while-not-ready.md) | question | core | open |

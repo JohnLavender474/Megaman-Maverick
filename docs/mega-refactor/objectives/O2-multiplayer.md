@@ -215,7 +215,7 @@ Not a redo, but new work that is larger than the table shows:
 | `012` | planned | [Named, composable freezes with a reason table](../items/012-named-freezes/ITEM.md) |
 | `013` | planned | [Level flow state machine; pause as an overlay](../items/013-level-flow-fsm/ITEM.md) |
 | `016` | done | [Narrow services instead of `game` everywhere](../items/016-narrow-services/ITEM.md) |
-| `019` | active | [One spawn phase per tick with destroy notifications](../items/019-spawn-phase/ITEM.md) |
+| `019` | done | [One spawn phase per tick with destroy notifications](../items/019-spawn-phase/ITEM.md) |
 | `020` | planned | [Cheaper broad phase with stable contact order](../items/020-broad-phase/ITEM.md) |
 | `038` | planned | [One ordered respawn routine instead of an event chain](../items/038-respawn-routine/ITEM.md) |
 | `055` | planned | [Record and replay for contract checks](../items/055-record-and-replay/ITEM.md) |
