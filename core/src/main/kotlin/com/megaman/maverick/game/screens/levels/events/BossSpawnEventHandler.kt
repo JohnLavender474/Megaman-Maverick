@@ -17,12 +17,14 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) {
         const val TAG = "BossSpawnEventHandler"
     }
 
-    fun init(bossName: String, bossSpawnProps: Properties) {
+    fun init(bossName: String, bossSpawnProps: Properties): AbstractBoss {
         val boss = MegaEntityFactory.fetch(EntityType.BOSS.getFullyQualifiedName(bossName), AbstractBoss::class)!!
 
         boss.ready = false
         boss.spawn(bossSpawnProps)
 
         game.events.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS pairTo boss)))
+
+        return boss
     }
 }

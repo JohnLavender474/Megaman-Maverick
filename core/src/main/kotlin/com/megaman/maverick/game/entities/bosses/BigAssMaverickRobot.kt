@@ -44,7 +44,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
-import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.StandardDamageNegotiator
@@ -208,7 +207,6 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MUSIC, MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO.name)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 

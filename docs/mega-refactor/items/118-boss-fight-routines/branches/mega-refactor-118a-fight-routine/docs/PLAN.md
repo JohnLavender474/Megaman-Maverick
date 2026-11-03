@@ -60,52 +60,52 @@ Both are in `SCOPE.md` now. They need the owner's approval with this plan.
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` and start dates, item `active`, `ITEM.md` "Branches". Then `git worktree add -b mega-refactor-118a-fight-routine .worktrees/mega-refactor-118a-fight-routine master`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base. Use the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. `Step` and `Routine` in `engine`
 
 - Changes: `engine/.../state/Step.kt`, `engine/.../state/Routine.kt`. Tests first.
 - Check: `RoutineTest` passes: order, one step at a time, several steps in one tick, `end` once for each started step, `interrupted` on a cancel, a cancel with no started step.
-- Done: no
+- Done: yes
 
 ### 3. Core types
 
 - Changes: in `core/.../fights/`: `Lease`, `FightRule.AllDefeated`, `FightPlan`, `Fight`, `FightDirector`. Tests first. No screen change.
 - Check: `FightTest` passes: leases release once, in reverse order, on an end and on a cancel; a win during the intro goes to the outro; `owns` and `active`; `cancelAll` with no fight does nothing.
-- Done: no
+- Done: yes
 
 ### 4. Steps, preset and `FightPlans`
 
 - Changes: `AwaitReady`, `HoldWorld`, `FillBar`, `ReleaseWorld`, `ControllerOn`, `DefeatLock`, `NotifyListeners`, `HideBar`, `AwaitDefeatEnd`, `LevelVictory`, `stageBoss`, `FightPlans.find`, `FightPlans.resolve`. Each step body is a copy of the old branch, including the slot 0 tests and a `TODO` for `047e`. No screen change, so these steps have a first caller only in step 6, in the same branch.
 - Check: `FightPlansTest` passes: a plan for `BigAssMaverickRobot`, `null` for each other class in `entities/bosses/`, the music value in the props.
-- Done: no
+- Done: yes
 
 ### 5. Temporary contract suite
 
 - Changes: `FrozenBossFlow` and `BossFlowContractTest` in the test sources. The frozen copy is the 6 branches at `MegaLevelScreen.kt:691-804`, with fake systems, a relaxed `BossHealthHandler` mock with a scripted `finished`, a real `EventsManager`, and a mock `AbstractBoss` with scripted `ready`, `defeated` and existence state.
 - Check: all rows in `CONTRACT.md` pass, with equal traces for each frame. To prove that the trace is sensitive, delay one step by 1 frame by hand and see the suite fail, then undo this. Log the result.
-- Done: no
+- Done: yes
 
 ### 6. Wire the screen
 
 - Changes in `MegaLevelScreen`: the `fights` field; the route in `ENTER_BOSS_ROOM` after the skip check; the 4 guards; `fights.update(delta)` inside `if (!game.clock.paused)`, before the `when`; `fights.cancelAll()` in `PLAYER_SPAWN_INIT` and in `reset()`. `BossSpawnEventHandler.init` returns the boss. Remove `BigAssMaverickRobot.kt:211`.
 - Check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes. A guard test in `MegaLevelScreenEventsTest`, for each branch: it skips a boss that a fight owns, and it acts for a boss with no fight. If the mock `game` cannot reach a branch, test `fights.owns` for that branch, and log which one.
-- Done: no
+- Done: yes
 
 ### 7. Short launch
 
 - Changes: none.
 - Check: build first, then `timeout 12` one launch of `--level INTRO_STAGE --room room12`. A clean exit is a pass.
-- Done: no
+- Done: yes
 
 ### 8. Owner play test
 
 - Changes: none, unless a check fails. A fix means that the control checks run again.
 - Check: all checks in `CONTRACT.md`, "Manual playthrough". Write the result in the process log.
-- Done: no
+- Done: yes
 
 ### 9. Merge
 
 - Changes: delete `FrozenBossFlow` and `BossFlowContractTest` in the last commit. Then the steps in `docs/mega-refactor/CLAUDE.md`, "Branch merge", into `master`.
 - Check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes with the suite gone.
-- Done: no
+- Done: yes

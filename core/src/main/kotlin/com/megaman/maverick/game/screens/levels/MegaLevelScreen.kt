@@ -80,6 +80,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.fights.FightDirector
+import com.megaman.maverick.game.fights.FightPlans
 import com.megaman.maverick.game.input.SystemButton
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelState
@@ -202,6 +204,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
+
+    internal val fights = FightDirector()
 
     private lateinit var drawables: ObjectMap<DrawingSection, InsertionOrderPriorityQueue<IComparableDrawable<Batch>>>
     private lateinit var shapes: Array<IDrawableShape>
@@ -534,6 +538,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
                 game.cameraController.reset()
 
+                fights.cancel()
                 bossHealthHandler.unset()
 
                 engine.systems.forEach { it.on = true }
@@ -710,11 +715,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 }
 
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
-                bossSpawnEventHandler.init(bossMapObject.name, bossSpawnProps)
+
+                val plan = FightPlans.find(bossMapObject.name)
+                if (plan != null) FightPlans.resolve(plan, bossSpawnProps)
+
+                val boss = bossSpawnEventHandler.init(bossMapObject.name, bossSpawnProps)
+                if (plan != null) fights.start(boss, plan, game.services, bossHealthHandler)
             }
 
             EventType.BOSS_READY -> {
                 val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                if (fights.owns(boss)) return
 
                 when {
                     boss.mini -> eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
@@ -748,6 +759,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.END_BOSS_SPAWN -> {
+                if (fights.active) return
+
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
                 game.engine.systems.forEach { it.on = true }
@@ -756,12 +769,13 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.BOSS_DEFEATED -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss defeated")
 
+                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                if (fights.owns(boss)) return
+
                 if (!player.existenceState.liveAfterUpdate) {
                     GameLogger.debug(TAG, "onEvent(): Megaman dead when boss defeated, doing nothing...")
                     return
                 }
-
-                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
 
                 if (!boss.mini) {
                     eventsMan.submitEvent(
@@ -785,12 +799,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.BOSS_DEAD -> {
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss dead")
 
+                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                if (fights.owns(boss)) return
+
                 if (!player.existenceState.liveAfterUpdate) {
                     GameLogger.debug(TAG, "onEvent(): Megaman dead when boss dead, doing nothing...")
                     return
                 }
 
-                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 val eventType = boss.getEventOnDefeated()
                 if (eventType != null) eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS pairTo boss)))
             }
@@ -913,6 +929,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 if (!engine.spawn(spawn.entity, spawn.properties)) spawn.onRejected?.invoke()
                 spawnsIter.remove()
             }
+
+            fights.update()
 
             // Because I'm not good at software design, there's some tight coupling in this block
             // Essentially, the order in which these handlers are updated must not be modified or
@@ -1082,6 +1100,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         // TODO: should replace EntityFactories with MegaEntityFactory
         // EntityFactories.clear()
 
+        fights.cancel()
         engine.reset()
 
         spawns.clear()
