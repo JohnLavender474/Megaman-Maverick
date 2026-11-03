@@ -148,3 +148,4 @@ related-items: [<mega-refactor item IDs>]
 | [The check that stops an item drop on a cart kill is always true](2026-11-02-cart-kill-drop-check-always-true.md) | yes | core | open |
 | [Question: a moving `CartV2` kills a boss in one hit](2026-11-02-cart-kills-boss-in-one-hit.md) | question | core | open |
 | [Question: a player shot in flight can hit a boss during its intro](2026-11-02-boss-takes-hits-during-intro.md) | question | core | open |
+| [On a second `BigAssMaverickRobot` fight, a hand floats in midair while the boss falls](2026-11-02-big-ass-robot-hand-floats-on-second-fight.md) | yes | core | open |
