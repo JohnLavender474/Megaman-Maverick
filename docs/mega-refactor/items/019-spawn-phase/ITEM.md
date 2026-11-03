@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O2`
 - Depends on: none
 - Related: `010`, `013`, `038`, `041`, `045`
-- Branches: `mega-refactor-019a-remove-second-spawn-pass` (merged 2026-10-22, squash `21df34661`), `mega-refactor-019b-destroy-notification` (merged 2026-10-27, squash `7a30c8982`); next: `019c` (merge the four spawn queues `spawns`, the engine queue, `playerSpawnsMan`, `SPAWN_NOW`; backlog from `019b`, not started)
+- Branches: `mega-refactor-019a-remove-second-spawn-pass` (merged 2026-10-22, squash `21df34661`), `mega-refactor-019b-destroy-notification` (merged 2026-10-27, squash `7a30c8982`), `mega-refactor-019c-merge-spawn-queues` (active, started 2026-11-03: merge the four spawn queues `spawns`, the engine queue, `playerSpawnsMan`, `SPAWN_NOW`)
 
 ## Goal
 
