@@ -56,20 +56,17 @@ No map object sets `mini`, `health_fill_type` or `orb`. The other props (walls, 
 
 ### Two fights on the new flow in a row
 
-In `WILY_STAGE_3`, gate `578` leads from the `PreciousWoman` room to the `TimberWoman` room. After `118c`, both fights are on the new flow. `FightDirector.start` replaces the current fight with no cancel (`FightDirector.kt:17-25`). The first fight closes 1 tick after the boss is gone (`AwaitBossGone`), and a room transition takes many frames, so an overlap is not expected (inference). If one did happen, the leases of the first fight would not be released.
+In `WILY_STAGE_3`, gate `578` leads from the `PreciousWoman` room to the `TimberWoman` room. After `118c`, both fights are on the new flow. `FightDirector.start` replaces the current fight with no cancel (`FightDirector.kt:17-25`). Today a fight cannot start while another one is open, and if it did, no lease would stay held (`NOTES.md`, "Can a fight start while another one is open?"). No code enforces this, so the README states it as a rule.
 
 ## In scope
 
 1. Add `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` to `FightPlans.find`, with no plan music. The plan comes from `end`, as in `118b`.
-2. `FightDirector.start` cancels an open fight before it starts the new one. On the expected path there is no open fight, so nothing changes. If there is one, its leases are released.
-3. Change the README line about the supplier.
-4. Tests:
-   - `find`: a plan with no music for the 5 bosses, for `end=false` and `end=true`. The "no plan" list loses them.
-   - `start` with an open fight: the open fight's leases are released once, and the new fight is the active one.
+2. The `fights` README: change the line about the supplier, and add the rule "a fight starts only when no fight is open", with the reason.
+3. Tests: `find` gives a plan with no music for the 5 bosses, the mid-level plan for `end=false` and the standard plan for `end=true`. The "no plan" list loses them.
 
 ### New APIs
 
-None. `FightDirector.start` keeps its signature.
+None.
 
 ### Intended changes
 
@@ -84,14 +81,14 @@ None that a player can see. The 5 mid-level fights get the `118b` intended chang
 
 ## Affected areas and risks
 
-Files: `FightPlans.kt`, `FightDirector.kt`, `README.md` in `fights/`, and tests.
+Files: `FightPlans.kt`, `README.md` in `fights/`, and tests.
 
 | Risk | Result if wrong | Control |
 |---|---|---|
 | A boss missed in `find` | It stays on the old flow, with no visible change | A test lists the 9 moved bosses |
 | The wrong plan | A mid-level fight ends the level | `find` reads `end`, as in `118b`, and a test covers both values for each new boss |
 | `GlacierMan` music | A wrong track | `resolve` writes nothing, so the map prop and the default apply as today |
-| Two fights in a row in `WILY_STAGE_3` | A frozen world or a stuck bar | The cancel in `start`, a test, and a play check of `MoonMan` → `PreciousWoman` → `TimberWoman` |
+| Two fights in a row in `WILY_STAGE_3` | A frozen world or a stuck bar | Not reachable today (`NOTES.md`). A play check of `MoonMan` → `PreciousWoman` → `TimberWoman` |
 | Defeat listeners | A hazard stays after the fight | The listener step and `BOSS_DEFEATED` do not change. Play checks in the Wily rooms with listeners |
 
 ## Overlap with other branches
@@ -114,4 +111,4 @@ Files: `FightPlans.kt`, `FightDirector.kt`, `README.md` in `fights/`, and tests.
 
 ## Open questions
 
-1. The cancel in `FightDirector.start` (in scope, item 2). I recommend it: no API change, nothing changes on the expected path, and it closes the one way that a lease could stay held. The other choice is a play check only.
+None. The owner chose (2026-11-03) no cancel in `FightDirector.start` and no `TODO`, with the rule in the README.

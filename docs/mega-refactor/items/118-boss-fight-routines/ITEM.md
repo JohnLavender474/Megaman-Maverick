@@ -117,6 +117,7 @@ No test covers boss timing. Layers 1 to 5 of `NOTES.md`, "Behavior check for the
 - (2026-11-02, owner) The `WilyFinalBoss` batch removes the `isLevelDefeated` check for `wily_room`, as a named intended change. The research infers that normal play cannot reach it: the write at `MegaLevelScreen.kt:829` runs on `END_LEVEL`, and `Wily` ends with `GAME_COMPLETE`.
 - (2026-11-02, owner) `GauntletMaster` does not become a `Fight`. It shares only the key-based gate unlock in `118d`.
 - (2026-11-02, owner) Each branch merges directly into `master`, because each one ships alone.
+- (2026-11-03, owner) `FightDirector.start` does not cancel an open fight, and no `TODO` marks it. Today a fight cannot start while another one is open (`118c` `NOTES.md`). The `fights` README states it as a rule. A branch that adds a new kind of plan or a new start path (`118e` mini bosses, `118f` final boss) checks the rule in its scope.
 
 ## Open questions
 
