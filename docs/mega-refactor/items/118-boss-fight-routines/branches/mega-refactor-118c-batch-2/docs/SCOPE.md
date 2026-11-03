@@ -4,8 +4,8 @@ What this branch changes and why. Write this file after the scan, before `CONTRA
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-11-03
 
 ## Goal
 
@@ -61,7 +61,7 @@ In `WILY_STAGE_3`, gate `578` leads from the `PreciousWoman` room to the `Timber
 ## In scope
 
 1. Add `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` to `FightPlans.find`, with no plan music. The plan comes from `end`, as in `118b`.
-2. The `fights` README: change the line about the supplier, and add the rule "a fight starts only when no fight is open", with the reason.
+2. The `fights` README: change the line about the supplier, and add the rule "a fight starts only when no fight is open", with the reason. Next to the `FightDirector` part, add a short warning: `start` replaces an open fight with no cancel, so its leases would not be released (owner, 2026-11-03).
 3. Tests: `find` gives a plan with no music for the 5 bosses, the mid-level plan for `end=false` and the standard plan for `end=true`. The "no plan" list loses them.
 
 ### New APIs
