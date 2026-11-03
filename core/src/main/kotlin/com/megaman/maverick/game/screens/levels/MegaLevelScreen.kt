@@ -716,11 +716,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
 
-                val plan = FightPlans.find(bossMapObject.name)
+                val plan = FightPlans.find(bossMapObject.name, bossSpawnProps)
                 if (plan != null) FightPlans.resolve(plan, bossSpawnProps)
 
                 val boss = bossSpawnEventHandler.init(bossMapObject.name, bossSpawnProps)
-                if (plan != null) fights.start(boss, plan, game.services, bossHealthHandler)
+                if (plan != null) fights.start(boss, plan, game.services, bossHealthHandler) { music }
             }
 
             EventType.BOSS_READY -> {
@@ -812,10 +812,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.INTERMEDIATE_BOSS_DEAD -> {
+                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+                if (fights.owns(boss)) return
+
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
                 game.players.forEach { it.unlock(MegaLockGroup.DAMAGE, MegaLockReason.BOSS_DEFEATED) }
 
-                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
                 if (!boss.mini) audioMan.playMusic(music, true)
             }
 

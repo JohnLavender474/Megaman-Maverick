@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels
 
+import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.entities.EntityExistenceState
@@ -32,7 +33,9 @@ private fun gameWithLivePlayer() = mockk<MegamanMaverickGame>(relaxed = true).al
 }
 
 private fun MegaLevelScreen.ownFight(boss: AbstractBoss) =
-    fights.start(boss, FightPlans.find("BigAssMaverickRobot")!!, testServices(), mockk<BossHealthHandler>(relaxed = true))
+    fights.start(
+        boss, FightPlans.find("BigAssMaverickRobot", Properties())!!, testServices(), mockk<BossHealthHandler>(relaxed = true)
+    ) { null }
 
 private fun bossEvent(key: EventType, boss: AbstractBoss) = Event(key, props(ConstKeys.BOSS pairTo boss))
 
@@ -101,6 +104,28 @@ class MegaLevelScreenEventsTest : DescribeSpec({
             MegaLevelScreen(game).onEvent(bossEvent(EventType.BOSS_DEAD, boss(mini = false)))
 
             game.submitted(EventType.VICTORY_EVENT, 1)
+        }
+
+        it("INTERMEDIATE_BOSS_DEAD acts for a boss with no fight") {
+            val game = gameWithLivePlayer()
+
+            runCatching {
+                MegaLevelScreen(game).onEvent(bossEvent(EventType.INTERMEDIATE_BOSS_DEAD, boss(mini = false)))
+            }
+
+            game.submitted(EventType.TURN_CONTROLLER_ON, 1)
+        }
+
+        it("INTERMEDIATE_BOSS_DEAD skips a boss that a fight owns") {
+            val game = gameWithLivePlayer()
+            val screen = MegaLevelScreen(game)
+            val boss = boss(mini = false)
+            screen.ownFight(boss)
+
+            screen.onEvent(bossEvent(EventType.INTERMEDIATE_BOSS_DEAD, boss))
+
+            game.submitted(EventType.TURN_CONTROLLER_ON, 0)
+            verify(exactly = 0) { game.audio.playMusic(any(), any()) }
         }
 
         it("reset cancels a fight in progress, as on a game over") {

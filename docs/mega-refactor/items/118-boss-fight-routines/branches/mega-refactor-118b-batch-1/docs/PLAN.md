@@ -49,13 +49,13 @@ object AwaitBossGone : Step<Fight>        // isFinished: !boss.existenceState.li
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` with the start date, `ITEM.md` "Branches". Then `git worktree add -b mega-refactor-118b-batch-1 .worktrees/mega-refactor-118b-batch-1 master`. Recheck the overlap with the other active branches, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Music and names
 
 - Changes: `FightPlan.music` is `MusicAsset?`. `resolve` writes `MUSIC` only when it is set. `stageBossPlan` is `standardBossPlan`. `LevelVictory` submits `VICTORY_EVENT`. Tests first.
 - Check: `core:test` passes. New tests: `resolve` writes no `MUSIC` for a plan with no music; `LevelVictory` submits `VICTORY_EVENT` with the boss. The existing `BigAssMaverickRobot` tests pass with no change other than the name.
-- Done: no
+- Done: yes
 
 ### 3. Mid-level steps and plan
 
@@ -66,31 +66,31 @@ object AwaitBossGone : Step<Fight>        // isFinished: !boss.existenceState.li
   - `standardBossPlan`: `VICTORY_EVENT`, no resume.
   - `find`: `midBossPlan` for `end=false`, `standardBossPlan` for `end=true` and for no `end`.
   - Mutation checks: break each new step and the `end` read, one at a time. Confirm with `git diff` that the mutation is in the file, and see the matching test fail. Log the result.
-- Done: no
+- Done: yes
 
 ### 4. Move the 3 bosses, and the screen guard
 
 - Changes: add `TimberWoman`, `MoonMan` and `ReactorMan` to `find`, with no music. The `fights.owns(boss)` guard at the top of the screen's `INTERMEDIATE_BOSS_DEAD` branch. These go in one commit, so no commit has a moved boss without the guard.
 - Check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes. New tests: `find` gives a plan for the 4 moved bosses and `null` for each other class in `entities/bosses/`; in `MegaLevelScreenEventsTest`, the `INTERMEDIATE_BOSS_DEAD` branch skips a boss that a fight owns and acts for a boss with no fight. Mutation check of the guard, as in step 3.
-- Done: no
+- Done: yes
 
 ### 5. README
 
 - Changes: update `core/.../fights/README.md` if its generic text no longer fits, for example a plan whose outro hands control back, and the open fight after the last event.
 - Check: the text names no current step list or count, and its Mermaid blocks render.
-- Done: no
+- Done: yes
 
 ### 6. Short launches
 
 - Changes: none.
 - Check: build first, then one `timeout 12` launch for each room: `TIMBER_WOMAN room14`, `MOON_MAN room14`, `REACTOR_MAN room14`, `WILY_STAGE_1 room6`, `WILY_STAGE_3 room6`. A clean exit is a pass.
-- Done: no
+- Done: yes
 
 ### 7. Owner play test
 
 - Changes: none, unless a check fails. A fix means that the control checks run again.
 - Check: all checks in `CONTRACT.md`, "Manual playthrough". Write the result in the process log.
-- Done: no
+- Done: yes
 
 ### 8. Merge
 

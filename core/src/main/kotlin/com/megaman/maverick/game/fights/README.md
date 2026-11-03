@@ -79,6 +79,15 @@ flowchart LR
 
 A mini boss with no bar and no freeze uses a shorter intro. To leave out a behavior, leave out its step. No boolean is needed.
 
+The same boss can fight in the middle of a level. Then only the end of the outro changes: it opens the way on, gives control back, plays the level music again, and waits until the boss is gone.
+
+```mermaid
+flowchart LR
+    O1["lock the player"] --> O2["hide the health bar"] --> O3["wait for the defeat animation"] --> O4["open the way on"] --> O5["give control back"] --> O6["wait until the boss is gone"]
+```
+
+`FightPlans.find` reads the boss's map props to choose between such plans. A value that the screen can change during the fight, such as the level music, goes to `Fight` as a supplier, so that a step reads it when it runs.
+
 ## Leases
 
 A step that changes shared state takes a lease. The lease holds the undo. A later step can release it by its key, and `Fight` releases each lease that remains when it closes, in reverse order.
@@ -118,11 +127,11 @@ No system runs between `events.run` of frame F and the tick of frame F+1. So a s
 
 A routine gets no event for its order. It reads state, for example `boss.ready` or `boss.defeated`. Events stay as output for listeners, such as `AbstractBoss` and hazards that react to a defeat.
 
-Until the old flow is gone, guards in `MegaLevelScreen.onEvent` stop the old branches from acting on a boss that a fight owns.
+Until the old flow is gone, guards in `MegaLevelScreen.onEvent` stop the old branches from acting on a boss that a fight owns. A fight closes in the same tick as its last step, before `events.run` delivers what that step submitted. So if a guard must see the fight when that event arrives, the plan ends with a wait step that keeps the fight open for that `run`.
 
 ## How to change this package
 
-**Move a boss.** Add it to `FightPlans.find` with a preset. Remove its forced map props from its `onSpawn`, and give the values to the plan.
+**Move a boss.** Add it to `FightPlans.find` with a preset. Remove its forced map props from its `onSpawn`, and give the values to the plan. A plan with no music leaves the music to the map and the boss.
 
 **Add a step.** Add an object to `FightSteps.kt` and put it in a plan. If it changes shared state, use a lease. A step must have a production caller when you add it.
 

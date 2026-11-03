@@ -4,6 +4,8 @@
 
 ## Overlap with other branches
 
+- 2026-11-03, at branch start (`2db9e6ffc`): `compactor-level` and `x6-intro-extra-level` change none of `fights/`, `MegaLevelScreen`, `AbstractBoss`, the 3 bosses or their tests. `compactor-level` has an uncommitted change only in `CeilingCrusher.kt`. No overlap.
+
 ## Agent report: the mid-level resume 1 frame earlier (2026-11-02)
 
 Note: the owner chose to move the resume into a step in `118b`. `SCOPE.md` uses a stateless wait step after the resume, so the 1-frame shift stays and the screen guard can still see the fight.

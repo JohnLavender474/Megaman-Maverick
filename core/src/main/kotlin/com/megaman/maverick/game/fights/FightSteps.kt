@@ -7,6 +7,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.locks.lock
+import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.state.Step
 import com.megaman.maverick.game.ConstKeys
@@ -129,9 +130,41 @@ object LevelVictory : Step<Fight> {
     override fun begin(context: Fight) {
         if (!context.leadPlayerAlive) return
 
-        val eventType = context.boss.getEventOnDefeated() ?: return
-        context.services.events.submitEvent(Event(eventType, props(ConstKeys.BOSS pairTo context.boss)))
+        context.services.events.submitEvent(
+            Event(EventType.VICTORY_EVENT, props(ConstKeys.BOSS pairTo context.boss))
+        )
     }
 
     override fun isFinished(context: Fight) = context.leadPlayerAlive
+}
+
+object ExitMidBossFight : Step<Fight> {
+
+    override fun begin(context: Fight) {
+        if (!context.leadPlayerAlive) return
+
+        context.services.events.submitEvent(
+            Event(EventType.INTERMEDIATE_BOSS_DEAD, props(ConstKeys.BOSS pairTo context.boss))
+        )
+    }
+
+    override fun isFinished(context: Fight) = context.leadPlayerAlive
+}
+
+object ResumeAfterMidBoss : Step<Fight> {
+
+    override fun begin(context: Fight) {
+        val services = context.services
+
+        services.events.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+        services.players.forEach { it.unlock(MegaLockGroup.DAMAGE, MegaLockReason.BOSS_DEFEATED) }
+        services.audio.playMusic(context.levelMusic(), true)
+    }
+
+    override fun isFinished(context: Fight) = true
+}
+
+object AwaitBossGone : Step<Fight> {
+
+    override fun isFinished(context: Fight) = !context.boss.existenceState.liveNow
 }

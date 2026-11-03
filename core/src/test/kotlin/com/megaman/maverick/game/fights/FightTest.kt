@@ -37,7 +37,7 @@ private fun boss(defeated: () -> Boolean = { false }) = mockk<AbstractBoss>(rela
 }
 
 private fun fight(boss: AbstractBoss, plan: FightPlan) =
-    Fight(boss, plan, testServices(), mockk<BossHealthHandler>(relaxed = true))
+    Fight(boss, plan, testServices(), mockk<BossHealthHandler>(relaxed = true)) { null }
 
 class FightTest : DescribeSpec({
 
@@ -130,7 +130,7 @@ class FightTest : DescribeSpec({
             val director = FightDirector()
             val boss = boss()
 
-            director.start(boss, plan(gdxArrayOf(Probe("wait", ArrayList(), done = false))), testServices(), bar)
+            director.start(boss, plan(gdxArrayOf(Probe("wait", ArrayList(), done = false))), testServices(), bar) { null }
 
             director.active shouldBe true
             director.owns(boss) shouldBe true
@@ -140,7 +140,7 @@ class FightTest : DescribeSpec({
         it("drops a closed fight") {
             val director = FightDirector()
 
-            director.start(boss { true }, plan(Array()), testServices(), bar)
+            director.start(boss { true }, plan(Array()), testServices(), bar) { null }
             director.update()
 
             director.active shouldBe false
@@ -149,7 +149,7 @@ class FightTest : DescribeSpec({
         it("drops a cancelled fight") {
             val director = FightDirector()
 
-            director.start(boss(), plan(Array()), testServices(), bar)
+            director.start(boss(), plan(Array()), testServices(), bar) { null }
             director.cancel()
 
             director.active shouldBe false
@@ -157,24 +157,48 @@ class FightTest : DescribeSpec({
     }
 
     describe("FightPlans") {
-        it("has a plan for BigAssMaverickRobot") {
-            FightPlans.find("BigAssMaverickRobot") shouldNotBe null
+        it("has a plan for each moved boss") {
+            listOf("BigAssMaverickRobot", "TimberWoman", "MoonMan", "ReactorMan").forEach {
+                FightPlans.find(it, Properties()) shouldNotBe null
+            }
         }
 
         it("has no plan for any other boss") {
             listOf(
                 "Bospider", "DesertMan", "ElecDevil", "GlacierMan", "GutsTank", "InfernoMan", "MechaDragon",
-                "MoonHead", "MoonMan", "PenguinMiniBoss", "PreciousWoman", "ReactorMan", "ReactorMonkey",
-                "RodentMan", "SigmaRat", "TimberWoman", "WilyFinalBoss"
-            ).forEach { FightPlans.find(it) shouldBe null }
+                "MechaDragon_OLD", "MoonHead", "PenguinMiniBoss", "PreciousWoman", "ReactorMan_OLD", "ReactorMonkey",
+                "RodentMan", "SigmaRat", "SphinxMiniBoss", "WilyFinalBoss"
+            ).forEach { FightPlans.find(it, Properties()) shouldBe null }
+        }
+
+        it("gives the 3 bosses with no music of their own a plan with no music") {
+            listOf("TimberWoman", "MoonMan", "ReactorMan").forEach {
+                FightPlans.find(it, Properties())!!.music shouldBe null
+            }
         }
 
         it("writes the music of the plan to the spawn props") {
             val spawnProps = Properties()
 
-            FightPlans.resolve(FightPlans.find("BigAssMaverickRobot")!!, spawnProps)
+            FightPlans.resolve(FightPlans.find("BigAssMaverickRobot", Properties())!!, spawnProps)
 
             spawnProps.get(ConstKeys.MUSIC) shouldBe MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO.name
+        }
+
+        it("chooses the mid-level plan for end=false, and the standard plan for end=true and for no end") {
+            fun exit(props: Properties) = FightPlans.find("BigAssMaverickRobot", props)!!.outro.last()
+
+            exit(Properties().also { it.put(ConstKeys.END, false) }) shouldBe AwaitBossGone
+            exit(Properties().also { it.put(ConstKeys.END, true) }) shouldBe LevelVictory
+            exit(Properties()) shouldBe LevelVictory
+        }
+
+        it("writes no music to the spawn props for a plan with no music") {
+            val spawnProps = Properties()
+
+            FightPlans.resolve(FightPlan(Array(), FightRule.AllDefeated, Array(), null), spawnProps)
+
+            spawnProps.containsKey(ConstKeys.MUSIC) shouldBe false
         }
     }
 })

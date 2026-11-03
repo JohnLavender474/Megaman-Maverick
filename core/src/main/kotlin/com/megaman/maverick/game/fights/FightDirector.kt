@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.fights
 
 import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 
@@ -13,8 +14,14 @@ class FightDirector {
 
     fun owns(boss: AbstractBoss) = fight?.boss === boss
 
-    fun start(boss: AbstractBoss, plan: FightPlan, services: MegaServices, bar: BossHealthHandler) {
-        fight = Fight(boss, plan, services, bar)
+    fun start(
+        boss: AbstractBoss,
+        plan: FightPlan,
+        services: MegaServices,
+        bar: BossHealthHandler,
+        levelMusic: () -> MusicAsset?
+    ) {
+        fight = Fight(boss, plan, services, bar, levelMusic)
     }
 
     fun update() {

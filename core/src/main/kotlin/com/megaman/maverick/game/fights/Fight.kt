@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.state.Routine
 import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 
@@ -11,7 +12,8 @@ class Fight(
     val boss: AbstractBoss,
     private val plan: FightPlan,
     val services: MegaServices,
-    val bar: BossHealthHandler
+    val bar: BossHealthHandler,
+    val levelMusic: () -> MusicAsset?
 ) {
 
     private enum class Phase { INTRO, WAIT, OUTRO, CLOSED }
