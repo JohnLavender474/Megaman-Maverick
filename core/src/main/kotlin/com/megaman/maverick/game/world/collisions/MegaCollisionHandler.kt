@@ -47,6 +47,8 @@ class MegaCollisionHandler : ICollisionHandler {
             dynamicBodyFilters.any { it.invoke(staticEntity, dynamicEntity) }
         ) return true
 
+        // TODO: the slope checks here run for every static-dynamic collision in every level, with no before-and-after
+        //  measure (accepted O5-R2 gap of 068a, see docs/mega-refactor/objectives/O5-performance.md; item 009)
         if (staticBody.hasBodyLabel(BodyLabel.SLOPE)) {
             val slope = try {
                 staticEntity as GroundSlope

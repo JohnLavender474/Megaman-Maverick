@@ -76,7 +76,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 |------|--------|------|
 | `024` | planned | [One `WeaponDef` per weapon; loadout per character](../items/024-weapon-defs/ITEM.md) (main) |
 | `060` | idea | [Proto Man as a playable character](../items/060-proto-man/ITEM.md) (main) |
-| `068` | planned | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) (main) |
+| `068` | done | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) (main) |
+| `123` | idea | [X6 flat step-down off a slope](../items/123-slope-flat-step-down/ITEM.md) |
 | `069` | planned | [A dash button for X](../items/069-dash-button/ITEM.md) (main) |
 | `081` | planned | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](../items/081-playable-x/ITEM.md) (main) |
 | `084` | done | [Split `Megaman` into player components](../items/084-split-megaman/ITEM.md) (main) |

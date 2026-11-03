@@ -1,11 +1,11 @@
 # 068: Floor slopes for extra levels
 
-- Status: active
+- Status: done
 - Type: feature
 - Objectives: `O8`, `O4`
 - Depends on: none
 - Related: `003`, `010`, `017`, `051`, `058`, `060`, `067`, `069`, `081`
-- Branches: `mega-refactor-068a-slopes` (active, started 2026-11-03)
+- Branches: `mega-refactor-068a-slopes` (merged 2026-11-03)
 
 ## Goal
 
@@ -70,6 +70,12 @@ Slopes must support both Megaman (as he plays now) and the future playable X (`0
   the X6 converter (`mmx-demake-tools`).
 - 2026-11-01 (owner, from `081`): this item supports slopes for all entities, not only X. A level being X only for now
   does not limit this. A rule that is specific to X stays on the player, not in the slope code.
+- 2026-11-03 (`068a` scope): no engine step after `resolveCollisions`; the stick is in `core` (first in the collision
+  handler, then on the feet contact in `GroundSlope.hitByFeet`). The X6 flat step-down that needed the engine step is
+  item `123`. The class is `GroundSlope`, a rectangle in a `blocks_slopes(_<n>)` layer with `side`. The open questions
+  below were answered in the branch `docs/SCOPE.md` and `docs/NOTES.md`.
+- 2026-11-03: item done after `068a`. Follow-ups: `123` (flat step-down), `124` (pass-through from below), and a
+  validator rule in `003`.
 
 ## Open questions
 

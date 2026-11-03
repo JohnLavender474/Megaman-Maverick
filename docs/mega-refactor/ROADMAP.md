@@ -84,7 +84,7 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 - Boss fights: `118c` → `118d` → `118e` → `118f` → `118g`. `082b` after `082a`. `118i` before `048` step 6. `013` and `047e` can use the fight routine now
 - Death events: `119` before `047c`
 - Later features: `120` after `030`, `047c`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`
-- Content: `068`, `073` to `080`, `089`, `099`, `115`, `117`
+- Content: `073` to `080`, `089`, `099`, `115`, `117`; `123` after `017`; `124`
 
 ## Issues
 

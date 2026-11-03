@@ -75,7 +75,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | `O1` | planned | none | | |
 | 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | `O1` | idea | none | | |
 | 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | `O5`, `O3` | planned | none | | |
-| 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | `O8`, `O4` | active | none | 2026-11-03 | |
+| 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | `O8`, `O4` | done | none | 2026-11-03 | 2026-11-03 |
 | 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | `O8` | planned | `031`, `081a` | | |
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | `O9` | idea | `031` | | |
 | 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | `O1` | idea | none | | |
@@ -130,6 +130,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 120 | [A player that turns hostile and comes back](items/120-hostile-player/ITEM.md) | feature | `O8`, `O2` | idea | `030`, `047c`, `047e`, `112`, `118`, `119` | | |
 | 121 | [Enemy clones of a playable character](items/121-playable-character-clones/ITEM.md) | feature | `O4`, `O8` | idea | `081` | | |
 | 122 | [Human-driven boss](items/122-human-driven-boss/ITEM.md) | feature | `O8`, `O2` | idea | `102` | | |
+| 123 | [X6 flat step-down off a slope](items/123-slope-flat-step-down/ITEM.md) | feature | `O4`, `O8` | idea | `017`, `068` | | |
+| 124 | [Slope pass-through from below](items/124-slope-pass-through/ITEM.md) | feature | `O4` | idea | `068` | | |
 
 ## Branches
 
@@ -176,7 +178,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-063b-damage-entity-rename`](items/063-entity-contracts-as-entity-types/branches/mega-refactor-063b-damage-entity-rename/process-log.md) | 063 | Rename `IDamageable`/`IDamager` to `IDamageableEntity`/`IDamagerEntity` (and decide their module); `IChildEntity`/`IParentEntity` extend `IGameEntity` | merged | 2026-10-27 | 2026-10-28 |
 | [`mega-refactor-064a-instance-identity`](items/064-entity-instance-identity/branches/mega-refactor-064a-instance-identity/process-log.md) | 064 | Groups as an engine `GroupsComponent` with an engine group query; `group` leaves `MegaGameEntity` and `MegaGameEntities` | merged | 2026-10-27 | 2026-10-28 |
 | [`mega-refactor-064b-map-object-id`](items/064-entity-instance-identity/branches/mega-refactor-064b-map-object-id/process-log.md) | 064 | `id` becomes a `core` component present only on entities spawned from a map; `RANDOM_ID_POOL` goes; runtime readers use entity references | merged | 2026-10-28 | 2026-10-28 |
-| [`mega-refactor-068a-slopes`](items/068-slopes/branches/mega-refactor-068a-slopes/process-log.md) | 068 | X6-style floor slopes for every body with a `FEET` fixture; main levels unchanged | active | 2026-11-03 | |
+| [`mega-refactor-068a-slopes`](items/068-slopes/branches/mega-refactor-068a-slopes/process-log.md) | 068 | X6-style floor slopes for every body with a `FEET` fixture; main levels unchanged | merged | 2026-11-03 | 2026-11-03 |
 | `mega-refactor-016-master` | 016 | Parent branch of `016`: collects the `016` branches before they merge into `master` | merged | 2026-10-28 | 2026-10-30 |
 | [`mega-refactor-016a-typed-level-state`](items/016-narrow-services/branches/mega-refactor-016a-typed-level-state/process-log.md) | 016 | Typed `LevelState` fields and camera flags replace the `game` property bag | merged | 2026-10-28 | 2026-10-28 |
 | [`mega-refactor-016b-entity-host-reads`](items/016-narrow-services/branches/mega-refactor-016b-entity-host-reads/process-log.md) | 016 | The host-only reads in entities get a home (`DrWily` screen switch, `Starkner` `paused`, `selectButtonAction`, debug shapes, `weaponsAttained`) | merged | 2026-10-28 | 2026-10-29 |

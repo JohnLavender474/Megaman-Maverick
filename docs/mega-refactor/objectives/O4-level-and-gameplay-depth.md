@@ -80,7 +80,9 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `036` | planned | [Checkpoints as typed Tiled data: respawn point, triggers, order](../items/036-checkpoints-as-data/ITEM.md) |
 | `042` | planned | [Split god classes and extract reusable motion and attack components](../items/042-reusable-components/ITEM.md) |
 | `058` | idea | [Camera rotation as its own mechanism, separate from gravity](../items/058-camera-rotation-mechanism/ITEM.md) |
-| `068` | planned | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) |
+| `068` | done | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) |
+| `123` | idea | [X6 flat step-down off a slope](../items/123-slope-flat-step-down/ITEM.md) (main) |
+| `124` | idea | [Slope pass-through from below](../items/124-slope-pass-through/ITEM.md) (main) |
 | `076` | idea | [A new tileset for the final stage](../items/076-final-stage-tileset/ITEM.md) |
 | `086` | idea | [Player movement modifiers as a component](../items/086-player-movement-modifiers/ITEM.md) |
 | `099` | idea | [Use camera zones and scroll sections in real stages](../items/099-camera-sections-in-stages/ITEM.md) (main) |

@@ -20,6 +20,7 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - Rules: the class resolves for its layer, enums parse, `spawn_room` names exist, unknown or hidden layers are reported, intentional layers are on an allowlist.
 - A Kotest spec runs it on all `LevelDefinition` maps in CI.
 - Fixing the existing findings (about 14 objects in 7 maps) is a separate content change, because a fix makes an object spawn.
+- Slope rule (from `068a`, owner decision 2026-11-03): every object in a `blocks_slopes` or `blocks_slopes_<n>` layer is a rectangle named `GroundSlope`, with `side` set to `left` or `right` and a height/width ratio of 1/4 or 1/2. An object with no name in such a layer spawns as a full `Block`, with no warning.
 
 ## Owner's input
 

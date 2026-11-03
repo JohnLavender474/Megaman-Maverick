@@ -27,7 +27,7 @@ import kotlin.math.min
 // TODO: a body that jumps or air dashes up into a slope from below snaps up onto the surface: at the top of the jump
 //  (or at once in a dash, with vy = 0) its bottom is inside the triangle, and MegaCollisionHandler pushes it up. A
 //  one-way platform lets such a body fall back down instead. Levels do not ask Megaman to pass up through a slope
-//  (backlog candidate in docs/mega-refactor/items/068-slopes/branches/mega-refactor-068a-slopes/docs/TODO.md)
+//  (see item 124, docs/mega-refactor/items/124-slope-pass-through/ITEM.md)
 class GroundSlope(services: MegaServices) : Block(services) {
 
     companion object {
