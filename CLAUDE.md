@@ -148,6 +148,20 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - Body fixtures use `FixtureType` (`world/body/FixtureType.kt`). Use `BodyComponentCreator.create(this, body, BodyFixtureDef.of(...))`.
 - Log with `GameLogger.debug(TAG, ...)`, `GameLogger.log(TAG, ...)`, `GameLogger.error(TAG, ...)`.
 
+## Package READMEs
+
+A package can have a `README.md` next to its source files that explains and illustrates its design. The first one is `core/.../fights/README.md` (2026-11-02); use it as the model.
+
+The owner started this practice long after most of the repo was built, so most packages have no README. Fill them in lazily: do not write READMEs for old packages as a task of their own.
+
+- **Write one** when you add a new package or a new design that a reader cannot see from one file: several types that work together, a life cycle, an order that matters, or rules a change must keep.
+- **Also write one** when a branch makes a large change to an old package, if the design is not clear from the code.
+- **Skip it** for a package of similar classes (for example `entities/enemies/`), a single class, or a design that the code already shows.
+- **Contents:** the purpose and why the design is as it is; the current status (for example which parts are not moved yet); the parts and how they connect; the life cycle or the order in a frame; how to change the package; the rules a change must keep. Leave out what each class or function does line by line: that belongs in the code.
+- **Diagrams:** plain text in `text` code blocks, so that they read the same in the IDE and on GitHub.
+- **Links:** point to the item folder in `docs/mega-refactor/` for the research and the decisions. Do not copy them.
+- **Keep it true:** a branch that changes the design of a package with a README updates the README in the same branch.
+
 ## Gotchas
 
 - `GameLogger.filterByTag` is `true`. Debug and log messages print only if the tag is in `MegamanMaverickGame.TAGS_TO_LOG`. Errors always print.
