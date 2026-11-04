@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` (10 fights) on the fight flow
-- Done: plan steps 1 to 6
-- Next: merge (plan step 7)
+- Done: all plan steps
+- Next: none
 - Blocked:
 
 ## Entries
@@ -34,3 +34,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Review (read-only agent): no issue. None of the 5 bosses overrides `getEventOnDefeated`, `playBossMusic`, `getHealthFillType` or `preReady`, writes spawn props, or sends or listens to fight events. Each live map gives the right plan from `end`, and each mid-level boss's `boss_key` matches its gate (`WILY_STAGE_1` gate `421`, `WILY_STAGE_2` gates `348` and `452`, `WILY_STAGE_3` gates `356` and `578`). The defeat listeners (`BulbBlaster`, `PipePuff`, `FloatingCan`) go through `NotifyListenersOfBossDefeat`, and `Spike` and `PreciousGem` act on `BOSS_DEFEATED`, which `AbstractBoss` still sends. The `WILY_STAGE_3` chain agrees with `docs/NOTES.md`. I checked the hook overrides, the default exit event (`AbstractBoss.kt:235-236`) and `IHazard : IBossListener`.
 - Checks not played: the other 3 own-stage fights, the 3 other Wily fights, the `WILY_STAGE_3 room6` chain, the death and re-entry check, the `--players 2` check, and the 4 control checks. The review covers them in code only.
 - Merge approved by the owner on the condition above.
+- Merged into `master` as `caf4ef701`. `engine:test core:test core:smokeTest lwjgl3:jar` passes on `master`: engine 636, core 852, 0 failures.

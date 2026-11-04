@@ -58,4 +58,4 @@ None.
 
 - Changes: the steps in `docs/mega-refactor/CLAUDE.md`, "Branch merge", into `master`. Stage by path, and check the squash file list.
 - Check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on `master`.
-- Done: no
+- Done: yes
