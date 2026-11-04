@@ -17,3 +17,5 @@ Today it cannot happen, and if it did, no lease would stay held:
 These facts hold for the current plans and maps, but no code enforces them. They hold because each moved fight's room is shut by a gate that opens only on the fight's exit event, after the leases are released. A later plan with no gate, or a boss that the game spawns in another way, could break them.
 
 ## Overlap with other branches
+
+- At branch start (`c91ba7ca8`): `compactor-level` and `x6-intro-extra-level` change none of `fights/`, `MegaLevelScreen`, `AbstractBoss`, the 5 bosses or the fight tests. No overlap.

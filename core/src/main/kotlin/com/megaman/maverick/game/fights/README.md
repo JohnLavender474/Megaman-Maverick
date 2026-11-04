@@ -37,6 +37,8 @@ flowchart TD
 | `FightDirector` | The screen's entry point |
 | `FightPlans` | Finds the plan of a boss, and holds the presets |
 
+Warning: `FightDirector` holds 1 fight. `start` replaces an open fight with no `cancel`, so the leases of that fight are not released. See the open-fight rule in "Rules".
+
 ## The life of a fight
 
 ```mermaid
@@ -86,7 +88,7 @@ flowchart LR
     O1["lock the player"] --> O2["hide the health bar"] --> O3["wait for the defeat animation"] --> O4["open the way on"] --> O5["give control back"] --> O6["wait until the boss is gone"]
 ```
 
-`FightPlans.find` reads the boss's map props to choose between such plans. A value that the screen can change during the fight, such as the level music, goes to `Fight` as a supplier, so that a step reads it when it runs.
+`FightPlans.find` reads the boss's map props to choose between such plans. A value that the screen owns, such as the level music, goes to `Fight` as a supplier, so that a step reads it when it runs.
 
 ## Leases
 
@@ -144,3 +146,4 @@ Until the old flow is gone, guards in `MegaLevelScreen.onEvent` stop the old bra
 - A step changes shared state only through a lease.
 - `FightPlans.resolve` is the one source for fight facts. It runs before the spawn, because `spawn` only queues and `onSpawn` runs later.
 - Add a type or a field only with a production caller. Item `118` lists the parts that wait.
+- A fight starts only when no fight is open. No code enforces this. It is true because a gate shuts each fight room, and the gate opens only on the exit event of the fight, after the plan released its leases. A plan with no gate, or a new way to start a fight, must keep this rule, or cancel the open fight first. The `118` `ITEM.md` has the decision.

@@ -158,22 +158,33 @@ class FightTest : DescribeSpec({
 
     describe("FightPlans") {
         it("has a plan for each moved boss") {
-            listOf("BigAssMaverickRobot", "TimberWoman", "MoonMan", "ReactorMan").forEach {
-                FightPlans.find(it, Properties()) shouldNotBe null
-            }
+            listOf(
+                "BigAssMaverickRobot", "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan",
+                "InfernoMan", "RodentMan", "PreciousWoman"
+            ).forEach { FightPlans.find(it, Properties()) shouldNotBe null }
         }
 
         it("has no plan for any other boss") {
             listOf(
-                "Bospider", "DesertMan", "ElecDevil", "GlacierMan", "GutsTank", "InfernoMan", "MechaDragon",
-                "MechaDragon_OLD", "MoonHead", "PenguinMiniBoss", "PreciousWoman", "ReactorMan_OLD", "ReactorMonkey",
-                "RodentMan", "SigmaRat", "SphinxMiniBoss", "WilyFinalBoss"
+                "Bospider", "ElecDevil", "GutsTank", "MechaDragon", "MechaDragon_OLD", "MoonHead", "PenguinMiniBoss",
+                "ReactorMan_OLD", "ReactorMonkey", "SigmaRat", "SphinxMiniBoss", "WilyFinalBoss"
             ).forEach { FightPlans.find(it, Properties()) shouldBe null }
         }
 
-        it("gives the 3 bosses with no music of their own a plan with no music") {
-            listOf("TimberWoman", "MoonMan", "ReactorMan").forEach {
-                FightPlans.find(it, Properties())!!.music shouldBe null
+        it("gives the bosses with no music of their own a plan with no music") {
+            listOf(
+                "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan", "InfernoMan", "RodentMan",
+                "PreciousWoman"
+            ).forEach { FightPlans.find(it, Properties())!!.music shouldBe null }
+        }
+
+        it("chooses the plan from end for each boss of the second batch") {
+            listOf("GlacierMan", "DesertMan", "InfernoMan", "RodentMan", "PreciousWoman").forEach { boss ->
+                fun exit(props: Properties) = FightPlans.find(boss, props)!!.outro.last()
+
+                exit(Properties().also { it.put(ConstKeys.END, false) }) shouldBe AwaitBossGone
+                exit(Properties().also { it.put(ConstKeys.END, true) }) shouldBe LevelVictory
+                exit(Properties()) shouldBe LevelVictory
             }
         }
 

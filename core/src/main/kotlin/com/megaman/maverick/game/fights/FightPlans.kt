@@ -6,8 +6,13 @@ import com.maverick.game.engine.state.Step
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
+import com.megaman.maverick.game.entities.bosses.DesertMan
+import com.megaman.maverick.game.entities.bosses.GlacierMan
+import com.megaman.maverick.game.entities.bosses.InfernoMan
 import com.megaman.maverick.game.entities.bosses.MoonMan
+import com.megaman.maverick.game.entities.bosses.PreciousWoman
 import com.megaman.maverick.game.entities.bosses.ReactorMan
+import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.bosses.TimberWoman
 
 object FightPlans {
@@ -15,7 +20,8 @@ object FightPlans {
     fun find(bossName: String, props: Properties): FightPlan? {
         val music = when (bossName) {
             BigAssMaverickRobot.TAG -> MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO
-            TimberWoman.TAG, MoonMan.TAG, ReactorMan.TAG -> null
+            TimberWoman.TAG, MoonMan.TAG, ReactorMan.TAG,
+            GlacierMan.TAG, DesertMan.TAG, InfernoMan.TAG, RodentMan.TAG, PreciousWoman.TAG -> null
             else -> return null
         }
 
