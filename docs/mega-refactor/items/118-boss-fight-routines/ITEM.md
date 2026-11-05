@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O4`, `O2`
 - Depends on: none
 - Related: `005`, `006`, `012`, `013`, `015`, `023`, `030`, `038`, `042`, `047`, `048`, `050`, `053`, `055`, `057`, `082`, `102`, `108`, `109`, `120`
-- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (merged), `118f` (merged), `118g` (merged)
+- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (merged), `118f` (merged), `118g` (merged), `118h` (active)
 
 ## Goal
 
@@ -118,6 +118,7 @@ No test covers boss timing. Layers 1 to 5 of `NOTES.md`, "Behavior check for the
 - (2026-11-02, owner) `GauntletMaster` does not become a `Fight`. It shares only the key-based gate unlock in `118j` (corrected 2026-11-04, owner; it said `118d`).
 - (2026-11-02, owner) Each branch merges directly into `master`, because each one ships alone.
 - (2026-11-03, owner) `FightDirector.start` does not cancel an open fight, and no `TODO` marks it. Today a fight cannot start while another one is open (`118c` `NOTES.md`). The `fights` README states it as a rule. A branch that adds a new kind of plan or a new start path (`118e` mini bosses, `118f` final boss) checks the rule in its scope.
+- (2026-11-05, owner) `118h` is lean: `HealthFillType` and its dead `ALL_AT_ONCE` branch go, and the fight runs the bar fill, so the bar leaves the screen's `when` chain. `HudBars`, `BarSpec` and `BarSource` wait until a second bar has a caller (`O1-R5`). This replaces the `118h` line in "Proposed branches".
 
 ## Open questions
 
