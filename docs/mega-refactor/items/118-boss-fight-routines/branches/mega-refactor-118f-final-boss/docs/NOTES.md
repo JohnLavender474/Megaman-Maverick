@@ -9,4 +9,4 @@
 ## Overlap with other branches
 
 - At the scan (`c19e75ad9`): `compactor-level` changes none of `fights/`, `MegaLevelScreen`, `AbstractBoss` or the bosses. `fix/spawner-rearm-margin` merged into `master` at `48a6ff917`; its 1 `MegaLevelScreen` line (`spawnsMan.rearm()` at `PLAYER_SPAWN_INIT`) is not near the boss branches, and this branch starts from a `master` that has it.
-- `x6-intro-extra-level` (last commit `3d2a4573b`) adds `D1000.TAG -> MusicAsset.MMX6_BOSS_FIGHT_MUSIC` to the `when` in `FightPlans.find`. It already gets a text conflict there; this branch adds 1 more entry. Keep both sets of entries.
+- `x6-intro-extra-level` merged `master` at `3637a5ff7` (its last commit is `145f93af9`). In this branch's files it now changes only `FightPlans.kt`: the `D1000` import and `D1000.TAG -> MusicAsset.MMX6_BOSS_FIGHT_MUSIC` after the `BigAssMaverickRobot` line. This branch puts the `WilyFinalBoss` entry just before `else`, and its import after `TimberWoman`, away from those lines, so the next merge has no text conflict. `D1000` has no `mini` on its map, so it keeps the stage or mid plan from `end`.

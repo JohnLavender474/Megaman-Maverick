@@ -183,13 +183,51 @@ class FightTest : DescribeSpec({
             listOf(
                 "BigAssMaverickRobot", "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan",
                 "InfernoMan", "RodentMan", "PreciousWoman", "ElecDevil", "GutsTank", "SigmaRat", "MoonHead",
-                "MechaDragon", "ReactorMonkey", "PenguinMiniBoss"
+                "MechaDragon", "ReactorMonkey", "PenguinMiniBoss", "WilyFinalBoss"
             ).forEach { FightPlans.find(it, Properties()) shouldNotBe null }
         }
 
         it("has no plan for any other boss") {
-            listOf("MechaDragon_OLD", "ReactorMan_OLD", "SphinxMiniBoss", "WilyFinalBoss")
+            listOf("MechaDragon_OLD", "ReactorMan_OLD", "SphinxMiniBoss")
                 .forEach { FightPlans.find(it, Properties()) shouldBe null }
+        }
+
+        it("chooses the final plan for WilyFinalBoss, whatever mini and end say") {
+            listOf(
+                Properties(),
+                Properties().also { it.put(ConstKeys.END, true) },
+                Properties().also { it.put(ConstKeys.END, false) },
+                Properties().also { it.put(ConstKeys.MINI, true) }
+            ).forEach { props ->
+                val plan = FightPlans.find("WilyFinalBoss", props)!!
+
+                plan.intro.toList() shouldBe listOf(
+                    AwaitBossReady, HoldWorld, FillBossHealthBar, ReleaseWorld, ControllerOn
+                )
+                plan.outro.toList() shouldBe listOf(
+                    BossDefeatLock, NotifyListenersOfBossDefeat, HideBossHealthBar, AwaitBossDefeatEnd
+                )
+                plan.music shouldBe MusicAsset.OUR_BLOOD_BOILS_8_BIT
+            }
+        }
+
+        it("writes the music of WilyFinalBoss to the spawn props") {
+            val spawnProps = Properties()
+
+            FightPlans.resolve(FightPlans.find("WilyFinalBoss", Properties())!!, spawnProps)
+
+            spawnProps.get(ConstKeys.MUSIC) shouldBe MusicAsset.OUR_BLOOD_BOILS_8_BIT.name
+        }
+
+        it("says that only the stage plan ends the level") {
+            fun plan(boss: String, vararg pairs: Pair<String, Boolean>) =
+                FightPlans.find(boss, Properties().also { props -> pairs.forEach { props.put(it.first, it.second) } })!!
+
+            plan("GlacierMan").endsLevel shouldBe true
+            plan("GlacierMan", ConstKeys.END to true).endsLevel shouldBe true
+            plan("GlacierMan", ConstKeys.END to false).endsLevel shouldBe false
+            plan("MoonHead", ConstKeys.MINI to true).endsLevel shouldBe false
+            plan("WilyFinalBoss").endsLevel shouldBe false
         }
 
         it("gives the bosses with no music of their own a plan with no music") {

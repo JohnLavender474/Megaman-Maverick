@@ -57,7 +57,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
-import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -234,9 +233,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MUSIC, MusicAsset.OUR_BLOOD_BOILS_8_BIT.name)
         spawnProps.put(ConstKeys.ORB, false)
-        spawnProps.put(ConstKeys.END, false)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         super.onSpawn(spawnProps)

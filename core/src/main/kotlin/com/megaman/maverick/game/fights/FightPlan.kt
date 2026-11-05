@@ -21,4 +21,8 @@ class FightPlan(
     val win: FightRule,
     val outro: Array<Step<Fight>>,
     val music: MusicAsset?
-)
+) {
+
+    val endsLevel: Boolean
+        get() = outro.contains(LevelVictory, true)
+}

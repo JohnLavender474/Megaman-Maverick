@@ -703,9 +703,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
                 // if this boss is at the end of the level
                 val end = bossSpawnProps.getOrDefault(ConstKeys.END, true, Boolean::class)
-                // if this is NOT a mini-boss AND this is the end of the level, then check if the
-                // victory event should be triggered (when the boss is already defeated)
-                if (!mini && end) {
+                val plan = FightPlans.find(bossMapObject.name, bossSpawnProps)
+
+                // if this fight ends the level, then check if the victory event should be triggered (when the
+                // boss is already defeated)
+                if (plan?.endsLevel ?: (!mini && end)) {
                     val levelDef = game.levelState.currentLevel!!
                     if (game.gameState.isLevelDefeated(levelDef)) {
                         eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
@@ -715,7 +717,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
 
-                val plan = FightPlans.find(bossMapObject.name, bossSpawnProps)
                 if (plan != null) FightPlans.resolve(plan, bossSpawnProps)
 
                 val boss = bossSpawnEventHandler.init(bossMapObject.name, bossSpawnProps)

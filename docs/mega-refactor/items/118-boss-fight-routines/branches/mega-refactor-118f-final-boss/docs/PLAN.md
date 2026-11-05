@@ -35,7 +35,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` with the start date, `ITEM.md` "Branches". Then `git worktree add -b mega-refactor-118f-final-boss .worktrees/mega-refactor-118f-final-boss master`. Recheck the overlap with the other active branches for `fights/`, `MegaLevelScreen`, `AbstractBoss` and `WilyFinalBoss`, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Tests first
 
@@ -46,7 +46,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
   - `endsLevel` is `true` for a stage plan and `false` for a mid-level, a mini and the final plan.
   Add `endsLevel` with the value `false` first, so that the tests compile.
 - Check: `core:test` fails only on the new or changed tests.
-- Done: no
+- Done: yes
 
 ### 3. The final plan, the level check and the boss
 
@@ -58,25 +58,25 @@ approved. The user approves it. When the plan changes, write the reason in the p
   - `endsLevel` always `true`;
   - `endsLevel` always `false`.
   Confirm with `git diff` that each mutation is in the file, run the full `core:test`, and see the matching test fail. Log the result. The screen change has no unit test; the `endsLevel` tests and the play checks cover it.
-- Done: no
+- Done: yes
 
 ### 4. The `fights` README
 
 - Changes: the open-fight rule says that a gate or a spawned block shuts each fight room.
 - Check: the README names no current boss, step or count (root `CLAUDE.md`, "Package READMEs").
-- Done: no
+- Done: yes
 
 ### 5. Short launches
 
 - Changes: none.
 - Check: build first, then one `timeout 12` launch for each room: `WILY_STAGE_3 room8`, `GLACIER_MAN room12`. A clean exit is a pass.
-- Done: no
+- Done: yes
 
 ### 6. Owner play test
 
 - Changes: none, unless a check fails. A fix means that the control check runs again.
 - Check: all checks in `CONTRACT.md`, "Manual playthrough". Write the result in the process log.
-- Done: no
+- Done: yes
 
 ### 7. Merge
 

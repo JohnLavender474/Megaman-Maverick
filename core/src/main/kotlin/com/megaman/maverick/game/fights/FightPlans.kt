@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.bosses.ReactorMonkey
 import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.bosses.SigmaRat
 import com.megaman.maverick.game.entities.bosses.TimberWoman
+import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
 
 object FightPlans {
 
@@ -33,6 +34,7 @@ object FightPlans {
             GlacierMan.TAG, DesertMan.TAG, InfernoMan.TAG, RodentMan.TAG, PreciousWoman.TAG,
             SigmaRat.TAG,
             MoonHead.TAG, MechaDragon.TAG, ReactorMonkey.TAG, PenguinMiniBoss.TAG -> null
+            WilyFinalBoss.TAG -> return finalBossPlan()
             else -> return null
         }
 
@@ -48,6 +50,8 @@ object FightPlans {
     }
 
     private fun standardBossPlan(music: MusicAsset?) = stageBossPlan(music, LevelVictory)
+
+    private fun finalBossPlan() = stageBossPlan(MusicAsset.OUR_BLOOD_BOILS_8_BIT)
 
     private fun midBossPlan(music: MusicAsset?) =
         stageBossPlan(music, ExitMidBossFight, ResumeAfterMidBoss, AwaitBossGone)
