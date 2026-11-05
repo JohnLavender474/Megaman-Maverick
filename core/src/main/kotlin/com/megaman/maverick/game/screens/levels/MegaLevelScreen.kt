@@ -545,6 +545,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 game.levelState.roomTransition = false
 
                 MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
+                spawnsMan.rearm()
 
                 val spawnProps =
                     playerCheckpointMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")

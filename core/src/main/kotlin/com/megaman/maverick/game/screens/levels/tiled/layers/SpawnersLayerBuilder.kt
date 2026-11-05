@@ -9,6 +9,7 @@ import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
@@ -29,6 +30,15 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
         const val TAG = "SpawnersLayerBuilder"
 
         private val ALWAYS_TRUE_PRED: (Float) -> Boolean = { true }
+
+        fun rearmMargin(spawnProps: Properties, name: String): Float {
+            val tiles = spawnProps.getOrDefault(ConstKeys.REARM_MARGIN, 0f, Float::class)
+            if (tiles < 0f) throw IllegalArgumentException(
+                "Map object $name (id=${spawnProps.get(ConstKeys.ID)}) has ${ConstKeys.REARM_MARGIN}=$tiles. " +
+                    "Set it to 0 or more tiles, or remove it."
+            )
+            return tiles * ConstVals.PPM
+        }
 
         private fun predBasedOnRoomTrans(game: MegamanMaverickGame): (Float) -> Boolean {
             return { !game.levelState.roomTransition }
@@ -180,7 +190,8 @@ class SpawnersLayerBuilder(private val params: MegaMapLayerBuildersParams) : ITi
                         spawnShape = SpawnerShapeFactory.getSpawnShape(entityType, it),
                         respawnable = respawnable,
                         spawnSupplier = spawnSupplier,
-                        shouldTest = shouldTestSpawnerPredicate
+                        shouldTest = shouldTestSpawnerPredicate,
+                        rearmMargin = rearmMargin(spawnProps, name)
                     )
                     spawners.add(spawner)
 

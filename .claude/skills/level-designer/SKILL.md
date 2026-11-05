@@ -191,6 +191,11 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       between the entrance and a ground enemy.
     - Keep enemies out of the reach of hazards (saw swing or rotation radius, spikes, crushers).
       A hazard can destroy the enemy, so the enemy is wasted.
+    - An enemy that the player kills and then walks back from (for example to dodge an enemy that
+      rolls toward him) spawns again as soon as its spawn rectangle leaves the view and comes back.
+      To stop this, give the object a `rearm_margin` property (float, tiles, default `0`): after
+      the kill, the spawner re-arms only when the spawn rectangle is that far outside the view. A
+      respawn after a death re-arms it at once. This works only for an object with no `spawn_type`.
 11. **Outer blocks extend off-screen**: floors, ceilings and outer walls continue past the room
     edges (for example, floors down to the bottom of the map), so no gap shows at the camera edge.
 12. **Gauntlet stages** (rooms with a `GauntletMaster`): follow the `gauntlet-stages` skill. In

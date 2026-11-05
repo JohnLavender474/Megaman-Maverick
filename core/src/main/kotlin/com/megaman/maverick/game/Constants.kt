@@ -376,6 +376,7 @@ object ConstKeys {
     const val SENSORS = "sensors"
     const val SENSOR = "sensor"
     const val RESPAWNABLE = "respawnable"
+    const val REARM_MARGIN = "rearm_margin"
     const val X = "x"
     const val Y = "y"
     const val LARGE = "large"

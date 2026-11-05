@@ -18,5 +18,15 @@ interface ISpawner : Supplier<Spawn?>, UpdatePredicate, ICullable {
      */
     fun onSpawnRejected() {}
 
+    /**
+     * Called on each spawns update before [shouldTest], also when [shouldTest] is false.
+     */
+    fun track(delta: Float) {}
+
+    /**
+     * Called when the level resets its enemies for a new attempt, after a player death.
+     */
+    fun rearm() {}
+
     override fun reset() {}
 }

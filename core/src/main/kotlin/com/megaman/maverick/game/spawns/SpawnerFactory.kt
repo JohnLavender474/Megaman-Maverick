@@ -15,16 +15,27 @@ object SpawnerFactory {
         spawnShape: IGameShape2D,
         spawnSupplier: () -> Spawn,
         respawnable: Boolean = true,
-        shouldTest: (Float) -> Boolean = { true }
+        shouldTest: (Float) -> Boolean = { true },
+        rearmMargin: Float = 0f
     ): SpawnerForBoundsEntered {
         GameLogger.debug(TAG, "spawnerForWhenEnteringCamera(): creating spawner for cameraBounds=$cameraBounds")
 
+        val rearmBounds = GameRectangle()
         return SpawnerForBoundsEntered(
             spawnSupplier = spawnSupplier,
             thisBounds = { spawnShape },
             otherBounds = { cameraBounds },
             respawnable = respawnable,
-            shouldTestPred = shouldTest
+            shouldTestPred = shouldTest,
+            rearmBounds = {
+                rearmBounds.set(
+                    cameraBounds.getX() - rearmMargin,
+                    cameraBounds.getY() - rearmMargin,
+                    cameraBounds.getWidth() + 2f * rearmMargin,
+                    cameraBounds.getHeight() + 2f * rearmMargin
+                )
+            },
+            rearmsOnLevelReset = rearmMargin > 0f
         )
     }
 

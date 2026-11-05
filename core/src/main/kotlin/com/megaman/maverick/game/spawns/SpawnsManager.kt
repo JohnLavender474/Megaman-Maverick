@@ -31,6 +31,8 @@ class SpawnsManager(private val spawn: (MegaGameEntity, Properties) -> Boolean) 
                 continue
             }
 
+            spawner.track(delta)
+
             if (spawner.shouldTest(delta) && spawner.test(delta)) {
                 val newSpawn = spawner.get()!!
                 if (!spawn(newSpawn.entity, newSpawn.properties)) spawner.onSpawnRejected()
@@ -42,6 +44,8 @@ class SpawnsManager(private val spawn: (MegaGameEntity, Properties) -> Boolean) 
             }
         }
     }
+
+    fun rearm() = spawners.forEach { it.rearm() }
 
     override fun reset() {
         spawners.forEach { it.reset() }
