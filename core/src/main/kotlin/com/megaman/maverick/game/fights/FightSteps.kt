@@ -68,6 +68,15 @@ object ReleaseWorld : Step<Fight> {
     override fun isFinished(context: Fight) = true
 }
 
+object EndBossSpawn : Step<Fight> {
+
+    override fun begin(context: Fight) {
+        context.services.events.submitEvent(Event(EventType.END_BOSS_SPAWN))
+    }
+
+    override fun isFinished(context: Fight) = true
+}
+
 object ControllerOn : Step<Fight> {
 
     override fun begin(context: Fight) {

@@ -2,11 +2,15 @@ package com.megaman.maverick.game.fights
 
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.extensions.gdxArrayOf
+import com.maverick.game.engine.common.extensions.objectSetOf
+import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.state.Step
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
@@ -102,6 +106,24 @@ class FightTest : DescribeSpec({
             fight.closed shouldBe true
         }
 
+        it("sends END_BOSS_SPAWN from the EndBossSpawn step") {
+            val services = testServices()
+            val received = ArrayList<Any>()
+            services.events.addListener(object : IEventListener {
+                override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN)
+
+                override fun onEvent(event: Event) {
+                    received.add(event.key)
+                }
+            })
+            val fight = Fight(boss(), plan(gdxArrayOf(EndBossSpawn)), services, mockk(relaxed = true)) { null }
+
+            fight.update()
+            services.events.run()
+
+            received.shouldContainExactly(EventType.END_BOSS_SPAWN)
+        }
+
         it("ends a running step as interrupted on a cancel") {
             val log = ArrayList<String>()
             val fight = fight(boss(), plan(gdxArrayOf(Probe("intro", log, done = false))))
@@ -160,22 +182,62 @@ class FightTest : DescribeSpec({
         it("has a plan for each moved boss") {
             listOf(
                 "BigAssMaverickRobot", "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan",
-                "InfernoMan", "RodentMan", "PreciousWoman", "ElecDevil", "GutsTank", "SigmaRat"
+                "InfernoMan", "RodentMan", "PreciousWoman", "ElecDevil", "GutsTank", "SigmaRat", "MoonHead",
+                "MechaDragon", "ReactorMonkey", "PenguinMiniBoss"
             ).forEach { FightPlans.find(it, Properties()) shouldNotBe null }
         }
 
         it("has no plan for any other boss") {
-            listOf(
-                "Bospider", "MechaDragon", "MechaDragon_OLD", "MoonHead", "PenguinMiniBoss", "ReactorMan_OLD",
-                "ReactorMonkey", "SphinxMiniBoss", "WilyFinalBoss"
-            ).forEach { FightPlans.find(it, Properties()) shouldBe null }
+            listOf("MechaDragon_OLD", "ReactorMan_OLD", "SphinxMiniBoss", "WilyFinalBoss")
+                .forEach { FightPlans.find(it, Properties()) shouldBe null }
         }
 
         it("gives the bosses with no music of their own a plan with no music") {
             listOf(
                 "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan", "InfernoMan", "RodentMan",
-                "PreciousWoman", "SigmaRat"
+                "PreciousWoman", "SigmaRat", "MoonHead", "MechaDragon", "ReactorMonkey", "PenguinMiniBoss"
             ).forEach { FightPlans.find(it, Properties())!!.music shouldBe null }
+        }
+
+        it("chooses the mini plan for mini=true, whatever end says, for each mini boss") {
+            listOf("MoonHead", "MechaDragon", "ReactorMonkey", "PenguinMiniBoss").forEach { boss ->
+                listOf(null, true, false).forEach { end ->
+                    val props = Properties().also {
+                        it.put(ConstKeys.MINI, true)
+                        if (end != null) it.put(ConstKeys.END, end)
+                    }
+
+                    val plan = FightPlans.find(boss, props)!!
+
+                    plan.intro.toList() shouldBe listOf(AwaitBossReady, EndBossSpawn, ControllerOn)
+                    plan.outro.toList() shouldBe listOf(
+                        NotifyListenersOfBossDefeat, AwaitBossDefeatEnd, ExitMidBossFight, ControllerOn, AwaitBossGone
+                    )
+                    plan.music shouldBe null
+                }
+            }
+        }
+
+        it("gives a mini plan no music, also for a boss with its own music") {
+            val props = Properties().also { it.put(ConstKeys.MINI, true) }
+
+            FightPlans.find("BigAssMaverickRobot", props)!!.music shouldBe null
+        }
+
+        it("chooses the plan from end for each mini boss with no mini and with mini=false") {
+            listOf("MoonHead", "MechaDragon", "ReactorMonkey", "PenguinMiniBoss").forEach { boss ->
+                listOf(null, false).forEach { mini ->
+                    fun plan(end: Boolean?) = FightPlans.find(boss, Properties().also {
+                        if (mini != null) it.put(ConstKeys.MINI, mini)
+                        if (end != null) it.put(ConstKeys.END, end)
+                    })!!
+
+                    listOf(null, true, false).forEach { plan(it).intro.contains(FillBossHealthBar, true) shouldBe true }
+                    plan(false).outro.last() shouldBe AwaitBossGone
+                    plan(true).outro.last() shouldBe LevelVictory
+                    plan(null).outro.last() shouldBe LevelVictory
+                }
+            }
         }
 
         it("writes the boss music of ElecDevil and GutsTank to the spawn props") {

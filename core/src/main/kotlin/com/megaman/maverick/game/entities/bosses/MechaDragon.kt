@@ -203,7 +203,6 @@ class MechaDragon(services: MegaServices) : AbstractBoss(services), IFreezableEn
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MINI, true)
         spawnProps.put(ConstKeys.ORB, false)
         super.onSpawn(spawnProps)
 

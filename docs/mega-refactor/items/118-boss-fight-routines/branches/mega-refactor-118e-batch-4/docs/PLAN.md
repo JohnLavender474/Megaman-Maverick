@@ -54,7 +54,7 @@ In tick D+1 the boss is still in the engine (`liveNow`), because the engine remo
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` with the start date, `ITEM.md` "Branches". Then `git worktree add -b mega-refactor-118e-batch-4 .worktrees/mega-refactor-118e-batch-4 master`. Recheck the overlap with the other active branches for `fights/`, `MegaLevelScreen`, `AbstractBoss` and the 5 bosses, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Tests first
 
@@ -64,7 +64,7 @@ In tick D+1 the boss is still in the engine (`liveNow`), because the engine remo
   - each of the 4 with no `mini` and with `mini=false` gives the stage or mid plan from `end`;
   - a fight with the intro `EndBossSpawn` delivers `END_BOSS_SPAWN` to a listener after `events.run()`.
 - Check: `core:test` fails only on the new or changed tests. The `EndBossSpawn` test cannot compile without the step, so add the step object with an empty `begin` first, and confirm that its test fails.
-- Done: no
+- Done: yes
 
 ### 3. The mini plan and the 4 bosses
 
@@ -80,25 +80,25 @@ In tick D+1 the boss is still in the engine (`liveNow`), because the engine remo
   - remove `ExitMidBossFight` from the mini outro;
   - an empty `EndBossSpawn.begin`.
   Confirm with `git diff` that each mutation is in the file, run the full `core:test`, and see the matching test fail. Log the result.
-- Done: no
+- Done: yes
 
 ### 4. Comment out `Bospider`
 
 - Changes: comment out `Bospider.kt` with a `TODO` at the top, in the form of `SphinxMiniBoss.kt` (no live level uses it; commented out, not deleted, in `118e`; check it against the current entity code before use). Remove the `BOSPIDER` constant and its pool line from `BossesFactory`.
 - Check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes. `grep` finds no live reference to `Bospider` in `core/src/main` outside its own file.
-- Done: no
+- Done: yes
 
 ### 5. Short launches
 
 - Changes: none.
 - Check: build first, then one `timeout 12` launch for each room: `MOON_MAN room11`, `INFERNO_MAN room8`, `REACTOR_MAN room12`, `REACTOR_MAN room5`, `WILY_STAGE_1 room9`. A clean exit is a pass.
-- Done: no
+- Done: yes
 
 ### 6. Owner play test
 
 - Changes: none, unless a check fails. A fix means that the control check runs again.
 - Check: all checks in `CONTRACT.md`, "Manual playthrough". Write the result in the process log.
-- Done: no
+- Done: yes
 
 ### 7. Merge
 

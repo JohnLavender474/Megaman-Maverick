@@ -14,7 +14,6 @@ class BossesFactory(private val services: MegaServices) : EntityFactory() {
         const val INFERNO_MAN = "InfernoMan"
         const val MOON_MAN = "MoonMan"
         const val TIMBER_WOMAN = "TimberWoman"
-        const val BOSPIDER = "Bospider"
         const val GUTS_TANK = "GutsTank"
         const val SIGMA_RAT = "SigmaRat"
         const val PENGUIN_MINI_BOSS = "PenguinMiniBoss"
@@ -31,7 +30,6 @@ class BossesFactory(private val services: MegaServices) : EntityFactory() {
         pools.put(INFERNO_MAN, GameEntityPoolCreator.create { InfernoMan(services) })
         pools.put(MOON_MAN, GameEntityPoolCreator.create { MoonMan(services) })
         pools.put(TIMBER_WOMAN, GameEntityPoolCreator.create { TimberWoman(services) })
-        pools.put(BOSPIDER, GameEntityPoolCreator.create { Bospider(services) })
         pools.put(GUTS_TANK, GameEntityPoolCreator.create { GutsTank(services) })
         pools.put(SIGMA_RAT, GameEntityPoolCreator.create { SigmaRat(services) })
         pools.put(PENGUIN_MINI_BOSS, GameEntityPoolCreator.create { PenguinMiniBoss(services) })

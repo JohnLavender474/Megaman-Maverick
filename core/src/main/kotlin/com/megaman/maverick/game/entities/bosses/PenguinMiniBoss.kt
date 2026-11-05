@@ -81,7 +81,6 @@ class PenguinMiniBoss(services: MegaServices) : AbstractBoss(services), IParentE
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MINI, true)
         super.onSpawn(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!

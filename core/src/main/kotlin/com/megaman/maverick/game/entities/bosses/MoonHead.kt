@@ -130,7 +130,6 @@ class MoonHead(services: MegaServices) : AbstractBoss(services, dmgDuration = DA
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.ORB, false)
-        spawnProps.put(ConstKeys.MINI, true)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
