@@ -3,8 +3,8 @@
 How to do the work in `SCOPE.md`. Write this file after `SCOPE.md` and `CONTRACT.md` are
 approved. The user approves it. When the plan changes, write the reason in the process log.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-11-05
 
 ## Design notes
 
