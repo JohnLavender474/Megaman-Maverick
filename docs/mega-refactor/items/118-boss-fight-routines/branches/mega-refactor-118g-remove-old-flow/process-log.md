@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: remove the old boss flow (screen branches, route, guards, 3 events, and the parts with no caller left)
-- Done: `SCOPE.md` and `CONTRACT.md` approved, draft `PLAN.md`
-- Next: owner approval of `PLAN.md`
+- Done: planning
+- Next: plan step 1 (worktree and base tests)
 - Blocked:
 
 ## Entries
@@ -17,3 +17,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - No branch exists yet. Scan of `master` at `373923c8e`: every use of the 6 boss events, the guards, `FightDirector`, the hooks and their callers, `BossSpawnEventHandler`, the screen events test, the `fights` README, and the boss rooms of the 26 maps that `LevelDefinition` names (25 rooms, each boss with a plan). The owner chose to remove the hooks that lose their only caller. Draft `SCOPE.md`.
 - The owner approved `SCOPE.md`. Draft `CONTRACT.md`, with no experimental check and 3 control checks.
 - The owner approved `CONTRACT.md`. Draft `PLAN.md`.
+- The owner approved `PLAN.md`. Branch start on `master`, and the worktree from `master`.
