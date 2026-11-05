@@ -25,7 +25,7 @@ None.
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` with the start date, `ITEM.md` "Branches". Then `git worktree add -b mega-refactor-118d-batch-3 .worktrees/mega-refactor-118d-batch-3 master`. Recheck the overlap with the other active branches for `fights/`, `MegaLevelScreen`, `AbstractBoss` and the 3 bosses, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Tests first
 
@@ -35,7 +35,7 @@ None.
   - `SigmaRat` has no plan music;
   - each of the 3 gives `standardBossPlan` for no `end` and for `end=true`.
 - Check: `core:test` fails only on the new or changed tests, because `find` does not know the 3 bosses yet.
-- Done: no
+- Done: yes
 
 ### 3. Move the 3 bosses
 
@@ -46,19 +46,19 @@ None.
   - give `SigmaRat` a music value;
   - make the `end` read always `false`.
   Confirm with `git diff` that each mutation is in the file, run the full `core:test`, and see the matching test fail. Log the result.
-- Done: no
+- Done: yes
 
 ### 4. Short launches
 
 - Changes: none.
 - Check: build first, then one `timeout 12` launch for each room: `WILY_STAGE_1 room10`, `WILY_STAGE_2 room9`, `MOON_MAN room11`. A clean exit is a pass.
-- Done: no
+- Done: yes
 
 ### 5. Owner play test
 
 - Changes: none, unless a check fails. A fix means that the control check runs again.
 - Check: all checks in `CONTRACT.md`, "Manual playthrough". Write the result in the process log.
-- Done: no
+- Done: yes
 
 ### 6. Merge
 

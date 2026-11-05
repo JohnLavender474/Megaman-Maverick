@@ -160,22 +160,44 @@ class FightTest : DescribeSpec({
         it("has a plan for each moved boss") {
             listOf(
                 "BigAssMaverickRobot", "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan",
-                "InfernoMan", "RodentMan", "PreciousWoman"
+                "InfernoMan", "RodentMan", "PreciousWoman", "ElecDevil", "GutsTank", "SigmaRat"
             ).forEach { FightPlans.find(it, Properties()) shouldNotBe null }
         }
 
         it("has no plan for any other boss") {
             listOf(
-                "Bospider", "ElecDevil", "GutsTank", "MechaDragon", "MechaDragon_OLD", "MoonHead", "PenguinMiniBoss",
-                "ReactorMan_OLD", "ReactorMonkey", "SigmaRat", "SphinxMiniBoss", "WilyFinalBoss"
+                "Bospider", "MechaDragon", "MechaDragon_OLD", "MoonHead", "PenguinMiniBoss", "ReactorMan_OLD",
+                "ReactorMonkey", "SphinxMiniBoss", "WilyFinalBoss"
             ).forEach { FightPlans.find(it, Properties()) shouldBe null }
         }
 
         it("gives the bosses with no music of their own a plan with no music") {
             listOf(
                 "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan", "InfernoMan", "RodentMan",
-                "PreciousWoman"
+                "PreciousWoman", "SigmaRat"
             ).forEach { FightPlans.find(it, Properties())!!.music shouldBe null }
+        }
+
+        it("writes the boss music of ElecDevil and GutsTank to the spawn props") {
+            mapOf(
+                "ElecDevil" to MusicAsset.JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC,
+                "GutsTank" to MusicAsset.MMX6_SIGMA_2_BATTLE_INTRO_MUSIC
+            ).forEach { (boss, music) ->
+                val spawnProps = Properties()
+
+                FightPlans.resolve(FightPlans.find(boss, Properties())!!, spawnProps)
+
+                spawnProps.get(ConstKeys.MUSIC) shouldBe music.name
+            }
+        }
+
+        it("chooses the standard plan for no end and for end=true for each boss of the third batch") {
+            listOf("ElecDevil", "GutsTank", "SigmaRat").forEach { boss ->
+                fun exit(props: Properties) = FightPlans.find(boss, props)!!.outro.last()
+
+                exit(Properties().also { it.put(ConstKeys.END, true) }) shouldBe LevelVictory
+                exit(Properties()) shouldBe LevelVictory
+            }
         }
 
         it("chooses the plan from end for each boss of the second batch") {

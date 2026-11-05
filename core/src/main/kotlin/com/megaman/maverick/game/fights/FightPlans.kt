@@ -7,12 +7,15 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
 import com.megaman.maverick.game.entities.bosses.DesertMan
+import com.megaman.maverick.game.entities.bosses.ElecDevil
 import com.megaman.maverick.game.entities.bosses.GlacierMan
+import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.bosses.InfernoMan
 import com.megaman.maverick.game.entities.bosses.MoonMan
 import com.megaman.maverick.game.entities.bosses.PreciousWoman
 import com.megaman.maverick.game.entities.bosses.ReactorMan
 import com.megaman.maverick.game.entities.bosses.RodentMan
+import com.megaman.maverick.game.entities.bosses.SigmaRat
 import com.megaman.maverick.game.entities.bosses.TimberWoman
 
 object FightPlans {
@@ -20,8 +23,11 @@ object FightPlans {
     fun find(bossName: String, props: Properties): FightPlan? {
         val music = when (bossName) {
             BigAssMaverickRobot.TAG -> MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO
+            ElecDevil.TAG -> MusicAsset.JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC
+            GutsTank.TAG -> MusicAsset.MMX6_SIGMA_2_BATTLE_INTRO_MUSIC
             TimberWoman.TAG, MoonMan.TAG, ReactorMan.TAG,
-            GlacierMan.TAG, DesertMan.TAG, InfernoMan.TAG, RodentMan.TAG, PreciousWoman.TAG -> null
+            GlacierMan.TAG, DesertMan.TAG, InfernoMan.TAG, RodentMan.TAG, PreciousWoman.TAG,
+            SigmaRat.TAG -> null
             else -> return null
         }
 

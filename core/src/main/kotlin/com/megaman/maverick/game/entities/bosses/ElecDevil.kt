@@ -31,7 +31,6 @@ import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
@@ -136,7 +135,6 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
     // On spawn, both bodies should be inactive, all body pieces should be inactive, and body pieces should be queued
     // to spawn from off-screen via the "start" object property.
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MUSIC, MusicAsset.JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC.name)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 

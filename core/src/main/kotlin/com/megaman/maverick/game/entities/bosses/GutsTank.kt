@@ -45,7 +45,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
-import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
@@ -201,7 +200,6 @@ class GutsTank(services: MegaServices) : AbstractBoss(services, size = Size.LARG
     }
 
     override fun onSpawn(spawnProps: Properties) {
-        spawnProps.put(ConstKeys.MUSIC, MusicAsset.MMX6_SIGMA_2_BATTLE_INTRO_MUSIC.name)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
