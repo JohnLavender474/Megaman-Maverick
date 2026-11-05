@@ -24,13 +24,13 @@ None. `delta` is a new parameter of `Fight.update` and `FightDirector.update`; t
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` with the start date; `ITEM.md` "Branches" and the owner decision (2026-11-05, the lean `118h`). Then `git worktree add -b mega-refactor-118h-bar-fill .worktrees/mega-refactor-118h-bar-fill master`. Recheck the overlap with the other active branches, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Tests first
 
 - Changes: add the `delta` parameter to `Fight.update` and `FightDirector.update`, still unused, and pass it from the screen and the tests, so that the tests compile. New tests in `FightTest`: the bar update comes after the steps of the tick, with the same `delta`; no update for a finished bar. In `FightStepsTest`: with a bar that finishes on its first update, `ReleaseWorld` and `ControllerOn` run in the next tick, not in the tick of the fill.
 - Check: `core:test` fails only on the new tests.
-- Done: no
+- Done: yes
 
 ### 3. The fight runs the fill
 
@@ -40,19 +40,19 @@ None. `delta` is a new parameter of `Fight.update` and `FightDirector.update`; t
   - the bar update with no `finished` check;
   - no bar update.
   Confirm with `git diff` that each mutation is in the file, run the full `core:test`, and see the matching test fail. Log the result.
-- Done: no
+- Done: yes
 
 ### 4. The `fights` README
 
 - Changes: "How it runs in a frame" says that a fight runs its bar fill after its steps, and that the screen only draws the bar; "Status" loses "the health bar" from the later-branches line.
 - Check: the README names no current boss, step or count.
-- Done: no
+- Done: yes
 
 ### 5. Short launches
 
 - Changes: none.
 - Check: build first, then one `timeout 12` launch for each room: `GLACIER_MAN room12`, `WILY_STAGE_1 room9`. A clean exit is a pass.
-- Done: no
+- Done: yes
 
 ### 6. Owner play test
 

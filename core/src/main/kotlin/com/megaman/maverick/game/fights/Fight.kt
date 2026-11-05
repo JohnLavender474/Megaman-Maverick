@@ -39,7 +39,7 @@ class Fight(
         leases.remove(key)?.release()
     }
 
-    fun update() {
+    fun update(delta: Float) {
         if (phase == Phase.INTRO) {
             if (plan.win.isMet(this)) {
                 intro.cancel(this)
@@ -57,6 +57,8 @@ class Fight(
             outro.update(this)
             if (outro.finished) close()
         }
+
+        if (!bar.finished) bar.update(delta)
     }
 
     fun cancel() {

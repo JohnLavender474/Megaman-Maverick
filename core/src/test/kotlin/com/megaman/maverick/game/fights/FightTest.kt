@@ -21,6 +21,9 @@ import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
+
+private const val DELTA = 0.1f
 
 private class Probe(val name: String, val log: ArrayList<String>, var done: Boolean = true) : Step<Fight> {
 
@@ -56,13 +59,13 @@ class FightTest : DescribeSpec({
                 plan(gdxArrayOf(Probe("intro", log)), gdxArrayOf(Probe("outro", log)))
             )
 
-            fight.update()
-            fight.update()
+            fight.update(DELTA)
+            fight.update(DELTA)
             log.shouldContainExactly("begin:intro", "end:intro:false")
             fight.closed shouldBe false
 
             defeated = true
-            fight.update()
+            fight.update(DELTA)
             log.shouldContainExactly("begin:intro", "end:intro:false", "begin:outro", "end:outro:false")
             fight.closed shouldBe true
         }
@@ -73,7 +76,7 @@ class FightTest : DescribeSpec({
             fight.lease(FightLease.WORLD_HOLD) { log.add("world") }
             fight.lease(FightLease.HEALTH_BAR) { log.add("bar") }
 
-            fight.update()
+            fight.update(DELTA)
             fight.cancel()
 
             log.shouldContainExactly("bar", "world")
@@ -100,12 +103,36 @@ class FightTest : DescribeSpec({
             )
             fight.lease(FightLease.WORLD_HOLD) { log.add("world") }
 
-            fight.update()
+            fight.update(DELTA)
             defeated = true
-            fight.update()
+            fight.update(DELTA)
 
             log.shouldContainExactly("begin:intro", "end:intro:true", "world", "begin:outro", "end:outro:false")
             fight.closed shouldBe true
+        }
+
+        it("updates its bar after the steps of the tick, with the same delta") {
+            val log = ArrayList<String>()
+            val bar = mockk<BossHealthHandler>(relaxed = true).also {
+                every { it.finished } returns false
+                every { it.update(any()) } answers { log.add("bar:${firstArg<Float>()}") }
+            }
+            val fight = Fight(boss(), plan(gdxArrayOf(Probe("intro", log, done = false))), testServices(), bar) { null }
+
+            fight.update(DELTA)
+
+            log.shouldContainExactly("begin:intro", "bar:$DELTA")
+        }
+
+        it("does not update a finished bar") {
+            val bar = mockk<BossHealthHandler>(relaxed = true).also { every { it.finished } returns true }
+            val fight = Fight(boss(), plan(gdxArrayOf(Probe("intro", ArrayList(), done = false))), testServices(), bar) {
+                null
+            }
+
+            fight.update(DELTA)
+
+            verify(exactly = 0) { bar.update(any()) }
         }
 
         it("sends END_BOSS_SPAWN from the EndBossSpawn step") {
@@ -120,7 +147,7 @@ class FightTest : DescribeSpec({
             })
             val fight = Fight(boss(), plan(gdxArrayOf(EndBossSpawn)), services, mockk(relaxed = true)) { null }
 
-            fight.update()
+            fight.update(DELTA)
             services.events.run()
 
             received.shouldContainExactly(EventType.END_BOSS_SPAWN)
@@ -130,7 +157,7 @@ class FightTest : DescribeSpec({
             val log = ArrayList<String>()
             val fight = fight(boss(), plan(gdxArrayOf(Probe("intro", log, done = false))))
 
-            fight.update()
+            fight.update(DELTA)
             fight.cancel()
 
             log.shouldContainExactly("begin:intro", "end:intro:true")
@@ -144,7 +171,7 @@ class FightTest : DescribeSpec({
         it("does nothing with no fight") {
             val director = FightDirector()
 
-            director.update()
+            director.update(DELTA)
             director.cancel()
 
             director.active shouldBe false
@@ -154,7 +181,7 @@ class FightTest : DescribeSpec({
             val director = FightDirector()
 
             director.start(boss(), plan(gdxArrayOf(Probe("wait", ArrayList(), done = false))), testServices(), bar) { null }
-            director.update()
+            director.update(DELTA)
 
             director.active shouldBe true
         }
@@ -163,7 +190,7 @@ class FightTest : DescribeSpec({
             val director = FightDirector()
 
             director.start(boss { true }, plan(Array()), testServices(), bar) { null }
-            director.update()
+            director.update(DELTA)
 
             director.active shouldBe false
         }

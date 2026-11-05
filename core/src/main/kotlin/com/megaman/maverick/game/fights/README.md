@@ -12,7 +12,7 @@ The examples in this file are hypothetical. They show the design, not the curren
 
 Every boss fight runs in this package. `FightPlans.find` is the one list of bosses that can fight. Each boss room needs a boss that it finds: for any other boss it throws `MissingFightPlanException` when the player enters the room.
 
-Item `118` has later branches that move the health bar and the boss hooks out of `AbstractBoss`.
+Item `118` has a later branch that moves the boss hooks out of `AbstractBoss`.
 
 ## The parts
 
@@ -107,7 +107,9 @@ So no exit route can leave the world frozen or a bar on the screen: a normal end
 
 ## How it runs in a frame
 
-`MegaLevelScreen.render` calls `fights.update()` before `engine.update`. It does not run in a pause.
+`MegaLevelScreen.render` calls `fights.update(delta)` before `engine.update`. It does not run in a pause.
+
+A tick runs the steps first. Then, if the fight's health bar is filling, the tick runs the fill with the same `delta`. So a step that waits for the fill sees the fill end in the next tick, and the screen only draws the bar.
 
 ```mermaid
 sequenceDiagram

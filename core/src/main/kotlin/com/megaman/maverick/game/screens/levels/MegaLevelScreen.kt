@@ -804,13 +804,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             spawnCameraBounds.set(game.cameraView.getRotatedBounds())
             spawnsMan.update(delta)
 
-            fights.update()
+            fights.update(delta)
 
             // Because I'm not good at software design, there's some tight coupling in this block
             // Essentially, the order in which these handlers are updated must not be modified or
             // else the flow of events in the game might become broken
             when {
-                !bossHealthHandler.finished -> bossHealthHandler.update(delta)
                 !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
                 !playerSpawnEventHandler.isFinished() -> playerSpawnEventHandler.update(delta)
                 !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)

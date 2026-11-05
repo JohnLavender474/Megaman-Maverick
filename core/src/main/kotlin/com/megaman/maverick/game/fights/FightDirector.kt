@@ -22,9 +22,9 @@ class FightDirector {
         fight = Fight(boss, plan, services, bar, levelMusic)
     }
 
-    fun update() {
+    fun update(delta: Float) {
         val fight = fight ?: return
-        fight.update()
+        fight.update(delta)
         if (fight.closed) this.fight = null
     }
 

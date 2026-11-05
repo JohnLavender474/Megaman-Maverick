@@ -17,7 +17,6 @@ import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
-import com.megaman.maverick.game.utils.misc.HealthFillType
 
 object AwaitBossReady : Step<Fight> {
 
@@ -47,7 +46,6 @@ object FillBossHealthBar : Step<Fight> {
 
         bar.set(
             context.boss,
-            HealthFillType.BIT_BY_BIT,
             { services.audio.pauseMusic() },
             {
                 services.events.submitEvent(Event(EventType.END_BOSS_SPAWN))

@@ -31,12 +31,19 @@ import io.mockk.verify
 
 private val LEVEL_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC
 
-private class StageFight(end: Boolean? = null) {
+private const val DELTA = 0.1f
+
+private class StageFight(end: Boolean? = null, barFillsOnFirstUpdate: Boolean = false) {
 
     val received = ArrayList<Any>()
     val receivedEvents = ArrayList<Event>()
     val audio = mockk<MegaAudioManager>(relaxed = true)
-    val bar = mockk<BossHealthHandler>(relaxed = true).also { every { it.finished } returns true }
+
+    private var barFilled = !barFillsOnFirstUpdate
+    val bar = mockk<BossHealthHandler>(relaxed = true).also {
+        every { it.finished } answers { barFilled }
+        every { it.update(any()) } answers { barFilled = true }
+    }
 
     var bossDefeated = false
     var bossState = EntityExistenceState.LIVE
@@ -94,7 +101,7 @@ private class StageFight(end: Boolean? = null) {
     fun count(key: EventType) = received.count { it == key }
 
     fun tick() {
-        fight.update()
+        fight.update(DELTA)
         fight.services.events.run()
     }
 
@@ -114,6 +121,18 @@ private class StageFight(end: Boolean? = null) {
 }
 
 class FightStepsTest : DescribeSpec({
+
+    describe("the stage boss plan during the bar fill") {
+        it("releases the world and gives control in the tick after the fill ends, not in the same tick") {
+            val stage = StageFight(barFillsOnFirstUpdate = true)
+
+            stage.tick()
+            stage.received shouldNotContain EventType.TURN_CONTROLLER_ON
+
+            stage.tick()
+            stage.received shouldContain EventType.TURN_CONTROLLER_ON
+        }
+    }
 
     describe("the stage boss plan at the defeat") {
         it("locks, stops the music, hides the bar and ends the level when slot 0 is alive") {
