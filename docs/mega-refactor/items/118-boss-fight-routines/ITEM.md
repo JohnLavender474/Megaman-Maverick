@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O4`, `O2`
 - Depends on: none
 - Related: `005`, `006`, `012`, `013`, `015`, `023`, `030`, `038`, `042`, `047`, `048`, `050`, `053`, `055`, `057`, `082`, `102`, `108`, `109`, `120`
-- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (merged), `118f` (merged), `118g` (merged), `118h` (merged)
+- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (merged), `118f` (merged), `118g` (merged), `118h` (merged), `118i` (active)
 
 ## Goal
 
@@ -120,6 +120,8 @@ No test covers boss timing. Layers 1 to 5 of `NOTES.md`, "Behavior check for the
 - (2026-11-02, owner) Each branch merges directly into `master`, because each one ships alone.
 - (2026-11-03, owner) `FightDirector.start` does not cancel an open fight, and no `TODO` marks it. Today a fight cannot start while another one is open (`118c` `NOTES.md`). The `fights` README states it as a rule. A branch that adds a new kind of plan or a new start path (`118e` mini bosses, `118f` final boss) checks the rule in its scope.
 - (2026-11-05, owner) `118h` is lean: `HealthFillType` and its dead `ALL_AT_ONCE` branch go, and the fight runs the bar fill, so the bar leaves the screen's `when` chain. `HudBars`, `BarSpec` and `BarSource` wait until a second bar has a caller (`O1-R5`). This replaces the `118h` line in "Proposed branches".
+- (2026-11-05, owner) `118i` is phase only: a `BossComponent` with `phase` replaces `ready` and `betweenReadyAndEndBossSpawnEvent`, and a fight step starts the fight phase. `isReady`, `preReady`, `onReady` and `onEndBossSpawnEvent` stay as hooks on `AbstractBoss`; a `TODO` in `BossComponent` points to `048` step 6, which moves them into the component. The boss music and `END_BOSS_SPAWN` stay. This replaces the `118i` line in "Proposed branches".
+- (2026-11-05, owner) `x6-intro-extra-level` adapts its 2 `D1000` reads of the old flags when it next merges `master`; `118i` does not change that branch.
 
 ## Open questions
 
