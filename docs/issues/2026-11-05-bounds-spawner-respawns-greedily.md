@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -81,3 +81,9 @@ Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktree
 
 - A spawner with margin `0` can stay off after a death near the checkpoint: at the destroy, it reads the camera of the death position, not the camera at the checkpoint. This fix does not change that (see "Not changed"). It is a question for the owner.
 - After the merge, `master` is merged into `x6-intro-extra-level`, and the Meta Wheels in `X6Intro_16x14_v1.tmx` get a `rearm_margin`. The value comes from a play test there.
+
+## Resolution
+
+Fixed by `fix/spawner-rearm-margin` (squash `48a6ff917`). A map object with no `spawn_type` can set `rearm_margin` (tiles). After its entity is destroyed, its spawner re-arms only when the spawn shape is that far outside the view. The check runs on each frame, also during a room transition. A respawn after a death re-arms each spawner with a margin. With no margin, the behavior does not change. `SpawnerRearmMarginTest` covers these cases. The owner's play checks in `FIX_TEST_SPAWNER_REARM` and `INTRO_STAGE` pass (2026-11-05).
+
+Not changed: the margin-`0` case at a death near the checkpoint (see "Notes").
