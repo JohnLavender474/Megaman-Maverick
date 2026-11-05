@@ -102,7 +102,7 @@ Files: `FightPlans.kt`, `FightPlan.kt`, `MegaLevelScreen.kt`, `WilyFinalBoss.kt`
 
 ## Overlap with other branches
 
-Active worktrees at `c19e75ad9`: `compactor-level` (no change in `fights/`, the bosses or `MegaLevelScreen`), `fix/spawner-rearm-margin` (a spawner fix; recheck at branch start for `MegaLevelScreen`), and `x6-intro-extra-level`, which adds `D1000` to the `when` in `FightPlans.find` (the same text conflict as after `118e`).
+Active worktrees at `c19e75ad9`: `compactor-level` (no change in `fights/`, the bosses or `MegaLevelScreen`), `fix/spawner-rearm-margin`, which merged into `master` at `48a6ff917` with 1 line in `MegaLevelScreen` at `PLAYER_SPAWN_INIT`, not near the boss branches, and `x6-intro-extra-level`, which adds `D1000` to the `when` in `FightPlans.find` (the same text conflict as after `118e`).
 
 ## Objective check
 
