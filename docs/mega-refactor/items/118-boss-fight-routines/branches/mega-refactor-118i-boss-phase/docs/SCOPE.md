@@ -4,8 +4,8 @@ What this branch changes and why. Write this file after the scan, before `CONTRA
 `PLAN.md`. The user approves it. If the scope changes later, update this file and get approval
 again.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-11-05
 
 ## Goal
 
@@ -65,7 +65,7 @@ No live mini boss (`MoonHead`, `MechaDragon`, `ReactorMonkey`) and no `ElecDevil
 
 ## In scope
 
-1. `BossComponent` (`entities/state/`), with `phase: BossPhase` and `reset()` back to `ENTRANCE`. `BossPhase` has 3 values: `ENTRANCE` (not ready), `INTRO` (ready, the fight not started), `FIGHT`. The boss makes it as a field and adds it in `init()`.
+1. `BossComponent` (`entities/state/`), with `phase: BossPhase` and `reset()` back to `ENTRANCE`. `BossPhase` has 3 values: `ENTRANCE` (not ready), `INTRO` (ready, the fight not started), `FIGHT`. The boss makes it as a field and adds it in `init()`. The class has a short `TODO` that points to `048` step 6, which moves the boss hooks (`isReady`, `preReady`, `onReady`, `onEndBossSpawnEvent`) into the component (owner, 2026-11-05).
 2. `AbstractBoss`: when `isReady` is `true`, the boss sets `INTRO` and calls `onReady()`, as today. `ready` and `betweenReadyAndEndBossSpawnEvent` go. `onSpawn` sets `ENTRANCE`. `onEndBossSpawnEvent` keeps the music and no longer writes a flag. `canDamage` reads "phase is not `ENTRANCE`".
 3. A new fight step, `StartBossFight`, sets `FIGHT`.
    - In the stage plan, it comes right after `FillBossHealthBar`. It runs in the tick of frame G+1, which has the same effect as `events.run` of frame G (the frame rule).
