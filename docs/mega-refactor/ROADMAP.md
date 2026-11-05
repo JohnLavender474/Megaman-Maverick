@@ -81,7 +81,7 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 - Tooling: `003`, `008`, `039`, `040`, `043`, `090`, `100`
 - Cleanup: `027`, `066`, `071`, `083`, `087`, `092`, `093`, `096`, `097`, `098`, `103`, `104`
 - Design: `025`, `042`, `048`, `049`, `052`, `053`, `057`, `058`, `059`, `070`, `086`, `114`
-- Boss fights: `118e` → `118f` → `118g`. `082b` after `082a`. `118i` before `048` step 6. `013` and `047e` can use the fight routine now
+- Boss fights: `118f` → `118g`. `082b` after `082a`. `118i` before `048` step 6. `013` and `047e` can use the fight routine now
 - Death events: `119` before `047c`
 - Later features: `120` after `030`, `047c`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`
 - Content: `073` to `080`, `089`, `099`, `115`, `117`; `123` after `017`; `124`

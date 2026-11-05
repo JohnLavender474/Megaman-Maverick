@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O4`, `O2`
 - Depends on: none
 - Related: `005`, `006`, `012`, `013`, `015`, `023`, `030`, `038`, `042`, `047`, `048`, `050`, `053`, `055`, `057`, `082`, `102`, `108`, `109`, `120`
-- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (active)
+- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (merged)
 
 ## Goal
 
