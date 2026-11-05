@@ -5,8 +5,8 @@ check them. Write this file during
 planning, before you change code. Do the checks before the branch merges, and write the result
 in the branch process log.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-11-05
 
 ## Intended changes
 
