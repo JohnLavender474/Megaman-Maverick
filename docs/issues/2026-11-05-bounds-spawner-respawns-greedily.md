@@ -46,7 +46,7 @@ Intended changes:
 - At `PLAYER_SPAWN_INIT` (a respawn after a death), each spawner with a margin above `0` re-arms, so that a new attempt sees all its enemies again. A spawner with margin `0` keeps its current behavior at a respawn.
 - New test map `FixTestSpawnerRearm.tmx`, with the `LevelDefinition` entry `FIX_TEST_SPAWNER_REARM` of type `TEST_LEVEL`. It stays on `master` after the merge.
 
-Changed files: `SpawnerForBoundsEntered.kt`, `SpawnerFactory.kt`, `SpawnsManager.kt`, `ISpawner.kt`, `SpawnersLayerBuilder.kt`, `MegaLevelScreen.kt` (one call at `PLAYER_SPAWN_INIT`), `Constants.kt` (one key), `LevelDefinition.kt` and `LevelCompletionScreensTest` (the test level), tests, the test map, and the docs for the property (`level-builder` and `level-designer` skills).
+Changed files: `SpawnerForBoundsEntered.kt`, `SpawnerFactory.kt`, `SpawnsManager.kt`, `ISpawner.kt`, `SpawnersLayerBuilder.kt`, `MegaLevelScreen.kt` (one call at `PLAYER_SPAWN_INIT`), `Constants.kt` (one key), `LevelDefinition.kt` and `LevelCompletionScreensTest` (the test level), tests, the test map, and the docs for the property (`level-designer` skill, rule 10; the `level-builder` skill writes no enemy properties).
 
 Not changed:
 
