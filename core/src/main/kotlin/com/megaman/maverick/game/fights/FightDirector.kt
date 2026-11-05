@@ -12,8 +12,6 @@ class FightDirector {
 
     private var fight: Fight? = null
 
-    fun owns(boss: AbstractBoss) = fight?.boss === boss
-
     fun start(
         boss: AbstractBoss,
         plan: FightPlan,

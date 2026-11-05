@@ -30,12 +30,9 @@ enum class EventType {
     GATE_FINISH_CLOSING,
 
     ENTER_BOSS_ROOM,
-    BEGIN_BOSS_SPAWN,
-    BOSS_READY,
     END_BOSS_SPAWN,
 
     BOSS_DEFEATED,
-    BOSS_DEAD,
     // called when the boss that just died is NOT the end-level boss
     INTERMEDIATE_BOSS_DEAD,
     // called when a gauntlet master's waves are all defeated

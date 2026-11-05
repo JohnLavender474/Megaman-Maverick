@@ -1,15 +1,10 @@
 package com.megaman.maverick.game.screens.levels.events
 
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.common.objects.props
-import com.maverick.game.engine.events.Event
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.events.EventType
 
 class BossSpawnEventHandler(private val game: MegamanMaverickGame) {
 
@@ -22,8 +17,6 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) {
 
         boss.ready = false
         boss.spawn(bossSpawnProps)
-
-        game.events.submitEvent(Event(EventType.BEGIN_BOSS_SPAWN, props(ConstKeys.BOSS pairTo boss)))
 
         return boss
     }

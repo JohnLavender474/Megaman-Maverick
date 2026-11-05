@@ -10,7 +10,9 @@ The examples in this file are hypothetical. They show the design, not the curren
 
 ## Status
 
-The bosses move to this package in batches. `FightPlans.find` is the one list of moved bosses. A boss that it does not find takes the old branches in `MegaLevelScreen.onEvent`, until item `118` removes them.
+Every boss fight runs in this package. `FightPlans.find` is the one list of bosses that can fight. Each boss room needs a boss that it finds: for any other boss it throws `MissingFightPlanException` when the player enters the room.
+
+Item `118` has later branches that move the health bar and the boss hooks out of `AbstractBoss`.
 
 ## The parts
 
@@ -129,7 +131,7 @@ No system runs between `events.run` of frame F and the tick of frame F+1. So a s
 
 A routine gets no event for its order. It reads state, for example `boss.ready` or `boss.defeated`. Events stay as output for listeners, such as `AbstractBoss` and hazards that react to a defeat.
 
-Until the old flow is gone, guards in `MegaLevelScreen.onEvent` stop the old branches from acting on a boss that a fight owns. A fight closes in the same tick as its last step, before `events.run` delivers what that step submitted. So if a guard must see the fight when that event arrives, the plan ends with a wait step that keeps the fight open for that `run`.
+A fight closes in the same tick as its last step, before `events.run` delivers what that step submitted. So a plan whose exit sends an event can end with a wait step, for example "wait until the boss is gone", that keeps the fight open while that event is delivered.
 
 ## How to change this package
 

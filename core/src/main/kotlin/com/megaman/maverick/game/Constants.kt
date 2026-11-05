@@ -445,8 +445,6 @@ object ConstKeys {
     const val VELOCITY_ALTERATION = "velocity_alteration"
     const val LADDER = "ladder"
     const val HEALTH = "health"
-    const val FILL = "fill"
-    const val HEALTH_FILL_TYPE = "${HEALTH}_${FILL}_${TYPE}"
     const val CLEAR_FEET_BLOCKS = "clear_feet_blocks"
     const val FEET_BLOCKS = "feet_blocks"
     const val CONTACT_WATER = "contact_water"

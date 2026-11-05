@@ -39,7 +39,6 @@ import com.megaman.maverick.game.entities.state.SandReaction
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.PlayerDamaged
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
 
@@ -109,8 +108,6 @@ abstract class AbstractBoss(
     var betweenReadyAndEndBossSpawnEvent = false
         private set
 
-    private var end = true
-
     private val playerDamagedListener: (PlayerDamaged) -> Unit = { onPlayerDamaged(it.damager, it.player) }
 
     override fun init(vararg params: Any) {
@@ -129,7 +126,6 @@ abstract class AbstractBoss(
 
         bossKey = spawnProps.getOrDefault("${ConstKeys.BOSS}_${ConstKeys.KEY}", "NO_BOSS_KEY", String::class)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
-        end = spawnProps.getOrDefault(ConstKeys.END, true, Boolean::class)
 
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
@@ -213,7 +209,6 @@ abstract class AbstractBoss(
                 if (defeatTimer.isFinished()) {
                     GameLogger.debug(TAG, "update(): defeat timer finished")
                     destroy()
-                    services.events.submitEvent(Event(EventType.BOSS_DEAD, props(ConstKeys.BOSS pairTo this)))
                 }
             }
         }
@@ -232,12 +227,7 @@ abstract class AbstractBoss(
         return pointsComponent
     }
 
-    open fun getEventOnDefeated(): EventType? =
-        if (!mini && end) EventType.VICTORY_EVENT else EventType.INTERMEDIATE_BOSS_DEAD
-
     protected open fun playBossMusic() = !mini
-
-    protected open fun getHealthFillType() = HealthFillType.BIT_BY_BIT
 
     protected abstract fun isReady(delta: Float): Boolean
 
@@ -245,15 +235,6 @@ abstract class AbstractBoss(
 
     protected open fun onReady() {
         GameLogger.debug(TAG, "onReady()")
-
-        val event = Event(
-            EventType.BOSS_READY, props(
-                ConstKeys.BOSS pairTo this,
-                ConstKeys.HEALTH_FILL_TYPE pairTo getHealthFillType()
-            )
-        )
-        services.events.submitEvent(event)
-
         betweenReadyAndEndBossSpawnEvent = true
     }
 

@@ -1,11 +1,8 @@
 package com.megaman.maverick.game.screens.levels
 
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.events.Event
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -20,10 +17,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-private fun boss(mini: Boolean) = mockk<AbstractBoss>(relaxed = true).also {
-    every { it.mini } returns mini
+private fun boss() = mockk<AbstractBoss>(relaxed = true).also {
     every { it.existenceState } returns EntityExistenceState.LIVE
-    every { it.getEventOnDefeated() } returns EventType.VICTORY_EVENT
 }
 
 private fun gameWithLivePlayer() = mockk<MegamanMaverickGame>(relaxed = true).also {
@@ -34,118 +29,30 @@ private fun gameWithLivePlayer() = mockk<MegamanMaverickGame>(relaxed = true).al
 
 private fun MegaLevelScreen.ownFight(boss: AbstractBoss) =
     fights.start(
-        boss, FightPlans.find("BigAssMaverickRobot", Properties())!!, testServices(), mockk<BossHealthHandler>(relaxed = true)
+        boss, FightPlans.find("BigAssMaverickRobot", Properties()), testServices(), mockk<BossHealthHandler>(relaxed = true)
     ) { null }
-
-private fun bossEvent(key: EventType, boss: AbstractBoss) = Event(key, props(ConstKeys.BOSS pairTo boss))
-
-private fun MegamanMaverickGame.submitted(key: EventType, times: Int) =
-    verify(exactly = times) { events.submitEvent(match { it.key == key }) }
 
 class MegaLevelScreenEventsTest : DescribeSpec({
 
-    describe("MegaLevelScreen boss branches and the fight route") {
-        it("BOSS_READY acts for a boss with no fight") {
-            val game = gameWithLivePlayer()
-
-            MegaLevelScreen(game).onEvent(bossEvent(EventType.BOSS_READY, boss(mini = true)))
-
-            game.submitted(EventType.END_BOSS_SPAWN, 1)
-        }
-
-        it("BOSS_READY skips a boss that a fight owns") {
-            val game = gameWithLivePlayer()
-            val screen = MegaLevelScreen(game)
-            val boss = boss(mini = true)
-            screen.ownFight(boss)
-
-            screen.onEvent(bossEvent(EventType.BOSS_READY, boss))
-
-            game.submitted(EventType.END_BOSS_SPAWN, 0)
-        }
-
-        it("END_BOSS_SPAWN acts with no fight, and skips during a fight") {
-            val game = gameWithLivePlayer()
-            val screen = MegaLevelScreen(game)
-            screen.ownFight(boss(mini = false))
-
-            screen.onEvent(Event(EventType.END_BOSS_SPAWN))
-            game.submitted(EventType.TURN_CONTROLLER_ON, 0)
-
-            screen.fights.cancel()
-            screen.onEvent(Event(EventType.END_BOSS_SPAWN))
-            game.submitted(EventType.TURN_CONTROLLER_ON, 1)
-        }
-
-        it("BOSS_DEFEATED acts for a boss with no fight") {
-            val game = gameWithLivePlayer()
-
-            runCatching {
-                MegaLevelScreen(game).onEvent(bossEvent(EventType.BOSS_DEFEATED, boss(mini = false)))
-            }
-
-            game.submitted(EventType.TURN_CONTROLLER_OFF, 1)
-        }
-
-        it("BOSS_DEFEATED skips a boss that a fight owns") {
-            val game = gameWithLivePlayer()
-            val screen = MegaLevelScreen(game)
-            val boss = boss(mini = false)
-            screen.ownFight(boss)
-
-            screen.onEvent(bossEvent(EventType.BOSS_DEFEATED, boss))
-
-            game.submitted(EventType.TURN_CONTROLLER_OFF, 0)
-        }
-
-        it("BOSS_DEAD acts for a boss with no fight") {
-            val game = gameWithLivePlayer()
-
-            MegaLevelScreen(game).onEvent(bossEvent(EventType.BOSS_DEAD, boss(mini = false)))
-
-            game.submitted(EventType.VICTORY_EVENT, 1)
-        }
-
-        it("INTERMEDIATE_BOSS_DEAD acts for a boss with no fight") {
-            val game = gameWithLivePlayer()
-
-            runCatching {
-                MegaLevelScreen(game).onEvent(bossEvent(EventType.INTERMEDIATE_BOSS_DEAD, boss(mini = false)))
-            }
-
-            game.submitted(EventType.TURN_CONTROLLER_ON, 1)
-        }
-
-        it("INTERMEDIATE_BOSS_DEAD skips a boss that a fight owns") {
-            val game = gameWithLivePlayer()
-            val screen = MegaLevelScreen(game)
-            val boss = boss(mini = false)
-            screen.ownFight(boss)
-
-            screen.onEvent(bossEvent(EventType.INTERMEDIATE_BOSS_DEAD, boss))
-
-            game.submitted(EventType.TURN_CONTROLLER_ON, 0)
-            verify(exactly = 0) { game.audio.playMusic(any(), any()) }
-        }
-
+    describe("MegaLevelScreen and the fight") {
         it("reset cancels a fight in progress, as on a game over") {
             val screen = MegaLevelScreen(gameWithLivePlayer())
-            screen.ownFight(boss(mini = false))
+            screen.ownFight(boss())
 
             runCatching { screen.reset() }
 
             screen.fights.active shouldBe false
         }
+    }
 
-        it("BOSS_DEAD skips a boss that a fight owns") {
-            val game = gameWithLivePlayer()
-            val screen = MegaLevelScreen(game)
-            val boss = boss(mini = false)
-            screen.ownFight(boss)
+    describe("MegaLevelScreen and the fight events") {
+        it("listens to the room entry and the victory, and to no event that a fight handles") {
+            val mask = MegaLevelScreen(mockk<MegamanMaverickGame>(relaxed = true)).eventKeyMask
 
-            screen.onEvent(bossEvent(EventType.BOSS_DEAD, boss))
-
-            game.submitted(EventType.VICTORY_EVENT, 0)
+            mask.contains(EventType.ENTER_BOSS_ROOM) shouldBe true
+            mask.contains(EventType.VICTORY_EVENT) shouldBe true
+            listOf(EventType.END_BOSS_SPAWN, EventType.BOSS_DEFEATED, EventType.INTERMEDIATE_BOSS_DEAD)
+                .forEach { mask.contains(it) shouldBe false }
         }
     }
 

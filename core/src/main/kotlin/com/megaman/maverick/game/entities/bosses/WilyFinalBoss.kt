@@ -318,9 +318,6 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         frozen = false
     }
 
-    // Do not trigger an event when defeated. Instead, spawn Dr. Wily when destroyed.
-    override fun getEventOnDefeated() = null
-
     override fun onEndBossSpawnEvent() {
         GameLogger.debug(TAG, "onEndBossSpawnEvent()")
         super.onEndBossSpawnEvent()

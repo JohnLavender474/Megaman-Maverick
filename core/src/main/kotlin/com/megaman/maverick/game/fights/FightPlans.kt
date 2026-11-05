@@ -25,7 +25,7 @@ import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
 
 object FightPlans {
 
-    fun find(bossName: String, props: Properties): FightPlan? {
+    fun find(bossName: String, props: Properties): FightPlan {
         val music = when (bossName) {
             BigAssMaverickRobot.TAG -> MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO
             ElecDevil.TAG -> MusicAsset.JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC
@@ -35,7 +35,7 @@ object FightPlans {
             SigmaRat.TAG,
             MoonHead.TAG, MechaDragon.TAG, ReactorMonkey.TAG, PenguinMiniBoss.TAG -> null
             WilyFinalBoss.TAG -> return finalBossPlan()
-            else -> return null
+            else -> throw MissingFightPlanException(bossName)
         }
 
         if (props.getOrDefault(ConstKeys.MINI, false, Boolean::class)) return miniBossPlan()

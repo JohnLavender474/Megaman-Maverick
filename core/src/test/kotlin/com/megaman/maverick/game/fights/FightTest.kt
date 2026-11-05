@@ -13,10 +13,12 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
 import com.megaman.maverick.game.testServices
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 
@@ -148,15 +150,13 @@ class FightTest : DescribeSpec({
             director.active shouldBe false
         }
 
-        it("owns only the boss of its fight") {
+        it("is active while its fight is open") {
             val director = FightDirector()
-            val boss = boss()
 
-            director.start(boss, plan(gdxArrayOf(Probe("wait", ArrayList(), done = false))), testServices(), bar) { null }
+            director.start(boss(), plan(gdxArrayOf(Probe("wait", ArrayList(), done = false))), testServices(), bar) { null }
+            director.update()
 
             director.active shouldBe true
-            director.owns(boss) shouldBe true
-            director.owns(boss()) shouldBe false
         }
 
         it("drops a closed fight") {
@@ -187,9 +187,12 @@ class FightTest : DescribeSpec({
             ).forEach { FightPlans.find(it, Properties()) shouldNotBe null }
         }
 
-        it("has no plan for any other boss") {
-            listOf("MechaDragon_OLD", "ReactorMan_OLD", "SphinxMiniBoss")
-                .forEach { FightPlans.find(it, Properties()) shouldBe null }
+        it("throws for a boss with no plan, and names the boss") {
+            listOf("MechaDragon_OLD", "ReactorMan_OLD", "SphinxMiniBoss", "NotABoss").forEach { boss ->
+                val error = shouldThrow<MissingFightPlanException> { FightPlans.find(boss, Properties()) }
+
+                error.message!! shouldContain "\"$boss\""
+            }
         }
 
         it("chooses the final plan for WilyFinalBoss, whatever mini and end say") {
@@ -199,7 +202,7 @@ class FightTest : DescribeSpec({
                 Properties().also { it.put(ConstKeys.END, false) },
                 Properties().also { it.put(ConstKeys.MINI, true) }
             ).forEach { props ->
-                val plan = FightPlans.find("WilyFinalBoss", props)!!
+                val plan = FightPlans.find("WilyFinalBoss", props)
 
                 plan.intro.toList() shouldBe listOf(
                     AwaitBossReady, HoldWorld, FillBossHealthBar, ReleaseWorld, ControllerOn
@@ -214,14 +217,14 @@ class FightTest : DescribeSpec({
         it("writes the music of WilyFinalBoss to the spawn props") {
             val spawnProps = Properties()
 
-            FightPlans.resolve(FightPlans.find("WilyFinalBoss", Properties())!!, spawnProps)
+            FightPlans.resolve(FightPlans.find("WilyFinalBoss", Properties()), spawnProps)
 
             spawnProps.get(ConstKeys.MUSIC) shouldBe MusicAsset.OUR_BLOOD_BOILS_8_BIT.name
         }
 
         it("says that only the stage plan ends the level") {
             fun plan(boss: String, vararg pairs: Pair<String, Boolean>) =
-                FightPlans.find(boss, Properties().also { props -> pairs.forEach { props.put(it.first, it.second) } })!!
+                FightPlans.find(boss, Properties().also { props -> pairs.forEach { props.put(it.first, it.second) } })
 
             plan("GlacierMan").endsLevel shouldBe true
             plan("GlacierMan", ConstKeys.END to true).endsLevel shouldBe true
@@ -234,7 +237,7 @@ class FightTest : DescribeSpec({
             listOf(
                 "TimberWoman", "MoonMan", "ReactorMan", "GlacierMan", "DesertMan", "InfernoMan", "RodentMan",
                 "PreciousWoman", "SigmaRat", "MoonHead", "MechaDragon", "ReactorMonkey", "PenguinMiniBoss"
-            ).forEach { FightPlans.find(it, Properties())!!.music shouldBe null }
+            ).forEach { FightPlans.find(it, Properties()).music shouldBe null }
         }
 
         it("chooses the mini plan for mini=true, whatever end says, for each mini boss") {
@@ -245,7 +248,7 @@ class FightTest : DescribeSpec({
                         if (end != null) it.put(ConstKeys.END, end)
                     }
 
-                    val plan = FightPlans.find(boss, props)!!
+                    val plan = FightPlans.find(boss, props)
 
                     plan.intro.toList() shouldBe listOf(AwaitBossReady, EndBossSpawn, ControllerOn)
                     plan.outro.toList() shouldBe listOf(
@@ -259,7 +262,7 @@ class FightTest : DescribeSpec({
         it("gives a mini plan no music, also for a boss with its own music") {
             val props = Properties().also { it.put(ConstKeys.MINI, true) }
 
-            FightPlans.find("BigAssMaverickRobot", props)!!.music shouldBe null
+            FightPlans.find("BigAssMaverickRobot", props).music shouldBe null
         }
 
         it("chooses the plan from end for each mini boss with no mini and with mini=false") {
@@ -268,7 +271,7 @@ class FightTest : DescribeSpec({
                     fun plan(end: Boolean?) = FightPlans.find(boss, Properties().also {
                         if (mini != null) it.put(ConstKeys.MINI, mini)
                         if (end != null) it.put(ConstKeys.END, end)
-                    })!!
+                    })
 
                     listOf(null, true, false).forEach { plan(it).intro.contains(FillBossHealthBar, true) shouldBe true }
                     plan(false).outro.last() shouldBe AwaitBossGone
@@ -285,7 +288,7 @@ class FightTest : DescribeSpec({
             ).forEach { (boss, music) ->
                 val spawnProps = Properties()
 
-                FightPlans.resolve(FightPlans.find(boss, Properties())!!, spawnProps)
+                FightPlans.resolve(FightPlans.find(boss, Properties()), spawnProps)
 
                 spawnProps.get(ConstKeys.MUSIC) shouldBe music.name
             }
@@ -293,7 +296,7 @@ class FightTest : DescribeSpec({
 
         it("chooses the standard plan for no end and for end=true for each boss of the third batch") {
             listOf("ElecDevil", "GutsTank", "SigmaRat").forEach { boss ->
-                fun exit(props: Properties) = FightPlans.find(boss, props)!!.outro.last()
+                fun exit(props: Properties) = FightPlans.find(boss, props).outro.last()
 
                 exit(Properties().also { it.put(ConstKeys.END, true) }) shouldBe LevelVictory
                 exit(Properties()) shouldBe LevelVictory
@@ -302,7 +305,7 @@ class FightTest : DescribeSpec({
 
         it("chooses the plan from end for each boss of the second batch") {
             listOf("GlacierMan", "DesertMan", "InfernoMan", "RodentMan", "PreciousWoman").forEach { boss ->
-                fun exit(props: Properties) = FightPlans.find(boss, props)!!.outro.last()
+                fun exit(props: Properties) = FightPlans.find(boss, props).outro.last()
 
                 exit(Properties().also { it.put(ConstKeys.END, false) }) shouldBe AwaitBossGone
                 exit(Properties().also { it.put(ConstKeys.END, true) }) shouldBe LevelVictory
@@ -313,13 +316,13 @@ class FightTest : DescribeSpec({
         it("writes the music of the plan to the spawn props") {
             val spawnProps = Properties()
 
-            FightPlans.resolve(FightPlans.find("BigAssMaverickRobot", Properties())!!, spawnProps)
+            FightPlans.resolve(FightPlans.find("BigAssMaverickRobot", Properties()), spawnProps)
 
             spawnProps.get(ConstKeys.MUSIC) shouldBe MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO.name
         }
 
         it("chooses the mid-level plan for end=false, and the standard plan for end=true and for no end") {
-            fun exit(props: Properties) = FightPlans.find("BigAssMaverickRobot", props)!!.outro.last()
+            fun exit(props: Properties) = FightPlans.find("BigAssMaverickRobot", props).outro.last()
 
             exit(Properties().also { it.put(ConstKeys.END, false) }) shouldBe AwaitBossGone
             exit(Properties().also { it.put(ConstKeys.END, true) }) shouldBe LevelVictory

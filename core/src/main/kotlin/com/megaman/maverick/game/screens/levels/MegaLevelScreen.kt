@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.GameEngine
-import com.maverick.game.engine.animations.AnimationsSystem
 import com.maverick.game.engine.behaviors.BehaviorsSystem
 import com.maverick.game.engine.camera.CameraFollow
 import com.maverick.game.engine.camera.CameraRoomTransition
@@ -24,28 +23,23 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.gdxArrayOf
-import com.maverick.game.engine.common.extensions.isAny
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sorting.IComparableDrawable
-import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.EventsManager
 import com.maverick.game.engine.events.IEventListener
-import com.maverick.game.engine.locks.lock
-import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
@@ -69,8 +63,6 @@ import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.factories.EntityFactories
@@ -86,8 +78,6 @@ import com.megaman.maverick.game.input.SystemButton
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
-import com.megaman.maverick.game.locks.MegaLockGroup
-import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.levels.camera.CameraEdgeBlocks
 import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
@@ -116,7 +106,6 @@ import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
-import com.megaman.maverick.game.utils.misc.HealthFillType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
@@ -154,11 +143,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EventType.GATE_INIT_CLOSING,
 
         EventType.ENTER_BOSS_ROOM,
-        EventType.BOSS_READY,
-        EventType.END_BOSS_SPAWN,
-        EventType.BOSS_DEFEATED,
-        EventType.BOSS_DEAD,
-        EventType.INTERMEDIATE_BOSS_DEAD,
 
         EventType.VICTORY_EVENT,
         EventType.END_LEVEL,
@@ -699,126 +683,21 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val bossMapObject = bossRoom.properties.get(ConstKeys.OBJECT, RectangleMapObject::class.java)
                 val bossSpawnProps = bossMapObject.properties.toProps()
 
-                // if this is a mini-boss
-                val mini = bossSpawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
-                // if this boss is at the end of the level
-                val end = bossSpawnProps.getOrDefault(ConstKeys.END, true, Boolean::class)
                 val plan = FightPlans.find(bossMapObject.name, bossSpawnProps)
 
                 // if this fight ends the level, then check if the victory event should be triggered (when the
                 // boss is already defeated)
-                if (plan?.endsLevel ?: (!mini && end)) {
-                    val levelDef = game.levelState.currentLevel!!
-                    if (game.gameState.isLevelDefeated(levelDef)) {
-                        eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
-                        return
-                    }
+                if (plan.endsLevel && game.gameState.isLevelDefeated(game.levelState.currentLevel!!)) {
+                    eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
+                    return
                 }
 
                 bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
 
-                if (plan != null) FightPlans.resolve(plan, bossSpawnProps)
+                FightPlans.resolve(plan, bossSpawnProps)
 
                 val boss = bossSpawnEventHandler.init(bossMapObject.name, bossSpawnProps)
-                if (plan != null) fights.start(boss, plan, game.services, bossHealthHandler) { music }
-            }
-
-            EventType.BOSS_READY -> {
-                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (fights.owns(boss)) return
-
-                when {
-                    boss.mini -> eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                    else -> {
-                        val type = event.getOrDefaultProperty(
-                            ConstKeys.HEALTH_FILL_TYPE,
-                            HealthFillType.BIT_BY_BIT,
-                            HealthFillType::class
-                        )
-
-                        val runOnFirstUpdate: (() -> Unit)? = when (type) {
-                            HealthFillType.BIT_BY_BIT -> {
-                                { game.audio.pauseMusic() }
-                            }
-
-                            else -> null
-                        }
-
-                        val runOnFinished = {
-                            eventsMan.submitEvent(Event(EventType.END_BOSS_SPAWN))
-                            if (type == HealthFillType.BIT_BY_BIT) game.audio.playMusic()
-                        }
-
-                        bossHealthHandler.set(boss, type, runOnFirstUpdate, runOnFinished)
-
-                        game.engine.systems.forEach {
-                            if (!it.isAny(SpritesSystem::class, AnimationsSystem::class)) it.on = false
-                        }
-                    }
-                }
-            }
-
-            EventType.END_BOSS_SPAWN -> {
-                if (fights.active) return
-
-                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-
-                game.engine.systems.forEach { it.on = true }
-            }
-
-            EventType.BOSS_DEFEATED -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss defeated")
-
-                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (fights.owns(boss)) return
-
-                if (!player.existenceState.liveAfterUpdate) {
-                    GameLogger.debug(TAG, "onEvent(): Megaman dead when boss defeated, doing nothing...")
-                    return
-                }
-
-                if (!boss.mini) {
-                    eventsMan.submitEvent(
-                        Event(
-                            EventType.TURN_CONTROLLER_OFF, props(
-                                "${ConstKeys.CONTROLLER}_${ConstKeys.SYSTEM}_${ConstKeys.OFF}" pairTo false
-                            )
-                        )
-                    )
-                    game.players.forEach { it.lock(MegaLockGroup.DAMAGE, MegaLockReason.BOSS_DEFEATED) }
-                    audioMan.unsetMusic()
-                }
-
-                MegaGameEntities.forEach {
-                    if (it is IBossListener && it.getType() != EntityType.BOSS) it.onBossDefeated(boss)
-                }
-
-                bossHealthHandler.unset()
-            }
-
-            EventType.BOSS_DEAD -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): boss dead")
-
-                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (fights.owns(boss)) return
-
-                if (!player.existenceState.liveAfterUpdate) {
-                    GameLogger.debug(TAG, "onEvent(): Megaman dead when boss dead, doing nothing...")
-                    return
-                }
-
-                val eventType = boss.getEventOnDefeated()
-                if (eventType != null) eventsMan.submitEvent(Event(eventType, props(ConstKeys.BOSS pairTo boss)))
-            }
-
-            EventType.INTERMEDIATE_BOSS_DEAD -> {
-                val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
-                if (fights.owns(boss)) return
-
-                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-                game.players.forEach { it.unlock(MegaLockGroup.DAMAGE, MegaLockReason.BOSS_DEFEATED) }
-
-                if (!boss.mini) audioMan.playMusic(music, true)
+                fights.start(boss, plan, game.services, bossHealthHandler) { music }
             }
 
             EventType.VICTORY_EVENT -> {

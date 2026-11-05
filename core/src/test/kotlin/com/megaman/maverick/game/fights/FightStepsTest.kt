@@ -44,7 +44,6 @@ private class StageFight(end: Boolean? = null) {
         every { it.ready } returns true
         every { it.defeated } answers { bossDefeated }
         every { it.existenceState } answers { bossState }
-        every { it.getEventOnDefeated() } returns EventType.VICTORY_EVENT
     }
 
     private val players = MegaPlayers(capacity = 2)
@@ -68,7 +67,7 @@ private class StageFight(end: Boolean? = null) {
 
     private val mapProps = Properties().also { if (end != null) it.put(ConstKeys.END, end) }
 
-    val fight = Fight(boss, FightPlans.find("BigAssMaverickRobot", mapProps)!!, services, bar) { LEVEL_MUSIC }
+    val fight = Fight(boss, FightPlans.find("BigAssMaverickRobot", mapProps), services, bar) { LEVEL_MUSIC }
 
     init {
         services.events.addListener(object : IEventListener {
@@ -131,9 +130,8 @@ class FightStepsTest : DescribeSpec({
             stage.fight.closed shouldBe true
         }
 
-        it("sends VICTORY_EVENT with the boss, whatever event the boss gives") {
+        it("sends VICTORY_EVENT with the boss") {
             val stage = StageFight()
-            every { stage.boss.getEventOnDefeated() } returns EventType.INTERMEDIATE_BOSS_DEAD
             stage.throughIntro()
 
             stage.defeatAndDestroyBoss(leadDiesFirst = false)
