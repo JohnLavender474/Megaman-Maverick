@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O4`, `O2`
 - Depends on: none
 - Related: `005`, `006`, `012`, `013`, `015`, `023`, `030`, `038`, `042`, `047`, `048`, `050`, `053`, `055`, `057`, `082`, `102`, `108`, `109`, `120`
-- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (merged), `118f` (merged), `118g` (merged), `118h` (active)
+- Branches: `118a` (merged), `118b` (merged), `118c` (merged), `118d` (merged), `118e` (merged), `118f` (merged), `118g` (merged), `118h` (merged)
 
 ## Goal
 
@@ -73,6 +73,7 @@ Phased (owner, 2026-11-02): one boss first, then batches. The old flow stays unt
 | `Fight.cast` in place of `Fight.boss`, so that a fight has more than one boss at once; `AllDefeated` reads the whole cast, with an optional `group` | not named. `118a` holds 1 boss (`Fight.boss`), and `AllDefeated` has a `TODO` that points here |
 | `say` step, `parallel`, `Routine.skip` | `082a`, `082b` |
 | Second bar, group `BarSource` | not named |
+| `HudBars`, `BarSpec` and `BarSource` (from the old `118h` line in "Proposed branches"), so that a fight can show more than 1 bar | not named. `118h` kept 1 bar in `BossHealthHandler` |
 | `setHealth` step, `FightMemory` (partial or carried-over health, rematch rule) | not named |
 | `lockArena`, `lockCamera`, `followRooms` | not named |
 | `swapCast`, `nextFight` | not named |

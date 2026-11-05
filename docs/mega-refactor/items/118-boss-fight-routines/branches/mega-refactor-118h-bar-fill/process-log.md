@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: the fight runs the boss bar fill, the screen only draws the bar, and `HealthFillType` goes
-- Done: plan steps 1 to 5
-- Next: owner play test (plan step 6)
+- Done: plan steps 1 to 7
+- Next: none
 - Blocked:
 
 ## Entries
@@ -26,3 +26,5 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   - no bar update: 2 tests fail.
 - Step 4 (`66791cbdb`): the `fights` README says that a tick runs the steps and then the bar fill, and that the screen only draws the bar; the status line names only the boss hooks as later work.
 - Step 5: rebuild after the mutations, then `timeout 12` launches of `GLACIER_MAN room12` and `WILY_STAGE_1 room9` ran with no exception. The only errors are the known `Sealion` and `DuoBallCanon` spawner errors.
+- Step 6: the owner played the 2 control checks in `CONTRACT.md` (`GlacierMan` in `GLACIER_MAN room12`, `DesertMan` in `WILY_STAGE_1 room9`). The owner said: "Tests pass".
+- Step 7: the owner approved the merge. `master` had no new commits since the branch start, so no merge of `master` into the branch. Squash commit `7c4fc1d87`.
