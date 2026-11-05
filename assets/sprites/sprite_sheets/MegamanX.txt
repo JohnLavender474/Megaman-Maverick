@@ -1,66 +1,78 @@
 MegamanX.png
-size: 250, 1742
+size: 1018, 820
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 pma: false
 air_damaged
-  bounds: 201, 149, 48, 144
+  bounds: 701, 1, 48, 144
 climb
-  bounds: 1, 295, 96, 144
+  bounds: 751, 1, 96, 144
 climb_finish
-  bounds: 101, 51, 48, 96
+  bounds: 351, 1, 48, 96
 climb_shoot
   bounds: 1, 1, 48, 48
 climb_start
   bounds: 51, 1, 48, 48
 crouch
-  bounds: 151, 51, 48, 96
+  bounds: 401, 1, 48, 96
 crouch_shoot
-  bounds: 201, 51, 48, 96
+  bounds: 451, 1, 48, 96
 damaged
-  bounds: 99, 295, 48, 144
+  bounds: 849, 1, 48, 144
 dash
-  bounds: 1, 149, 48, 96
+  bounds: 501, 1, 48, 96
 dash_shoot
-  bounds: 51, 149, 48, 96
+  bounds: 551, 1, 48, 96
 death
-  bounds: 51, 441, 48, 240
+  bounds: 51, 147, 48, 240
 death_orb
-  bounds: 1, 441, 48, 192
+  bounds: 1, 147, 48, 192
 jump
-  bounds: 1, 683, 48, 288
+  bounds: 251, 147, 48, 288
 jump_shoot
-  bounds: 51, 683, 48, 288
+  bounds: 301, 147, 48, 288
 land
   bounds: 101, 1, 48, 48
 land_shoot
   bounds: 151, 1, 48, 48
 low_health
-  bounds: 101, 441, 48, 240
+  bounds: 101, 147, 48, 240
 r13_unknown
   bounds: 201, 1, 48, 48
 run
-  bounds: 151, 683, 48, 384
+  bounds: 401, 147, 48, 384
 run_shoot
-  bounds: 201, 683, 48, 384
+  bounds: 451, 147, 48, 384
 run_trans
-  bounds: 1, 51, 48, 48
+  bounds: 251, 1, 48, 48
 run_trans_shoot
-  bounds: 51, 51, 48, 48
+  bounds: 301, 1, 48, 48
+sabre_air
+  bounds: 601, 147, 48, 432
+sabre_air_arc
+  bounds: 863, 147, 104, 486
+sabre_floor
+  bounds: 501, 147, 48, 384
+sabre_floor_arc
+  bounds: 651, 147, 104, 432
+sabre_wall
+  bounds: 551, 147, 48, 384
+sabre_wall_arc
+  bounds: 757, 147, 104, 432
 spawn_in
-  bounds: 1, 1069, 48, 672
+  bounds: 969, 147, 48, 672
 spawn_out
-  bounds: 101, 683, 48, 336
+  bounds: 351, 147, 48, 336
 stand
-  bounds: 151, 441, 48, 240
+  bounds: 151, 147, 48, 240
 victory
-  bounds: 201, 441, 48, 240
+  bounds: 201, 147, 48, 240
 walljump
-  bounds: 149, 295, 48, 144
+  bounds: 899, 1, 48, 144
 walljump_shoot
-  bounds: 199, 295, 48, 144
+  bounds: 949, 1, 48, 144
 wallslide
-  bounds: 101, 149, 48, 96
+  bounds: 601, 1, 48, 96
 wallslide_shoot
-  bounds: 151, 149, 48, 96
+  bounds: 651, 1, 48, 96
