@@ -67,6 +67,14 @@ Proposed 2026-10-23. The owner asked for the split. Each later branch gets its o
 
 Order: `029a` first. `029b`, `029c` and `029d` can run in any order after it. `029e` before `029f`, because the HUD and pause read the profile. `029g` last.
 
+## Workarounds from `081b` (2026-11-06)
+
+- X shares Megaman's progress (heart tanks, health tanks, lives), with a `TODO` in `MegamanX` (items `047`, `059`).
+  A profile for each character is open.
+- `PlayerRoster.putInSlot0` changes the character of slot 0 only, at the level start. 2 players on a level with no
+  `MEGAMAN` throw, and the launcher rejects that combination (items `047`, `113`).
+- The weapon reads in the screens check `is Megaman` (see `024`, "Workarounds from `081b`").
+
 ## Open questions
 
 - Target selection: is "nearest" enough, or do some enemies need "last attacker" or "random"?

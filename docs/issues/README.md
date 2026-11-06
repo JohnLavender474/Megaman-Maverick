@@ -150,3 +150,4 @@ related-items: [<mega-refactor item IDs>]
 | [Question: a player shot in flight can hit a boss during its intro](2026-11-02-boss-takes-hits-during-intro.md) | question | core | open |
 | [On a second `BigAssMaverickRobot` fight, a hand floats in midair while the boss falls](2026-11-02-big-ass-robot-hand-floats-on-second-fight.md) | yes | core | closed |
 | [A camera-bounds spawner respawns its enemy after a step of 1 px out of the view and back](2026-11-05-bounds-spawner-respawns-greedily.md) | yes | core | closed |
+| [`X6_INTRO` `room2`: the floor block is 1 tile below the painted floor, and the boss gate is above standing height](2026-11-06-x6-intro-room2-floor-below-art.md) | yes | content | open |

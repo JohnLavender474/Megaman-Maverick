@@ -1691,3 +1691,28 @@ newest entry at the bottom.
 - Summary: the respawn routine sends `LEVEL_RESET` from its `ResetLevel` step, and the 24 entity classes that used `PLAYER_SPAWN` as a level reset listen to it (squash commit `b4d18eaba`). By owner decision D1, `PLAYER_SPAWN` went, with its slot-0 submit and `TODO` in `playerSpawnEnd()`; `047` adds a spawn event for each slot when a listener needs one. The new event reaches the same `events.run()` as the old one, because `ResetLevel` runs in the same `render` as the player spawn and the run delivers by listener and key mask, not by submit time. No change that a player can see. Item `038` is done (its 2 planned branches merged). This was the first brief made from the new template.
 - Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch (`engine` 639, `core` 957, `smokeTest` 448, 0 failures). 3 mutation checks of the submit (drop, twice, moved to `BeamIn`), each one failed 5 tests. The review before the play test (2 subagents, no launch): no bug in the diff; the check review reworded 3 checks, removed 1 that could not fail, and relabeled 1 as a control check; 1 claim (no reset at level start) was wrong and rejected. No game launch during the branch. The owner's 4 play checks pass. `master` moved only in docs, so it was not merged into the branch. CI did not run, because the branch was never pushed.
 - Follow-up: closed the `O2-R9` accepted gap. The roadmap listed "coins on respawn" and "`SPAWN` damage lock" as closed by `038`; neither branch touched them, and their issue files link `037` and `084`, so the line went and they stay open there. `081b` shares `players/README.md` with this branch (a docs conflict when it takes in `master`); its `MegamanX` calls `playerSpawnEnd()`, so it gets the change.
+
+## 2026-11-06 — mega-refactor-081b-x-run-jump-shoot
+
+- Summary: phase 1 of playable X (squash commit `30393d44d`). `MegamanX` (`entities/megamanx/`) plays slot 0 on
+  `X6_INTRO` and `REFACTOR_TEST_081`, with the X6 values: walk start and walk, jump, fall, and the buster with the X6
+  input (a press shoots, a hold charges, a release fires the charged shot), shot limits and a charge tint flash. It
+  calls the `081a` `players/` functions. `PlayerCharacter`, `LevelDefinition.characters` and `PlayerRoster`: slot 0
+  gets the level's character at `startLevel`. Megaman's jump moved to `players/playerJumpBehavior(JumpParams)`, and a
+  test written on the old code shows that Megaman jumps the same. The camera focus is set at each level start. 5 `is
+  Megaman` workarounds with `TODO`s for `024` (listed in `024` `ITEM.md`). X passes a one-way block while `DOWN` is
+  held (until climb). `--players 2` on a level with no `MEGAMAN` is a launch error. The `X6_INTRO` boss room got a
+  floor and the `D1000` arena moved onto it. Atlas: hand-made strips `stand_simplified`, `jump_v2` and
+  `jump_shoot_v2` (not made by the slicer data file; a comment in `MegamanX.yaml`). New test map `REFACTOR_TEST_081`.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch after the last
+  merge of `master` (`engine` 639, `core` 1013, `smokeTest` 449). 16 mutation checks, each one failed at least 1 test.
+  The review before the play test (2 agents) found 2 bugs (a slow sink through a ladder top; the charge sound after
+  death), 2 risks and 2 map problems; all were fixed or decided by the owner. The owner played the checks, and they
+  pass. CI did not run, because the branch was never pushed.
+- Follow-up:
+  - `047g` (active): when it takes in `master`, its group focus must move from `MegaLevelScreen.init()` into `start()`,
+    or the `start()` call replaces it with slot 0 (owner decision: merge `081b` first and warn `047g`; `081`
+    `NOTES.md`, "Camera focus and `047g`").
+  - Bug filed: `docs/issues/2026-11-06-x6-intro-room2-floor-below-art.md`.
+  - `X6_INTRO` is not finishable as X until the wall kick (phase 2): a 2.5-tile step in `room1`.
+  - Workarounds documented in `024` and `029` `ITEM.md`.

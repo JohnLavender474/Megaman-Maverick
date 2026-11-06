@@ -20,6 +20,19 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - Remove the weapon `when`s from the handler, behaviors, controller, HUD and pause screen.
 - Rewards come from the level manifest through `CharacterDef.unlocks`.
 
+## Workarounds from `081b` (2026-11-06)
+
+X (`MegamanX`, item `081`) has only the buster. Until this item gives each character a loadout, these places check
+`is Megaman`, with a `TODO` that names this item. Each one is a code smell that this item removes (`O8-R2`: 5 lines).
+
+| Place | What it does for a player that is not `Megaman` |
+|---|---|
+| `PlayerStatsHandler`, the weapon bar supplier | no weapon bar |
+| `MegaLevelScreen`, `ADD_WEAPON_ENERGY` | the pickup does nothing |
+| `LevelPauseScreen`, the ammo bars and the weapon select | 0 ammo, and no weapon change |
+| `MegamanMaverickGame.resetPlayerProgress` | resets the weapon of each `Megaman` in `PlayerRoster` |
+| `EndLevelEventHandler`, the beam-out | uses the buster beam art (item `081` owns X's beam art) |
+
 ## Owner's input
 
 Answer to review item 23 (2026-10-22, verbatim):

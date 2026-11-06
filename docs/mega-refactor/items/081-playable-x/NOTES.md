@@ -207,3 +207,12 @@ Placement (LibGDX places a sprite by its bottom-left corner, with y up):
 Timing is not decided. The owner's showcase GIF of the floor slash uses 80 ms per frame. The X6 body animations are
 183 (floor), 184 (air) and 187 (wall) in `~/IdeaProjects/mmx-x6/assets/sprites/players/x/animations.json`, at 60 ticks
 per second. The slash appears on the frame with flag `0x80`.
+
+## Camera focus and `047g` (2026-11-06, after the `081b` merge)
+
+`081b` moved `cameraFollow.setFocus(gameCamera, player.focus)` from `MegaLevelScreen.init()` to the top of `start()`,
+so that the focus follows the slot-0 character of each level. `047g` (shared camera) sets a 2-player group focus in
+`init()`. When `047g` takes in `master`, it must move its focus choice into `start()`
+(`setFocus(gameCamera, playersFocus ?: player.focus)`, with the 2-player check made at `start()`). If it does not,
+the `start()` call replaces the group focus with slot 0 at each level start, with no error. Owner decision
+(2026-11-06): merge `081b` first and warn `047g`.

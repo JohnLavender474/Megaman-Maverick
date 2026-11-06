@@ -7,7 +7,7 @@
 - Includes: the work of `069` (dash button), folded in on 2026-11-05. Its research and decisions are in
   `069` `ITEM.md` and `NOTES.md`.
 - Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`, `120`, `121`, `122`
-- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (active, 2026-11-06)
+- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06)
 
 ## Goal
 
@@ -160,6 +160,14 @@ slash (we'll need to work out what button or button combo controls this)".
   branch is safe to ship alone. `081b` sets `characters` on `X6_INTRO`, so that level must be on `master` before
   `081b` merges, or `081b` adds the field with no X level yet.
 - (2026-11-05, owner) The first branch is `081a`, a refactor only (see "Branch split").
+
+- (2026-11-06, owner, `081b`) X starts with the X6 movement values as they are (`MegamanXValues`); tune after play.
+  The `X6_INTRO` `room1` step at tile 20 is 2.5 tiles, above X's 2.05-tile jump, so `X6_INTRO` is not finishable until
+  the wall kick (phase 2). X passes a one-way block while `DOWN` is held until X can climb. The charge shows as a tint
+  flash until there is charge art. The stand is the simplified 2-frame `stand_simplified` strip, and the jump uses
+  `jump_v2` and `jump_shoot_v2`; the full 5-frame stand needs more work. Details: the `081b` branch `docs/NOTES.md`.
+- (2026-11-06, owner, `081b`) The `X6_INTRO` boss room got a floor at the painted ground, and the `D1000` arena moved
+  down onto it. A new `nesmap` export of the map must keep this.
 
 ## Open questions
 

@@ -82,6 +82,10 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 
 ## Open questions
 
+- `047g` and the camera focus (2026-11-06): `081b` sets the focus to slot 0 at the top of `MegaLevelScreen.start()`.
+  When `047g` takes in `master`, its group focus must move from `init()` into `start()`. See the `081` `NOTES.md`,
+  "Camera focus and `047g`".
+
 - Camera: closed 2026-11-06 (group camera with edge walls, see "Decisions").
 - Tall rooms (taller than the view): what happens to a player who goes below the view but stays inside the room (warp to the partner, with or without damage?), and above the view (head bump or warp)? To decide at the phase 1 play test.
 - The lead player as the source of truth, with earnings shared by all players: confirm. This is one profile for the session. The lead slot is a session policy, not a helper in the players query API (`029` decision).
