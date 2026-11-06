@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename></filename>
+                <filename>../sprite_sheets/MegamanX.txt</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -299,6 +299,7 @@
             </struct>
             <key type="filename">../frames/MegamanX/run.png</key>
             <key type="filename">../frames/MegamanX/run_shoot.png</key>
+            <key type="filename">../frames/MegamanX/sabre_wall.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -310,6 +311,67 @@
                 <rect>12,96,24,192</rect>
                 <key>scale9Paddings</key>
                 <rect>12,96,24,192</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/MegamanX/sabre_air.png</key>
+            <key type="filename">../frames/MegamanX/sabre_floor.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,108,24,216</rect>
+                <key>scale9Paddings</key>
+                <rect>12,108,24,216</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/MegamanX/sabre_air_arc.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>26,122,52,243</rect>
+                <key>scale9Paddings</key>
+                <rect>26,122,52,243</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/MegamanX/sabre_floor_arc.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>28,144,56,288</rect>
+                <key>scale9Paddings</key>
+                <rect>28,144,56,288</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../frames/MegamanX/sabre_wall_arc.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>26,108,52,216</rect>
+                <key>scale9Paddings</key>
+                <rect>26,108,52,216</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

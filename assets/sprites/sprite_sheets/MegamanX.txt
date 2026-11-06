@@ -1,5 +1,5 @@
 MegamanX.png
-size: 1018, 820
+size: 1024, 916
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -7,7 +7,7 @@ pma: false
 air_damaged
   bounds: 701, 1, 48, 144
 climb
-  bounds: 751, 1, 96, 144
+  bounds: 151, 243, 96, 144
 climb_finish
   bounds: 351, 1, 48, 96
 climb_shoot
@@ -19,59 +19,59 @@ crouch
 crouch_shoot
   bounds: 451, 1, 48, 96
 damaged
-  bounds: 849, 1, 48, 144
+  bounds: 751, 1, 48, 144
 dash
   bounds: 501, 1, 48, 96
 dash_shoot
   bounds: 551, 1, 48, 96
 death
-  bounds: 51, 147, 48, 240
+  bounds: 951, 1, 48, 240
 death_orb
-  bounds: 1, 147, 48, 192
+  bounds: 901, 1, 48, 192
 jump
-  bounds: 251, 147, 48, 288
+  bounds: 249, 243, 48, 288
 jump_shoot
-  bounds: 301, 147, 48, 288
+  bounds: 299, 243, 48, 288
 land
   bounds: 101, 1, 48, 48
 land_shoot
   bounds: 151, 1, 48, 48
 low_health
-  bounds: 101, 147, 48, 240
+  bounds: 1, 243, 48, 240
 r13_unknown
   bounds: 201, 1, 48, 48
 run
-  bounds: 401, 147, 48, 384
+  bounds: 399, 243, 48, 384
 run_shoot
-  bounds: 451, 147, 48, 384
+  bounds: 449, 243, 48, 384
 run_trans
   bounds: 251, 1, 48, 48
 run_trans_shoot
   bounds: 301, 1, 48, 48
 sabre_air
-  bounds: 601, 147, 48, 432
+  bounds: 549, 243, 48, 432
 sabre_air_arc
-  bounds: 863, 147, 104, 486
+  bounds: 805, 243, 104, 486
 sabre_floor
-  bounds: 501, 147, 48, 384
+  bounds: 599, 243, 48, 432
 sabre_floor_arc
-  bounds: 651, 147, 104, 432
+  bounds: 911, 243, 112, 576
 sabre_wall
-  bounds: 551, 147, 48, 384
+  bounds: 499, 243, 48, 384
 sabre_wall_arc
-  bounds: 757, 147, 104, 432
+  bounds: 699, 243, 104, 432
 spawn_in
-  bounds: 969, 147, 48, 672
+  bounds: 649, 243, 48, 672
 spawn_out
-  bounds: 351, 147, 48, 336
+  bounds: 349, 243, 48, 336
 stand
-  bounds: 151, 147, 48, 240
+  bounds: 51, 243, 48, 240
 victory
-  bounds: 201, 147, 48, 240
+  bounds: 101, 243, 48, 240
 walljump
-  bounds: 899, 1, 48, 144
+  bounds: 801, 1, 48, 144
 walljump_shoot
-  bounds: 949, 1, 48, 144
+  bounds: 851, 1, 48, 144
 wallslide
   bounds: 601, 1, 48, 96
 wallslide_shoot
