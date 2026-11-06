@@ -226,6 +226,26 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     platform, pillar or ledge that the player jumps from or across. Check each gap along the route,
     including the gap between a new object and the objects under or beside it, also when you
     add the object after the route is laid out.
+17. **Use an `AbstractBlock` where the art has no wall.** To stop the player from leaving a room
+    through the sky, or through a side with no wall in the art, put an `AbstractBlock`
+    (`entities/blocks/AbstractBlock.kt`) there, not a plain block. It is invisible, only the
+    players collide with it, and the player cannot wall-slide or stand on it. Put it just outside
+    the view edge or on the room edge, as wide as the open part. Give it `spawn_type=spawn_now` and
+    `cull_out_of_bounds=false` (bool), so that it is always in the world.
+18. **Use as few blocks as possible on each screen.** Every block is a body in the world system, so
+    fewer blocks in the view make the world update cheaper. The `blocks` objects are invisible: they
+    give only the collision shape, not the look. Do not trace the art in small pieces. Use one block
+    for each solid mass that the player can touch, and fill the solid parts that the player cannot
+    reach (under a floor, inside a wall, behind a closed wall) into the blocks around them or leave
+    them empty. A ground column goes down to the room bottom in one block, with no thin strips
+    under it. Do not keep a long, thin strip across many other blocks (for example a 16 px strip
+    over a full corridor ceiling): cut it into the blocks above or below it, so that each part of
+    the ceiling or floor is one block from top to bottom.
+19. **A wall that the player can wall-slide on has one smooth face.** Where a vertical face is
+    reachable, use one block for the full height of that face. Two blocks stacked on the same face
+    make a seam, and the player can catch on it. A step in the wall (a face at a different `x`) is
+    not a seam. A short face that the player must not grab (for example the edge of a ceiling
+    lip) can take `fixture_labels=no_side_touchie`.
 
 ## Notes Block Format
 

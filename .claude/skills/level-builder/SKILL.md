@@ -70,7 +70,8 @@ the room topology with the user before adding any content.
 Add floors, walls, ceilings, and platforms with `add-block`. Blocks may span across
 room boundaries. Confirm before moving on.
 
-Follow the design rules in the `level-designer` skill (Rules 6–16). In particular, for a
+Follow the design rules in the `level-designer` skill (Rules 6–19). The first build can be rough;
+clean it up later in passes (see "Cleanup passes" below). In particular, for a
 bottomless pit, the `Death` rectangle is off-screen: `y` = room bottom + 48 px, height
 16 px, `instant=true`. `add-death` takes whole tiles only, so set this `y` and height on
 the object after you add it. Extend floors, ceilings and outer walls past the room edges.
@@ -82,6 +83,22 @@ a tile on every cell that a block covers. The CLI cannot paint tiles; add the la
 script or by hand, and raise `nextlayerid`. Use a tile from a tileset the map already has, for
 example tile 175 of `Tileset1.tsx`, the most common floor tile in `Test1.tmx`. See the `tiles`
 layer of `Test1.tmx` for the format.
+
+#### Room barriers, block count and wall faces
+
+Follow `level-designer` Rules 17–19:
+
+- Close the sky and each open side of a room with an `AbstractBlock`, not a plain block. It is a
+  rectangle named `AbstractBlock` in the `blocks` layer with two properties: `spawn_type` =
+  `spawn_now` (string) and `cull_out_of_bounds` = `false` (bool). See the `AbstractBlock` objects
+  in `X6Intro_16x14_v1.tmx` and `Gauntlet1_v2.tmx`.
+- Use few, large blocks. One block per solid mass that the player can touch. Do not add thin
+  strips under a floor or inside a wall to follow the art.
+- Give each wall face that the player can wall-slide on one block for its full height, so that
+  the face has no seam.
+
+The CLI cannot write named objects with properties in the `blocks` layer. Add them with a small
+script or by hand in Tiled.
 
 #### Pushable blocks
 
@@ -162,6 +179,36 @@ rectangle and the object property by hand or with a small script. Confirm.
 ### Iteration 4 — Enemy & hazard markers
 Drop single-tile placeholder markers with `add-marker` (enemies/hazards), plus any
 `TODO` markers. Remind the user these are placeholders to finalize manually in Tiled.
+
+### Cleanup passes — after the build, one version at a time
+
+A first build can be rough: many small blocks, traced art, seams. Clean it up afterwards in small
+passes, not all at once. Each pass is one version that the user can play-test and compare with
+the version before it: one commit per pass, or a new `_v<n>` file when the user wants to keep the
+old map. Tell the user what each pass changed and what is left for the next pass.
+
+A good pass order:
+
+1. Barriers: replace the blocks that close the sky or an open side with `AbstractBlock`s.
+2. Unreachable blocks: remove blocks the player cannot reach (behind a closed wall, under a floor)
+   and extend the ground blocks down to the room bottom.
+3. Wall faces: merge the blocks stacked on a face that the player can wall-slide on.
+4. Merge: rebuild the blocks to have as few as possible on each screen. A method that works
+   (used on `X6Intro_16x14_v1.tmx`) is:
+   1. On a 16 px grid, flood-fill the air that the player can reach, starting from the spawn.
+   2. Keep the solid cells that touch this air. The other solid cells are free.
+   3. Cut the kept cells into vertical slabs (one block per solid run in each column, with
+      neighbouring columns that have the same run joined into one block). Then join touching
+      blocks into their bounding box when that box covers no reachable air and no special block.
+   4. Finish by hand.
+   Vertical slabs remove the long thin strips, and they cannot put a seam in a wall face. Measure
+   the result: the number of blocks, and the mean and maximum number of blocks in a 512×448 view.
+5. Detail: merge or remove the small pieces that trace the art (ceiling teeth, 16 px lips), where
+   the larger shape plays the same. Check the enemies that stand on or hang from these pieces.
+
+Before and after each pass, draw the blocks over the tiles (for example to a PNG in the scratchpad)
+to see the change. Keep every walk surface, wall face and gap height that the route uses
+(`level-designer` Rule 16), unless the user asks for a change.
 
 ## Verifying
 
