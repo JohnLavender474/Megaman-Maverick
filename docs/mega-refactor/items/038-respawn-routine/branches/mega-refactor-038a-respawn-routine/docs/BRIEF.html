@@ -1,0 +1,253 @@
+<title>038a Respawn Routine</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column; the before/after pair goes side by side when wide. Accent = the blue of a beam-in. */
+:root {
+  --bg: #f3f5fa;
+  --panel: #ffffff;
+  --ink: #141a2e;
+  --muted: #5a6380;
+  --line: #d8ddeb;
+  --accent: #1f5fe0;
+  --accent-soft: #e3ecff;
+  --beam: #12a6d8;
+  --warn: #b5650d;
+  --warn-soft: #fff1e0;
+  --code-bg: #eef1f8;
+  --f-display: "Pixelify Sans", "Courier New", monospace;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1322; --panel: #171c30; --ink: #e6e9f5; --muted: #9aa3c2; --line: #2a3150;
+    --accent: #7aa6ff; --accent-soft: #1d2a4d; --beam: #4fd0f5; --warn: #f0a556; --warn-soft: #3a2a17;
+    --code-bg: #12172a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1322; --panel: #171c30; --ink: #e6e9f5; --muted: #9aa3c2; --line: #2a3150;
+  --accent: #7aa6ff; --accent-soft: #1d2a4d; --beam: #4fd0f5; --warn: #f0a556; --warn-soft: #3a2a17;
+  --code-bg: #12172a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+.narrow { max-width: 68ch; }
+h1, h2 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; }
+h2 { font-size: 1.35rem; display: flex; align-items: baseline; gap: 10px; }
+h2 .tag { font-family: var(--f-mono); font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+h3 { font-size: 1rem; margin: 0; }
+p { margin: 0; }
+section { display: flex; flex-direction: column; gap: 14px; }
+code, .mono { font-family: var(--f-mono); font-size: 0.86em; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.eyebrow { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.eyebrow .draft { color: var(--warn); }
+.lede { font-size: 1.15rem; }
+.visible { display: flex; gap: 12px; align-items: flex-start; background: var(--accent-soft); border-radius: 8px; padding: 12px 16px; }
+.visible b { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; padding-top: 3px; }
+.pair { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 860px) { .pair { grid-template-columns: 1fr 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.panel h3 { font-family: var(--f-mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.panel.after h3 { color: var(--accent); }
+.panel p.note { color: var(--muted); font-size: 0.92rem; }
+.diagram { overflow-x: auto; }
+pre.mermaid { margin: 0; background: transparent; text-align: center; font-family: var(--f-body); }
+pre.code { margin: 0; background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--f-mono); font-size: 0.82rem; line-height: 1.6; }
+pre.code .c { color: var(--muted); font-style: italic; }
+pre.code .k { color: var(--accent); }
+pre.code .del { color: var(--warn); }
+.decisions { display: flex; flex-direction: column; gap: 14px; }
+.decision { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.decision .q { display: flex; gap: 10px; align-items: baseline; }
+.decision .id { font-family: var(--f-display); font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+.decision .q h3 { font-size: 1.05rem; }
+.opts { display: grid; grid-template-columns: 1fr; gap: 8px; }
+@media (min-width: 700px) { .opts { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+.opt { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.93rem; min-width: 0; }
+.opt.rec { border-color: var(--accent); background: var(--accent-soft); }
+.opt .lbl { font-weight: 700; display: block; }
+.opt .rec-pill { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.risks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.risks li { border-left: 3px solid var(--warn); background: var(--warn-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; }
+.checks { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; }
+.checks code { word-break: break-word; }
+.cd { font-family: var(--f-mono); font-size: 0.82rem; background: var(--code-bg); padding: 8px 12px; border-radius: 6px; overflow-x: auto; white-space: nowrap; }
+.details { color: var(--muted); font-size: 0.92rem; display: flex; flex-direction: column; gap: 4px; }
+.steps { display: flex; flex-wrap: wrap; gap: 6px; }
+.step { font-family: var(--f-mono); font-size: 0.78rem; border: 1px solid var(--beam); color: var(--ink); border-radius: 999px; padding: 3px 10px; }
+.step.go { border-color: var(--warn); }
+a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:14px">
+  <div class="eyebrow"><span>Item 038</span><span>Branch 038a</span><span>Objectives O1, O2</span><span>Brief: approved 2026-11-06</span></div>
+  <h1>Respawn routine</h1>
+  <p class="lede narrow">Replace the chain of 5 events and 2 screen handlers that runs a death and a respawn with one <code>RespawnRoutine</code>. Its steps run in a fixed order, which you can read in one file. It reuses <code>Routine</code> and <code>Step</code> from the engine, the same types that the boss fights use.</p>
+  <div class="visible narrow"><b>In play</b><span>Nothing changes, except one music fix: in <code>SMB3_1</code>, a respawn in a room with no music now plays the level music, not the music of the room where you died.</span></div>
+</header>
+
+<section>
+  <h2>Before and after <span class="tag">the flow</span></h2>
+  <div class="pair">
+    <div class="panel">
+      <h3>Today: events hand off to each other</h3>
+      <div class="diagram"><pre class="mermaid">
+flowchart TD
+  A["Megaman.onDestroy"] -->|PLAYER_JUST_DIED| B["Screen onEvent<br/>music off, -1 life"]
+  B --> C["PlayerDeathEventHandler<br/>4 s, fade out"]
+  C -->|PLAYER_DONE_DYIN| D["Screen onEvent<br/>lives check"]
+  D --> E["PlayerSpawnEventHandler"]
+  E -->|PLAYER_SPAWN_INIT| F["Screen onEvent<br/>reset camera, fights,<br/>enemies; spawn players"]
+  F -.->|next frame| G["Megaman.onSpawn"]
+  G -->|PLAYER_SPAWN| H["24 entities<br/>level reset"]
+  E -->|beam done: PLAYER_READY| I["Screen onEvent<br/>controller on, again"]
+</pre></div>
+      <p class="note">Each event starts the next part. The screen has a comment that warns "the order in which these handlers are updated must not be modified".</p>
+    </div>
+    <div class="panel after">
+      <h3>After: one routine owns the order</h3>
+      <div class="diagram"><pre class="mermaid">
+flowchart TD
+  A["Megaman.onDestroy"] -->|PLAYER_JUST_DIED, slot 0| R1
+  S["Level start"] --> R4
+  subgraph RR["RespawnRoutine"]
+    R1["1 Defeat<br/>music off, -1 life, sound"] --> R2["2 Wait 4 s, fade out<br/>sends PLAYER_DONE_DYIN"]
+    R2 --> R3{"3 Lives left?"}
+    R3 -->|yes| R4["4 Reset level<br/>camera, fights, enemies;<br/>spawn players"]
+    R4 --> R5["5 Fade in, beam in"]
+    R5 --> R6["6 Ready<br/>sends PLAYER_READY"]
+  end
+  R3 -->|no| GO["Game over screen"]
+  R4 -.->|next frame, as today| P["PLAYER_SPAWN<br/>24 entities, unchanged"]
+</pre></div>
+      <p class="note">Entities still get the same public events in the same frames. Only the screen stops using events to run itself. <code>PLAYER_SPAWN_INIT</code> goes, because no entity listens to it.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Code sketch <span class="tag">first caller</span></h2>
+  <div class="pair">
+    <div class="panel">
+      <h3>Today: <code>MegaLevelScreen</code></h3>
+<pre class="code"><span class="c">// Because I'm not good at software design, there's some tight coupling in this block
+// ... the order in which these handlers are updated must not be modified</span>
+<span class="k">when</span> {
+    !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
+    !playerSpawnEventHandler.isFinished() -> playerSpawnEventHandler.update(delta)
+    !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
+}
+
+<span class="c">// plus 4 onEvent branches that pass control along:</span>
+<span class="del">EventType.PLAYER_JUST_DIED  -> { ... playerDeathEventHandler.init() }
+EventType.PLAYER_DONE_DYIN  -> { ... playerSpawnEventHandler.init() }
+EventType.PLAYER_SPAWN_INIT -> { ... 40 lines of reset ... }
+EventType.PLAYER_READY      -> eventsMan.submitEvent(TURN_CONTROLLER_ON)</span></pre>
+    </div>
+    <div class="panel after">
+      <h3>After: <code>MegaLevelScreen</code></h3>
+<pre class="code"><span class="k">when</span> {
+    !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
+    !respawn.finished -> respawn.update(delta)
+}
+
+EventType.PLAYER_JUST_DIED -> {
+    <span class="k">val</span> slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::<span class="k">class</span>)!!
+    <span class="k">if</span> (slot == PlayerSlot(0)) respawn.startAtDeath()
+}</pre>
+      <h3>After: <code>screens/levels/respawn/RespawnRoutine.kt</code></h3>
+<pre class="code"><span class="k">class</span> RespawnRoutine(<span class="k">private val</span> ctx: RespawnContext) {
+    <span class="k">private val</span> deathSteps = gdxArrayOf(Defeat, WaitAndFadeOut, CheckLives)
+    <span class="k">private val</span> respawnSteps = gdxArrayOf(ResetLevel, FadeInAndBeam, Ready)
+
+    <span class="k">fun</span> startAtDeath() { ... }    <span class="c">// slot 0 death</span>
+    <span class="k">fun</span> startAtRespawn() { ... }  <span class="c">// level start</span>
+}
+
+<span class="k">object</span> Ready : Step&lt;RespawnContext&gt; {
+    <span class="k">override fun</span> isFinished(ctx: RespawnContext) = <span class="k">true</span>
+    <span class="k">override fun</span> begin(ctx: RespawnContext) {
+        ctx.players.forEach { it.setPlayPhase(PlayPhase.IN_PLAY) <span class="c">/* unlock, gravity */</span> }
+        ctx.events.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
+        ctx.events.submitEvent(Event(EventType.PLAYER_READY, props(SLOT pairTo ctx.lead)))
+    }
+}</pre>
+    </div>
+  </div>
+  <div class="steps" aria-label="Step order">
+    <span class="step">1 Defeat</span><span class="step">2 Wait and fade out</span><span class="step go">3 Check lives</span><span class="step">4 Reset level</span><span class="step">5 Fade in and beam</span><span class="step">6 Ready</span>
+  </div>
+</section>
+
+<section>
+  <h2>Decisions <span class="tag">answered 2026-11-06: all as recommended</span></h2>
+  <div class="decisions">
+    <div class="decision">
+      <div class="q"><span class="id">D1</span><h3>One branch or two?</h3></div>
+      <p class="narrow">The item has two parts: the routine, and splitting <code>PLAYER_SPAWN</code> into a per-player event and a <code>LEVEL_RESET</code> event, which moves 24 listeners.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Two branches into master</span><code>038a</code>: the routine, with the same events. <code>038b</code>: the split. Each one is safe to ship alone.</div>
+        <div class="opt"><span class="lbl">One branch</span>Both parts at once. The diff is larger, and a frame problem is harder to trace to one part.</div>
+        <div class="opt"><span class="lbl">Two branches, parent branch</span>Use this only if <code>038a</code> must not ship alone. It need not.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D2</span><h3>An interface for the routine now?</h3></div>
+      <p class="narrow">The item proposed one, so that co-op (<code>047</code>) can add its own routine. You also asked whether an interface is enough when players can join and leave during play.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">No interface yet</span>A concrete class. <code>047</code> designs the co-op shape when it has a real second caller (rule <code>O1-R5</code>).</div>
+        <div class="opt"><span class="lbl">Interface now</span>A <code>RespawnFlow</code> interface with one single-player implementation, and no second caller yet.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D3</span><h3>Does the routine also own the death half?</h3></div>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Death and respawn</span>Steps 1 to 6 in one owner. The level start enters at step 4.</div>
+        <div class="opt"><span class="lbl">Respawn only</span>Steps 4 to 6. <code>PlayerDeathEventHandler</code> and 2 event hand-offs stay.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="narrow">
+  <h2>Risks</h2>
+  <ul class="risks">
+    <li><b>Frame timing.</b> <code>PLAYER_SPAWN</code> arrives one frame after the reset, because the engine queues the spawn. Entities spawned in that frame can be culled by it. The routine keeps these frames, and a test checks them.</li>
+    <li><b>Overlap with <code>081a</code>.</b> That branch moves <code>Megaman.onSpawn</code> and <code>onDestroy</code>, which send 2 of the events. This branch does not change those lines, but the branch that merges second must rebase.</li>
+    <li><b>Pause and game over.</b> A death while paused must still resume the game. When no lives are left, no respawn step may run.</li>
+  </ul>
+</section>
+
+<section class="narrow">
+  <h2>Play checks <span class="tag">for the play test, not for now</span></h2>
+  <div class="cd">cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-038a-respawn-routine</div>
+  <ul class="checks">
+    <li><code>./run-game-alpha.sh --level TIMBER_WOMAN</code>: the level start and a respawn after a death look as today, and the room's enemies come back.</li>
+    <li><code>./run-game-alpha.sh --level MOON_MAN --room room11</code>: die in the <code>MoonHead</code> fight. The boss bar goes, the gate locks again, and the fight starts again.</li>
+    <li><code>./run-game-alpha.sh --level INFERNO_MAN</code>: die while the lava rises. The lava stays still until <code>READY</code>.</li>
+    <li><code>./run-game-alpha.sh --level SMB3_1</code>: die in a room with its own music. The respawn plays the level music (the intended change).</li>
+    <li><code>./run-game-alpha.sh --level TIMBER_WOMAN --players 2</code>: slot 0 dies. Slot 1 goes, then spawns again with slot 0.</li>
+    <li>Lose all lives: the game over screen opens.</li>
+  </ul>
+</section>
+
+<section class="details narrow">
+  <h2 style="color:var(--ink)">Details</h2>
+  <p>The full scan (line numbers, listener lists, objective table) and the full contract are in the branch folder:</p>
+  <p class="mono">docs/mega-refactor/items/038-respawn-routine/branches/mega-refactor-038a-respawn-routine/docs/SCOPE.md</p>
+  <p class="mono">.../mega-refactor-038a-respawn-routine/docs/CONTRACT.md</p>
+</section>
+
+</div>

@@ -1,11 +1,11 @@
 # 038: One ordered respawn routine instead of an event chain
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Objectives: `O1`, `O2`
 - Depends on: none
 - Related: `012`, `013`, `029`, `047`, `057`, `036`, `037`, `051`, `053`, `118`, `119`
-- Branches: none yet
+- Branches: see "Branches"
 
 ## Goal
 
@@ -38,10 +38,18 @@ Item `029` research (2026-10-23, verbatim):
 - 2026-10-23 (from `029`): `PLAYER_SPAWN` must split into a spawn event for each player and a separate level reset. This item does the split. Motivation: with respawn per player (co-op), one player's respawn must not reset the room for everyone.
 - 2026-11-02 (owner, from `119`): the entity keeps the entity fact (`PLAYER_DESTROYED`), and the routine sends the level fact (`LEVEL_FAILED`). If the routine took over the entity submit, slot 1 and fight deaths would lose their event.
 - 2026-11-02 (from `118`): the routine can reuse the `Step` and `Routine` type of `118a`. It need not.
+- 2026-11-06 (owner, `038a` brief): merge target is directly into `master`. Two branches: `038a` makes the routine with the same public events; `038b` splits `PLAYER_SPAWN` into a spawn event for each slot and `LEVEL_RESET`, and moves the 24 listeners.
+- 2026-11-06 (owner, `038a` brief): no interface for the routine yet. `047` designs the co-op shape when it has a second caller.
+- 2026-11-06 (owner, `038a` brief): the routine owns the death half and the respawn half. The level start enters at the respawn half.
 
 ## Open questions
 
-- Is an interface for the routine enough when players can join and leave during play? Discuss at the scope step, with `047`.
+- Is an interface for the routine enough when players can join and leave during play? Deferred to `047` (decision 2026-11-06).
+
+## Branches
+
+- `mega-refactor-038a-respawn-routine`: active (2026-11-06).
+- `mega-refactor-038b-level-reset`: proposed. No folder or `ITEMS.md` row yet.
 
 ## Sources
 
