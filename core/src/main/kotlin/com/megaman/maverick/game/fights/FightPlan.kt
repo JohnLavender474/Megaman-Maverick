@@ -20,7 +20,8 @@ class FightPlan(
     val intro: Array<Step<Fight>>,
     val win: FightRule,
     val outro: Array<Step<Fight>>,
-    val music: MusicAsset?
+    val music: MusicAsset?,
+    val gateKey: String?
 ) {
 
     val endsLevel: Boolean

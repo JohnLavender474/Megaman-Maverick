@@ -38,10 +38,12 @@ object FightPlans {
             else -> throw MissingFightPlanException(bossName)
         }
 
-        if (props.getOrDefault(ConstKeys.MINI, false, Boolean::class)) return miniBossPlan()
+        val gateKey = props.get("${ConstKeys.BOSS}_${ConstKeys.KEY}", String::class)
+
+        if (props.getOrDefault(ConstKeys.MINI, false, Boolean::class)) return miniBossPlan(gateKey)
 
         val end = props.getOrDefault(ConstKeys.END, true, Boolean::class)
-        return if (end) standardBossPlan(music) else midBossPlan(music)
+        return if (end) standardBossPlan(music, gateKey) else midBossPlan(music, gateKey)
     }
 
     fun resolve(plan: FightPlan, spawnProps: Properties) {
@@ -49,14 +51,14 @@ object FightPlans {
         spawnProps.put(ConstKeys.MUSIC, music.name)
     }
 
-    private fun standardBossPlan(music: MusicAsset?) = stageBossPlan(music, LevelVictory)
+    private fun standardBossPlan(music: MusicAsset?, gateKey: String?) = stageBossPlan(music, gateKey, LevelVictory)
 
-    private fun finalBossPlan() = stageBossPlan(MusicAsset.OUR_BLOOD_BOILS_8_BIT)
+    private fun finalBossPlan() = stageBossPlan(MusicAsset.OUR_BLOOD_BOILS_8_BIT, null)
 
-    private fun midBossPlan(music: MusicAsset?) =
-        stageBossPlan(music, ExitMidBossFight, ResumeAfterMidBoss, AwaitBossGone)
+    private fun midBossPlan(music: MusicAsset?, gateKey: String?) =
+        stageBossPlan(music, gateKey, UnlockGate, ResumeAfterMidBoss, AwaitBossGone)
 
-    private fun miniBossPlan() = FightPlan(
+    private fun miniBossPlan(gateKey: String?) = FightPlan(
         intro = gdxArrayOf(
             AwaitBossReady,
             EndBossSpawn,
@@ -67,14 +69,15 @@ object FightPlans {
         outro = gdxArrayOf(
             NotifyListenersOfBossDefeat,
             AwaitBossDefeatEnd,
-            ExitMidBossFight,
+            UnlockGate,
             ControllerOn,
             AwaitBossGone
         ),
-        music = null
+        music = null,
+        gateKey = gateKey
     )
 
-    private fun stageBossPlan(music: MusicAsset?, vararg exit: Step<Fight>) = FightPlan(
+    private fun stageBossPlan(music: MusicAsset?, gateKey: String?, vararg exit: Step<Fight>) = FightPlan(
         intro = gdxArrayOf(
             AwaitBossReady,
             HoldWorld,
@@ -91,6 +94,7 @@ object FightPlans {
             AwaitBossDefeatEnd,
             *exit
         ),
-        music = music
+        music = music,
+        gateKey = gateKey
     )
 }

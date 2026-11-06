@@ -25,6 +25,9 @@ class Fight(
     val leadPlayerAlive: Boolean
         get() = services.players.get(PlayerSlot(0))!!.existenceState.liveAfterUpdate
 
+    val gateKey: String?
+        get() = plan.gateKey
+
     private val intro = Routine(plan.intro)
     private val outro = Routine(plan.outro)
     private val leases = OrderedMap<FightLease, Lease>()

@@ -33,10 +33,7 @@ enum class EventType {
     END_BOSS_SPAWN,
 
     BOSS_DEFEATED,
-    // called when the boss that just died is NOT the end-level boss
-    INTERMEDIATE_BOSS_DEAD,
-    // called when a gauntlet master's waves are all defeated
-    GAUNTLET_CLEARED,
+    UNLOCK_GATE,
     VICTORY_EVENT,
     END_LEVEL,
     GAME_COMPLETE,

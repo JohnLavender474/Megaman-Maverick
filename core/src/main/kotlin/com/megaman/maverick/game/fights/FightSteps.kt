@@ -155,14 +155,13 @@ object LevelVictory : Step<Fight> {
     override fun isFinished(context: Fight) = context.leadPlayerAlive
 }
 
-object ExitMidBossFight : Step<Fight> {
+object UnlockGate : Step<Fight> {
 
     override fun begin(context: Fight) {
         if (!context.leadPlayerAlive) return
+        val key = context.gateKey ?: return
 
-        context.services.events.submitEvent(
-            Event(EventType.INTERMEDIATE_BOSS_DEAD, props(ConstKeys.BOSS pairTo context.boss))
-        )
+        context.services.events.submitEvent(Event(EventType.UNLOCK_GATE, props(ConstKeys.KEY pairTo key)))
     }
 
     override fun isFinished(context: Fight) = context.leadPlayerAlive

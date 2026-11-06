@@ -104,8 +104,6 @@ abstract class AbstractBoss(
         private set
     var defeated = false
         private set
-    var bossKey = ""
-        private set
     var spawnDefeatOrbs = true
 
     private val playerDamagedListener: (PlayerDamaged) -> Unit = { onPlayerDamaged(it.damager, it.player) }
@@ -125,7 +123,6 @@ abstract class AbstractBoss(
         services.events.addListener(this)
         players.playerDamaged.connect(playerDamagedListener)
 
-        bossKey = spawnProps.getOrDefault("${ConstKeys.BOSS}_${ConstKeys.KEY}", "NO_BOSS_KEY", String::class)
         mini = spawnProps.getOrDefault(ConstKeys.MINI, false, Boolean::class)
 
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)

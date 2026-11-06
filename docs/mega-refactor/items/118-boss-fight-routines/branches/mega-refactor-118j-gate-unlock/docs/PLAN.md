@@ -35,7 +35,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` with the start date; `ITEM.md` "Branches", and the owner decisions (2026-11-05: the plan reads `boss_key` from the map; 1 key namespace). Stage `ITEMS.md` so that the owner's local lines stay out. Then `git worktree add -b mega-refactor-118j-gate-unlock .worktrees/mega-refactor-118j-gate-unlock master`. Recheck the overlap with the other worktrees, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Tests first
 
@@ -44,7 +44,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
   - `FightStepsTest`: `FightPlans.find` puts the map `boss_key` in a mid-level plan (`end=false`) and in a mini plan, and `null` when the map has none; `UnlockGate` submits `UNLOCK_GATE` with the key when slot 0 is alive, and submits nothing with no key or with slot 0 dead. The old `INTERMEDIATE_BOSS_DEAD` checks change to `UNLOCK_GATE`.
   - `MegaLevelScreenEventsTest`: the mask does not have `UNLOCK_GATE`.
 - Check: `core:test` fails only on the new tests that need the new behavior.
-- Done: no
+- Done: yes
 
 ### 3. One keyed unlock
 
@@ -56,19 +56,19 @@ approved. The user approves it. When the plan changes, write the reason in the p
   - `FightPlans.find` that gives no key;
   - `UnlockGate` that sends also when slot 0 is dead.
   Confirm with `git diff` that each mutation is in the file, run the full `core:test`, and see a matching test fail. Log the result.
-- Done: no
+- Done: yes
 
 ### 4. The `fights` README
 
 - Changes: only if a line names the old event or the old step name.
 - Check: the README names no current boss, step list or count.
-- Done: no
+- Done: yes
 
 ### 5. Short launches
 
 - Changes: none.
 - Check: rebuild after the mutations, then one `timeout 12` launch for each room of the play checks: `MOON_MAN room11`, `REACTOR_MAN room12`, `WILY_STAGE_1 room6`, `GAUNTLET_1 room1`. A clean exit is a pass. The both-properties throw needs no launch: the scan found no gate with both properties in the live maps.
-- Done: no
+- Done: yes
 
 ### 6. Owner play test
 

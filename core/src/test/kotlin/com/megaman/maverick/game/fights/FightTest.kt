@@ -39,7 +39,7 @@ private class Probe(val name: String, val log: ArrayList<String>, var done: Bool
 }
 
 private fun plan(intro: Array<Step<Fight>>, outro: Array<Step<Fight>> = Array()) =
-    FightPlan(intro, FightRule.AllDefeated, outro, MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO)
+    FightPlan(intro, FightRule.AllDefeated, outro, MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO, null)
 
 private fun boss(defeated: () -> Boolean = { false }) = mockk<AbstractBoss>(relaxed = true).also {
     every { it.defeated } answers { defeated() }
@@ -279,7 +279,7 @@ class FightTest : DescribeSpec({
 
                     plan.intro.toList() shouldBe listOf(AwaitBossReady, EndBossSpawn, StartBossFight, ControllerOn)
                     plan.outro.toList() shouldBe listOf(
-                        NotifyListenersOfBossDefeat, AwaitBossDefeatEnd, ExitMidBossFight, ControllerOn, AwaitBossGone
+                        NotifyListenersOfBossDefeat, AwaitBossDefeatEnd, UnlockGate, ControllerOn, AwaitBossGone
                     )
                     plan.music shouldBe null
                 }
@@ -359,7 +359,7 @@ class FightTest : DescribeSpec({
         it("writes no music to the spawn props for a plan with no music") {
             val spawnProps = Properties()
 
-            FightPlans.resolve(FightPlan(Array(), FightRule.AllDefeated, Array(), null), spawnProps)
+            FightPlans.resolve(FightPlan(Array(), FightRule.AllDefeated, Array(), null, null), spawnProps)
 
             spawnProps.containsKey(ConstKeys.MUSIC) shouldBe false
         }

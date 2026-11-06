@@ -51,7 +51,7 @@ class MegaLevelScreenEventsTest : DescribeSpec({
 
             mask.contains(EventType.ENTER_BOSS_ROOM) shouldBe true
             mask.contains(EventType.VICTORY_EVENT) shouldBe true
-            listOf(EventType.END_BOSS_SPAWN, EventType.BOSS_DEFEATED, EventType.INTERMEDIATE_BOSS_DEAD)
+            listOf(EventType.END_BOSS_SPAWN, EventType.BOSS_DEFEATED, EventType.UNLOCK_GATE)
                 .forEach { mask.contains(it) shouldBe false }
         }
     }

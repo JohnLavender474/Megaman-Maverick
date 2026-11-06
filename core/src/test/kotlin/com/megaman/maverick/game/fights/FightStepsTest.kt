@@ -40,7 +40,8 @@ private class StageFight(
     barFillsOnFirstUpdate: Boolean = false,
     bossName: String = "BigAssMaverickRobot",
     mini: Boolean = false,
-    bossReady: Boolean = true
+    bossReady: Boolean = true,
+    bossKey: String? = null
 ) {
 
     val bossComponent = BossComponent().also { if (bossReady) it.phase = BossPhase.INTRO }
@@ -85,6 +86,7 @@ private class StageFight(
     private val mapProps = Properties().also {
         if (end != null) it.put(ConstKeys.END, end)
         if (mini) it.put(ConstKeys.MINI, true)
+        if (bossKey != null) it.put("${ConstKeys.BOSS}_${ConstKeys.KEY}", bossKey)
     }
 
     val plan = FightPlans.find(bossName, mapProps)
@@ -96,7 +98,7 @@ private class StageFight(
                 EventType.TURN_CONTROLLER_ON,
                 EventType.TURN_CONTROLLER_OFF,
                 EventType.VICTORY_EVENT,
-                EventType.INTERMEDIATE_BOSS_DEAD
+                EventType.UNLOCK_GATE
             )
 
             override fun onEvent(event: Event) {
@@ -252,7 +254,7 @@ class FightStepsTest : DescribeSpec({
                 stage.defeatAndDestroyBoss(leadDiesFirst = false)
 
                 stage.count(EventType.VICTORY_EVENT) shouldBe 1
-                stage.received shouldNotContain EventType.INTERMEDIATE_BOSS_DEAD
+                stage.received shouldNotContain EventType.UNLOCK_GATE
                 stage.received shouldNotContain EventType.TURN_CONTROLLER_ON
                 stage.damageLocked shouldBe true
                 stage.secondDamageLocked shouldBe true
@@ -263,14 +265,14 @@ class FightStepsTest : DescribeSpec({
 
     describe("the mid-level boss plan at the defeat") {
         it("opens the way and resumes once when slot 0 is alive, and stays open until the boss is gone") {
-            val stage = StageFight(end = false)
+            val stage = StageFight(end = false, bossKey = "2")
             stage.throughIntro()
 
             stage.defeatAndDestroyBoss(leadDiesFirst = false)
 
-            stage.count(EventType.INTERMEDIATE_BOSS_DEAD) shouldBe 1
-            stage.receivedEvents.single { it.key == EventType.INTERMEDIATE_BOSS_DEAD }
-                .getProperty(ConstKeys.BOSS) shouldBe stage.boss
+            stage.count(EventType.UNLOCK_GATE) shouldBe 1
+            stage.receivedEvents.single { it.key == EventType.UNLOCK_GATE }
+                .getProperty(ConstKeys.KEY) shouldBe "2"
             stage.received shouldNotContain EventType.VICTORY_EVENT
             stage.count(EventType.TURN_CONTROLLER_ON) shouldBe 1
             stage.damageLocked shouldBe false
@@ -283,34 +285,34 @@ class FightStepsTest : DescribeSpec({
             stage.tick()
 
             stage.fight.closed shouldBe true
-            stage.count(EventType.INTERMEDIATE_BOSS_DEAD) shouldBe 1
+            stage.count(EventType.UNLOCK_GATE) shouldBe 1
             stage.count(EventType.TURN_CONTROLLER_ON) shouldBe 1
             verify(exactly = 1) { stage.audio.playMusic(any(), any()) }
         }
 
         it("sends the exit event in the tick after the boss destroy is queued, while the fight is open") {
-            val stage = StageFight(end = false)
+            val stage = StageFight(end = false, bossKey = "1")
             stage.throughIntro()
             stage.bossDefeated = true
             stage.tick()
-            stage.received shouldNotContain EventType.INTERMEDIATE_BOSS_DEAD
+            stage.received shouldNotContain EventType.UNLOCK_GATE
 
             stage.bossState = EntityExistenceState.DESTROY_QUEUED
             stage.tick()
 
-            stage.count(EventType.INTERMEDIATE_BOSS_DEAD) shouldBe 1
+            stage.count(EventType.UNLOCK_GATE) shouldBe 1
             stage.fight.closed shouldBe false
         }
 
         it("does nothing, and keeps the fight open until a cancel, when slot 0 dies in the same frame as the boss") {
-            val stage = StageFight(end = false)
+            val stage = StageFight(end = false, bossKey = "1")
             stage.throughIntro()
 
             stage.defeatAndDestroyBoss(leadDiesFirst = true)
             stage.bossState = EntityExistenceState.UNSPAWNED
             stage.tick()
 
-            stage.received shouldNotContain EventType.INTERMEDIATE_BOSS_DEAD
+            stage.received shouldNotContain EventType.UNLOCK_GATE
             stage.received shouldNotContain EventType.TURN_CONTROLLER_ON
             verify(exactly = 0) { stage.audio.playMusic(any(), any()) }
             stage.fight.closed shouldBe false
@@ -318,7 +320,42 @@ class FightStepsTest : DescribeSpec({
             stage.fight.cancel()
 
             stage.fight.closed shouldBe true
-            stage.received shouldNotContain EventType.INTERMEDIATE_BOSS_DEAD
+            stage.received shouldNotContain EventType.UNLOCK_GATE
+        }
+
+        it("unlocks no gate, and still resumes, when the map gives the boss no key") {
+            val stage = StageFight(end = false)
+            stage.throughIntro()
+
+            stage.defeatAndDestroyBoss(leadDiesFirst = false)
+
+            stage.received shouldNotContain EventType.UNLOCK_GATE
+            stage.count(EventType.TURN_CONTROLLER_ON) shouldBe 1
+        }
+    }
+
+    describe("the gate key of a plan") {
+        it("comes from the boss map key in a mid-level and in a mini plan") {
+            StageFight(end = false, bossKey = "3").plan.gateKey shouldBe "3"
+            StageFight(bossName = "MoonHead", mini = true, bossKey = "1").plan.gateKey shouldBe "1"
+        }
+
+        it("is null when the map gives the boss no key") {
+            StageFight(end = false).plan.gateKey shouldBe null
+            StageFight(bossName = "MoonHead", mini = true).plan.gateKey shouldBe null
+        }
+    }
+
+    describe("the mini boss plan at the defeat") {
+        it("unlocks the gate of its key once when slot 0 is alive") {
+            val stage = StageFight(bossName = "MoonHead", mini = true, bossKey = "1")
+            stage.throughIntro()
+
+            stage.defeatAndDestroyBoss(leadDiesFirst = false)
+
+            stage.count(EventType.UNLOCK_GATE) shouldBe 1
+            stage.receivedEvents.single { it.key == EventType.UNLOCK_GATE }
+                .getProperty(ConstKeys.KEY) shouldBe "1"
         }
     }
 })

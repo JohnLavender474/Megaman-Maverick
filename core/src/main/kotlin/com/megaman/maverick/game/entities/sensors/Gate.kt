@@ -45,7 +45,6 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.events.EventType
@@ -81,8 +80,7 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
     override val eventKeyMask = objectSetOf<Any>(
         EventType.PLAYER_SPAWN,
         EventType.END_ROOM_TRANS,
-        EventType.INTERMEDIATE_BOSS_DEAD,
-        EventType.GAUNTLET_CLEARED
+        EventType.UNLOCK_GATE
     )
     override lateinit var direction: Direction
 
@@ -94,8 +92,7 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
     private lateinit var state: GateState
 
     private lateinit var nextRoomKey: String
-    private var thisBossKey: String? = null
-    private var gauntletKey: String? = null
+    private var unlockKey: String? = null
 
     private val center = Vector2()
     private val timer = Timer(DURATION)
@@ -143,12 +140,15 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
 
         nextRoomKey = spawnProps.get(ConstKeys.ROOM, String::class)!!
 
-        // If this gate has a boss key, then that means that it cannot be triggered until the boss with the boss key
-        // has been defeated. Conversely, if there is no boss key, then this gate is always triggerable.
-        thisBossKey = spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}", String::class)
-        // If this gate has a gauntlet key, then it cannot be triggered until the gauntlet master with the same key has
-        // been cleared.
-        gauntletKey = spawnProps.get("${ConstKeys.GAUNTLET}_${ConstKeys.KEY}", String::class)
+        // A gate with a boss key or a gauntlet key stays locked until an UNLOCK_GATE event with the same key. Boss keys
+        // and gauntlet keys share one namespace in a level.
+        val bossKey = spawnProps.get("${ConstKeys.BOSS}_${ConstKeys.KEY}", String::class)
+        val gauntletKey = spawnProps.get("${ConstKeys.GAUNTLET}_${ConstKeys.KEY}", String::class)
+        if (bossKey != null && gauntletKey != null) throw IllegalStateException(
+            "Gate to room $nextRoomKey (map object id=$mapObjectId) has both boss_key=$bossKey and " +
+                "gauntlet_key=$gauntletKey: keep only one of the two properties"
+        )
+        unlockKey = bossKey ?: gauntletKey
         triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGER, isUnlockedByDefault(), Boolean::class)
 
         resettable = spawnProps.getOrDefault(ConstKeys.RESET, true, Boolean::class)
@@ -193,35 +193,16 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
                 }
             }
 
-            EventType.INTERMEDIATE_BOSS_DEAD -> {
-                thisBossKey?.let {
-                    val boss = event.getProperty(ConstKeys.BOSS, AbstractBoss::class)!!
+            EventType.UNLOCK_GATE -> {
+                val key = event.getProperty(ConstKeys.KEY, String::class)
 
-                    if (it == boss.bossKey) {
-                        GameLogger.debug(
-                            TAG,
-                            "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, INTERMEDIATE_BOSS_DEAD: " +
-                                "this_boss_key=$thisBossKey, other_boss_key=${boss.bossKey}"
-                        )
+                if (unlockKey != null && unlockKey == key) {
+                    GameLogger.debug(
+                        TAG,
+                        "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, UNLOCK_GATE: key=$key"
+                    )
 
-                        triggerable = true
-                    }
-                }
-            }
-
-            EventType.GAUNTLET_CLEARED -> {
-                gauntletKey?.let {
-                    val key = event.getProperty(ConstKeys.KEY, String::class)
-
-                    if (it == key) {
-                        GameLogger.debug(
-                            TAG,
-                            "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, GAUNTLET_CLEARED: " +
-                                "this_gauntlet_key=$gauntletKey, other_gauntlet_key=$key"
-                        )
-
-                        triggerable = true
-                    }
+                    triggerable = true
                 }
             }
         }
@@ -236,7 +217,7 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
         triggerable = isUnlockedByDefault()
     }
 
-    private fun isUnlockedByDefault() = thisBossKey == null && gauntletKey == null
+    private fun isUnlockedByDefault() = unlockKey == null
 
     fun isTriggerable() = state == GateState.OPENABLE
 

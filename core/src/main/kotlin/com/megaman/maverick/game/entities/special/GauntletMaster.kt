@@ -31,7 +31,7 @@ import kotlin.reflect.KClass
 
 /**
  * Spawns waves of enemies in one room. The next wave spawns only when all enemies of the current wave are dead. When
- * the last wave is dead, a [EventType.GAUNTLET_CLEARED] event is submitted with this master's key. A [com.megaman
+ * the last wave is dead, a [EventType.UNLOCK_GATE] event is submitted with this master's key. A [com.megaman
  * .maverick.game.entities.sensors.Gate] with the same `gauntlet_key` is then unlocked.
  *
  * TMX properties:
@@ -287,7 +287,7 @@ class GauntletMaster(services: MegaServices) : MegaGameEntity(services), IEventL
                         state = GauntletState.CLEARED
                         requestToPlaySound(SoundAsset.SELECT_PING_SOUND, false)
                         services.events.submitEvent(
-                            Event(EventType.GAUNTLET_CLEARED, props(ConstKeys.KEY pairTo key))
+                            Event(EventType.UNLOCK_GATE, props(ConstKeys.KEY pairTo key))
                         )
                     }
                 }
