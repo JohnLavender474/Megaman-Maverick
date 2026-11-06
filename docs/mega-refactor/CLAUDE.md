@@ -61,7 +61,7 @@ for the objective to stay possible.
 - Always-on rules apply to every branch. The other rules of an objective apply to its linked items.
 - A rule with `after <item>` waits for that item. Until the item merges, a branch may repeat the
   current pattern, and the check says `waiting`. A new kind of violation is still a `conflict`.
-- **Conflict:** tell the owner before `SCOPE.md` approval. The owner chooses one of these: change
+- **Conflict:** ask the owner as a decision in the brief (see "Planning"). The owner chooses one of these: change
   the scope, accept the gap, or change the rule. An accepted gap gets a row in the objective's
   current state and a `TODO` comment at the code.
 - A conflict between two objectives goes to the owner, and the decision goes in both files. No
@@ -149,7 +149,7 @@ on `master`:
    entry that says no branch exists yet.
 3. Add a row to the branches table in `ITEMS.md` with the status `planned` or `blocked`.
 
-A draft `SCOPE.md` written ahead of time still needs the user's approval (see "Planning").
+A draft `SCOPE.md` written ahead of time still goes through the brief (see "Planning").
 
 ### Item start: merge target
 
@@ -178,29 +178,54 @@ the branch from the parent branch instead.
 
 ### Planning
 
-Do these steps in this order, before you change code. Do not start a step until the user
-approves the step before it.
+Do these steps in this order, before you change code. The owner approves once, at the brief
+(step 3).
+
+`SCOPE.md`, `CONTRACT.md` and `PLAN.md` are Claude's working record, for later sessions and for
+the merge checks. The owner does not have to read them. The owner reads the brief and answers its
+questions.
 
 1. **Scan.** Read the code that the branch will touch. Find the classes, call sites, events and
    data involved, how they connect, and their problems. Read the item `NOTES.md`. Read
    `objectives/README.md` and the file of each objective that the item links. Read the folders
    of the other active branches for overlap.
-2. **`docs/SCOPE.md`.** Write what the scan found and what the branch will and will not change.
-   In "Objective check", list the always-on rules and the rules of the linked objectives that the
-   branch can affect, each with `helps`, `no effect`, `waiting` or `conflict`. The user approves it.
-3. **`docs/CONTRACT.md`.** Write the behavior that the branch changes on purpose, the behavior that
-   it must not change, and how to check them, for example the levels to play through and what to
-   look for. Only include what the scope can affect. The user approves it.
-4. **`docs/PLAN.md`.** Write the ordered steps to do the work. Give each step its own check. The
-   user approves it.
+2. **Draft `docs/SCOPE.md` and `docs/CONTRACT.md`.**
+   - `SCOPE.md`: what the scan found and what the branch will and will not change. In
+     "Objective check", list the always-on rules and the rules of the linked objectives that the
+     branch can affect, each with `helps`, `no effect`, `waiting` or `conflict`.
+   - `CONTRACT.md`: the behavior that the branch changes on purpose, the behavior that it must not
+     change, and how to check them, for example the levels to play through and what to look for.
+     Only include what the scope can affect.
+3. **Brief.** Write `docs/BRIEF.html` and publish it as a private Artifact page (load the
+   `artifact-design` skill first). Write the link in the status block of the branch
+   `process-log.md`. Then ask the decisions with `AskUserQuestion`. The brief fits on about one
+   screen and has these parts, in this order:
+   - **Goal:** one or two sentences. Then what the player sees change, or "nothing visible".
+   - **Before and after:** a Mermaid diagram of the parts that change, for example the senders,
+     the events and the listeners.
+   - **Code sketch:** the new or changed API at its first real caller, before and after, in a
+     few short code blocks. Not the full diff.
+   - **Decisions:** 2 to 4 questions, each with options and a recommendation. An objective
+     `conflict` is a decision. If nothing needs a decision, say so.
+   - **Risks:** up to 3 points.
+   - **Play checks:** the commands, as in "Test maps". The owner uses them at the play test, not
+     at planning.
+   - **Details:** links to `SCOPE.md` and `CONTRACT.md` on the branch folder.
+
+   Do not put scan inventories, `file:line` references or the objective table in the brief. They
+   stay in `SCOPE.md`. When the owner answers, write the answers in `SCOPE.md` (and in
+   `CONTRACT.md` if they change it), and set both to `approved` with the date.
+4. **`docs/PLAN.md`.** Write the ordered steps to do the work. Give each step its own check. It
+   needs no approval. Show the step titles to the owner in a short list, and start the work.
 
 Specs and plans for a `mega-refactor-` branch go in the branch folder, not in
 `docs/superpowers/`. This also applies when a skill (for example `superpowers:writing-plans`)
 gives a different default path.
 
-If the scope must change during the work, update `docs/SCOPE.md` and get the user's approval
-again. Then update `docs/CONTRACT.md` and `docs/PLAN.md` to match. A change to `docs/PLAN.md`
-alone does not need a new approval, but write the reason in the process log.
+If the scope must change during the work, update `docs/SCOPE.md` and `docs/CONTRACT.md`. Update
+the brief, mark what changed, publish it again to the same link, and ask the owner the new
+decision. Then update `docs/PLAN.md` to match. A change to `docs/PLAN.md` alone does not need
+approval, but write the reason in the process log.
 
 ### During the branch
 

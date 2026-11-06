@@ -1,10 +1,7 @@
 # Plan: <branch>
 
-How to do the work in `SCOPE.md`. Write this file after `SCOPE.md` and `CONTRACT.md` are
-approved. The user approves it. When the plan changes, write the reason in the process log.
-
-- Status: draft
-- Approved: <date, or "no">
+How to do the work in `SCOPE.md`. Write this file after the owner approves the brief. It needs
+no approval. When the plan changes, write the reason in the process log.
 
 ## Steps
 

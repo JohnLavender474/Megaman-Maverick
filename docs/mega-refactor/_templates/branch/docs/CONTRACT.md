@@ -2,8 +2,11 @@
 
 The behavior that this branch changes on purpose, the behavior that it must not change, and how to
 check them. Write this file during
-planning, before you change code. Do the checks before the branch merges, and write the result
-in the branch process log.
+planning, with `SCOPE.md` and before `BRIEF.html`. The owner approves the brief, not this file.
+Do the checks before the branch merges, and write the result in the branch process log.
+
+- Status: draft
+- Approved: <date, or "no">
 
 ## Automated checks
 
