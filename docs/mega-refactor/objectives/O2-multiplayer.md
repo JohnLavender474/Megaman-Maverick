@@ -217,7 +217,7 @@ Not a redo, but new work that is larger than the table shows:
 | `016` | done | [Narrow services instead of `game` everywhere](../items/016-narrow-services/ITEM.md) |
 | `019` | done | [One spawn phase per tick with destroy notifications](../items/019-spawn-phase/ITEM.md) |
 | `020` | planned | [Cheaper broad phase with stable contact order](../items/020-broad-phase/ITEM.md) |
-| `038` | planned | [One ordered respawn routine instead of an event chain](../items/038-respawn-routine/ITEM.md) |
+| `038` | active | [One ordered respawn routine instead of an event chain](../items/038-respawn-routine/ITEM.md) |
 | `055` | planned | [Record and replay for contract checks](../items/055-record-and-replay/ITEM.md) |
 | `094` | idea | [Split screen (`O2` phase 2)](../items/094-split-screen/ITEM.md) (main) |
 | `095` | idea | [Netplay with lockstep (`O2` phase 3)](../items/095-netplay/ITEM.md) (main) |

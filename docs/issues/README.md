@@ -55,7 +55,7 @@ related-items: [<mega-refactor item IDs>]
 | [`InsertionOrderPriorityQueue.size` is always 0](2026-10-22-insertion-order-priority-queue-size.md) | yes | engine | open |
 | [`MutableOrderedSet.retainAll` removes nothing and reports the wrong result](2026-10-22-mutable-ordered-set-retain-all.md) | yes | engine | open |
 | [`replace("\\s+", "")` treats the pattern as literal text](2026-10-22-literal-whitespace-regex.md) | yes | core | open |
-| [The room-music block on respawn reads the room before Mega moves, and can throw](2026-10-22-respawn-stale-room-music.md) | yes | core | open |
+| [The room-music block on respawn reads the room before Mega moves, and can throw](2026-10-22-respawn-stale-room-music.md) | yes | core | closed |
 | [A pause during a gate opening turns physics and behaviors on again when the game resumes](2026-10-22-pause-during-gate-reenables-physics.md) | yes | core | open |
 | [When a health fill ends during a pause, all systems turn on while the game is still paused](2026-10-22-health-fill-end-unpauses-systems.md) | no | core | open |
 | [Saved keyboard bindings are not applied at boot](2026-10-22-saved-key-bindings-not-applied.md) | yes | core | closed |

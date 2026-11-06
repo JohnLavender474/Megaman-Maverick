@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: no
@@ -24,3 +24,9 @@ Read the room after Mega is placed, or remove the block (the respawn routine in 
 ## How to reproduce
 
 Dead today: no live room has a `music` property.
+
+## Resolution
+
+Closed by `mega-refactor-038a-respawn-routine` (squash commit `a97e75e4d`, 2026-11-06), which removes the block.
+
+Correction: the "How to reproduce" text above is wrong. Among the live maps, every `game_rooms` object of `SMB3_1.tmx` has a `music` property. The block played the death room's track for the frames before the next camera update; then `LevelRoomHandler.onSetToRoomNoTrans` played the respawn room's track. So the block changed nothing that a player can hear, and its removal changes nothing either. The owner's play test of an underground death in `SMB3_1` passed. Details: the "room-music block" section of the branch `docs/SCOPE.md`.

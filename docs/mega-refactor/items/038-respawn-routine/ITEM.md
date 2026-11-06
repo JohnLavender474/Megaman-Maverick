@@ -48,7 +48,7 @@ Item `029` research (2026-10-23, verbatim):
 
 ## Branches
 
-- `mega-refactor-038a-respawn-routine`: active (2026-11-06).
+- `mega-refactor-038a-respawn-routine`: merged (2026-11-06, squash commit `a97e75e4d`).
 - `mega-refactor-038b-level-reset`: proposed. No folder or `ITEMS.md` row yet.
 
 ## Sources

@@ -95,7 +95,7 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - `011`: `superRandom`, `OrderedSet.random`
 - `010`: frame delta clamp
 - `012`, `013`: pause during a gate, health fill during a pause, `START` release, focus-loss pause
-- `038`: respawn room music, coins on respawn, `SPAWN` damage lock
+- `038`: coins on respawn, `SPAWN` damage lock
 - `036`: silent checkpoint change, same-name "4" spawns
 - `007`, `034`: volume not saved, health tank fill not saved
 - `058`, `114`: `down` gravity camera, `BLOCK`-`GRAVITY_CHANGE` rule
