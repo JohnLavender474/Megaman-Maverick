@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: 1 keyed unlock event for `Gate`, from a boss fight and from a `GauntletMaster`
-- Done: scan, `SCOPE.md` and `CONTRACT.md` approved, draft `PLAN.md`
-- Next: owner approval of `PLAN.md`
+- Done: planning
+- Next: plan step 1
 - Blocked:
 
 ## Entries
@@ -20,3 +20,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 ## 2026-11-06
 
 - The owner approved `CONTRACT.md`. Draft `PLAN.md`.
+- The owner approved `PLAN.md`. Branch start on `master` (with the owner decisions in `ITEM.md`), and the worktree from `master`.
