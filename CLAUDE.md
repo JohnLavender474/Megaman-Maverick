@@ -18,6 +18,10 @@ A multi-branch effort on `engine/` and `core/` is in progress. It includes refac
 - Every other branch goes in its own worktree in `.worktrees/<branch>/` (git-ignored), whatever its type: `git worktree add -b <branch> .worktrees/<branch> master`.
 - `master` itself never goes in a worktree. Work that belongs on `master`, such as `docs/issues/`, is done in the main checkout.
 
+## Temporary files
+
+Put temporary work files in `temp/` at the repo root (git-ignored by `**/temp/`), one subfolder per task, for example `temp/x-sabre-gifs/`. This includes GIFs, sprite drafts, contact sheets, previews, level drafts and one-off helper scripts. Use it in place of a session scratchpad under `/tmp`, so that the owner can find the files later. Subagents write there too. Never commit files from `temp/`.
+
 ## Modules
 
 `settings.gradle` includes three Gradle modules:
