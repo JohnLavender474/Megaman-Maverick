@@ -1,11 +1,17 @@
 # 069: A dash button for X
 
-- Status: planned
+- Status: dropped (2026-11-05): folded into `081`
 - Type: feature
 - Objectives: `O8`
 - Depends on: `031`, `081a` (the first X branch, because only X reads the new button)
 - Related: `010`, `024`, `029`, `034`, `047`, `055`, `060`, `068`, `070`, `081`
-- Branches: none yet
+- Branches: none
+
+## Dropped
+
+2026-11-05 (owner): this item is folded into `081`. Only X reads the dash button, and `081` already had this work as
+a step. The dash input is now part of `081` phase 3 (see `081` `ITEM.md`, "Phases"). This file and `NOTES.md` stay as
+the record of the research and the decisions. `081` continues the open questions here.
 
 ## Goal
 

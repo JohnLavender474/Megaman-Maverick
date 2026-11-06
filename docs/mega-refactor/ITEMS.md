@@ -76,7 +76,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | `O1` | idea | none | | |
 | 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | `O5`, `O3` | planned | none | | |
 | 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | `O8`, `O4` | done | none | 2026-11-03 | 2026-11-03 |
-| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | `O8` | planned | `031`, `081a` | | |
+| 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | `O8` | dropped | `031`, `081a` | | 2026-11-05 |
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | `O9` | idea | `031` | | |
 | 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | `O1` | idea | none | | |
 | 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | `O1` | planned | `016` | | |
