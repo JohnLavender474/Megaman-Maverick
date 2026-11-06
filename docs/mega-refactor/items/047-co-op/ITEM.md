@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
-- Branches: `047a` (merged), `047b` (merged)
+- Branches: `047a` (merged), `047b` (merged), `047g` (active)
 
 ## Goal
 
@@ -51,6 +51,10 @@ Item `029` research (2026-10-23, verbatim):
 - 2026-11-02: a player entity is slot-owned, not pooled: one entity per slot, created and released by the slot's owner, not by `destroy`. The old reason ("one singleton") is out of date, but a pool does not fit, because it treats `destroy` as release and a slot keeps its player through death. The real need is "the entity in a slot can change" (`047f`, `081`). See `NOTES.md`, "Can `Megaman` be pooled?". Only 2 sites bind one instance for the session: `MegamanMaverickGame.kt:454` and `MegaLevelScreen.kt:337`.
 - 2026-11-02: a released player object stays for a rejoin, unregistered. Slot 1 is built at a load point or a lobby, not in play. Slot 0 cannot leave until "What happens when the lead player leaves?" closes. A leave does not fire `PLAYER_DESTROYED` as a death.
 - 2026-11-02 (from `119`): `047c` owns any listener filter that `119` does not finish.
+- 2026-11-06: the shared screen uses a group camera with edge walls. The camera follows the players as a group inside the 16x14 room view (the view does not zoom). The left and right edges of the view block each player, so no player leaves the view sideways and cull and spawn keep one camera. This replaces the 2026-10-23 lean to "the camera follows the lead player", which had the campaign as its target.
+- 2026-11-06: room bounds come before the shared view. At a room edge, the single-player rule applies (a transition, a wall, or a pit death at the bottom); the view edge is only a wall inside the room.
+- 2026-11-06: for now, every room exit uses "carry": any one player triggers the transition, and the other players are carried along (they warp next to that player at the end of the pan). This applies to side, ladder, jump-up and fall-down exits. Other rules come later (see "Open questions", "Rooms").
+- 2026-11-06: build the shared screen in phases. Each phase adds one mechanic and gets play tested before the next: (1) one room with no exits, group camera and edge walls; (2) side exits; (3) vertical exits (ladders, jumps, falls); (4) gates; (5) camera sections (`051`); (6) death and respawn. The first co-op maps use only side and ladder exits, until phase 3 tests jump and fall exits.
 
 ## Branch split
 
@@ -60,10 +64,11 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 |---|---|
 | `047a` `second-slot` | With `--players 2`, a second `Megaman` plays in a level on its own device |
 | `047b` `player-rules` | Session rules, friendly fire, targeting, `ChargedShot` and pickups |
-| `047c` | Player 2 death and respawn near the lead. Also fixes `2026-11-02-weapon-spawned-sets-survive-death.md` and `2026-11-02-throw-axe-no-live-check.md` |
+| `047c` | Player 2 death and respawn near the lead (shared screen phase 6). Also fixes `2026-11-02-weapon-spawned-sets-survive-death.md` and `2026-11-02-throw-axe-no-live-check.md` |
 | `047d` | HUD and pause |
 | `047e` | Bosses and gauntlets, as present-player steps in `118` plans |
 | `047f` | Join and leave during play, device claim, unplug prompt, settings for slot 1. Adds the first production callers of `Players.unregister` and `GameState.removeListener` |
+| `047g` `shared-camera` | Shared screen phase 1: a group camera with edge walls in one room with no exits (2026-11-06). Phases 2 to 5 (side exits, vertical exits, gates, camera sections) get their own branches after the phase 1 play test. It starts before `047c` to `047f`, which keep their letters because other docs and code `TODO`s name them |
 
 `038` comes before the end of phase 1 if a death must not reset the room for the other player.
 
@@ -77,7 +82,8 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 
 ## Open questions
 
-- Camera: follow one player, or a group bounds? The owner leans to "the camera follows the primary (lead) player" (2026-10-23).
+- Camera: closed 2026-11-06 (group camera with edge walls, see "Decisions").
+- Tall rooms (taller than the view): what happens to a player who goes below the view but stays inside the room (warp to the partner, with or without damage?), and above the view (head bump or warp)? To decide at the phase 1 play test.
 - The lead player as the source of truth, with earnings shared by all players: confirm. This is one profile for the session. The lead slot is a session policy, not a helper in the players query API (`029` decision).
 - What happens when the lead player leaves? Does the next slot become the lead?
 - Respawn with drop-in and drop-out: is a respawn routine behind an interface (`038`) enough?
@@ -100,6 +106,7 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 
 ### Rooms
 
+- Exit rules after "carry" (decision 2026-11-06): consider more rules and when each applies. Candidates: "wait" (the exit is a wall until all players touch it; hard for jump-up exits, broken for fall-down exits, because the first player to fall must stand on air), "lead only" (only slot 0 triggers), and a hybrid (wait for side and ladder exits, carry for jump and fall exits). Questions: is the rule per mode, per map or per exit (a Tiled property)? How does a player see which rule an exit uses? How is "carry" griefing handled (one player pulls the other out of a fight, or back down a shaft)?
 - Who triggers a room transition? Today two paths exist. The room scan tests only the focus (`CameraRoomBounds.kt:91,138`). `GateRule` lets any player open a `Gate`, and the `Gate` then moves the camera (`Gate.kt:265`). Options: the lead, any player, all players at the edge. **(mode)**
 - What happens to the other players in a transition? Each `Megaman` sets its center to the one transition point (`Megaman.kt:386`), so all players stack. Inference: "wait behind" does not work, because the transition destroys the enemies (`LevelRoomHandler.kt:72`), and 465 blocks spawn by room. Options: all stack, all keep their offset, warp at the end. **(mode)**
 - Teleports move one player: `PipePortal` (4 in live stages) and `CapsuleTeleporter` (2). If the lead goes, do the others follow? If another player goes, does the off-screen rule apply at once? **(mode)**
