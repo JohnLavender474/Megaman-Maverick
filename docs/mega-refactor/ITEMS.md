@@ -45,7 +45,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 035 | [Aspect-ratio policy for phones](items/035-aspect-ratio/ITEM.md) | research | `O3` | planned | none | | |
 | 036 | [Checkpoints as typed Tiled data: respawn point, triggers, order](items/036-checkpoints-as-data/ITEM.md) | feature | `O7`, `O4` | planned | none | | |
 | 037 | [Explicit respawn state and named `on_respawn` actions](items/037-respawn-state/ITEM.md) | refactor | `O1` | planned | `036` | | |
-| 038 | [One ordered respawn routine instead of an event chain](items/038-respawn-routine/ITEM.md) | refactor | `O1`, `O2` | active | none | 2026-11-06 | |
+| 038 | [One ordered respawn routine instead of an event chain](items/038-respawn-routine/ITEM.md) | refactor | `O1`, `O2` | done | none | 2026-11-06 | 2026-11-06 |
 | 039 | [Retire unused assets and review dead code](items/039-retire-dead-assets-code/ITEM.md) | tooling | `O1`, `O3` | planned | none | | |
 | 040 | [Atlas checks and one-command repack (keep TexturePacker)](items/040-atlas-checks/ITEM.md) | tooling | `O6` | idea | none | | |
 | 041 | [Lifecycle policy per entity, room inferred from geometry](items/041-lifecycle-policy/ITEM.md) | refactor | `O7` | planned | `021`, `022` | | |
@@ -152,7 +152,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-081a-player-lifecycle`](items/081-playable-x/branches/mega-refactor-081a-player-lifecycle/process-log.md) | 081 | Move the shared player lifecycle out of `Megaman` into functions that a second player class can call; Megaman plays the same | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-081b-x-run-jump-shoot`](items/081-playable-x/branches/mega-refactor-081b-x-run-jump-shoot/process-log.md) | 081 | Phase 1 of X: `MegamanX` in slot 0 on `X6_INTRO`, with run, jump and the buster | active | 2026-11-06 | |
 | [`mega-refactor-038a-respawn-routine`](items/038-respawn-routine/branches/mega-refactor-038a-respawn-routine/process-log.md) | 038 | One `RespawnRoutine` runs the death and the respawn in a fixed order, in place of the 5-event chain; the public events stay | merged | 2026-11-06 | 2026-11-06 |
-| [`mega-refactor-038b-level-reset`](items/038-respawn-routine/branches/mega-refactor-038b-level-reset/process-log.md) | 038 | Split `PLAYER_SPAWN` into a spawn event for each slot and a `LEVEL_RESET` that the respawn routine sends; move the level-reset listeners | active | 2026-11-06 | |
+| [`mega-refactor-038b-level-reset`](items/038-respawn-routine/branches/mega-refactor-038b-level-reset/process-log.md) | 038 | Split `PLAYER_SPAWN` into a spawn event for each slot and a `LEVEL_RESET` that the respawn routine sends; move the level-reset listeners | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-001b-host-contract`](items/001-maverick-engine/branches/mega-refactor-001b-host-contract/process-log.md) | 001 | Add `IMaverickGame` and `MaverickGame` | blocked | | |
 | [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | merged | 2026-10-22 | 2026-10-22 |

@@ -1,6 +1,6 @@
 # 038: One ordered respawn routine instead of an event chain
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O1`, `O2`
 - Depends on: none
@@ -42,6 +42,8 @@ Item `029` research (2026-10-23, verbatim):
 - 2026-11-06 (owner, `038a` brief): no interface for the routine yet. `047` designs the co-op shape when it has a second caller.
 - 2026-11-06 (owner, `038a` brief): the routine owns the death half and the respawn half. The level start enters at the respawn half.
 
+- 2026-11-06 (owner, `038b` brief, D1): remove `PLAYER_SPAWN`. `LEVEL_RESET` from the routine takes its job; `047` adds a spawn event for each slot when a listener needs one.
+
 ## Open questions
 
 - Is an interface for the routine enough when players can join and leave during play? Deferred to `047` (decision 2026-11-06).
@@ -49,7 +51,7 @@ Item `029` research (2026-10-23, verbatim):
 ## Branches
 
 - `mega-refactor-038a-respawn-routine`: merged (2026-11-06, squash commit `a97e75e4d`).
-- `mega-refactor-038b-level-reset`: active (2026-11-06).
+- `mega-refactor-038b-level-reset`: merged (2026-11-06, squash commit `b4d18eaba`).
 
 ## Sources
 
