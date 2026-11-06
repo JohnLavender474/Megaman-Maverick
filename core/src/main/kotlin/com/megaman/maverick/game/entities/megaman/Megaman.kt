@@ -36,7 +36,9 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.*
+import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
+import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
+import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
@@ -56,11 +58,7 @@ import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.locks.behaviorsLockHook
-import com.megaman.maverick.game.players.GravityDeviceComponent
-import com.megaman.maverick.game.players.PlayerLight
-import com.megaman.maverick.game.players.PlayerLightComponent
-import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.players.rootPlayer
+import com.megaman.maverick.game.players.*
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.startSmoothFollow
 import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
@@ -81,7 +79,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     }
 
     override val damageNegotiator = MegamanDamageNegotiator(this)
-
     internal val damageRecovery = defineDamageRecoveryComponent()
 
     // TODO: a second player entity needs this same rule; extract one function when it exists (item 081)
@@ -95,7 +92,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
 
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
-
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
 
     internal var airDashConsumed = false
@@ -240,7 +236,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal val wallSlideNotAllowedTimer = Timer(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY)
 
-
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
@@ -288,11 +283,9 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         addComponent(defineAnimationsComponent(animations))
 
         weaponsHandler = MegamanWeaponsHandler(this)
-
         jetpackHandler = MegamanJetpackHandler(this)
 
         currentWeapon = MegamanWeapon.MEGA_BUSTER
-
         aButtonTask = AButtonTask.JUMP
 
         addComponent(GravityDeviceComponent {
@@ -301,7 +294,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
                 else -> AButtonTask.AIR_DASH
             }
         })
-
         addComponent(PlayerLightComponent {
             when {
                 charging -> if (fullyCharged) PlayerLight.FULL_CHARGE else PlayerLight.HALF_CHARGE
