@@ -84,10 +84,10 @@ approved. The user approves it. When the plan changes, write the reason in the p
 
 - Changes: none, unless a check fails. A fix means that the checks run again.
 - Check: all checks in `CONTRACT.md`, "Manual playthrough". Write the result in the process log.
-- Done: no
+- Done: yes
 
 ### 7. Merge
 
 - Changes: the steps in `docs/mega-refactor/CLAUDE.md`, "Branch merge", into `master`. The process log entry names the 2 `D1000` lines (`D1000.kt:556`, `:583`) and their new reads, for the `x6-intro-extra-level` merge of `master`. Stage by path, and check the squash file list.
 - Check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on `master`.
-- Done: no
+- Done: yes

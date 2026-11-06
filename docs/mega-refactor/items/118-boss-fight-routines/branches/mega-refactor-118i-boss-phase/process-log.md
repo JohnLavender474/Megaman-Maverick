@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: a `BossComponent` holds the boss phase, and the fight starts the boss AI
-- Done: plan steps 1 to 5
-- Next: owner play test (plan step 6)
+- Done: plan steps 1 to 7
+- Next: none
 - Blocked:
 
 ## Entries
@@ -27,3 +27,7 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   - `BossComponent.reset()` that does nothing: 1 test fails.
 - Step 4 (`36df56532`): the `fights` README has "The boss phase", with a state diagram, and the status line names the hooks that `048` step 6 moves.
 - Step 5: rebuild after the mutations, then `timeout 12` launches of `INTRO_STAGE room12`, `PRECIOUS_WOMAN room7`, `GLACIER_MAN room12` and `MOON_MAN room11` ran with no exception.
+- Step 6: the owner played the 4 control checks in `CONTRACT.md` (`BigAssMaverickRobot`, `PreciousWoman`, `GlacierMan` with a death and a new intro, `MoonHead`). The owner said: "tests passed". Docs-only fix before the merge (`7ec226b25`): 2 lines of the `fights` README still named `boss.ready`; they now name the boss phase.
+- Step 7: the owner approved the merge. `master` had 2 new commits since the branch start (`336a5a3d2` sprites, `444681c2d` item `081` docs), with no file in common with the branch, so no merge of `master` into the branch. Squash commit `afe4dc6ac`. For the `x6-intro-extra-level` merge of `master`, its 2 `D1000` reads change:
+  - `D1000.kt:556`: `!ready || betweenReadyAndEndBossSpawnEvent` becomes `bossComponent.phase != BossPhase.FIGHT`;
+  - `D1000.kt:583`: `ready` becomes `bossComponent.phase != BossPhase.ENTRANCE`.
