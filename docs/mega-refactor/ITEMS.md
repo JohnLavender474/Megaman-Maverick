@@ -125,7 +125,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 115 | [Partial sink and stuck behavior in sand](items/115-partial-sink-stuck-in-sand/ITEM.md) | feature | `O4`, `O1` | idea | none | | |
 | 116 | [Body senses as typed state, then a sense history](items/116-body-senses/ITEM.md) | refactor | `O1`, `O5` | idea | none | | |
 | 117 | [Crush with a falling pushable block](items/117-pushable-block-crush/ITEM.md) | feature | `O4` | idea | none | | |
-| 118 | [Boss fights as routines, rules and leases](items/118-boss-fight-routines/ITEM.md) | refactor | `O1`, `O4`, `O2` | active | none | 2026-11-02 | |
+| 118 | [Boss fights as routines, rules and leases](items/118-boss-fight-routines/ITEM.md) | refactor | `O1`, `O4`, `O2` | done | none | 2026-11-02 | 2026-11-06 |
 | 119 | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](items/119-player-left-world-event/ITEM.md) | refactor | `O2`, `O1` | planned | none | | |
 | 120 | [A player that turns hostile and comes back](items/120-hostile-player/ITEM.md) | feature | `O8`, `O2` | idea | `030`, `047c`, `047e`, `112`, `118`, `119` | | |
 | 121 | [Enemy clones of a playable character](items/121-playable-character-clones/ITEM.md) | feature | `O4`, `O8` | idea | `081` | | |
@@ -148,7 +148,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-118g-remove-old-flow`](items/118-boss-fight-routines/branches/mega-refactor-118g-remove-old-flow/process-log.md) | 118 | Remove the old boss flow: the screen branches, the route, the guards, `BOSS_READY`, `BOSS_DEAD`, `BEGIN_BOSS_SPAWN` and the parts with no caller left | merged | 2026-11-05 | 2026-11-05 |
 | [`mega-refactor-118h-bar-fill`](items/118-boss-fight-routines/branches/mega-refactor-118h-bar-fill/process-log.md) | 118 | The fight runs the boss bar fill, the screen only draws the bar, and `HealthFillType` goes | merged | 2026-11-05 | 2026-11-05 |
 | [`mega-refactor-118i-boss-phase`](items/118-boss-fight-routines/branches/mega-refactor-118i-boss-phase/process-log.md) | 118 | A `BossComponent` holds the boss phase, and a fight step starts the boss AI; `ready` and `betweenReadyAndEndBossSpawnEvent` go | merged | 2026-11-05 | 2026-11-05 |
-| [`mega-refactor-118j-gate-unlock`](items/118-boss-fight-routines/branches/mega-refactor-118j-gate-unlock/process-log.md) | 118 | 1 keyed `UNLOCK_GATE` event from a boss fight and a `GauntletMaster`; `INTERMEDIATE_BOSS_DEAD`, `GAUNTLET_CLEARED` and `AbstractBoss.bossKey` go | active | 2026-11-06 | |
+| [`mega-refactor-118j-gate-unlock`](items/118-boss-fight-routines/branches/mega-refactor-118j-gate-unlock/process-log.md) | 118 | 1 keyed `UNLOCK_GATE` event from a boss fight and a `GauntletMaster`; `INTERMEDIATE_BOSS_DEAD`, `GAUNTLET_CLEARED` and `AbstractBoss.bossKey` go | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-081a-player-lifecycle`](items/081-playable-x/branches/mega-refactor-081a-player-lifecycle/process-log.md) | 081 | Move the shared player lifecycle out of `Megaman` into functions that a second player class can call; Megaman plays the same | active | 2026-11-06 | |
 | [`mega-refactor-038a-respawn-routine`](items/038-respawn-routine/branches/mega-refactor-038a-respawn-routine/process-log.md) | 038 | One `RespawnRoutine` runs the death and the respawn in a fixed order, in place of the 5-event chain; the public events stay | active | 2026-11-06 | |
 | [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | merged | 2026-10-22 | 2026-10-22 |

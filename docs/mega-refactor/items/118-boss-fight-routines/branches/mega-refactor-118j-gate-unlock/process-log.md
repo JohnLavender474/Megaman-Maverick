@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: 1 keyed unlock event for `Gate`, from a boss fight and from a `GauntletMaster`
-- Done: plan steps 1 to 6
-- Next: owner merge approval, then the merge (plan step 7)
+- Done: plan steps 1 to 7
+- Next:
 - Blocked:
 
 ## Entries

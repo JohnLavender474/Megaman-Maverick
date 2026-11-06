@@ -1650,3 +1650,9 @@ newest entry at the bottom.
   the checks. Added the review to the automated checks of the branch `CONTRACT.md` template.
 - Contract check: not needed (docs only).
 - Follow-up: active branches whose `PLAN.md` has smoke-launch steps skip them and use the review.
+
+## 2026-11-06 — mega-refactor-118j-gate-unlock
+
+- Summary: 1 keyed `UNLOCK_GATE` event unlocks a `Gate` (squash commit `bf5dc333c`). `Gate` reads 1 key from `boss_key` or `gauntlet_key`; by owner decision (2026-11-05) the 2 keys share 1 namespace, and a gate with both throws at spawn. `GauntletMaster` sends `UNLOCK_GATE` after its last wave. `FightPlans.find` reads `boss_key` from the boss map props into `FightPlan.gateKey`, so `AbstractBoss.bossKey` went. The step `ExitMidBossFight` is now `UnlockGate`: it sends the plan key, and nothing with no key or with slot 0 dead. `INTERMEDIATE_BOSS_DEAD` and `GAUNTLET_CLEARED` went. New `GateTest`. No change that a player can see. This is the last proposed branch of `118`, so the item is done; the "Possible later" table in `ITEM.md` waits for real callers.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch and on `master` (`engine` 638 tests, `core` 885 tests, 0 failures). 6 mutation checks, each one failed at least 1 test. The branch planned and ran 4 short launches before the 2026-11-06 rule against game launches; they ran with no exception. The branch did not do the new "Review before the play test", because the rule came after its plan; the owner played all 4 control checks, and they pass. The owner approved the merge. CI did not run, because the branch was never pushed.
+- Follow-up: none from the branch `TODO.md`. Overlap: `038a` also changes `EventType`, so its merge can have a text conflict there. `038b` moves the `PLAYER_SPAWN` listener of `Gate` and must change the `PLAYER_SPAWN` case of `GateTest`.

@@ -227,7 +227,7 @@ Not a redo, but new work that is larger than the table shows:
 | `109` | idea | [PvP modes](../items/109-pvp-mode/ITEM.md) (main) |
 | `110` | idea | [Co-op in the main campaign](../items/110-co-op-campaign/ITEM.md) (main) |
 | `111` | idea | [PvP across multiple rooms](../items/111-pvp-multi-room/ITEM.md) (main) |
-| `118` | active | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) |
+| `118` | done | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) |
 | `119` | planned | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](../items/119-player-left-world-event/ITEM.md) (main) |
 | `120` | idea | [A player that turns hostile and comes back](../items/120-hostile-player/ITEM.md) |
 | `122` | idea | [Human-driven boss](../items/122-human-driven-boss/ITEM.md) |
