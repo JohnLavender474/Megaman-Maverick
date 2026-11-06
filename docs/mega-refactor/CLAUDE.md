@@ -196,8 +196,9 @@ questions.
    - `CONTRACT.md`: the behavior that the branch changes on purpose, the behavior that it must not
      change, and how to check them, for example the levels to play through and what to look for.
      Only include what the scope can affect.
-3. **Brief.** Write `docs/BRIEF.html` and publish it as a private Artifact page (load the
-   `artifact-design` skill first). Write the link in the status block of the branch
+3. **Brief.** Write `docs/BRIEF.html` from the template `_templates/branch/docs/BRIEF.html` and
+   publish it as a private Artifact page (load the `artifact-design` skill first). The template
+   holds the styles and the sections below; `038a` is a filled-in example. Write the link in the status block of the branch
    `process-log.md`. Then ask the decisions with `AskUserQuestion`. The brief fits on about one
    screen and has these parts, in this order:
    - **Goal:** one or two sentences. Then what the player sees change, or "nothing visible".
