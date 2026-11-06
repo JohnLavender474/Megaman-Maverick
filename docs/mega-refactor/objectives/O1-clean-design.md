@@ -149,6 +149,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `116` | idea | [Body senses as typed state, then a sense history](../items/116-body-senses/ITEM.md) (main) |
 | `118` | active | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) (main) |
 | `119` | planned | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](../items/119-player-left-world-event/ITEM.md) |
+| `126` | idea | [Movement and damage blocks as lock reasons](../items/126-movement-damage-lock-reasons/ITEM.md) (main) |
 
 ## Gaps with no item
 

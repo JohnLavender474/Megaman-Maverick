@@ -91,6 +91,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `120` | idea | [A player that turns hostile and comes back](../items/120-hostile-player/ITEM.md) (main) |
 | `121` | idea | [Enemy clones of a playable character](../items/121-playable-character-clones/ITEM.md) |
 | `122` | idea | [Human-driven boss](../items/122-human-driven-boss/ITEM.md) (main) |
+| `126` | idea | [Movement and damage blocks as lock reasons](../items/126-movement-damage-lock-reasons/ITEM.md) |
 
 ## Gaps with no item
 

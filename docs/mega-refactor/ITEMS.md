@@ -133,6 +133,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 123 | [X6 flat step-down off a slope](items/123-slope-flat-step-down/ITEM.md) | feature | `O4`, `O8` | idea | `017`, `068` | | |
 | 124 | [Slope pass-through from below](items/124-slope-pass-through/ITEM.md) | feature | `O4` | idea | `068` | | |
 | 125 | [Spatial or room index for spawners, if a measure shows a cost](items/125-spawner-index/ITEM.md) | refactor | `O5` | idea | none | | |
+| 126 | [Movement and damage blocks as lock reasons](items/126-movement-damage-lock-reasons/ITEM.md) | refactor | `O1`, `O8` | idea | `048` | | |
 
 ## Branches
 
