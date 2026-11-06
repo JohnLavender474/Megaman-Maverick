@@ -9,44 +9,44 @@ class LocksComponent(
 
     companion object {
         const val MAX_REASONS = 32
+
+        internal fun bit(reason: LockReason): Int {
+            val i = reason.index
+            if (i !in 0 until MAX_REASONS) throw IllegalArgumentException("$reason has index $i, outside 0 until $MAX_REASONS")
+            return 1 shl i
+        }
     }
 
-    private val reasonsByGroup = IntArray(groupCount)
+    private val groups = Array(groupCount) { LockGroupState() }
+
+    fun getLockGroup(group: LockGroup) = groups[check(group)]
 
     fun add(group: LockGroup, reason: LockReason) {
-        val i = check(group)
-        reasonsByGroup[i] = reasonsByGroup[i] or bit(reason)
+        val state = getLockGroup(group)
+        state.reasons = state.reasons or bit(reason)
         onChange?.invoke(group, true)
     }
 
     fun remove(group: LockGroup, reason: LockReason) {
-        val i = check(group)
-        reasonsByGroup[i] = reasonsByGroup[i] and bit(reason).inv()
-        if (reasonsByGroup[i] == 0) onChange?.invoke(group, false)
+        val state = getLockGroup(group)
+        state.reasons = state.reasons and bit(reason).inv()
+        if (state.reasons == 0) onChange?.invoke(group, false)
     }
 
     fun clear(group: LockGroup) {
-        val i = check(group)
-        val wasLocked = reasonsByGroup[i] != 0
-        reasonsByGroup[i] = 0
+        val state = getLockGroup(group)
+        val wasLocked = state.isLocked()
+        state.reasons = 0
         if (wasLocked) onChange?.invoke(group, false)
     }
 
-    fun isLocked(group: LockGroup) = reasonsByGroup[check(group)] != 0
+    fun isLocked(group: LockGroup) = getLockGroup(group).isLocked()
 
-    fun isLockedBy(group: LockGroup, reason: LockReason) = reasonsByGroup[check(group)] and bit(reason) != 0
-
-    override fun reset() = reasonsByGroup.fill(0)
+    override fun reset() = groups.forEach { it.reasons = 0 }
 
     private fun check(group: LockGroup): Int {
         val i = group.index
         if (i !in 0 until groupCount) throw IllegalArgumentException("$group has index $i, outside 0 until $groupCount")
         return i
-    }
-
-    private fun bit(reason: LockReason): Int {
-        val i = reason.index
-        if (i !in 0 until MAX_REASONS) throw IllegalArgumentException("$reason has index $i, outside 0 until $MAX_REASONS")
-        return 1 shl i
     }
 }

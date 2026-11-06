@@ -5,6 +5,7 @@ import com.maverick.game.engine.components.MissingComponentException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 
 private enum class TestGroup(override val index: Int) : LockGroup { A(0), B(1) }
 
@@ -27,7 +28,7 @@ class LocksTest : DescribeSpec({
             locks.remove(TestGroup.A, TestReason.X)
 
             locks.isLocked(TestGroup.A) shouldBe true
-            locks.isLockedBy(TestGroup.A, TestReason.LAST) shouldBe true
+            locks.getLockGroup(TestGroup.A).isLockedBy(TestReason.LAST) shouldBe true
 
             locks.remove(TestGroup.A, TestReason.LAST)
 
@@ -75,6 +76,61 @@ class LocksTest : DescribeSpec({
             shouldThrow<IllegalArgumentException> { locks.add(OutOfRange(-1), TestReason.X) }
             shouldThrow<IllegalArgumentException> { locks.add(TestGroup.A, OutOfRange(LocksComponent.MAX_REASONS)) }
             shouldThrow<IllegalArgumentException> { locks.isLocked(OutOfRange(5)) }
+            shouldThrow<IllegalArgumentException> { locks.getLockGroup(OutOfRange(2)) }
+            shouldThrow<IllegalArgumentException> { locks.getLockGroup(OutOfRange(-1)) }
+            shouldThrow<IllegalArgumentException> {
+                locks.getLockGroup(TestGroup.A).isLockedBy(OutOfRange(LocksComponent.MAX_REASONS))
+            }
+        }
+
+        it("getLockGroup returns the same object on each call, one per group") {
+            val locks = LocksComponent(2)
+            val a = locks.getLockGroup(TestGroup.A)
+
+            locks.add(TestGroup.A, TestReason.X)
+            locks.reset()
+
+            locks.getLockGroup(TestGroup.A) shouldBeSameInstanceAs a
+            (locks.getLockGroup(TestGroup.B) === a) shouldBe false
+        }
+
+        it("the group object follows add, remove, clear and reset") {
+            val locks = LocksComponent(2)
+            val a = locks.getLockGroup(TestGroup.A)
+            val b = locks.getLockGroup(TestGroup.B)
+
+            a.isLocked() shouldBe false
+            a.isLockedBy(TestReason.X) shouldBe false
+
+            locks.add(TestGroup.A, TestReason.X)
+            locks.add(TestGroup.A, TestReason.Y)
+
+            a.isLocked() shouldBe true
+            a.isLockedBy(TestReason.X) shouldBe true
+            a.isLockedBy(TestReason.Y) shouldBe true
+            a.isLockedBy(TestReason.LAST) shouldBe false
+            b.isLocked() shouldBe false
+            b.isLockedBy(TestReason.X) shouldBe false
+
+            locks.remove(TestGroup.A, TestReason.X)
+
+            a.isLocked() shouldBe true
+            a.isLockedBy(TestReason.X) shouldBe false
+            a.isLockedBy(TestReason.Y) shouldBe true
+
+            locks.clear(TestGroup.A)
+
+            a.isLocked() shouldBe false
+            a.isLockedBy(TestReason.Y) shouldBe false
+
+            locks.add(TestGroup.A, TestReason.LAST)
+            locks.add(TestGroup.B, TestReason.Y)
+            locks.reset()
+
+            a.isLocked() shouldBe false
+            a.isLockedBy(TestReason.LAST) shouldBe false
+            b.isLocked() shouldBe false
+            b.isLockedBy(TestReason.Y) shouldBe false
         }
 
         it("calls the hook on each add, and with false when a group becomes free") {
