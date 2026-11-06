@@ -1657,6 +1657,17 @@ newest entry at the bottom.
 - Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch and on `master` (`engine` 638 tests, `core` 885 tests, 0 failures). 6 mutation checks, each one failed at least 1 test. The branch planned and ran 4 short launches before the 2026-11-06 rule against game launches; they ran with no exception. The branch did not do the new "Review before the play test", because the rule came after its plan; the owner played all 4 control checks, and they pass. The owner approved the merge. CI did not run, because the branch was never pushed.
 - Follow-up: none from the branch `TODO.md`. Overlap: `038a` also changes `EventType`, so its merge can have a text conflict there. `038b` moves the `PLAYER_SPAWN` listener of `Gate` and must change the `PLAYER_SPAWN` case of `GateTest`.
 
+## 2026-11-06 — master (docs)
+
+- Summary: a passed play test with no other request from the owner is now the approval to merge.
+  Claude does not ask for merge approval. Claude resolves simple merge conflicts itself, runs the
+  automated checks again and merges. Claude stops and tells the owner when a conflict is
+  substantial, when the checks fail after a resolution, or when another active branch or item
+  can conflict with the merge. Changed "Branch merge", step 2, and the parent merge in
+  "Parent branches".
+- Contract check: not needed (docs only).
+- Follow-up: none.
+
 ## 2026-11-06 — mega-refactor-081a-player-lifecycle
 
 - Summary: the shared player lifecycle and rules left `Megaman` (squash commit `7a577b4cc`). New `players/PlayerLifecycle.kt` (`playerSpawnStart`, `playerSpawnEnd`, `playerOnDestroy`, `playerOnRoomTransition`, `killPlayerIfOutsideLevel`) and `players/PlayerRules.kt` (`playerInvincible`, `playerCanMove`, `playerAllowsDamageFrom`, `playerAfterDamage`, `playerEditDamage`). By owner decision (2026-11-05) they are free functions, not a base class or locks; stun, freeze and damage as lock reasons went to `126`. `MegamanDamageNegotiator` is now `players/PlayerDamageNegotiator.kt`. The rules read their components with `require`, so a player class that lacks one throws. The spawn is 2 shared calls, so the gravity set stays before the lock clears. `Megaman.kt` went from 535 to 465 lines. New `players/README.md`. No change that a player can see; the out-of-bounds error text now names "the player".

@@ -300,9 +300,12 @@ makes sure that **every** manual check in the contract will compile, launch and 
 
 1. Do the checks in the branch `docs/CONTRACT.md`: the automated checks, the review before the
    play test, and then the user's play test. Write the result in the branch process log.
-2. Get the user's explicit approval to merge this branch. Approval for one branch never covers
-   another branch, also when branches run in parallel. Merge only one branch at a time. If
-   `master` changed since the branch last took it in, compare the two
+2. **Merge approval.** When the owner reports that the play test passed and adds no other
+   request, remark or question, that report is the approval to merge (owner decision,
+   2026-11-06). Do not ask "may I merge?". Go on with the merge. When the owner reports a
+   problem, asks for a change or asks a question, do not merge: handle it first. The approval
+   covers only the branch that the owner tested, also when branches run in parallel. Merge only
+   one branch at a time. If `master` changed since the branch last took it in, compare the two
    (`git diff --stat <branch>...master`):
    - If `master`'s new changes touch the same files or systems as the branch (for example the
      same classes, the build files, or tests that the branch's changes affect), first merge
@@ -310,6 +313,24 @@ makes sure that **every** manual check in the contract will compile, launch and 
      tell the user the result.
    - If they do not (for example docs only, or unrelated code), skip that merge. The build check
      on `master` after the squash (step 9) catches problems.
+
+   **Conflicts and risks.** Before the squash, read the folders of the other active branches
+   again (see "Parallel branches").
+   - **Simple conflicts:** resolve them yourself and continue the merge. A conflict is simple
+     when the right result is clear from the two sides and keeps the behavior of both, for
+     example imports, independent hunks next to each other, a list that both sides added to, or
+     docs. After you resolve them, run the contract's automated checks again. They must pass.
+     Write each resolved file in the branch process log.
+   - **Stop and tell the owner, and do not merge,** when:
+     - a conflict is substantial: both sides change the same logic, the right result needs a
+       design choice, or a resolution can change gameplay;
+     - the automated checks fail after you resolve the conflicts;
+     - another active branch or in-progress item can conflict with this merge or get unintended
+       results from it, for example a branch that changes the same classes or systems, or that
+       depends on behavior that this branch changes.
+
+     Tell the owner what you found (the files, the branches and the risk) and give options
+     with a recommendation.
 3. Squash-merge the branch into `master`. Do not carry the branch commits over. From the main
    checkout: `git merge --squash <branch>`, then one commit named after the branch goal. List
    the main changes in the commit message.
@@ -355,7 +376,8 @@ An item that uses a parent branch (see "Item start: merge target") collects its 
   1. Merge `master` into the parent and run the automated checks.
   2. The user plays the combined result. Use the manual checks of the merged branches; the user may choose a subset.
      Write the result in `process-log.md`.
-  3. Get the user's explicit approval for this parent merge.
+  3. Merge approval, conflicts and risks: the same rules as in "Branch merge", step 2. A passed
+     play test with no other request is the approval.
   4. From the main checkout: `git merge --no-ff mega-refactor-<id>-master`, with a message that lists the merged
      branches. Do not squash: each branch keeps its own squash commit on `master`, and the SHAs in
      `.git-blame-ignore-revs` stay valid.
