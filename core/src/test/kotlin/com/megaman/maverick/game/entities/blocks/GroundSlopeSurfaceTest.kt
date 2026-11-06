@@ -1,15 +1,18 @@
 package com.megaman.maverick.game.entities.blocks
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GamePolygon
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.hasBodyLabel
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
@@ -103,6 +106,22 @@ class GroundSlopeSurfaceTest : DescribeSpec({
 
         it("has the slope label after the spawn") {
             spawned(0f, 0f, 256f, 64f, ConstKeys.RIGHT).body.hasBodyLabel(BodyLabel.SLOPE) shouldBe true
+        }
+    }
+
+    describe("the shapes") {
+        val slope = spawned(0f, 0f, 256f, 64f, ConstKeys.RIGHT)
+        val shapes = slope.getComponent(DrawableShapesComponent::class)!!
+
+        it("draws nothing outside the debug view, so the map tiles show the slope") {
+            shapes.prodShapeSuppliers.mapNotNull { it() } shouldBe emptyList()
+        }
+
+        it("draws the triangle as a line in the debug view") {
+            val drawn = shapes.debugShapeSuppliers.mapNotNull { it() }
+            drawn shouldContain slope.blockFixture
+            slope.blockFixture.getShape().shouldBeInstanceOf<GamePolygon>()
+            slope.blockFixture.drawingShapeType shouldBe ShapeRenderer.ShapeType.Line
         }
     }
 })

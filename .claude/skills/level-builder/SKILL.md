@@ -166,7 +166,8 @@ Slopes are for extra levels only (X6-style). The main stages have no slopes. A s
 
 The CLI cannot make a named object with a property in a custom layer. Add the slopes with a small
 script (unique ids, raise `nextobjectid`, and `nextlayerid` for a new layer) or by hand in Tiled.
-A `GroundSlope` draws its own filled triangle, so do not paint tiles in its box. See
+A `GroundSlope` draws nothing in play; only the debug view outlines its triangle. Paint slope tiles
+in its box, as for any other block. See
 `RefactorTest068.tmx` for examples of each case.
 
 ### Iteration 3 — Player spawns

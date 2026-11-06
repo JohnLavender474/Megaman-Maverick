@@ -6,6 +6,7 @@ import com.maverick.game.engine.state.Step
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
+import com.megaman.maverick.game.entities.bosses.D1000
 import com.megaman.maverick.game.entities.bosses.DesertMan
 import com.megaman.maverick.game.entities.bosses.ElecDevil
 import com.megaman.maverick.game.entities.bosses.GlacierMan
@@ -28,6 +29,7 @@ object FightPlans {
     fun find(bossName: String, props: Properties): FightPlan {
         val music = when (bossName) {
             BigAssMaverickRobot.TAG -> MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO
+            D1000.TAG -> MusicAsset.MMX6_BOSS_FIGHT_MUSIC
             ElecDevil.TAG -> MusicAsset.JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC
             GutsTank.TAG -> MusicAsset.MMX6_SIGMA_2_BATTLE_INTRO_MUSIC
             TimberWoman.TAG, MoonMan.TAG, ReactorMan.TAG,

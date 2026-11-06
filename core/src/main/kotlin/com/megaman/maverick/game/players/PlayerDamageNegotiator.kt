@@ -13,10 +13,17 @@ import com.megaman.maverick.game.entities.blocks.PropellerPlatform
 import com.megaman.maverick.game.entities.blocks.RocketPlatform
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand
+import com.megaman.maverick.game.entities.bosses.D1000
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.enemies.HoverGunner
+import com.megaman.maverick.game.entities.enemies.Junkroid
+import com.megaman.maverick.game.entities.enemies.MetaDridler
+import com.megaman.maverick.game.entities.enemies.MetaWheelF
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.hazards.Laser
+import com.megaman.maverick.game.entities.projectiles.D1000Bomb
+import com.megaman.maverick.game.entities.projectiles.X6Shot
 import com.megaman.maverick.game.entities.utils.hardMode
 
 // TODO: a player class cannot give its own entries yet; item 081 branch 081b adds an overrides parameter, with X as
@@ -28,6 +35,13 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
     private val custom = objectMapOf(
         BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
         BigAssMaverickRobot.TAG pairTo dmgNeg(2),
+        D1000.TAG pairTo dmgNeg(6),
+        X6Shot.TAG pairTo dmgNeg { (it as X6Shot).type.damage },
+        Junkroid.TAG pairTo dmgNeg(4),
+        HoverGunner.TAG pairTo dmgNeg(3),
+        MetaWheelF.TAG pairTo dmgNeg(4),
+        MetaDridler.TAG pairTo dmgNeg(8),
+        D1000Bomb.TAG pairTo dmgNeg(6),
         PropellerPlatform.TAG pairTo dmgNeg(1),
         RocketPlatform.TAG pairTo dmgNeg(1),
         Laser.TAG pairTo dmgNeg { if (services.gameState.hardMode) 15 else 8 },

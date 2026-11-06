@@ -199,6 +199,12 @@ enum class LevelDefinition(
                 tag != Life.TAG && tag != WeaponEnergyBulb.TAG
             }
         ),
+    ),
+    X6_INTRO(
+        type = LevelType.EXTRA_LEVEL,
+        tmxMapSource = "X6Intro_16x14_v1.tmx",
+        music = MusicAsset.MMX6_INTRO_STAGE_MUSIC,
+        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN }
     );
 
     // TODO: Gauntlet 2 is retired: its waves need JetMet, and CeilingCrusher has a pooled scratch object fault; restore

@@ -1,8 +1,6 @@
 package com.megaman.maverick.game.entities.blocks
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.math.MathUtils
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
@@ -10,8 +8,6 @@ import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GamePolygon
-import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
-import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
@@ -40,8 +36,6 @@ class GroundSlope(services: MegaServices) : Block(services) {
         private const val STEEP_STEP_WIDTH = 0.125f
         private const val RATIO_TOLERANCE = 0.01f
         private const val STEP_TOLERANCE = 0.01f * ConstVals.PPM
-
-        private val FILL_COLOR = Color(0.45f, 0.3f, 0.6f, 1f)
     }
 
     var highOnRight = true
@@ -52,24 +46,6 @@ class GroundSlope(services: MegaServices) : Block(services) {
 
     private val triangle = GamePolygon()
     private val vertices = FloatArray(6)
-
-    private val fill = object : IDrawableShape {
-        override var drawingColor = FILL_COLOR
-        override var drawingShapeType = ShapeType.Filled
-
-        override fun draw(renderer: ShapeRenderer): IDrawableShape {
-            renderer.color = drawingColor
-            renderer.set(drawingShapeType)
-            val topX = if (highOnRight) body.getMaxX() else body.getX()
-            renderer.triangle(body.getX(), body.getY(), body.getMaxX(), body.getY(), topX, body.getMaxY())
-            return this
-        }
-    }
-
-    override fun init(vararg params: Any) {
-        super.init()
-        getComponent(DrawableShapesComponent::class)!!.prodShapeSuppliers.add { fill }
-    }
 
     override fun defineBodyComponent(): BodyComponent {
         val component = super.defineBodyComponent()
