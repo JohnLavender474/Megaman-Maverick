@@ -44,6 +44,18 @@ class LaunchOptionsResolverTest : DescribeSpec({
         }
     }
 
+    describe("--players with --level") {
+        it("rejects 2 players on a level with no Megaman") {
+            val result = resolve(LaunchOptions(level = "X6_INTRO", players = "2"))
+            result.resolved shouldBe null
+            result.errors[0] shouldContain "--level X6_INTRO plays only with 1 player"
+        }
+
+        it("accepts 2 players on a Megaman level") {
+            resolve(LaunchOptions(level = "TEST_1", players = "2")).resolved!!.players shouldBe 2
+        }
+    }
+
     describe("--mode") {
         it("is single with 1 player and co-op with 2 players by default") {
             resolve(LaunchOptions()).resolved!!.mode shouldBe GameMode.SINGLE

@@ -41,7 +41,7 @@ import com.megaman.maverick.game.entities.focus
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
-import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
+import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon

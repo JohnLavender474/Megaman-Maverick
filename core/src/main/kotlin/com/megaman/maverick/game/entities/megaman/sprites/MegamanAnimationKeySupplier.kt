@@ -12,7 +12,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
+import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.components.fullyCharged
 import com.megaman.maverick.game.entities.megaman.components.halfCharged
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon

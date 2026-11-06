@@ -323,7 +323,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
         )
 
-        cameraFollow.setFocus(gameCamera, player.focus)
         game.cameraController.reset()
 
         roomHandler = LevelRoomHandler(game.services, roomBounds, roomTransition, { player }) {
@@ -351,6 +350,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun start(tmxMapSource: String) {
         if (!initialized) throw IllegalStateException("must call init() before start()")
+        cameraFollow.setFocus(gameCamera, player.focus)
         super.start(tmxMapSource)
 
         game.resetAutoPerfGracePeriod()
@@ -561,7 +561,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.ADD_WEAPON_ENERGY -> {
                 val ammo = event.getProperty(ConstKeys.VALUE, Int::class)!!
                 val slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!
-                playerStatsHandler.addWeaponEnergy(game.players.get(slot) as Megaman, ammo)
+                // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
+                val player = game.players.get(slot)!!
+                if (player is Megaman) playerStatsHandler.addWeaponEnergy(player, ammo)
             }
 
             EventType.ADD_PLAYER_HEALTH -> {

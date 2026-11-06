@@ -40,6 +40,7 @@ import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
+import com.megaman.maverick.game.players.bodyOverGround
 
 const val MEGAMAN_BODY_WIDTH = 1f
 const val MEGAMAN_BODY_HEIGHT = 1.5f
@@ -56,9 +57,6 @@ val BEHAVIORS_TO_END_ON_BOUNCE = gdxArrayOf(
     BehaviorType.CLIMBING,
     BehaviorType.CROUCHING
 )
-
-val Megaman.bodyOverGround: Boolean
-    get() = (body.getProperty(ConstKeys.BODY_OVER_GROUND) as () -> Boolean).invoke()
 
 internal fun Megaman.defineBodyComponent(): BodyComponent {
     val body = Body(BodyType.DYNAMIC)

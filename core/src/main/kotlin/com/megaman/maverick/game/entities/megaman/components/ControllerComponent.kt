@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
+import com.megaman.maverick.game.players.bodyOverGround
 
 const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 

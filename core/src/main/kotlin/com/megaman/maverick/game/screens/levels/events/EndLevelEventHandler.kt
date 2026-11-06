@@ -170,7 +170,11 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
             game.players.forEach { it.setPlayPhase(PlayPhase.POST_PLAY) }
 
-            val weaponKey = (player as Megaman).currentWeapon.name
+            // TODO: another character (X, item 081) beams out with Megaman's buster beam until it has its own beam art
+            val weaponKey = when (val megaman = player) {
+                is Megaman -> megaman.currentWeapon.name
+                else -> MegamanWeapon.MEGA_BUSTER.name
+            }
             beamRegion = BEAM_REGIONS.get(weaponKey) ?: BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)
             beamTransAnim = (BEAM_TRANS_ANIMS.get(weaponKey) ?: BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name))
                 .also { it.reset() }

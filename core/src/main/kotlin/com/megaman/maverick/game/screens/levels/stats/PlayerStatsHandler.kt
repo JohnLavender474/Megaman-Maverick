@@ -111,8 +111,11 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             weaponBars.put(it, weaponBar)
         }
 
-        weaponBarSupplier = {
-            val current = (player as Megaman).currentWeapon
+        weaponBarSupplier = supplier@{
+            // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
+            val megaman = player
+            if (megaman !is Megaman) return@supplier null
+            val current = megaman.currentWeapon
             if (current == MegamanWeapon.MEGA_BUSTER) null else weaponBars.get(current)
         }
     }

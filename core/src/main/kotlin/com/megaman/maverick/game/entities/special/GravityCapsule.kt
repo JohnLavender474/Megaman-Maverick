@@ -52,7 +52,7 @@ package com.megaman.maverick.game.entities.special
 // import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 // import com.megaman.maverick.game.entities.contracts.megaman
 // import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
-// import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
+// import com.megaman.maverick.game.players.bodyOverGround
 // import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 // import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 // import com.megaman.maverick.game.events.EventType

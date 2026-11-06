@@ -1,78 +1,84 @@
 MegamanX.png
-size: 1024, 916
+size: 550, 1016
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 pma: false
 air_damaged
-  bounds: 701, 1, 48, 144
+  bounds: 399, 677, 48, 144
 climb
-  bounds: 151, 243, 96, 144
+  bounds: 301, 677, 96, 144
 climb_finish
-  bounds: 351, 1, 48, 96
+  bounds: 251, 731, 48, 96
 climb_shoot
-  bounds: 1, 1, 48, 48
+  bounds: 51, 965, 48, 48
 climb_start
-  bounds: 51, 1, 48, 48
+  bounds: 101, 965, 48, 48
 crouch
-  bounds: 401, 1, 48, 96
+  bounds: 201, 779, 48, 96
 crouch_shoot
-  bounds: 451, 1, 48, 96
+  bounds: 151, 869, 48, 96
 damaged
-  bounds: 751, 1, 48, 144
+  bounds: 449, 677, 48, 144
 dash
-  bounds: 501, 1, 48, 96
+  bounds: 201, 877, 48, 96
 dash_shoot
-  bounds: 551, 1, 48, 96
+  bounds: 351, 823, 48, 96
 death
-  bounds: 951, 1, 48, 240
+  bounds: 251, 489, 48, 240
 death_orb
-  bounds: 901, 1, 48, 192
+  bounds: 501, 629, 48, 192
 jump
-  bounds: 249, 243, 48, 288
+  bounds: 151, 579, 48, 288
 jump_shoot
-  bounds: 299, 243, 48, 288
+  bounds: 201, 489, 48, 288
+jump_shoot_v2
+  bounds: 301, 435, 48, 240
+jump_v2
+  bounds: 351, 435, 48, 240
 land
-  bounds: 101, 1, 48, 48
+  bounds: 151, 967, 48, 48
 land_shoot
-  bounds: 151, 1, 48, 48
+  bounds: 351, 921, 48, 48
 low_health
-  bounds: 1, 243, 48, 240
+  bounds: 401, 435, 48, 240
 r13_unknown
-  bounds: 201, 1, 48, 48
+  bounds: 401, 921, 48, 48
 run
-  bounds: 399, 243, 48, 384
+  bounds: 477, 1, 48, 384
 run_shoot
-  bounds: 449, 243, 48, 384
+  bounds: 51, 579, 48, 384
 run_trans
-  bounds: 251, 1, 48, 48
+  bounds: 451, 921, 48, 48
 run_trans_shoot
-  bounds: 301, 1, 48, 48
+  bounds: 501, 921, 48, 48
 sabre_air
-  bounds: 549, 243, 48, 432
+  bounds: 377, 1, 48, 432
 sabre_air_arc
-  bounds: 805, 243, 104, 486
+  bounds: 165, 1, 104, 486
 sabre_floor
-  bounds: 599, 243, 48, 432
+  bounds: 427, 1, 48, 432
 sabre_floor_arc
-  bounds: 911, 243, 112, 576
+  bounds: 51, 1, 112, 576
 sabre_wall
-  bounds: 499, 243, 48, 384
+  bounds: 101, 579, 48, 384
 sabre_wall_arc
-  bounds: 699, 243, 104, 432
+  bounds: 271, 1, 104, 432
 spawn_in
-  bounds: 649, 243, 48, 672
+  bounds: 1, 1, 48, 672
 spawn_out
-  bounds: 349, 243, 48, 336
+  bounds: 1, 675, 48, 336
 stand
-  bounds: 51, 243, 48, 240
+  bounds: 451, 435, 48, 240
+stand_simplified
+  bounds: 401, 823, 48, 96
 victory
-  bounds: 101, 243, 48, 240
+  bounds: 501, 387, 48, 240
 walljump
-  bounds: 801, 1, 48, 144
+  bounds: 251, 829, 48, 144
 walljump_shoot
-  bounds: 851, 1, 48, 144
+  bounds: 301, 823, 48, 144
 wallslide
-  bounds: 601, 1, 48, 96
+  bounds: 451, 823, 48, 96
 wallslide_shoot
-  bounds: 651, 1, 48, 96
+  bounds: 501, 823, 48, 96

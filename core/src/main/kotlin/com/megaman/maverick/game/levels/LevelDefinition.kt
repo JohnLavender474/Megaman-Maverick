@@ -14,6 +14,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.players.PlayerCharacter
 
 enum class LevelDefinition(
     val type: LevelType,
@@ -22,7 +23,8 @@ enum class LevelDefinition(
     val music: MusicAsset? = null,
     val mugshotAtlas: String? = null,
     val mugshotRegion: String? = null,
-    val levelOverride: LevelOverride? = null
+    val levelOverride: LevelOverride? = null,
+    val characters: Set<PlayerCharacter> = setOf(PlayerCharacter.MEGAMAN)
 ) : IAsset {
     INTRO_STAGE(
         type = LevelType.INTRO_LEVEL,
@@ -178,6 +180,13 @@ enum class LevelDefinition(
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
+    REFACTOR_TEST_081(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "RefactorTest081.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
+        characters = setOf(PlayerCharacter.X)
+    ),
     FIX_TEST_SPAWNER_REARM(
         type = LevelType.TEST_LEVEL,
         tmxMapSource = "FixTestSpawnerRearm.tmx",
@@ -210,7 +219,8 @@ enum class LevelDefinition(
         type = LevelType.EXTRA_LEVEL,
         tmxMapSource = "X6Intro_16x14_v1.tmx",
         music = MusicAsset.MMX6_INTRO_STAGE_MUSIC,
-        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN }
+        screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
+        characters = setOf(PlayerCharacter.X)
     );
 
     // TODO: Gauntlet 2 is retired: its waves need JetMet, and CeilingCrusher has a pooled scratch object fault; restore

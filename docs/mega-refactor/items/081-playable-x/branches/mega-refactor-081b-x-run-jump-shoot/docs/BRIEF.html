@@ -1,0 +1,151 @@
+<title>081b X Phase 1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* Layout: one narrow column, a cartridge-label header band, numbered sections only where order matters */
+:root {
+  --bg: #f3f5f8; --fg: #1b2230; --muted: #5b6577; --line: #d5dbe5;
+  --panel: #ffffff; --accent: #1f6fd1; --rec: #0f8a5f;
+  --display: "Chakra Petch", "Trebuchet MS", sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151c; --fg: #e3e8f0; --muted: #98a2b3; --line: #2a3240;
+  --panel: #181e28; --accent: #6aa8f5; --rec: #4cc999; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #11151c; --fg: #e3e8f0; --muted: #98a2b3; --line: #2a3240;
+  --panel: #181e28; --accent: #6aa8f5; --rec: #4cc999; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--body); }
+main { max-width: 760px; margin: 0 auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 26px; }
+header { border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
+.eyebrow { font: 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 600 30px/1.15 var(--display); margin: 4px 0 6px; text-wrap: balance; }
+h2 { font: 600 18px var(--display); margin: 0 0 8px; letter-spacing: .02em; }
+p { margin: 0; max-width: 68ch; }
+section { min-width: 0; }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px; overflow-x: auto;
+  font: 13px/1.5 var(--mono); margin: 8px 0 0; }
+pre.mermaid { background: var(--panel); text-align: center; }
+code { font-family: var(--mono); font-size: .92em; }
+.decs { display: flex; flex-direction: column; gap: 12px; }
+.dec { border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 12px 14px; }
+.dec h3 { font: 600 15px var(--body); margin: 0 0 4px; }
+.dec ul { margin: 6px 0 0; padding-left: 20px; }
+.rec { color: var(--rec); font-weight: 600; }
+ul { margin: 0; padding-left: 20px; }
+li { margin: 2px 0; }
+.small { color: var(--muted); font-size: 13px; }
+</style>
+<main>
+<header>
+  <div class="eyebrow">Item 081 · branch 081b · brief</div>
+  <h1>X Phase 1: run, jump, buster</h1>
+  <p><code>MegamanX</code> plays slot 0 on <code>X6_INTRO</code>, with stand, run, jump, fall and the buster. Megaman is dormant there. <strong>What the player sees:</strong> X in the X6 intro level; every other level is as before.</p>
+</header>
+
+<section>
+  <h2>Before and after</h2>
+<pre class="mermaid">
+flowchart LR
+  subgraph Before
+    PC1[postCreate] --> M1[Megaman in slot 0]
+    SL1[startLevel] --> LS1[level screen: focus set once]
+  end
+  subgraph After
+    PC2[postCreate] --> R[roster: Megaman, X]
+    SL2[startLevel] --> SW{level.characters}
+    SW -- MEGAMAN --> M2[Megaman in slot 0]
+    SW -- X --> X2[MegamanX in slot 0]
+    SW --> LS2[level screen: focus set at each start]
+    X2 --> P[players/ shared functions from 081a]
+    M2 --> P
+  end
+</pre>
+</section>
+
+<section>
+  <h2>Code sketch</h2>
+<pre>X6_INTRO(
+    type = LevelType.EXTRA_LEVEL,
+    tmxMapSource = "X6Intro_16x14_v1.tmx",
+    characters = setOf(PlayerCharacter.X),
+)
+
+fun startLevel(level: LevelDefinition) {
+    putInSlot0(level.characters.single())   // throws with 2 players on an X level
+    levelScreen.start(...)
+}
+
+class MegamanX(services) : AbstractHealthEntity(services), IBodyEntity, ... {
+    override val damageNegotiator = PlayerDamageNegotiator(this)
+    override val invincible get() = playerInvincible
+    override fun onSpawn(p) { super.onSpawn(p); playerSpawnStart(p); ...; playerSpawnEnd() }
+}
+
+jumpBehavior(JumpParams(canStart = { ... }, jumpSpeed = { ... }, onJump = { ... }))  // Megaman and X</pre>
+</section>
+
+<section>
+  <h2>Decisions</h2>
+  <div class="decs">
+    <div class="dec">
+      <h3>D1. The ladder in <code>room1</code> blocks X</h3>
+      <p>The route goes down a ladder at tile 62. Only a climbing body passes its top, and phase 1 has no climb, so X cannot finish the level.</p>
+      <ul>
+        <li><span class="rec">Recommended:</span> a temporary rule with a <code>TODO</code>: X drops through a ladder top while <code>DOWN</code> is held.</li>
+        <li>Add climb to phase 1.</li>
+        <li>Leave it blocked until climb comes.</li>
+      </ul>
+    </div>
+    <div class="dec">
+      <h3>D2. Charge feedback</h3>
+      <p>X has no charge art, and <code>D1000</code> takes damage only from a full charge.</p>
+      <ul>
+        <li><span class="rec">Recommended:</span> a color flash on X in code, with a <code>TODO</code> for real art.</li>
+        <li>The charge sound only.</li>
+        <li>Recolored charge frames from a script, now.</li>
+      </ul>
+    </div>
+    <div class="dec">
+      <h3>D3. Movement values</h3>
+      <p>The X6 values in Maverick units: walk 3.75 tiles/s, jump about 2.05 tiles high. Megaman runs at 6 tiles/s. The map is at the X6 scale.</p>
+      <ul>
+        <li><span class="rec">Recommended:</span> use the X6 values as they are, in one values file, and tune after the play test.</li>
+        <li>Scale them toward Megaman's feel now.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small" style="margin-top:8px">Already decided: the weapon reads in the screens use <code>is Megaman</code> workarounds with <code>TODO</code>s for <code>024</code>. The stand shot uses the <code>land_shoot</code> pose, and the <code>jump</code> strip splits into rise and fall frames.</p>
+</section>
+
+<section>
+  <h2>Risks</h2>
+  <ul>
+    <li>The <code>jumpBehavior</code> parameters touch Megaman's jump. A jump-height test runs before and after, and there is a control play check.</li>
+    <li>A swap while a player is in the engine. A fail-fast check guards it.</li>
+    <li>4 screen casts crash with X today (HUD, weapon-energy drop, beam-out, progress reset). Each gets a fix and a test.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Play checks</h2>
+  <p class="small">From <code>.worktrees/mega-refactor-081b-x-run-jump-shoot</code>. You run them after the work, not now.</p>
+  <ul>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room flat</code>: run, jump, fall, camera.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room slope</code>: walk and jump on a slope.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room targets</code>: tap, half and full charge.</li>
+    <li><code>./run-game-alpha.sh --level X6_INTRO --room room1</code>: HUD, enemies, the ladder.</li>
+    <li><code>./run-game-alpha.sh --level X6_INTRO --room room2</code>: the boss with a full charge, then the beam-out.</li>
+    <li>Extras menu: <code>X6_INTRO</code>, game over, continue; then a Megaman extra level.</li>
+    <li><code>./run-game-alpha.sh --level GLACIER_MAN --room room1</code>: Megaman as before (control).</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Details</h2>
+  <p class="small"><code>docs/SCOPE.md</code> and <code>docs/CONTRACT.md</code> in the branch folder <code>items/081-playable-x/branches/mega-refactor-081b-x-run-jump-shoot/</code>.</p>
+</section>
+</main>

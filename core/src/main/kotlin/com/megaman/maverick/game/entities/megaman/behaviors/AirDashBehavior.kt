@@ -16,7 +16,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
+import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.*
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.preserveMomentum

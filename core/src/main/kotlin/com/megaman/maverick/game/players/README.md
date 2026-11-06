@@ -14,10 +14,9 @@ The examples in this file are hypothetical. The real functions are in `PlayerLif
 
 ## Status
 
-`Megaman` is the only player class. X (`081b`) is the second caller. Some rules still have another owner, and a
-`TODO` at the function names it: the difficulty change of the damage (`023`), the owner chain of a shot (`030`), the
-spawn event as a level reset (`038`), the death event (`119`), the health base class (`048`), and the locks for stun,
-freeze and damage (`126`).
+`Megaman` and `MegamanX` (`081b`) are the player classes. Some rules still have another owner, and a `TODO` at the
+function names it: the difficulty change of the damage (`023`), the owner chain of a shot (`030`), the death event
+(`119`), the health base class (`048`), and the locks for stun, freeze and damage (`126`). Only slot 0 can change its character, at the level start (`047` for co-op, `113` for a select screen).
 
 ## The parts
 
@@ -26,6 +25,8 @@ flowchart LR
     Class["a player class<br/>(for example Megaman)"] -- "its hooks call" --> Lifecycle["PlayerLifecycle.kt<br/>spawn, destroy, room transition,<br/>out-of-level kill"]
     Class -- "its rules call" --> Rules["PlayerRules.kt<br/>invincible, can move,<br/>damage permission, damage tail, damage edit"]
     Class -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
+    Class -- "its behaviors" --> Jump["PlayerJump.kt<br/>the jump, with the class's JumpParams"]
+    Game["the game, at level start"] -- "putInSlot0" --> Roster["PlayerRoster<br/>one entity per PlayerCharacter;<br/>slot 0 gets the level's character"]
     Lifecycle --> State["the mechanism components<br/>(entities/state/)"]
     Rules --> State
 ```
@@ -70,4 +71,7 @@ override val invincible get() = playerInvincible
   ones it reads with `require`.
 - **The gravity set comes before the lock clears** in `playerSpawnStart`. The gravity set can start a camera turn
   that locks `MOVEMENT`, and the lock clear must remove it.
-- **One copy.** A rule that two player classes need goes here, not into each class.
+- **One copy.** A rule that two player classes need goes here, not into each class. A difference between the
+  classes is a parameter (for example `JumpParams`), not a type check in the shared code.
+- **Swap only out of the engine.** `PlayerRoster.putInSlot0` throws when the outgoing player is in the engine. Call it
+  before the level screen starts, and set the camera focus after it.

@@ -6,6 +6,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.state.GameMode
+import com.megaman.maverick.game.players.PlayerCharacter
 
 sealed interface LaunchStart {
 
@@ -65,6 +66,8 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val healthTanks = parseEnumListOption<MegaHealthTank>("--healthTanks", options.healthTanks, errors)
     val players = parsePlayers(options.players, errors)
     val mode = parseMode(options.mode, players, errors)
+    if (level != null && players != null && players > 1 && PlayerCharacter.MEGAMAN !in level.characters)
+        errors.add("--level $level plays only with 1 player (${level.characters.joinToString()}); remove --players.")
 
     if (errors.isNotEmpty()) return LaunchResult(null, errors)
 

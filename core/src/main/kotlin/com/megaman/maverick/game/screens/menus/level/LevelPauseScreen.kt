@@ -283,7 +283,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                                 }
 
                                 else -> {
-                                    { (player as Megaman).weaponsHandler.getAmmo(element) }
+                                    // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
+                                    {
+                                        val megaman = player
+                                        if (megaman is Megaman) megaman.weaponsHandler.getAmmo(element) else 0
+                                    }
                                 }
                             }
                             val bitsBar = LevelPauseScreenBitsBar(
@@ -566,7 +570,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
         override fun onSelect(delta: Float): Boolean {
             GameLogger.debug(TAG, "createWeaponButton(): onSelect(): weapon=$weapon")
-            (player as Megaman).currentWeapon = weapon
+            // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
+            val megaman = player
+            if (megaman is Megaman) megaman.currentWeapon = weapon
             return true
         }
 

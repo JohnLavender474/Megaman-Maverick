@@ -2,7 +2,7 @@ package com.megaman.maverick.game.entities.megaman
 
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.megaman.components.bodyOverGround
+import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing

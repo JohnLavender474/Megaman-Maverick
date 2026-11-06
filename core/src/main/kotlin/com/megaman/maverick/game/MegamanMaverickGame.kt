@@ -86,6 +86,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megamanx.MegamanX
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.state.PlayerProgressComponent
 import com.megaman.maverick.game.events.EventType
@@ -98,6 +99,8 @@ import com.megaman.maverick.game.levels.LevelOverride
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.pathfinding.MegaPathfinderFactory
 import com.megaman.maverick.game.players.MegaPlayers
+import com.megaman.maverick.game.players.PlayerCharacter
+import com.megaman.maverick.game.players.PlayerRoster
 import com.megaman.maverick.game.players.PlayerSettingsStore
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.players.applyBootSettings
@@ -236,6 +239,7 @@ class MegamanMaverickGame(
     lateinit var gameState: GameState
 
     val players = MegaPlayers(MAX_PLAYERS)
+    private val roster = PlayerRoster(players)
     val gravity = WorldGravity(players)
 
     private var currentScreenKey: String? = null
@@ -454,7 +458,14 @@ class MegamanMaverickGame(
             gameState.addListener(megaman.require(PlayerProgressComponent::class))
 
             players.register(PlayerSlot(i), megaman)
+            roster.add(megaman, if (i == 0) PlayerCharacter.MEGAMAN else null)
         }
+
+        val megamanX = MegamanX(services)
+        megamanX.init()
+        megamanX.initialized = true
+        gameState.addListener(megamanX.require(PlayerProgressComponent::class))
+        roster.add(megamanX, PlayerCharacter.X)
 
         val levelScreen = MegaLevelScreen(this)
         levelScreen.init()
@@ -819,7 +830,8 @@ class MegamanMaverickGame(
         GameLogger.debug(TAG, "resetPlayerProgress()")
         gameState.reset()
         gameState.clearWeapons()
-        players.forEach { (it as Megaman).currentWeapon = MegamanWeapon.MEGA_BUSTER }
+        // TODO: only Megaman has weapons; the loadout of each character is item 024
+        roster.forEach { if (it is Megaman) it.currentWeapon = MegamanWeapon.MEGA_BUSTER }
         gameState.resetLives()
         levelState.weaponsAttained = null
     }
@@ -1058,6 +1070,7 @@ class MegamanMaverickGame(
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
         val currentLevel = levelState.currentLevel!!
+        roster.putInSlot0(currentLevel.characters, launch.players)
         levelScreen.music = currentLevel.music
         levelScreen.screenOnCompletion = currentLevel.screenOnCompletion
         levelScreen.start(currentLevel.source)

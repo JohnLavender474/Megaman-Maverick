@@ -8,6 +8,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.state.PostActionMomentumComponent
 import com.megaman.maverick.game.entities.state.RoomTransitionCarryComponent
 import com.megaman.maverick.game.utils.misc.FacingUtils
+import com.megaman.maverick.game.players.bodyOverGround
 
 internal fun Megaman.defineMomentumComponent() = PostActionMomentumComponent(
     MegamanValues.POST_ACTION_MOMENTUM_DUR,

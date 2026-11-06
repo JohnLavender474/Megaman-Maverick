@@ -27,6 +27,10 @@ animations:
   - {name: spawn_out, row: 6, frames: [0, 6], align_x: center, offsets: {0: [3, 0], 5: [0, -5], 6: [0, -2]}}
 
   - {name: low_health, row: 7, frames: [0, 4]}
+  # stand_simplified.png, jump_v2.png and jump_shoot_v2.png (frames dir) are made by hand, not by this file:
+  # stand_simplified is frame 1 (eyes open) and frame 3 (eyes closed) of the stand strip; jump_v2 and jump_shoot_v2
+  # are frames 0-4 of the jump and jump_shoot strips. A pack from this file leaves them out of the atlas; add them
+  # to the TexturePacker file list. See docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081b-x-run-jump-shoot/docs/NOTES.md.
   - {name: stand, row: 8, frames: [0, 4], align_to: null}
 
   - {name: spawn_in, row: 9, frames: [0, 13], align_x: center}

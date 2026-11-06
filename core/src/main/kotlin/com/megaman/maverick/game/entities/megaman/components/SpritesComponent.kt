@@ -30,6 +30,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.players.bodyOverGround
 
 const val MEGAMAN_SPRITE_KEY = "Megaman"
 const val MEGAMAN_SPRITE_SIZE = 3f
