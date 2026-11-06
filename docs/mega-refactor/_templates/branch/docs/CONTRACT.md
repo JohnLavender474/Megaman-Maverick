@@ -14,6 +14,8 @@ Do the checks before the branch merges, and write the result in the branch proce
 - [ ] `./gradlew core:test` passes.
 - [ ] `./gradlew core:smokeTest` passes.
 - [ ] `./gradlew lwjgl3:jar` builds.
+- [ ] The review before the play test (see `docs/mega-refactor/CLAUDE.md`) finds that every
+  manual check compiles, launches and runs as written. No game launch.
 
 ## Manual playthrough
 

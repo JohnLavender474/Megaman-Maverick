@@ -1640,3 +1640,13 @@ newest entry at the bottom.
 - Summary: planning has 1 owner approval in place of 3. The owner was tired from reading `SCOPE.md`, `CONTRACT.md` and `PLAN.md` (269 lines with no diagrams for `118j`). Now Claude writes the 3 files as its record, and the owner approves a one-screen `docs/BRIEF.html`, published as a private Artifact page. It has a before and after diagram, a code sketch at the first caller, the decisions as questions, risks and play checks. `PLAN.md` needs no approval. Changed "Planning" in `CLAUDE.md` and the 3 branch templates.
 - Contract check: not needed (docs only).
 - Follow-up: first brief on the next branch that starts planning. After the first brief, decide if a `BRIEF.html` template is necessary.
+
+## 2026-11-06 — master (docs)
+
+- Summary: no more game launches during a branch, also not short smoke launches, because the
+  windows distract the owner. Compile checks use Gradle. Added "Review before the play test" to
+  `CLAUDE.md`: one or more code-review subagents make sure that every manual check in the
+  contract compiles, launches and runs as written, because the owner often runs only some of
+  the checks. Added the review to the automated checks of the branch `CONTRACT.md` template.
+- Contract check: not needed (docs only).
+- Follow-up: active branches whose `PLAN.md` has smoke-launch steps skip them and use the review.

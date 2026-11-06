@@ -247,6 +247,11 @@ approval, but write the reason in the process log.
   docs line) may go into the current branch, with no new scope approval. It must not change
   gameplay. Write each one in the branch process log. Anything larger, or anything that changes
   gameplay, is a backlog candidate or a bug candidate as above.
+- **Do not launch the game** (the run scripts, `lwjgl3:run` or the JAR) during a branch, also not
+  as a short smoke launch (owner decision, 2026-11-06). The game windows distract the owner from
+  other work. To check that the code compiles, use Gradle (`./gradlew lwjgl3:jar` and the tests).
+  To check that a level or a room loads, use the review before the play test. Launch the game only
+  when the owner asks for it. This rule also applies to subagents: put it in their briefs.
 - A branch may use a **temporary contract test suite** to prove that a rewrite keeps the old
   behavior. Put a frozen copy of the old code (for example the old `WorldSystem`) in the test
   sources. Run the old and the new code side by side on the same seeded inputs, and assert that
@@ -262,10 +267,39 @@ approval, but write the reason in the process log.
   - The frozen copy is test code, so the rule "write code only when production code calls it"
     does not apply to it.
 
+### Review before the play test
+
+The owner often runs only some of the manual checks, mostly when the list is long. A check that
+the owner skips must still be correct. So before you ask the owner to play, do a code review that
+makes sure that **every** manual check in the contract will compile, launch and run as written
+(owner decision, 2026-11-06).
+
+1. Run the automated checks of the contract first. They must pass.
+2. Dispatch the review to one or more code-review subagents. You can split the work, for example
+   one agent for the branch diff and one agent for each test map or group of checks. Give each
+   agent the branch diff, the contract and the rule "do not launch the game".
+3. The review covers the branch diff (bugs, behavior that the contract does not name as a change)
+   and each manual check. For each check, it makes sure that:
+   - the command is valid: the `--level` is a `LevelDefinition` entry, the `--room` is a room in
+     the live TMX file of that level and has a player spawn inside it, and each other option value
+     (for example `--weapons`) is a valid name;
+   - the level loads: each layer name has a builder or is skipped on purpose, each spawner `name`
+     matches a class in the package of the layer's `EntityType`, the required spawn properties
+     are present with the correct types, object references point to objects that exist, and the
+     rooms have painted `tiles`;
+   - the code that the check runs does not throw at start: new or changed entities get through
+     `init()` and `onSpawn()` with the spawn properties of the map (`core:smokeTest` covers only
+     `init()`), and new code on the level start path has no missing asset or bad cast;
+   - the check can show what it says: the room holds the entities and the setup that the check
+     describes, and the expected result follows from the code.
+4. Fix each real finding, run the automated checks again, and review the fixed parts again.
+5. Write the result in the branch process log: the agents, the findings and the fixes. Then give
+   the owner the list of checks (see "Test maps").
+
 ### Branch merge
 
-1. Do the checks in the branch `docs/CONTRACT.md`, including the user's play test. Write the
-   result in the branch process log.
+1. Do the checks in the branch `docs/CONTRACT.md`: the automated checks, the review before the
+   play test, and then the user's play test. Write the result in the branch process log.
 2. Get the user's explicit approval to merge this branch. Approval for one branch never covers
    another branch, also when branches run in parallel. Merge only one branch at a time. If
    `master` changed since the branch last took it in, compare the two
@@ -367,8 +401,9 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
 - **Paint the blocks:** every test map and room has a `tiles` tile layer with a tile on each block
   cell (see the `level-builder` skill and `Test1.tmx`). Block objects alone are invisible in the
   game.
-- **When:** in the first plan steps of the branch, before the code changes. A short launch of each
-  new room on the baseline code checks that the room loads with no exception.
+- **When:** in the first plan steps of the branch, before the code changes. Do not launch the game
+  to check that a new room loads. The review before the play test checks it (see "Review before
+  the play test").
 - **The owner's play test runs once, after the implementation** (owner decision, 2026-10-23). The
   owner knows the baseline behavior, so the contract does not ask for a baseline play-through of
   the manual checks. Ask for a baseline run only for a check whose current behavior is unclear,
