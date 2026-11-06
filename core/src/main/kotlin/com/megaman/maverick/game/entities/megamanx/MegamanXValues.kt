@@ -37,4 +37,17 @@ object MegamanXValues {
 
     const val SHOT_OFFSET_X = 0.75f
     const val SHOT_OFFSET_Y = 0.05f
+
+    const val WALL_GRAB_TIME = 0.1333f
+    const val WALL_SLIDE_SPEED = 2.6953f
+    const val WALL_KICK_SPEED = 10.5469f
+    const val WALL_KICK_AWAY_SPEED = 3.75f
+    const val WALL_KICK_LOCK_TIME = 0.1667f
+    const val WALL_DELAY_AFTER_JUMP = 0.1667f
+    const val PUSH_OFF_SPEED = 3.75f
+    const val PUSH_OFF_TIME = 0.0667f
+
+    const val AIR_DASH_HOVER_TIME = 0.1333f
+    const val AIR_DASH_TIME = 0.3f
+    const val AIR_DASH_SPEED = 7.7344f
 }

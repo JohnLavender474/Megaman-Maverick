@@ -35,12 +35,22 @@ class PlayerSettings {
 }
 
 fun keyLabel(code: Int): String {
+    if (code == PlayerSettings.NO_CODE) return "NONE"
     if (code !in 0..255) return code.toString()
     return Input.Keys.toString(code) ?: code.toString()
 }
 
 fun padLabel(code: Int) = when (code) {
+    PlayerSettings.NO_CODE -> "NONE"
     GamepadInput.TRIGGER_LEFT_CODE -> "L2"
     GamepadInput.TRIGGER_RIGHT_CODE -> "R2"
     else -> code.toString()
+}
+
+fun unbindClashingDefaults(codes: IntArray, defaulted: List<MegaControllerButton>) {
+    defaulted.forEach { button ->
+        val code = codes[button.index]
+        val clash = MegaControllerButton.entries.any { it != button && it !in defaulted && codes[it.index] == code }
+        if (clash) codes[button.index] = PlayerSettings.NO_CODE
+    }
 }

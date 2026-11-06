@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.megamanx
 
 import com.maverick.game.engine.audio.AudioComponent
-import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
@@ -25,7 +24,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
@@ -78,6 +76,12 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
 
     internal val buster = MegamanXBuster(this)
 
+    internal var airDashUsed = false
+    internal val wallGrabTimer = Timer(MegamanXValues.WALL_GRAB_TIME)
+    internal val kickLockTimer = Timer(MegamanXValues.WALL_KICK_LOCK_TIME).setToEnd()
+    internal val pushOffTimer = Timer(MegamanXValues.PUSH_OFF_TIME).setToEnd()
+    internal val wallDelayTimer = Timer(MegamanXValues.WALL_DELAY_AFTER_JUMP).setToEnd()
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
@@ -114,6 +118,10 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
 
         damageTimer.setToEnd()
         buster.reset()
+        airDashUsed = false
+        kickLockTimer.setToEnd()
+        pushOffTimer.setToEnd()
+        wallDelayTimer.setToEnd()
         require(PostActionMomentumComponent::class).reset()
 
         playerSpawnEnd()
@@ -193,25 +201,12 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
             require(FreezeComponent::class).update(delta)
 
             buster.update(delta)
-        }
-    }
 
-    internal fun defineBehaviorsComponent(): BehaviorsComponent {
-        val component = BehaviorsComponent()
-        component.addBehavior(
-            BehaviorType.JUMPING,
-            playerJumpBehavior(
-                JumpParams(
-                    canStart = { true },
-                    blocked = { false },
-                    jumpSpeed = { upSign() * MegamanXValues.JUMP_SPEED },
-                    wallJumpSpeed = { upSign() * MegamanXValues.JUMP_SPEED },
-                    wallJumpHorizontal = 0f,
-                    onJump = {}
-                )
-            )
-        )
-        return component
+            kickLockTimer.update(delta)
+            pushOffTimer.update(delta)
+            wallDelayTimer.update(delta)
+            if (bodyOverGround) airDashUsed = false
+        }
     }
 
     // TODO: X shares Megaman's progress (heart tanks, health tanks, lives) for now; a profile for each character is

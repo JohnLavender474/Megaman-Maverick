@@ -1,68 +1,30 @@
 package com.megaman.maverick.game.entities.megaman.behaviors
 
-import com.maverick.game.engine.behaviors.FunctionalBehaviorImpl
 import com.maverick.game.engine.behaviors.IBehavior
-import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.components.isRunSidePressed
-import com.megaman.maverick.game.entities.megaman.constants.*
-import com.megaman.maverick.game.entities.state.inPlay
-import com.megaman.maverick.game.world.body.*
+import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.players.WallSlideParams
+import com.megaman.maverick.game.players.playerWallSlideBehavior
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.isSensing
 
-const val MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG = "Megaman: BehaviorsComponent: WallSlideBehavior"
-
-private fun Megaman.pressedWallSide() = when {
-    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isRunSidePressed(Facing.LEFT) -> Facing.LEFT
-    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isRunSidePressed(Facing.RIGHT) -> Facing.RIGHT
-    else -> null
-}
-
-internal fun Megaman.wallSlideBehavior(): IBehavior {
-    return FunctionalBehaviorImpl(
-        evaluate = evaluate@{
-            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || body.isSensing(BodySense.FEET_ON_SAND) ||
-                isBehaviorActive(BehaviorType.JETPACKING) || !wallSlideNotAllowedTimer.isFinished() ||
-                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
-            ) return@evaluate false
-
-            if (pressedWallSide() != null) {
-                if (damaged) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "damaged")
-                    return@evaluate false
-                }
-                if (isBehaviorActive(BehaviorType.JUMPING)) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "jumping")
-                    return@evaluate false
-                }
-                if (isBehaviorActive(BehaviorType.CLIMBING)) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "climbing")
-                    return@evaluate false
-                }
-                if (body.isSensing(BodySense.FEET_ON_GROUND)) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "feet on ground")
-                    return@evaluate false
-                }
-                if (!wallJumpTimer.isFinished()) {
-                    GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "wall jump timer not finished")
-                    return@evaluate false
-                }
-                return@evaluate true
-            } else return@evaluate false
+internal fun Megaman.wallSlideBehavior(): IBehavior = playerWallSlideBehavior(
+    WallSlideParams(
+        blocked = {
+            body.isSensing(BodySense.FEET_ON_SAND) || isBehaviorActive(BehaviorType.JETPACKING) ||
+                !wallSlideNotAllowedTimer.isFinished() || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
+                !wallJumpTimer.isFinished()
         },
-        init = {
-            aButtonTask = AButtonTask.JUMP
-            facing = pressedWallSide()!!.opposite()
-            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "init()")
-        },
-        act = {
+        onStart = { aButtonTask = AButtonTask.JUMP },
+        onAct = {
             aButtonTask = AButtonTask.JUMP
 
-            val friction =
-                MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
+            val friction = MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
             when {
                 direction.isVertical() -> body.physics.frictionOnSelf.y = friction
                 else -> body.physics.frictionOnSelf.x = friction
@@ -76,9 +38,6 @@ internal fun Megaman.wallSlideBehavior(): IBehavior {
                 body.physics.gravityOn = false
             }
         },
-        end = {
-            if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH
-            GameLogger.debug(MEGAMAN_WALL_SLIDE_BEHAVIOR_TAG, "end()")
-            body.physics.gravityOn = true
-        })
-}
+        onEnd = { if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH }
+    )
+)

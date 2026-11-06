@@ -12,7 +12,8 @@ enum class MegaControllerButton(override val index: Int, val defaultKeyboardKey:
     A(4, Input.Keys.K),
     B(5, Input.Keys.J),
     START(6, Input.Keys.ENTER),
-    SELECT(7, Input.Keys.L);
+    SELECT(7, Input.Keys.L),
+    R(8, Input.Keys.U);
 
     fun isDpadButton() = DPAD_BUTTONS.contains(this)
 

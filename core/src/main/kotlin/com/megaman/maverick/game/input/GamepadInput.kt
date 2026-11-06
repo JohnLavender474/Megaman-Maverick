@@ -8,6 +8,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.getMapping
 import com.megaman.maverick.game.players.PlayerSettings
 import com.megaman.maverick.game.players.PlayerSettingsStore
+import com.megaman.maverick.game.players.unbindClashingDefaults
 
 enum class PadShare { ALL, ALL_BUT_LAST, LAST_ONLY }
 
@@ -51,11 +52,18 @@ class GamepadInput(
         }
 
         if (first !== primary) {
-            if (first != null) MegaControllerButton.entries.forEach {
-                var code: Int? = null
-                if (loadPrefsOnConnect) code = store.readGamepadCode(first.name, it)
-                if (code == null) code = first.mapping.getMapping(it)
-                settings.padCodes[it.index] = code
+            if (first != null) {
+                val defaulted = ArrayList<MegaControllerButton>()
+                MegaControllerButton.entries.forEach {
+                    var code: Int? = null
+                    if (loadPrefsOnConnect) code = store.readGamepadCode(first.name, it)
+                    if (code == null) {
+                        code = first.mapping.getMapping(it)
+                        defaulted.add(it)
+                    }
+                    settings.padCodes[it.index] = code
+                }
+                if (loadPrefsOnConnect) unbindClashingDefaults(settings.padCodes, defaulted)
             } else settings.padCodes.fill(PlayerSettings.NO_CODE)
             primary = first
         }

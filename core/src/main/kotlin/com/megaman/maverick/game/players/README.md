@@ -25,7 +25,8 @@ flowchart LR
     Class["a player class<br/>(for example Megaman)"] -- "its hooks call" --> Lifecycle["PlayerLifecycle.kt<br/>spawn, destroy, room transition,<br/>out-of-level kill"]
     Class -- "its rules call" --> Rules["PlayerRules.kt<br/>invincible, can move,<br/>damage permission, damage tail, damage edit"]
     Class -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
-    Class -- "its behaviors" --> Jump["PlayerJump.kt<br/>the jump, with the class's JumpParams"]
+    Class -- "its behaviors" --> Moves["PlayerJump.kt, PlayerWallSlide.kt, PlayerAirDash.kt<br/>each with the class's params"]
+    Moves --> Input["PlayerInput.kt, the air dash input reads<br/>the run side, A or SELECT"]
     Game["the game, at level start"] -- "putInSlot0" --> Roster["PlayerRoster<br/>one entity per PlayerCharacter;<br/>slot 0 gets the level's character"]
     Lifecycle --> State["the mechanism components<br/>(entities/state/)"]
     Rules --> State
@@ -72,6 +73,8 @@ override val invincible get() = playerInvincible
 - **The gravity set comes before the lock clears** in `playerSpawnStart`. The gravity set can start a camera turn
   that locks `MOVEMENT`, and the lock clear must remove it.
 - **One copy.** A rule that two player classes need goes here, not into each class. A difference between the
-  classes is a parameter (for example `JumpParams`), not a type check in the shared code.
+  classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`), not a type check in the shared
+  code. A shared behavior keeps the gate and the physics that every class has; the params give the class's own start
+  rules, speeds, timers and side effects.
 - **Swap only out of the engine.** `PlayerRoster.putInSlot0` throws when the outgoing player is in the engine. Call it
   before the level screen starts, and set the camera focus after it.

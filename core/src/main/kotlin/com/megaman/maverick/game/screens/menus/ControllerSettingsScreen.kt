@@ -337,7 +337,7 @@ class ControllerSettingsScreen(
             }
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {
-                Direction.UP -> MegaControllerButton.SELECT.name
+                Direction.UP -> MegaControllerButton.entries.last().name
                 Direction.DOWN -> BACK
                 Direction.LEFT -> {
                     settings.selectButtonAction = settings.selectButtonAction.previous()
@@ -411,7 +411,7 @@ class ControllerSettingsScreen(
             BACK -> 12.6f
             LOAD_SAVED_SETTINGS -> 11.6f
             RESET_TO_DEFAULTS -> 10.6f
-            SELECT_ACTION -> 1.6f
+            SELECT_ACTION -> 10.6f - (MegaControllerButton.entries.size + 1)
             else -> try {
                 10.6f - (MegaControllerButton.valueOf(buttonKey!!).ordinal + 1)
             } catch (e: Exception) {

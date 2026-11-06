@@ -19,13 +19,17 @@ import com.megaman.maverick.game.players.playerCanMove
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.players.isRunSidePressed
+import com.megaman.maverick.game.players.runButton
+import com.maverick.game.engine.entities.isBehaviorActive
+import com.megaman.maverick.game.behaviors.BehaviorType
 
 internal fun MegamanX.defineControllerComponent(): ControllerComponent {
     fun side(facing: Facing) = ButtonActuator(
         onJustPressed = { require(RunComponent::class).lastPressedSide = facing },
         onPressContinued = { delta -> run(delta, facing) },
-        onJustReleased = { if (!input.isPressed(facing.opposite().button())) stopRunning() },
-        onReleaseContinued = { if (!input.isPressed(facing.opposite().button())) running = false }
+        onJustReleased = { if (!input.isPressed(facing.opposite().runButton())) stopRunning() },
+        onReleaseContinued = { if (!input.isPressed(facing.opposite().runButton())) running = false }
     )
 
     val attack = ButtonActuator(
@@ -47,18 +51,16 @@ internal fun MegamanX.defineControllerComponent(): ControllerComponent {
     )
 }
 
-private fun Facing.button() = if (this == Facing.LEFT) MegaControllerButton.LEFT else MegaControllerButton.RIGHT
-
 private fun MegamanX.canAttack() = inPlay && !stunned && !damaged && !teleporting && !frozen &&
     !services.gameCamera.rotating && !services.levelState.roomTransition
 
 internal fun MegamanX.run(delta: Float, side: Facing) {
     val runState = require(RunComponent::class)
-    if (!input.isPressed(side.button()) ||
-        (input.isPressed(side.opposite().button()) && runState.lastPressedSide != side)
-    ) return
+    if (!isRunSidePressed(side)) return
 
-    if (!inPlay || !playerCanMove || damaged || teleporting) {
+    if (!inPlay || !playerCanMove || damaged || teleporting || holdsSideSpeed ||
+        isBehaviorActive(BehaviorType.WALL_SLIDING)
+    ) {
         running = false
         return
     }

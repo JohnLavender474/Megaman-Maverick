@@ -33,6 +33,8 @@ import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
 import com.megaman.maverick.game.players.bodyOverGround
+import com.megaman.maverick.game.players.isRunSidePressed
+import com.megaman.maverick.game.players.runButton
 
 const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
@@ -169,18 +171,13 @@ private fun Megaman.setToNextWeapon() {
     }
 }
 
-private fun Facing.button() = if (this == Facing.LEFT) MegaControllerButton.LEFT else MegaControllerButton.RIGHT
-
-internal fun Megaman.isRunSidePressed(side: Facing) = input.isPressed(side.button()) &&
-    (!input.isPressed(side.opposite().button()) || require(RunComponent::class).lastPressedSide == side)
-
 internal fun Megaman.run(delta: Float, side: Facing) {
     if (!isRunSidePressed(side)) return
 
     val runState = require(RunComponent::class)
 
     val lastPressedJustReleased =
-        runState.lastPressedSide != side && input.isJustReleased(side.opposite().button())
+        runState.lastPressedSide != side && input.isJustReleased(side.opposite().runButton())
     val runFacing =
         if (isBehaviorActive(BehaviorType.WALL_SLIDING) && !lastPressedJustReleased) side.opposite() else side
 

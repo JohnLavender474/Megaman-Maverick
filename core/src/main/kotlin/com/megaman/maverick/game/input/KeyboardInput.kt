@@ -32,7 +32,7 @@ class KeyboardInput(private val settings: PlayerSettings) {
         var held = 0L
         val codes = settings.keyCodes
         for (i in codes.indices) {
-            if (Gdx.input.isKeyPressed(codes[i])) held = held or (1L shl i)
+            if (codes[i] != PlayerSettings.NO_CODE && Gdx.input.isKeyPressed(codes[i])) held = held or (1L shl i)
         }
         for (i in ALIAS_KEYS.indices) {
             if (Gdx.input.isKeyPressed(ALIAS_KEYS[i])) held = held or ALIAS_BITS[i]

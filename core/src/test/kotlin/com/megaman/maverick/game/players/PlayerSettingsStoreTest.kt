@@ -41,7 +41,7 @@ class PlayerSettingsStoreTest : DescribeSpec({
     }
 
     describe("keyboard table") {
-        it("writes the 8 keys of the table and flushes once") {
+        it("writes 1 key for each button and flushes once") {
             val file = files.file(slot0File)
 
             store.saveKeyboard(settings)
@@ -49,7 +49,7 @@ class PlayerSettingsStoreTest : DescribeSpec({
             file.keys shouldBe MegaControllerButton.entries.map { "KEYBOARD.${it.name}" }.toSet()
             file.flushCount shouldBe 1
             file.reopen()
-            file.keys.size shouldBe 8
+            file.keys.size shouldBe MegaControllerButton.entries.size
         }
 
         it("loads a partial table: each saved key changes, and each missing key keeps the current code") {
@@ -61,6 +61,30 @@ class PlayerSettingsStoreTest : DescribeSpec({
             settings.keyCodes[MegaControllerButton.A.index] shouldBe Input.Keys.I
             settings.keyCodes[MegaControllerButton.B.index] shouldBe Input.Keys.Z
             settings.keyCodes[MegaControllerButton.UP.index] shouldBe MegaControllerButton.UP.defaultKeyboardKey
+        }
+
+        it("unbinds a button missing from an old save when its default key is already saved for another button") {
+            val file = files.file(slot0File)
+            MegaControllerButton.entries.filter { it != MegaControllerButton.R }.forEach {
+                file.put("KEYBOARD.${it.name}", it.defaultKeyboardKey.toString())
+            }
+            file.put("KEYBOARD.B", Input.Keys.U.toString())
+
+            store.loadKeyboard(settings)
+
+            settings.keyCodes[MegaControllerButton.B.index] shouldBe Input.Keys.U
+            settings.keyCodes[MegaControllerButton.R.index] shouldBe PlayerSettings.NO_CODE
+        }
+
+        it("keeps the default of a button missing from an old save when no other button has it") {
+            val file = files.file(slot0File)
+            MegaControllerButton.entries.filter { it != MegaControllerButton.R }.forEach {
+                file.put("KEYBOARD.${it.name}", it.defaultKeyboardKey.toString())
+            }
+
+            store.loadKeyboard(settings)
+
+            settings.keyCodes[MegaControllerButton.R.index] shouldBe Input.Keys.U
         }
     }
 
@@ -78,7 +102,7 @@ class PlayerSettingsStoreTest : DescribeSpec({
             store.readGamepadCode("Pad", MegaControllerButton.B) shouldBe 0
         }
 
-        it("writes the 8 keys of the pad name and flushes once") {
+        it("writes 1 key for each button of the pad name and flushes once") {
             val file = files.file(slot0File)
             MegaControllerButton.entries.forEach { settings.padCodes[it.index] = it.ordinal }
 

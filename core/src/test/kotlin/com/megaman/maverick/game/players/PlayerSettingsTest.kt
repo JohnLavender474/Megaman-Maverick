@@ -120,7 +120,7 @@ class PlayerSettingsTest : DescribeSpec({
             settings.captureKey(MegaControllerButton.UP, Input.Keys.UP) shouldBe KeyCapture.KEEP
         }
 
-        it("leaves 8 different codes after every accept") {
+        it("leaves 1 different code for each button after every accept") {
             val freeKeys = listOf(Input.Keys.I, Input.Keys.O, Input.Keys.P, Input.Keys.Z)
             val boundKeys = MegaControllerButton.entries.map { it.defaultKeyboardKey }
 
@@ -129,7 +129,7 @@ class PlayerSettingsTest : DescribeSpec({
                     val settings = PlayerSettings()
 
                     if (settings.captureKey(button, key) == KeyCapture.ACCEPT)
-                        settings.keyCodes.toSet().size shouldBe 8
+                        settings.keyCodes.toSet().size shouldBe MegaControllerButton.entries.size
                 }
             }
         }

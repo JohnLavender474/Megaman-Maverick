@@ -125,7 +125,7 @@ internal fun MegamanX.defineBodyComponent(): BodyComponent {
             return@put
         }
 
-        if (!running && !damaged && !stunned) when (direction) {
+        if (!running && !damaged && !stunned && !holdsSideSpeed) when (direction) {
             Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
             Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = 0f
         }

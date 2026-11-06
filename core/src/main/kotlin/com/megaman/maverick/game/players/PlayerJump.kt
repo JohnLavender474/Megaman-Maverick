@@ -32,6 +32,8 @@ class JumpParams(
     val jumpSpeed: () -> Float,
     val wallJumpSpeed: () -> Float,
     val wallJumpHorizontal: Float,
+    val wallJumpAllowed: () -> Boolean,
+    val ignoreRelease: () -> Boolean,
     val onJump: () -> Unit
 )
 
@@ -42,7 +44,7 @@ fun <T> T.playerJumpBehavior(params: JumpParams): IBehavior
             !body.isSensing(BodySense.FEET_ON_GROUND))
 
     fun upSpeed() = ConstVals.PPM * when {
-        isBehaviorActive(BehaviorType.WALL_SLIDING) -> params.wallJumpSpeed()
+        params.wallJumpAllowed() -> params.wallJumpSpeed()
         else -> params.jumpSpeed()
     }
 
@@ -51,7 +53,7 @@ fun <T> T.playerJumpBehavior(params: JumpParams): IBehavior
             if (!existenceState.liveAfterUpdate || !inPlay || !playerCanMove || damaged || teleporting ||
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
-                !input.isPressed(MegaControllerButton.A) ||
+                (!input.isPressed(MegaControllerButton.A) && !params.ignoreRelease()) ||
                 (bodyOverGround && input.isPressed(MegaControllerButton.DOWN)) ||
                 params.blocked()
             ) return@FunctionalBehaviorImpl false
@@ -68,7 +70,7 @@ fun <T> T.playerJumpBehavior(params: JumpParams): IBehavior
 
             return@FunctionalBehaviorImpl params.canStart() &&
                 input.isJustPressed(MegaControllerButton.A) &&
-                (bodyOverGround || isBehaviorActive(BehaviorType.WALL_SLIDING))
+                (bodyOverGround || params.wallJumpAllowed())
         },
         init = {
             when {

@@ -1,18 +1,6 @@
-<title><id><letter> <Short Name></title>
+<title>081c X Wall Moves</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid">. Code: <pre class="code"> with the spans
-    .k (keyword), .c (comment), .del (removed code).
-  - At approval: set the eyebrow to "Brief: approved <date>", set each chosen option to
-    "opt rec" with the pill "Chosen", and set the Decisions tag to "answered <date>".
-  - On a scope change: mark what changed in the text, with the date, and publish to the same link.
-  - The accent color can change to suit the branch. Keep the light and dark token sets in step.
--->
 <style>
 :root {
   --bg: #f3f5fa;
@@ -102,94 +90,128 @@ a { color: var(--accent); }
 
 <div class="wrap">
 
-<!-- 1. Goal -->
 <header style="display:flex;flex-direction:column;gap:14px">
-  <div class="eyebrow"><span>Item <id></span><span>Branch <id><letter></span><span>Objectives <O-ids></span><span class="draft">Brief: draft</span></div>
-  <h1><Short name></h1>
-  <p class="lede narrow"><One or two sentences: what the branch changes and why.></p>
-  <div class="visible narrow"><b>In play</b><span><What the player sees change, or "Nothing changes."></span></div>
+  <div class="eyebrow"><span>Item 081</span><span>Branch 081c</span><span>Objectives O8</span><span>Brief: approved 2026-11-06</span></div>
+  <h1>X: wall slide, wall kick, air dash</h1>
+  <p class="lede narrow">Phase 2 of X. Megaman's wall slide and air dash become shared behaviors with a params object, as the jump did in 081b. X calls them with the X6 rules, and Megaman calls them with his own rules.</p>
+  <div class="visible narrow"><b>In play</b><span>X can grab and slide down walls, kick up off them, and dash once in the air. X can now get through the X6 intro level. Megaman plays as before.</span></div>
 </header>
 
-<!-- 2. Before and after: a Mermaid diagram of the parts that change (senders, events, listeners). -->
 <section>
-  <h2>Before and after <span class="tag"><what the diagram shows></span></h2>
+  <h2>Before and after <span class="tag">who owns the wall slide and the air dash</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <short label></h3>
+      <h3>Today: Megaman only</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  M["Megaman"] --> WS["wallSlideBehavior()<br/>reads Megaman fields"]
+  M --> AD["airDashBehavior()<br/>reads Megaman fields"]
+  X["MegamanX"] --> J["playerJumpBehavior"]
+  M --> J
 </pre></div>
-      <p class="note"><The problem that the diagram shows.></p>
+      <p class="note">X has no wall slide and no air dash, so X cannot pass the 2.5-tile step in the X6 intro level.</p>
     </div>
     <div class="panel after">
-      <h3>After: <short label></h3>
+      <h3>After: shared, with params</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] --> B["<new owner>"]
+  M["Megaman<br/>his rules"] --> P["players/<br/>playerWallSlideBehavior<br/>playerAirDashBehavior<br/>playerJumpBehavior"]
+  X["MegamanX<br/>X6 rules"] --> P
 </pre></div>
-      <p class="note"><What stays the same for the other code.></p>
+      <p class="note">Baseline tests on Megaman's old behaviors run before and after the change.</p>
     </div>
   </div>
 </section>
 
-<!-- 3. Code sketch: the new or changed API at its first real caller. A few short blocks, not the diff. -->
 <section>
   <h2>Code sketch <span class="tag">first caller</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <code><Caller></code></h3>
-<pre class="code"><span class="del"><old code></span></pre>
+      <h3>Today: <code>Megaman.airDashBehavior()</code></h3>
+<pre class="code"><span class="del">internal fun Megaman.airDashBehavior() = FunctionalBehaviorImpl(
+    evaluate = { ... aButtonTask == AIR_DASH ... },
+    init = { ... MegamanValues.AIR_DASH_VEL ... },
+    ...
+)</span></pre>
     </div>
     <div class="panel after">
-      <h3>After: <code><Caller></code></h3>
-<pre class="code"><span class="k">fun</span> <new code></pre>
+      <h3>After: <code>MegamanX</code> behaviors</h3>
+<pre class="code"><span class="k">playerAirDashBehavior</span>(AirDashParams(
+    canStart = { !airDashUsed &amp;&amp; aJustPressed },
+    startDelay = 0.133f,   <span class="c">// X6 hover</span>
+    minTime = 0.3f, maxTime = { 0.3f },
+    speed = { 7.734f },    <span class="c">// tiles per s</span>
+    endBump = { 0f },
+    ...
+))</pre>
     </div>
   </div>
-  <!-- Optional: an ordered list of steps or parts, as pills. Use "step go" for a branch point. -->
-  <div class="steps" aria-label="<Order>">
-    <span class="step">1 <step></span><span class="step">2 <step></span>
+  <div class="steps" aria-label="Order">
+    <span class="step">1 test rooms</span><span class="step">2 Megaman baseline tests</span><span class="step">3 shared wall slide</span><span class="step">4 shared air dash</span><span class="step">5 X wall moves</span><span class="step">6 X air dash and the DASH button</span><span class="step go">7 checks and review</span>
   </div>
 </section>
 
-<!-- 4. Decisions: 2 to 4 questions. An objective conflict is a decision. Ask them with AskUserQuestion too.
-     If nothing needs a decision, replace the list with one sentence that says so. -->
 <section>
-  <h2>Decisions <span class="tag">open</span></h2>
+  <h2>Decisions <span class="tag">answered 2026-11-06</span></h2>
   <div class="decisions">
     <div class="decision">
-      <div class="q"><span class="id">D1</span><h3><Question?></h3></div>
-      <p class="narrow"><The context that the question needs, in one or two sentences.></p>
+      <div class="q"><span class="id">D1</span><h3>Which input starts X's air dash?</h3></div>
+      <p class="narrow">X6 starts the air dash on a jump press in the air, and also on the dash button. Item 069 said "A is only jump and wall kick", which does not match X6.</p>
       <div class="opts">
-        <div class="opt rec"><span class="rec-pill">Recommended</span><span class="lbl"><Option></span><Why.></div>
-        <div class="opt"><span class="lbl"><Option></span><Trade-off.></div>
+        <div class="opt"><span class="lbl">A again in the air</span>The X6 rule and Megaman's default. No new button.</div>
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Megaman's input + the dash button</span>A in the air, SELECT when set to air dash, and a new DASH button now (keyboard U, pad R1). Megaman ignores DASH.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D2</span><h3>What shape does the air dash have?</h3></div>
+      <p class="narrow">You said "similar to Megaman's air dash". The X6 dash and Megaman's dash differ.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">X6 shape</span>A short hover, then a fixed 0.3 s at 7.7 tiles/s (2.3 tiles), no end bump. Matches "X6 values as they are".</div>
+        <div class="opt"><span class="lbl">Megaman's shape</span>Hold for 0.1 to 0.25 s at 10 tiles/s, with the end bump.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D3</span><h3>Which wall rules?</h3></div>
+      <p class="narrow">The X6 intro level has single-wall climbs of 10 and 14 tiles.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">X6 rules</span>A short grab, a fixed slide speed, a kick on any wall touch (also while rising), a 0.167 s kick lock, a push-off on release.</div>
+        <div class="opt"><span class="lbl">Megaman's rules</span>Slide only while falling, and kick only from a slide, with the X6 numbers.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D4</span><h3>Sounds for the grab, the kick and the dash?</h3></div>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">None for now</span>As for Megaman today, with a TODO.</div>
+        <div class="opt"><span class="lbl">Existing sounds</span>Pick from the game's sound files now.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 5. Risks: up to 3. -->
 <section class="narrow">
   <h2>Risks</h2>
   <ul class="risks">
-    <li><b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+    <li><b>Megaman's play can change.</b> 232 lines of his wall slide and air dash move behind params. Baseline tests first, and a control play check with water, Rush Jet, claws and SELECT as air dash.</li>
+    <li><b>X's body stops a kick or a dash today.</b> It sets the side speed to 0 when X does not run. Fixed in this branch, with tests.</li>
+    <li><b>The X6 windows are short.</b> 0.133 s grab and 0.167 s kick lock. The entry into a 2-tile opening in the X6 intro level can be too hard; a play check.</li>
   </ul>
 </section>
 
-<!-- 6. Play checks: as in "Test maps". Experimental checks first, then control checks. A --room on each. -->
 <section class="narrow">
   <h2>Play checks <span class="tag">for the play test, not for now</span></h2>
   <div class="cd">cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-081c-x-wall-slide-air-dash</div>
   <ul class="checks">
-    <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room walls</code>: grab, slide, kick up one wall and a chimney, push off, the step and the opening.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room dash</code>: dash over 3, 4 and 5-tile pits with A, with U (DASH) and with SELECT as air dash; 1 dash per air.</li>
+    <li><code>./run-game-alpha.sh --level X6_INTRO --room room1</code>: play from the start to the gate.</li>
+    <li><code>./run-game-alpha.sh --level GLACIER_MAN --room room1 --weapons RUSH_JET,RODENT_CLAWS,NEEDLE_SPIN</code>: Megaman control check.</li>
   </ul>
 </section>
 
-<!-- 7. Details -->
 <section class="details narrow">
   <h2 style="color:var(--ink)">Details</h2>
-  <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-  <p class="mono">docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-081c-x-wall-slide-air-dash/docs/SCOPE.md</p>
+  <p>The full scan and the full contract are in the branch folder:</p>
+  <p class="mono">docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081c-x-wall-slide-air-dash/docs/SCOPE.md</p>
   <p class="mono">.../mega-refactor-081c-x-wall-slide-air-dash/docs/CONTRACT.md</p>
 </section>
 

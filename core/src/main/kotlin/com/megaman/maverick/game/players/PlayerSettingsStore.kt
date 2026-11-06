@@ -57,9 +57,12 @@ class PlayerSettingsStore(slot: PlayerSlot) {
     }
 
     fun loadKeyboard(settings: PlayerSettings) {
+        val defaulted = ArrayList<MegaControllerButton>()
         MegaControllerButton.entries.forEach { button ->
-            readCode(keyboardKey(button))?.let { settings.keyCodes[button.index] = it }
+            val code = readCode(keyboardKey(button))
+            if (code != null) settings.keyCodes[button.index] = code else defaulted.add(button)
         }
+        unbindClashingDefaults(settings.keyCodes, defaulted)
     }
 
     fun saveGamepad(padName: String, settings: PlayerSettings) {
@@ -69,9 +72,12 @@ class PlayerSettingsStore(slot: PlayerSlot) {
     }
 
     fun loadGamepad(padName: String, settings: PlayerSettings) {
+        val defaulted = ArrayList<MegaControllerButton>()
         MegaControllerButton.entries.forEach { button ->
-            readGamepadCode(padName, button)?.let { settings.padCodes[button.index] = it }
+            val code = readGamepadCode(padName, button)
+            if (code != null) settings.padCodes[button.index] = code else defaulted.add(button)
         }
+        unbindClashingDefaults(settings.padCodes, defaulted)
     }
 
     fun readGamepadCode(padName: String, button: MegaControllerButton) = readCode(gamepadKey(padName, button))

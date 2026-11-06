@@ -11,4 +11,5 @@ fun ControllerMapping.getMapping(button: MegaControllerButton) = when (button) {
     MegaControllerButton.B -> buttonY
     MegaControllerButton.START -> buttonStart
     MegaControllerButton.SELECT -> buttonA
+    MegaControllerButton.R -> buttonR1
 }

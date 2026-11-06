@@ -30,6 +30,8 @@ import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
+import com.maverick.game.engine.entities.isBehaviorActive
+import com.megaman.maverick.game.behaviors.BehaviorType
 
 const val MEGAMAN_X_SPRITE_KEY = "MegamanX"
 
@@ -48,7 +50,8 @@ internal fun MegamanX.defineSpritesComponent(): SpritesComponent {
     var flashTime = 0f
     component.putPreProcess(MEGAMAN_X_SPRITE_KEY) { delta, player ->
         player.setSize(MegamanXValues.SPRITE_SIZE * ConstVals.PPM, MegamanXValues.SPRITE_SIZE * ConstVals.PPM)
-        player.setFlip(facing == Facing.LEFT, false)
+        val stripFacesLeft = isBehaviorActive(BehaviorType.WALL_SLIDING)
+        player.setFlip(if (stripFacesLeft) facing == Facing.RIGHT else facing == Facing.LEFT, false)
         player.setOriginCenter()
         player.rotation = direction.rotation
         val position = DirectionPositionMapper.getInvertedPosition(direction)
@@ -80,6 +83,9 @@ internal fun MegamanX.animationKey(): String {
     }
     return when {
         damaged -> if (bodyOverGround) "damaged" else "air_damaged"
+        isBehaviorActive(BehaviorType.AIR_DASHING) -> "dash$shoot"
+        isBehaviorActive(BehaviorType.WALL_SLIDING) -> "wallslide$shoot"
+        kickLocked -> "walljump$shoot"
         !bodyOverGround -> (if (rising) "jump" else "fall") + shoot
         walkStarting -> "run_trans$shoot"
         running -> "run$shoot"
@@ -114,8 +120,24 @@ internal fun MegamanX.defineAnimationsComponent(): AnimationsComponent {
     animations.put("jump_shoot", part("jump_shoot_v2", 5, 0, 4, 0.08f, false))
     animations.put("fall_shoot", part("jump_shoot_v2", 5, 4, 5, 0.1f, true))
     animations.put("damaged", Animation(frames("damaged", 3), 0.1f, false))
+    val holdThenStay = gdxArrayOf(MegamanXValues.AIR_DASH_HOVER_TIME, 1f)
+    animations.put("dash", Animation(frames("dash", 2), holdThenStay, false))
+    animations.put("dash_shoot", Animation(frames("dash_shoot", 2), holdThenStay, false))
+    val grabThenSlide = gdxArrayOf(MegamanXValues.WALL_GRAB_TIME, 1f)
+    animations.put("wallslide", Animation(frames("wallslide", 2), grabThenSlide, false))
+    animations.put("wallslide_shoot", Animation(frames("wallslide_shoot", 2), grabThenSlide, false))
+    animations.put("walljump", Animation(frames("walljump", 3), MegamanXValues.WALL_KICK_LOCK_TIME / 3f, false))
+    animations.put("walljump_shoot", Animation(frames("walljump_shoot", 3), MegamanXValues.WALL_KICK_LOCK_TIME / 3f, false))
     animations.put("air_damaged", Animation(frames("air_damaged", 3), 0.1f, false))
 
-    val animator = Animator(keySupplier = { animationKey() }, animations = animations)
+    val animator = Animator(
+        keySupplier = { animationKey() },
+        animations = animations,
+        onChangeKey = { _, currentKey, nextKey ->
+            if (currentKey != null && nextKey != null &&
+                currentKey.removeSuffix("_shoot") == nextKey.removeSuffix("_shoot")
+            ) animations[currentKey]?.getCurrentTime()?.let { animations[nextKey]?.setCurrentTime(it) }
+        }
+    )
     return AnimationsComponent(orderedMapOf<Any, IAnimator>(MEGAMAN_X_SPRITE_KEY pairTo animator), sprites)
 }
