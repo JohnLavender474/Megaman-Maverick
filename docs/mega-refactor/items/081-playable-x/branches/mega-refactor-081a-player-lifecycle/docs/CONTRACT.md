@@ -5,8 +5,8 @@ check them. Write this file during
 planning, before you change code. Do the checks before the branch merges, and write the result
 in the branch process log.
 
-- Status: draft
-- Approved: no
+- Status: approved
+- Approved: 2026-11-06
 
 The branch is a pure move: `Megaman` calls shared functions in place of its own lifecycle code. Megaman plays the
 same. Each check below is a control check, except where it says "experimental": those cover the 2 places where the

@@ -4,8 +4,8 @@
 
 - State: planned
 - Goal: move the shared player lifecycle out of `Megaman` into functions that a second player class can call
-- Done: scan, `SCOPE.md` approved, draft `CONTRACT.md`
-- Next: owner approval of `CONTRACT.md`
+- Done: scan, `SCOPE.md` and `CONTRACT.md` approved, draft `PLAN.md`
+- Next: owner approval of `PLAN.md`
 - Blocked:
 
 ## Entries
@@ -27,3 +27,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   with direct overrides for a player class. `fix/lock-group-api` merged into `master` (`e38787ace`):
   `getLockGroup(group).isLockedBy(reason)`.
 - Owner (2026-11-06): the 3 open questions of `SCOPE.md` closed as recommended, and the scope approved ("let's start the refactor branch"). Draft `CONTRACT.md`: automated tests for each shared function with mutation checks, 2 experimental play checks for the order in `onSpawn` (`REFACTOR_TEST_051 edge_rotated`) and `takeDamageFrom` (`PRECIOUS_WOMAN room7`), and control checks from the `084` contracts.
+- Owner (2026-11-06): `CONTRACT.md` approved ("go for it"). Draft `PLAN.md`: 6 steps; the spawn is 2 shared calls so the gravity set stays before the lock clear; 2 order changes are named (the `aButtonTask` and weapon lines after the health set and lock clears; the damage signal before the sounds), each with a check.
