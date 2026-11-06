@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.screens.levels.events
+package com.megaman.maverick.game.screens.levels.respawn
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.maverick.game.engine.common.GameLogger
@@ -6,32 +6,19 @@ import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
-import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
-import com.maverick.game.engine.entities.body
-import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.players.PlayerSlot
-import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.state.PlayPhase
-import com.megaman.maverick.game.entities.state.setPlayPhase
-import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 
-class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable,
-    IDrawable<Batch> {
+class DeathFadeOut(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable, IDrawable<Batch> {
 
     companion object {
-        const val TAG = "PlayerDeathEventHandler"
+        const val TAG = "DeathFadeOut"
         private const val ON_DEATH_DELAY = 4f
         private const val FADE_OUT_DUR = 0.25f
     }
@@ -42,10 +29,6 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
     private val fadeout = Fade(FadeType.FADE_OUT, FADE_OUT_DUR)
     private val deathTimer = Timer(ON_DEATH_DELAY).setToEnd()
 
-    // TODO: the death flow acts on the lead player in slot 0; with more players, each player needs its own (item 047)
-    private val player: MegaGameEntity
-        get() = game.players.get(PlayerSlot(0))!!
-
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
 
@@ -54,13 +37,6 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
         val black = game.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         fadeout.setRegion(black)
         fadeout.reset()
-
-        game.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-
-        player.body.physics.gravityOn = false
-        player.setPlayPhase(PlayPhase.POST_PLAY)
-
-        game.audio.playSound(SoundAsset.DEFEAT_SOUND)
     }
 
     override fun update(delta: Float) {
@@ -78,13 +54,7 @@ class PlayerDeathEventHandler(private val game: MegamanMaverickGame) : Initializ
 
             fadeout.update(delta)
 
-            if (fadeout.isJustFinished()) {
-                GameLogger.debug(TAG, "update(): fade out just finished, submit PLAYER_DONE_DYIN event")
-
-                game.events.submitEvent(
-                    Event(EventType.PLAYER_DONE_DYIN, props(PlayerEventKeys.SLOT pairTo player.playerSlot!!))
-                )
-            }
+            if (fadeout.isJustFinished()) GameLogger.debug(TAG, "update(): fade out just finished")
         }
     }
 

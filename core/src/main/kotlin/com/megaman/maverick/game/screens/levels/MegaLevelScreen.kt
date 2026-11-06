@@ -91,8 +91,10 @@ import com.megaman.maverick.game.screens.levels.camera.CameraZones
 import com.megaman.maverick.game.screens.levels.camera.isPastCameraEdge
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
-import com.megaman.maverick.game.screens.levels.events.PlayerDeathEventHandler
-import com.megaman.maverick.game.screens.levels.events.PlayerSpawnEventHandler
+import com.megaman.maverick.game.screens.levels.respawn.BeamInView
+import com.megaman.maverick.game.screens.levels.respawn.DeathFadeOut
+import com.megaman.maverick.game.screens.levels.respawn.RespawnContext
+import com.megaman.maverick.game.screens.levels.respawn.RespawnRoutine
 import com.megaman.maverick.game.screens.levels.spawns.PlayerCheckpointManager
 import com.megaman.maverick.game.screens.levels.spawns.slotSpawnProps
 import com.megaman.maverick.game.screens.levels.stats.BossHealthHandler
@@ -127,10 +129,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EventType.GAME_PAUSE,
         EventType.GAME_RESUME,
 
-        EventType.PLAYER_SPAWN_INIT,
-        EventType.PLAYER_READY,
         EventType.PLAYER_JUST_DIED,
-        EventType.PLAYER_DONE_DYIN,
 
         EventType.ADD_PLAYER_HEALTH,
         EventType.ADD_WEAPON_ENERGY,
@@ -183,8 +182,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     private lateinit var endLevelEventHandler: EndLevelEventHandler
 
-    private lateinit var playerSpawnEventHandler: PlayerSpawnEventHandler
-    private lateinit var playerDeathEventHandler: PlayerDeathEventHandler
+    private lateinit var beamIn: BeamInView
+    private lateinit var deathFade: DeathFadeOut
+    private lateinit var respawn: RespawnRoutine
 
     private lateinit var bossSpawnEventHandler: BossSpawnEventHandler
 
@@ -260,8 +260,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
         }
 
-        playerSpawnEventHandler = PlayerSpawnEventHandler(game)
-        playerDeathEventHandler = PlayerDeathEventHandler(game)
+        beamIn = BeamInView(game)
+        deathFade = DeathFadeOut(game)
+        respawn = RespawnRoutine(
+            RespawnContext(game, deathFade, beamIn, resetLevel = { resetLevelForRespawn() }, levelMusic = { music })
+        )
         bossSpawnEventHandler = BossSpawnEventHandler(game)
 
         playerStatsHandler = PlayerStatsHandler(game)
@@ -398,8 +401,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         game.levelState.worldContainer = worldContainer
 
-        playerSpawnEventHandler.init()
-        playerDeathEventHandler.setToEnd()
+        respawn.startAtRespawn()
+        deathFade.setToEnd()
 
         endLevelEventHandler.reset()
 
@@ -491,6 +494,35 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerCheckpointMan.startAt(spawn)
     }
 
+    private fun resetLevelForRespawn() {
+        GameLogger.debug(TAG, "resetLevelForRespawn(): reset the room bounds and spawn the players")
+
+        backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
+        game.cameraController.reset()
+
+        fights.cancel()
+        bossHealthHandler.unset()
+
+        engine.systems.forEach { it.on = true }
+
+        cameraFollow.stopSmoothFollow()
+        game.levelState.roomTransition = false
+
+        MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
+        spawnsMan.rearm()
+
+        val spawnProps =
+            playerCheckpointMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
+        GameLogger.debug(TAG, "resetLevelForRespawn(): spawn Megaman: $spawnProps")
+        engine.spawn(player, spawnProps)
+        for (i in 1 until game.players.capacity) {
+            val slot = PlayerSlot(i)
+            game.players.get(slot)?.let { engine.spawn(it, slotSpawnProps(slot, spawnProps)) }
+        }
+
+        if (!cameraShake.isFinished) cameraShake.stop()
+    }
+
     override fun onEvent(event: Event) {
         GameLogger.log(TAG, "event(): event=$event")
 
@@ -511,57 +543,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 game.resume()
             }
 
-            EventType.PLAYER_SPAWN_INIT -> {
-                GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                    "onEvent(): player spawn --> reset the room bounds and spawn megaman"
-                )
-
-                backgrounds.forEach { background -> background.immediateRotation(Direction.UP) }
-                game.cameraController.reset()
-
-                fights.cancel()
-                bossHealthHandler.unset()
-
-                engine.systems.forEach { it.on = true }
-
-                cameraFollow.stopSmoothFollow()
-                game.levelState.roomTransition = false
-
-                MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
-                spawnsMan.rearm()
-
-                val spawnProps =
-                    playerCheckpointMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
-                GameLogger.debug(TAG, "onEvent(): player spawn --> spawn Megaman: $spawnProps")
-                engine.spawn(player, spawnProps)
-                for (i in 1 until game.players.capacity) {
-                    val slot = PlayerSlot(i)
-                    game.players.get(slot)?.let { engine.spawn(it, slotSpawnProps(slot, spawnProps)) }
-                }
-
-                if (!cameraShake.isFinished) cameraShake.stop()
-
-                if (roomBounds.nextGameRoom()?.properties?.containsKey(ConstKeys.MUSIC) == true) {
-                    val musicAsset = MusicAsset.valueOf(
-                        roomBounds
-                            .currentGameRoom!!
-                            .properties
-                            .get(ConstKeys.MUSIC, String::class.java)
-                            .uppercase()
-                    )
-                    musicAsset.let { audioMan.playMusic(it, it.loop) }
-                }
-            }
-
-            EventType.PLAYER_READY -> {
-                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player ready")
-                eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-            }
-
             EventType.PLAYER_JUST_DIED -> {
                 GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player just died --> init death handler"
+                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player just died --> start the respawn routine"
                 )
 
                 // TODO: the death of slot 0 resets the level for all players, and any other death changes nothing until
@@ -571,39 +555,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!
                 if (slot != PlayerSlot(0)) return
 
-                game.players.forEach { if (it != player) engine.destroy(it) }
-
-                audioMan.unsetMusic()
-                audioMan.stopAllLoopingSounds()
-
-                game.gameState.removeLife(slot)
-
-                playerDeathEventHandler.init()
-
-                if (game.clock.paused) {
-                    GameLogger.debug(
-                        MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
-                        "onEvent(): force resume game when Megaman dies"
-                    )
-                    game.resume()
-                }
-            }
-
-            EventType.PLAYER_DONE_DYIN -> {
-                GameLogger.debug(
-                    MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): player done dying --> respawn player"
-                )
-
-                music?.let { audioMan.playMusic(it, it.loop) }
-
-                if (game.gameState.livesExhausted()) {
-                    game.setCurrentScreen(ScreenEnum.GAME_OVER_SCREEN.name)
-                    game.gameState.resetLives()
-                    return
-                }
-
-                playerSpawnEventHandler.init()
-                playerDeathEventHandler.setToEnd()
+                respawn.startAtDeath()
             }
 
             EventType.ADD_WEAPON_ENERGY -> {
@@ -801,21 +753,16 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerStatsHandler.update(delta)
 
         if (!game.clock.paused) {
+            if (endLevelEventHandler.finished) respawn.update(delta)
+
             spawnCameraBounds.set(game.cameraView.getRotatedBounds())
             spawnsMan.update(delta)
 
             fights.update(delta)
 
-            // Because I'm not good at software design, there's some tight coupling in this block
-            // Essentially, the order in which these handlers are updated must not be modified or
-            // else the flow of events in the game might become broken
-            when {
-                !endLevelEventHandler.finished -> endLevelEventHandler.update(delta)
-                !playerSpawnEventHandler.isFinished() -> playerSpawnEventHandler.update(delta)
-                !playerDeathEventHandler.finished -> playerDeathEventHandler.update(delta)
-            }
+            if (!endLevelEventHandler.finished) endLevelEventHandler.update(delta)
 
-            if (player.existenceState.liveAfterUpdate) playerDeathEventHandler.setInactive()
+            if (player.existenceState.liveAfterUpdate) deathFade.setInactive()
         }
 
         engine.update(delta)
@@ -891,9 +838,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         bossHealthHandler.draw(drawer)
         playerStatsHandler.draw(drawer)
 
-        if (!playerSpawnEventHandler.isFinished()) playerSpawnEventHandler.draw(drawer)
+        if (!beamIn.finished) beamIn.draw(drawer)
 
-        if (!player.existenceState.liveAfterUpdate) playerDeathEventHandler.draw(drawer)
+        if (!player.existenceState.liveAfterUpdate) deathFade.draw(drawer)
 
         if (game.clock.paused) pauseScreen.draw(drawer)
 
@@ -972,8 +919,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         spawnsMan.reset()
         playerCheckpointMan.reset()
 
-        playerSpawnEventHandler.reset()
-        playerDeathEventHandler.setToEnd()
+        respawn.cancel()
+        beamIn.reset()
+        deathFade.setToEnd()
 
         endLevelEventHandler.reset()
 

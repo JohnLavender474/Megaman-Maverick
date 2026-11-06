@@ -48,7 +48,7 @@ import com.megaman.maverick.game.world.body.getPositionPoint
 class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable {
 
     companion object {
-        const val TAG = "PlayerSpawnEventHandler"
+        const val TAG = "EndLevelEventHandler"
         private const val START_DELAY_DUR = 2f
         private const val PRE_BEAM_DUR = 6f
         private const val BEAM_UP_DUR = 0.5f
@@ -85,7 +85,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     private var initialized = false
 
     override fun init(vararg params: Any) {
-        GameLogger.debug(PlayerSpawnEventHandler.TAG, "init()")
+        GameLogger.debug(TAG, "init()")
         if (!initialized) {
             MegamanWeapon.entries.forEach { weapon ->
                 val atlas = game.assets.getTextureAtlas(MegamanAnimations.getAssetSourceForWeapon(weapon))

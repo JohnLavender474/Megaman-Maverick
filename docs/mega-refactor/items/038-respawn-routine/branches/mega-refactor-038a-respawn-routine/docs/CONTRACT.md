@@ -10,7 +10,7 @@ Do the checks before the branch merges, and write the result in the branch proce
 
 ## Intended changes
 
-- A death in a `SMB3_1` room with `music`, followed by a respawn in a room with no `music`, plays the level music. Today the death room's music keeps playing.
+- None that a player can see or hear. The room-music block goes; in `SMB3_1` the respawn room's music plays after the respawn, as today.
 - `PLAYER_SPAWN_INIT` goes. No entity listens to it.
 - `TURN_CONTROLLER_ON` is sent once at ready, not twice.
 
@@ -28,6 +28,9 @@ Do the checks before the branch merges, and write the result in the branch proce
 ## Automated checks
 
 - [ ] `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
+- [ ] The review before the play test (see `docs/mega-refactor/CLAUDE.md`) finds that every
+  manual check compiles, launches and runs as written. No game launch.
+- [ ] Death during the beam-in waits for `READY`; a level start from a menu resets in the first events run.
 - [ ] `grep` finds no `PLAYER_SPAWN_INIT`, `PlayerSpawnEventHandler` or `PlayerDeathEventHandler` in live code.
 
 Permanent tests:
@@ -41,12 +44,14 @@ Permanent tests:
 
 Run from the worktree: `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-038a-respawn-routine`
 
-- `./run-game-alpha.sh --level TIMBER_WOMAN`: at level start, the fade in, `READY` and the beam-in look as today. Die to an enemy: the fade out, the respawn and the beam-in look as today, and the enemies of the room come back.
-- `./run-game-alpha.sh --level MOON_MAN --room room11`: die in the `MoonHead` fight. The boss bar goes, the gate locks again, and the fight starts again when you enter.
-- `./run-game-alpha.sh --level INFERNO_MAN`: die while the rising lava moves. The lava is dormant after the respawn, and starts again after `READY`.
-- `./run-game-alpha.sh --level SMB3_1`: die in a room with its own music, after a checkpoint in a room with none. The level music plays after the respawn (intended change).
-- `./run-game-alpha.sh --level TIMBER_WOMAN --players 2`: slot 0 dies. Slot 1 goes and spawns again with slot 0.
-- Lose all lives in any level: the game over screen opens.
+The branch has no intended change that a player can see, so all checks are control checks. The first one runs the whole flow with no input.
+
+- `./run-game-alpha.sh --level REFACTOR_TEST_038 --room death_pit`: do not touch the controls. Megaman beams in, falls into the pit and dies 3 times. Each death: the defeat sound, a pause, the fade out, then the fade in, `READY` and the beam-in. After the third death the game over screen opens.
+- `./run-game-alpha.sh --level TIMBER_WOMAN --room room1`: the level start looks as today. Kill an enemy, then die. After the respawn the enemy is back.
+- `./run-game-alpha.sh --level MOON_MAN --room room11`: go through the gate and die in the `MoonHead` fight. The boss bar goes, the exit gate of the boss room is locked again, and the fight starts again when you enter.
+- `./run-game-alpha.sh --level DESERT_MAN --room room6`: in the dark room, die. During the beam-in the dark area is lit at the beam, as today, and after `READY` the darkness acts as today.
+- `./run-game-alpha.sh --level SMB3_1 --room room2`: go left into `room1`, take the pipe at the far left down to the underground room, and let the `GreenKoopa` hit you until you die (do not kill it). After the respawn in `room2`, the overworld music plays, as today.
+- `./run-game-alpha.sh --level TIMBER_WOMAN --room room1 --players 2`: let slot 0 die. Slot 1 goes at once. Only slot 0 beams in; slot 1 appears 1 tile to the right at `READY`, as today.
 
 ## Behaviors to check
 

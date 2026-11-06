@@ -45,7 +45,7 @@ Scan of `master` at `73fdb0f8c`.
 
 ### The room-music block
 
-`MegaLevelScreen.kt:545-554` reads `nextGameRoom()`, which falls back to `currentGameRoom`. At that moment the camera reset is only a flag (`CameraRoomBounds.kt:47-58`), so both are the room of the death. `LevelRoomHandler.onSetToRoomNoTrans` (`LevelRoomHandler.kt:157-180`) already plays the music of the respawn room on the next camera update. So the block only plays the death room's music before that. Only `SMB3_1.tmx` has rooms with `music` among the live maps. Effect today: a death in a `SMB3_1` room with music, and a respawn in a room with none, keeps the death room's music. With the block gone, the level music plays.
+`MegaLevelScreen.kt:545-554` reads `nextGameRoom()`, which falls back to `currentGameRoom`. At that moment the camera reset is only a flag (`CameraRoomBounds.kt:47-58`), so both are the room of the death. `LevelRoomHandler.onSetToRoomNoTrans` (`LevelRoomHandler.kt:157-180`) plays the music of the respawn room on the next camera update, if the room has `music` and it is not already playing. Among the live maps, only `SMB3_1.tmx` has rooms with `music`, and every one of its 5 `game_rooms` objects has it; `SMB3_1` has no level music. So in every case the respawn room's music plays after the camera update, with or without the block. The block only plays the death room's track for the frames before that. With the block gone, nothing that a player can hear changes. (Correction, 2026-11-06: the brief first said that the level music would play in one `SMB3_1` case. That case does not exist.) The issue `docs/issues/2026-10-22-respawn-stale-room-music.md` says no live room has `music`; that is also wrong. Close the issue at the merge and correct it.
 
 ## In scope
 
@@ -69,6 +69,7 @@ Scan of `master` at `73fdb0f8c`.
 | `RespawnRoutine` | `MegaLevelScreen.onEvent(PLAYER_JUST_DIED)` and the level start |
 | One `Step<RespawnContext>` per step | `RespawnRoutine` |
 | `RespawnContext` | the steps |
+| `EventsManager.runCount` (engine) | `AwaitEventsRun` and `BeamUntilEventsRun`: the old chain did its next part in the next `events.run()`, so the steps wait for that run (added after the review, 2026-11-06) |
 
 ## Affected areas and risks
 

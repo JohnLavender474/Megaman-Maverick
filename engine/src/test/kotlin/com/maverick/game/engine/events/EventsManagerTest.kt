@@ -19,6 +19,15 @@ class EventsManagerTest :
                 eventsManager = EventsManager()
             }
 
+            it("counts each run") {
+                eventsManager.runCount shouldBe 0L
+
+                eventsManager.run()
+                eventsManager.run()
+
+                eventsManager.runCount shouldBe 2L
+            }
+
             it("should queue an event") {
                 // if
                 val event = Event("testEvent", Properties())

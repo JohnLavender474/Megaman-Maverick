@@ -160,6 +160,12 @@ enum class LevelDefinition(
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
     ),
+    REFACTOR_TEST_038(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "RefactorTest038.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+    ),
     REFACTOR_TEST_047(
         type = LevelType.TEST_LEVEL,
         tmxMapSource = "RefactorTest047.tmx",

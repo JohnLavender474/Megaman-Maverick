@@ -23,6 +23,9 @@ class EventsManager : Runnable {
     internal var running = false
         private set
 
+    var runCount = 0L
+        private set
+
     private var setToClearListeners = false
 
 
@@ -78,5 +81,6 @@ class EventsManager : Runnable {
         eventsMap.clear()
 
         running = false
+        runCount++
     }
 }

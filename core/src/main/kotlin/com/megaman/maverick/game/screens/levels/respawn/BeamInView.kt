@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.screens.levels.events
+package com.megaman.maverick.game.screens.levels.respawn
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -8,12 +8,9 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.getTextureRegion
-import com.maverick.game.engine.common.interfaces.IFinishable
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
-import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -22,38 +19,25 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.facing
-import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.locks.lock
-import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.PlayerSlot
-import com.maverick.game.engine.players.forEach
-import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getMegamanSpritePriority
-import com.megaman.maverick.game.entities.state.PlayPhase
-import com.megaman.maverick.game.entities.state.setPlayPhase
-import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.events.PlayerEventKeys
-import com.megaman.maverick.game.locks.MegaLockGroup
-import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.getCenter
 
-class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable,
-    IFinishable, IDrawable<Batch> {
+class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable, IDrawable<Batch> {
 
     companion object {
-        const val TAG = "PlayerSpawnEventHandler"
+        const val TAG = "BeamInView"
         private const val PRE_BEAM_DUR = 1f
         private const val BEAM_DOWN_DUR = 0.5f
         private const val BEAM_TRANS_DUR = 0.35f
@@ -64,8 +48,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     // TODO: the beam-in acts on the lead player in slot 0; with more players, each player needs its own (item 047)
     private val player: MegaGameEntity
         get() = game.players.get(PlayerSlot(0))!!
-
-    private fun playerSlot() = player.playerSlot!!
 
     private val blinkTimer = Timer(BLINK_READY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
@@ -85,7 +67,8 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
     private var initialized = false
     private var showReadyText = false
 
-    private var finished = true
+    var finished = true
+        private set
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -123,18 +106,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         beamSprite.setPosition(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
 
-        game.players.forEach {
-            it.setPlayPhase(PlayPhase.PRE_PLAY)
-            it.lock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
-            it.body.physics.gravityOn = false
-            it.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
-        }
-
-        game.events.submitEvent(Event(EventType.PLAYER_SPAWN_INIT, props(PlayerEventKeys.SLOT pairTo playerSlot())))
-        game.events.submitEvent(Event(EventType.TURN_CONTROLLER_OFF))
-
-        game.levelState.megamanBeam = true
-
         fadein.init()
 
         finished = false
@@ -165,8 +136,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
         if (preBeamTimer.isFinished() && (!beamDownTimer.isFinished() || !beamTransitionTimer.isFinished()))
             game.addDrawable(beamSprite)
     }
-
-    override fun isFinished() = finished
 
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
@@ -206,20 +175,6 @@ class PlayerSpawnEventHandler(private val game: MegamanMaverickGame) : Initializ
 
         if (beamTransitionTimer.isJustFinished()) {
             GameLogger.debug(TAG, "beamTrans(): just finished")
-
-            game.players.forEach {
-                it.body.physics.gravityOn = true
-                it.unlock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
-                it.setPlayPhase(PlayPhase.IN_PLAY)
-                it.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
-            }
-
-            game.events.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
-            game.events.submitEvent(Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo playerSlot())))
-
-            game.audio.playSound(SoundAsset.BEAM_SOUND)
-
-            game.levelState.megamanBeam = false
 
             showReadyText = false
 

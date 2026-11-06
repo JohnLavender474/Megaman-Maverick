@@ -119,7 +119,7 @@ flowchart LR
     Lease -. "still held at close or cancel" .-> Close["Fight releases it"]
 ```
 
-So no exit route can leave the world frozen or a bar on the screen: a normal end, a win during the intro, a player death (`PLAYER_SPAWN_INIT`) or a screen reset (`MegaLevelScreen.reset()`).
+So no exit route can leave the world frozen or a bar on the screen: a normal end, a win during the intro, a player death (the level reset of the respawn routine, `screens/levels/respawn/`) or a screen reset (`MegaLevelScreen.reset()`).
 
 ## How it runs in a frame
 

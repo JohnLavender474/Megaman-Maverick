@@ -56,6 +56,16 @@ class MegaLevelScreenEventsTest : DescribeSpec({
         }
     }
 
+    describe("MegaLevelScreen and the respawn events") {
+        it("listens to the death and to no event that the respawn routine sends") {
+            val mask = MegaLevelScreen(mockk<MegamanMaverickGame>(relaxed = true)).eventKeyMask
+
+            mask.contains(EventType.PLAYER_JUST_DIED) shouldBe true
+            listOf(EventType.PLAYER_DONE_DYIN, EventType.PLAYER_READY, EventType.PLAYER_SPAWN)
+                .forEach { mask.contains(it) shouldBe false }
+        }
+    }
+
     describe("MegaLevelScreen and GAME_COMPLETE") {
         it("listens to GAME_COMPLETE") {
             val screen = MegaLevelScreen(mockk<MegamanMaverickGame>(relaxed = true))
