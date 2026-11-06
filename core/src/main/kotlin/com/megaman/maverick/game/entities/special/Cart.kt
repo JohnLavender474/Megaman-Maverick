@@ -181,7 +181,7 @@ class Cart(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICul
     private fun defineCullablesComponent() =
         CullablesComponent(
             objectMapOf(
-                ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this, objectSetOf(EventType.PLAYER_SPAWN))
+                ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this, objectSetOf(EventType.LEVEL_RESET))
             )
         )
 

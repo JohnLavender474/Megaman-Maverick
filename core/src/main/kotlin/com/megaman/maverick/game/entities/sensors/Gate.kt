@@ -78,7 +78,7 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
     enum class GateType { STANDARD }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.PLAYER_SPAWN,
+        EventType.LEVEL_RESET,
         EventType.END_ROOM_TRANS,
         EventType.UNLOCK_GATE
     )
@@ -175,8 +175,8 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.PLAYER_SPAWN -> {
-                GameLogger.debug(TAG, "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, PLAYER_SPAWN")
+            EventType.LEVEL_RESET -> {
+                GameLogger.debug(TAG, "onEvent(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId, LEVEL_RESET")
                 if (resettable) reset()
             }
 

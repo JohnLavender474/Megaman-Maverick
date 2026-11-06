@@ -27,7 +27,7 @@ class RoomShaker(services: MegaServices) : MegaGameEntity(services), IEventListe
     }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.PLAYER_SPAWN,
+        EventType.LEVEL_RESET,
         EventType.BEGIN_ROOM_TRANS,
         EventType.END_ROOM_TRANS,
         EventType.SET_TO_ROOM_NO_TRANS
@@ -84,7 +84,7 @@ class RoomShaker(services: MegaServices) : MegaGameEntity(services), IEventListe
         GameLogger.debug(TAG, "Received event: $event")
 
         when (event.key) {
-            EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS -> {
+            EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS -> {
                 GameLogger.debug(TAG, "Room transition started")
                 run = false
             }

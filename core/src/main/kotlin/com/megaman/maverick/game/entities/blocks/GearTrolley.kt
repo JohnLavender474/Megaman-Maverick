@@ -40,7 +40,7 @@ class GearTrolley(services: MegaServices) : Block(services), IMotionEntity, ISpr
     }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
+        EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
 
     override fun init(vararg params: Any) {
@@ -84,7 +84,7 @@ class GearTrolley(services: MegaServices) : Block(services), IMotionEntity, ISpr
             }
 
             EventType.END_ROOM_TRANS -> defaultSprite.hidden = false
-            EventType.PLAYER_SPAWN -> resetMotionComponent()
+            EventType.LEVEL_RESET -> resetMotionComponent()
         }
     }
 

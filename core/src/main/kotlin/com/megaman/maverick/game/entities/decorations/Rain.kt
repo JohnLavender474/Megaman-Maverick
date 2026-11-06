@@ -68,7 +68,7 @@ class RainDrop(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
     internal enum class RainDropType { BLUE, PURPLE }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.PLAYER_SPAWN, EventType.GATE_INIT_OPENING, EventType.BEGIN_ROOM_TRANS
+        EventType.LEVEL_RESET, EventType.GATE_INIT_OPENING, EventType.BEGIN_ROOM_TRANS
     )
 
     private lateinit var type: RainDropType
@@ -156,7 +156,7 @@ class RainDrop(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
     }
 
     override fun onEvent(event: Event) {
-        if (event.key.equalsAny(EventType.PLAYER_SPAWN, EventType.GATE_INIT_OPENING)) destroy()
+        if (event.key.equalsAny(EventType.LEVEL_RESET, EventType.GATE_INIT_OPENING)) destroy()
         if (destroyOnRoomChange && event.key == EventType.BEGIN_ROOM_TRANS) destroy()
     }
 

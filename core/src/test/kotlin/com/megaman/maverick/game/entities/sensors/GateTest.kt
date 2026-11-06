@@ -88,11 +88,11 @@ class GateTest : DescribeSpec({
             unlockedAndTriggered(gauntletGate) shouldBe false
         }
 
-        it("locks an unlocked gate with a key again on PLAYER_SPAWN") {
+        it("locks an unlocked gate with a key again on LEVEL_RESET") {
             val gate = spawnGate(BOSS_KEY to "1")
             send(EventType.UNLOCK_GATE, props(ConstKeys.KEY pairTo "1"))
 
-            send(EventType.PLAYER_SPAWN)
+            send(EventType.LEVEL_RESET)
 
             unlockedAndTriggered(gate) shouldBe false
         }

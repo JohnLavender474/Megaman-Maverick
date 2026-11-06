@@ -53,7 +53,7 @@ class PropellerPlatform(services: MegaServices) : Block(services), IMotionEntity
     }
 
     override val eventKeyMask = objectSetOf<Any>(
-        EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
+        EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.END_ROOM_TRANS
     )
     override lateinit var direction: Direction
 
@@ -117,7 +117,7 @@ class PropellerPlatform(services: MegaServices) : Block(services), IMotionEntity
             }
 
             EventType.END_ROOM_TRANS -> hidden = false
-            EventType.PLAYER_SPAWN -> resetMotionComponent()
+            EventType.LEVEL_RESET -> resetMotionComponent()
         }
     }
 

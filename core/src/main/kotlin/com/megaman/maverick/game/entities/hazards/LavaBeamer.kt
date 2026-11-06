@@ -99,7 +99,7 @@ class LavaBeamer(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
         val cullEvents = objectSetOf<Any>(
             EventType.GAME_OVER,
-            EventType.PLAYER_SPAWN,
+            EventType.LEVEL_RESET,
             EventType.BEGIN_ROOM_TRANS,
             EventType.GATE_INIT_OPENING
         )

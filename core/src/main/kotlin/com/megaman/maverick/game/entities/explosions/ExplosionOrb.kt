@@ -136,7 +136,7 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
             { defaultSprite.boundingRectangle.toGameRectangle() },
             OOB_CULL_TIME
         )
-        val cullEvents = getStandardEventCullingLogic(this, objectSetOf(EventType.PLAYER_SPAWN))
+        val cullEvents = getStandardEventCullingLogic(this, objectSetOf(EventType.LEVEL_RESET))
         return CullablesComponent(
             objectMapOf(
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOOB,

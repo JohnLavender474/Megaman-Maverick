@@ -132,7 +132,7 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this,
-                objectSetOf(EventType.PLAYER_SPAWN)
+                objectSetOf(EventType.LEVEL_RESET)
             )
         )
     )

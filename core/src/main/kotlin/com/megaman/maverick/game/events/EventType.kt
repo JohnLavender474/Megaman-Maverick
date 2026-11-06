@@ -5,7 +5,8 @@ enum class EventType {
     GAME_RESUME,
     GAME_OVER,
 
-    PLAYER_SPAWN,
+    LEVEL_RESET,
+
     PLAYER_JUST_DIED,
     PLAYER_DONE_DYIN,
     PLAYER_READY,

@@ -111,6 +111,7 @@ class RespawnRoutineTest : DescribeSpec({
                 "$d:MUSIC",
                 "${d + 1}:TURN_CONTROLLER_OFF",
                 "${d + 2}:RESET",
+                "${d + 2}:LEVEL_RESET",
                 "${d + BEAM_FRAMES}:TURN_CONTROLLER_ON",
                 "${d + BEAM_FRAMES}:PLAYER_READY"
             )
@@ -175,6 +176,7 @@ class RespawnRoutineTest : DescribeSpec({
             r.log shouldBe listOf(
                 "0:TURN_CONTROLLER_OFF",
                 "2:RESET",
+                "2:LEVEL_RESET",
                 "2:TURN_CONTROLLER_OFF",
                 "$BEAM_FRAMES:TURN_CONTROLLER_ON",
                 "$BEAM_FRAMES:PLAYER_READY",
@@ -194,7 +196,8 @@ class RespawnRoutineTest : DescribeSpec({
             r.frames(DEATH_FRAMES + BEAM_FRAMES + 3)
 
             r.log.count { it.endsWith("PLAYER_DONE_DYIN") } shouldBe 1
-            r.log.count { it.endsWith("RESET") } shouldBe 1
+            r.log.count { it.endsWith(":RESET") } shouldBe 1
+            r.log.count { it.endsWith(":LEVEL_RESET") } shouldBe 1
             r.log.filter { it.endsWith("PLAYER_DONE_DYIN") } shouldBe listOf("${1 + DEATH_FRAMES}:PLAYER_DONE_DYIN")
         }
     }
@@ -210,6 +213,7 @@ class RespawnRoutineTest : DescribeSpec({
             r.log shouldBe listOf(
                 "0:TURN_CONTROLLER_OFF",
                 "1:RESET",
+                "1:LEVEL_RESET",
                 "$BEAM_FRAMES:TURN_CONTROLLER_ON",
                 "$BEAM_FRAMES:PLAYER_READY"
             )
@@ -225,6 +229,7 @@ class RespawnRoutineTest : DescribeSpec({
             r.log shouldBe listOf(
                 "0:TURN_CONTROLLER_OFF",
                 "2:RESET",
+                "2:LEVEL_RESET",
                 "$BEAM_FRAMES:TURN_CONTROLLER_ON",
                 "$BEAM_FRAMES:PLAYER_READY"
             )

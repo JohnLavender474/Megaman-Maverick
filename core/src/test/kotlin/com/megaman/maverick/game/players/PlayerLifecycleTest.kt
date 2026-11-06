@@ -114,8 +114,8 @@ class PlayerLifecycleTest : DescribeSpec({
     }
 
     describe("playerSpawnEnd") {
-        it("submits PLAYER_SPAWN for slot 0 and not for slot 1") {
-            val recorder = EventRecorder(EventType.PLAYER_SPAWN)
+        it("submits no level reset for any slot, because the respawn routine sends it") {
+            val recorder = EventRecorder(EventType.LEVEL_RESET)
             val events = first.services.events
             events.addListener(recorder)
 
@@ -123,8 +123,7 @@ class PlayerLifecycleTest : DescribeSpec({
             second.playerSpawnEnd()
             events.run()
 
-            recorder.received.size shouldBe 1
-            recorder.received[0].getProperty(PlayerEventKeys.SLOT) shouldBe PlayerSlot(0)
+            recorder.received.size shouldBe 0
         }
     }
 
@@ -177,7 +176,7 @@ class PlayerLifecycleTest : DescribeSpec({
         }
 
         it("throws for an event that is not a room transition") {
-            shouldThrow<IllegalArgumentException> { first.playerOnRoomTransition(transition(EventType.PLAYER_SPAWN)) }
+            shouldThrow<IllegalArgumentException> { first.playerOnRoomTransition(transition(EventType.LEVEL_RESET)) }
         }
     }
 

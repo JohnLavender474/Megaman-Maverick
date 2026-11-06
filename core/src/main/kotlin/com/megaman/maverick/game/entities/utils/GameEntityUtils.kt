@@ -39,7 +39,7 @@ import com.megaman.maverick.game.world.body.getCenter
 fun getStandardEventCullingLogic(
     entity: ICullableEntity,
     cullEvents: ObjectSet<Any> = objectSetOf(
-        EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.PLAYER_SPAWN
+        EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING, EventType.LEVEL_RESET
     ),
     vararg additionalPredicates: (Event) -> Boolean
 ): CullableOnEvent {

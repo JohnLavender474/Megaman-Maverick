@@ -175,9 +175,9 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     private fun defineCullablesComponent() = CullablesComponent(
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
-                this, objectSetOf(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS), cull@{ event ->
+                this, objectSetOf(EventType.LEVEL_RESET, EventType.END_ROOM_TRANS), cull@{ event ->
                     val room = services.levelState.currentRoom?.name
-                    val cull = event.key == EventType.PLAYER_SPAWN || room != spawnRoom
+                    val cull = event.key == EventType.LEVEL_RESET || room != spawnRoom
                     GameLogger.debug(
                         TAG,
                         "defineCullablesComponent(): event=$event, currentRoom=$room, spawnRoom=$spawnRoom, cull=$cull"

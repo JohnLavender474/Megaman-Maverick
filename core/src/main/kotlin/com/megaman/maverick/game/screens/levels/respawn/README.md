@@ -10,7 +10,7 @@ The examples in this file are hypothetical. The real steps are in `RespawnSteps.
 
 ## Status
 
-The routine acts on the lead player in slot 0, as the old handlers did. Co-op respawn is item `047`. The public events (`PLAYER_JUST_DIED`, `PLAYER_DONE_DYIN`, `PLAYER_SPAWN`, `PLAYER_READY`) stay, because entities listen to them. `PLAYER_SPAWN` still comes from `Megaman.onSpawn`, and many entity classes use it as a level reset; item `038b` splits it into a spawn event for each slot and a `LEVEL_RESET` that the routine sends.
+The routine acts on the lead player in slot 0, as the old handlers did. Co-op respawn is item `047`. The public events (`PLAYER_JUST_DIED`, `PLAYER_DONE_DYIN`, `PLAYER_READY`) stay, because entities listen to them. The routine sends `LEVEL_RESET` when it resets the level; many entity classes destroy, cull or reset themselves on it. A player spawn sends no event. A spawn event for each slot comes with co-op (`047`), when a listener needs it.
 
 ## The parts
 
@@ -55,7 +55,8 @@ sequenceDiagram
     R->>R: begin respawn: locks, TURN_CONTROLLER_OFF; beam until the next run
     Note over S,E: next run, then frame M+2
     R->>S: resetLevel(): camera, fights, enemies, spawn players
-    E->>E: engine.update spawns the players, PLAYER_SPAWN
+    R->>E: LEVEL_RESET
+    E->>E: engine.update spawns the players; the run delivers LEVEL_RESET
     Note over S,E: frames M+2 to R
     R->>R: beam in
     R->>E: TURN_CONTROLLER_ON, PLAYER_READY (frame R)

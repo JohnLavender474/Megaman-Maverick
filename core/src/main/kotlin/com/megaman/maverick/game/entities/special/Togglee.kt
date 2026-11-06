@@ -79,7 +79,7 @@ class Togglee(services: MegaServices) : MegaGameEntity(services), IBodyEntity, I
 
     override var direction = Direction.UP
     override var children = Array<IGameEntity>()
-    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.END_ROOM_TRANS)
+    override val eventKeyMask = objectSetOf<Any>(EventType.LEVEL_RESET, EventType.END_ROOM_TRANS)
 
     val moving: Boolean
         get() = state.equalsAny(ToggleeState.TOGGLING_TO_ON, ToggleeState.TOGGLING_TO_OFF)
@@ -198,7 +198,7 @@ class Togglee(services: MegaServices) : MegaGameEntity(services), IBodyEntity, I
 
     override fun onEvent(event: Event) {
         when (event.key) {
-            EventType.PLAYER_SPAWN -> destroy() // this assumes that a player spawn is never in the same room as a Togglee
+            EventType.LEVEL_RESET -> destroy() // this assumes that a level reset never spawns a player in the same room as a Togglee
             EventType.END_ROOM_TRANS -> {
                 val newRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
                 if (spawnRoom != newRoom) destroy()

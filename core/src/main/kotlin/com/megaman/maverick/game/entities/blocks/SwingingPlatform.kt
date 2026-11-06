@@ -65,7 +65,7 @@ class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN)
+    override val eventKeyMask = objectSetOf<Any>(EventType.LEVEL_RESET)
     override var children = Array<MegaGameEntity>()
 
     private lateinit var pendulum: Pendulum

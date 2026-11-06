@@ -126,7 +126,10 @@ object BeamUntilEventsRun : Step<RespawnContext> {
 
 object ResetLevel : Step<RespawnContext> {
 
-    override fun begin(context: RespawnContext) = context.resetLevel()
+    override fun begin(context: RespawnContext) {
+        context.resetLevel()
+        context.game.events.submitEvent(Event(EventType.LEVEL_RESET))
+    }
 
     override fun isFinished(context: RespawnContext) = true
 }

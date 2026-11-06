@@ -43,8 +43,10 @@ sequenceDiagram
     Note over S: listener, body position and physics, facing,<br/>world gravity, health, lock clears, teleporter
     C->>C: its own lines (for example weapons, timers)
     C->>S: playerSpawnEnd()
-    Note over S: camera follow stop, PLAYER_SPAWN for slot 0
+    Note over S: camera follow stop
 ```
+
+A spawn sends no level event. The respawn routine sends `LEVEL_RESET` when it resets the level (see `screens/levels/respawn/README.md`).
 
 A hypothetical player class:
 

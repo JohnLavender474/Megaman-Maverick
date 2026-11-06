@@ -34,7 +34,7 @@ class BigAssMaverickRobotBody(services: MegaServices) : MegaGameEntity(services)
         private var region: TextureRegion? = null
     }
 
-    override val eventKeyMask = objectSetOf<Any>(EventType.PLAYER_SPAWN)
+    override val eventKeyMask = objectSetOf<Any>(EventType.LEVEL_RESET)
 
     internal val bounds = GameRectangle()
 
@@ -62,7 +62,7 @@ class BigAssMaverickRobotBody(services: MegaServices) : MegaGameEntity(services)
     }
 
     override fun onEvent(event: Event) {
-        if (event.key == EventType.PLAYER_SPAWN) destroy()
+        if (event.key == EventType.LEVEL_RESET) destroy()
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()

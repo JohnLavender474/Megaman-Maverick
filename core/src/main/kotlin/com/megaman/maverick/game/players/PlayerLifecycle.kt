@@ -63,11 +63,6 @@ fun <T> T.playerSpawnStart(spawnProps: Properties)
 
 fun MegaGameEntity.playerSpawnEnd() {
     services.cameraController.stopSmoothFollow()
-
-    // TODO: only slot 0 submits this event, because its listeners use it as a level reset, which must run once; a
-    //  later slot has no spawn event until item 038 splits it into a spawn event per player and a level reset
-    if (playerSlot!!.index == 0)
-        services.events.submitEvent(Event(EventType.PLAYER_SPAWN, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
 }
 
 // TODO: this event fires on each destroy of a player, also when it is not a death (item 119)

@@ -140,7 +140,7 @@ class FireMetSpawner(services: MegaServices) : MegaGameEntity(services), IParent
 
     private fun defineCullablesComponent(): CullablesComponent {
         val eventsToCullOn = objectSetOf<Any>(
-            EventType.GAME_OVER, EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
+            EventType.GAME_OVER, EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
         )
         val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
         return CullablesComponent(objectMapOf(ConstKeys.CULL_EVENTS pairTo cullOnEvents))

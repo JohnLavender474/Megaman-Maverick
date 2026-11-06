@@ -54,7 +54,7 @@ interface IProjectileEntity : IMegaGameEntity, IBodyEntity, IAudioEntity, ICulla
 
     fun getCullOnEventsCullable(): CullableOnEvent {
         val cullEvents =
-            objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
+            objectSetOf<Any>(EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
         return CullableOnEvent({ cullEvents.contains(it.key) }, cullEvents)
     }
 

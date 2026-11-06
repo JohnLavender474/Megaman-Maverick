@@ -181,7 +181,7 @@ class SeaMine(services: MegaServices) : MegaGameEntity(services), IBodyEntity, I
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullEvents =
-            objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
+            objectSetOf<Any>(EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING)
         val cullOnEvents = CullableOnEvent({ cullEvents.contains(it) }, cullEvents)
         runnablesOnSpawn.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
         runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }

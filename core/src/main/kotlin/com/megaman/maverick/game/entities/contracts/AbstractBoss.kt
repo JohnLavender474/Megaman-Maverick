@@ -93,7 +93,7 @@ abstract class AbstractBoss(
     }
 
     override val damageNegotiator: IDamageNegotiator = BossDamageNegotiator()
-    override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN, EventType.PLAYER_SPAWN)
+    override val eventKeyMask = objectSetOf<Any>(EventType.END_BOSS_SPAWN, EventType.LEVEL_RESET)
 
     protected open val defeatTimer = Timer(defeatDur)
     protected open val spawnDefeatExplosionTimer = Timer(EXPLOSION_TIME)
@@ -162,7 +162,7 @@ abstract class AbstractBoss(
         GameLogger.debug(TAG, "onEvent: event=$event")
         when (event.key) {
             EventType.END_BOSS_SPAWN -> onEndBossSpawnEvent()
-            EventType.PLAYER_SPAWN -> destroy()
+            EventType.LEVEL_RESET -> destroy()
         }
     }
 

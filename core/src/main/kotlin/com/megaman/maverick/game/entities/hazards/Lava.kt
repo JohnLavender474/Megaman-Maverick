@@ -203,7 +203,7 @@ class Lava(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICul
 
     private fun defineCullablesComponent(): CullablesComponent {
         val cullEvents =
-            objectSetOf<Any>(EventType.PLAYER_SPAWN, EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS)
+            objectSetOf<Any>(EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS)
         val cullOnEvents = CullableOnEvent({ event ->
             when {
                 !doCull -> false

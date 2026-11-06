@@ -61,7 +61,7 @@ class MegaLevelScreenEventsTest : DescribeSpec({
             val mask = MegaLevelScreen(mockk<MegamanMaverickGame>(relaxed = true)).eventKeyMask
 
             mask.contains(EventType.PLAYER_JUST_DIED) shouldBe true
-            listOf(EventType.PLAYER_DONE_DYIN, EventType.PLAYER_READY, EventType.PLAYER_SPAWN)
+            listOf(EventType.PLAYER_DONE_DYIN, EventType.PLAYER_READY, EventType.LEVEL_RESET)
                 .forEach { mask.contains(it) shouldBe false }
         }
     }

@@ -89,7 +89,7 @@ Reference stage: `assets/tiled_maps/tmx/Gauntlet1_v2.tmx` (design notes in
 |---|---|
 | Player leaves the room during a wave (`BEGIN_ROOM_TRANS`) | All enemies are destroyed; the master resets. Re-entering starts again from wave 1. |
 | Player leaves a cleared room and comes back | The master stays cleared; the gate stays open. |
-| Player dies (`PLAYER_JUST_DIED`) | Every master resets, cleared ones too. On `PLAYER_SPAWN` every gauntlet gate locks again. |
+| Player dies (`PLAYER_JUST_DIED`) | Every master resets, cleared ones too. On `LEVEL_RESET` (the respawn routine sends it) every gauntlet gate locks again. |
 | Level start or respawn in a gauntlet room (`SET_TO_ROOM_NO_TRANS`) | The master starts after `start_delay`. |
 
 ## Hazard-only rooms

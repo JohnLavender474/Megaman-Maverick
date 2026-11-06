@@ -150,10 +150,10 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
         objectMapOf(
             ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(
                 this,
-                objectSetOf(EventType.END_ROOM_TRANS, EventType.PLAYER_SPAWN),
+                objectSetOf(EventType.END_ROOM_TRANS, EventType.LEVEL_RESET),
                 { event ->
                     val cull = when (event.key) {
-                        EventType.PLAYER_SPAWN -> true
+                        EventType.LEVEL_RESET -> true
                         EventType.END_ROOM_TRANS -> {
                             val room = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)!!.name
                             room != spawnRoom
