@@ -131,6 +131,7 @@ class MegamanRunTest : DescribeSpec({
         megaman.addComponent(RunComponent())
         behaviors = BehaviorsComponent()
         megaman.addComponent(behaviors)
+        megaman.addRuleComponents()
 
         controllerSystem = ControllerSystem()
         controllerSystem.add(megaman)

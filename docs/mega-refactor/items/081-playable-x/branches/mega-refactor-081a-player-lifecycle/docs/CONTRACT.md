@@ -72,7 +72,7 @@ Control: room transitions:
 Control: death and respawn:
 
 - `./run-game-alpha.sh --level REFACTOR_TEST_084 --room out_of_bounds`: walk into the pit. Mega dies past the bottom
-  of the map, and respawns. The log has the error "Megaman is below game bounds, kill him".
+  of the map, and respawns. The log has the error "The player is outside the level bounds, kill it" (the text changed in this branch, because the function serves every player).
 - `./run-game-alpha.sh --level REFACTOR_TEST_029 --room player_death`: die from damage. The orbs ring out, Mega
   respawns, the enemies reset, and Mega cannot be hit during the beam-in.
 

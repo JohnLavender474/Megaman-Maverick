@@ -63,6 +63,7 @@ class MegamanCrouchDelayTest : DescribeSpec({
         every { groundSlide.isActive() } answers { groundSliding }
         behaviors.addBehavior(BehaviorType.GROUND_SLIDING, groundSlide)
         megaman.addComponent(behaviors)
+        megaman.addRuleComponents()
 
         crouch = megaman.crouchBehavior()
     }

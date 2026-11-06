@@ -22,6 +22,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.addRuleComponents
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.rootPlayer
@@ -146,6 +147,7 @@ class FriendlyFireTest : DescribeSpec({
             slots.register(PlayerSlot(0), megaman)
             slots.register(PlayerSlot(1), teammate)
             megaman.existenceState = EntityExistenceState.LIVE
+            megaman.addRuleComponents()
             return megaman
         }
 

@@ -82,7 +82,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
   `git worktree add -b mega-refactor-081a-player-lifecycle .worktrees/mega-refactor-081a-player-lifecycle master`.
   Recheck the overlap with the other worktrees, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Tests first
 
@@ -91,7 +91,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
   `testServices()`: each check in the contract "Automated checks". Move `MegamanInvincibleTest` to the new rule and add
   the components that `require` needs to its setup.
 - Check: `core:test` fails only on the new tests that need the moved code.
-- Done: no
+- Done: yes
 
 ### 3. The rules and the damage
 
@@ -99,7 +99,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
   `Megaman` calls them; `PlayerDamageNegotiator` replaces `MegamanDamageNegotiator`.
 - Check: `core:test` passes for these tests. A mutation check for each function (break 1 term, at least 1 test
   fails); write the results in the process log.
-- Done: no
+- Done: yes
 
 ### 4. The spawn, the destroy, the room transition and the kill
 
@@ -108,7 +108,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
   `setAllToMaxAmmo` and the `aButtonTask` writes, and confirm that they read no health and no lock; write the result
   in the process log.
 - Check: `core:test` passes. A mutation check for each function; write the results in the process log.
-- Done: no
+- Done: yes
 
 ### 5. README, imports and the full checks
 
@@ -117,11 +117,11 @@ approved. The user approves it. When the plan changes, write the reason in the p
   active branches.
 - Check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes. `Megaman.kt` has no lifecycle line left
   that the scope lists as shared.
-- Done: no
+- Done: yes
 
 ### 6. Launch checks
 
 - Changes: none.
 - Check: a `timeout 12` launch of each room in the contract "Manual playthrough", one launch per room, from the
   worktree. A clean exit passes. Write the results in the process log. Then the owner plays the contract checks.
-- Done: no
+- Done: yes

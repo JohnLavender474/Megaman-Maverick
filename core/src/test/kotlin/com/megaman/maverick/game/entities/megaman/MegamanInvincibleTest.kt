@@ -28,6 +28,7 @@ class MegamanInvincibleTest : DescribeSpec({
     beforeEach {
         megaman = Megaman(testServices(engine = mockk<GameEngine>(relaxed = true)))
         megaman.addComponent(PlayPhaseComponent(PlayPhase.IN_PLAY))
+        megaman.addComponent(megaman.damageRecovery)
         megaman.addComponent(LocksComponent(MegaLockGroup.entries.size))
         megaman.addComponent(megaman.defineStunComponent())
         megaman.addComponent(megaman.defineFreezeComponent())

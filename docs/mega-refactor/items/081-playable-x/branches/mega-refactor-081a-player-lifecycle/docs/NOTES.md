@@ -41,3 +41,10 @@ The free function keeps the later change to its body only. Before the change: en
 `SmallIceCube.kt:228` reader, and a review of the `048` decision that invincibility is never stored.
 
 ## Overlap with other branches
+
+2026-11-06, at branch start (`07a8e1908`):
+
+- `x6-intro-extra-level` changes `MegamanDamageNegotiator.kt` (7 entries and their imports). This branch renames the
+  file to `players/PlayerDamageNegotiator.kt`, so that branch moves its entries when it next merges `master`. It
+  changes no other file that this branch touches.
+- `compactor-level` changes `CeilingCrusher.kt` and `LevelDefinition.kt`. No overlap.

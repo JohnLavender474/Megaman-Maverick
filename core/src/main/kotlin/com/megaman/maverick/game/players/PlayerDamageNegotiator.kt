@@ -1,4 +1,4 @@
-package com.megaman.maverick.game.entities.megaman
+package com.megaman.maverick.game.players
 
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.objectMapOf
@@ -19,9 +19,11 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.utils.hardMode
 
-class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator {
+// TODO: a player class cannot give its own entries yet; item 081 branch 081b adds an overrides parameter, with X as
+//  its first caller
+class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegotiator {
 
-    private val services = megaman.services
+    private val services = player.services
 
     private val custom = objectMapOf(
         BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
@@ -34,7 +36,7 @@ class MegamanDamageNegotiator(private val megaman: Megaman) : IDamageNegotiator 
 
     override fun get(damager: IDamagerEntity): Int {
         val entity = damager as MegaGameEntity
-        if (entity is IOwnable<*> && entity.owner == megaman) return 0
+        if (entity is IOwnable<*> && entity.owner == player) return 0
 
         val tag = entity.getTag()
         return when {
