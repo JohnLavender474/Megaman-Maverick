@@ -33,6 +33,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -113,7 +114,7 @@ class PenguinMiniBoss(services: MegaServices) : AbstractBoss(services), IParentE
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) return@add
+            if (bossComponent.phase == BossPhase.ENTRANCE) return@add
             if (defeated) {
                 explodeOnDefeat(delta)
                 return@add

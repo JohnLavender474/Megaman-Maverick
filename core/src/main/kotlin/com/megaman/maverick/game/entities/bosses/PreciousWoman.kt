@@ -45,6 +45,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
@@ -346,7 +347,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (betweenReadyAndEndBossSpawnEvent) return@add
+            if (bossComponent.phase == BossPhase.INTRO) return@add
 
             if (defeated) {
                 body.physics.velocity.setZero()
@@ -674,7 +675,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
                         stunned -> "damaged"
 
-                        !ready || betweenReadyAndEndBossSpawnEvent -> when {
+                        bossComponent.phase != BossPhase.FIGHT -> when {
                             !body.isSensing(BodySense.FEET_ON_GROUND) -> "jump"
                             else -> "wink"
                         }

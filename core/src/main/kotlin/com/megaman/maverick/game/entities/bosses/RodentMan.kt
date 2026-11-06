@@ -47,6 +47,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -361,7 +362,7 @@ class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<
                 if (!next.existenceState.liveAfterUpdate) childIter.remove()
             }
 
-            if (betweenReadyAndEndBossSpawnEvent) return@update
+            if (bossComponent.phase == BossPhase.INTRO) return@update
 
             if (defeated) {
                 body.physics.velocity.setZero()

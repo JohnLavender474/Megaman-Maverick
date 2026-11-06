@@ -42,6 +42,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -202,7 +203,7 @@ class ReactorMonkey(services: MegaServices) :
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) return@add
+            if (bossComponent.phase == BossPhase.ENTRANCE) return@add
 
             if (defeated) {
                 explodeOnDefeat(delta)
@@ -289,7 +290,7 @@ class ReactorMonkey(services: MegaServices) :
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 
-            sprite.hidden = damageBlink || !ready
+            sprite.hidden = damageBlink || bossComponent.phase == BossPhase.ENTRANCE
             sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         return component

@@ -37,6 +37,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -235,7 +236,7 @@ class SigmaRat(services: MegaServices) : AbstractBoss(services, size = Size.LARG
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) return@add
+            if (bossComponent.phase == BossPhase.ENTRANCE) return@add
             if (defeated) {
                 explodeOnDefeat(delta)
                 return@add
@@ -447,7 +448,7 @@ class SigmaRat(services: MegaServices) : AbstractBoss(services, size = Size.LARG
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
-            sprite.hidden = damageBlink || !ready
+            sprite.hidden = damageBlink || bossComponent.phase == BossPhase.ENTRANCE
         }
         return spritesComponent
     }

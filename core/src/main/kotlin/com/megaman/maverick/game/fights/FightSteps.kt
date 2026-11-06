@@ -14,13 +14,14 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.IBossListener
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
 
 object AwaitBossReady : Step<Fight> {
 
-    override fun isFinished(context: Fight) = context.boss.ready
+    override fun isFinished(context: Fight) = context.boss.bossComponent.phase != BossPhase.ENTRANCE
 }
 
 object HoldWorld : Step<Fight> {
@@ -57,6 +58,15 @@ object FillBossHealthBar : Step<Fight> {
     }
 
     override fun isFinished(context: Fight) = context.bar.finished
+}
+
+object StartBossFight : Step<Fight> {
+
+    override fun begin(context: Fight) {
+        context.boss.bossComponent.phase = BossPhase.FIGHT
+    }
+
+    override fun isFinished(context: Fight) = true
 }
 
 object ReleaseWorld : Step<Fight> {

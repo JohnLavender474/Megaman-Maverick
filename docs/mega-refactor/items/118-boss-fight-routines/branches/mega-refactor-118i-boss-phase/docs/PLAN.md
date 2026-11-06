@@ -45,7 +45,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
 
 - Changes: on `master`, a docs-only commit: `ITEMS.md` branch row `active` with the start date; `ITEM.md` "Branches", and the owner decisions (2026-11-05: phase only; the x6 branch adapts `D1000`; the `TODO` to `048` step 6). Then `git worktree add -b mega-refactor-118i-boss-phase .worktrees/mega-refactor-118i-boss-phase master`. Recheck the overlap with the other worktrees, and write it in `docs/NOTES.md`.
 - Check: `git worktree list` shows it. `./gradlew engine:test core:test` passes on the base, with the Corretto 17 JDK.
-- Done: no
+- Done: yes
 
 ### 2. Tests first
 
@@ -55,7 +55,7 @@ approved. The user approves it. When the plan changes, write the reason in the p
   - `FightStepsTest`: the `StageFight` mock boss gets a real `BossComponent`. `AwaitBossReady` ends only when the phase is not `ENTRANCE`; `StartBossFight` sets `FIGHT`; in a stage intro with a fill, the phase is `FIGHT` in the tick after the fill ends, and still `INTRO` in the tick of the fill.
   - `FightStepsTest` (it builds plans with `FightPlans.find`): the mini intro has `StartBossFight` right after `EndBossSpawn`; the stage intro has it right after `FillBossHealthBar`.
 - Check: `core:test` fails only on the new tests that need the new behavior.
-- Done: no
+- Done: yes
 
 ### 3. The phase replaces the flags
 
@@ -66,19 +66,19 @@ approved. The user approves it. When the plan changes, write the reason in the p
   - `AwaitBossReady` that reads `phase == FIGHT`;
   - `BossComponent.reset()` that does nothing.
   Confirm with `git diff` that each mutation is in the file, run the full `core:test`, and see a matching test fail. Log the result.
-- Done: no
+- Done: yes
 
 ### 4. The `fights` README
 
 - Changes: a short part on the boss phase: the boss sets the intro phase when it is ready, and a fight step starts the fight phase, so the plan decides when the boss AI starts. The status line names the boss hooks that stay in `AbstractBoss` until `048`.
 - Check: the README names no current boss, step list or count.
-- Done: no
+- Done: yes
 
 ### 5. Short launches
 
 - Changes: none.
 - Check: rebuild after the mutations, then one `timeout 12` launch for each room of the play checks: `INTRO_STAGE room12`, `PRECIOUS_WOMAN room7`, `GLACIER_MAN room12`, `MOON_MAN room11`. A clean exit is a pass.
-- Done: no
+- Done: yes
 
 ### 6. Owner play test
 

@@ -49,6 +49,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
@@ -272,7 +273,7 @@ class InfernoMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (betweenReadyAndEndBossSpawnEvent) return@add
+            if (bossComponent.phase == BossPhase.INTRO) return@add
 
             if (defeated) {
                 body.physics.velocity.setZero()
@@ -518,7 +519,7 @@ class InfernoMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(InfernoManState.INIT.name)
             // init
-            .transition(InfernoManState.INIT.name, InfernoManState.STAND.name) { ready }
+            .transition(InfernoManState.INIT.name, InfernoManState.STAND.name) { bossComponent.phase != BossPhase.ENTRANCE }
             // stand
             .transition(InfernoManState.STAND.name, InfernoManState.FLAMEHEAD.name) { stateIndex % 3 == 0 }
             .transition(InfernoManState.STAND.name, InfernoManState.JUMP.name) { true }

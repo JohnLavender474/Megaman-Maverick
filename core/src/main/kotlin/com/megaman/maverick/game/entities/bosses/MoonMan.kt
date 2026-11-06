@@ -52,6 +52,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
@@ -286,7 +287,7 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
                 if (!scythe.existenceState.liveAfterUpdate) scytheIter.remove()
             }
 
-            if (betweenReadyAndEndBossSpawnEvent) return@add
+            if (bossComponent.phase == BossPhase.INTRO) return@add
 
             if (defeated) {
                 body.physics.velocity.setZero()
@@ -598,7 +599,7 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
         builder.setOnChangeState(this::onChangeState)
         builder.setTriggerChangeWhenSameElement(false)
         builder.initialState(MoonManState.INIT.name)
-            .transition(MoonManState.INIT.name, MoonManState.STAND.name) { ready && shouldGoToStandState() }
+            .transition(MoonManState.INIT.name, MoonManState.STAND.name) { bossComponent.phase != BossPhase.ENTRANCE && shouldGoToStandState() }
             .transition(MoonManState.STAND.name, MoonManState.THROW_ASTEROIDS.name) { shouldEnterThrowAsteroidsState() }
             .transition(MoonManState.STAND.name, MoonManState.GRAVITY_CHANGE.name) { shouldEnterGravityChangeState() }
             .transition(MoonManState.STAND.name, MoonManState.JUMP.name) { body.isSensing(BodySense.FEET_ON_GROUND) }

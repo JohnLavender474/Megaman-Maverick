@@ -232,7 +232,7 @@ class FightTest : DescribeSpec({
                 val plan = FightPlans.find("WilyFinalBoss", props)
 
                 plan.intro.toList() shouldBe listOf(
-                    AwaitBossReady, HoldWorld, FillBossHealthBar, ReleaseWorld, ControllerOn
+                    AwaitBossReady, HoldWorld, FillBossHealthBar, StartBossFight, ReleaseWorld, ControllerOn
                 )
                 plan.outro.toList() shouldBe listOf(
                     BossDefeatLock, NotifyListenersOfBossDefeat, HideBossHealthBar, AwaitBossDefeatEnd
@@ -277,7 +277,7 @@ class FightTest : DescribeSpec({
 
                     val plan = FightPlans.find(boss, props)
 
-                    plan.intro.toList() shouldBe listOf(AwaitBossReady, EndBossSpawn, ControllerOn)
+                    plan.intro.toList() shouldBe listOf(AwaitBossReady, EndBossSpawn, StartBossFight, ControllerOn)
                     plan.outro.toList() shouldBe listOf(
                         NotifyListenersOfBossDefeat, AwaitBossDefeatEnd, ExitMidBossFight, ControllerOn, AwaitBossGone
                     )

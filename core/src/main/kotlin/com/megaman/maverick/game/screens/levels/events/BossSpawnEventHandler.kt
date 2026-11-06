@@ -15,7 +15,6 @@ class BossSpawnEventHandler(private val game: MegamanMaverickGame) {
     fun init(bossName: String, bossSpawnProps: Properties): AbstractBoss {
         val boss = MegaEntityFactory.fetch(EntityType.BOSS.getFullyQualifiedName(bossName), AbstractBoss::class)!!
 
-        boss.ready = false
         boss.spawn(bossSpawnProps)
 
         return boss

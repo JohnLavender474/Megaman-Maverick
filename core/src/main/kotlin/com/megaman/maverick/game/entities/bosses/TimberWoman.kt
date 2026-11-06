@@ -53,6 +53,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
@@ -415,7 +416,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(TimberWomanState.INIT.name)
             // init
-            .transition(TimberWomanState.INIT.name, TimberWomanState.STAND.name) { ready }
+            .transition(TimberWomanState.INIT.name, TimberWomanState.STAND.name) { bossComponent.phase != BossPhase.ENTRANCE }
 
             // stand
             .transition(TimberWomanState.STAND.name, TimberWomanState.BURN.name) { burning }
@@ -588,7 +589,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (betweenReadyAndEndBossSpawnEvent) return@add
+            if (bossComponent.phase == BossPhase.INTRO) return@add
 
             if (defeated) {
                 body.physics.velocity.setZero()
@@ -688,7 +689,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
                 }
             }
 
-            if (ready && services.gameState.hardMode) {
+            if (bossComponent.phase != BossPhase.ENTRANCE && services.gameState.hardMode) {
                 hardModeLeafSpawnDelay.update(delta)
                 if (hardModeLeafSpawnDelay.isFinished()) {
                     val spawn = leafSpawnBounds.getRandomPositionInBounds()

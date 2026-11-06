@@ -42,6 +42,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -333,7 +334,7 @@ class SigmaRatClaw(services: MegaServices) : AbstractEnemy(services), IChildEnti
         spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.TOP_CENTER), Position.TOP_CENTER)
             sprite.translateY(0.35f * ConstVals.PPM)
-            sprite.hidden = damageBlink || !(parent as SigmaRat).ready
+            sprite.hidden = damageBlink || (parent as SigmaRat).bossComponent.phase == BossPhase.ENTRANCE
         }
         return spritesComponent
     }

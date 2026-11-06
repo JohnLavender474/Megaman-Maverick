@@ -34,6 +34,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -330,7 +331,7 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) {
+            if (bossComponent.phase == BossPhase.ENTRANCE) {
                 // TODO: players.all also visits a player who is dead or waits to respawn; such a
                 //  player never lands, so the boss would never start; skipping players who are not
                 //  present is a co-op rule for item 047

@@ -48,6 +48,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
@@ -351,7 +352,7 @@ class GutsTank(services: MegaServices) : AbstractBoss(services, size = Size.LARG
                 if (!met.existenceState.liveAfterUpdate) heliMetIter.remove()
             }
 
-            if (!ready) return@add
+            if (bossComponent.phase == BossPhase.ENTRANCE) return@add
 
             if (defeated) {
                 body.physics.velocity.setZero()

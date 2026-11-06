@@ -45,6 +45,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
@@ -308,7 +309,7 @@ class BigAssMaverickRobotHand(services: MegaServices) : MegaGameEntity(services)
             }
 
             BigAssMaverickRobotHandState.ROTATE -> {
-                if (owner?.ready == true && owner?.betweenReadyAndEndBossSpawnEvent == false) {
+                if (owner?.bossComponent?.phase == BossPhase.FIGHT) {
                     rotatingLine.speed = rotateSpeedSupplier.invoke()
                     rotatingLine.update(delta)
                     val center = rotatingLine.getMotionValue()!!

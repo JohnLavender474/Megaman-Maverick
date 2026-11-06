@@ -60,6 +60,7 @@ object FightPlans {
         intro = gdxArrayOf(
             AwaitBossReady,
             EndBossSpawn,
+            StartBossFight,
             ControllerOn
         ),
         win = FightRule.AllDefeated,
@@ -78,6 +79,7 @@ object FightPlans {
             AwaitBossReady,
             HoldWorld,
             FillBossHealthBar,
+            StartBossFight,
             ReleaseWorld,
             ControllerOn
         ),

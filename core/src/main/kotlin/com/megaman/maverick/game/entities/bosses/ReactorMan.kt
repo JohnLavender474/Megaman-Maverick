@@ -49,6 +49,7 @@ import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
@@ -290,7 +291,7 @@ class ReactorMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add update@{ delta ->
-            if (betweenReadyAndEndBossSpawnEvent) return@update
+            if (bossComponent.phase == BossPhase.INTRO) return@update
 
             if (defeated) {
                 body.physics.velocity.setZero()

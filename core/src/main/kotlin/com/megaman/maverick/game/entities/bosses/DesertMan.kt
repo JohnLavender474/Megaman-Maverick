@@ -46,6 +46,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.dmgNeg
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.ILightSource
@@ -234,7 +235,7 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (betweenReadyAndEndBossSpawnEvent) return@add
+            if (bossComponent.phase == BossPhase.INTRO) return@add
 
             if (defeated) {
                 body.physics.velocity.setZero()
@@ -582,7 +583,7 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(DesertManState.INIT.name)
             // INIT -> STAND
-            .transition(DesertManState.INIT.name, DesertManState.STAND.name) { ready }
+            .transition(DesertManState.INIT.name, DesertManState.STAND.name) { bossComponent.phase != BossPhase.ENTRANCE }
             // STAND -> PUNCH, JUMP, TORNADO, DANCE
             .transition(DesertManState.STAND.name, DesertManState.PUNCH.name) {
                 previousAttackState != DesertManState.PUNCH &&

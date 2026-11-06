@@ -34,6 +34,8 @@ import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.state.BossComponent
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.state.SandReactionComponent
 import com.megaman.maverick.game.entities.state.SandReaction
 import com.megaman.maverick.game.events.EventType
@@ -96,7 +98,8 @@ abstract class AbstractBoss(
     protected open val defeatTimer = Timer(defeatDur)
     protected open val spawnDefeatExplosionTimer = Timer(EXPLOSION_TIME)
 
-    var ready = false
+    val bossComponent = BossComponent()
+
     var mini = false
         private set
     var defeated = false
@@ -105,14 +108,12 @@ abstract class AbstractBoss(
         private set
     var spawnDefeatOrbs = true
 
-    var betweenReadyAndEndBossSpawnEvent = false
-        private set
-
     private val playerDamagedListener: (PlayerDamaged) -> Unit = { onPlayerDamaged(it.damager, it.player) }
 
     override fun init(vararg params: Any) {
         super.init()
         addComponent(SandReactionComponent(SandReaction.SURFACE))
+        addComponent(bossComponent)
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -130,9 +131,8 @@ abstract class AbstractBoss(
         spawnProps.put(ConstKeys.DROP_ITEM_ON_DEATH, false)
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
 
-        ready = false
+        bossComponent.phase = BossPhase.ENTRANCE
         defeated = false
-        betweenReadyAndEndBossSpawnEvent = false
 
         defeatTimer.setToEnd()
         spawnDefeatOrbs = spawnProps.getOrDefault(ConstKeys.ORB, !mini, Boolean::class)
@@ -147,8 +147,6 @@ abstract class AbstractBoss(
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
-        ready = false
 
         players.playerDamaged.disconnect(playerDamagedListener)
         services.events.removeListener(this)
@@ -171,7 +169,8 @@ abstract class AbstractBoss(
         }
     }
 
-    override fun canDamage(damageable: IDamageableEntity) = !defeated && ready && super.canDamage(damageable)
+    override fun canDamage(damageable: IDamageableEntity) =
+        !defeated && bossComponent.phase != BossPhase.ENTRANCE && super.canDamage(damageable)
 
     override fun canBeDamagedBy(damager: IDamagerEntity) = !defeated && super.canBeDamagedBy(damager)
 
@@ -188,10 +187,10 @@ abstract class AbstractBoss(
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
-            if (!ready) {
+            if (bossComponent.phase == BossPhase.ENTRANCE) {
                 preReady(delta)
                 if (isReady(delta)) {
-                    ready = true
+                    bossComponent.phase = BossPhase.INTRO
                     onReady()
                 }
             }
@@ -235,13 +234,10 @@ abstract class AbstractBoss(
 
     protected open fun onReady() {
         GameLogger.debug(TAG, "onReady()")
-        betweenReadyAndEndBossSpawnEvent = true
     }
 
     protected open fun onEndBossSpawnEvent() {
         GameLogger.debug(TAG, "onEndBossSpawnEvent()")
-
-        betweenReadyAndEndBossSpawnEvent = false
 
         if (playBossMusic()) {
             try {

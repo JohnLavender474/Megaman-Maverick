@@ -49,6 +49,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.StandardDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand.BigAssMaverickRobotHandState
@@ -469,7 +470,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
 
             turnHeadDelay.update(delta)
 
-            if (ready && !betweenReadyAndEndBossSpawnEvent) {
+            if (bossComponent.phase == BossPhase.FIGHT) {
                 shootOrbsTimer.update(delta)
                 if (shootOrbsTimer.isJustFinished()) {
                     GameLogger.debug(TAG, "update(): shoot orbs timer just finished")

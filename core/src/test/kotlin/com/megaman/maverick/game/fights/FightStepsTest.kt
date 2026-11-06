@@ -15,6 +15,8 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
+import com.megaman.maverick.game.entities.state.BossComponent
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.players.MegaPlayers
@@ -33,7 +35,15 @@ private val LEVEL_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC
 
 private const val DELTA = 0.1f
 
-private class StageFight(end: Boolean? = null, barFillsOnFirstUpdate: Boolean = false) {
+private class StageFight(
+    end: Boolean? = null,
+    barFillsOnFirstUpdate: Boolean = false,
+    bossName: String = "BigAssMaverickRobot",
+    mini: Boolean = false,
+    bossReady: Boolean = true
+) {
+
+    val bossComponent = BossComponent().also { if (bossReady) it.phase = BossPhase.INTRO }
 
     val received = ArrayList<Any>()
     val receivedEvents = ArrayList<Event>()
@@ -48,7 +58,7 @@ private class StageFight(end: Boolean? = null, barFillsOnFirstUpdate: Boolean = 
     var bossDefeated = false
     var bossState = EntityExistenceState.LIVE
     val boss = mockk<AbstractBoss>(relaxed = true).also {
-        every { it.ready } returns true
+        every { it.bossComponent } returns bossComponent
         every { it.defeated } answers { bossDefeated }
         every { it.existenceState } answers { bossState }
     }
@@ -72,9 +82,13 @@ private class StageFight(end: Boolean? = null, barFillsOnFirstUpdate: Boolean = 
         players.register(PlayerSlot(1), it)
     }
 
-    private val mapProps = Properties().also { if (end != null) it.put(ConstKeys.END, end) }
+    private val mapProps = Properties().also {
+        if (end != null) it.put(ConstKeys.END, end)
+        if (mini) it.put(ConstKeys.MINI, true)
+    }
 
-    val fight = Fight(boss, FightPlans.find("BigAssMaverickRobot", mapProps), services, bar) { LEVEL_MUSIC }
+    val plan = FightPlans.find(bossName, mapProps)
+    val fight = Fight(boss, plan, services, bar) { LEVEL_MUSIC }
 
     init {
         services.events.addListener(object : IEventListener {
@@ -121,6 +135,51 @@ private class StageFight(end: Boolean? = null, barFillsOnFirstUpdate: Boolean = 
 }
 
 class FightStepsTest : DescribeSpec({
+
+    describe("the boss phase") {
+        it("keeps the intro waiting while the boss is in its entrance, and goes on when it is in its intro") {
+            val stage = StageFight(bossReady = false)
+
+            stage.tick()
+            stage.tick()
+            verify(exactly = 0) { stage.bar.set(any(), any(), any()) }
+
+            stage.bossComponent.phase = BossPhase.INTRO
+            stage.tick()
+            verify(exactly = 1) { stage.bar.set(any(), any(), any()) }
+        }
+
+        it("StartBossFight sets the fight phase") {
+            val stage = StageFight()
+
+            StartBossFight.begin(stage.fight)
+
+            stage.bossComponent.phase shouldBe BossPhase.FIGHT
+            StartBossFight.isFinished(stage.fight) shouldBe true
+        }
+
+        it("starts the fight phase in the tick after the fill ends, not in the tick of the fill") {
+            val stage = StageFight(barFillsOnFirstUpdate = true)
+
+            stage.tick()
+            stage.bossComponent.phase shouldBe BossPhase.INTRO
+
+            stage.tick()
+            stage.bossComponent.phase shouldBe BossPhase.FIGHT
+        }
+
+        it("comes right after the bar fill in the stage intro") {
+            val intro = StageFight().plan.intro
+
+            intro.indexOf(StartBossFight, true) shouldBe intro.indexOf(FillBossHealthBar, true) + 1
+        }
+
+        it("comes right after EndBossSpawn in the mini intro") {
+            val intro = StageFight(bossName = "MoonHead", mini = true).plan.intro
+
+            intro.indexOf(StartBossFight, true) shouldBe intro.indexOf(EndBossSpawn, true) + 1
+        }
+    }
 
     describe("the stage boss plan during the bar fill") {
         it("releases the world and gives control in the tick after the fill ends, not in the same tick") {

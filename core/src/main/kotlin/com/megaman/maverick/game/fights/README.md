@@ -12,7 +12,7 @@ The examples in this file are hypothetical. They show the design, not the curren
 
 Every boss fight runs in this package. `FightPlans.find` is the one list of bosses that can fight. Each boss room needs a boss that it finds: for any other boss it throws `MissingFightPlanException` when the player enters the room.
 
-Item `118` has a later branch that moves the boss hooks out of `AbstractBoss`.
+The boss hooks (`isReady`, `preReady`, `onReady`, `onEndBossSpawnEvent`) are still on `AbstractBoss`. Item `048` step 6 moves them into `BossComponent`.
 
 ## The parts
 
@@ -92,6 +92,22 @@ flowchart LR
 
 `FightPlans.find` reads the boss's map props to choose between such plans. A value that the screen owns, such as the level music, goes to `Fight` as a supplier, so that a step reads it when it runs.
 
+## The boss phase
+
+Each boss has a `BossComponent` with a phase. The boss and the plan each move it 1 step:
+
+```mermaid
+stateDiagram-v2
+    [*] --> ENTRANCE: spawn
+    ENTRANCE --> INTRO: the boss says that it is ready
+    INTRO --> FIGHT: a step of the plan
+    FIGHT --> [*]: destroy (reset to ENTRANCE)
+```
+
+The boss runs its entrance in `ENTRANCE`, holds its AI in `INTRO`, and fights in `FIGHT`. So the plan, not an event, decides when the boss AI starts. A plan can put that step after a bar fill, after a talk, or at once.
+
+The fight reads the phase before the boss spawns, because `spawn` only queues. So the boss makes its component when it is built, not in `init()`.
+
 ## Leases
 
 A step that changes shared state takes a lease. The lease holds the undo. A later step can release it by its key, and `Fight` releases each lease that remains when it closes, in reverse order.
@@ -120,7 +136,7 @@ sequenceDiagram
     Engine->>Events: the boss becomes ready, and submits an event
     Events->>Events: listeners get the event
     Note over Engine,Fights: frame F+1, before engine.update
-    Fights->>Fights: the wait step reads boss.ready and ends
+    Fights->>Fights: the wait step reads the boss phase and ends
     Fights->>Fights: the next steps begin
     Fights->>Engine: the systems see the result in this update
 ```
@@ -131,7 +147,7 @@ No system runs between `events.run` of frame F and the tick of frame F+1. So a s
 
 ## Events
 
-A routine gets no event for its order. It reads state, for example `boss.ready` or `boss.defeated`. Events stay as output for listeners, such as `AbstractBoss` and hazards that react to a defeat.
+A routine gets no event for its order. It reads state, for example the boss phase or `boss.defeated`. Events stay as output for listeners, such as `AbstractBoss` and hazards that react to a defeat.
 
 A fight closes in the same tick as its last step, before `events.run` delivers what that step submitted. So a plan whose exit sends an event can end with a wait step, for example "wait until the boss is gone", that keeps the fight open while that event is delivered.
 
