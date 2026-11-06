@@ -88,7 +88,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
-| 081 | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | planned | `047b`, `084` | | |
+| 081 | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | active | `047b`, `084` | 2026-11-06 | |
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | `O9` | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | `O1` | idea | none | | |
 | 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | `O8`, `O1` | done | none | 2026-10-30 | 2026-11-01 |
@@ -149,7 +149,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-118h-bar-fill`](items/118-boss-fight-routines/branches/mega-refactor-118h-bar-fill/process-log.md) | 118 | The fight runs the boss bar fill, the screen only draws the bar, and `HealthFillType` goes | merged | 2026-11-05 | 2026-11-05 |
 | [`mega-refactor-118i-boss-phase`](items/118-boss-fight-routines/branches/mega-refactor-118i-boss-phase/process-log.md) | 118 | A `BossComponent` holds the boss phase, and a fight step starts the boss AI; `ready` and `betweenReadyAndEndBossSpawnEvent` go | merged | 2026-11-05 | 2026-11-05 |
 | [`mega-refactor-118j-gate-unlock`](items/118-boss-fight-routines/branches/mega-refactor-118j-gate-unlock/process-log.md) | 118 | 1 keyed `UNLOCK_GATE` event from a boss fight and a `GauntletMaster`; `INTERMEDIATE_BOSS_DEAD`, `GAUNTLET_CLEARED` and `AbstractBoss.bossKey` go | planned | | |
-| [`mega-refactor-081a-player-lifecycle`](items/081-playable-x/branches/mega-refactor-081a-player-lifecycle/process-log.md) | 081 | Move the shared player lifecycle out of `Megaman` into functions that a second player class can call; Megaman plays the same | planned | | |
+| [`mega-refactor-081a-player-lifecycle`](items/081-playable-x/branches/mega-refactor-081a-player-lifecycle/process-log.md) | 081 | Move the shared player lifecycle out of `Megaman` into functions that a second player class can call; Megaman plays the same | active | 2026-11-06 | |
 | [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | merged | 2026-10-22 | 2026-10-22 |
 | [`mega-refactor-001b-host-contract`](items/001-maverick-engine/branches/mega-refactor-001b-host-contract/process-log.md) | 001 | Add `IMaverickGame` and `MaverickGame` | blocked | | |
 | [`mega-refactor-019a-remove-second-spawn-pass`](items/019-spawn-phase/branches/mega-refactor-019a-remove-second-spawn-pass/process-log.md) | 019 | Run one spawn pass per frame instead of two | merged | 2026-10-22 | 2026-10-22 |

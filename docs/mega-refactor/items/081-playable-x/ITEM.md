@@ -1,13 +1,13 @@
 # 081: Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`
 
-- Status: planned
+- Status: active
 - Type: feature
 - Objectives: `O8`
 - Depends on: `047b`, `084`; `024` only before X moves to slot 0 or gets more than the buster
 - Includes: the work of `069` (dash button), folded in on 2026-11-05. Its research and decisions are in
   `069` `ITEM.md` and `NOTES.md`.
 - Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`, `120`, `121`, `122`
-- Branches: none yet. The first is `mega-refactor-081a-player-lifecycle` (see "Branch split").
+- Branches: `mega-refactor-081a-player-lifecycle` (active, 2026-11-06)
 
 ## Goal
 
