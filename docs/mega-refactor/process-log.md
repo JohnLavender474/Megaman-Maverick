@@ -1762,7 +1762,7 @@ newest entry at the bottom.
 ## 2026-11-06 — master (direct change)
 
 - Summary: new run script `run-game-test-coop.sh` (owner's request): the `run-game-test.sh` settings with
-  `--players 2`, and `--level TEST_1` and `--mode coop` unless the arguments give them (JCommander rejects an option
+  `--players 2`, and `--level REFACTOR_TEST_047` (changed from `TEST_1` at the owner's request) and `--mode coop` unless the arguments give them (JCommander rejects an option
   given twice). A direct change to `master`, because it is a small run script with no gameplay change and no active
   branch owns it. Root `CLAUDE.md` lists it.
 - Contract check: `bash -n` passes; the default logic was checked with no arguments, with `--level`, and with
