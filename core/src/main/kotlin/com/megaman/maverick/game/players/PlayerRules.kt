@@ -8,13 +8,7 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
-import com.megaman.maverick.game.entities.state.DamageRecoveryComponent
-import com.megaman.maverick.game.entities.state.FreezeComponent
-import com.megaman.maverick.game.entities.state.PlayPhase
-import com.megaman.maverick.game.entities.state.PlayPhaseComponent
-import com.megaman.maverick.game.entities.state.StunComponent
-import com.megaman.maverick.game.entities.state.freezeFrom
-import com.megaman.maverick.game.entities.state.knockBackFrom
+import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.locks.MegaLockGroup
 
 // TODO: the receiver is AbstractHealthEntity only for `damaged`; it changes when item 048 replaces the base class
@@ -55,11 +49,8 @@ fun MegaGameEntity.playerEditDamage(baseDamage: Int): Int {
         services.gameState.containsEnhancement(MegaEnhancement.DAMAGE_INCREASE) -> MegaEnhancement.scaleDamage(
             baseDamage, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR
         )
-
         else -> baseDamage
     }
-
     if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) damage += 1
-
     return damage
 }

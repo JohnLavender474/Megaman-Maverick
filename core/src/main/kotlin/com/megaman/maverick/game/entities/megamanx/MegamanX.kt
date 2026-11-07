@@ -130,16 +130,13 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-
         playerOnDestroy()
-
         services.audio.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
 
     override fun onHealthDepleted() {
         GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
-
         ExplosionOrb.spawnRing(body.getCenter())
     }
 
@@ -149,13 +146,9 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
                 playerOnRoomTransition(event)
                 stopCharging()
             }
-
             EventType.END_ROOM_TRANS -> playerOnRoomTransition(event)
-
             EventType.GATE_INIT_OPENING -> stopCharging()
-
             EventType.STUN_PLAYER -> onStunPlayerEvent(event)
-
             EventType.END_GAME_CAM_ROTATION -> {
                 unlock(MegaLockGroup.MOVEMENT, MegaLockReason.CAMERA_ROTATION)
                 body.physics.gravityOn = true

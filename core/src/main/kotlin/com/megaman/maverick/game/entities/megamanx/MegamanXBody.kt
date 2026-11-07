@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.gdxArrayOf
-import com.maverick.game.engine.common.extensions.set
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.world.body.*

@@ -15,7 +15,6 @@ import com.maverick.game.engine.drawables.sprites.*
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.players.playerSlot
-import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -26,11 +25,11 @@ import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.teleporter
 import com.megaman.maverick.game.entities.state.teleporting
+import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
-import com.megaman.maverick.game.players.bodyOverGround
 
 const val MEGAMAN_SPRITE_KEY = "Megaman"
 const val MEGAMAN_SPRITE_SIZE = 3f
