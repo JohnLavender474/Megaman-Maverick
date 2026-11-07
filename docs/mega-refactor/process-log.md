@@ -1768,3 +1768,18 @@ newest entry at the bottom.
 - Contract check: `bash -n` passes; the default logic was checked with no arguments, with `--level`, and with
   `--mode`. The game was not launched.
 - Follow-up: none.
+
+## 2026-11-06 — master (direct change)
+
+- Summary: a co-op route in `RefactorTest047.tmx` (owner's request), so `./run-game-test-coop.sh` with no `--room`
+  plays through room transitions: `coop_start` (16x14) → `coop_wide` (48x14) → `coop_shaft` (16x42, platforms on the
+  way down, a ladder back up) → `coop_rest_1` (16x14) → `coop_hscroll` (64x14, a right scroll at 3 tiles/s) →
+  `coop_vscroll` (16x42, an up scroll at 2 tiles/s, steps 3 tiles apart) → `coop_rest_2` (16x14). The map grew from
+  356 to 550 tiles wide at the right, so the old rooms keep their coordinates. The level start spawn `0` moved to
+  `coop_start`; the old one in `default_spawn` is now `14`, so `--room default_spawn` still works. New spawns `15`
+  (`coop_rest_1`) and `16` (`coop_rest_2`). Built with the `level-builder` CLI and `temp/coop-route/` scripts. A direct
+  change to `master`, because it is a test map with no code change.
+- Contract check: 180 object ids, all unique; every new block and ladder cell painted; the layout drawn as text and
+  checked. Gradle did not run (owner's uncommitted code in the main checkout), and the game was not launched.
+- Follow-up: room transitions with 2 players are phase 2 of the shared screen ("carry"): slot 0 triggers them, and
+  slot 1 moves to the transition point. In the scroll rooms, the view edge rules are off (phase 5).
