@@ -14,7 +14,11 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.state.running
+import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.body.isSensing
 
 class MegamanXBuster(private val x: MegamanX) {
 
@@ -61,11 +65,22 @@ class MegamanXBuster(private val x: MegamanX) {
             MegaChargeStatus.HALF_CHARGED -> MegamanXValues.HALF_SHOT_SPEED
             MegaChargeStatus.FULLY_CHARGED -> MegamanXValues.FULL_SHOT_SPEED
         }
-        val trajectory = Vector2(speed * ConstVals.PPM * x.facing.value, 0f).rotateDeg(x.direction.rotation)
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+            .set(speed * ConstVals.PPM * x.facing.value, 0f)
+            .rotateDeg(x.direction.rotation)
 
-        val position = Vector2(
-            MegamanXValues.SHOT_OFFSET_X * x.facing.value, MegamanXValues.SHOT_OFFSET_Y
-        ).scl(ConstVals.PPM.toFloat()).rotateDeg(x.direction.rotation).add(x.body.getCenter())
+        val position = GameObjectPools.fetch(Vector2::class)
+            .set(
+                MegamanXValues.SHOT_OFFSET_X * x.facing.value,
+                MegamanXValues.SHOT_OFFSET_Y
+            )
+            .also {
+                if (x.running) it.x += x.facing.value * 0.5f
+                if (!x.body.isSensing(BodySense.FEET_ON_GROUND)) it.y += 0.1f
+            }
+            .scl(ConstVals.PPM.toFloat())
+            .rotateDeg(x.direction.rotation)
+            .add(x.body.getCenter())
 
         val props = props(
             ConstKeys.OWNER pairTo x,
@@ -79,7 +94,6 @@ class MegamanXBuster(private val x: MegamanX) {
                 x.requestToPlaySound(SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND, false)
                 MegaEntityFactory.fetch(Bullet::class)!!
             }
-
             else -> {
                 x.requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGED_SHOT_SOUND, false)
                 props.put(ConstKeys.BOOLEAN, status == MegaChargeStatus.FULLY_CHARGED)
