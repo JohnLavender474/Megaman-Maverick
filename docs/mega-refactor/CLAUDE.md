@@ -295,16 +295,40 @@ makes sure that **every** manual check in the contract will compile, launch and 
      describes, and the expected result follows from the code.
 4. Fix each real finding, run the automated checks again, and review the fixed parts again.
 5. Write the result in the branch process log: the agents, the findings and the fixes. Then give
-   the owner the list of checks (see "Test maps").
+   the owner the list of checks (see "Test maps"), and open the diff review (see "Diff review").
+
+### Diff review
+
+The owner reviews the branch diff in Diffity, at the same time as the play test (owner decision,
+2026-11-07). Diffity shows the diff in the browser with anchored comment threads. The global
+skills `diffity-open`, `diffity-resolve` and `diffity-review` give the commands and the rules.
+
+1. Commit all branch work before you open it. When you give the owner the play checks, open the
+   review with `diffity-open` from the branch worktree. The base is the merge base with the merge
+   target (`master`, or the item's parent branch). Give the URL with the list of checks.
+2. When the owner says that the comments are ready, handle them with `diffity-resolve`. The fixes
+   stay uncommitted until the round ends: a commit hides the open threads.
+3. A fix that changes code that a manual check runs means that the owner runs that check again.
+   Say which checks.
+4. When the owner says that the review is done, commit the fixes, run the automated checks again,
+   and stop the Diffity server.
+5. Write each round in the branch process log: the number of threads and what was done with them
+   (fixed, answered, decided by the owner, dismissed).
+
+Use `diffity-review` (Claude's own comments in the diff) only when the owner asks for it. The
+review before the play test stays the review by subagents.
 
 ### Branch merge
 
 1. Do the checks in the branch `docs/CONTRACT.md`: the automated checks, the review before the
-   play test, and then the user's play test. Write the result in the branch process log.
+   play test, and then the user's play test and diff review. Write the result in the branch
+   process log.
 2. **Merge approval.** When the owner reports that the play test passed and adds no other
    request, remark or question, that report is the approval to merge (owner decision,
    2026-11-06). Do not ask "may I merge?". Go on with the merge. When the owner reports a
-   problem, asks for a change or asks a question, do not merge: handle it first. The approval
+   problem, asks for a change or asks a question, do not merge: handle it first. Also do not
+   merge while the diff review has open threads (`diffity agent list --status open` in the
+   worktree) or uncommitted fixes. Ask the owner about them first. The approval
    covers only the branch that the owner tested, also when branches run in parallel. Merge only
    one branch at a time. If `master` changed since the branch last took it in, compare the two
    (`git diff --stat <branch>...master`):

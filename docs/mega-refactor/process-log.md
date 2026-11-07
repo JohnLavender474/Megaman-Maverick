@@ -1805,3 +1805,13 @@ newest entry at the bottom.
     item `127` got the owner's report of a warp into a block.
   - `081d` changes other lines of `MegaLevelScreen.kt`; its merge may meet a simple import conflict.
 
+
+## 2026-11-07 — master (docs)
+
+- Summary: added the diff review in Diffity to the branch process (`CLAUDE.md`, "Diff review").
+  The owner reviews the branch diff with anchored comments at the same time as the play test, in
+  place of a GitHub pull request. A branch does not merge while the review has open threads or
+  uncommitted fixes ("Branch merge", step 2). The commands are in the global skills
+  `diffity-open`, `diffity-resolve` and `diffity-review`.
+- Contract check: not needed (docs only).
+- Follow-up: none.
