@@ -58,6 +58,9 @@ Megaman's controls must not change.
 
 ## Decisions
 
+- 2026-11-06 (owner, in `081d`): `SELECT` is always X's dash, whatever the select action is (the ground dash, the
+  dash jump, the dash wall kick and the faster air dash). `A` in the air still starts the plain air dash. The `R`
+  button is removed, and `SELECT` never pauses the game for X. This replaces the `R` decisions below.
 - 2026-11-06 (owner, in `081c`): the `R` button exists now (index 8, keyboard `U`, pad `R1`), read only by X. It
   starts X's air dash. Changed from option B below: `A` in the air and `SELECT` (when the select action is air dash)
   also start X's air dash, as for Megaman. The ground dash on `R` comes in phase 3 of `081`.

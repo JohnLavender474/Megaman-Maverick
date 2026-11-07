@@ -7,7 +7,7 @@
 - Includes: the work of `069` (dash button), folded in on 2026-11-05. Its research and decisions are in
   `069` `ITEM.md` and `NOTES.md`.
 - Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`, `120`, `121`, `122`
-- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (merged, 2026-11-06), `mega-refactor-081d-x-dash-sabre` (active, 2026-11-06)
+- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (merged, 2026-11-06), `mega-refactor-081d-x-dash-sabre` (merged, 2026-11-07), `mega-refactor-081e-x-sabre` (planned)
 
 ## Goal
 
@@ -48,12 +48,12 @@ Not approved. The branch `SCOPE.md` decides the final scope. Facts are in `NOTES
 - **Where X plays:** only in the new X6-based extra levels, not in the `GAUNTLET_*` levels. How a level picks its character is a question for this item (see
   "Open questions"). X plays in slot 0 (see "Decisions", 2026-11-05).
 - **Rules per player:** each X-specific rule belongs to the player, not to a level. Examples: `SELECT` is always
-  `NEXT_WEAPON`, the dash on `R`, the air dash rules and the X6 values. A level never turns one of these rules on or
+  `NEXT_WEAPON`, the dash on `SELECT`, the air dash rules and the X6 values. A level never turns one of these rules on or
   off.
 - **X only, for now:** the new X6-based extra levels are playable only by X. This limit is one item of level data
   (`O7-R3`), not a condition in the code of a level or a rule. Removing it must be enough for Megaman to play these
   levels with his own rules.
-- **Controls:** a keyboard or a pad with an `R` button. An NES-style pad is not enough to play as X (see `069`).
+- **Controls:** since `081d`, X uses only the 8 NES-style buttons: `SELECT` is always X's dash (see "Decisions", 2026-11-06, `081d`).
 - **Not in this item:** the falcon dash, ropes and bars, armor parts. The sabre is phase 4 (see "Phases").
 
 ## Phases
@@ -66,7 +66,7 @@ Owner, 2026-11-05. Each phase can be one or more branches.
 | 1 | Run, jump and shoot (the buster). |
 | 2 | Wall slide and air dash. The air dash is like Megaman's air dash. |
 | 3 | The X6 ground dash and the dash wall kick, with the dash input from `069`. |
-| 4 | The Z-sabre slash. The button or the button combination is not decided. |
+| 4 | The Z-sabre slash, on `UP` + `B` (branch `081e`). |
 
 ## Branch split
 
@@ -175,6 +175,12 @@ slash (we'll need to work out what button or button combo controls this)".
   select action is air dash, and on a new `R` button (keyboard `U`, pad `R1`), which only X reads. This changes the
   `069` plan "`A` is only jump and wall kick; `SELECT` is always `NEXT_WEAPON` for X". No new sounds yet. The dash
   button gives the same dash as `A` until phase 3. Details: the `081c` branch `docs/NOTES.md`.
+- (2026-11-06 and 2026-11-07, owner, `081d`) Phase 3 is done. `SELECT` is always X's dash, whatever the select
+  action is: the ground dash, the dash jump, the dash wall kick and the faster air dash. `A` in the air still starts
+  the plain air dash. The `R` button of `081c` is removed, and `SELECT` never pauses the game for X. `DOWN` + `A` is
+  not a dash. X's movement logic matches `mmx-x6` (values may differ), with X's own knockback (8 / 5 t/s, a 6/s side
+  drag). A press on the landing frame gives the ground move, as in X6. The sabre moved to its own branch `081e`, on
+  `UP` + `B` (no new button). Details: the `081d` branch `docs/NOTES.md`.
 
 ## Open questions
 
@@ -189,11 +195,10 @@ slash (we'll need to work out what button or button combo controls this)".
 7. Thin classes or one `PlayerEntity(def)`? Decide this before any swap work. One class needs a way to rebuild on a change of def, because `init()` is not safe to repeat, and it does not fit a per-class pool for `121` clones. A level that picks its character needs a spawn-time `setFocus` in place of the once-only `MegaLevelScreen.kt:337` (`047` `NOTES.md`, "Can `Megaman` be pooled?"). (from `047`, 2026-11-02)
 8. Closed 2026-11-06 (`081c`): X's air dash starts on Megaman's input (`A` in the air; `SELECT` when the select action
    is air dash) and on the new `R` button (see "Decisions").
-9. Phase 3: a dash button, or a button combination so that X is playable on an NES-style pad? This reopens the
-   2026-11-01 decision that an NES-style pad is not enough for X (see "Decisions", `069` "Decisions" and `O9-R1`).
-   `069` dropped `DOWN` + `A`, because a dash jump needs the dash held when the jump starts.
+9. Closed 2026-11-06 (`081d`): `SELECT` is always X's dash; no `R` button and no `DOWN` + `A` (see "Decisions").
+   The `TODO` in `MegamanXMoves.kt` records that no adequate dash button is found yet.
 10. Which phase gets crouch, ladder and climb? They are in the move set above, but not in "Phases".
-11. Phase 4: which button or button combination starts the sabre slash?
+11. Closed 2026-11-06 (`081d`): the sabre slashes on `UP` + `B` (branch `081e`).
 
 12. During the wall kick lock, X faces the wall (X6), so a shot goes into the wall. Should a shot during the kick go
     away from the wall? (asked at the `081c` play test, 2026-11-06; no answer yet)

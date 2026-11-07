@@ -1832,3 +1832,21 @@ newest entry at the bottom.
 - Follow-up: new items `135` (a held player left behind at a side exit) and `136` (spike floors skipped in tall
   rooms). `127` (the warp spot test) is next.
 
+## 2026-11-07 — mega-refactor-081d-x-dash-sabre
+
+- Summary: phase 3 of X (`081`). The ground dash, the dash jump, the dash wall kick and the faster air dash, all on
+  `SELECT`, which is always X's dash (the `R` button of `081c` is removed; `SELECT` never pauses for X). X's movement
+  logic matches `mmx-x6`, with X's own knockback and the owner's X tuning. Feel fixes: a press on the landing frame
+  gives the ground move (a probe from the feet sensor), a walk start and a turn act on the press frame, the kick and
+  the push-off move at walk speed, the X6 jump top, the kick pose from the first frame, and the dash brake pose.
+  `BlockSideRule` keeps the side sense across a seam between 2 blocks (a touched-block set per fixture), which also
+  fixes Megaman's wall slide at a seam. `JumpParams` takes `startPressed`, `downBlocksGroundJump` and `endKeepsFall`;
+  Megaman plays the same. The sabre moved to `081e` (`UP` + `B`).
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch after the merge of
+  `master` (the owner's X tuning and dash end art; 1 simple conflict in `MegamanXValues.kt`): `engine` 639, `core`
+  1174, `smokeTest` 450. 19 mutation checks, each caught. The review before the play test (2 agents and 1 re-review)
+  found the landing-press, stale side block and probe problems, fixed. The owner played the checks, and they pass.
+  Diff review in Diffity: 0 open threads. CI did not run, because the branch was never pushed.
+- Follow-up: `081e` folder made (`planned`). 2 accepted edge cases with `TODO`s point to `134` (a long frame and a
+  rising platform can still miss the landing press). `081` open questions 9 and 11 are closed.
+
