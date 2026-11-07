@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.megaman.behaviors
 
 import com.maverick.game.engine.behaviors.IBehavior
+import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isBehaviorActive
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -29,6 +31,9 @@ internal fun Megaman.jumpBehavior(): IBehavior = playerJumpBehavior(
         wallJumpHorizontal = MegamanValues.WALL_JUMP_HORIZONTAL,
         wallJumpAllowed = { isBehaviorActive(BehaviorType.WALL_SLIDING) },
         ignoreRelease = { false },
+        startPressed = { input.isJustPressed(MegaControllerButton.A) },
+        downBlocksGroundJump = true,
+        endKeepsFall = false,
         onJump = {
             if (services.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
                 requestToPlaySound(SoundAsset.SMB3_JUMP_SOUND, false)

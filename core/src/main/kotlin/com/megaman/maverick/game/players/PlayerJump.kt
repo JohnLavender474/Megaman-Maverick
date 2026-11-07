@@ -34,6 +34,9 @@ class JumpParams(
     val wallJumpHorizontal: Float,
     val wallJumpAllowed: () -> Boolean,
     val ignoreRelease: () -> Boolean,
+    val startPressed: () -> Boolean,
+    val downBlocksGroundJump: Boolean,
+    val endKeepsFall: Boolean,
     val onJump: () -> Unit
 )
 
@@ -54,7 +57,7 @@ fun <T> T.playerJumpBehavior(params: JumpParams): IBehavior
                 isAnyBehaviorActive(BehaviorType.SWIMMING, BehaviorType.CLIMBING, BehaviorType.JETPACKING) ||
                 body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
                 (!input.isPressed(MegaControllerButton.A) && !params.ignoreRelease()) ||
-                (bodyOverGround && input.isPressed(MegaControllerButton.DOWN)) ||
+                (params.downBlocksGroundJump && bodyOverGround && input.isPressed(MegaControllerButton.DOWN)) ||
                 params.blocked()
             ) return@FunctionalBehaviorImpl false
 
@@ -69,7 +72,7 @@ fun <T> T.playerJumpBehavior(params: JumpParams): IBehavior
             }
 
             return@FunctionalBehaviorImpl params.canStart() &&
-                input.isJustPressed(MegaControllerButton.A) &&
+                params.startPressed() &&
                 (bodyOverGround || params.wallJumpAllowed())
         },
         init = {
@@ -105,9 +108,14 @@ fun <T> T.playerJumpBehavior(params: JumpParams): IBehavior
             GameLogger.debug(TAG, "init(): velocity=$v")
         },
         end = {
-            when {
-                direction.isVertical() -> body.physics.velocity.y = 0f
-                else -> body.physics.velocity.x = 0f
+            val velocity = body.physics.velocity
+            fun stop(speed: Float, fallSign: Float) =
+                if (params.endKeepsFall && speed * fallSign > 0f) speed else 0f
+            when (direction) {
+                Direction.UP -> velocity.y = stop(velocity.y, -1f)
+                Direction.DOWN -> velocity.y = stop(velocity.y, 1f)
+                Direction.LEFT -> velocity.x = stop(velocity.x, 1f)
+                Direction.RIGHT -> velocity.x = stop(velocity.x, -1f)
             }
 
             GameLogger.debug(TAG, "end(): velocity=${body.physics.velocity}")

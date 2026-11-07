@@ -20,6 +20,8 @@ internal fun Megaman.wallSlideBehavior(): IBehavior = playerWallSlideBehavior(
                 !wallSlideNotAllowedTimer.isFinished() || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
                 !wallJumpTimer.isFinished()
         },
+        allowedWhileJumping = { false },
+        holdsWithoutInput = { false },
         onStart = { aButtonTask = AButtonTask.JUMP },
         onAct = {
             aButtonTask = AButtonTask.JUMP

@@ -65,26 +65,26 @@ class PlayerSettingsStoreTest : DescribeSpec({
 
         it("unbinds a button missing from an old save when its default key is already saved for another button") {
             val file = files.file(slot0File)
-            MegaControllerButton.entries.filter { it != MegaControllerButton.R }.forEach {
+            MegaControllerButton.entries.filter { it != MegaControllerButton.SELECT }.forEach {
                 file.put("KEYBOARD.${it.name}", it.defaultKeyboardKey.toString())
             }
-            file.put("KEYBOARD.B", Input.Keys.U.toString())
+            file.put("KEYBOARD.B", Input.Keys.L.toString())
 
             store.loadKeyboard(settings)
 
-            settings.keyCodes[MegaControllerButton.B.index] shouldBe Input.Keys.U
-            settings.keyCodes[MegaControllerButton.R.index] shouldBe PlayerSettings.NO_CODE
+            settings.keyCodes[MegaControllerButton.B.index] shouldBe Input.Keys.L
+            settings.keyCodes[MegaControllerButton.SELECT.index] shouldBe PlayerSettings.NO_CODE
         }
 
         it("keeps the default of a button missing from an old save when no other button has it") {
             val file = files.file(slot0File)
-            MegaControllerButton.entries.filter { it != MegaControllerButton.R }.forEach {
+            MegaControllerButton.entries.filter { it != MegaControllerButton.SELECT }.forEach {
                 file.put("KEYBOARD.${it.name}", it.defaultKeyboardKey.toString())
             }
 
             store.loadKeyboard(settings)
 
-            settings.keyCodes[MegaControllerButton.R.index] shouldBe Input.Keys.U
+            settings.keyCodes[MegaControllerButton.SELECT.index] shouldBe Input.Keys.L
         }
     }
 

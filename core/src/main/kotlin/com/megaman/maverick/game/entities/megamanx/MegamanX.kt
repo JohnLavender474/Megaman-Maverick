@@ -8,6 +8,7 @@ import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
 import com.maverick.game.engine.damage.IDamagerEntity
@@ -28,7 +29,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.explosions.ExplosionOrb
 import com.megaman.maverick.game.entities.megaman.components.defineDamageRecoveryComponent
-import com.megaman.maverick.game.entities.megaman.components.defineKnockbackComponent
+import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.state.*
@@ -77,6 +78,14 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
     internal val buster = MegamanXBuster(this)
 
     internal var airDashUsed = false
+    internal var dashSpeedInAir = false
+    internal var airborne = false
+    internal var wallKicked = false
+    internal var jumpPressKept = false
+    internal var dashPressKept = false
+    internal var pressHeldForLanding = false
+    internal val landingProbe = GameRectangle()
+    internal var groundDash: GroundDash? = null
     internal val wallGrabTimer = Timer(MegamanXValues.WALL_GRAB_TIME)
     internal val kickLockTimer = Timer(MegamanXValues.WALL_KICK_LOCK_TIME).setToEnd()
     internal val pushOffTimer = Timer(MegamanXValues.PUSH_OFF_TIME).setToEnd()
@@ -98,7 +107,13 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
         addComponent(defineWeaponChargeComponent())
         addComponent(PostActionMomentumComponent(0f, 0f, { 0f }, { bodyOverGround }, { false }, { false }))
         addComponent(RoomTransitionCarryComponent(ConstVals.ROOM_TRANS_DELAY_DURATION, carries = { bodyOverGround }))
-        addComponent(defineKnockbackComponent())
+        addComponent(
+            KnockbackComponent(
+                MegamanXValues.KNOCKBACK_X * ConstVals.PPM,
+                MegamanXValues.KNOCKBACK_Y * ConstVals.PPM,
+                objectSetOf(SpringHead::class)
+            )
+        )
         addComponent(defineFreezeComponent())
         addComponent(defineStunComponent())
         addComponent(damageRecovery)
@@ -119,6 +134,12 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
         damageTimer.setToEnd()
         buster.reset()
         airDashUsed = false
+        dashSpeedInAir = false
+        airborne = false
+        wallKicked = false
+        jumpPressKept = false
+        dashPressKept = false
+        pressHeldForLanding = false
         kickLockTimer.setToEnd()
         pushOffTimer.setToEnd()
         wallDelayTimer.setToEnd()
@@ -166,6 +187,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
 
         playerAfterDamage(damager)
 
+        dashSpeedInAir = false
         stopCharging()
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
 
@@ -198,7 +220,9 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
             kickLockTimer.update(delta)
             pushOffTimer.update(delta)
             wallDelayTimer.update(delta)
-            if (bodyOverGround) airDashUsed = false
+            endKickLockOnBlock()
+            keepStartPresses()
+            resetAirMovesOnLanding()
         }
     }
 

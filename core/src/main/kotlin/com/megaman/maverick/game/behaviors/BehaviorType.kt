@@ -8,5 +8,6 @@ enum class BehaviorType {
     AIR_DASHING,
     WALL_SLIDING,
     GROUND_SLIDING,
+    GROUND_DASHING,
     JETPACKING
 }

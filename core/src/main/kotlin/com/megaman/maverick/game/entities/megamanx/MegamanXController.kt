@@ -26,7 +26,10 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 
 internal fun MegamanX.defineControllerComponent(): ControllerComponent {
     fun side(facing: Facing) = ButtonActuator(
-        onJustPressed = { require(RunComponent::class).lastPressedSide = facing },
+        onJustPressed = {
+            require(RunComponent::class).lastPressedSide = facing
+            run(0f, facing)
+        },
         onPressContinued = { delta -> run(delta, facing) },
         onJustReleased = { if (!input.isPressed(facing.opposite().runButton())) stopRunning() },
         onReleaseContinued = { if (!input.isPressed(facing.opposite().runButton())) running = false }
@@ -58,7 +61,7 @@ internal fun MegamanX.run(delta: Float, side: Facing) {
     val runState = require(RunComponent::class)
     if (!isRunSidePressed(side)) return
 
-    if (!inPlay || !playerCanMove || damaged || teleporting || holdsSideSpeed ||
+    if (!inPlay || !playerCanMove || damaged || teleporting || holdsSideSpeedForRun ||
         isBehaviorActive(BehaviorType.WALL_SLIDING)
     ) {
         running = false
@@ -73,6 +76,7 @@ internal fun MegamanX.run(delta: Float, side: Facing) {
 
     val speed = ConstVals.PPM * side.value * when {
         walkStart -> MegamanXValues.WALK_START_SPEED
+        !bodyOverGround && dashSpeedInAir -> MegamanXValues.DASH_AIR_SPEED
         else -> MegamanXValues.WALK_SPEED
     }
 

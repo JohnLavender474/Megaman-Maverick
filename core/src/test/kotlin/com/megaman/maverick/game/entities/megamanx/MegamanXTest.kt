@@ -47,14 +47,17 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import com.maverick.game.engine.common.enums.Direction
 
 private const val DELTA = 0.05f
 private const val TOLERANCE = 0.001f
 
-private fun MegamanX.startDamage() {
+private fun MegamanX.damageTimerForTest(): Timer {
     val field = MegamanX::class.java.getDeclaredField("damageTimer").apply { isAccessible = true }
-    (field.get(this) as Timer).reset()
+    return field.get(this) as Timer
 }
+
+private fun MegamanX.startDamage() = damageTimerForTest().reset()
 
 class MegamanXTest : DescribeSpec({
 
@@ -176,6 +179,27 @@ class MegamanXTest : DescribeSpec({
             x.startDamage()
             press(MegaControllerButton.RIGHT)
             body.physics.velocity.x shouldBe 0f
+        }
+
+        it("drags the side speed only while damaged") {
+            x.startDamage()
+            body.preProcess()
+            body.physics.applyFrictionX shouldBe true
+            body.physics.defaultFrictionOnSelf.x shouldBe MegamanXValues.KNOCKBACK_DRAG
+
+            x.damageTimerForTest().setToEnd()
+            body.preProcess()
+            body.physics.applyFrictionX shouldBe false
+            body.physics.applyFrictionY shouldBe false
+        }
+
+        it("drags on the side axis of a body turned left") {
+            body.direction = Direction.LEFT
+            x.startDamage()
+            body.preProcess()
+            body.physics.applyFrictionX shouldBe false
+            body.physics.applyFrictionY shouldBe true
+            body.physics.defaultFrictionOnSelf.y shouldBe MegamanXValues.KNOCKBACK_DRAG
         }
 
         it("keeps the knockback speed while damaged") {

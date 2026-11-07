@@ -50,7 +50,7 @@ internal fun MegamanX.defineSpritesComponent(): SpritesComponent {
     var flashTime = 0f
     component.putPreProcess(MEGAMAN_X_SPRITE_KEY) { delta, player ->
         player.setSize(MegamanXValues.SPRITE_SIZE * ConstVals.PPM, MegamanXValues.SPRITE_SIZE * ConstVals.PPM)
-        val stripFacesLeft = isBehaviorActive(BehaviorType.WALL_SLIDING)
+        val stripFacesLeft = isBehaviorActive(BehaviorType.WALL_SLIDING) && !kickLocked
         player.setFlip(if (stripFacesLeft) facing == Facing.RIGHT else facing == Facing.LEFT, false)
         player.setOriginCenter()
         player.rotation = direction.rotation
@@ -84,8 +84,10 @@ internal fun MegamanX.animationKey(): String {
     return when {
         damaged -> if (bodyOverGround) "damaged" else "air_damaged"
         isBehaviorActive(BehaviorType.AIR_DASHING) -> "dash$shoot"
-        isBehaviorActive(BehaviorType.WALL_SLIDING) -> "wallslide$shoot"
+        isBehaviorActive(BehaviorType.GROUND_DASHING) -> (if (groundDashBraking) "dash_end" else "dash") + shoot
         kickLocked -> "walljump$shoot"
+        isBehaviorActive(BehaviorType.WALL_SLIDING) -> "wallslide$shoot"
+        wallKicked && isBehaviorActive(BehaviorType.JUMPING) -> "walljump$shoot"
         !bodyOverGround -> (if (rising) "jump" else "fall") + shoot
         walkStarting -> "run_trans$shoot"
         running -> "run$shoot"
@@ -123,6 +125,15 @@ internal fun MegamanX.defineAnimationsComponent(): AnimationsComponent {
     val holdThenStay = gdxArrayOf(MegamanXValues.AIR_DASH_HOVER_TIME, 1f)
     animations.put("dash", Animation(frames("dash", 2), holdThenStay, false))
     animations.put("dash_shoot", Animation(frames("dash_shoot", 2), holdThenStay, false))
+    val brake = gdxArrayOf(
+        MegamanXValues.DASH_END_FRAME_1,
+        MegamanXValues.DASH_END_FRAME_2,
+        MegamanXValues.DASH_END_FRAME_3,
+        MegamanXValues.DASH_END_FRAME_4
+    )
+    fun sheet2x2(name: String) = atlas.findRegion(name)!!.splitAndFlatten(2, 2, Array())
+    animations.put("dash_end", Animation(sheet2x2("dash_end"), brake, false))
+    animations.put("dash_end_shoot", Animation(sheet2x2("dash_end_shoot"), brake, false))
     val grabThenSlide = gdxArrayOf(MegamanXValues.WALL_GRAB_TIME, 1f)
     animations.put("wallslide", Animation(frames("wallslide", 2), grabThenSlide, false))
     animations.put("wallslide_shoot", Animation(frames("wallslide_shoot", 2), grabThenSlide, false))

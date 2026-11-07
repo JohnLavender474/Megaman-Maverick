@@ -26,6 +26,7 @@ import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
+import kotlin.math.max
 
 private const val TAG = "PlayerAirDash"
 
@@ -37,6 +38,8 @@ class AirDashParams(
     val minTime: Float,
     val maxTime: () -> Float,
     val speed: () -> Float,
+    val decel: () -> Float,
+    val minSpeed: Float,
     val endBump: () -> Float,
     val onStart: () -> Unit,
     val onEnd: () -> Unit
@@ -61,6 +64,7 @@ fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
         private val impulse = Vector2()
         private var lastFacing = Facing.RIGHT
         private var time = 0f
+        private var decel = 0f
 
         override fun evaluate(delta: Float): Boolean {
             if (!existenceState.liveAfterUpdate || !inPlay || !playerCanMove || damaged || teleporting ||
@@ -86,6 +90,8 @@ fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
             params.onStart()
 
             if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
+
+            decel = params.decel()
 
             val impulseValue = ConstVals.PPM * params.speed()
             when (direction) {
@@ -113,6 +119,10 @@ fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
 
             if (facing != lastFacing) impulse.scl(-1f)
             lastFacing = facing
+
+            if (decel > 0f) impulse.setLength(
+                max(params.minSpeed * ConstVals.PPM, impulse.len() - decel * ConstVals.PPM * delta)
+            )
 
             body.physics.velocity.set(impulse)
 

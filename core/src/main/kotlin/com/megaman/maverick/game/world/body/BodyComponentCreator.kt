@@ -45,7 +45,10 @@ object BodyComponentCreator {
         body.setEntity(entity)
         body.forEachFixture { fixture -> fixture.setEntity(entity) }
         body.preProcess.put(ConstKeys.PRIOR) { body.putProperty(ConstKeys.PRIOR, body.getPosition()) }
-        body.onReset.put(ConstKeys.BODY_SENSES) { body.resetBodySenses() }
+        body.onReset.put(ConstKeys.BODY_SENSES) {
+            body.resetBodySenses()
+            body.forEachFixture { fixture -> fixture.clearTouchedSideBlocks() }
+        }
 
         if (entity is MegaGameEntity)
             entity.runnablesOnDestroy.put(ConstKeys.CLEAR_FEET_BLOCKS) { body.clearFeetBlocks() }

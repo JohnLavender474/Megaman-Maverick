@@ -124,6 +124,12 @@ internal fun MegamanX.defineBodyComponent(): BodyComponent {
             return@put
         }
 
+        val vertical = direction.isVertical()
+        body.physics.applyFrictionX = damaged && vertical
+        body.physics.applyFrictionY = damaged && !vertical
+        if (vertical) body.physics.defaultFrictionOnSelf.set(MegamanXValues.KNOCKBACK_DRAG, 0f)
+        else body.physics.defaultFrictionOnSelf.set(0f, MegamanXValues.KNOCKBACK_DRAG)
+
         if (!running && !damaged && !stunned && !holdsSideSpeed) when (direction) {
             Direction.UP, Direction.DOWN -> body.physics.velocity.x = 0f
             Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = 0f

@@ -37,6 +37,8 @@ internal fun Megaman.airDashBehavior(): IBehavior = playerAirDashBehavior(
             if (currentWeapon == MegamanWeapon.RUSH_JET) speed *= MegamanValues.RUSH_JET_AIR_DASH_SCALAR
             speed
         },
+        decel = { 0f },
+        minSpeed = 0f,
         endBump = {
             if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_END_BUMP
             else MegamanValues.AIR_DASH_END_BUMP

@@ -18,6 +18,8 @@ private const val TAG = "PlayerWallSlide"
 
 class WallSlideParams(
     val blocked: () -> Boolean,
+    val allowedWhileJumping: () -> Boolean,
+    val holdsWithoutInput: () -> Boolean,
     val onStart: () -> Unit,
     val onAct: (Float) -> Unit,
     val onEnd: () -> Unit
@@ -33,8 +35,10 @@ fun <T> T.playerWallSlideBehavior(params: WallSlideParams): IBehavior
     where T : AbstractHealthEntity, T : IBodyEntity, T : IFaceable, T : IDirectional = FunctionalBehaviorImpl(
     evaluate = {
         !(!existenceState.liveAfterUpdate || !inPlay || !playerCanMove || params.blocked()) &&
-            pressedWallSide() != null && !damaged &&
-            !isBehaviorActive(BehaviorType.JUMPING) && !isBehaviorActive(BehaviorType.CLIMBING) &&
+            (pressedWallSide() != null ||
+                (isBehaviorActive(BehaviorType.WALL_SLIDING) && params.holdsWithoutInput())) && !damaged &&
+            (!isBehaviorActive(BehaviorType.JUMPING) || params.allowedWhileJumping()) &&
+            !isBehaviorActive(BehaviorType.CLIMBING) &&
             !body.isSensing(BodySense.FEET_ON_GROUND)
     },
     init = {

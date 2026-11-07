@@ -116,6 +116,8 @@ import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.entities.megamanx.MegamanX
+import com.megaman.maverick.game.controllers.SelectButtonAction
 
 class MegaLevelScreen(private val game: MegamanMaverickGame) :
     TiledMapLevelScreen(game.batch, TiledMapLoader(game.assets)), Initializable, IEventListener, IShapeDebuggable,
@@ -797,7 +799,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 // TODO: Esc is pause in gameplay for now; consider another action for Esc in gameplay later (031
                 //  decision of 2026-10-25)
                 backStatus = game.systemInput.getStatus(SystemButton.BACK),
-                selectAction = game.players.settings(player.playerSlot!!).selectButtonAction
+                // TODO: SELECT is always X's dash for now, so it never pauses for X; see the dash input TODO in
+                //  MegamanXMoves.kt (item 081)
+                selectAction = if (player is MegamanX) SelectButtonAction.NEXT_WEAPON
+                else game.players.settings(player.playerSlot!!).selectButtonAction
             )
         ) {
             GameLogger.debug(TAG, "render(): pause game")

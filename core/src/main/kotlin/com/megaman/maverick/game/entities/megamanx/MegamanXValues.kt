@@ -41,13 +41,31 @@ object MegamanXValues {
     const val WALL_GRAB_TIME = 0.1333f
     const val WALL_SLIDE_SPEED = 2.6953f
     const val WALL_KICK_SPEED = 10.5469f
-    const val WALL_KICK_AWAY_SPEED = 3.75f
+    const val WALL_KICK_AWAY_SPEED = WALK_SPEED
     const val WALL_KICK_LOCK_TIME = 0.1667f
     const val WALL_DELAY_AFTER_JUMP = 0.1667f
-    const val PUSH_OFF_SPEED = 3.75f
+    const val PUSH_OFF_SPEED = WALK_SPEED
     const val PUSH_OFF_TIME = 0.0667f
 
     const val AIR_DASH_HOVER_TIME = 0.1f
     const val AIR_DASH_TIME = 0.3f
     const val AIR_DASH_SPEED = 8f
+
+    const val KNOCKBACK_X = 8f
+    const val KNOCKBACK_Y = 5f
+    const val KNOCKBACK_DRAG = 6f
+
+    const val DASH_START_DELAY = 0.0833f
+    const val DASH_START_SPEED = 12.5f
+    const val DASH_SPEED = 8f
+    const val DASH_DECEL = 21.1f
+    const val DASH_TIME = 0.5f
+    const val DASH_END_FRAME_1 = 0.05f
+    const val DASH_END_FRAME_2 = 0.0333f
+    const val DASH_END_FRAME_3 = 0.1167f
+    const val DASH_END_FRAME_4 = 0.0833f
+    const val DASH_END_TIME = DASH_END_FRAME_1 + DASH_END_FRAME_2 + DASH_END_FRAME_3 + DASH_END_FRAME_4
+    const val DASH_AIR_SPEED = 8f
+    const val DASH_WALL_KICK_AWAY_SPEED = 8f
+    const val AIR_DASH_FAST_START_SPEED = 12.5f
 }

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.world.body
 
+import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.world.body.IBody
 import com.maverick.game.engine.world.body.IFixture
@@ -15,6 +16,17 @@ fun IFixture.setEntity(entity: IBodyEntity): IFixture {
 }
 
 fun IFixture.getEntity() = properties.get(ConstKeys.ENTITY) as MegaGameEntity
+
+private object TouchedSideBlocksKey
+
+@Suppress("UNCHECKED_CAST")
+fun IFixture.getTouchedSideBlocks(): ObjectSet<IFixture> =
+    properties.get(TouchedSideBlocksKey) as ObjectSet<IFixture>?
+        ?: ObjectSet<IFixture>().also { properties.put(TouchedSideBlocksKey, it) }
+
+fun IFixture.clearTouchedSideBlocks() {
+    (properties.get(TouchedSideBlocksKey) as ObjectSet<*>?)?.clear()
+}
 
 fun IFixture.depleteHealth(): Boolean {
     val entity = getEntity()
