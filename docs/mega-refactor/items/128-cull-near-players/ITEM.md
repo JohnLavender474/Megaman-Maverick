@@ -25,6 +25,14 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ## Owner's input
 
+The first question on the shared screen (2026-11-06), verbatim:
+
+> Should the 2nd player have their own "virtual game camera" so that objects like blocks aren't culled when off screen
+> from the 1st player's camera?
+
+This item is that idea: each player has a virtual view that is used only for cull and spawn checks, and nothing is
+drawn from it.
+
 Option F3 of the `047g` warp review (play test, 2026-11-06): the real fix for a player out of view, in its own item.
 The `047g` page: `docs/mega-refactor/items/047-co-op/branches/mega-refactor-047g-shared-camera/docs/WARP-REVIEW.html`.
 
