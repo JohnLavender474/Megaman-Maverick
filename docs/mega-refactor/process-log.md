@@ -1716,3 +1716,22 @@ newest entry at the bottom.
   - Bug filed: `docs/issues/2026-11-06-x6-intro-room2-floor-below-art.md`.
   - `X6_INTRO` is not finishable as X until the wall kick (phase 2): a 2.5-tile step in `room1`.
   - Workarounds documented in `024` and `029` `ITEM.md`.
+
+## 2026-11-06 — mega-refactor-081c-x-wall-slide-air-dash
+
+- Summary: phase 2 of playable X (squash commit `61460cd31`). The wall slide and the air dash moved into shared
+  `players/PlayerWallSlide.kt` and `players/PlayerAirDash.kt` with params objects; `JumpParams` got `wallJumpAllowed`
+  and `ignoreRelease`; `isRunSidePressed` and the air dash input reads moved to `players/`. Megaman passes his own
+  rules and plays the same (37 baseline tests written on the old code pass unchanged). X got the X6 wall grab, slide,
+  push-off, wall kick (kick lock and wall delay) and air dash (hover, fixed dash, 1 per air). The air dash starts on
+  `A`, on `SELECT` when set to air dash, and on a new `MegaControllerButton.R` (keyboard `U`, pad `R1`; renamed from
+  the branch's `DASH` at the merge, as `069` and `031` decided). An old save with no `R` entry leaves `R` unbound
+  when its default clashes with another button. Test rooms `walls` and `dash` in `REFACTOR_TEST_081`. X can now pass
+  `X6_INTRO` `room1` to the gate.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on `master` before the docs
+  commit, after the rename (`engine` 639, `core` 1078, `smokeTest` 449). 15 mutation checks, each one failed at
+  least 1 test. The review before the play test (2 agents) found no change to Megaman, 2 bugs in X (no wall delay;
+  no dash on `R` or `SELECT` during a rise) and 3 risks; all fixed with tests. The owner played the checks, and they
+  pass. CI did not run, because the branch was never pushed.
+- Follow-up: open question 12 in `081` (a shot during the kick lock goes into the wall). Phase 3: the ground dash, the
+  dash jump, the dash wall kick and the faster start on `R`.

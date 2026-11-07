@@ -58,6 +58,10 @@ Megaman's controls must not change.
 
 ## Decisions
 
+- 2026-11-06 (owner, in `081c`): the `R` button exists now (index 8, keyboard `U`, pad `R1`), read only by X. It
+  starts X's air dash. Changed from option B below: `A` in the air and `SELECT` (when the select action is air dash)
+  also start X's air dash, as for Megaman. The ground dash on `R` comes in phase 3 of `081`.
+
 - 2026-10-28: the new button is named `R` (a physical name, as item `031` decided for all buttons).
 - 2026-10-28: option B. One dash input does the ground dash and the air dash; `A` is only jump and wall kick. The
   owner's first idea for option A was to keep `DOWN` + `A` for both dashes, as for Megaman's slide. It was dropped,

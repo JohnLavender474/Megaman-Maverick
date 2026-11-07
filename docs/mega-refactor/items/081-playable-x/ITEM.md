@@ -7,7 +7,7 @@
 - Includes: the work of `069` (dash button), folded in on 2026-11-05. Its research and decisions are in
   `069` `ITEM.md` and `NOTES.md`.
 - Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`, `120`, `121`, `122`
-- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (active, 2026-11-06)
+- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (merged, 2026-11-06)
 
 ## Goal
 
@@ -169,6 +169,13 @@ slash (we'll need to work out what button or button combo controls this)".
 - (2026-11-06, owner, `081b`) The `X6_INTRO` boss room got a floor at the painted ground, and the `D1000` arena moved
   down onto it. A new `nesmap` export of the map must keep this.
 
+- (2026-11-06, owner, `081c`) Phase 2 uses the X6 rules: a wall grab, a fixed slide, a push-off, a wall kick on a
+  slide or on a wall touch in the air (after a 0.167 s wall delay from a jump start), a 0.167 s kick lock, and the X6
+  air dash (a hover, then a fixed 0.3 s dash, 1 per air). The air dash starts on `A` in the air, on `SELECT` when the
+  select action is air dash, and on a new `R` button (keyboard `U`, pad `R1`), which only X reads. This changes the
+  `069` plan "`A` is only jump and wall kick; `SELECT` is always `NEXT_WEAPON` for X". No new sounds yet. The dash
+  button gives the same dash as `A` until phase 3. Details: the `081c` branch `docs/NOTES.md`.
+
 ## Open questions
 
 1. Closed 2026-11-05: a `characters` field on `LevelDefinition` (see "Decisions").
@@ -180,15 +187,16 @@ slash (we'll need to work out what button or button combo controls this)".
    as an effect over X? See `NOTES.md`, "`1LMX` sprite sheet".
 6. Is `CharacterDef` moved to the engine once two characters show the shared shape? (from `060`)
 7. Thin classes or one `PlayerEntity(def)`? Decide this before any swap work. One class needs a way to rebuild on a change of def, because `init()` is not safe to repeat, and it does not fit a per-class pool for `121` clones. A level that picks its character needs a spawn-time `setFocus` in place of the once-only `MegaLevelScreen.kt:337` (`047` `NOTES.md`, "Can `Megaman` be pooled?"). (from `047`, 2026-11-02)
-8. Phase 2: which input starts X's air dash? Megaman's air dash is `A` in the air, or `SELECT` when
-   `selectButtonAction` is `AIR_DASH` (`AirDashBehavior.kt:38-46`). `069` decided that for X, `A` is only jump and
-   wall kick, `R` is the only dash input, and `SELECT` is always `NEXT_WEAPON`. If phase 2 uses Megaman's input, phase
-   3 changes X's controls when `R` arrives.
+8. Closed 2026-11-06 (`081c`): X's air dash starts on Megaman's input (`A` in the air; `SELECT` when the select action
+   is air dash) and on the new `R` button (see "Decisions").
 9. Phase 3: a dash button, or a button combination so that X is playable on an NES-style pad? This reopens the
    2026-11-01 decision that an NES-style pad is not enough for X (see "Decisions", `069` "Decisions" and `O9-R1`).
    `069` dropped `DOWN` + `A`, because a dash jump needs the dash held when the jump starts.
 10. Which phase gets crouch, ladder and climb? They are in the move set above, but not in "Phases".
 11. Phase 4: which button or button combination starts the sabre slash?
+
+12. During the wall kick lock, X faces the wall (X6), so a shot goes into the wall. Should a shot during the kick go
+    away from the wall? (asked at the `081c` play test, 2026-11-06; no answer yet)
 
 ## Sources
 

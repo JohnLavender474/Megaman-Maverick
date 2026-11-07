@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: phase 2 of X: wall slide (with the wall kick) and air dash
 - Done: steps 1 to 8 (play test next)
-- Next: the owner play test (`CONTRACT.md`)
+- Next: none (phase 3 of X is the next branch)
 - Brief: https://claude.ai/artifact/AJmyLtfrHVBmjHQekmA5Ru
 - Blocked:
 
@@ -81,3 +81,14 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   `no_side_touchie` wall (from the chimney top, not from the floor), that the opening needs 2 kicks, and that the
   5-tile pit needs a dash near the jump top. In water, Megaman's air dash works only after a jump into the pool, as on
   `master`.
+
+## 2026-11-06 (merge)
+
+- Owner (2026-11-06): the play checks pass ("tests pass"); this is the merge approval. The open question on a shot
+  during the kick lock got no answer, so X keeps the X6 rule (X faces the wall during the lock); it stays an open
+  question in `081` `ITEM.md`.
+- `master` had only a docs commit (an issue file) since the branch start; no merge into the branch.
+- `047g` (active) shares no file with this branch.
+- At the squash, the owner chose to rename the button `DASH` to `R`, as `069` (2026-10-28) and `031` decided (physical
+  button names). The squash commit holds the rename; the checks passed again after it (`engine` 639, `core` 1078,
+  `smokeTest` 449). This branch's docs still say `DASH`.
