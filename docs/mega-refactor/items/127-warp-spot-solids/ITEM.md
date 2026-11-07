@@ -4,7 +4,7 @@
 - Type: feature
 - Objectives: `O2`
 - Depends on: `047`
-- Related: `047g`
+- Related: `047g`, `047j`
 - Branches: none yet
 
 ## Goal
@@ -23,6 +23,14 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 ## Owner's input
 
 Found by the review before the play test of `047g` (2026-11-06), accepted for later.
+
+2026-11-06, at the `047h` play test with `--room coop_shaft --viewEdges bottom=WARP,delay=1`: "it works good. One
+minor thing, I think there's an edge case where a player that's being warped can potentially be warped into a block or
+wall. We need to decide at some point how to handle that edge case. In the meantime, it needs to be recorded so that
+it's not forgotten and can be addressed later."
+
+Note: `047j` makes `bottom=WARP` the co-op default, so every co-op player can now meet this case in a tall room. Decide
+the fallback before or with `047j`.
 
 ## Open questions
 
