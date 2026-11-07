@@ -71,6 +71,7 @@ None found. Numbers for merged hot-path work (`014c`, `031c`, `031d`, `051b`, `0
 | `116` | idea | [Body senses as typed state, then a sense history](../items/116-body-senses/ITEM.md) |
 | `125` | idea | [Spatial or room index for spawners, if a measure shows a cost](../items/125-spawner-index/ITEM.md) (main) |
 | `128` | idea | [Cull near players, not only by the camera view](../items/128-cull-near-players/ITEM.md) |
+| `134` | idea | [Draw bodies and the camera between physics steps (render interpolation)](../items/134-render-interpolation/ITEM.md) |
 
 ## Gaps with no item
 

@@ -78,6 +78,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `129` | idea | [View edge warp visuals, phase 2](../items/129-warp-visuals/ITEM.md) (main) |
 | `132` | idea | [Spread the players after a room transition](../items/132-spread-after-transition/ITEM.md) |
 | `133` | idea | [A cue that shows who waits at a room exit](../items/133-exit-wait-cue/ITEM.md) (main) |
+| `134` | idea | [Draw bodies and the camera between physics steps (render interpolation)](../items/134-render-interpolation/ITEM.md) (main) |
 
 ## Gaps with no item
 

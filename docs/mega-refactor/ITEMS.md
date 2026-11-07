@@ -141,6 +141,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 131 | [Room exit: a player past the exit wall outside the shared span](items/131-exit-outside-span/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 132 | [Spread the players after a room transition](items/132-spread-after-transition/ITEM.md) | feature | `O2`, `O9` | idea | `047` | | |
 | 133 | [A cue that shows who waits at a room exit](items/133-exit-wait-cue/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
+| 134 | [Draw bodies and the camera between physics steps (render interpolation)](items/134-render-interpolation/ITEM.md) | refactor | `O9`, `O5` | idea | none | | |
 
 ## Branches
 
