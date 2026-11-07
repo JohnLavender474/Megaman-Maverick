@@ -134,6 +134,9 @@ statuses and column meanings are in `CLAUDE.md`.
 | 124 | [Slope pass-through from below](items/124-slope-pass-through/ITEM.md) | feature | `O4` | idea | `068` | | |
 | 125 | [Spatial or room index for spawners, if a measure shows a cost](items/125-spawner-index/ITEM.md) | refactor | `O5` | idea | none | | |
 | 126 | [Movement and damage blocks as lock reasons](items/126-movement-damage-lock-reasons/ITEM.md) | refactor | `O1`, `O8` | idea | `048` | | |
+| 127 | [View edge warp: test the warp spot for solids](items/127-warp-spot-solids/ITEM.md) | feature | `O2` | idea | `047` | | |
+| 128 | [Cull near players, not only by the camera view](items/128-cull-near-players/ITEM.md) | refactor | `O2`, `O5` | idea | none | | |
+| 129 | [View edge warp visuals, phase 2](items/129-warp-visuals/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
 
 ## Branches
 
@@ -214,4 +217,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-004a-entity-smoke-test`](items/004-entity-smoke-test/branches/mega-refactor-004a-entity-smoke-test/process-log.md) | 004 | Headless `smokeTest` suite: build and `init()` every entity class with real atlas data | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-047a-second-slot`](items/047-co-op/branches/mega-refactor-047a-second-slot/process-log.md) | 047 | With `--players 2`, a second `Megaman` plays in a level on its own device | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-047b-player-rules`](items/047-co-op/branches/mega-refactor-047b-player-rules/process-log.md) | 047 | Session rules, friendly fire, targeting, `ChargedShot` and pickups | merged | 2026-11-01 | 2026-11-02 |
-| [`mega-refactor-047g-shared-camera`](items/047-co-op/branches/mega-refactor-047g-shared-camera/process-log.md) | 047 | Shared screen phase 1: a group camera with edge walls in one room with no exits | active | 2026-11-06 | |
+| [`mega-refactor-047g-shared-camera`](items/047-co-op/branches/mega-refactor-047g-shared-camera/process-log.md) | 047 | Shared screen phase 1: a group camera with edge walls in one room with no exits | merged | 2026-11-06 | 2026-11-06 |

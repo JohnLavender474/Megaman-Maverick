@@ -1735,3 +1735,26 @@ newest entry at the bottom.
   pass. CI did not run, because the branch was never pushed.
 - Follow-up: open question 12 in `081` (a shot during the kick lock goes into the wall). Phase 3: the ground dash, the
   dash jump, the dash wall kick and the faster start on `R`.
+
+## 2026-11-06 — mega-refactor-047g-shared-camera
+
+- Summary: phase 1 of the shared screen (squash commit `3e8655f02`). With `--players 2`, the camera follows
+  `PlayersFocus` (the mean of the players in the world; a 0.5 s ease when the group changes or the target jumps more
+  than 1 tile; on an axis with a `WARP` or `KILL` edge, one keeper player stays fully in view). `CameraViewEdges` gives
+  each view edge inside the room a rule (`NONE`, `WALL`, `BOUNCE`, `WARP`, `KILL`) with `delay` and `damage`, from
+  `SessionRules.viewEdges`; the default is side walls. `WARP` holds the out player (`MegaLockReason.VIEW_EDGE`) and
+  puts it beside a partner in view; `BOUNCE` damages through `ViewEdgeHazard`. The `--viewEdges` dev flag sets the
+  rules. The rules are off in turned rooms and in rooms with camera sections (`TODO`, phase 5). With 1 player, nothing
+  changes. Test rooms `group_wide`, `group_clamp`, `group_pit`, `group_tall` in `REFACTOR_TEST_047`.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch after 2 merges of
+  `master` (`engine` 639, `core` 1108, `smokeTest` 450). The first merge resolved 2 simple conflicts (the group focus
+  moved into `MegaLevelScreen.start()`, as the `081b` entry asked; imports and a line in `LaunchOptionsResolver.kt`).
+  The second merge was needed because `master` had replaced the `081c` commit of the first merge; the 6 `081c` files
+  take `master`'s version. The review before the play test (2 agents) found 4 bugs and a per-frame allocation; all
+  fixed. The owner played 4 rounds; 3 reports led to fixes (the ease, the warp hold, the keeper), and the fourth
+  passed. CI did not run, because the branch was never pushed.
+- Follow-up:
+  - New items `127` (warp spot solids), `128` (cull near players, the owner's F3), `129` (warp visuals, phase 2).
+  - Phase 5 note in `047` `ITEM.md`: zones and scrolls read the group midpoint with 2 players.
+  - Open in `047`: the final default for each view edge, and whether side `WARP` stays.
+  - Next: phase 2 of the shared screen (side exits, "carry").

@@ -75,6 +75,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `082` | planned | [Dialogue boxes, in-level dialogue scenes and cutscenes](../items/082-dialogue-and-cutscenes/ITEM.md) (main) |
 | `031` | done | [Input frames per player (`InputFrame`), devices and bindings](../items/031-input-frames/ITEM.md) |
 | `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) |
+| `129` | idea | [View edge warp visuals, phase 2](../items/129-warp-visuals/ITEM.md) (main) |
 
 ## Gaps with no item
 

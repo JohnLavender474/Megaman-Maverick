@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
-- Branches: `047a` (merged), `047b` (merged), `047g` (active)
+- Branches: `047a` (merged), `047b` (merged), `047g` (merged)
 
 ## Goal
 
@@ -82,12 +82,9 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 
 ## Open questions
 
-- `047g` and the camera focus (2026-11-06): `081b` sets the focus to slot 0 at the top of `MegaLevelScreen.start()`.
-  When `047g` takes in `master`, its group focus must move from `init()` into `start()`. See the `081` `NOTES.md`,
-  "Camera focus and `047g`".
-
 - Camera: closed 2026-11-06 (group camera with edge walls, see "Decisions").
-- Tall rooms (taller than the view): what happens to a player who goes below the view but stays inside the room (warp to the partner, with or without damage?), and above the view (head bump or warp)? To decide at the phase 1 play test.
+- Tall rooms (taller than the view): `047g` (phase 1) gives a rule for each view edge (`NONE`, `WALL`, `BOUNCE`, `WARP`, `KILL`) through `--viewEdges`, and the owner played all of them (2026-11-06). The default stays `left=WALL, right=WALL, top=NONE, bottom=NONE`. Open: the final default for each edge, and whether side `WARP` (experimental) stays.
+- Phase 5 (camera sections, from the `047g` backlog): with 2 players in a room with a `051` zone or scroll, the zone and the scroll read the group midpoint as their focus point, and `CameraEdgeBlocks` kills only slot 0 at a kill edge. The view edge rules are off in such a room until then.
 - The lead player as the source of truth, with earnings shared by all players: confirm. This is one profile for the session. The lead slot is a session policy, not a helper in the players query API (`029` decision).
 - What happens when the lead player leaves? Does the next slot become the lead?
 - Respawn with drop-in and drop-out: is a respawn routine behind an interface (`038`) enough?
