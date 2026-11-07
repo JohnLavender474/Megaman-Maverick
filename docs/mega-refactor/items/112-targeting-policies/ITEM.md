@@ -46,6 +46,9 @@ The first branch must run with the boss work in `047e`, because the boss parts a
 - `IGameComponent.reset()` is the clear point for a stateful policy, but it runs before `onDestroy`. Reads in `onDestroy` or `runnablesOnDestroy` see a cleared hold (`WilyFinalBoss.kt:293,295`, `AbstractEnemy` drop logic).
 - `addComponent` keys on the exact class (`GameEntity.kt:38`). Rules must be policies in one component class, not subclasses of a component.
 - `072` names `029` and `047` as the items that move `targetPlayer`. This item now does that move.
+- A policy can return `IGameEntity` in place of `MegaGameEntity`: with `targetPlayer: IGameEntity`, 2 call sites fail,
+  both on a declared type. Goes with the `MegaPlayers` bound change; see `072` `NOTES.md`, "2026-11-07: the
+  `MegaPlayers` type bound".
 
 ## Sources
 

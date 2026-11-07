@@ -25,6 +25,9 @@ Not approved. The branch `SCOPE.md` decides the final scope. From the research i
 - Every `getType()` and `getTag()` value stays the same (for example `BulletBill` keeps `ENEMY` over the
   `IProjectileEntity` default `PROJECTILE`). `EntityContractsTest` changes its assertion to `IGameEntity`.
 - No game content goes into `engine`.
+- Optional: `MegaPlayers` becomes `Players<IGameEntity>` (2026-11-07). Nothing in it or at its call sites needs
+  `MegaGameEntity`; a compile gave 47 type-only errors in about 17 files. No `IPlayer` marker interface (`029`
+  decision). `NOTES.md`, "2026-11-07: the `MegaPlayers` type bound".
 
 ## Owner's input
 
@@ -48,7 +51,8 @@ item."
 
 ## Open questions
 
-None.
+- Does the `MegaPlayers` bound change (`IGameEntity`) go in this item's branch or in the first `112` branch?
+  Recommendation: whichever runs first (`NOTES.md`, 2026-11-07).
 
 ## Sources
 

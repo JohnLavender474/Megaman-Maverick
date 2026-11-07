@@ -322,3 +322,75 @@ What must stay true in every branch:
 - Is the goal "fewer interface files" or "no `game` on entities"? The first is (c), and it costs casts now. The second
   is `016`, and it makes (c) free later.
 - Do the 3 audio/camera default methods go now (small trim) or wait for `016`?
+
+## 2026-11-07: the `MegaPlayers` type bound (`master` at `6d75184b0`)
+
+Owner's question (2026-11-07, verbatim): "Does `MegaPlayers` need the `MegaGameEntity` type param? Or does
+`IGameEntity` suffice? If it suffices, then can we create a new `IPLayer` marker interface that extends
+`IGameEntity`?"
+
+Short forms as above (`E/`, `C/`). Tags: [code] read in the repo, [measured] a compile, [inferred] reasoned.
+
+### Short answer
+
+`IGameEntity` is enough. Change the bound in the branch of this item (or in `112`), not as a task of its own. Do not
+add an `IPlayer` marker interface.
+
+### 1. What `MegaPlayers` uses [code]
+
+`C/players/MegaPlayers.kt` is `Players<MegaGameEntity>`; the engine bound is `Players<E : IGameEntity>`
+(`E/players/Players.kt`). Every member it reads on a player is on `IGameEntity`: `hasBody`, `body`
+(`E/entities/EntityQueries.kt`), `existenceState`, `inPlay` (`C/entities/state/PlayPhases.kt`), `playerSlot`.
+
+On player references in `core` (`targetPlayer`, `asPlayer`, `rootPlayer`, `firstLive()`), the members used are `body`
+(415), `direction` (22), `existenceState` (14), `inPlay` (4) and a few others (`playerSlot`, `damaged`,
+`damageableFixture`, `invincible`, `healthRatio`). All are `IGameEntity` extensions.
+
+The `MegaGameEntity` extensions in `C/players/` (`playerAllowsDamageFrom`, `playerEditDamage`, `playerSpawnEnd`,
+`playerAfterDamage`, `playerOnDestroy`) read `services`, but the player classes call them on themselves, not through
+`MegaPlayers`. They do not need the bound.
+
+### 2. Compile with `Players<IGameEntity>` [measured]
+
+A throwaway detached worktree, deleted after the check. `core:compileKotlin`:
+
+- Pass 1 (only `MegaPlayers.kt` changed): 35 errors.
+- Pass 2 (also widened `CameraViewEdges`, `PlayersFocus`, `CameraRoomExits`, `PlayerDamaged`, `RespawnContext`, and the
+  return type of `targetPlayer`): 12 errors.
+- All 47 are declared types (`val player: MegaGameEntity`, `OrderedMap<MegaGameEntity, ...>`, parameters such as
+  `SpiderWeb.stickTo(player: MegaGameEntity)`). None calls a `MegaGameEntity` member.
+- With `targetPlayer: IGameEntity`, 2 of its call sites fail (`AbstractBoss.kt:109` through `PlayerDamaged`,
+  `MagFly.kt:200`), both on a declared type.
+- The files: the 5 above, `MegaGameEntity.kt`, `SpiderWeb.kt`, `DarknessV4.kt`, `AbstractBoss.kt`, `MagFly.kt`,
+  `MegaLevelScreen.kt`, `EndLevelEventHandler.kt`, `BeamInView.kt`, `PlayerStatsHandler.kt`, `LevelPauseScreen.kt`,
+  `GetWeaponScreen.kt`, `MegaPlayers.kt`: 17 files. A third pass can add a few more [inferred].
+
+### 3. Assessment
+
+Change the bound to `IGameEntity`:
+
+| Pros | Cons |
+|---|---|
+| The type is true: nothing needs `MegaGameEntity`. | A type-only change of about 17 files, with no behavior. |
+| It matches the engine bound and `048` (components, not base classes). | A later caller that needs `services` or `mapObjectId` must get it another way. |
+| A test can register a plain entity, with no `MegaServices`. | `IGameEntity` does not say "player" to a reader. |
+| `asPlayer` becomes `takeIf { isPlayer }`, with no `as? MegaGameEntity`. | |
+
+No real caller needs it today (no speculative change). It fits this item (fewer types that describe an entity) or
+`112` (which changes `targetPlayer`).
+
+An `IPlayer : IGameEntity` marker interface:
+
+- Two sources of truth. `PlayerComponent` is added at `register` and removed at `unregister`; a marker is fixed on the
+  class. An `IPlayer` can have no slot (slot 1 not registered, X not in the roster), and the compiler cannot see it.
+  `isPlayer` is always correct.
+- It is against the decision of 2026-10-23 (`029` `ITEM.md`, `048` `ITEM.md`): no `IPlayer` interface on the player
+  entity; "player" is a marker component.
+- A marker with no members gives no capability; it only names the type.
+
+If the declarations need the name, `typealias PlayerEntity = IGameEntity` names them with no second truth (it checks
+nothing).
+
+### 4. Open question for the owner
+
+- Does the bound change go in this item's branch or in the first `112` branch? Recommendation: whichever runs first.
