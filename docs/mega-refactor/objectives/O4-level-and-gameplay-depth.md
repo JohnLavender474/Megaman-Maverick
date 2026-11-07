@@ -90,6 +90,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `117` | idea | [Crush with a falling pushable block](../items/117-pushable-block-crush/ITEM.md) (main) |
 | `118` | done | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) |
 | `121` | idea | [Enemy clones of a playable character](../items/121-playable-character-clones/ITEM.md) (main) |
+| `136` | idea | [Co-op: a player can skip a spike floor in a tall room](../items/136-tall-room-spike-skip/ITEM.md) |
 
 ## Gaps with no item
 

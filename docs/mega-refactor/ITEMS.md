@@ -142,6 +142,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 132 | [Spread the players after a room transition](items/132-spread-after-transition/ITEM.md) | feature | `O2`, `O9` | idea | `047` | | |
 | 133 | [A cue that shows who waits at a room exit](items/133-exit-wait-cue/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
 | 134 | [Draw bodies and the camera between physics steps (render interpolation)](items/134-render-interpolation/ITEM.md) | refactor | `O9`, `O5` | idea | none | | |
+| 135 | [A player held below the view is left behind at a side room exit](items/135-held-player-left-behind/ITEM.md) | feature | `O2` | idea | `047` | | |
+| 136 | [Co-op: a player can skip a spike floor in a tall room by falling below the view](items/136-tall-room-spike-skip/ITEM.md) | feature | `O2`, `O4` | idea | `047` | | |
 
 ## Branches
 
@@ -225,4 +227,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047b-player-rules`](items/047-co-op/branches/mega-refactor-047b-player-rules/process-log.md) | 047 | Session rules, friendly fire, targeting, `ChargedShot` and pickups | merged | 2026-11-01 | 2026-11-02 |
 | [`mega-refactor-047g-shared-camera`](items/047-co-op/branches/mega-refactor-047g-shared-camera/process-log.md) | 047 | Shared screen phase 1: a group camera with edge walls in one room with no exits | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-047h-side-exits`](items/047-co-op/branches/mega-refactor-047h-side-exits/process-log.md) | 047 | Shared screen phase 2: side room exits with 2 players (gather at the exit) | merged | 2026-11-06 | 2026-11-06 |
-| [`mega-refactor-047j-coop-bottom-warp`](items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/process-log.md) | 047 | The co-op default `bottom=WARP` for tall rooms | active | 2026-11-06 | |
+| [`mega-refactor-047j-coop-bottom-warp`](items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/process-log.md) | 047 | The co-op default `bottom=WARP` for tall rooms | merged | 2026-11-06 | 2026-11-07 |

@@ -1815,3 +1815,20 @@ newest entry at the bottom.
   `diffity-open`, `diffity-resolve` and `diffity-review`.
 - Contract check: not needed (docs only).
 - Follow-up: none.
+
+## 2026-11-07 — mega-refactor-047j-coop-bottom-warp
+
+- Summary: the co-op default `bottom=WARP` with a 1 s delay (squash commit `caf1a57da`). In a room taller than the view,
+  the keeper camera keeps one player in view, and a player fully below the view is held and warps beside the partner,
+  so the low player is no longer lost when its floor culls. `PVP` and `SINGLE` keep `ViewEdgeRules()`. A held player
+  with no free partner dies (before: a soft lock when slot 1 died while slot 0 was held), and a player with no free
+  partner is not held. With 1 player, nothing changes.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch after the merge of
+  `master` (docs only), the tree of the squash (`engine` 639, `core` 1124, `smokeTest` 450); not in the main checkout,
+  which holds the owner's uncommitted X work. 3 mutation checks each failed at least 1 test. The review before the
+  play test (1 agent) found one wrong death (a lone player held during the camera ease), fixed, and one check that
+  could not run, removed. The owner played the checks, and they pass. Diff review in Diffity: 0 threads. CI did not
+  run, because the branch was never pushed.
+- Follow-up: new items `135` (a held player left behind at a side exit) and `136` (spike floors skipped in tall
+  rooms). `127` (the warp spot test) is next.
+
