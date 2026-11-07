@@ -1758,3 +1758,13 @@ newest entry at the bottom.
   - Phase 5 note in `047` `ITEM.md`: zones and scrolls read the group midpoint with 2 players.
   - Open in `047`: the final default for each view edge, and whether side `WARP` stays.
   - Next: phase 2 of the shared screen (side exits, "carry").
+
+## 2026-11-06 — master (direct change)
+
+- Summary: new run script `run-game-test-coop.sh` (owner's request): the `run-game-test.sh` settings with
+  `--players 2`, and `--level TEST_1` and `--mode coop` unless the arguments give them (JCommander rejects an option
+  given twice). A direct change to `master`, because it is a small run script with no gameplay change and no active
+  branch owns it. Root `CLAUDE.md` lists it.
+- Contract check: `bash -n` passes; the default logic was checked with no arguments, with `--level`, and with
+  `--mode`. The game was not launched.
+- Follow-up: none.
