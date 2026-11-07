@@ -1,18 +1,6 @@
-<title><id><letter> <Short Name></title>
+<title>047g Shared Camera</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid">. Code: <pre class="code"> with the spans
-    .k (keyword), .c (comment), .del (removed code).
-  - At approval: set the eyebrow to "Brief: approved <date>", set each chosen option to
-    "opt rec" with the pill "Chosen", and set the Decisions tag to "answered <date>".
-  - On a scope change: mark what changed in the text, with the date, and publish to the same link.
-  - The accent color can change to suit the branch. Keep the light and dark token sets in step.
--->
 <style>
 :root {
   --bg: #f3f5fa;
@@ -102,94 +90,134 @@ a { color: var(--accent); }
 
 <div class="wrap">
 
-<!-- 1. Goal -->
 <header style="display:flex;flex-direction:column;gap:14px">
-  <div class="eyebrow"><span>Item <id></span><span>Branch <id><letter></span><span>Objectives <O-ids></span><span class="draft">Brief: draft</span></div>
-  <h1><Short name></h1>
-  <p class="lede narrow"><One or two sentences: what the branch changes and why.></p>
-  <div class="visible narrow"><b>In play</b><span><What the player sees change, or "Nothing changes."></span></div>
+  <div class="eyebrow"><span>Item 047</span><span>Branch 047g</span><span>Objectives O2</span><span>Brief: approved 2026-11-06</span></div>
+  <h1>Shared camera, phase 1</h1>
+  <p class="lede narrow">With 2 players, the camera follows the players as a group, and the left and right edges of the view become walls for the players inside the room. One room, no exits: this is the first of the 6 shared-screen phases.</p>
+  <div class="visible narrow"><b>In play</b><span>With <code>--players 2</code>: the view stays between the players, and a player stops at the view edge when the other player is one screen away. With 1 player, nothing changes.</span></div>
 </header>
 
-<!-- 2. Before and after: a Mermaid diagram of the parts that change (senders, events, listeners). -->
 <section>
-  <h2>Before and after <span class="tag"><what the diagram shows></span></h2>
+  <h2>Before and after <span class="tag">camera parts with 2 players</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <short label></h3>
+      <h3>Today: the camera follows slot 0</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  P0["Slot 0 focus"] --> F["CameraFollow"]
+  P0 --> R["CameraRoomBounds<br/>(room scan, transitions)"]
+  F --> V["View"]
+  P1["Slot 1"] -. "can walk out of the view<br/>and lose its floor" .-> X["Off screen"]
 </pre></div>
-      <p class="note"><The problem that the diagram shows.></p>
+      <p class="note">Slot 1 is not part of the camera. Blocks out of view cull after 1 s, so slot 1 can fall through the world.</p>
     </div>
     <div class="panel after">
-      <h3>After: <short label></h3>
+      <h3>After: the camera follows the group</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] --> B["<new owner>"]
+  P0["Slot 0"] --> G["Group focus<br/>position: mean of live players<br/>bounds: slot 0"]
+  P1["Slot 1"] --> G
+  G --> F["CameraFollow"]
+  G --> R["CameraRoomBounds<br/>(slot 0 trigger, as today)"]
+  F --> V["View"]
+  V --> W["Group walls<br/>left and right view edge,<br/>inside the room only"]
+  W -. "players-only block" .-> P0
+  W -. "players-only block" .-> P1
 </pre></div>
-      <p class="note"><What stays the same for the other code.></p>
+      <p class="note">The room scan still reads slot 0's bounds, so room transitions do not change in this branch. "Carry" is phase 2.</p>
     </div>
   </div>
 </section>
 
-<!-- 3. Code sketch: the new or changed API at its first real caller. A few short blocks, not the diff. -->
 <section>
-  <h2>Code sketch <span class="tag">first caller</span></h2>
+  <h2>Code sketch <span class="tag">first caller: MegaLevelScreen.init()</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <code><Caller></code></h3>
-<pre class="code"><span class="del"><old code></span></pre>
+      <h3>Today: <code>MegaLevelScreen.init()</code></h3>
+<pre class="code"><span class="del">cameraFollow.setFocus(gameCamera, player.focus)</span></pre>
     </div>
     <div class="panel after">
-      <h3>After: <code><Caller></code></h3>
-<pre class="code"><span class="k">fun</span> <new code></pre>
+      <h3>After: <code>MegaLevelScreen.init()</code></h3>
+<pre class="code"><span class="k">val</span> focus = <span class="k">if</span> (twoPlayers) PlayersFocus(game.players) <span class="k">else</span> player.focus
+cameraFollow.setFocus(gameCamera, focus)
+
+<span class="k">if</span> (twoPlayers) game.cameraController.addEffect(
+    CameraViewEdges(game.cameraView, roomBounds, game.rules.viewEdges) {
+        player.inPlay &amp;&amp; !roomTransition.transitioning
+    }
+)</pre>
     </div>
   </div>
-  <!-- Optional: an ordered list of steps or parts, as pills. Use "step go" for a branch point. -->
-  <div class="steps" aria-label="<Order>">
-    <span class="step">1 <step></span><span class="step">2 <step></span>
+  <div class="steps" aria-label="Order">
+    <span class="step">1 test rooms</span><span class="step">2 group focus</span><span class="step">3 edge rules and --viewEdges</span><span class="step">4 ease on change</span><span class="step go">5 review, then play test</span>
   </div>
 </section>
 
-<!-- 4. Decisions: 2 to 4 questions. An objective conflict is a decision. Ask them with AskUserQuestion too.
-     If nothing needs a decision, replace the list with one sentence that says so. -->
 <section>
-  <h2>Decisions <span class="tag">open</span></h2>
+  <h2>Decisions <span class="tag">answered 2026-11-06</span></h2>
   <div class="decisions">
     <div class="decision">
-      <div class="q"><span class="id">D1</span><h3><Question?></h3></div>
-      <p class="narrow"><The context that the question needs, in one or two sentences.></p>
+      <div class="q"><span class="id">D1</span><h3>Does the group camera follow the midpoint on both axes?</h3></div>
+      <p class="narrow">With 1 player, the camera follows the player on both axes. With 2, the up-down position must also come from somewhere.</p>
       <div class="opts">
-        <div class="opt rec"><span class="rec-pill">Recommended</span><span class="lbl"><Option></span><Why.></div>
-        <div class="opt"><span class="lbl"><Option></span><Trade-off.></div>
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Midpoint on both axes</span>The view shows both players up and down as well, as long as they fit.</div>
+        <div class="opt"><span class="lbl">X midpoint, Y follows slot 0</span>The up-down view stays as for 1 player; slot 1 leaves the view more easily in a tall room.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D2</span><h3>When slot 1 dies, how does the camera move to slot 0?</h3></div>
+      <p class="narrow">Today slot 1 stays dead until the next level reset (<code>047c</code> adds a respawn). The midpoint then jumps by up to half a screen.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Ease</span>Use the smooth follow that already exists, for each change of the live players.</div>
+        <div class="opt"><span class="lbl">Snap</span>Simpler, but the view jumps at once.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D3</span><h3>Group walls in a turned room, or while a camera zone or scroll acts?</h3></div>
+      <p class="narrow">A scroll moves the view by itself, so a group wall could push a player. Camera sections are phase 5.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Walls off there, with a TODO</span>The 051 edge blocks act as today. Phase 5 decides the rule.</div>
+        <div class="opt"><span class="lbl">Walls on everywhere now</span>More cases in this branch, and a rule for a pushed player is needed first.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D4</span><h3>Tall rooms in phase 1?</h3></div>
+      <p class="narrow">In a room taller than the view, a player can leave the view up or down. The rule for this is an open question in 047.</p>
+      <div class="opts">
+        <div class="opt"><span class="lbl">Observe only</span>Not chosen.</div>
+        <div class="opt"><span class="lbl">Build one warp rule now</span>Not chosen.</div>
+        <div class="opt rec"><span class="rec-pill">Chosen (changed 2026-11-06)</span><span class="lbl">A rule for each view edge, set by a dev flag</span>Each edge: <code>NONE</code>, <code>WALL</code>, <code>BOUNCE</code>, <code>WARP</code> (1 tile beside the partner) or <code>KILL</code>, with <code>delay</code> and <code>damage</code> (default 0). Default: sides <code>WALL</code>, top and bottom <code>NONE</code>. Example: <code>--viewEdges top=WALL,bottom=WARP,delay=1.5</code>. To discuss more after the play test.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 5. Risks: up to 3. -->
 <section class="narrow">
   <h2>Risks</h2>
   <ul class="risks">
-    <li><b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+    <li><b>One frame of lag.</b> The camera moves after the physics step, so the walls act one frame late. A fast player (air dash) can be past the edge for one frame; the block then pushes them back.</li>
+    <li><b>Vertical spread.</b> In a tall room, a player can still leave the view and lose its floor. The tall test room shows it; D4.</li>
+    <li><b>1-player path.</b> It must not change. The group focus and the walls are only built with 2 players, and a control check covers it.</li>
   </ul>
 </section>
 
-<!-- 6. Play checks: as in "Test maps". Experimental checks first, then control checks. A --room on each. -->
 <section class="narrow">
   <h2>Play checks <span class="tag">for the play test, not for now</span></h2>
   <div class="cd">cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-047g-shared-camera</div>
   <ul class="checks">
-    <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_047 --room group_wide --players 2</code>: walk apart and together. Each player stops at its view edge at one screen apart; no wall slide on it.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_047 --room group_clamp --players 2</code>: at the room edge, the room edge is the wall.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_047 --room group_pit --players 2</code>: a fall in the pit kills as today; let slot 1 die and watch the camera move to slot 0.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_047 --room group_tall --players 2</code>: observe only, for the tall-room rule.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_047 --room group_wide</code>: control, 1 player, camera as before.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_047 --room transition --players 2</code>: control, room transition as today.</li>
   </ul>
 </section>
 
-<!-- 7. Details -->
 <section class="details narrow">
   <h2 style="color:var(--ink)">Details</h2>
   <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-  <p class="mono">docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-047g-shared-camera/docs/SCOPE.md</p>
+  <p class="mono">docs/mega-refactor/items/047-co-op/branches/mega-refactor-047g-shared-camera/docs/SCOPE.md</p>
   <p class="mono">.../mega-refactor-047g-shared-camera/docs/CONTRACT.md</p>
 </section>
 

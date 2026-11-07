@@ -67,6 +67,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.focus
+import com.megaman.maverick.game.entities.hazards.ViewEdgeHazard
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
@@ -86,8 +87,10 @@ import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
 import com.megaman.maverick.game.screens.levels.camera.CameraScroll
 import com.megaman.maverick.game.screens.levels.camera.CameraScrollSection
+import com.megaman.maverick.game.screens.levels.camera.CameraViewEdges
 import com.megaman.maverick.game.screens.levels.camera.CameraZone
 import com.megaman.maverick.game.screens.levels.camera.CameraZones
+import com.megaman.maverick.game.screens.levels.camera.PlayersFocus
 import com.megaman.maverick.game.screens.levels.camera.isPastCameraEdge
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
@@ -205,6 +208,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var roomBounds: CameraRoomBounds
     private lateinit var cameraZones: CameraZones
     private lateinit var cameraScroll: CameraScroll
+    private var viewEdges: CameraViewEdges? = null
+    private var playersFocus: PlayersFocus? = null
     private lateinit var cameraShake: CameraShake
     private lateinit var roomHandler: LevelRoomHandler
 
@@ -323,6 +328,31 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
         )
 
+        // TODO: the view edge rules are off in a turned room and in a room with a camera zone or scroll, because a
+        //  section can move the view into a player; phase 5 of the shared screen sets the rule there (item 047,
+        //  "Decisions", 2026-11-06)
+        val viewEdgesOn = {
+            player.inPlay && !roomTransition.transitioning && !game.cameraView.rotating &&
+                game.cameraRotation.direction == Direction.UP && !roomHasCameraSection()
+        }
+        val viewEdges = if (game.players.get(PlayerSlot(1)) != null) CameraViewEdges(
+            game.cameraView,
+            game.cameraController.settledPosition,
+            game.players,
+            game.services.rules.viewEdges,
+            ViewEdgeHazard(game.services).also { it.damage = game.services.rules.viewEdges.damage },
+            { roomBounds.currentGameRoom?.rectangle },
+            viewEdgesOn
+        ) else null
+        this.viewEdges = viewEdges
+        val playersFocus = viewEdges?.let { edges ->
+            PlayersFocus(game.players, game.cameraView, game.services.rules.viewEdges, viewEdgesOn) { edges.isHeld(it) }
+        }
+        if (playersFocus != null) {
+            game.cameraController.addEffect(playersFocus)
+            game.cameraController.addEffect(viewEdges)
+        }
+        this.playersFocus = playersFocus
         game.cameraController.reset()
 
         roomHandler = LevelRoomHandler(game.services, roomBounds, roomTransition, { player }) {
@@ -350,7 +380,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun start(tmxMapSource: String) {
         if (!initialized) throw IllegalStateException("must call init() before start()")
-        cameraFollow.setFocus(gameCamera, player.focus)
+        cameraFollow.setFocus(gameCamera, playersFocus ?: player.focus)
         super.start(tmxMapSource)
 
         game.resetAutoPerfGracePeriod()
@@ -492,6 +522,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         GameLogger.log(TAG, "startAtLaunchRoom(): room=$roomName, spawn=${spawn.name}")
         playerCheckpointMan.startAt(spawn)
+    }
+
+    private fun roomHasCameraSection(): Boolean {
+        val room = roomBounds.currentGameRoom?.rectangle ?: return false
+        return cameraZones.zones.any { it.bounds.overlaps(room) } || cameraScroll.sections.any { it.bounds.overlaps(room) }
     }
 
     private fun resetLevelForRespawn() {
@@ -885,6 +920,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             cameraZones.zones.forEach { zone ->
                 zone.crushSurfaces.forEach { renderer.rect(it.getX(), it.getY(), it.getWidth(), it.getHeight()) }
             }
+        }
+
+        viewEdges?.let {
+            renderer.set(ShapeType.Line)
+            it.drawWarpGuides(renderer)
         }
 
         if (game.params.debugShapes) {

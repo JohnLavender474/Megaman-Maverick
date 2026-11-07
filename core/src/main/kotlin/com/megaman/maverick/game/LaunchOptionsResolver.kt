@@ -4,9 +4,12 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.players.PlayerCharacter
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.state.GameMode
-import com.megaman.maverick.game.players.PlayerCharacter
+import com.megaman.maverick.game.state.SessionRules
+import com.megaman.maverick.game.state.ViewEdgeRule
+import com.megaman.maverick.game.state.ViewEdgeRules
 
 sealed interface LaunchStart {
 
@@ -27,7 +30,8 @@ data class ResolvedLaunch(
     val heartTanks: Set<MegaHeartTank>,
     val healthTanks: Set<MegaHealthTank>,
     val players: Int = 1,
-    val mode: GameMode = GameMode.SINGLE
+    val mode: GameMode = GameMode.SINGLE,
+    val rules: SessionRules = mode.rules
 ) {
 
     val savesAllowed: Boolean
@@ -66,6 +70,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val healthTanks = parseEnumListOption<MegaHealthTank>("--healthTanks", options.healthTanks, errors)
     val players = parsePlayers(options.players, errors)
     val mode = parseMode(options.mode, players, errors)
+    val viewEdges = parseViewEdges(options.viewEdges, players, mode.rules.viewEdges, errors)
     if (level != null && players != null && players > 1 && PlayerCharacter.MEGAMAN !in level.characters)
         errors.add("--level $level plays only with 1 player (${level.characters.joinToString()}); remove --players.")
 
@@ -83,7 +88,8 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
 
     return LaunchResult(
         ResolvedLaunch(
-            start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players!!, mode
+            start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players!!, mode,
+            mode.rules.copy(viewEdges = viewEdges)
         ),
         errors
     )
@@ -96,6 +102,48 @@ private fun parseMode(value: String?, players: Int?, errors: MutableList<String>
     val mode = parseEnumOption("--mode", text, errors, arrayOf(GameMode.COOP, GameMode.PVP)) ?: return GameMode.SINGLE
     if (players == 1) errors.add("--mode $text needs --players 2.")
     return mode
+}
+
+private val VIEW_EDGE_KEYS = listOf("left", "right", "top", "bottom", "delay", "damage")
+
+private fun parseViewEdges(
+    value: String?,
+    players: Int?,
+    defaults: ViewEdgeRules,
+    errors: MutableList<String>
+): ViewEdgeRules {
+    val text = value?.trim()
+    if (text.isNullOrEmpty()) return defaults
+    if (players == 1) errors.add("--viewEdges needs --players 2.")
+
+    var rules = defaults
+    for (entry in text.split(",").map { it.trim() }.filter { it.isNotEmpty() }) {
+        val parts = entry.split("=").map { it.trim() }
+        val key = parts[0].lowercase()
+        if (parts.size != 2 || parts[1].isEmpty() || key !in VIEW_EDGE_KEYS) {
+            errors.add("Invalid --viewEdges entry '$entry'. Use key=value with a key from ${VIEW_EDGE_KEYS.joinToString(", ")}")
+            continue
+        }
+        val raw = parts[1]
+        when (key) {
+            "delay", "damage" -> {
+                val number = raw.toFloatOrNull()?.takeIf { it >= 0f && (key == "delay" || it % 1f == 0f) }
+                if (number == null) errors.add("Invalid --viewEdges $key '$raw'. Use a number of 0 or more")
+                else rules = if (key == "delay") rules.copy(delay = number) else rules.copy(damage = number.toInt())
+            }
+
+            else -> {
+                val rule = parseEnumOption<ViewEdgeRule>("--viewEdges $key", raw, errors) ?: continue
+                rules = when (key) {
+                    "left" -> rules.copy(left = rule)
+                    "right" -> rules.copy(right = rule)
+                    "top" -> rules.copy(top = rule)
+                    else -> rules.copy(bottom = rule)
+                }
+            }
+        }
+    }
+    return rules
 }
 
 private fun parsePlayers(value: String?, errors: MutableList<String>): Int? {

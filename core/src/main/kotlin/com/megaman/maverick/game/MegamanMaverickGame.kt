@@ -439,7 +439,7 @@ class MegamanMaverickGame(
             getSystem(GroupsSystem::class)!!,
             cameraView,
             cameraController,
-            launch.mode.rules
+            launch.rules
         )
 
         MegaEntityFactory.init(services)
@@ -959,7 +959,7 @@ class MegamanMaverickGame(
                     fixedStep = settings.performance.fixedStep,
                     worldContainerSupplier = { levelState.worldContainer },
                     contactListener = ContactRuleDispatcher(
-                        megaContactRules(players, gravity, launch.mode.rules, CONTACT_LISTENER_DEBUG_FILTER),
+                        megaContactRules(players, gravity, launch.rules, CONTACT_LISTENER_DEBUG_FILTER),
                         CONTACT_LISTENER_DEBUG_FILTER
                     ),
                     collisionHandler = MegaCollisionHandler(),

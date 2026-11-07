@@ -10,5 +10,6 @@ data class LaunchOptions(
     val healthTanks: String? = null,
     val autoPerf: Boolean = true,
     val players: String? = null,
-    val mode: String? = null
+    val mode: String? = null,
+    val viewEdges: String? = null
 )

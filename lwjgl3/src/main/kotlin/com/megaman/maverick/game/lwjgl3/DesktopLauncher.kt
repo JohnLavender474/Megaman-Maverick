@@ -88,7 +88,8 @@ object DesktopLauncher {
             healthTanks = appArgs.healthTanks,
             autoPerf = appArgs.autoPerf,
             players = appArgs.players,
-            mode = appArgs.mode
+            mode = appArgs.mode,
+            viewEdges = appArgs.viewEdges
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
 
@@ -110,6 +111,7 @@ object DesktopLauncher {
         println("- Auto Perf: " + appArgs.autoPerf)
         println("- Players: " + appArgs.players)
         println("- Mode: " + appArgs.mode)
+        println("- View Edges: " + appArgs.viewEdges)
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Reset Bindings: " + appArgs.resetBindings)
         println("- Performance: " + appArgs.performance)
@@ -429,6 +431,15 @@ object DesktopLauncher {
             description = "Dev option: the rules of a session with 2 players, coop or pvp. Default value = coop."
         )
         var mode: String? = null
+
+        @Parameter(
+            names = ["--viewEdges"],
+            description = "Dev option, needs --players 2: the rule at each edge of the shared view, " +
+                "for example left=WALL,right=WALL,top=NONE,bottom=WARP,delay=1.5,damage=3. " +
+                "Rules: NONE, WALL, BOUNCE, WARP, KILL. A missing key keeps its default " +
+                "(left=WALL,right=WALL,top=NONE,bottom=NONE,delay=0,damage=0)."
+        )
+        var viewEdges: String? = null
 
         @Parameter(
             names = ["--autoPerf"],

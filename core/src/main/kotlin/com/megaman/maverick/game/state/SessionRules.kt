@@ -4,7 +4,7 @@ import com.maverick.game.engine.damage.IDamagerEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.players.rootPlayer
 
-data class SessionRules(val friendlyFire: Boolean) {
+data class SessionRules(val friendlyFire: Boolean, val viewEdges: ViewEdgeRules = ViewEdgeRules()) {
 
     fun isFriendlyFire(source: IDamagerEntity, target: MegaGameEntity): Boolean {
         if (friendlyFire) return false

@@ -53,6 +53,23 @@ class CameraEdgeBlockTest : DescribeSpec({
             block.blockFixture.hasFixtureLabel(FixtureLabel.NO_PROJECTILE_COLLISION) shouldBe true
         }
 
+        it("is no floor by default, and a floor with the feet property") {
+            spawned().blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE) shouldBe true
+
+            val services = testServices(engine = mockk<GameEngine>(relaxed = true))
+            val floor = CameraEdgeBlock(services)
+            floor.init()
+            floor.onSpawn(
+                props(
+                    ConstKeys.BOUNDS pairTo GameRectangle().setSize(512f, 32f),
+                    ConstKeys.DIRECTION pairTo Direction.DOWN,
+                    ConstKeys.FEET pairTo true
+                )
+            )
+            floor.blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE) shouldBe false
+            floor.blockFixture.hasFixtureLabel(FixtureLabel.NO_SIDE_TOUCHIE) shouldBe true
+        }
+
         it("is a crusher") {
             spawned().getComponent(CrusherComponent::class).shouldNotBeNull()
         }

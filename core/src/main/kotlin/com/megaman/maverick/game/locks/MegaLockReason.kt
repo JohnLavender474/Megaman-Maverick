@@ -9,5 +9,6 @@ enum class MegaLockReason(override val index: Int) : LockReason {
     BOSS_DEFEATED(3),
     LEVEL_END(4),
     WILY_FINAL_BOSS(5),
-    SPIDER_WEB(6)
+    SPIDER_WEB(6),
+    VIEW_EDGE(7)
 }

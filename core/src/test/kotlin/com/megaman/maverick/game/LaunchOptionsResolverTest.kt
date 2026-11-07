@@ -6,6 +6,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.state.GameMode
+import com.megaman.maverick.game.state.ViewEdgeRule
+import com.megaman.maverick.game.state.ViewEdgeRules
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -103,6 +105,52 @@ class LaunchOptionsResolverTest : DescribeSpec({
             GameMode.SINGLE.rules.friendlyFire shouldBe false
             GameMode.COOP.rules.friendlyFire shouldBe false
             GameMode.PVP.rules.friendlyFire shouldBe true
+        }
+    }
+
+    describe("--viewEdges") {
+        it("uses the default rules when not given") {
+            val rules = resolve(LaunchOptions(players = "2")).resolved!!.rules.viewEdges
+            rules shouldBe ViewEdgeRules()
+            rules.left shouldBe ViewEdgeRule.WALL
+            rules.right shouldBe ViewEdgeRule.WALL
+            rules.top shouldBe ViewEdgeRule.NONE
+            rules.bottom shouldBe ViewEdgeRule.NONE
+        }
+
+        it("overrides only the given keys, case-insensitively") {
+            val result = resolve(LaunchOptions(players = "2", viewEdges = "top=wall, bottom=WARP,delay=1.5,damage=3"))
+            result.isValid shouldBe true
+            result.resolved!!.rules.viewEdges shouldBe
+                ViewEdgeRules(top = ViewEdgeRule.WALL, bottom = ViewEdgeRule.WARP, delay = 1.5f, damage = 3)
+        }
+
+        it("parses each rule on each edge") {
+            ViewEdgeRule.entries.forEach { rule ->
+                val text = "left=$rule,right=$rule,top=$rule,bottom=$rule"
+                val rules = resolve(LaunchOptions(players = "2", viewEdges = text)).resolved!!.rules.viewEdges
+                listOf(rules.left, rules.right, rules.top, rules.bottom).forEach { it shouldBe rule }
+            }
+        }
+
+        it("keeps the mode's other rules") {
+            val resolved = resolve(LaunchOptions(players = "2", mode = "pvp", viewEdges = "left=KILL")).resolved!!
+            resolved.rules.friendlyFire shouldBe true
+            resolved.rules.viewEdges.left shouldBe ViewEdgeRule.KILL
+        }
+
+        it("rejects the flag with 1 player") {
+            val result = resolve(LaunchOptions(viewEdges = "bottom=WARP"))
+            result.isValid shouldBe false
+            result.errors[0] shouldContain "--viewEdges needs --players 2"
+        }
+
+        it("rejects a bad key, a bad rule and a bad number") {
+            listOf("side=WALL", "top", "top=JUMP", "delay=-1", "delay=x", "damage=1.5").forEach {
+                val result = resolve(LaunchOptions(players = "2", viewEdges = it))
+                result.isValid shouldBe false
+                result.errors.size shouldBe 1
+            }
         }
     }
 

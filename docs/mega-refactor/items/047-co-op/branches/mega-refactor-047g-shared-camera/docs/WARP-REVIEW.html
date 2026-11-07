@@ -1,0 +1,176 @@
+<title>047g Warp Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #f3f5fa;
+  --panel: #ffffff;
+  --ink: #141a2e;
+  --muted: #5a6380;
+  --line: #d8ddeb;
+  --accent: #1f5fe0;
+  --accent-soft: #e3ecff;
+  --beam: #12a6d8;
+  --warn: #b5650d;
+  --warn-soft: #fff1e0;
+  --code-bg: #eef1f8;
+  --f-display: "Pixelify Sans", "Courier New", monospace;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1322; --panel: #171c30; --ink: #e6e9f5; --muted: #9aa3c2; --line: #2a3150;
+    --accent: #7aa6ff; --accent-soft: #1d2a4d; --beam: #4fd0f5; --warn: #f0a556; --warn-soft: #3a2a17;
+    --code-bg: #12172a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1322; --panel: #171c30; --ink: #e6e9f5; --muted: #9aa3c2; --line: #2a3150;
+  --accent: #7aa6ff; --accent-soft: #1d2a4d; --beam: #4fd0f5; --warn: #f0a556; --warn-soft: #3a2a17;
+  --code-bg: #12172a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+.narrow { max-width: 68ch; }
+h1, h2 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; }
+h2 { font-size: 1.35rem; display: flex; align-items: baseline; gap: 10px; }
+h2 .tag { font-family: var(--f-mono); font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+h3 { font-size: 1rem; margin: 0; }
+p { margin: 0; }
+section { display: flex; flex-direction: column; gap: 14px; }
+code, .mono { font-family: var(--f-mono); font-size: 0.86em; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.eyebrow { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.eyebrow .draft { color: var(--warn); }
+.lede { font-size: 1.15rem; }
+.visible { display: flex; gap: 12px; align-items: flex-start; background: var(--accent-soft); border-radius: 8px; padding: 12px 16px; }
+.visible b { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; padding-top: 3px; }
+.pair { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 860px) { .pair { grid-template-columns: 1fr 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.panel h3 { font-family: var(--f-mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.panel.after h3 { color: var(--accent); }
+.panel p.note { color: var(--muted); font-size: 0.92rem; }
+.diagram { overflow-x: auto; }
+pre.mermaid { margin: 0; background: transparent; text-align: center; font-family: var(--f-body); }
+pre.code { margin: 0; background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--f-mono); font-size: 0.82rem; line-height: 1.6; }
+pre.code .c { color: var(--muted); font-style: italic; }
+pre.code .k { color: var(--accent); }
+pre.code .del { color: var(--warn); }
+.decisions { display: flex; flex-direction: column; gap: 14px; }
+.decision { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.decision .q { display: flex; gap: 10px; align-items: baseline; }
+.decision .id { font-family: var(--f-display); font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+.decision .q h3 { font-size: 1.05rem; }
+.opts { display: grid; grid-template-columns: 1fr; gap: 8px; }
+@media (min-width: 700px) { .opts { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+.opt { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.93rem; min-width: 0; }
+.opt.rec { border-color: var(--accent); background: var(--accent-soft); }
+.opt .lbl { font-weight: 700; display: block; }
+.opt .rec-pill { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.risks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.risks li { border-left: 3px solid var(--warn); background: var(--warn-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; }
+.checks { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; }
+.checks code { word-break: break-word; }
+.cd { font-family: var(--f-mono); font-size: 0.82rem; background: var(--code-bg); padding: 8px 12px; border-radius: 6px; overflow-x: auto; white-space: nowrap; }
+.details { color: var(--muted); font-size: 0.92rem; display: flex; flex-direction: column; gap: 4px; }
+.steps { display: flex; flex-wrap: wrap; gap: 6px; }
+.step { font-family: var(--f-mono); font-size: 0.78rem; border: 1px solid var(--beam); color: var(--ink); border-radius: 999px; padding: 3px 10px; }
+.step.go { border-color: var(--warn); }
+a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:14px">
+  <div class="eyebrow"><span>Item 047</span><span>Branch 047g</span><span>Play test 2026-11-06</span><span>Decided 2026-11-06: F1, F2, F4; F3 later</span></div>
+  <h1>Why WARP feels wrong</h1>
+  <p class="lede narrow">Two play-test reports: a player below the view falls through a culled floor and dies before the warp, and a side warp snaps the camera. The diagrams show what the code does today, frame by frame.</p>
+</header>
+
+<section>
+  <h2>1. Below the view: the floor culls first <span class="tag">group_tall, bottom=WARP, delay=1</span></h2>
+  <div class="diagram"><pre class="mermaid">
+sequenceDiagram
+  participant C as Climber (slot 1)
+  participant Cam as Camera (group midpoint)
+  participant F as Floor block
+  participant L as Low player (slot 0)
+  participant E as CameraViewEdges
+  C->>Cam: climbs, midpoint rises
+  Cam-->>F: floor leaves the view
+  Note over F: cull timer starts (1 s out of view)
+  Cam-->>L: view bottom passes over L
+  E->>E: L fully below the view, warp timer starts (1 s)
+  Note over F,L: about 1 s later
+  F--xF: culled (destroyed)
+  L->>L: no floor, falls
+  L--xL: falls out of the room bottom, dies
+  Note over E: the warp timer never reaches 1 s
+</pre></div>
+  <p class="note narrow">The floor leaves the view before the player does, so its 1 s cull ends first. Any delay of about 1 s or more loses this race. The KILL rule has the same race, but the result is the same death.</p>
+</section>
+
+<section>
+  <h2>2. Side warp: the camera snaps <span class="tag">group_wide, left=WARP, right=WARP</span></h2>
+  <div class="diagram"><pre class="mermaid">
+sequenceDiagram
+  participant A as Player A
+  participant B as Player B
+  participant E as CameraViewEdges
+  participant Cam as Camera (group midpoint)
+  A->>A: runs right, out of the view
+  E->>A: warp beside B (same frame, delay 0)
+  Note over Cam: midpoint jumps by half the spread
+  Cam->>Cam: follows the new midpoint at once (SNAP)
+  Note over Cam: the 0.5 s ease runs only when a player joins or leaves the group, not on a warp
+</pre></div>
+</section>
+
+<section>
+  <h2>3. Both out at almost the same time <span class="tag">group_wide, sides WARP</span></h2>
+  <div class="diagram"><pre class="mermaid">
+sequenceDiagram
+  participant A as Player A
+  participant B as Player B
+  participant E as CameraViewEdges
+  A->>A: out at the left edge
+  E->>A: warp beside B
+  B->>B: out at the right edge (A now stands beside B)
+  E->>B: warp beside A, so both end where B left the view
+</pre></div>
+  <p class="note narrow">Both players also count in the midpoint while one is out of view. So the player who stays in view drags the view, and both players steer the camera all the time.</p>
+</section>
+
+<section>
+  <h2>Fix options <span class="tag">F1, F2, F4 built; F3 is a backlog item</span></h2>
+  <p class="narrow">F1 also draws a white line and a circle to the warp spot while the player is held. The floating sprite and the bubbles are phase 2.</p>
+  <div class="decisions">
+    <div class="decision">
+      <div class="q"><span class="id">F1</span><h3>A player who is out at a WARP edge is held, and leaves the group</h3></div>
+      <p class="narrow">While out, the player is frozen in place (no gravity, no input) and blinks, until the warp. The camera follows only the players in view, so the player in view can never leave it, and two players can never be out together. A culled floor no longer matters. All the code is in the 2 new camera parts.</p>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">F2</span><h3>The group focus eases on any large jump, not only on a join or a leave</h3></div>
+      <p class="narrow">A warp moves the midpoint by up to half a screen in one frame. With F2, any jump larger than about 1 tile in one frame starts the same 0.5 s ease. This fixes the snap in diagram 2.</p>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">F3</span><h3>Keep a player's surroundings alive out of view</h3></div>
+      <p class="narrow">Cull only what is out of the view and far from every player (the "virtual camera" idea). This is the real fix for a player who is out of view, and split screen (<code>094</code>) needs it anyway. But it changes the cull rule of about 2270 blocks and 88 entity files, so it belongs in its own item.</p>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">F4</span><h3>Side WARP stays experimental</h3></div>
+      <p class="narrow">The default for the sides stays WALL. A TODO marks side WARP as not tuned, until more play tests show whether a group camera or a leader camera suits it.</p>
+    </div>
+  </div>
+</section>
+
+</div>

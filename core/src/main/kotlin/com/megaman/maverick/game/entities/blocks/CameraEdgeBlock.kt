@@ -12,8 +12,10 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.state.CrusherComponent
 import com.megaman.maverick.game.entities.state.worldToBodySide
 import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.addBlockFilter
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.removeFixtureLabel
 
 class CameraEdgeBlock(services: MegaServices) : AbstractBlock(services) {
 
@@ -55,6 +57,9 @@ class CameraEdgeBlock(services: MegaServices) : AbstractBlock(services) {
         spawnProps.put(ConstKeys.DO_UPDATE, { true })
 
         super.onSpawn(spawnProps)
+
+        if (spawnProps.getOrDefault(ConstKeys.FEET, false, Boolean::class))
+            blockFixture.removeFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE)
 
         body.addBlockFilter { entity, _ -> entity.asPlayer == null }
     }
