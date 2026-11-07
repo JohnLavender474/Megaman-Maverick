@@ -109,13 +109,27 @@ class LaunchOptionsResolverTest : DescribeSpec({
     }
 
     describe("--viewEdges") {
-        it("uses the default rules when not given") {
+        it("uses the co-op default rules when not given") {
             val rules = resolve(LaunchOptions(players = "2")).resolved!!.rules.viewEdges
-            rules shouldBe ViewEdgeRules()
+            rules shouldBe GameMode.COOP.rules.viewEdges
             rules.left shouldBe ViewEdgeRule.WALL
             rules.right shouldBe ViewEdgeRule.WALL
             rules.top shouldBe ViewEdgeRule.NONE
-            rules.bottom shouldBe ViewEdgeRule.NONE
+            rules.bottom shouldBe ViewEdgeRule.WARP
+            rules.delay shouldBe 1f
+            rules.damage shouldBe 0
+        }
+
+        it("keeps the PvP and single player defaults") {
+            GameMode.PVP.rules.viewEdges shouldBe ViewEdgeRules()
+            GameMode.SINGLE.rules.viewEdges shouldBe ViewEdgeRules()
+            resolve(LaunchOptions(players = "2", mode = "pvp")).resolved!!.rules.viewEdges shouldBe ViewEdgeRules()
+        }
+
+        it("turns the co-op bottom warp off and keeps the other co-op values") {
+            val rules = resolve(LaunchOptions(players = "2", viewEdges = "bottom=NONE")).resolved!!.rules.viewEdges
+            rules shouldBe GameMode.COOP.rules.viewEdges.copy(bottom = ViewEdgeRule.NONE)
+            rules.delay shouldBe 1f
         }
 
         it("overrides only the given keys, case-insensitively") {

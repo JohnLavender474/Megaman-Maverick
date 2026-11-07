@@ -355,12 +355,51 @@ class SharedViewTest : DescribeSpec({
             }
         }
 
-        it("does not warp a player onto a partner that is out at the same edge") {
+        it("holds only one of two players out at the same edge, and warps nobody onto an out partner") {
             val rig = EdgesRig(noWalls.copy(right = ViewEdgeRule.WARP))
             rig.session.first.body.setCenter(420f, 40f)
             rig.session.second.body.setCenter(400f, 40f)
             rig.update()
-            rig.session.second.body.getCenter(Vector2()) shouldBe Vector2(400f, 40f)
+            rig.edges.isHeld(rig.session.first) shouldBe true
+            rig.edges.isHeld(rig.session.second) shouldBe false
+            rig.session.first.body.getCenter(Vector2()) shouldBe Vector2(420f, 40f)
+            rig.session.first.currentHealth shouldNotBe 0
+            rig.session.second.currentHealth shouldNotBe 0
+        }
+
+        it("kills and releases a held player when its partner is no longer live") {
+            val rig = EdgesRig(noWalls.copy(right = ViewEdgeRule.WARP, delay = 5f))
+            rig.session.first.body.setCenter(200f, 40f)
+            rig.session.second.body.setCenter(400f, 40f)
+            rig.update()
+            rig.edges.isHeld(rig.session.second) shouldBe true
+            rig.session.second.currentHealth shouldNotBe 0
+
+            rig.session.first.existenceState = EntityExistenceState.UNSPAWNED
+            rig.update()
+            rig.edges.isHeld(rig.session.second) shouldBe false
+            rig.session.second.currentHealth shouldBe 0
+        }
+
+        it("does not hold, or kill, a player that is alone past a warp edge") {
+            val rig = EdgesRig(noWalls.copy(right = ViewEdgeRule.WARP, delay = 5f))
+            rig.session.first.existenceState = EntityExistenceState.UNSPAWNED
+            rig.session.second.body.setCenter(400f, 40f)
+            rig.update()
+            rig.update()
+            rig.edges.isHeld(rig.session.second) shouldBe false
+            rig.session.second.currentHealth shouldNotBe 0
+        }
+
+        it("keeps a held player alive while its partner is live, also out of view") {
+            val rig = EdgesRig(noWalls.copy(right = ViewEdgeRule.WARP, top = ViewEdgeRule.NONE, delay = 5f))
+            rig.session.first.body.setCenter(200f, 40f)
+            rig.session.second.body.setCenter(400f, 40f)
+            rig.update()
+            rig.session.first.body.setCenter(200f, 300f)
+            rig.update()
+            rig.edges.isHeld(rig.session.second) shouldBe true
+            rig.session.second.currentHealth shouldNotBe 0
         }
 
         it("does nothing when it is off") {

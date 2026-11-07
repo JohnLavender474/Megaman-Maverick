@@ -16,6 +16,6 @@ data class SessionRules(val friendlyFire: Boolean, val viewEdges: ViewEdgeRules 
 
 enum class GameMode(val rules: SessionRules) {
     SINGLE(SessionRules(friendlyFire = false)),
-    COOP(SessionRules(friendlyFire = false)),
+    COOP(SessionRules(friendlyFire = false, viewEdges = ViewEdgeRules(bottom = ViewEdgeRule.WARP, delay = 1f))),
     PVP(SessionRules(friendlyFire = true))
 }

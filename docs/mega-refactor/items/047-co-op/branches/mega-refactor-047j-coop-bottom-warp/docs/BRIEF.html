@@ -1,18 +1,6 @@
-<title><id><letter> <Short Name></title>
+<title>047j Co-op Bottom Warp</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid">. Code: <pre class="code"> with the spans
-    .k (keyword), .c (comment), .del (removed code).
-  - At approval: set the eyebrow to "Brief: approved <date>", set each chosen option to
-    "opt rec" with the pill "Chosen", and set the Decisions tag to "answered <date>".
-  - On a scope change: mark what changed in the text, with the date, and publish to the same link.
-  - The accent color can change to suit the branch. Keep the light and dark token sets in step.
--->
 <style>
 :root {
   --bg: #f3f5fa;
@@ -102,94 +90,113 @@ a { color: var(--accent); }
 
 <div class="wrap">
 
-<!-- 1. Goal -->
 <header style="display:flex;flex-direction:column;gap:14px">
-  <div class="eyebrow"><span>Item <id></span><span>Branch <id><letter></span><span>Objectives <O-ids></span><span class="draft">Brief: draft</span></div>
-  <h1><Short name></h1>
-  <p class="lede narrow"><One or two sentences: what the branch changes and why.></p>
-  <div class="visible narrow"><b>In play</b><span><What the player sees change, or "Nothing changes."></span></div>
+  <div class="eyebrow"><span>Item 047</span><span>Branch 047j</span><span>Objectives O2</span><span>Brief: approved 2026-11-06</span></div>
+  <h1>Co-op bottom warp</h1>
+  <p class="lede narrow">Co-op gets <code>bottom=WARP</code> as its default view edge rule, so a tall room never loses both players and never drops the low player through a culled floor.</p>
+  <div class="visible narrow"><b>In play</b><span>In a room taller than the view, the camera keeps the higher player in view; a player who drops below the view is held and appears beside the partner. Rooms one view tall, and 1 player, do not change.</span></div>
 </header>
 
-<!-- 2. Before and after: a Mermaid diagram of the parts that change (senders, events, listeners). -->
 <section>
-  <h2>Before and after <span class="tag"><what the diagram shows></span></h2>
+  <h2>Before and after <span class="tag">coop_shaft, one player on the ledge, one drops</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <short label></h3>
+      <h3>Today: bottom=NONE</h3>
       <div class="diagram"><pre class="mermaid">
-flowchart TD
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+sequenceDiagram
+  participant Cam as Camera (midpoint)
+  participant L as Low player
+  Cam->>Cam: shows neither player
+  L->>L: floor culls out of view
+  L--xL: falls out of the level, dies
 </pre></div>
-      <p class="note"><The problem that the diagram shows.></p>
     </div>
     <div class="panel after">
-      <h3>After: <short label></h3>
+      <h3>After: bottom=WARP</h3>
       <div class="diagram"><pre class="mermaid">
-flowchart TD
-  A["<sender>"] --> B["<new owner>"]
+sequenceDiagram
+  participant Cam as Camera (keeper)
+  participant L as Low player
+  Cam->>Cam: keeps the ledge player in view
+  L->>L: fully below the view: held
+  L->>L: after the delay, beside the partner
 </pre></div>
-      <p class="note"><What stays the same for the other code.></p>
     </div>
   </div>
 </section>
 
-<!-- 3. Code sketch: the new or changed API at its first real caller. A few short blocks, not the diff. -->
 <section>
   <h2>Code sketch <span class="tag">first caller</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <code><Caller></code></h3>
-<pre class="code"><span class="del"><old code></span></pre>
+      <h3>Today: <code>GameMode</code></h3>
+<pre class="code">COOP(SessionRules(friendlyFire = false)),</pre>
     </div>
     <div class="panel after">
-      <h3>After: <code><Caller></code></h3>
-<pre class="code"><span class="k">fun</span> <new code></pre>
+      <h3>After: <code>GameMode</code></h3>
+<pre class="code">COOP(SessionRules(friendlyFire = false,
+    viewEdges = ViewEdgeRules(bottom = ViewEdgeRule.WARP, delay = 1f))),</pre>
     </div>
   </div>
-  <!-- Optional: an ordered list of steps or parts, as pills. Use "step go" for a branch point. -->
-  <div class="steps" aria-label="<Order>">
-    <span class="step">1 <step></span><span class="step">2 <step></span>
-  </div>
+  <p class="note narrow"><code>--viewEdges bottom=NONE</code> still turns it off for a test.</p>
 </section>
 
-<!-- 4. Decisions: 2 to 4 questions. An objective conflict is a decision. Ask them with AskUserQuestion too.
-     If nothing needs a decision, replace the list with one sentence that says so. -->
 <section>
-  <h2>Decisions <span class="tag">open</span></h2>
+  <h2>Decisions <span class="tag">answered 2026-11-06</span></h2>
   <div class="decisions">
     <div class="decision">
-      <div class="q"><span class="id">D1</span><h3><Question?></h3></div>
-      <p class="narrow"><The context that the question needs, in one or two sentences.></p>
+      <div class="q"><span class="id">D1</span><h3>PvP too?</h3></div>
       <div class="opts">
-        <div class="opt rec"><span class="rec-pill">Recommended</span><span class="lbl"><Option></span><Why.></div>
-        <div class="opt"><span class="lbl"><Option></span><Trade-off.></div>
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Co-op only</span>PvP keeps <code>NONE</code> until its mode (109) designs its arenas; warping an opponent next to you is a PvP design choice.</div>
+        <div class="opt"><span class="lbl">PvP too</span>The same culled-floor death can happen in a tall PvP room.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D2</span><h3>The warp delay?</h3></div>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">1 s</span>What you played and liked in <code>coop_shaft</code>. The dev flag <code>--viewEdges delay=...</code> overrides it.</div>
+        <div class="opt"><span class="lbl">0 s</span>The warp happens the moment the player is fully below the view.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D3</span><h3>The warp into a wall (127): in this branch?</h3></div>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Separate, right after</span>Your "wait until safe" idea is under review now and has its own choices; this branch stays one value.</div>
+        <div class="opt"><span class="lbl">Fold in</span>This branch waits for the 127 design and grows.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 5. Risks: up to 3. -->
+<section class="narrow">
+  <h2>Added at approval <span class="tag">changed 2026-11-06</span></h2>
+  <p>A held player with no free partner (slot 1 died) now dies too, so the level resets. Before, slot 0 stayed held forever: a soft lock that the new default makes easy to reach.</p>
+</section>
+
 <section class="narrow">
   <h2>Risks</h2>
   <ul class="risks">
-    <li><b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+    <li><b>Camera feel.</b> In every tall co-op room the camera follows the higher player more than the midpoint. Intended.</li>
+    <li><b>A pit inside a tall room.</b> A player who goes fully below the view before the pit's death sensor is held and warps in place of dying. The review checks the tall rooms of the real stages.</li>
+    <li><b>Warp into a solid (127).</b> More frequent with this default.</li>
   </ul>
 </section>
 
-<!-- 6. Play checks: as in "Test maps". Experimental checks first, then control checks. A --room on each. -->
 <section class="narrow">
   <h2>Play checks <span class="tag">for the play test, not for now</span></h2>
   <div class="cd">cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-047j-coop-bottom-warp</div>
   <ul class="checks">
-    <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+    <li><code>./run-game-test-coop.sh --room coop_shaft</code>: one player on the ledge, the other drops; the dropper is held and warps beside the ledge player.</li>
+    <li><code>./run-game-test-coop.sh --room group_tall</code>: the climber stays in view.</li>
+    <li><code>./run-game-test-coop.sh --room group_pit</code>: a pit in a one-view room still kills.</li>
+    <li><code>./run-game-test-coop.sh --room coop_shaft --viewEdges bottom=NONE</code>: the old behavior.</li>
   </ul>
 </section>
 
-<!-- 7. Details -->
 <section class="details narrow">
   <h2 style="color:var(--ink)">Details</h2>
-  <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-  <p class="mono">docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-047j-coop-bottom-warp/docs/SCOPE.md</p>
+  <p>The full scan and contract are in the branch folder:</p>
+  <p class="mono">docs/mega-refactor/items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/docs/SCOPE.md</p>
   <p class="mono">.../mega-refactor-047j-coop-bottom-warp/docs/CONTRACT.md</p>
 </section>
 

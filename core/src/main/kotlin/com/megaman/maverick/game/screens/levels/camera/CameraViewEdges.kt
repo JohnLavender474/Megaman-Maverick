@@ -186,8 +186,9 @@ class CameraViewEdges(
     //  camera for it (item 047, branch 047g play test, 2026-11-06)
     private fun checkWarpOut(direction: Direction, edge: Float) {
         players.forEach { player ->
-            if (players.isLive(player) && !isHeld(player) && isPastCameraEdge(player.body.getBounds(), direction, edge))
-                hold(player)
+            if (players.isLive(player) && !isHeld(player) && hasFreePartner(player) &&
+                isPastCameraEdge(player.body.getBounds(), direction, edge)
+            ) hold(player)
         }
     }
 
@@ -236,6 +237,14 @@ class CameraViewEdges(
                 return@forEach
             }
 
+            // TODO: a held player with no free partner counts as dead; phase 6 (047c) must keep this when it adds
+            //  the respawn of slot 1 and the rule for the death of every slot (item 047, "Decisions", 2026-11-06)
+            if (!hasFreePartner(player)) {
+                release(player)
+                player.depleteHealth()
+                return@forEach
+            }
+
             player.body.setPosition(heldPositions[slot])
             player.body.physics.velocity.setZero()
 
@@ -248,6 +257,11 @@ class CameraViewEdges(
             player.body.setCenter(spot.x, spot.y)
             damage(player)
         }
+    }
+
+    private fun hasFreePartner(player: MegaGameEntity): Boolean {
+        players.forEach { if (it != player && players.isLive(it) && !isHeld(it)) return true }
+        return false
     }
 
     // TODO: the warp spot is not tested for solids, so a player that warps beside a partner next to a wall or a
