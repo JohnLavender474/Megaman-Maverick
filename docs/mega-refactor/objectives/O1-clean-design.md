@@ -150,6 +150,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `118` | done | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) (main) |
 | `119` | planned | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](../items/119-player-left-world-event/ITEM.md) |
 | `126` | idea | [Movement and damage blocks as lock reasons](../items/126-movement-damage-lock-reasons/ITEM.md) (main) |
+| `130` | planned | [`LevelCamera` and `SharedView`: the camera stack out of `MegaLevelScreen`](../items/130-level-camera/ITEM.md) (main) |
 
 ## Gaps with no item
 

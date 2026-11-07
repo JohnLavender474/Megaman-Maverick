@@ -152,3 +152,4 @@ related-items: [<mega-refactor item IDs>]
 | [A camera-bounds spawner respawns its enemy after a step of 1 px out of the view and back](2026-11-05-bounds-spawner-respawns-greedily.md) | yes | core | closed |
 | [`X6_INTRO` `room2`: the floor block is 1 tile below the painted floor, and the boss gate is above standing height](2026-11-06-x6-intro-room2-floor-below-art.md) | yes | content | open |
 | [Code casts `IAnimator` to `Animator` to read animator state, and `Animator` mixes several concerns](2026-11-06-animator-casts-and-composition.md) | yes | engine, core | open |
+| [A camera shake that runs at level exit goes on in the next level](2026-11-06-camera-shake-survives-level-exit.md) | no | core | open |

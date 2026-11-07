@@ -236,6 +236,7 @@ Not a redo, but new work that is larger than the table shows:
 | `120` | idea | [A player that turns hostile and comes back](../items/120-hostile-player/ITEM.md) |
 | `122` | idea | [Human-driven boss](../items/122-human-driven-boss/ITEM.md) |
 | `112` | planned | [Targeting as a policy that each entity owns](../items/112-targeting-policies/ITEM.md) |
+| `130` | planned | [`LevelCamera` and `SharedView`: the camera stack out of `MegaLevelScreen`](../items/130-level-camera/ITEM.md) |
 
 ## Gaps with no item
 

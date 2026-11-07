@@ -4,7 +4,7 @@
 - Type: feature
 - Objectives: `O2`
 - Depends on: `047`, `010`
-- Related: `047`, `051`, `016`, `108`, `109`, `111`
+- Related: `047`, `051`, `016`, `108`, `109`, `111`, `130` (one `LevelCamera` per view)
 - Branches: none yet
 
 ## Goal

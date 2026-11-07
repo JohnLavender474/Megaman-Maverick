@@ -137,6 +137,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 127 | [View edge warp: test the warp spot for solids](items/127-warp-spot-solids/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 128 | [Cull near players, not only by the camera view](items/128-cull-near-players/ITEM.md) | refactor | `O2`, `O5` | idea | none | | |
 | 129 | [View edge warp visuals, phase 2](items/129-warp-visuals/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
+| 130 | [`LevelCamera` and `SharedView`: the camera stack out of `MegaLevelScreen`](items/130-level-camera/ITEM.md) | refactor | `O1`, `O2` | planned | `047` (`047h`) | | |
 
 ## Branches
 
