@@ -7,7 +7,7 @@
 - Includes: the work of `069` (dash button), folded in on 2026-11-05. Its research and decisions are in
   `069` `ITEM.md` and `NOTES.md`.
 - Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`, `120`, `121`, `122`
-- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (merged, 2026-11-06)
+- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (merged, 2026-11-06), `mega-refactor-081d-x-dash-sabre` (active, 2026-11-06)
 
 ## Goal
 
