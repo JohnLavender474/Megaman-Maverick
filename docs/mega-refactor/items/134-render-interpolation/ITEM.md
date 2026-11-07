@@ -1,11 +1,18 @@
 # 134: Draw bodies and the camera between physics steps (render interpolation)
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O9`, `O5`
 - Depends on: none
 - Related: `010` (fixed tick), `067` (PPM 16, whole-pixel rounding), `081` (playable X, where the judder was found)
-- Branches: none yet
+- Branches: `mega-refactor-134a-draw-interpolation` (active, 2026-11-07)
+
+## Decisions (owner, 2026-11-07, at the item start)
+
+- D1: render interpolation. The physics steps do not change.
+- Merge target: directly into `master`. `134a` ships with `--interpolation` off by default.
+- D2: vsync is not in `134`. The owner can try `--vsync true`; a default change is its own item if wanted.
+- D3, D4 and D5 stay open for the `134a` brief.
 
 ## Goal
 
@@ -52,9 +59,7 @@ and vsync as a default (a separate small change, D2).
 
 ## Open questions
 
-- D1: which option: render interpolation (recommended), a whole number of steps per frame, the X6 1/60 s update, vsync
-  only, or nothing.
-- D2: vsync on by default? Check `--vsync true` on the owner's screen first. Vsync is not saved today (`034`).
+- D1, D2: decided 2026-11-07 (see "Decisions").
 - D3: the snap rule: a distance guard plus explicit snaps at teleports and respawns (recommended), or explicit snaps
   only.
 - D4: rounding to whole world pixels: not in `134`; decide it with `067` (recommended).
