@@ -48,12 +48,17 @@ left or right depending on which way the remaining player is facing". A review (
 - "Both count as dead": the case "slot 0 held, slot 1 dies" was a soft lock; its fix goes into `047j` (owner,
   2026-11-06). "Slot 1 held, slot 0 dies" already resets the level.
 
+## Decisions (owner, 2026-11-07, at the `127a` brief)
+
+- Merge target: directly into `master`.
+- The cap: 3 s after the delay (a dev key in `--viewEdges` can change it).
+- Facing is read every frame.
+- While the warp waits, the guide line and circle are gray at the best try; white when the warp is ready.
+- Enemies: a hurtful `DAMAGER` overlap only, no margin.
+
 ## Open questions
 
-- The cap length.
-- When facing is read: every frame, so the guide shows the live choice (recommended), or at the warp.
-- What the waiting player sees: the guide circle in another color at the best candidate spot (recommended).
-- Enemies: the `DAMAGER` overlap only (recommended), or also a margin around them.
+None; the brief of `127a` answered them.
 
 ## Sources
 
