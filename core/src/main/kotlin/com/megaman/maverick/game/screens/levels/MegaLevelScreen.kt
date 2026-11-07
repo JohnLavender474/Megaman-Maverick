@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
@@ -71,6 +72,7 @@ import com.megaman.maverick.game.entities.hazards.ViewEdgeHazard
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.fights.FightDirector
@@ -87,6 +89,7 @@ import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
 import com.megaman.maverick.game.screens.levels.camera.CameraScroll
 import com.megaman.maverick.game.screens.levels.camera.CameraScrollSection
+import com.megaman.maverick.game.screens.levels.camera.CameraRoomExits
 import com.megaman.maverick.game.screens.levels.camera.CameraViewEdges
 import com.megaman.maverick.game.screens.levels.camera.CameraZone
 import com.megaman.maverick.game.screens.levels.camera.CameraZones
@@ -210,6 +213,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var cameraScroll: CameraScroll
     private var viewEdges: CameraViewEdges? = null
     private var playersFocus: PlayersFocus? = null
+    private var roomExits: CameraRoomExits? = null
     private lateinit var cameraShake: CameraShake
     private lateinit var roomHandler: LevelRoomHandler
 
@@ -348,11 +352,21 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         val playersFocus = viewEdges?.let { edges ->
             PlayersFocus(game.players, game.cameraView, game.services.rules.viewEdges, viewEdgesOn) { edges.isHeld(it) }
         }
+        // TODO: the room exits hold the players only in an upright room; in a turned room a side exit is not a left or
+        //  right room edge (item 047, "Decisions", 2026-11-06)
+        val roomExits = viewEdges?.let { edges ->
+            CameraRoomExits(game.players, roomBounds, {
+                player.inPlay && !roomTransition.transitioning && !game.cameraView.rotating &&
+                    game.cameraRotation.direction == Direction.UP
+            }) { edges.isHeld(it) }
+        }
         if (playersFocus != null) {
             game.cameraController.addEffect(playersFocus)
             game.cameraController.addEffect(viewEdges)
+            game.cameraController.addEffect(roomExits!!)
         }
         this.playersFocus = playersFocus
+        this.roomExits = roomExits
         game.cameraController.reset()
 
         roomHandler = LevelRoomHandler(game.services, roomBounds, roomTransition, { player }) {
@@ -484,6 +498,12 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         val gameRooms = result.get(ConstKeys.GAME_ROOMS) as Array<RectangleMapObject>? ?: Array()
         roomBounds.gameRooms = gameRooms
+        roomExits?.gates?.let { gates ->
+            gates.clear()
+            tiledMapLoadResult!!.map.layers.get(ConstKeys.SENSORS)?.objects?.forEach {
+                if (it.name == Gate.TAG && it is RectangleMapObject) gates.add(Rectangle(it.rectangle))
+            }
+        }
         @Suppress("UNCHECKED_CAST")
         val zones = result.get(ConstKeys.CAMERA_SECTIONS) as Array<CameraZone>?
         cameraZones.zones = zones ?: Array()
