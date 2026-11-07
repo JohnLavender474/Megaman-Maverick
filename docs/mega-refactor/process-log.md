@@ -1783,3 +1783,25 @@ newest entry at the bottom.
   checked. Gradle did not run (owner's uncommitted code in the main checkout), and the game was not launched.
 - Follow-up: room transitions with 2 players are phase 2 of the shared screen ("carry"): slot 0 triggers them, and
   slot 1 moves to the transition point. In the scroll rooms, the view edge rules are off (phase 5).
+
+## 2026-11-06 — mega-refactor-047h-side-exits
+
+- Summary: phase 2 of the shared screen (squash commit `1ff8de509`). With 2 players, `CameraRoomExits` puts a
+  players-only wall 1 tile outside each side room exit (a left or right room edge that touches another room) and,
+  when every live player touches the exit, starts the transition at once (`transitionToRoom`); the carry moves every
+  player. One live player: no walls. An exit that a `Gate` covers gets no wall (phase 4). On in rooms with camera
+  sections; off in a transition and in a turned room. Owner's decisions D1 to D4 as recommended. With 1 player,
+  nothing changes. Spawns `17` to `20` in the `coop_*` route.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch after the merge of
+  `master` (docs only), which is the tree of the squash (`engine` 639, `core` 1119, `smokeTest` 450). The checks did
+  not run in the main checkout, because it holds the owner's uncommitted X code. 3 mutation checks each failed at
+  least 1 test. The review before the play test (2 agents) found no serious bug; 3 check texts were corrected and 2
+  real-stage checks added (`DESERT_MAN` `room14` with gates, `GLACIER_MAN` `room11` without). The owner played the
+  checks, and they pass. CI did not run, because the branch was never pushed.
+- Follow-up:
+  - New items `131` (a player past the wall outside the span), `132` (spread after a transition), `133` (a wait cue).
+  - Phase 6 note in `047` `ITEM.md`: with slot 0 held or dead, slot 1 can still leave alone.
+  - Owner's decisions at the play test: `047i` (per-player transition path), `047j` (co-op default `bottom=WARP`);
+    item `127` got the owner's report of a warp into a block.
+  - `081d` changes other lines of `MegaLevelScreen.kt`; its merge may meet a simple import conflict.
+

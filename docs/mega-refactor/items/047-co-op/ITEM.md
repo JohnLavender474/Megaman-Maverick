@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
-- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (active)
+- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (merged)
 
 ## Goal
 
@@ -90,6 +90,7 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 
 - Camera: closed 2026-11-06 (group camera with edge walls, see "Decisions").
 - Tall rooms (taller than the view): `047g` (phase 1) gives a rule for each view edge (`NONE`, `WALL`, `BOUNCE`, `WARP`, `KILL`) through `--viewEdges`, and the owner played all of them (2026-11-06). `bottom=WARP` becomes the co-op default (`047j`, decision 2026-11-06). Open: the final top default, and whether side `WARP` (experimental) stays.
+- Phase 6 (death and respawn, from the `047h` backlog): when slot 0 is held by a side `WARP` rule or is dead, the exit walls drop, and slot 1 can walk into the next room with no transition, because the room scan follows only slot 0. Same as before `047h`.
 - Phase 5 (camera sections, from the `047g` backlog): with 2 players in a room with a `051` zone or scroll, the zone and the scroll read the group midpoint as their focus point, and `CameraEdgeBlocks` kills only slot 0 at a kill edge. The view edge rules are off in such a room until then.
 - The lead player as the source of truth, with earnings shared by all players: confirm. This is one profile for the session. The lead slot is a session policy, not a helper in the players query API (`029` decision).
 - What happens when the lead player leaves? Does the next slot become the lead?

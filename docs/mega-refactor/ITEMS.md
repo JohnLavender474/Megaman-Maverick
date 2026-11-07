@@ -138,6 +138,9 @@ statuses and column meanings are in `CLAUDE.md`.
 | 128 | [Cull near players, not only by the camera view](items/128-cull-near-players/ITEM.md) | refactor | `O2`, `O5` | idea | none | | |
 | 129 | [View edge warp visuals, phase 2](items/129-warp-visuals/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
 | 130 | [`LevelCamera` and `SharedView`: the camera stack out of `MegaLevelScreen`](items/130-level-camera/ITEM.md) | refactor | `O1`, `O2` | planned | `047` (`047h`) | | |
+| 131 | [Room exit: a player past the exit wall outside the shared span](items/131-exit-outside-span/ITEM.md) | feature | `O2` | idea | `047` | | |
+| 132 | [Spread the players after a room transition](items/132-spread-after-transition/ITEM.md) | feature | `O2`, `O9` | idea | `047` | | |
+| 133 | [A cue that shows who waits at a room exit](items/133-exit-wait-cue/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
 
 ## Branches
 
@@ -220,4 +223,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047a-second-slot`](items/047-co-op/branches/mega-refactor-047a-second-slot/process-log.md) | 047 | With `--players 2`, a second `Megaman` plays in a level on its own device | merged | 2026-11-01 | 2026-11-01 |
 | [`mega-refactor-047b-player-rules`](items/047-co-op/branches/mega-refactor-047b-player-rules/process-log.md) | 047 | Session rules, friendly fire, targeting, `ChargedShot` and pickups | merged | 2026-11-01 | 2026-11-02 |
 | [`mega-refactor-047g-shared-camera`](items/047-co-op/branches/mega-refactor-047g-shared-camera/process-log.md) | 047 | Shared screen phase 1: a group camera with edge walls in one room with no exits | merged | 2026-11-06 | 2026-11-06 |
-| [`mega-refactor-047h-side-exits`](items/047-co-op/branches/mega-refactor-047h-side-exits/process-log.md) | 047 | Shared screen phase 2: side room exits with 2 players (gather at the exit) | active | 2026-11-06 | |
+| [`mega-refactor-047h-side-exits`](items/047-co-op/branches/mega-refactor-047h-side-exits/process-log.md) | 047 | Shared screen phase 2: side room exits with 2 players (gather at the exit) | merged | 2026-11-06 | 2026-11-06 |
