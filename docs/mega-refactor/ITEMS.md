@@ -224,3 +224,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047b-player-rules`](items/047-co-op/branches/mega-refactor-047b-player-rules/process-log.md) | 047 | Session rules, friendly fire, targeting, `ChargedShot` and pickups | merged | 2026-11-01 | 2026-11-02 |
 | [`mega-refactor-047g-shared-camera`](items/047-co-op/branches/mega-refactor-047g-shared-camera/process-log.md) | 047 | Shared screen phase 1: a group camera with edge walls in one room with no exits | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-047h-side-exits`](items/047-co-op/branches/mega-refactor-047h-side-exits/process-log.md) | 047 | Shared screen phase 2: side room exits with 2 players (gather at the exit) | merged | 2026-11-06 | 2026-11-06 |
+| [`mega-refactor-047j-coop-bottom-warp`](items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/process-log.md) | 047 | The co-op default `bottom=WARP` for tall rooms | active | 2026-11-06 | |
