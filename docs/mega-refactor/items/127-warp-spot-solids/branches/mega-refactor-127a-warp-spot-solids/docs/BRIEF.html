@@ -1,0 +1,196 @@
+<title><id><letter> <Short Name></title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<!--
+  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
+  - Copy this file to the branch docs/ folder. Replace every <placeholder>. Delete these comments.
+  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
+  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
+  - Diagrams: Mermaid in <pre class="mermaid">. Code: <pre class="code"> with the spans
+    .k (keyword), .c (comment), .del (removed code).
+  - At approval: set the eyebrow to "Brief: approved <date>", set each chosen option to
+    "opt rec" with the pill "Chosen", and set the Decisions tag to "answered <date>".
+  - On a scope change: mark what changed in the text, with the date, and publish to the same link.
+  - The accent color can change to suit the branch. Keep the light and dark token sets in step.
+-->
+<style>
+:root {
+  --bg: #f3f5fa;
+  --panel: #ffffff;
+  --ink: #141a2e;
+  --muted: #5a6380;
+  --line: #d8ddeb;
+  --accent: #1f5fe0;
+  --accent-soft: #e3ecff;
+  --beam: #12a6d8;
+  --warn: #b5650d;
+  --warn-soft: #fff1e0;
+  --code-bg: #eef1f8;
+  --f-display: "Pixelify Sans", "Courier New", monospace;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1322; --panel: #171c30; --ink: #e6e9f5; --muted: #9aa3c2; --line: #2a3150;
+    --accent: #7aa6ff; --accent-soft: #1d2a4d; --beam: #4fd0f5; --warn: #f0a556; --warn-soft: #3a2a17;
+    --code-bg: #12172a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1322; --panel: #171c30; --ink: #e6e9f5; --muted: #9aa3c2; --line: #2a3150;
+  --accent: #7aa6ff; --accent-soft: #1d2a4d; --beam: #4fd0f5; --warn: #f0a556; --warn-soft: #3a2a17;
+  --code-bg: #12172a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+.narrow { max-width: 68ch; }
+h1, h2 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; }
+h2 { font-size: 1.35rem; display: flex; align-items: baseline; gap: 10px; }
+h2 .tag { font-family: var(--f-mono); font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+h3 { font-size: 1rem; margin: 0; }
+p { margin: 0; }
+section { display: flex; flex-direction: column; gap: 14px; }
+code, .mono { font-family: var(--f-mono); font-size: 0.86em; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.eyebrow { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.eyebrow .draft { color: var(--warn); }
+.lede { font-size: 1.15rem; }
+.visible { display: flex; gap: 12px; align-items: flex-start; background: var(--accent-soft); border-radius: 8px; padding: 12px 16px; }
+.visible b { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; padding-top: 3px; }
+.pair { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 860px) { .pair { grid-template-columns: 1fr 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.panel h3 { font-family: var(--f-mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.panel.after h3 { color: var(--accent); }
+.panel p.note { color: var(--muted); font-size: 0.92rem; }
+.diagram { overflow-x: auto; }
+pre.mermaid { margin: 0; background: transparent; text-align: center; font-family: var(--f-body); }
+pre.code { margin: 0; background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--f-mono); font-size: 0.82rem; line-height: 1.6; }
+pre.code .c { color: var(--muted); font-style: italic; }
+pre.code .k { color: var(--accent); }
+pre.code .del { color: var(--warn); }
+.decisions { display: flex; flex-direction: column; gap: 14px; }
+.decision { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.decision .q { display: flex; gap: 10px; align-items: baseline; }
+.decision .id { font-family: var(--f-display); font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+.decision .q h3 { font-size: 1.05rem; }
+.opts { display: grid; grid-template-columns: 1fr; gap: 8px; }
+@media (min-width: 700px) { .opts { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+.opt { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.93rem; min-width: 0; }
+.opt.rec { border-color: var(--accent); background: var(--accent-soft); }
+.opt .lbl { font-weight: 700; display: block; }
+.opt .rec-pill { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.risks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.risks li { border-left: 3px solid var(--warn); background: var(--warn-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; }
+.checks { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; }
+.checks code { word-break: break-word; }
+.cd { font-family: var(--f-mono); font-size: 0.82rem; background: var(--code-bg); padding: 8px 12px; border-radius: 6px; overflow-x: auto; white-space: nowrap; }
+.details { color: var(--muted); font-size: 0.92rem; display: flex; flex-direction: column; gap: 4px; }
+.steps { display: flex; flex-wrap: wrap; gap: 6px; }
+.step { font-family: var(--f-mono); font-size: 0.78rem; border: 1px solid var(--beam); color: var(--ink); border-radius: 999px; padding: 3px 10px; }
+.step.go { border-color: var(--warn); }
+a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+
+<!-- 1. Goal -->
+<header style="display:flex;flex-direction:column;gap:14px">
+  <div class="eyebrow"><span>Item <id></span><span>Branch <id><letter></span><span>Objectives <O-ids></span><span class="draft">Brief: draft</span></div>
+  <h1><Short name></h1>
+  <p class="lede narrow"><One or two sentences: what the branch changes and why.></p>
+  <div class="visible narrow"><b>In play</b><span><What the player sees change, or "Nothing changes."></span></div>
+</header>
+
+<!-- 2. Before and after: a Mermaid diagram of the parts that change (senders, events, listeners). -->
+<section>
+  <h2>Before and after <span class="tag"><what the diagram shows></span></h2>
+  <div class="pair">
+    <div class="panel">
+      <h3>Today: <short label></h3>
+      <div class="diagram"><pre class="mermaid">
+flowchart TD
+  A["<sender>"] -->|<EVENT>| B["<listener>"]
+</pre></div>
+      <p class="note"><The problem that the diagram shows.></p>
+    </div>
+    <div class="panel after">
+      <h3>After: <short label></h3>
+      <div class="diagram"><pre class="mermaid">
+flowchart TD
+  A["<sender>"] --> B["<new owner>"]
+</pre></div>
+      <p class="note"><What stays the same for the other code.></p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Code sketch: the new or changed API at its first real caller. A few short blocks, not the diff. -->
+<section>
+  <h2>Code sketch <span class="tag">first caller</span></h2>
+  <div class="pair">
+    <div class="panel">
+      <h3>Today: <code><Caller></code></h3>
+<pre class="code"><span class="del"><old code></span></pre>
+    </div>
+    <div class="panel after">
+      <h3>After: <code><Caller></code></h3>
+<pre class="code"><span class="k">fun</span> <new code></pre>
+    </div>
+  </div>
+  <!-- Optional: an ordered list of steps or parts, as pills. Use "step go" for a branch point. -->
+  <div class="steps" aria-label="<Order>">
+    <span class="step">1 <step></span><span class="step">2 <step></span>
+  </div>
+</section>
+
+<!-- 4. Decisions: 2 to 4 questions. An objective conflict is a decision. Ask them with AskUserQuestion too.
+     If nothing needs a decision, replace the list with one sentence that says so. -->
+<section>
+  <h2>Decisions <span class="tag">open</span></h2>
+  <div class="decisions">
+    <div class="decision">
+      <div class="q"><span class="id">D1</span><h3><Question?></h3></div>
+      <p class="narrow"><The context that the question needs, in one or two sentences.></p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Recommended</span><span class="lbl"><Option></span><Why.></div>
+        <div class="opt"><span class="lbl"><Option></span><Trade-off.></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Risks: up to 3. -->
+<section class="narrow">
+  <h2>Risks</h2>
+  <ul class="risks">
+    <li><b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+  </ul>
+</section>
+
+<!-- 6. Play checks: as in "Test maps". Experimental checks first, then control checks. A --room on each. -->
+<section class="narrow">
+  <h2>Play checks <span class="tag">for the play test, not for now</span></h2>
+  <div class="cd">cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-127a-warp-spot-solids</div>
+  <ul class="checks">
+    <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+  </ul>
+</section>
+
+<!-- 7. Details -->
+<section class="details narrow">
+  <h2 style="color:var(--ink)">Details</h2>
+  <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
+  <p class="mono">docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-127a-warp-spot-solids/docs/SCOPE.md</p>
+  <p class="mono">.../mega-refactor-127a-warp-spot-solids/docs/CONTRACT.md</p>
+</section>
+
+</div>

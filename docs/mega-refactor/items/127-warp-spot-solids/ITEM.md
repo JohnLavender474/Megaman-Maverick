@@ -1,11 +1,11 @@
 # 127: View edge warp: test the warp spot for solids
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O2`
 - Depends on: `047`
 - Related: `047g`, `047j`
-- Branches: none yet
+- Branches: `mega-refactor-127a-warp-spot-solids`
 
 ## Goal
 
