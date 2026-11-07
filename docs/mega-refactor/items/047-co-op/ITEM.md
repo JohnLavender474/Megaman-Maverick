@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
-- Branches: `047a` (merged), `047b` (merged), `047g` (merged)
+- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (active)
 
 ## Goal
 
@@ -54,6 +54,7 @@ Item `029` research (2026-10-23, verbatim):
 - 2026-11-06: the shared screen uses a group camera with edge walls. The camera follows the players as a group inside the 16x14 room view (the view does not zoom). The left and right edges of the view block each player, so no player leaves the view sideways and cull and spawn keep one camera. This replaces the 2026-10-23 lean to "the camera follows the lead player", which had the campaign as its target.
 - 2026-11-06: room bounds come before the shared view. At a room edge, the single-player rule applies (a transition, a wall, or a pit death at the bottom); the view edge is only a wall inside the room.
 - 2026-11-06: for now, every room exit uses "carry": any one player triggers the transition, and the other players are carried along (they warp next to that player at the end of the pan). This applies to side, ladder, jump-up and fall-down exits. Other rules come later (see "Open questions", "Rooms").
+- 2026-11-06: side exits with 2 players (phase 2, `047h`): "gather at the exit". A side room exit is a wall for every player. It opens only when every live player touches it from inside; then slot 0 crosses, the transition runs, and the other players are carried. Chosen over "only slot 1 waits" and "any player leads". Found at the play test of the `coop_*` route: slot 1 ran into the next room alone.
 - 2026-11-06: build the shared screen in phases. Each phase adds one mechanic and gets play tested before the next: (1) one room with no exits, group camera and edge walls; (2) side exits; (3) vertical exits (ladders, jumps, falls); (4) gates; (5) camera sections (`051`); (6) death and respawn. The first co-op maps use only side and ladder exits, until phase 3 tests jump and fall exits.
 
 ## Branch split
@@ -69,6 +70,7 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 | `047e` | Bosses and gauntlets, as present-player steps in `118` plans |
 | `047f` | Join and leave during play, device claim, unplug prompt, settings for slot 1. Adds the first production callers of `Players.unregister` and `GameState.removeListener` |
 | `047g` `shared-camera` | Shared screen phase 1: a group camera with edge walls in one room with no exits (2026-11-06). Phases 2 to 5 (side exits, vertical exits, gates, camera sections) get their own branches after the phase 1 play test. It starts before `047c` to `047f`, which keep their letters because other docs and code `TODO`s name them |
+| `047h` `side-exits` | Shared screen phase 2: side room exits with 2 players, "gather at the exit" (2026-11-06) |
 
 `038` comes before the end of phase 1 if a death must not reset the room for the other player.
 
