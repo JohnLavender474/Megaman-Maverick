@@ -134,7 +134,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 124 | [Slope pass-through from below](items/124-slope-pass-through/ITEM.md) | feature | `O4` | idea | `068` | | |
 | 125 | [Spatial or room index for spawners, if a measure shows a cost](items/125-spawner-index/ITEM.md) | refactor | `O5` | idea | none | | |
 | 126 | [Movement and damage blocks as lock reasons](items/126-movement-damage-lock-reasons/ITEM.md) | refactor | `O1`, `O8` | idea | `048` | | |
-| 127 | [View edge warp: test the warp spot for solids](items/127-warp-spot-solids/ITEM.md) | feature | `O2` | active | `047` | 2026-11-07 | |
+| 127 | [View edge warp: test the warp spot for solids](items/127-warp-spot-solids/ITEM.md) | feature | `O2` | done | `047` | 2026-11-07 | 2026-11-09 |
 | 128 | [Cull near players, not only by the camera view](items/128-cull-near-players/ITEM.md) | refactor | `O2`, `O5` | idea | none | | |
 | 129 | [View edge warp visuals, phase 2](items/129-warp-visuals/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
 | 130 | [`LevelCamera` and `SharedView`: the camera stack out of `MegaLevelScreen`](items/130-level-camera/ITEM.md) | refactor | `O1`, `O2` | planned | `047` (`047h`) | | |
@@ -150,6 +150,9 @@ statuses and column meanings are in `CLAUDE.md`.
 | 140 | [`TickFrames` as the engine `Animation`, with durations in seconds](items/140-tick-frames-seconds/ITEM.md) | refactor | `O1` | idea | none | | |
 | 141 | [The sabre damage by slash kind and by target](items/141-sabre-damage-rules/ITEM.md) | feature | `O8` | idea | `081` | | |
 | 142 | [Remove the reflection from `FriendlyFireTest` and `EntityExistenceTest`](items/142-tests-no-reflection/ITEM.md) | test | `O6` | idea | none | | |
+| 143 | [View edge warp: the cap does not run while no partner is in view](items/143-warp-cap-out-of-view/ITEM.md) | feature | `O2` | idea | `047` | | |
+| 144 | [View edge warp beside a partner on a ladder](items/144-warp-ladder-partner/ITEM.md) | feature | `O2` | idea | `047` | | |
+| 145 | [View edge warp: the landing after the cap tests only solids](items/145-warp-fallback-hazards/ITEM.md) | feature | `O2` | idea | `047` | | |
 
 ## Branches
 
@@ -171,7 +174,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-081d-x-dash-sabre`](items/081-playable-x/branches/mega-refactor-081d-x-dash-sabre/process-log.md) | 081 | Phase 3 of X (ground dash, dash jump, dash wall kick), less knockback, the owner's X tuning and the X6 feel fixes; the sabre moved to `081e` | merged | 2026-11-06 | 2026-11-07 |
 | [`mega-refactor-081e-x-sabre`](items/081-playable-x/branches/mega-refactor-081e-x-sabre/process-log.md) | 081 | Phase 4 of X: the Z-sabre slash on `UP` + `B` | merged | 2026-11-07 | 2026-11-09 |
 | [`mega-refactor-081f-x6-intro-fixes`](items/081-playable-x/branches/mega-refactor-081f-x6-intro-fixes/process-log.md) | 081 | Fix the X6 intro stage and `D1000` problems that the `081e` play test found | active | 2026-11-09 | |
-| [`mega-refactor-127a-warp-spot-solids`](items/127-warp-spot-solids/branches/mega-refactor-127a-warp-spot-solids/process-log.md) | 127 | Test the view edge warp spot for solids, hazards and enemies, and wait for a safe spot | active | 2026-11-07 | |
+| [`mega-refactor-127a-warp-spot-solids`](items/127-warp-spot-solids/branches/mega-refactor-127a-warp-spot-solids/process-log.md) | 127 | Test the view edge warp spot for solids, hazards and enemies, and wait for a safe spot | merged | 2026-11-07 | 2026-11-09 |
 | [`mega-refactor-038a-respawn-routine`](items/038-respawn-routine/branches/mega-refactor-038a-respawn-routine/process-log.md) | 038 | One `RespawnRoutine` runs the death and the respawn in a fixed order, in place of the 5-event chain; the public events stay | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-038b-level-reset`](items/038-respawn-routine/branches/mega-refactor-038b-level-reset/process-log.md) | 038 | Split `PLAYER_SPAWN` into a spawn event for each slot and a `LEVEL_RESET` that the respawn routine sends; move the level-reset listeners | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-001a-package-rename`](items/001-maverick-engine/branches/mega-refactor-001a-package-rename/process-log.md) | 001 | Rename the engine root package to a Maverick Engine identity | merged | 2026-10-22 | 2026-10-22 |

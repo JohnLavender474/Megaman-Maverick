@@ -1890,3 +1890,23 @@ newest entry at the bottom.
   `TickFrames`, the sabre damage, the reflection in 2 older tests). `081f` folder made (`planned`), with a draft
   `SCOPE.md` for the X6 intro stage and `D1000` fixes that the play test found. The `docs/x6-intro/*.md` plans still
   use the old X6 names; offered to the owner, not changed.
+
+## 2026-11-09 — mega-refactor-127a-warp-spot-solids
+
+- Summary: `127` done (squash commit `f5fd02dfa`). The co-op view edge warp lands a held player only on a safe spot. It
+  tries the side the partner faces, then the other side, then the partner's own spot, each fully in view. A new
+  `WarpSpotTest` (camera package) tests a spot against the world container: no blocking solid (the collision
+  handler's block filters; one-way blocks and slopes pass, `PRESS_UP_FALL_THRU` blocks), no `DEATH` or `TELEPORTER`
+  fixture, no `DAMAGER` that may hurt the player; a side spot also needs ground under the centre 0.5 tile of the feet
+  (a solid less than 1 tile below with no hazard in its top, or water). The spot lines up with the partner's feet. The
+  warp happens only while the partner stands (ground, ladder, water). After the delay plus the cap
+  (`ViewEdgeRules.warpCap`, 3 s, `--viewEdges cap`), it lands on the partner's spot unless a solid blocks it there;
+  then it waits on. The guide is gray while the warp waits. Test map `RefactorTest127` (`REFACTOR_TEST_127`) with 7
+  rooms. The pit, crevice and teleporter cases came from the owner after the first play test (decisions in `ITEM.md`).
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch: `engine` 639,
+  `core` 1195, `smokeTest` 450, JAR built. Mutation checks on the spot test, the stand test, the ground, free and
+  teleporter tests, all caught. Two reviews before the play test (subagents), with their fixes. The owner played all 8
+  checks, and they pass. Diff review in Diffity: 0 open threads. `master` merged into the branch once, with no
+  conflicts. CI did not run, because the branch was never pushed.
+- Follow-up: new items `143` (the cap does not run while no partner is in view), `144` (a partner on a ladder), `145`
+  (the landing after the cap tests only solids). `134a` shares 4 files with this merge (text only).

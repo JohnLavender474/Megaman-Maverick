@@ -1,6 +1,6 @@
 # 127: View edge warp: test the warp spot for solids
 
-- Status: active
+- Status: done
 - Type: feature
 - Objectives: `O2`
 - Depends on: `047`
@@ -55,6 +55,12 @@ left or right depending on which way the remaining player is facing". A review (
 - Facing is read every frame.
 - While the warp waits, the guide line and circle are gray at the best try; white when the warp is ready.
 - Enemies: a hurtful `DAMAGER` overlap only, no margin.
+
+## Decisions (owner, 2026-11-09, after the first `127a` play test)
+
+- Pit: a side spot needs ground under the feet (a solid less than 1 tile below, or water); the partner's spot does not.
+- Crevice: after the cap, land on the partner's spot only if no solid blocks it there; else wait on.
+- Teleporter: a `TELEPORTER` fixture makes a spot unsafe.
 
 ## Open questions
 
