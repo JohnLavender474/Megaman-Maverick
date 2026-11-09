@@ -276,6 +276,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Robot Master Fight - [MMX6 Boss Fight 8-Bit](https://youtu.be/IeySHEF5U_8)
   - Wily Stage 3 - [MMX6 Gate Laboratory 8-Bit](https://youtu.be/Zdtp6f57E_c?list=RDZdtp6f57E_c)
   - X6 Intro Stage - [MMX6 Intro Stage 8-Bit](https://youtu.be/EZrqRIRTA2I)
+  - X6 D-1000 - [MMX6 D-1000 8-Bit](https://www.youtube.com/watch?v=KivGaSyTalc)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Main Menu
   - Intro Stage 
