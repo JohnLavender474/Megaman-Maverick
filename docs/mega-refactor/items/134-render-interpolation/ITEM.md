@@ -5,7 +5,7 @@
 - Objectives: `O9`, `O5`
 - Depends on: none
 - Related: `010` (fixed tick), `067` (PPM 16, whole-pixel rounding), `081` (playable X, where the judder was found)
-- Branches: `mega-refactor-134a-draw-interpolation` (merged, 2026-11-09)
+- Branches: `mega-refactor-134a-draw-interpolation` (merged, 2026-11-09), `mega-refactor-134b-interpolation-audit` (active, 2026-11-09)
 
 ## Decisions (owner, 2026-11-09, in `134a`)
 
