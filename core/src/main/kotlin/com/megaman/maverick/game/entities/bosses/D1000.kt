@@ -29,7 +29,8 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -63,6 +64,7 @@ class D1000(services: MegaServices) :
 
         const val HALF_HEALTH = ConstVals.MAX_HEALTH / 2
         const val FULL_CHARGE_DAMAGE = 5
+        const val SABRE_DAMAGE = 2
         const val STUN_DAMAGE = 8
 
         private const val DAMAGE_DURATION = 0.5f
@@ -132,6 +134,7 @@ class D1000(services: MegaServices) :
         override fun get(damager: IDamagerEntity) = when (damager) {
             is Bullet, is ChargedShotExplosion -> 0
             is ChargedShot -> if (damager.fullyCharged) FULL_CHARGE_DAMAGE else 0
+            is MegamanXSabreSlash -> SABRE_DAMAGE
             else -> super.get(damager)
         }
     }
@@ -175,7 +178,7 @@ class D1000(services: MegaServices) :
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
-        X6Frames.animations(atlas, TAG, D1000Frames.BODY, animations)
+        TickFrames.animations(atlas, TAG, D1000Frames.BODY, animations)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -264,7 +267,7 @@ class D1000(services: MegaServices) :
     }
 
     private fun animFinished() =
-        X6Frames.baseKey(animator.currentKey ?: "") == anim && animator.currentAnimation?.isFinished() == true
+        TickFrames.baseKey(animator.currentKey ?: "") == anim && animator.currentAnimation?.isFinished() == true
 
     private fun playerX() = targetPlayer.body.getCenter().x
 
@@ -600,7 +603,7 @@ class D1000(services: MegaServices) :
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             val def = D1000Frames.BODY[anim]
-            X6Frames.place(sprite, def, origin.x, origin.y + shakeOffset, isFacing(Facing.RIGHT))
+            TickFrames.place(sprite, def, origin.x, origin.y + shakeOffset, isFacing(Facing.RIGHT))
             sprite.hidden = damageBlink && !defeated
         }
         return component
@@ -608,10 +611,10 @@ class D1000(services: MegaServices) :
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { current ->
-            if (!animLooping && X6Frames.hasLoop(D1000Frames.BODY, anim) && current == anim &&
+            if (!animLooping && TickFrames.hasLoop(D1000Frames.BODY, anim) && current == anim &&
                 animations[anim].isFinished()
             ) animLooping = true
-            if (animLooping) anim + X6Frames.LOOP_SUFFIX else anim
+            if (animLooping) anim + TickFrames.LOOP_SUFFIX else anim
         }
         animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -23,7 +23,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -54,7 +54,7 @@ class D1000Bomb(services: MegaServices) : AbstractProjectile(services, size = Si
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
-        X6Frames.animations(atlas, TAG, D1000Frames.BOMB, animations)
+        TickFrames.animations(atlas, TAG, D1000Frames.BOMB, animations)
         super.init()
         addComponent(AnimationsComponent(this, Animator(animations["bomb"])))
         addComponent(UpdatablesComponent({ land() }))
@@ -105,7 +105,7 @@ class D1000Bomb(services: MegaServices) : AbstractProjectile(services, size = Si
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             val center = body.getCenter()
-            X6Frames.place(sprite, D1000Frames.BOMB["bomb"], center.x, center.y, false)
+            TickFrames.place(sprite, D1000Frames.BOMB["bomb"], center.x, center.y, false)
         }
         return component
     }

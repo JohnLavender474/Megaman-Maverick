@@ -6,6 +6,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.interfaces.ISizable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -27,12 +28,12 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.decorations.X6Debris
+import com.megaman.maverick.game.entities.decorations.DebrisPiece
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.utils.X6Damage
-import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -43,7 +44,6 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
     companion object {
         const val TAG = "SabreBlock"
 
-        const val X6_HEALTH = 32
 
         private const val DAMAGE_DUR = 0.1f
         private const val EXPLOSIONS = 5
@@ -58,7 +58,7 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
-    private val negotiator = X6Damage.negotiator(this, X6_HEALTH)
+    private val negotiator = SelfSizeDamageNegotiator(this, objectMapOf(MegamanXSabreSlash::class pairTo dmgNeg(9)))
     private val damageTimer = Timer(DAMAGE_DUR)
     private lateinit var damageableFixture: Fixture
     private var health = ConstVals.MAX_HEALTH
@@ -68,7 +68,7 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
         if (region == null)
             region = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source).findRegion("$TAG/block")
                 ?: throw IllegalStateException("Missing region $TAG/block")
-        X6Debris.load(services, DEBRIS)
+        DebrisPiece.load(services, DEBRIS)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(UpdatablesComponent({ delta -> damageTimer.update(delta) }))
@@ -82,10 +82,8 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
         damageTimer.setToEnd()
     }
 
-    // TODO: when X is the player, only a sabre slash hurts the sabre block (the X6 rule); Mega Man keeps every weapon.
-    //  Maverick has no player character other than Mega Man yet (docs/x6-intro/intro-objects-plan.md, decision 2)
     override fun canBeDamagedBy(damager: IDamagerEntity) =
-        !invincible && damager is IOwnable<*> && damager.owner.asPlayer != null
+        !invincible && damager is MegamanXSabreSlash
 
     override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         if (!canBeDamagedBy(damager)) return false
@@ -107,7 +105,7 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
             spawnExplosion(Vector2(center.x + getRandom(-1, 1) * spread, center.y + getRandom(-1, 1) * spread))
         }
         spawnExplosion(center)
-        X6Debris.spawnPieces(DEBRIS, center)
+        DebrisPiece.spawnPieces(DEBRIS, center)
         services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 

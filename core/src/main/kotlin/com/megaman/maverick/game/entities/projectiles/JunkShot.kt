@@ -36,8 +36,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.enemies.Junkroid
 import com.megaman.maverick.game.entities.explosions.Disintegration
-import com.megaman.maverick.game.entities.utils.X6FrameDef
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.utils.TickFrameDef
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
@@ -45,33 +45,34 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-class X6Shot(services: MegaServices) : AbstractProjectile(services, size = Size.SMALL), IAnimatedEntity,
+// TODO: JunkShot is one of many one-off enemy shots; move it into a shared simple enemy shot (item 081)
+class JunkShot(services: MegaServices) : AbstractProjectile(services, size = Size.SMALL), IAnimatedEntity,
     IDamageableEntity {
 
-    enum class X6ShotType(
-        val key: String, val size: Float, val damage: Int, val shootable: Boolean, val def: X6FrameDef,
+    enum class Type(
+        val key: String, val size: Float, val damage: Int, val shootable: Boolean, val def: TickFrameDef,
         val gravity: Float = 0f
     ) {
-        CORE("core", 0.5f * ConstVals.PPM, 4, true, X6FrameDef(15, 14, 7, 7, 3, intArrayOf(0, 1, 2, 1), intArrayOf(2, 2, 3, 2), 0)),
-        JUNKROID("junkroid", 0.3125f * ConstVals.PPM, 1, true, X6FrameDef(10, 10, 5, 5, 1, intArrayOf(0), intArrayOf(1), 0),
+        CORE("core", 0.5f * ConstVals.PPM, 4, true, TickFrameDef(15, 14, 7, 7, 3, intArrayOf(0, 1, 2, 1), intArrayOf(2, 2, 3, 2), 0)),
+        JUNKROID("junkroid", 0.3125f * ConstVals.PPM, 1, true, TickFrameDef(10, 10, 5, 5, 1, intArrayOf(0), intArrayOf(1), 0),
             Junkroid.HURL_GRAVITY
         ),
         JUNKROID_HARD(
-            "junkroid_hard", 0.3125f * ConstVals.PPM, 1, false, X6FrameDef(10, 10, 5, 5, 3, intArrayOf(0, 1, 2), intArrayOf(2, 2, 2), 0),
+            "junkroid_hard", 0.3125f * ConstVals.PPM, 1, false, TickFrameDef(10, 10, 5, 5, 3, intArrayOf(0, 1, 2), intArrayOf(2, 2, 2), 0),
             Junkroid.HURL_GRAVITY
         ),
         HOVER_GUNNER(
-            "hover_gunner", 0.3125f * ConstVals.PPM, 3, true, X6FrameDef(8, 8, 4, 4, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0)
+            "hover_gunner", 0.3125f * ConstVals.PPM, 3, true, TickFrameDef(8, 8, 4, 4, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0)
         )
     }
 
     companion object {
-        const val TAG = "X6Shot"
+        const val TAG = "JunkShot"
     }
 
     override val invincible = false
 
-    var type = X6ShotType.CORE
+    var type = Type.CORE
         private set
 
     private val animations = ObjectMap<String, IAnimation>()
@@ -79,7 +80,7 @@ class X6Shot(services: MegaServices) : AbstractProjectile(services, size = Size.
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-        X6ShotType.entries.forEach { X6Frames.animation(atlas, "$TAG/${it.key}", it.key, it.def, animations) }
+        Type.entries.forEach { TickFrames.animation(atlas, "$TAG/${it.key}", it.key, it.def, animations) }
         super.init()
         addComponent(AnimationsComponent(this, Animator({ type.key }, animations)))
     }
@@ -87,7 +88,7 @@ class X6Shot(services: MegaServices) : AbstractProjectile(services, size = Size.
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        type = spawnProps.get(ConstKeys.TYPE, X6ShotType::class)!!
+        type = spawnProps.get(ConstKeys.TYPE, Type::class)!!
         body.setSize(type.size)
         body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(type.size) }
         body.setCenter(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
@@ -119,7 +120,7 @@ class X6Shot(services: MegaServices) : AbstractProjectile(services, size = Size.
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
-        body.setSize(X6ShotType.CORE.size)
+        body.setSize(Type.CORE.size)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
         addComponent(DrawableShapesComponent(debugShapeSuppliers = gdxArrayOf({ body.getBounds() }), debug = true))
@@ -133,7 +134,7 @@ class X6Shot(services: MegaServices) : AbstractProjectile(services, size = Size.
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             val center = body.getCenter()
-            X6Frames.place(sprite, type.def, center.x, center.y, body.physics.velocity.x > 0f)
+            TickFrames.place(sprite, type.def, center.x, center.y, body.physics.velocity.x > 0f)
         }
         return component
     }

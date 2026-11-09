@@ -28,14 +28,15 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-class X6Debris(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity {
+// TODO: DebrisPiece, BlockPiece and WoodCratePiece are the same kind of falling piece; merge them into one entity (item 081)
+class DebrisPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity {
 
     companion object {
-        const val TAG = "X6Debris"
+        const val TAG = "DebrisPiece"
 
         private const val GRAVITY = -35f
         private const val FALL_MAX = 12f
@@ -58,7 +59,7 @@ class X6Debris(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
         }
 
         fun spawnPieces(keys: Array<String>, position: Vector2, parentSpeedX: Float = 0f) = keys.forEach { key ->
-            val debris = MegaEntityFactory.fetch(X6Debris::class)!!
+            val debris = MegaEntityFactory.fetch(DebrisPiece::class)!!
             debris.spawn(
                 props(
                     ConstKeys.KEY pairTo key,
@@ -90,7 +91,7 @@ class X6Debris(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
         super.onSpawn(spawnProps)
 
         val key = spawnProps.get(ConstKeys.KEY, String::class)!!
-        region = regions.get(key) ?: throw IllegalStateException("Debris region $key is not loaded: call X6Debris.load")
+        region = regions.get(key) ?: throw IllegalStateException("Debris region $key is not loaded: call DebrisPiece.load")
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val offset = START_OFFSET * ConstVals.PPM
@@ -121,7 +122,7 @@ class X6Debris(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
         .preProcess { _, sprite ->
             val region = region!!
             sprite.setRegion(region)
-            sprite.setSize(region.regionWidth * X6Frames.SCALE, region.regionHeight * X6Frames.SCALE)
+            sprite.setSize(region.regionWidth * TickFrames.SCALE, region.regionHeight * TickFrames.SCALE)
             sprite.setCenter(body.getCenter())
             sprite.hidden = (elapsed / BLINK).toInt() % 2 == 1
         }

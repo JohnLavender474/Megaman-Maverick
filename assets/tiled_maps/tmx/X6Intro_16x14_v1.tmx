@@ -381,12 +381,12 @@
   <object id="212" name="MetaDridler" x="5408" y="272" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="10" name="decorations">
-  <object id="218" name="X6Scenery" x="24" y="1089" width="32" height="32">
+  <object id="218" name="Wreck" x="24" y="1089" width="32" height="32">
    <properties>
     <property name="key" value="wreck_a"/>
    </properties>
   </object>
-  <object id="219" name="X6Scenery" x="1864" y="1010" width="32" height="32">
+  <object id="219" name="Wreck" x="1864" y="1010" width="32" height="32">
    <properties>
     <property name="key" value="wreck_b"/>
    </properties>

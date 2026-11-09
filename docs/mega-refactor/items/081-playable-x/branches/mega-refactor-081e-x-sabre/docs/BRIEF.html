@@ -1,18 +1,6 @@
-<title><id><letter> <Short Name></title>
+<title>081e X Sabre</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid">. Code: <pre class="code"> with the spans
-    .k (keyword), .c (comment), .del (removed code).
-  - At approval: set the eyebrow to "Brief: approved <date>", set each chosen option to
-    "opt rec" with the pill "Chosen", and set the Decisions tag to "answered <date>".
-  - On a scope change: mark what changed in the text, with the date, and publish to the same link.
-  - The accent color can change to suit the branch. Keep the light and dark token sets in step.
--->
 <style>
 :root {
   --bg: #f3f5fa;
@@ -102,94 +90,128 @@ a { color: var(--accent); }
 
 <div class="wrap">
 
-<!-- 1. Goal -->
 <header style="display:flex;flex-direction:column;gap:14px">
-  <div class="eyebrow"><span>Item <id></span><span>Branch <id><letter></span><span>Objectives <O-ids></span><span class="draft">Brief: draft</span></div>
-  <h1><Short name></h1>
-  <p class="lede narrow"><One or two sentences: what the branch changes and why.></p>
-  <div class="visible narrow"><b>In play</b><span><What the player sees change, or "Nothing changes."></span></div>
+  <div class="eyebrow"><span>Item 081</span><span>Branch 081e</span><span>Objectives O8</span><span>Brief: approved 2026-11-09</span></div>
+  <h1>X: the Z-sabre</h1>
+  <p class="lede narrow">Phase 4 of X: hold UP and press B to slash. There are 3 kinds, as in X6: on the floor, in the air and on a wall. The slash cuts X6 shots, breaks sabre blocks and hurts the X6 enemies and D1000.</p>
+  <div class="visible narrow"><b>In play</b><span>A green slash plays in front of X with your redrawn art, and UP + B fires no shot. Megaman and X's buster play as before.</span></div>
 </header>
 
-<!-- 2. Before and after: a Mermaid diagram of the parts that change (senders, events, listeners). -->
 <section>
-  <h2>Before and after <span class="tag"><what the diagram shows></span></h2>
+  <h2>Before and after <span class="tag">the B button and the slash</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <short label></h3>
+      <h3>Today</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  B["B press"] --> S["buster shot"]
+  H["B held"] --> C["charge"]
+  R["B release"] --> CS["charged shot"]
+  SB["SabreBlock"] -.- N["10 buster hits"]
 </pre></div>
-      <p class="note"><The problem that the diagram shows.></p>
+      <p class="note">X reads no UP input today.</p>
     </div>
     <div class="panel after">
-      <h3>After: <short label></h3>
+      <h3>After</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] --> B["<new owner>"]
+  B["B press, UP held"] --> P["MegamanXSabre<br/>one clock"]
+  P --> K["X body key<br/>sabre_floor / air / wall"]
+  P --> E["MegamanXSabreSlash<br/>owned by X"]
+  E --> F["damage box per frame"]
+  F --> T["SabreBlock, X6Shot,<br/>X6 enemies, D1000"]
 </pre></div>
-      <p class="note"><What stays the same for the other code.></p>
+      <p class="note">The body and the slash read one frame index, so the 2 sprites cannot drift. While that B press is held, X does not charge.</p>
     </div>
   </div>
 </section>
 
-<!-- 3. Code sketch: the new or changed API at its first real caller. A few short blocks, not the diff. -->
 <section>
   <h2>Code sketch <span class="tag">first caller</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <code><Caller></code></h3>
-<pre class="code"><span class="del"><old code></span></pre>
+      <h3>Today: <code>MegamanXController</code></h3>
+<pre class="code">onJustPressed = { <span class="k">if</span> (canAttack()) buster.shoot(NOT_CHARGED) }
+onPressContinued = { <span class="c">/* charge */</span> }
+onJustReleased = { <span class="c">/* charged shot */</span> }</pre>
     </div>
     <div class="panel after">
-      <h3>After: <code><Caller></code></h3>
-<pre class="code"><span class="k">fun</span> <new code></pre>
+      <h3>After</h3>
+<pre class="code">onJustPressed = {
+    <span class="k">when</span> {
+        isPressed(UP) &amp;&amp; sabre.canStart() -> sabre.start()
+        canAttack() -> buster.shoot(NOT_CHARGED)
+    }
+}
+onPressContinued = { <span class="k">if</span> (!sabre.pressHeld) <span class="c">/* charge */</span> }
+onJustReleased = { <span class="k">if</span> (!sabre.pressHeld) <span class="c">/* charged shot */</span> }</pre>
     </div>
   </div>
-  <!-- Optional: an ordered list of steps or parts, as pills. Use "step go" for a branch point. -->
-  <div class="steps" aria-label="<Order>">
-    <span class="step">1 <step></span><span class="step">2 <step></span>
+  <div class="steps" aria-label="Order">
+    <span class="step">1 test room</span><span class="step">2 input and sabre part</span><span class="step">3 slash entity and box</span><span class="step">4 moves and cancels</span><span class="step">5 damage entries</span><span class="step">6 checks</span>
   </div>
 </section>
 
-<!-- 4. Decisions: 2 to 4 questions. An objective conflict is a decision. Ask them with AskUserQuestion too.
-     If nothing needs a decision, replace the list with one sentence that says so. -->
 <section>
-  <h2>Decisions <span class="tag">open</span></h2>
+  <h2>Decisions <span class="tag">answered 2026-11-09</span></h2>
   <div class="decisions">
     <div class="decision">
-      <div class="q"><span class="id">D1</span><h3><Question?></h3></div>
-      <p class="narrow"><The context that the question needs, in one or two sentences.></p>
+      <div class="q"><span class="id">B1</span><h3>How far does the slash hit?</h3></div>
+      <p class="narrow">Your art reaches 3.2 tiles in front of X on the floor. The X6 box reaches 5.25 tiles, because the X6 X is bigger.</p>
       <div class="opts">
-        <div class="opt rec"><span class="rec-pill">Recommended</span><span class="lbl"><Option></span><Why.></div>
-        <div class="opt"><span class="lbl"><Option></span><Trade-off.></div>
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">The art</span>The box of each frame is the visible slash. What you see hits.</div>
+        <div class="opt"><span class="lbl">X6 reach</span>X6 boxes in tiles. Hits about 2 tiles past the art.</div>
+        <div class="opt"><span class="lbl">One box per kind</span>Simple, but early and late frames hit where no slash shows.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">B2</span><h3>Sabre only, as in X6?</h3></div>
+      <p class="narrow">In X6 the buster does nothing to sabre blocks and MetaWheelF. Both are only in X maps, so the rule needs no character check.</p>
+      <div class="opts">
+        <div class="opt"><span class="lbl">SabreBlock only</span>The buster no longer breaks the block. The 9 wheels keep the buster.</div>
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Both</span>The X6 rule. The wheels get much harder; maybe try at a later play test.</div>
+        <div class="opt"><span class="lbl">Neither</span>The buster keeps breaking blocks (10 hits).</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">B3</span><h3>How does X move during a slash?</h3></div>
+      <p class="narrow">X6: on the floor X stops and cannot turn, and a jump cancels after 0.12 s. In the air X keeps air control, a landing ends the slash, and there is no air dash. On a wall X holds still, and a jump gives a wall kick. Damage ends every slash.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">All as X6</span>Without the DOWN cancel, because X has no crouch yet.</div>
+        <div class="opt"><span class="lbl">X6, wall keeps sliding</span>The wall slash does not stop the slide.</div>
+        <div class="opt"><span class="lbl">X6, jump cut in the air</span>A jump release still cuts the rise during an air slash.</div>
       </div>
     </div>
   </div>
+  <div class="visible narrow"><b>Changed 2026-11-09</b><span>At the diff review: sabre-only is now a damage gate on SabreBlock and MetaWheelF; the sabre does one static damage; each target hard-codes its damage (no X6 scaling); the X6 prefix goes from the code names (DebrisPiece, Wreck, JunkShot, TickFrames), each with a merge TODO.</span></div>
+  <p class="narrow note" style="color:var(--muted)">My calls (tell me if you want any changed): UP must be held on the frame of the B press; X6 times, tuned at the play test; the floor plays art frames 1 to 7 (the stand frames go); the targets' own damage timers, about 3 hits per slash; D1000Core is stunned by a slash; Megaman's claw sound until there is a sabre sound; a new test room <code>sabre</code>.</p>
 </section>
 
-<!-- 5. Risks: up to 3. -->
 <section class="narrow">
   <h2>Risks</h2>
   <ul class="risks">
-    <li><b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+    <li><b>UP + B fires a shot or a charged shot.</b> All 3 B handlers change, and a test checks each one.</li>
+    <li><b>A slash left in the world.</b> The sabre part destroys it on every end: damage, death, room change, level reset. Tests for each.</li>
+    <li><b>Holes in the floor body.</b> Floor body frames 3 to 6 are cut out under the slash, so the body must never show without the slash.</li>
   </ul>
 </section>
 
-<!-- 6. Play checks: as in "Test maps". Experimental checks first, then control checks. A --room on each. -->
 <section class="narrow">
   <h2>Play checks <span class="tag">for the play test, not for now</span></h2>
   <div class="cd">cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-081e-x-sabre</div>
   <ul class="checks">
-    <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room sabre</code>: floor, air and wall slashes; blocks, enemies and shots; no shot on UP + B.</li>
+    <li><code>./run-game-alpha.sh --level X6_INTRO --room room1</code>: the 5 sabre blocks on the route.</li>
+    <li><code>./run-game-alpha.sh --level X6_INTRO --room room2</code>: a slash on the open core stuns D1000.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room targets</code>: B alone, the buster and charge as before.</li>
+    <li><code>./run-game-alpha.sh --level GLACIER_MAN --room room1</code>: Megaman control check.</li>
   </ul>
 </section>
 
-<!-- 7. Details -->
 <section class="details narrow">
   <h2 style="color:var(--ink)">Details</h2>
-  <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-  <p class="mono">docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-081e-x-sabre/docs/SCOPE.md</p>
+  <p>The full scan and the full contract are in the branch folder:</p>
+  <p class="mono">docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081e-x-sabre/docs/SCOPE.md</p>
   <p class="mono">.../mega-refactor-081e-x-sabre/docs/CONTRACT.md</p>
 </section>
 

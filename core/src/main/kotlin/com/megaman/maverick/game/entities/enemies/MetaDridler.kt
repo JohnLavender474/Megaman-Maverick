@@ -35,8 +35,8 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.utils.X6FrameDef
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.utils.TickFrameDef
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
@@ -68,19 +68,19 @@ class MetaDridler(services: MegaServices) : AbstractEnemy(services, size = Size.
         private const val TIP_BELOW_ORIGIN = 1.1875f
 
         val FRAMES = orderedMapOf(
-            "wait" pairTo X6FrameDef(32, 63, 16, 32, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0),
-            "drill" pairTo X6FrameDef(32, 63, 16, 32, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0),
-            "rise" pairTo X6FrameDef(32, 63, 16, 32, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0),
-            "flame" pairTo X6FrameDef(
+            "wait" pairTo TickFrameDef(32, 63, 16, 32, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0),
+            "drill" pairTo TickFrameDef(32, 63, 16, 32, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0),
+            "rise" pairTo TickFrameDef(32, 63, 16, 32, 4, intArrayOf(0, 1, 2, 3), intArrayOf(2, 2, 2, 2), 0),
+            "flame" pairTo TickFrameDef(
                 37, 15, 18, -7, 6, intArrayOf(0, 1, 2, 3, 4, 5), intArrayOf(1, 2, 1, 1, 1, 2), 0
             ),
-            "flame_drop" pairTo X6FrameDef(
+            "flame_drop" pairTo TickFrameDef(
                 37, 24, 18, 46, 6, intArrayOf(0, 1, 2, 3, 4, 5), intArrayOf(1, 2, 1, 1, 1, 2), 0
             ),
-            "warn_drop" pairTo X6FrameDef(
+            "warn_drop" pairTo TickFrameDef(
                 32, 4, 16, 3, 4, intArrayOf(0, 1, 2, 3, 2, 1), intArrayOf(4, 3, 2, 1, 2, 3), 0
             ),
-            "warn_rise" pairTo X6FrameDef(
+            "warn_rise" pairTo TickFrameDef(
                 32, 4, 16, 13, 4, intArrayOf(0, 1, 2, 3, 2, 1), intArrayOf(4, 3, 2, 1, 2, 3), 0
             )
         )
@@ -103,7 +103,7 @@ class MetaDridler(services: MegaServices) : AbstractEnemy(services, size = Size.
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-        X6Frames.animations(atlas, TAG, FRAMES, animations)
+        TickFrames.animations(atlas, TAG, FRAMES, animations)
         super.init()
         addComponent(
             AnimationsComponentBuilder(this)
@@ -236,18 +236,18 @@ class MetaDridler(services: MegaServices) : AbstractEnemy(services, size = Size.
 
     override fun defineSpritesComponent(): SpritesComponent = SpritesComponentBuilder()
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 1)))
-        .preProcess { _, sprite -> X6Frames.place(sprite, FRAMES[bodyKey()], origin.x, origin.y, false) }
+        .preProcess { _, sprite -> TickFrames.place(sprite, FRAMES[bodyKey()], origin.x, origin.y, false) }
         .sprite("flame", GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0)))
         .preProcess { _, sprite ->
             val key = flameKey()
             sprite.hidden = key == null
-            if (key != null) X6Frames.place(sprite, FRAMES[key], origin.x, origin.y, false)
+            if (key != null) TickFrames.place(sprite, FRAMES[key], origin.x, origin.y, false)
         }
         .sprite("warning", GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2)))
         .preProcess { _, sprite ->
             val key = warningKey()
             sprite.hidden = key == null
-            if (key != null) X6Frames.place(sprite, FRAMES[key], origin.x, origin.y, false)
+            if (key != null) TickFrames.place(sprite, FRAMES[key], origin.x, origin.y, false)
         }
         .build()
 }

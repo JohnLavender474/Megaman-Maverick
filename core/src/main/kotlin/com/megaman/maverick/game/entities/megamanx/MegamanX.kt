@@ -76,6 +76,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
         }
 
     internal val buster = MegamanXBuster(this)
+    internal val sabre = MegamanXSabre(this)
 
     internal var airDashUsed = false
     internal var dashSpeedInAir = false
@@ -133,6 +134,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
 
         damageTimer.setToEnd()
         buster.reset()
+        sabre.reset()
         airDashUsed = false
         dashSpeedInAir = false
         airborne = false
@@ -151,6 +153,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        sabre.reset()
         playerOnDestroy()
         services.audio.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
@@ -166,6 +169,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
             EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
                 playerOnRoomTransition(event)
                 stopCharging()
+                sabre.end()
             }
             EventType.END_ROOM_TRANS -> playerOnRoomTransition(event)
             EventType.GATE_INIT_OPENING -> stopCharging()
@@ -189,6 +193,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
 
         dashSpeedInAir = false
         stopCharging()
+        sabre.end()
         requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
 
         return true
@@ -216,6 +221,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
             require(FreezeComponent::class).update(delta)
 
             buster.update(delta)
+            sabre.update(delta)
 
             kickLockTimer.update(delta)
             pushOffTimer.update(delta)

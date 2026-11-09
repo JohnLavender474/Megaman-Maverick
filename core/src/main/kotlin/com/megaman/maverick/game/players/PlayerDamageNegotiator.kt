@@ -23,7 +23,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.X6Shot
+import com.megaman.maverick.game.entities.projectiles.JunkShot
 import com.megaman.maverick.game.entities.utils.hardMode
 
 // TODO: a player class cannot give its own entries yet; item 081 branch 081b adds an overrides parameter, with X as
@@ -36,7 +36,7 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
         BigAssMaverickRobot.TAG pairTo dmgNeg(2),
         D1000.TAG pairTo dmgNeg(6),
-        X6Shot.TAG pairTo dmgNeg { (it as X6Shot).type.damage },
+        JunkShot.TAG pairTo dmgNeg { (it as JunkShot).type.damage },
         Junkroid.TAG pairTo dmgNeg(4),
         HoverGunner.TAG pairTo dmgNeg(3),
         MetaWheelF.TAG pairTo dmgNeg(4),

@@ -28,7 +28,8 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -39,8 +40,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.X6Shot
-import com.megaman.maverick.game.entities.projectiles.X6Shot.X6ShotType
+import com.megaman.maverick.game.entities.projectiles.JunkShot
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -83,7 +83,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
-        X6Frames.animations(atlas, TAG, D1000Frames.CORE, animations)
+        TickFrames.animations(atlas, TAG, D1000Frames.CORE, animations)
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -115,7 +115,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     }
 
     override fun canBeDamagedBy(damager: IDamagerEntity) =
-        vulnerable && !hidden && damager is ChargedShot && damager.fullyCharged
+        vulnerable && !hidden && ((damager is ChargedShot && damager.fullyCharged) || damager is MegamanXSabreSlash)
 
     override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         if (!canBeDamagedBy(damager)) return false
@@ -145,11 +145,11 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     private fun shoot() {
         val trajectory = targetPlayer.body.getCenter().sub(position).nor()
             .scl(SHOT_SPEED)
-        val shot = MegaEntityFactory.fetch(X6Shot::class)!!
+        val shot = MegaEntityFactory.fetch(JunkShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
-                ConstKeys.TYPE pairTo X6ShotType.CORE,
+                ConstKeys.TYPE pairTo JunkShot.Type.CORE,
                 ConstKeys.POSITION pairTo position.cpy(),
                 ConstKeys.TRAJECTORY pairTo trajectory
             )
@@ -221,7 +221,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             val key = animator.currentKey ?: "core"
-            X6Frames.place(sprite, D1000Frames.CORE[key], position.x, position.y, false)
+            TickFrames.place(sprite, D1000Frames.CORE[key], position.x, position.y, false)
             sprite.hidden = hidden
         }
         return component

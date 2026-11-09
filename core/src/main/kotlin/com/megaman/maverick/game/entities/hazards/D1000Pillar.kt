@@ -25,7 +25,7 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -68,7 +68,7 @@ class D1000Pillar(services: MegaServices) : MegaGameEntity(services), IBodyEntit
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
-        X6Frames.animations(atlas, TAG, D1000Frames.PILLAR, animations)
+        TickFrames.animations(atlas, TAG, D1000Frames.PILLAR, animations)
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
@@ -125,11 +125,11 @@ class D1000Pillar(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         .sprite(PILLAR, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 1)))
         .preProcess { _, sprite ->
             val key = pillarAnimator.currentKey ?: "pillar_start"
-            X6Frames.place(sprite, D1000Frames.PILLAR[key], floor.x, floor.y + ORIGIN_ABOVE_FLOOR, false)
+            TickFrames.place(sprite, D1000Frames.PILLAR[key], floor.x, floor.y + ORIGIN_ABOVE_FLOOR, false)
         }
         .sprite(BASE, GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 2)))
         .preProcess { _, sprite ->
-            X6Frames.place(sprite, D1000Frames.PILLAR["pillar_base"], floor.x, floor.y + BASE_ABOVE_FLOOR, false)
+            TickFrames.place(sprite, D1000Frames.PILLAR["pillar_base"], floor.x, floor.y + BASE_ABOVE_FLOOR, false)
         }
         .build()
 

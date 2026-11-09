@@ -36,15 +36,24 @@ internal fun MegamanX.defineControllerComponent(): ControllerComponent {
     )
 
     val attack = ButtonActuator(
-        onJustPressed = { if (canAttack()) buster.shoot(MegaChargeStatus.NOT_CHARGED) },
+        onJustPressed = {
+            if (input.isPressed(MegaControllerButton.UP) && sabre.canStart()) sabre.start()
+            when {
+                sabre.active -> sabre.pressHeld = true
+                canAttack() -> buster.shoot(MegaChargeStatus.NOT_CHARGED)
+            }
+        },
         onPressContinued = { delta ->
-            if (canAttack()) require(WeaponChargeComponent::class).update(delta) else stopCharging()
+            if (canAttack() && !sabre.pressHeld) require(WeaponChargeComponent::class).update(delta)
+            else stopCharging()
         },
         onJustReleased = {
             val status = chargeStatus
             if (canAttack() && status != MegaChargeStatus.NOT_CHARGED) buster.shoot(status)
+            sabre.pressHeld = false
             stopCharging()
-        }
+        },
+        onReleaseContinued = { sabre.pressHeld = false }
     )
 
     return ControllerComponent(
@@ -54,7 +63,7 @@ internal fun MegamanX.defineControllerComponent(): ControllerComponent {
     )
 }
 
-private fun MegamanX.canAttack() = inPlay && !stunned && !damaged && !teleporting && !frozen &&
+internal fun MegamanX.canAttack() = inPlay && !stunned && !damaged && !teleporting && !frozen &&
     !services.gameCamera.rotating && !services.levelState.roomTransition
 
 internal fun MegamanX.run(delta: Float, side: Facing) {
@@ -62,7 +71,7 @@ internal fun MegamanX.run(delta: Float, side: Facing) {
     if (!isRunSidePressed(side)) return
 
     if (!inPlay || !playerCanMove || damaged || teleporting || holdsSideSpeedForRun ||
-        isBehaviorActive(BehaviorType.WALL_SLIDING)
+        isBehaviorActive(BehaviorType.WALL_SLIDING) || sabre.kind == SabreKind.FLOOR
     ) {
         running = false
         return

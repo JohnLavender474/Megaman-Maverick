@@ -10,6 +10,7 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -36,16 +37,19 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.entities.decorations.X6Debris
-import com.megaman.maverick.game.entities.projectiles.X6Shot
-import com.megaman.maverick.game.entities.projectiles.X6Shot.X6ShotType
-import com.megaman.maverick.game.entities.utils.X6Damage
-import com.megaman.maverick.game.entities.utils.X6FrameDef
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.utils.TickFrameDef
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
@@ -60,7 +64,6 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
     companion object {
         const val TAG = "Junkroid"
 
-        const val X6_HEALTH = 12
         const val RANGE = 7f
 
         private const val FIRST_SHOT_DELAY = 0.25f
@@ -84,8 +87,8 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
         private val DEBRIS = arrayOf("$TAG/debris1", "$TAG/debris2", "$TAG/debris3", "$TAG/debris4")
 
         val FRAMES = orderedMapOf(
-            "idle" pairTo X6FrameDef(41, 38, 20, 18, 1, intArrayOf(0), intArrayOf(1), 0),
-            "shoot" pairTo X6FrameDef(
+            "idle" pairTo TickFrameDef(41, 38, 20, 18, 1, intArrayOf(0), intArrayOf(1), 0),
+            "shoot" pairTo TickFrameDef(
                 41, 38, 20, 18, 3,
                 intArrayOf(0, 1, 2, 2, 1, 0),
                 intArrayOf(6, 4, 1, 15, 6, 6),
@@ -96,14 +99,21 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
         fun inRange(dx: Float) = abs(dx) < RANGE * ConstVals.PPM
 
         fun mouthOffset(side: Float, out: Vector2) =
-            out.set(-side * MOUTH_BEHIND_ORIGIN * X6Frames.SCALE, MOUTH_ABOVE_ORIGIN * X6Frames.SCALE)
+            out.set(-side * MOUTH_BEHIND_ORIGIN * TickFrames.SCALE, MOUTH_ABOVE_ORIGIN * TickFrames.SCALE)
 
         fun hurlImpulse(side: Float, out: Vector2) =
             out.set(HURL_X * side, HURL_Y).scl(ConstVals.PPM.toFloat())
     }
 
     override lateinit var facing: Facing
-    override val damageNegotiator: IDamageNegotiator = X6Damage.negotiator(this, X6_HEALTH)
+    override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(
+        this,
+        objectMapOf(
+            Bullet::class pairTo dmgNeg(8),
+            ChargedShot::class pairTo dmgNeg { if ((it as ChargedShot).fullyCharged) 30 else 15 },
+            MegamanXSabreSlash::class pairTo dmgNeg(23)
+        )
+    )
 
     private val animations = ObjectMap<String, IAnimation>()
     private val origin = Vector2()
@@ -119,8 +129,8 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-        X6Frames.animations(atlas, TAG, FRAMES, animations)
-        X6Debris.load(services, DEBRIS)
+        TickFrames.animations(atlas, TAG, FRAMES, animations)
+        DebrisPiece.load(services, DEBRIS)
         super.init()
         addComponent(AnimationsComponent(this, Animator({ if (shooting) "shoot" else "idle" }, animations)))
     }
@@ -170,11 +180,11 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
     }
 
     private fun shoot() {
-        val type = if (services.gameState.hardMode) X6ShotType.JUNKROID_HARD else X6ShotType.JUNKROID
+        val type = if (services.gameState.hardMode) JunkShot.Type.JUNKROID_HARD else JunkShot.Type.JUNKROID
         val side = facing.value.toFloat()
         val spawn = mouthOffset(side, Vector2()).add(origin)
         val trajectory = hurlImpulse(side, Vector2())
-        val shot = MegaEntityFactory.fetch(X6Shot::class)!!
+        val shot = MegaEntityFactory.fetch(JunkShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
@@ -194,7 +204,7 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
                 ConstKeys.DAMAGER pairTo false
             )
         )
-        X6Debris.spawnPieces(DEBRIS, body.getCenter())
+        DebrisPiece.spawnPieces(DEBRIS, body.getCenter())
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -240,7 +250,7 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             val key = if (shooting) "shoot" else "idle"
-            X6Frames.place(
+            TickFrames.place(
                 sprite, FRAMES[key], body.getCenter().x, body.getY() + ORIGIN_ABOVE_FEET * ConstVals.PPM,
                 isFacing(Facing.RIGHT)
             )

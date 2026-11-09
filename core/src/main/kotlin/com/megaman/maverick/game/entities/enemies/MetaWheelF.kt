@@ -11,6 +11,7 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -30,19 +31,22 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
+import com.maverick.game.engine.damage.IDamagerEntity
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.decorations.X6Debris
-import com.megaman.maverick.game.entities.utils.X6Damage
-import com.megaman.maverick.game.entities.utils.X6FrameDef
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.utils.TickFrameDef
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
@@ -56,7 +60,6 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
     companion object {
         const val TAG = "MetaWheelF"
 
-        const val X6_HEALTH = 32
         const val FRAME_COUNT = 8
 
         private const val SIZE = 1.875f
@@ -79,9 +82,9 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
         private val ROLL_TICKS = intArrayOf(4, 4, 4, 4, 4, 4, 4, 4)
 
         val FRAMES = orderedMapOf(
-            "roll_left" pairTo X6FrameDef(36, 34, 18, 17, FRAME_COUNT, ROLL_ORDER, ROLL_TICKS, 0),
-            "roll_right" pairTo X6FrameDef(36, 34, 18, 17, FRAME_COUNT, ROLL_ORDER, ROLL_TICKS, 0),
-            "turn_flash" pairTo X6FrameDef(36, 34, 18, 17, FRAME_COUNT, ROLL_ORDER, ROLL_TICKS, 0)
+            "roll_left" pairTo TickFrameDef(36, 34, 18, 17, FRAME_COUNT, ROLL_ORDER, ROLL_TICKS, 0),
+            "roll_right" pairTo TickFrameDef(36, 34, 18, 17, FRAME_COUNT, ROLL_ORDER, ROLL_TICKS, 0),
+            "turn_flash" pairTo TickFrameDef(36, 34, 18, 17, FRAME_COUNT, ROLL_ORDER, ROLL_TICKS, 0)
         )
 
         fun picture(key: String, index: Int) = if (key == "roll_right") FRAME_COUNT - 1 - index else index
@@ -93,9 +96,10 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
 
     override lateinit var facing: Facing
 
-    // TODO: when X is the player, only a sabre slash hurts Meta Wheel F (the X6 rule); Mega Man keeps every weapon.
-    //  Maverick has no player character other than Mega Man yet (docs/x6-intro/intro-objects-plan.md, decision 2)
-    override val damageNegotiator: IDamageNegotiator = X6Damage.negotiator(this, X6_HEALTH)
+    override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this, objectMapOf(MegamanXSabreSlash::class pairTo dmgNeg(9)))
+
+    override fun canBeDamagedBy(damager: IDamagerEntity) =
+        super.canBeDamagedBy(damager) && damager is MegamanXSabreSlash
 
     private val animations = ObjectMap<String, IAnimation>()
     private val turnTimer = Timer(TURN_WAIT_DUR + TURN_FLASH_DUR)
@@ -106,8 +110,8 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-        X6Frames.animations(atlas, TAG, FRAMES, animations)
-        X6Debris.load(services, DEBRIS)
+        TickFrames.animations(atlas, TAG, FRAMES, animations)
+        DebrisPiece.load(services, DEBRIS)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -192,7 +196,7 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
                 )
             )
         }
-        X6Debris.spawnPieces(DEBRIS, center)
+        DebrisPiece.spawnPieces(DEBRIS, center)
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -249,7 +253,7 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             val center = body.getCenter()
-            X6Frames.place(sprite, FRAMES["roll_left"], center.x, center.y, false)
+            TickFrames.place(sprite, FRAMES["roll_left"], center.x, center.y, false)
             sprite.hidden = damageBlink
         }
         return component

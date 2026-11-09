@@ -40,18 +40,21 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.IDamageNegotiator
+import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
+import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.entities.decorations.X6Debris
+import com.megaman.maverick.game.entities.decorations.DebrisPiece
 import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.damage.IDamagerEntity
-import com.megaman.maverick.game.entities.projectiles.X6Shot
-import com.megaman.maverick.game.entities.projectiles.X6Shot.X6ShotType
-import com.megaman.maverick.game.entities.utils.X6Damage
-import com.megaman.maverick.game.entities.utils.X6FrameDef
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.utils.TickFrameDef
+import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -64,7 +67,6 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
     companion object {
         const val TAG = "HoverGunner"
 
-        const val X6_HEALTH = 5
         const val DIRECTIONS = 16
         const val WAKE_DISTANCE = 5.5f
 
@@ -99,13 +101,13 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         private val FLAME_TICKS = intArrayOf(1, 1)
 
         val FRAMES = orderedMapOf(
-            "fly" pairTo X6FrameDef(28, 16, 7, 7, 2, FLAME_FLICKER, FLAME_TICKS, 0),
-            "aim_forward" pairTo X6FrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
-            "aim_up" pairTo X6FrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
-            "aim_down" pairTo X6FrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
-            "aim_up_diagonal" pairTo X6FrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
-            "aim_down_diagonal" pairTo X6FrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
-            "muzzle_flash" pairTo X6FrameDef(
+            "fly" pairTo TickFrameDef(28, 16, 7, 7, 2, FLAME_FLICKER, FLAME_TICKS, 0),
+            "aim_forward" pairTo TickFrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
+            "aim_up" pairTo TickFrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
+            "aim_down" pairTo TickFrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
+            "aim_up_diagonal" pairTo TickFrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
+            "aim_down_diagonal" pairTo TickFrameDef(16, 25, 7, 8, 2, FLAME_FLICKER, FLAME_TICKS, 0),
+            "muzzle_flash" pairTo TickFrameDef(
                 14, 14, 7, 7, 7,
                 intArrayOf(0, 1, 2, 3, 4, 5, 6),
                 intArrayOf(1, 1, 1, 2, 3, 4, 5),
@@ -155,8 +157,8 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
             val pixels = MUZZLE_PIXELS[pose] ?: throw IllegalArgumentException("HoverGunner: no muzzle for pose $pose")
             val side = if (facingRight) 1f else -1f
             return out.set(
-                side * (SPRITE_OFFSET_X * ConstVals.PPM - pixels.x * X6Frames.SCALE),
-                pixels.y * X6Frames.SCALE
+                side * (SPRITE_OFFSET_X * ConstVals.PPM - pixels.x * TickFrames.SCALE),
+                pixels.y * TickFrames.SCALE
             )
         }
     }
@@ -164,7 +166,14 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
     private enum class HoverGunnerState { WAIT, FLY, BURST, FAN, LEAVE }
 
     override lateinit var facing: Facing
-    override val damageNegotiator: IDamageNegotiator = X6Damage.negotiator(this, X6_HEALTH)
+    override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(
+        this,
+        objectMapOf(
+            Bullet::class pairTo dmgNeg(18),
+            ChargedShot::class pairTo dmgNeg(30),
+            MegamanXSabreSlash::class pairTo dmgNeg(30)
+        )
+    )
 
     private val animations = ObjectMap<String, IAnimation>()
     private val muzzle = Vector2()
@@ -191,8 +200,8 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-        X6Frames.animations(atlas, TAG, FRAMES, animations)
-        X6Debris.load(services, DEBRIS)
+        TickFrames.animations(atlas, TAG, FRAMES, animations)
+        DebrisPiece.load(services, DEBRIS)
         super.init()
         addComponent(
             AnimationsComponentBuilder(this)
@@ -314,11 +323,11 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         val degrees = direction * 360f / DIRECTIONS
         val trajectory = Vector2(MathUtils.cosDeg(degrees), MathUtils.sinDeg(degrees))
             .scl(SHOT_SPEED * ConstVals.PPM)
-        val shot = MegaEntityFactory.fetch(X6Shot::class)!!
+        val shot = MegaEntityFactory.fetch(JunkShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.TYPE pairTo X6ShotType.HOVER_GUNNER,
+                ConstKeys.TYPE pairTo JunkShot.Type.HOVER_GUNNER,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory
             )
@@ -335,7 +344,7 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
                 ConstKeys.DAMAGER pairTo false
             )
         )
-        X6Debris.spawnPieces(DEBRIS, body.getCenter())
+        DebrisPiece.spawnPieces(DEBRIS, body.getCenter())
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -372,13 +381,13 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         .sprite(TAG, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2)))
         .preProcess { _, sprite ->
             val center = body.getCenter()
-            X6Frames.place(sprite, FRAMES[poseKey], center.x + SPRITE_OFFSET_X * ConstVals.PPM * facing.value, center.y, isFacing(Facing.RIGHT))
+            TickFrames.place(sprite, FRAMES[poseKey], center.x + SPRITE_OFFSET_X * ConstVals.PPM * facing.value, center.y, isFacing(Facing.RIGHT))
             sprite.hidden = state == HoverGunnerState.WAIT || damageBlink
         }
         .sprite("muzzle", GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 3)))
         .preProcess { _, sprite ->
             val center = body.getCenter()
-            X6Frames.place(sprite, FRAMES["muzzle_flash"], center.x + muzzle.x, center.y + muzzle.y, false)
+            TickFrames.place(sprite, FRAMES["muzzle_flash"], center.x + muzzle.x, center.y + muzzle.y, false)
             sprite.hidden = muzzleTimer.isFinished() || state == HoverGunnerState.WAIT
         }
         .build()

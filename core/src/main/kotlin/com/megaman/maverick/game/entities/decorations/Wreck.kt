@@ -22,17 +22,18 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.utils.X6FrameDef
-import com.megaman.maverick.game.entities.utils.X6Frames
+import com.megaman.maverick.game.entities.utils.TickFrameDef
+import com.megaman.maverick.game.entities.utils.TickFrames
 
-class X6Scenery(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
+// TODO: Wreck draws one still map sprite, as MockSpriteEntity does; merge them (item 081)
+class Wreck(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {
-        const val TAG = "X6Scenery"
+        const val TAG = "Wreck"
 
         val FRAMES = orderedMapOf(
-            "wreck_a" pairTo X6FrameDef(48, 36, 20, 12, 1, intArrayOf(0), intArrayOf(1), 0),
-            "wreck_b" pairTo X6FrameDef(18, 14, 6, 6, 1, intArrayOf(0), intArrayOf(1), 0)
+            "wreck_a" pairTo TickFrameDef(48, 36, 20, 12, 1, intArrayOf(0), intArrayOf(1), 0),
+            "wreck_b" pairTo TickFrameDef(18, 14, 6, 6, 1, intArrayOf(0), intArrayOf(1), 0)
         )
     }
 
@@ -43,7 +44,7 @@ class X6Scenery(services: MegaServices) : MegaGameEntity(services), ISpritesEnti
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-        X6Frames.animations(atlas, TAG, FRAMES, animations)
+        TickFrames.animations(atlas, TAG, FRAMES, animations)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(AnimationsComponent(this, Animator({ key }, animations)))
@@ -53,14 +54,14 @@ class X6Scenery(services: MegaServices) : MegaGameEntity(services), ISpritesEnti
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
         key = spawnProps.get(ConstKeys.KEY, String::class)!!
-        if (!FRAMES.containsKey(key)) throw IllegalArgumentException("Unknown X6Scenery key $key: use one of ${FRAMES.keys()}")
+        if (!FRAMES.containsKey(key)) throw IllegalArgumentException("Unknown Wreck key $key: use one of ${FRAMES.keys()}")
         spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(origin)
     }
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.BACKGROUND, 1))
         val component = SpritesComponent(sprite)
-        component.putPreProcess { _, _ -> X6Frames.place(sprite, FRAMES[key], origin.x, origin.y, false) }
+        component.putPreProcess { _, _ -> TickFrames.place(sprite, FRAMES[key], origin.x, origin.y, false) }
         return component
     }
 

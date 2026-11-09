@@ -5,6 +5,7 @@ import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.controller.ControllerSystem
 import com.maverick.game.engine.controller.buttons.ButtonStatus
@@ -14,6 +15,9 @@ import com.maverick.game.engine.input.InputFrame
 import com.maverick.game.engine.input.InputSource
 import com.maverick.game.engine.locks.LocksComponent
 import com.maverick.game.engine.common.enums.ProcessState
+import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.points.Points
+import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
@@ -26,6 +30,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.enemies.MetaWheelF
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -51,13 +56,6 @@ import com.maverick.game.engine.common.enums.Direction
 
 private const val DELTA = 0.05f
 private const val TOLERANCE = 0.001f
-
-private fun MegamanX.damageTimerForTest(): Timer {
-    val field = MegamanX::class.java.getDeclaredField("damageTimer").apply { isAccessible = true }
-    return field.get(this) as Timer
-}
-
-private fun MegamanX.startDamage() = damageTimerForTest().reset()
 
 class MegamanXTest : DescribeSpec({
 
@@ -87,6 +85,10 @@ class MegamanXTest : DescribeSpec({
     fun press(button: MegaControllerButton) {
         step(button to ButtonStatus.JUST_PRESSED)
         step(button to ButtonStatus.PRESSED)
+    }
+
+    fun hurt() {
+        x.takeDamageFrom(MetaWheelF(x.services)) shouldBe true
     }
 
     fun tapB() {
@@ -121,6 +123,7 @@ class MegamanXTest : DescribeSpec({
         x.addComponent(x.defineBodyComponent())
         body = (x.getComponent(BodyComponent::class)!!).body
         body.putProperty(ConstKeys.BODY_OVER_GROUND, { overGround })
+        services.players.register(PlayerSlot(0), x)
         x.addComponent(x.defineControllerComponent().also { it.input = InputSource { frame } })
         x.addComponent(RunComponent())
         x.addComponent(LocksComponent(MegaLockGroup.entries.size))
@@ -133,6 +136,7 @@ class MegamanXTest : DescribeSpec({
         x.addComponent(PostActionMomentumComponent(0f, 0f, { 0f }, { true }, { false }, { false }))
         x.addComponent(BehaviorsComponent())
         x.addComponent(AudioComponent())
+        x.addComponent(PointsComponent(ConstKeys.HEALTH pairTo Points(0, ConstVals.MAX_HEALTH, ConstVals.MAX_HEALTH)))
 
         controllerSystem = ControllerSystem()
         controllerSystem.add(x)
@@ -176,18 +180,19 @@ class MegamanXTest : DescribeSpec({
         }
 
         it("does not walk while damaged") {
-            x.startDamage()
+            hurt()
             press(MegaControllerButton.RIGHT)
             body.physics.velocity.x shouldBe 0f
         }
 
-        it("drags the side speed only while damaged") {
-            x.startDamage()
+        it("drags the side speed while damaged") {
+            hurt()
             body.preProcess()
             body.physics.applyFrictionX shouldBe true
             body.physics.defaultFrictionOnSelf.x shouldBe MegamanXValues.KNOCKBACK_DRAG
+        }
 
-            x.damageTimerForTest().setToEnd()
+        it("does not drag the side speed when not damaged") {
             body.preProcess()
             body.physics.applyFrictionX shouldBe false
             body.physics.applyFrictionY shouldBe false
@@ -195,7 +200,7 @@ class MegamanXTest : DescribeSpec({
 
         it("drags on the side axis of a body turned left") {
             body.direction = Direction.LEFT
-            x.startDamage()
+            hurt()
             body.preProcess()
             body.physics.applyFrictionX shouldBe false
             body.physics.applyFrictionY shouldBe true
@@ -203,7 +208,7 @@ class MegamanXTest : DescribeSpec({
         }
 
         it("keeps the knockback speed while damaged") {
-            x.startDamage()
+            hurt()
             body.physics.velocity.x = -5f
             body.preProcess()
             body.physics.velocity.x shouldBe -5f
@@ -211,11 +216,26 @@ class MegamanXTest : DescribeSpec({
     }
 
     describe("the body") {
-        it("uses the X6 gravity and fall limit in the air") {
+        it("uses the jump gravity while it rises") {
             overGround = false
+            body.physics.velocity.y = 1f
             body.preProcess()
-            body.physics.gravity.y shouldBe (MegamanXValues.GRAVITY * ConstVals.PPM plusOrMinus TOLERANCE)
+            body.physics.gravity.y shouldBe (MegamanXValues.JUMP_GRAVITY * ConstVals.PPM plusOrMinus TOLERANCE)
+        }
+
+        it("uses the fall gravity and fall limit while it falls") {
+            overGround = false
+            body.physics.velocity.y = -1f
+            body.preProcess()
+            body.physics.gravity.y shouldBe (MegamanXValues.FALL_GRAVITY * ConstVals.PPM plusOrMinus TOLERANCE)
             body.physics.velocityClamp.y shouldBe (MegamanXValues.FALL_MAX * ConstVals.PPM plusOrMinus TOLERANCE)
+        }
+
+        it("uses the fall gravity at the top of the jump") {
+            overGround = false
+            body.physics.velocity.y = 0f
+            body.preProcess()
+            body.physics.gravity.y shouldBe (MegamanXValues.FALL_GRAVITY * ConstVals.PPM plusOrMinus TOLERANCE)
         }
 
         it("uses the ground gravity over the ground") {
@@ -351,7 +371,7 @@ class MegamanXTest : DescribeSpec({
 
         it("drops the charge when damaged") {
             hold(MegaControllerButton.B, 1f)
-            x.startDamage()
+            hurt()
             step(MegaControllerButton.B to ButtonStatus.PRESSED)
             x.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
         }
@@ -363,7 +383,9 @@ class MegamanXTest : DescribeSpec({
         }
 
         it("shows the walk start, then the walk") {
-            press(MegaControllerButton.RIGHT)
+            val short = MegamanXValues.WALK_START_TIME / 4f
+            step(MegaControllerButton.RIGHT to ButtonStatus.JUST_PRESSED, delta = short)
+            step(MegaControllerButton.RIGHT to ButtonStatus.PRESSED, delta = short)
             x.animationKey() shouldBe "run_trans"
             hold(MegaControllerButton.RIGHT, MegamanXValues.WALK_START_TIME + DELTA)
             x.animationKey() shouldBe "run"
@@ -385,7 +407,7 @@ class MegamanXTest : DescribeSpec({
         }
 
         it("shows the damage pose") {
-            x.startDamage()
+            hurt()
             x.animationKey() shouldBe "damaged"
         }
     }

@@ -50,7 +50,7 @@ internal fun MegamanX.defineSpritesComponent(): SpritesComponent {
     var flashTime = 0f
     component.putPreProcess(MEGAMAN_X_SPRITE_KEY) { delta, player ->
         player.setSize(MegamanXValues.SPRITE_SIZE * ConstVals.PPM, MegamanXValues.SPRITE_SIZE * ConstVals.PPM)
-        val stripFacesLeft = isBehaviorActive(BehaviorType.WALL_SLIDING) && !kickLocked
+        val stripFacesLeft = sabre.kind?.stripFacesLeft ?: (isBehaviorActive(BehaviorType.WALL_SLIDING) && !kickLocked)
         player.setFlip(if (stripFacesLeft) facing == Facing.RIGHT else facing == Facing.LEFT, false)
         player.setOriginCenter()
         player.rotation = direction.rotation
@@ -83,6 +83,7 @@ internal fun MegamanX.animationKey(): String {
     }
     return when {
         damaged -> if (bodyOverGround) "damaged" else "air_damaged"
+        sabre.active -> sabre.kind!!.bodyRegion
         isBehaviorActive(BehaviorType.AIR_DASHING) -> "dash$shoot"
         isBehaviorActive(BehaviorType.GROUND_DASHING) -> (if (groundDashBraking) "dash_end" else "dash") + shoot
         kickLocked -> "walljump$shoot"
@@ -140,6 +141,7 @@ internal fun MegamanX.defineAnimationsComponent(): AnimationsComponent {
     animations.put("walljump", Animation(frames("walljump", 3), MegamanXValues.WALL_KICK_LOCK_TIME / 3f, false))
     animations.put("walljump_shoot", Animation(frames("walljump_shoot", 3), MegamanXValues.WALL_KICK_LOCK_TIME / 3f, false))
     animations.put("air_damaged", Animation(frames("air_damaged", 3), 0.1f, false))
+    SabreKind.entries.forEach { animations.put(it.bodyRegion, Animation(frames(it.bodyRegion, it.stripFrames), 1f)) }
 
     val animator = Animator(
         keySupplier = { animationKey() },
@@ -148,6 +150,13 @@ internal fun MegamanX.defineAnimationsComponent(): AnimationsComponent {
             if (currentKey != null && nextKey != null &&
                 currentKey.removeSuffix("_shoot") == nextKey.removeSuffix("_shoot")
             ) animations[currentKey]?.getCurrentTime()?.let { animations[nextKey]?.setCurrentTime(it) }
+        },
+        shouldUpdateAnimationPredicate = { key, animation, _ ->
+            val kind = sabre.kind
+            if (kind != null && key == kind.bodyRegion) {
+                animation.setIndex(sabre.frame)
+                false
+            } else true
         }
     )
     return AnimationsComponent(orderedMapOf<Any, IAnimator>(MEGAMAN_X_SPRITE_KEY pairTo animator), sprites)

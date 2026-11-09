@@ -1564,42 +1564,42 @@ Wanaan/frozen
   orig: 32, 32
   offset: 0, 0
   index: -1
-X6Scenery/wreck_a
+Wreck/wreck_a
   rotate: false
   xy: 758, 104
   size: 48, 36
   orig: 48, 36
   offset: 0, 0
   index: -1
-X6Scenery/wreck_b
+Wreck/wreck_b
   rotate: false
   xy: 173, 2
   size: 18, 14
   orig: 18, 14
   offset: 0, 0
   index: -1
-X6Shot/core
+JunkShot/core
   rotate: false
   xy: 44, 146
   size: 15, 42
   orig: 15, 42
   offset: 0, 0
   index: -1
-X6Shot/hover_gunner
+JunkShot/hover_gunner
   rotate: false
   xy: 714, 104
   size: 8, 32
   orig: 8, 32
   offset: 0, 0
   index: -1
-X6Shot/junkroid
+JunkShot/junkroid
   rotate: false
   xy: 82, 2
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
-X6Shot/junkroid_hard
+JunkShot/junkroid_hard
   rotate: false
   xy: 798, 2
   size: 10, 30

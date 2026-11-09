@@ -9,7 +9,9 @@ import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.drawables.sprites.GameSprite
 
-class X6FrameDef(
+// TODO: TickFrames times the frames in 60 Hz ticks; change it to the engine Animation with durations in seconds
+//  (item 081)
+class TickFrameDef(
     val width: Int,
     val height: Int,
     val originX: Int,
@@ -20,7 +22,7 @@ class X6FrameDef(
     val loopTo: Int?
 )
 
-object X6Frames {
+object TickFrames {
 
     const val FPS = 60f
     const val SCALE = 2f
@@ -31,7 +33,7 @@ object X6Frames {
     fun animations(
         atlas: TextureAtlas,
         tag: String,
-        defs: OrderedMap<String, X6FrameDef>,
+        defs: OrderedMap<String, TickFrameDef>,
         out: ObjectMap<String, IAnimation> = ObjectMap()
     ): ObjectMap<String, IAnimation> {
         defs.forEach { entry -> animation(atlas, "$tag/${entry.key}", entry.key, entry.value, out) }
@@ -42,7 +44,7 @@ object X6Frames {
         atlas: TextureAtlas,
         regionKey: String,
         key: String,
-        def: X6FrameDef,
+        def: TickFrameDef,
         out: ObjectMap<String, IAnimation>
     ) {
         val region = atlas.findRegion(regionKey) ?: throw IllegalStateException("Missing region $regionKey")
@@ -59,11 +61,11 @@ object X6Frames {
         }
     }
 
-    fun hasLoop(defs: OrderedMap<String, X6FrameDef>, key: String) = (defs[key]?.loopTo ?: 0) > 0
+    fun hasLoop(defs: OrderedMap<String, TickFrameDef>, key: String) = (defs[key]?.loopTo ?: 0) > 0
 
     fun baseKey(key: String) = key.removeSuffix(LOOP_SUFFIX)
 
-    fun place(sprite: GameSprite, def: X6FrameDef, originX: Float, originY: Float, facingRight: Boolean) {
+    fun place(sprite: GameSprite, def: TickFrameDef, originX: Float, originY: Float, facingRight: Boolean) {
         val width = def.width * SCALE
         val height = def.height * SCALE
         sprite.setSize(width, height)

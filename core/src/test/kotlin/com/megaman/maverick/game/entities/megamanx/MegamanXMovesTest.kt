@@ -5,6 +5,7 @@ import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.controller.ControllerSystem
 import com.maverick.game.engine.controller.buttons.ButtonStatus
 import com.maverick.game.engine.entities.EntityExistenceState
@@ -12,12 +13,15 @@ import com.maverick.game.engine.input.InputFrame
 import com.maverick.game.engine.input.InputSource
 import com.maverick.game.engine.locks.LocksComponent
 import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.points.Points
+import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
 import com.maverick.game.engine.world.container.SimpleGridWorldContainer
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.megaman.maverick.game.entities.enemies.MetaWheelF
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.ConstKeys
@@ -125,6 +129,7 @@ class MegamanXMovesTest : DescribeSpec({
         x.addComponent(x.defineWeaponChargeComponent())
         x.addComponent(PostActionMomentumComponent(0f, 0f, { 0f }, { overGround }, { false }, { false }))
         x.addComponent(AudioComponent())
+        x.addComponent(PointsComponent(ConstKeys.HEALTH pairTo Points(0, ConstVals.MAX_HEALTH, ConstVals.MAX_HEALTH)))
         behaviors = x.defineBehaviorsComponent()
         x.addComponent(behaviors)
 
@@ -182,8 +187,7 @@ class MegamanXMovesTest : DescribeSpec({
 
         it("does not push off when the slide ends from damage") {
             startSlideOnLeftWall()
-            val field = MegamanX::class.java.getDeclaredField("damageTimer").apply { isAccessible = true }
-            (field.get(x) as com.maverick.game.engine.common.time.Timer).reset()
+            x.takeDamageFrom(MetaWheelF(services)) shouldBe true
             tick()
 
             active(BehaviorType.WALL_SLIDING) shouldBe false
@@ -795,9 +799,10 @@ class MegamanXMovesTest : DescribeSpec({
             body.physics.velocity.y shouldBe 0f
         }
 
-        it("moves at the walk speed after a kick and a push-off") {
-            MegamanXValues.WALL_KICK_AWAY_SPEED shouldBe MegamanXValues.WALK_SPEED
-            MegamanXValues.PUSH_OFF_SPEED shouldBe MegamanXValues.WALK_SPEED
+        it("moves slower than the walk after a kick and a push-off, and faster after a dash kick") {
+            (MegamanXValues.WALL_KICK_AWAY_SPEED < MegamanXValues.WALK_SPEED) shouldBe true
+            (MegamanXValues.PUSH_OFF_SPEED < MegamanXValues.WALK_SPEED) shouldBe true
+            (MegamanXValues.DASH_WALL_KICK_AWAY_SPEED > MegamanXValues.WALK_SPEED) shouldBe true
         }
     }
 

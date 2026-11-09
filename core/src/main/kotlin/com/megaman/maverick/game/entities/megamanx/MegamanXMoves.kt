@@ -89,15 +89,10 @@ private const val LANDING_PROBE_FRAMES = 1.5f
 internal fun MegamanX.landsWithinFrame(): Boolean {
     val container = services.levelState.worldContainer
         ?: throw IllegalStateException("MegamanX.landsWithinFrame: the level has no world container")
-    val velocity = body.physics.velocity
-    val fallSpeed = when (direction) {
-        Direction.UP -> -velocity.y
-        Direction.DOWN -> velocity.y
-        Direction.LEFT -> velocity.x
-        Direction.RIGHT -> -velocity.x
-    }
+    val fallSpeed = -upSpeed()
     val frameTime = LANDING_PROBE_FRAMES / services.settings.performance.fps
-    val nextFallSpeed = min(fallSpeed - MegamanXValues.GRAVITY * ConstVals.PPM * frameTime,
+    val gravity = if (fallSpeed < 0f) MegamanXValues.JUMP_GRAVITY else MegamanXValues.FALL_GRAVITY
+    val nextFallSpeed = min(fallSpeed - gravity * ConstVals.PPM * frameTime,
         MegamanXValues.FALL_MAX * ConstVals.PPM)
     if (nextFallSpeed <= 0f) return false
     val distance = nextFallSpeed * frameTime
@@ -165,6 +160,13 @@ internal fun MegamanX.touchedWallSide(): Facing? = when {
     else -> null
 }
 
+internal fun MegamanX.upSpeed() = when (direction) {
+    Direction.UP -> body.physics.velocity.y
+    Direction.DOWN -> -body.physics.velocity.y
+    Direction.LEFT -> -body.physics.velocity.x
+    Direction.RIGHT -> body.physics.velocity.x
+}
+
 internal fun MegamanX.setUpSpeed(speed: Float) = when (direction) {
     Direction.UP -> body.physics.velocity.y = speed
     Direction.DOWN -> body.physics.velocity.y = -speed
@@ -183,7 +185,9 @@ private fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
     WallSlideParams(
         blocked = { kickLocked },
         allowedWhileJumping = { wallDelayTimer.isFinished() },
-        holdsWithoutInput = { !wallGrabTimer.isFinished() && touchedWallSide() != null },
+        holdsWithoutInput = {
+            (!wallGrabTimer.isFinished() || sabre.kind == SabreKind.WALL) && touchedWallSide() != null
+        },
         onStart = {
             wallGrabTimer.reset()
             airDashUsed = false
@@ -193,7 +197,8 @@ private fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
             wallGrabTimer.update(delta)
             body.physics.gravityOn = false
             body.physics.velocity.setZero()
-            if (wallGrabTimer.isFinished()) setUpSpeed(-MegamanXValues.WALL_SLIDE_SPEED * ConstVals.PPM)
+            if (wallGrabTimer.isFinished() && sabre.kind != SabreKind.WALL)
+                setUpSpeed(-MegamanXValues.WALL_SLIDE_SPEED * ConstVals.PPM)
         },
         onEnd = {
             val wall = touchedWallSide()
@@ -210,7 +215,10 @@ private fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
 private fun MegamanX.jumpBehavior() = playerJumpBehavior(
     JumpParams(
         canStart = { true },
-        blocked = { isBehaviorActive(BehaviorType.AIR_DASHING) },
+        blocked = {
+            isBehaviorActive(BehaviorType.AIR_DASHING) ||
+                (sabre.kind == SabreKind.FLOOR && sabre.time < MegamanXValues.SABRE_FLOOR_JUMP_CANCEL_TIME)
+        },
         jumpSpeed = { upSign() * MegamanXValues.JUMP_SPEED },
         wallJumpSpeed = { upSign() * MegamanXValues.WALL_KICK_SPEED },
         wallJumpHorizontal = 0f,
@@ -218,11 +226,12 @@ private fun MegamanX.jumpBehavior() = playerJumpBehavior(
             isBehaviorActive(BehaviorType.WALL_SLIDING) ||
                 (!bodyOverGround && touchedWallSide() != null && wallDelayTimer.isFinished())
         },
-        ignoreRelease = { kickLocked },
+        ignoreRelease = { kickLocked || sabre.kind == SabreKind.AIR },
         startPressed = { input.isJustPressed(MegaControllerButton.A) || jumpPressKept },
         downBlocksGroundJump = false,
         endKeepsFall = true,
         onJump = {
+            sabre.end()
             wallDelayTimer.reset()
             wallKicked = false
             val dashHeld = dashHeld()
@@ -255,7 +264,7 @@ private fun MegamanX.airDashBehavior() = playerAirDashBehavior(
             val pressed = dashPressNow() || (aPressed && !jumpTookA)
             val fromKeptPress = jumpPressKept || dashPressKept
             when {
-                airDashUsed || kickLocked || pushingOff || !pressed -> false
+                airDashUsed || kickLocked || pushingOff || sabre.active || !pressed -> false
                 !fromKeptPress && landsWithinFrame() -> {
                     pressHeldForLanding = true
                     false
@@ -306,7 +315,7 @@ internal class GroundDash(private val x: MegamanX) : AbstractBehaviorImpl() {
 
     override fun evaluate(delta: Float): Boolean {
         if (!x.existenceState.liveAfterUpdate || !x.inPlay || !x.playerCanMove || x.damaged || x.teleporting ||
-            !x.bodyOverGround || x.isBehaviorActive(BehaviorType.JUMPING) || x.kickLocked ||
+            !x.bodyOverGround || x.isBehaviorActive(BehaviorType.JUMPING) || x.kickLocked || x.sabre.active ||
             FacingUtils.isFacingBlock(x)
         ) return false
 
@@ -356,7 +365,7 @@ internal class GroundDash(private val x: MegamanX) : AbstractBehaviorImpl() {
     override fun end() {
         ending = false
         if (!x.bodyOverGround) x.airDashUsed = true
-        if (x.bodyOverGround && x.isRunSidePressed(x.facing) && !x.damaged &&
+        if (x.bodyOverGround && x.isRunSidePressed(x.facing) && !x.damaged && !x.sabre.active &&
             !x.isBehaviorActive(BehaviorType.JUMPING)
         ) {
             x.require(RunComponent::class).runTime = 0f

@@ -137,7 +137,8 @@ internal fun MegamanX.defineBodyComponent(): BodyComponent {
 
         val gravity = upSign() * ConstVals.PPM * when {
             bodyOverGround -> MegamanXValues.GROUND_GRAVITY
-            else -> MegamanXValues.GRAVITY
+            upSpeed() > 0f -> MegamanXValues.JUMP_GRAVITY
+            else -> MegamanXValues.FALL_GRAVITY
         }
 
         when (direction) {
