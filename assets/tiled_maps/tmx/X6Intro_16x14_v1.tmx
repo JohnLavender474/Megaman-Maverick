@@ -53,7 +53,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="2" name="game_rooms" visible="0">
+ <objectgroup id="2" name="game_rooms">
   <object id="2" name="room1" x="0" y="160" width="5760" height="1056"/>
   <object id="3" name="room2" x="5760" y="160" width="512" height="448"/>
   <object id="4" name="boss_room" x="6272" y="160" width="512" height="448">
@@ -63,7 +63,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="3" name="camera_sections" visible="0">
+ <objectgroup id="3" name="camera_sections">
   <object id="5" name="floor_limit" x="0" y="768" width="3680" height="448"/>
   <object id="6" name="floor" x="0" y="704" width="3680" height="512">
    <properties>
@@ -259,7 +259,7 @@
   <object id="183" name="3" x="5984" y="416" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="enemies">
-  <object id="184" name="Junkroid" x="400" y="1064" width="32" height="32">
+  <object id="184" name="Junkroid" x="400" y="1072" width="32" height="32">
    <properties>
     <property name="rearm_margin" type="float" value="6"/>
    </properties>
