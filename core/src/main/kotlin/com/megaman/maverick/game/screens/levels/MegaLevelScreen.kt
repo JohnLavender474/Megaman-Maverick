@@ -67,7 +67,6 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.factories.EntityFactories
-import com.megaman.maverick.game.entities.focus
 import com.megaman.maverick.game.entities.hazards.ViewEdgeHazard
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
@@ -82,9 +81,11 @@ import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.maverick.game.engine.camera.CameraDrawOffset
+import com.maverick.game.engine.camera.CameraSubject
 import com.megaman.maverick.game.screens.levels.camera.CameraEdgeBlocks
-import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
-import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
+import com.maverick.game.engine.camera.CameraLimitStage
+import com.maverick.game.engine.camera.CameraRoomBounds
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
 import com.megaman.maverick.game.screens.levels.camera.CameraScroll
@@ -93,6 +94,7 @@ import com.megaman.maverick.game.screens.levels.camera.CameraRoomExits
 import com.megaman.maverick.game.screens.levels.camera.CameraViewEdges
 import com.megaman.maverick.game.screens.levels.camera.CameraZone
 import com.megaman.maverick.game.screens.levels.camera.CameraZones
+import com.megaman.maverick.game.screens.levels.camera.PlayersCameraSubject
 import com.megaman.maverick.game.screens.levels.camera.PlayersFocus
 import com.megaman.maverick.game.screens.levels.camera.isPastCameraEdge
 import com.megaman.maverick.game.screens.levels.camera.WarpSpotTest
@@ -218,6 +220,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private var playersFocus: PlayersFocus? = null
     private var roomExits: CameraRoomExits? = null
     private lateinit var cameraShake: CameraShake
+    private lateinit var cameraDrawOffset: CameraDrawOffset
+    private lateinit var cameraSubject: CameraSubject
+    private lateinit var playersCameraSubject: PlayersCameraSubject
     private lateinit var roomHandler: LevelRoomHandler
 
     private lateinit var levelPointsText: MegaFontHandle
@@ -286,7 +291,6 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         cameraFollow = CameraFollow(0.25f * ConstVals.PPM, { 20f * Gdx.graphics.deltaTime })
         roomTransition = CameraRoomTransition(
-            cameraFollow,
             ROOM_DISTANCE_ON_TRANSITION * ConstVals.PPM,
             ConstVals.ROOM_TRANS_DELAY_DURATION,
             ConstVals.ROOM_TRANS_DURATION
@@ -371,6 +375,16 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         }
         this.playersFocus = playersFocus
         this.roomExits = roomExits
+        cameraDrawOffset = CameraDrawOffset(
+            game.cameraView,
+            cameraFollow,
+            limitStage,
+            game.cameraController.settledPosition,
+            game.getSystem(WorldSystem::class)!!
+        )
+        game.cameraController.addEffect(cameraDrawOffset)
+        cameraSubject = CameraSubject(gameCamera, cameraFollow, roomBounds, cameraDrawOffset)
+        playersCameraSubject = PlayersCameraSubject(game.players, playersFocus)
         game.cameraController.reset()
 
         roomHandler = LevelRoomHandler(game.services, roomBounds, roomTransition, { player }) {
@@ -398,7 +412,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
     override fun start(tmxMapSource: String) {
         if (!initialized) throw IllegalStateException("must call init() before start()")
-        cameraFollow.setFocus(gameCamera, playersFocus ?: player.focus)
+        playersCameraSubject.applyTo(cameraSubject)
         super.start(tmxMapSource)
 
         game.resetAutoPerfGracePeriod()
@@ -866,8 +880,17 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         // each background has its own viewport instance which is applied when the background is drawn,
         // so wait until after all backgrounds are drawn before applying the game viewport
-        backgrounds.forEach { if (!backgroundsToHide.contains(it.key)) it.draw(batch) }
+        val cameraOffset = cameraDrawOffset.offset
+        backgrounds.forEach {
+            if (backgroundsToHide.contains(it.key)) return@forEach
+            it.cameraDrawOffset.set(cameraOffset)
+            it.draw(batch)
+        }
 
+        val cameraX = gameCamera.position.x
+        val cameraY = gameCamera.position.y
+        gameCamera.position.x += cameraOffset.x
+        gameCamera.position.y += cameraOffset.y
         game.viewports.get(ConstKeys.GAME).apply()
         drawer.projectionMatrix = gameCamera.combined
 
@@ -890,6 +913,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             val foregroundSprite = foregroundSprites.poll()!!
             foregroundSprite.draw(drawer)
         }
+
+        gameCamera.position.x = cameraX
+        gameCamera.position.y = cameraY
+        gameCamera.update()
 
         game.viewports.get(ConstKeys.UI).apply()
         drawer.projectionMatrix = uiCamera.combined
@@ -924,6 +951,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     override fun draw(renderer: ShapeRenderer) {
+        // TODO: shapes draw with the camera without its draw offset, so the debug shapes and the WhiteArrowPool
+        //  outline can be up to 1 step away from the sprites (item 134, branch 134b)
         renderer.projectionMatrix = gameCamera.combined
 
         while (!shapes.isEmpty) {

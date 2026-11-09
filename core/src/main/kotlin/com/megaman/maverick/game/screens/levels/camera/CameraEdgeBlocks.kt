@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.maverick.game.engine.camera.CameraLimitStage
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.ObjectMap

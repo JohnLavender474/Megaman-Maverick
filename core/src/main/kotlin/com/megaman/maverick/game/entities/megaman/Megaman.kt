@@ -248,7 +248,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         )
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
-        addComponent(defineFocusComponent())
+        addComponent(defineCameraSubjectComponent())
         addComponent(definePlayerProgressComponent())
         addComponent(RunComponent())
         addComponent(defineWeaponChargeComponent())

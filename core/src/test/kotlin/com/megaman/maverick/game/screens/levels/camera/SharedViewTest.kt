@@ -1,5 +1,8 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.maverick.game.engine.camera.CameraLimitStage
+import com.maverick.game.engine.camera.CameraRoomBounds
+import com.megaman.maverick.game.entities.roomSubject
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -34,11 +37,13 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.world.IDrawOffsets
+import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.CameraEdgeBlock
 import com.megaman.maverick.game.entities.currentHealth
 import com.megaman.maverick.game.entities.hazards.ViewEdgeHazard
-import com.megaman.maverick.game.entities.state.FocusComponent
+import com.megaman.maverick.game.entities.state.CameraSubjectComponent
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.TestHealthPlayer
 import com.megaman.maverick.game.state.ViewEdgeRule
@@ -62,7 +67,7 @@ private class Session(engine: GameEngine = mockk(relaxed = true)) {
         val player = TestHealthPlayer(services)
         player.body.setSize(10f, 10f).setCenter(x, y)
         player.body.setBodySense(BodySense.FEET_ON_GROUND, true)
-        player.addComponent(FocusComponent({ GameRectangle(player.body) }, { player.body.getCenter(Vector2()) }))
+        player.addComponent(CameraSubjectComponent({ GameRectangle(player.body) }, { player.body.getCenter(Vector2()) }))
         players.register(PlayerSlot(slot), player)
         player.existenceState = EntityExistenceState.LIVE
         return player
@@ -124,7 +129,7 @@ private class TallRig {
     val rotation = CameraRotation()
     val view = CameraView(camera, rotation)
     val follow = CameraFollow(1f, { 1f })
-    val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
+    val transition = CameraRoomTransition(20f, 0.1f, 0.1f)
     val room = RectangleMapObject(0f, 0f, 100f, 400f).also { it.name = "tall" }
     val roomBounds = CameraRoomBounds(follow, transition, Vector2(50f, 50f)).also {
         it.gameRooms = GdxArray.with(room)
@@ -149,6 +154,7 @@ private class TallRig {
         controller.addEffect(focus)
         controller.addEffect(edges)
         follow.setFocus(camera, focus)
+        roomBounds.subject = session.first.roomSubject
         controller.reset()
         controller.update(1f / 60f)
     }
@@ -195,10 +201,27 @@ class SharedViewTest : DescribeSpec({
             focus.getFocusPosition() shouldBe Vector2(100f, 20f)
         }
 
-        it("gives the bounds of slot 0, so the room rules keep slot 0") {
+        it("gives the mean draw offset of the players in the group") {
             val session = Session()
+            val offsets = object : IDrawOffsets {
+                override fun getDrawOffset(body: IBody, out: Vector2): Vector2 =
+                    if (body === session.first.body) out.set(-2f, 0f) else out.set(-4f, 1f)
+            }
             val focus = PlayersFocus(session.players)
-            focus.getFocusBounds().getCenter(Vector2()) shouldBe Vector2(100f, 20f)
+            focus.getFocusPosition()
+            focus.getDrawOffset(offsets, Vector2()) shouldBe Vector2(-3f, 0.5f)
+        }
+
+        it("gives no draw offset while it eases after the group changes") {
+            val session = Session()
+            val offsets = object : IDrawOffsets {
+                override fun getDrawOffset(body: IBody, out: Vector2): Vector2 = out.set(-2f, 0f)
+            }
+            val focus = PlayersFocus(session.players)
+            focus.getFocusPosition()
+            session.second.existenceState = EntityExistenceState.UNSPAWNED
+            focus.getFocusPosition()
+            focus.getDrawOffset(offsets, Vector2()) shouldBe Vector2(0f, 0f)
         }
 
         it("eases from the old midpoint to the new one over the ease time when the group changes") {

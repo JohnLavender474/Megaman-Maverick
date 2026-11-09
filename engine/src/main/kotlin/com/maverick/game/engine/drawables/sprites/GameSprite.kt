@@ -57,8 +57,29 @@ open class GameSprite(
         setSize(width, height)
     }
 
+    companion object {
+        private const val X1 = 0
+        private const val Y1 = 1
+        private const val VERTEX_STRIDE = 5
+        private const val VERTICES_SIZE = 4 * VERTEX_STRIDE
+        private val shiftedVertices = FloatArray(VERTICES_SIZE)
+    }
+
+    var drawOffsetX = 0f
+    var drawOffsetY = 0f
+
     override fun draw(drawer: Batch) {
-        if (!hidden && texture != null) super.draw(drawer)
+        if (hidden || texture == null) return
+        if (drawOffsetX == 0f && drawOffsetY == 0f) {
+            super.draw(drawer)
+            return
+        }
+        getVertices().copyInto(shiftedVertices)
+        for (i in 0 until VERTICES_SIZE step VERTEX_STRIDE) {
+            shiftedVertices[i + X1] += drawOffsetX
+            shiftedVertices[i + Y1] += drawOffsetY
+        }
+        drawer.draw(texture, shiftedVertices, 0, VERTICES_SIZE)
     }
 
     override fun compareTo(other: IComparableDrawable<Batch>) = priority.compareTo(other.priority)

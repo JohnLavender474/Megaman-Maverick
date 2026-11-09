@@ -144,6 +144,8 @@ class MegamanMaverickGameParams {
     var musicVolume: Float = 0.5f
     var soundVolume: Float = 0.5f
     var screenshotTrigger: (() -> Boolean)? = null
+    var interpolation: Boolean = false
+    var interpolationToggle: (() -> Boolean)? = null
     var showScreenController: Boolean = false
     var vsync: Boolean = false
     var diagnostics: Boolean = false
@@ -620,6 +622,11 @@ class MegamanMaverickGame(
                 }
             }
 
+            if (params.interpolationToggle?.invoke() == true) getSystem(WorldSystem::class)!!.let {
+                it.interpolation = !it.interpolation
+                GameLogger.log(TAG, "render(): interpolation = ${it.interpolation}")
+            }
+
             if (params.screenshotTrigger?.invoke() == true) {
                 diagnostics?.beginEntry("screenshot")
 
@@ -950,26 +957,29 @@ class MegamanMaverickGame(
 
         val pathDebugConsumer = if (params.debugPathfinding) ::addPathDebugLines else null
 
+        val worldSystem = WorldSystem(
+            ppm = ConstVals.PPM,
+            fixedStep = settings.performance.fixedStep,
+            worldContainerSupplier = { levelState.worldContainer },
+            contactListener = ContactRuleDispatcher(
+                megaContactRules(players, gravity, launch.rules, CONTACT_LISTENER_DEBUG_FILTER),
+                CONTACT_LISTENER_DEBUG_FILTER
+            ),
+            collisionHandler = MegaCollisionHandler(),
+            contactFilter = MegaContactFilter(),
+            fixedStepScalar = params.fixedStepScalar,
+            maxIterations = 2 * MathUtils.ceil(
+                params.fixedStepScalar / (settings.performance.fixedStep * settings.performance.fps)
+            ),
+            diagnostics = diagnostics,
+            interpolation = params.interpolation
+        )
+
         val engine = GameEngine(
             systems = gdxArrayOf(
                 ControllerSystem(),
                 BehaviorsSystem(diagnostics),
-                WorldSystem(
-                    ppm = ConstVals.PPM,
-                    fixedStep = settings.performance.fixedStep,
-                    worldContainerSupplier = { levelState.worldContainer },
-                    contactListener = ContactRuleDispatcher(
-                        megaContactRules(players, gravity, launch.rules, CONTACT_LISTENER_DEBUG_FILTER),
-                        CONTACT_LISTENER_DEBUG_FILTER
-                    ),
-                    collisionHandler = MegaCollisionHandler(),
-                    contactFilter = MegaContactFilter(),
-                    fixedStepScalar = params.fixedStepScalar,
-                    maxIterations = 2 * MathUtils.ceil(
-                        params.fixedStepScalar / (settings.performance.fixedStep * settings.performance.fps)
-                    ),
-                    diagnostics = diagnostics,
-                ),
+                worldSystem,
                 CullablesSystem(object : GameEntityCuller {
                     override fun cull(entity: IGameEntity) {
                         entity.destroy()
@@ -995,7 +1005,7 @@ class MegamanMaverickGame(
                 UpdatablesSystem(diagnostics),
                 FontsSystem(this::addDrawable),
                 AnimationsSystem(diagnostics),
-                SpritesSystem(this::addDrawable, diagnostics),
+                SpritesSystem(this::addDrawable, diagnostics, worldSystem),
                 DrawableShapesSystem(
                     shapesCollector = { shapes.add(it) },
                     debug = params.debugShapes,

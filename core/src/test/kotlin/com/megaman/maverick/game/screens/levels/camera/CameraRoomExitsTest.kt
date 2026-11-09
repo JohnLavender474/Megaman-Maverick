@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.maverick.game.engine.camera.CameraRoomBounds
+import com.maverick.game.engine.camera.IRoomSubject
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
@@ -19,7 +21,7 @@ import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.CameraEdgeBlock
-import com.megaman.maverick.game.entities.state.FocusComponent
+import com.megaman.maverick.game.entities.state.CameraSubjectComponent
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.TestHealthPlayer
 import com.megaman.maverick.game.testServices
@@ -48,7 +50,7 @@ private class ExitsRig(var on: Boolean = true) {
         it.viewportHeight = 80f
     }
     val follow = CameraFollow(1f, { 1f })
-    val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
+    val transition = CameraRoomTransition(20f, 0.1f, 0.1f)
     val roomBounds = CameraRoomBounds(follow, transition, Vector2(50f, 50f)).also {
         it.gameRooms = GdxArray.with(start, next)
     }
@@ -56,10 +58,10 @@ private class ExitsRig(var on: Boolean = true) {
 
     init {
         MegaEntityFactory.init(services)
-        follow.setFocus(camera, object : IFocusable {
-            override fun getFocusBounds() = GameRectangle(first.body)
+        follow.setFocus(camera, object : IFocusable, IRoomSubject {
+            override fun getSubjectBounds() = GameRectangle(first.body)
             override fun getFocusPosition() = first.body.getCenter(Vector2())
-        })
+        }.also { roomBounds.subject = it })
         roomBounds.reset()
         roomBounds.update(camera, 0f)
     }
@@ -67,7 +69,7 @@ private class ExitsRig(var on: Boolean = true) {
     private fun player(slot: Int, x: Float, y: Float): TestHealthPlayer {
         val player = TestHealthPlayer(services)
         player.body.setSize(10f, 10f).setCenter(x, y)
-        player.addComponent(FocusComponent({ GameRectangle(player.body) }, { player.body.getCenter(Vector2()) }))
+        player.addComponent(CameraSubjectComponent({ GameRectangle(player.body) }, { player.body.getCenter(Vector2()) }))
         players.register(PlayerSlot(slot), player)
         player.existenceState = EntityExistenceState.LIVE
         return player

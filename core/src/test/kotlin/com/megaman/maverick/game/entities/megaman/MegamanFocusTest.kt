@@ -6,7 +6,7 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.megaman.maverick.game.entities.megaman.components.defineFocusComponent
+import com.megaman.maverick.game.entities.megaman.components.defineCameraSubjectComponent
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -24,7 +24,7 @@ class MegamanFocusTest : DescribeSpec({
         body.setPosition(100f, 200f)
         body.direction = direction
         megaman.addComponent(BodyComponent(body))
-        return megaman.defineFocusComponent().getFocusPosition()
+        return megaman.defineCameraSubjectComponent().getFocusPosition()
     }
 
     describe("the focus position") {

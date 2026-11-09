@@ -11,7 +11,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.blocks.Block
-import com.megaman.maverick.game.entities.state.FocusComponent
+import com.megaman.maverick.game.entities.state.CameraSubjectComponent
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.entities.state.stunned
@@ -159,7 +159,7 @@ internal fun MegamanX.defineBodyComponent(): BodyComponent {
     return BodyComponentCreator.create(this, body)
 }
 
-internal fun MegamanX.defineFocusComponent() = FocusComponent(
+internal fun MegamanX.defineCameraSubjectComponent() = CameraSubjectComponent(
     bounds = { body.getBounds() },
     position = {
         val position = DirectionPositionMapper.getInvertedPosition(direction)

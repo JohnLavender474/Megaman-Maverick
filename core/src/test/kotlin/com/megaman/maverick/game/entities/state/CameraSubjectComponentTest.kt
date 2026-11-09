@@ -6,28 +6,28 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 
-class FocusComponentTest : DescribeSpec({
+class CameraSubjectComponentTest : DescribeSpec({
 
-    describe("FocusComponent") {
+    describe("CameraSubjectComponent") {
         it("gives the values of its hooks") {
             val bounds = GameRectangle(0f, 0f, 2f, 2f)
             val position = Vector2(3f, 4f)
-            val component = FocusComponent({ bounds }, { position })
+            val component = CameraSubjectComponent({ bounds }, { position })
 
-            component.getFocusBounds() shouldBeSameInstanceAs bounds
+            component.getSubjectBounds() shouldBeSameInstanceAs bounds
             component.getFocusPosition() shouldBeSameInstanceAs position
         }
 
         it("calls the hooks on each read") {
             var x = 1f
-            val component = FocusComponent({ GameRectangle(x, 0f, 2f, 2f) }, { Vector2(x, 0f) })
+            val component = CameraSubjectComponent({ GameRectangle(x, 0f, 2f, 2f) }, { Vector2(x, 0f) })
 
-            component.getFocusBounds().getX() shouldBe 1f
+            component.getSubjectBounds().getX() shouldBe 1f
             component.getFocusPosition().x shouldBe 1f
 
             x = 5f
 
-            component.getFocusBounds().getX() shouldBe 5f
+            component.getSubjectBounds().getX() shouldBe 5f
             component.getFocusPosition().x shouldBe 5f
         }
     }

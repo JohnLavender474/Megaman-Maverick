@@ -102,7 +102,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
         addComponent(TeleportableComponent())
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(defineBodyComponent())
-        addComponent(defineFocusComponent())
+        addComponent(defineCameraSubjectComponent())
         addComponent(defineProgressComponent())
         addComponent(RunComponent())
         addComponent(defineWeaponChargeComponent())

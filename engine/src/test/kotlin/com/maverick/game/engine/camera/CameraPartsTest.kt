@@ -14,7 +14,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 
 private class TestFocus(var x: Float, var y: Float) : IFocusable {
-    override fun getFocusBounds() = GameRectangle().setSize(10f, 10f).setCenter(x, y)
     override fun getFocusPosition() = Vector2(x, y)
 }
 
@@ -237,8 +236,8 @@ class CameraPartsTest : DescribeSpec({
     }
 
     describe("CameraRoomTransition") {
-        fun transition(follow: CameraFollow, log: MutableList<String>) =
-            CameraRoomTransition(follow, 20f, 0.2f, 0.4f).also {
+        fun transition(log: MutableList<String>) =
+            CameraRoomTransition(20f, 0.2f, 0.4f).also {
                 it.onBegin = { log.add("begin") }
                 it.onContinue = { log.add("continue") }
                 it.onEnd = { log.add("end") }
@@ -250,9 +249,9 @@ class CameraPartsTest : DescribeSpec({
             val follow = CameraFollow(1f, { 1f })
             follow.setFocus(camera, TestFocus(50f, 40f))
             val log = ArrayList<String>()
-            val transition = transition(follow, log)
+            val transition = transition(log)
 
-            transition.start(camera, Rectangle(200f, 0f, 100f, 80f), Direction.RIGHT)
+            transition.start(camera, Rectangle(200f, 0f, 100f, 80f), Direction.RIGHT, Vector2(50f, 40f))
             transition.transitioning shouldBe true
 
             transition.update(camera, 0.1f) shouldBe true
@@ -277,11 +276,11 @@ class CameraPartsTest : DescribeSpec({
             val camera = camera()
             val follow = CameraFollow(1f, { 1f })
             follow.setFocus(camera, TestFocus(50f, 40f))
-            val transition = transition(follow, ArrayList())
+            val transition = transition(ArrayList())
 
             transition.getTransitionInterpolation(Vector2()).shouldBeNull()
 
-            transition.start(camera, Rectangle(200f, 0f, 100f, 80f), Direction.LEFT)
+            transition.start(camera, Rectangle(200f, 0f, 100f, 80f), Direction.LEFT, Vector2(50f, 40f))
             repeat(2) { transition.update(camera, 0.1f) }
             transition.update(camera, 0.4f)
             transition.getTransitionInterpolation(Vector2())!!.x shouldBe (280f plusOrMinus 0.01f)

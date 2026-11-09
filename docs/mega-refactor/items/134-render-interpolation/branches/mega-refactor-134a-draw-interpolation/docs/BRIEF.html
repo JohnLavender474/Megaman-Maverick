@@ -1,18 +1,6 @@
-<title><id><letter> <Short Name></title>
+<title>134a Draw Interpolation</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid">. Code: <pre class="code"> with the spans
-    .k (keyword), .c (comment), .del (removed code).
-  - At approval: set the eyebrow to "Brief: approved <date>", set each chosen option to
-    "opt rec" with the pill "Chosen", and set the Decisions tag to "answered <date>".
-  - On a scope change: mark what changed in the text, with the date, and publish to the same link.
-  - The accent color can change to suit the branch. Keep the light and dark token sets in step.
--->
 <style>
 :root {
   --bg: #f3f5fa;
@@ -102,94 +90,159 @@ a { color: var(--accent); }
 
 <div class="wrap">
 
-<!-- 1. Goal -->
 <header style="display:flex;flex-direction:column;gap:14px">
-  <div class="eyebrow"><span>Item <id></span><span>Branch <id><letter></span><span>Objectives <O-ids></span><span class="draft">Brief: draft</span></div>
-  <h1><Short name></h1>
-  <p class="lede narrow"><One or two sentences: what the branch changes and why.></p>
-  <div class="visible narrow"><b>In play</b><span><What the player sees change, or "Nothing changes."></span></div>
+  <div class="eyebrow"><span>Item 134</span><span>Branch 134a</span><span>Objectives O9, O5</span><span>Brief: approved 2026-11-09</span></div>
+  <h1>Draw interpolation</h1>
+  <p class="lede narrow">At 60 fps the world runs 2, then 3, then 2 steps of 1/150 s per frame, so bodies and the view move by &plusmn;20 % from frame to frame. This branch draws each body and the camera between its last 2 step positions, by the leftover time of the step clock. The physics does not change.</p>
+  <div class="visible narrow"><b>In play</b><span>With <code>--interpolation true</code>: the level scrolls evenly, and Megaman and X do not pulse against the view. With the default (<code>false</code>): nothing changes.</span></div>
 </header>
 
-<!-- 2. Before and after: a Mermaid diagram of the parts that change (senders, events, listeners). -->
 <section>
-  <h2>Before and after <span class="tag"><what the diagram shows></span></h2>
+  <h2>Before and after <span class="tag">one frame</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <short label></h3>
+      <h3>Today: draw the last step</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  W["WorldSystem: 2 or 3 steps"] --> B["Body position"]
+  B --> S["SpritesSystem: sprite on body"]
+  B --> F["CameraFollow: camera on focus"]
+  S --> D["MegaLevelScreen.draw"]
+  F --> D
+  W -.-> L["leftover time: not used"]
 </pre></div>
-      <p class="note"><The problem that the diagram shows.></p>
+      <p class="note">The frame shows the newest step. A frame of 3 steps moves 50 % more than a frame of 2.</p>
     </div>
     <div class="panel after">
-      <h3>After: <short label></h3>
+      <h3>After: draw between the last 2 steps</h3>
       <div class="diagram"><pre class="mermaid">
 flowchart TD
-  A["<sender>"] --> B["<new owner>"]
+  W["WorldSystem: 2 or 3 steps"] --> B["Body position + last step move"]
+  W --> A["alpha = leftover / step"]
+  B --> S["SpritesSystem: sprite draw offset"]
+  A --> S
+  B --> F["Focus draw offset"]
+  A --> F
+  F --> C["Draw camera: offset, room clamp"]
+  S --> D["MegaLevelScreen.draw"]
+  C --> D
 </pre></div>
-      <p class="note"><What stays the same for the other code.></p>
+      <p class="note">Collisions, timers, spawns, culling, edge blocks and the gameplay camera keep the step positions. Only the draw reads the offsets.</p>
     </div>
   </div>
 </section>
 
-<!-- 3. Code sketch: the new or changed API at its first real caller. A few short blocks, not the diff. -->
 <section>
-  <h2>Code sketch <span class="tag">first caller</span></h2>
+  <h2>Code sketch <span class="tag">first callers</span></h2>
   <div class="pair">
     <div class="panel">
-      <h3>Today: <code><Caller></code></h3>
-<pre class="code"><span class="del"><old code></span></pre>
+      <h3>Today: <code>WorldSystem.cycle</code>, <code>GameSprite.draw</code></h3>
+<pre class="code"><span class="del">bodies.forEach { it.preProcess() }</span>
+<span class="c">// ... process, contacts, collisions</span>
+<span class="del">bodies.forEach { it.postProcess() }</span>
+
+<span class="del">override fun draw(drawer: Batch) {
+    if (!hidden &amp;&amp; texture != null) super.draw(drawer)
+}</span></pre>
     </div>
     <div class="panel after">
-      <h3>After: <code><Caller></code></h3>
-<pre class="code"><span class="k">fun</span> <new code></pre>
+      <h3>After: the same loops, one offset</h3>
+<pre class="code">bodies.forEach { it.beginStep(serial); it.preProcess() }
+<span class="c">// ... process, contacts, collisions</span>
+bodies.forEach { it.postProcess(); it.endStep() }
+<span class="c">// in process(): alpha = accumulator / fixedStep (1 at the cap)</span>
+
+<span class="c">// SpritesSystem, after the entity's preProcess:</span>
+body.getDrawOffset(world.alpha, world.stepSerial, out)
+<span class="c">//   = (alpha - 1) * last step move, or 0</span>
+sprites.forEach { it.drawOffset.set(out) }
+
+<span class="k">override fun</span> draw(drawer: Batch) {
+    translate(drawOffset.x, drawOffset.y)
+    <span class="k">if</span> (!hidden &amp;&amp; texture != null) super.draw(drawer)
+    translate(-drawOffset.x, -drawOffset.y)
+}</pre>
     </div>
   </div>
-  <!-- Optional: an ordered list of steps or parts, as pills. Use "step go" for a branch point. -->
-  <div class="steps" aria-label="<Order>">
-    <span class="step">1 <step></span><span class="step">2 <step></span>
+  <div class="steps" aria-label="Plan order">
+    <span class="step">1 test map</span><span class="step">2 body step state, alpha</span><span class="step">3 sprite offset</span><span class="step">4 draw camera, backgrounds</span><span class="step">5 flag, A/B switch</span><span class="step">6 tests</span><span class="step go">7 diagnostics and play test</span>
   </div>
 </section>
 
-<!-- 4. Decisions: 2 to 4 questions. An objective conflict is a decision. Ask them with AskUserQuestion too.
-     If nothing needs a decision, replace the list with one sentence that says so. -->
 <section>
-  <h2>Decisions <span class="tag">open</span></h2>
+  <h2>Decisions <span class="tag">answered 2026-11-09</span></h2>
   <div class="decisions">
     <div class="decision">
-      <div class="q"><span class="id">D1</span><h3><Question?></h3></div>
-      <p class="narrow"><The context that the question needs, in one or two sentences.></p>
+      <div class="q"><span class="id">D1</span><h3>Distance guard for jumps inside a step?</h3></div>
+      <p class="narrow">A teleport inside a step (a hook that moves the body) would be drawn as a slide for 1 frame. A guard sets the offset to 0 when one step moves a body more than a limit. The fastest normal move is a fall at 8.5 px per step.</p>
       <div class="opts">
-        <div class="opt rec"><span class="rec-pill">Recommended</span><span class="lbl"><Option></span><Why.></div>
-        <div class="opt"><span class="lbl"><Option></span><Trade-off.></div>
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Guard at 1 tile per step</span>32 px: about 4 times the fastest normal move. Catches the teleports without an audit of all body hooks. Explicit snaps come in 134b.</div>
+        <div class="opt"><span class="lbl">Guard at half a tile</span>Catches smaller jumps, but is nearer to fast normal moves.</div>
+        <div class="opt"><span class="lbl">No guard</span>Explicit snaps only, all in 134b. Streaks with the flag on until then.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D2</span><h3>Co-op shared view: what draw offset?</h3></div>
+      <p class="narrow">The shared focus averages the players and eases when the group changes. Its position read changes its ease state, so the draw needs its own read.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Average of the grouped players</span>0 while the ease or a view-edge keeper acts. The shared view is even in normal play.</div>
+        <div class="opt"><span class="lbl">0 in co-op</span>The co-op view stays stepped. The players shake against it until a later branch.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="q"><span class="id">D3</span><h3>How to compare on and off?</h3></div>
+      <p class="narrow">The judder is easiest to see when you switch in the same room and keep moving.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="rec-pill">Chosen</span><span class="lbl">Launch flag plus a dev key</span><code>--interpolation</code> sets the start value. A keyboard dev key switches it live, only in a dev run. <i>(Corrected 2026-11-09: the key is <code>I</code>, armed only when the launch gives <code>--interpolation</code>, like the screenshot key <code>P</code>.)</i></div>
+        <div class="opt"><span class="lbl">Launch flag only</span>Fewer parts. Each compare needs 2 launches.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 5. Risks: up to 3. -->
 <section class="narrow">
   <h2>Risks</h2>
   <ul class="risks">
-    <li><b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+    <li><b>Attached bodies jitter with the flag on.</b> A body that follows another body outside the steps (riders, boss parts) is drawn up to one step away from its parent. This is the 134b audit. The flag stays off until then.</li>
+    <li><b>The draw lags by up to one step.</b> 6.7 ms at <code>MEDIUM</code>, 3.3 ms mean. The play test compares the input feel with the A/B switch.</li>
+    <li><b>Cost on weak machines.</b> 2 field writes per body per step, 1 lookup per sprite entity per frame, no allocation. The diagnostics runs measure <code>WorldSystem</code> and <code>SpritesSystem</code> with the flag off and on.</li>
   </ul>
 </section>
 
-<!-- 6. Play checks: as in "Test maps". Experimental checks first, then control checks. A --room on each. -->
 <section class="narrow">
   <h2>Play checks <span class="tag">for the play test, not for now</span></h2>
   <div class="cd">cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-134a-draw-interpolation</div>
   <ul class="checks">
-    <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_134 --room open --interpolation true</code>: walk, slide, jump; switch on and off. Even scroll, no pulse.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_134 --room shaft --interpolation true</code>: fall at full speed. The view moves evenly.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_134 --room edge --interpolation true</code>: the view stays still at the walls; Megaman moves evenly.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_134 --room scroll --interpolation true</code>: the scroll is as smooth as today; edge blocks hold.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_134 --room transition --interpolation true</code>: no jump at the start or end of the pan.</li>
+    <li><code>./run-game-test-coop.sh --level REFACTOR_TEST_134 --room open --interpolation true</code>: the shared view is even.</li>
+    <li><code>./run-game-debug.sh --level REFACTOR_TEST_134 --room open --interpolation false</code>, then <code>true</code>: walk for 30 s each, for the diagnostics.</li>
+    <li><code>./run-game-alpha.sh --level REFACTOR_TEST_134 --room open</code>: control. The default draw is as today.</li>
   </ul>
 </section>
 
-<!-- 7. Details -->
+<section class="narrow">
+  <h2>Scope change <span class="tag">owner, 2026-11-09</span></h2>
+  <p>The draw offset is no longer on <code>IFocusable</code>, and the room subject is split from it. Each camera part reads only what it needs: <code>IFocusable.getFocusPosition()</code> (the follow target), <code>IRoomSubject.getSubjectBounds()</code> (the rooms and the start of a transition), and <code>IDrawOffsetSource</code> (the draw camera). <code>MegaLevelScreen</code> sets all 3 in one place. No behavior change: the rooms still follow slot 0, and the view follows the group.</p>
+</section>
+
+<section class="narrow">
+  <h2>Scope change 2 <span class="tag">owner, 2026-11-09</span></h2>
+  <p>Interpolation is <b>on by default</b> (<code>--interpolation false</code> turns it off). The known 134b items (attached bodies, sprite entities with no body, small teleports, the shape renderer) now show in normal play; each has a <code>TODO</code> at its code. The play test adds checks in real levels with those entities.</p>
+</section>
+
+<section class="narrow">
+  <h2>Scope change 3 <span class="tag">owner, 2026-11-09</span></h2>
+  <p><code>CameraRoomBounds</code>, <code>CameraLimitStage</code>, <code>CameraDrawOffset</code> and <code>IDrawOffsetSource</code> moved to <code>engine</code>. <code>CameraSubject</code> is now an engine mechanism (<code>set(target, room, draw)</code>); the core <code>PlayersCameraSubject</code> holds the game's policy (the rooms follow slot 0). This overlaps item 130.</p>
+</section>
+
 <section class="details narrow">
   <h2 style="color:var(--ink)">Details</h2>
   <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-  <p class="mono">docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-134a-draw-interpolation/docs/SCOPE.md</p>
+  <p class="mono">docs/mega-refactor/items/134-render-interpolation/branches/mega-refactor-134a-draw-interpolation/docs/SCOPE.md</p>
   <p class="mono">.../mega-refactor-134a-draw-interpolation/docs/CONTRACT.md</p>
 </section>
 

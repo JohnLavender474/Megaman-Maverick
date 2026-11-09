@@ -1,5 +1,8 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.maverick.game.engine.camera.CameraLimitStage
+import com.maverick.game.engine.camera.CameraRoomBounds
+import com.maverick.game.engine.camera.IRoomSubject
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
@@ -19,8 +22,8 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 
-private class EdgeFocus(var x: Float, var y: Float) : IFocusable {
-    override fun getFocusBounds() = GameRectangle().setSize(10f, 10f).setCenter(x, y)
+private class EdgeFocus(var x: Float, var y: Float) : IFocusable, IRoomSubject {
+    override fun getSubjectBounds() = GameRectangle().setSize(10f, 10f).setCenter(x, y)
     override fun getFocusPosition() = Vector2(x, y)
 }
 
@@ -40,7 +43,7 @@ private class EdgeRig(rule: ICameraLimitRule) {
     val rotation = CameraRotation()
     val view = CameraView(camera, rotation)
     val follow = CameraFollow(1f, { 1f })
-    val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
+    val transition = CameraRoomTransition(20f, 0.1f, 0.1f)
     val roomBounds = CameraRoomBounds(follow, transition, Vector2(50f, 50f)).also {
         it.gameRooms = Array.with(RectangleMapObject(0f, 0f, 400f, 80f).also { room -> room.name = "a" })
     }
@@ -53,7 +56,7 @@ private class EdgeRig(rule: ICameraLimitRule) {
         controller.addMover(follow)
         controller.addMover(stage)
         controller.addMover(CameraRoomClamp(view, stage))
-        follow.setFocus(camera, EdgeFocus(150f, 40f))
+        follow.setFocus(camera, EdgeFocus(150f, 40f).also { roomBounds.subject = it })
         controller.reset()
         repeat(3) { controller.update(0.1f) }
     }

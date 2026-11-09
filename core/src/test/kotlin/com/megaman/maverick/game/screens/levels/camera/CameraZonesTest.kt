@@ -19,7 +19,6 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
 private class ZoneFocus(var x: Float, var y: Float) : IFocusable {
-    override fun getFocusBounds() = GameRectangle().setSize(10f, 10f).setCenter(x, y)
     override fun getFocusPosition() = Vector2(x, y)
 }
 

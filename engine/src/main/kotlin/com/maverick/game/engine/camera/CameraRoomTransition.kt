@@ -12,7 +12,6 @@ import com.maverick.game.engine.common.time.Timer
 import kotlin.math.min
 
 class CameraRoomTransition(
-    private val follow: CameraFollow,
     var distanceOnTransition: Float,
     transDelay: Float,
     transDuration: Float
@@ -45,13 +44,13 @@ class CameraRoomTransition(
     fun getTransitionInterpolation(out: Vector2): Vector2? =
         if (state == null) null else interpolate(focusStart, focusTarget, transTimer.getRatio(), out)
 
-    fun start(camera: Camera, next: Rectangle, direction: Direction?) {
+    fun start(camera: Camera, next: Rectangle, direction: Direction?, subjectCenter: Vector2) {
         state = ProcessState.BEGIN
 
         camera.position.toVector2(start)
         target.set(start)
 
-        follow.focus!!.getFocusBounds().getCenter(focusStart)
+        focusStart.set(subjectCenter)
         focusTarget.set(focusStart)
 
         when (direction) {

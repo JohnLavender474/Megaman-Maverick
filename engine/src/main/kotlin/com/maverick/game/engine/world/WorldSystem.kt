@@ -1,6 +1,7 @@
 package com.maverick.game.engine.world
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.common.objects.ImmutableCollection
@@ -20,6 +21,7 @@ import com.maverick.game.engine.world.contacts.Contact
 import com.maverick.game.engine.world.contacts.IContactFilter
 import com.maverick.game.engine.world.contacts.IContactListener
 import com.maverick.game.engine.world.container.IWorldContainer
+import kotlin.math.abs
 
 class WorldSystem(
     var ppm: Int,
@@ -30,8 +32,9 @@ class WorldSystem(
     var contactFilter: IContactFilter,
     var fixedStepScalar: Float = 1f,
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
-    var diagnostics: RuntimeDiagnostics? = null
-) : GameSystem(BodyComponent::class) {
+    var diagnostics: RuntimeDiagnostics? = null,
+    var interpolation: Boolean = false
+) : GameSystem(BodyComponent::class), IDrawOffsets {
 
     companion object {
         const val TAG = "WorldSystem"
@@ -93,6 +96,11 @@ class WorldSystem(
 
     private var accumulator = 0f
 
+    var stepSerial = 0
+        private set
+    var alpha = 1f
+        private set
+
     private val bodyArray = Array<IBody>()
     private val out1 = GameRectangle()
     private val out2 = GameRectangle()
@@ -123,6 +131,8 @@ class WorldSystem(
                 accumulator -= fixedStepScaled
                 iteration++
 
+                stepSerial++
+
                 diagnostics?.beginEntry(cycleName(iteration))
                 cycle(bodyArray, fixedStep, worldContainer)
                 diagnostics?.endEntry()
@@ -144,12 +154,26 @@ class WorldSystem(
             bodyArray.clear()
         }
 
+        val fixedStepScaled = fixedStep / fixedStepScalar
+        alpha = if (iteration >= maxIterations) 1f
+        else ((accumulator - (fixedStep - fixedStepScaled)) / fixedStepScaled).coerceIn(0f, 1f)
+
         diagnostics?.endEntry()
+    }
+
+    override fun getDrawOffset(body: IBody, out: Vector2): Vector2 {
+        if (!interpolation || body.stepSerial != stepSerial) return out.setZero()
+        body.getStepMove(out)
+        // TODO: a teleport inside a step that moves less than 1 tile is drawn as a slide for 1 frame (item 134,
+        //  branch 134b: explicit snaps)
+        if (abs(out.x) > ppm || abs(out.y) > ppm) return out.setZero()
+        return out.scl(alpha - 1f)
     }
 
     override fun reset() {
         super.reset()
         accumulator = 0f
+        alpha = 1f
 
         priorContactSet.forEach { contactPool.free(it) }
         currentContactSet.forEach { contactPool.free(it) }
@@ -163,7 +187,10 @@ class WorldSystem(
 
     internal fun cycle(bodies: Array<IBody>, delta: Float, worldContainer: IWorldContainer) {
         diagnostics?.beginEntry("preProcess")
-        bodies.forEach { body -> body.preProcess() }
+        bodies.forEach { body ->
+            body.beginStep(stepSerial)
+            body.preProcess()
+        }
         diagnostics?.endEntry()
 
         worldContainer.clear()
@@ -201,7 +228,10 @@ class WorldSystem(
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("postProcess")
-        bodies.forEach { body -> body.postProcess() }
+        bodies.forEach { body ->
+            body.postProcess()
+            body.endStep()
+        }
         diagnostics?.endEntry()
     }
 

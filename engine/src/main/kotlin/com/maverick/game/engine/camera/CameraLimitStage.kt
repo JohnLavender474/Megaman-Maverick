@@ -1,17 +1,10 @@
-package com.megaman.maverick.game.screens.levels.camera
+package com.maverick.game.engine.camera
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
-import com.maverick.game.engine.camera.CameraAxisLimit
-import com.maverick.game.engine.camera.CameraFollow
-import com.maverick.game.engine.camera.CameraFollowMode
-import com.maverick.game.engine.camera.CameraLimits
-import com.maverick.game.engine.camera.CameraView
-import com.maverick.game.engine.camera.ICameraLimitRule
-import com.maverick.game.engine.camera.ICameraPart
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.shapes.GameRectangle

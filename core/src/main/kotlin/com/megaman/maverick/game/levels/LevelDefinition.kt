@@ -193,6 +193,12 @@ enum class LevelDefinition(
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
         characters = setOf(PlayerCharacter.X)
     ),
+    REFACTOR_TEST_134(
+        type = LevelType.TEST_LEVEL,
+        tmxMapSource = "RefactorTest134.tmx",
+        music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
+        screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN }
+    ),
     FIX_TEST_SPAWNER_REARM(
         type = LevelType.TEST_LEVEL,
         tmxMapSource = "FixTestSpawnerRearm.tmx",

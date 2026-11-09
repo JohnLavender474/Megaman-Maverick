@@ -1,22 +1,17 @@
-package com.megaman.maverick.game.screens.levels.camera
+package com.maverick.game.engine.camera
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.maverick.game.engine.camera.CameraFollow
-import com.maverick.game.engine.camera.CameraFollowMode
-import com.maverick.game.engine.camera.CameraRoomTransition
-import com.maverick.game.engine.camera.ICameraPart
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.UtilMethods.getOverlapPushDirection
 import com.maverick.game.engine.common.UtilMethods.getSingleMostDirectionFromStartToTarget
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 
 class CameraRoomBounds(
     private val follow: CameraFollow,
@@ -32,6 +27,8 @@ class CameraRoomBounds(
 
     var gameRooms: Array<RectangleMapObject>? = null
 
+    var subject: IRoomSubject? = null
+
     var priorGameRoom: RectangleMapObject? = null
         private set
     var currentGameRoom: RectangleMapObject? = null
@@ -43,6 +40,10 @@ class CameraRoomBounds(
     private var reset = false
 
     private val outRect = Rectangle()
+    private val tempRect1 = GameRectangle()
+    private val tempRect2 = GameRectangle()
+    private val tempVec1 = Vector2()
+    private val tempVec2 = Vector2()
 
     override fun reset() {
         reset = true
@@ -70,8 +71,8 @@ class CameraRoomBounds(
 
         if (transition.transitioning) return false
 
-        val focus = follow.focus
-        if (focus == null) {
+        val subject = subject
+        if (subject == null) {
             follow.mode = CameraFollowMode.OFF
             return false
         }
@@ -89,16 +90,16 @@ class CameraRoomBounds(
         }
 
         if (currentGameRoom != null &&
-            !currentGameRoom!!.rectangle.toGameRectangle().overlaps(focus.getFocusBounds())
+            !currentGameRoom!!.rectangle.toGameRectangle(tempRect1).overlaps(subject.getSubjectBounds())
         ) {
             priorGameRoom = currentGameRoom
             currentGameRoom = null
         }
 
-        val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle()
+        val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle(tempRect1)
 
         follow.mode = when {
-            currentRoomBounds?.overlaps(focus.getFocusBounds()) == true -> CameraFollowMode.X_AND_Y
+            currentRoomBounds?.overlaps(subject.getSubjectBounds()) == true -> CameraFollowMode.X_AND_Y
             priorGameRoom != null -> CameraFollowMode.X_ONLY
             else -> CameraFollowMode.OFF
         }
@@ -116,12 +117,12 @@ class CameraRoomBounds(
         // Using room centers to calculate the transition direction is a very naive and unreliable way to do this.
         // Ideally, `transDirection` will always be supplied with a non-null value.
         val direction = transDirection ?: getSingleMostDirectionFromStartToTarget(
-            currentGameRoom!!.rectangle.getCenter(), nextGameRoom.rectangle.getCenter()
+            currentGameRoom!!.rectangle.getCenter(tempVec1), nextGameRoom.rectangle.getCenter(tempVec2)
         )
 
         GameLogger.debug(TAG, "transitionToRoom(): transition direction = $direction")
 
-        transition.start(camera, nextGameRoom.rectangle, direction)
+        transition.start(camera, nextGameRoom.rectangle, direction, subject!!.getSubjectBounds().getCenter(tempVec1))
 
         priorGameRoom = currentGameRoom
         currentGameRoom = nextGameRoom
@@ -130,15 +131,15 @@ class CameraRoomBounds(
     }
 
     fun scanForNextRoom(camera: Camera) {
-        val focus = follow.focus ?: return
-        val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle() ?: return
+        val subject = subject ?: return
+        val currentRoomBounds = currentGameRoom?.rectangle?.toGameRectangle(tempRect1) ?: return
 
         for (room in gameRooms!!) {
-            val roomBounds = room.rectangle.toGameRectangle()
-            if (roomBounds.overlaps(focus.getFocusBounds()) && room.name != currentGameRoomKey) {
+            val roomBounds = room.rectangle.toGameRectangle(tempRect2)
+            if (roomBounds.overlaps(subject.getSubjectBounds()) && room.name != currentGameRoomKey) {
                 val boundingBox = GameRectangle()
                     .setSize(transitionScannerDimensions.x, transitionScannerDimensions.y)
-                    .setCenter(focus.getFocusBounds().getCenter())
+                    .setCenter(subject.getSubjectBounds().getCenter(tempVec1))
 
                 val direction = getOverlapPushDirection(boundingBox, currentRoomBounds, outRect)
 
@@ -147,7 +148,7 @@ class CameraRoomBounds(
                 priorGameRoom = currentGameRoom
                 currentGameRoom = room
 
-                transition.start(camera, room.rectangle, direction)
+                transition.start(camera, room.rectangle, direction, subject.getSubjectBounds().getCenter(tempVec1))
 
                 break
             }
@@ -155,15 +156,15 @@ class CameraRoomBounds(
     }
 
     fun nextGameRoom(): RectangleMapObject? {
-        val focus = follow.focus
-        if (focus == null || gameRooms == null) {
-            GameLogger.debug(TAG, "nextGameRoom(): no focus, no game rooms, so no next room")
+        val subject = subject
+        if (subject == null || gameRooms == null) {
+            GameLogger.debug(TAG, "nextGameRoom(): no room subject, no game rooms, so no next room")
             return null
         }
 
         var nextGameRoom: RectangleMapObject? = null
         for (room in gameRooms!!)
-            if (room.rectangle.contains(focus.getFocusBounds().getCenter())) {
+            if (room.rectangle.contains(subject.getSubjectBounds().getCenter(tempVec1))) {
                 nextGameRoom = room
                 break
             }

@@ -181,6 +181,8 @@ class GutsTankFist(services: MegaServices) : AbstractEnemy(services, dmgDuration
                 GutsTankFistState.ATTACHED -> {
                     facing = Facing.LEFT
                     body.physics.velocity.setZero()
+                    // TODO: placed outside the world steps, so with render interpolation the attached fist hitches
+                    //  against the tank while the tank moves (owner play test 2026-11-09; item 134, branch 134b)
                     body.setCenter(attachment)
                 }
                 GutsTankFistState.LAUNCHED -> {

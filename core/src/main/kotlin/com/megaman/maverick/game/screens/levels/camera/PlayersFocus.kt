@@ -1,8 +1,10 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.maverick.game.engine.camera.IDrawOffsetSource
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
+import com.maverick.game.engine.world.IDrawOffsets
 import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraPart
 import com.maverick.game.engine.camera.IFocusable
@@ -28,7 +30,7 @@ class PlayersFocus(
     private val edges: ViewEdgeRules = ViewEdgeRules(),
     private val keepActive: () -> Boolean = { true },
     private val excluded: (MegaGameEntity) -> Boolean = { false }
-) : IFocusable, ICameraPart, Resettable {
+) : IFocusable, IDrawOffsetSource, ICameraPart, Resettable {
 
     companion object {
         const val EASE_DURATION = 0.5f
@@ -45,13 +47,13 @@ class PlayersFocus(
     private val lastTarget = Vector2()
     private var groupMask = -1
     private var easeTime = EASE_DURATION
+    private var keeperMoved = false
+    private val playerDrawOffset = Vector2()
 
     private val lead: MegaGameEntity
         get() = players.get(PlayerSlot(0))!!
 
     fun inGroup(player: MegaGameEntity) = player.hasBody && player.existenceState.liveNow && !excluded(player)
-
-    override fun getFocusBounds() = lead.focus.getFocusBounds()
 
     override fun getFocusPosition(): Vector2 {
         var count = 0
@@ -79,16 +81,34 @@ class PlayersFocus(
             position.set(easeFrom.x + (position.x - easeFrom.x) * alpha, easeFrom.y + (position.y - easeFrom.y) * alpha)
         }
 
+        keeperMoved = false
         val view = view
         if (view != null && count > 1 && keepActive()) {
             keeperX = keeper(keeperX, true, edges.left.leaves(), edges.right.leaves())
             keeperY = keeper(keeperY, false, edges.bottom.leaves(), edges.top.leaves())
+            val keptX = position.x
+            val keptY = position.y
             keeperX?.let { position.x = keepInView(position.x, it, true, view.viewWidth) }
             keeperY?.let { position.y = keepInView(position.y, it, false, view.viewHeight) }
+            keeperMoved = position.x != keptX || position.y != keptY
         }
 
         shown.set(position)
         return position
+    }
+
+    override fun getDrawOffset(offsets: IDrawOffsets, out: Vector2): Vector2 {
+        out.setZero()
+        if (easeTime < EASE_DURATION || keeperMoved) return out
+
+        var count = 0
+        players.forEach {
+            if (inGroup(it)) {
+                out.add(offsets.getDrawOffset(it.body, playerDrawOffset))
+                count++
+            }
+        }
+        return if (count == 0) offsets.getDrawOffset(lead.body, out) else out.scl(1f / count)
     }
 
     private fun ViewEdgeRule.leaves() = this == ViewEdgeRule.WARP || this == ViewEdgeRule.KILL

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels
 
+import com.maverick.game.engine.camera.IRoomSubject
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -26,8 +27,8 @@ import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.SecondPlayerEntity
-import com.megaman.maverick.game.screens.levels.camera.CameraLimitStage
-import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
+import com.maverick.game.engine.camera.CameraLimitStage
+import com.maverick.game.engine.camera.CameraRoomBounds
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomClamp
 import com.megaman.maverick.game.screens.levels.camera.CameraRoomScan
 import com.megaman.maverick.game.testServices
@@ -40,8 +41,8 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 
-private class Focus : IFocusable {
-    override fun getFocusBounds() = GameRectangle().setSize(10f, 10f).setCenter(100f, 40f)
+private class Focus : IFocusable, IRoomSubject {
+    override fun getSubjectBounds() = GameRectangle().setSize(10f, 10f).setCenter(100f, 40f)
     override fun getFocusPosition() = Vector2(100f, 40f)
 }
 
@@ -63,7 +64,7 @@ private class Rig(next: RectangleMapObject) {
     val rotation = CameraRotation()
     val view = CameraView(camera, rotation)
     val follow = CameraFollow(1f, { 1f })
-    val transition = CameraRoomTransition(follow, 20f, 0f, 0.01f)
+    val transition = CameraRoomTransition(20f, 0f, 0.01f)
     val first = RectangleMapObject(0f, 0f, 200f, 80f).also { it.name = "first" }
     val roomBounds = CameraRoomBounds(follow, transition, Vector2(50f, 50f))
     val behaviors = ArrayList<Boolean>()
@@ -85,7 +86,7 @@ private class Rig(next: RectangleMapObject) {
 
     init {
         roomBounds.gameRooms = Array.with(first, next)
-        follow.setFocus(camera, Focus())
+        follow.setFocus(camera, Focus().also { roomBounds.subject = it })
         roomBounds.reset()
         controller.update(0.01f)
     }

@@ -13,7 +13,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.state.FocusComponent
+import com.megaman.maverick.game.entities.state.CameraSubjectComponent
 import com.megaman.maverick.game.players.GravityDeviceComponent
 import com.megaman.maverick.game.players.PlayerLight
 import com.megaman.maverick.game.players.PlayerLightComponent
@@ -66,7 +66,7 @@ class EntityQueriesTest : DescribeSpec({
             entity.addComponent(PointsComponent().also { it.putPoints(ConstKeys.HEALTH, Points(0, 10, 10)) })
             entity.addComponent(PlayerLightComponent { PlayerLight.JETPACK })
             entity.addComponent(GravityDeviceComponent { switches++ })
-            val focus = FocusComponent({ GameRectangle(0f, 0f, 2f, 2f) }, { Vector2() })
+            val focus = CameraSubjectComponent({ GameRectangle(0f, 0f, 2f, 2f) }, { Vector2() })
             entity.addComponent(focus)
 
             entity.focus shouldBeSameInstanceAs focus

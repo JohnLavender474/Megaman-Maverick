@@ -1,5 +1,8 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.maverick.game.engine.camera.CameraLimitStage
+import com.maverick.game.engine.camera.CameraRoomBounds
+import com.maverick.game.engine.camera.IRoomSubject
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -17,8 +20,8 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 
-private class Focus(var x: Float, var y: Float) : IFocusable {
-    override fun getFocusBounds() = GameRectangle().setSize(10f, 10f).setCenter(x, y)
+private class Focus(var x: Float, var y: Float) : IFocusable, IRoomSubject {
+    override fun getSubjectBounds() = GameRectangle().setSize(10f, 10f).setCenter(x, y)
     override fun getFocusPosition() = Vector2(x, y)
 }
 
@@ -34,7 +37,7 @@ private class Rig(direction: Direction, rooms: Array<RectangleMapObject>, focusX
     val view = CameraView(camera, rotation)
     val focus = Focus(focusX, focusY)
     val follow = CameraFollow(1f, { 1f })
-    val transition = CameraRoomTransition(follow, 20f, 0.1f, 0.1f)
+    val transition = CameraRoomTransition(20f, 0.1f, 0.1f)
     val roomBounds = CameraRoomBounds(follow, transition, Vector2(50f, 50f)).also { it.gameRooms = rooms }
     val controller = CameraController(camera).also {
         it.addMover(roomBounds)
@@ -47,7 +50,7 @@ private class Rig(direction: Direction, rooms: Array<RectangleMapObject>, focusX
     }
 
     init {
-        follow.setFocus(camera, focus)
+        follow.setFocus(camera, focus.also { roomBounds.subject = it })
         roomBounds.reset()
         controller.update(0.01f)
     }

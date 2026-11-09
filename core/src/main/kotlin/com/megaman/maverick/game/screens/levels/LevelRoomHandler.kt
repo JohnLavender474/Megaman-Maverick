@@ -22,7 +22,7 @@ import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.screens.levels.camera.CameraRoomBounds
+import com.maverick.game.engine.camera.CameraRoomBounds
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.getCenter
 

@@ -64,6 +64,8 @@ open class Background(
 
     protected var viewport: Viewport
 
+    val cameraDrawOffset = Vector2()
+
     private val rotation = if (rotatable) CameraRotation() else null
     private val orientation: CameraOrientation
 
@@ -131,9 +133,23 @@ open class Background(
     }
 
     override fun draw(drawer: Batch) {
+        val position = viewport.camera.position
+        val x = position.x
+        val y = position.y
+        val shifted = !cameraDrawOffset.isZero && doMove.invoke()
+        if (shifted) {
+            position.x += cameraDrawOffset.x * parallaxX
+            position.y += cameraDrawOffset.y * parallaxY
+        }
+
         viewport.apply()
         drawer.projectionMatrix = viewport.camera.combined
         backgroundSprites.draw(drawer)
+
+        if (shifted) {
+            position.x = x
+            position.y = y
+        }
     }
 
     override fun reset() = set(initPos.x, initPos.y)

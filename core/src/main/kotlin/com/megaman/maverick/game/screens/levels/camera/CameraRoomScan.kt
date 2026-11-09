@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.levels.camera
 
+import com.maverick.game.engine.camera.CameraRoomBounds
 import com.badlogic.gdx.graphics.Camera
 import com.maverick.game.engine.camera.ICameraPart
 

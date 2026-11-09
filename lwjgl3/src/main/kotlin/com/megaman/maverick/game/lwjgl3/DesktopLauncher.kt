@@ -48,6 +48,7 @@ object DesktopLauncher {
     private const val DEFAULT_SHOW_SCREEN_CONTROLLER = false
     private const val DEFAULT_PIXEL_PERFECT = false
     private const val DEFAULT_VSYNC = false
+    private const val DEFAULT_INTERPOLATION = true
     private const val DEFAULT_DIAGNOSTICS = false
     private const val DEFAULT_WORLD_CONTAINER = "simple"
     private const val DEFAULT_PATHFINDING = "async"
@@ -112,6 +113,7 @@ object DesktopLauncher {
         println("- Players: " + appArgs.players)
         println("- Mode: " + appArgs.mode)
         println("- View Edges: " + appArgs.viewEdges)
+        println("- Interpolation: " + (appArgs.interpolation ?: DEFAULT_INTERPOLATION))
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Reset Bindings: " + appArgs.resetBindings)
         println("- Performance: " + appArgs.performance)
@@ -158,6 +160,9 @@ object DesktopLauncher {
         // TODO: the screenshot trigger is hard-coded to the `P` key; it moves to a system key or a binding with the
         //  input work of item 031 (see its NOTES.md, "Owner's answers on bindings")
         if (appArgs.allowScreenshots) params.screenshotTrigger = { Gdx.input.isKeyJustPressed(Input.Keys.P) }
+        params.interpolation = appArgs.interpolation ?: DEFAULT_INTERPOLATION
+        // TODO: the interpolation dev key is hard-coded to the `I` key, in the same way as the screenshot key `P` (item 134)
+        if (appArgs.interpolation != null) params.interpolationToggle = { Gdx.input.isKeyJustPressed(Input.Keys.I) }
         params.showScreenController = appArgs.showScreenController
         params.diagnostics = appArgs.diagnostics
         params.worldContainer = appArgs.worldContainer
@@ -441,6 +446,14 @@ object DesktopLauncher {
                 "cap is the most seconds after the delay that a WARP waits for a safe spot."
         )
         var viewEdges: String? = null
+
+        @Parameter(
+            names = ["--interpolation"],
+            arity = 1,
+            description = "Dev option: draw bodies and the camera between the last 2 physics steps. " +
+                "When the option is given, the I key switches it on and off. Default value is $DEFAULT_INTERPOLATION"
+        )
+        var interpolation: Boolean? = null
 
         @Parameter(
             names = ["--autoPerf"],

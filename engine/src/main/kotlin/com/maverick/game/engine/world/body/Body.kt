@@ -39,11 +39,32 @@ class Body(
 
     companion object {
         const val TAG = "Body"
+        const val NO_STEP = -1
     }
 
     private val bounds = GameRectangle(x, y, width, height)
     private val tempRect1 = GameRectangle()
     private val tempVec1 = Vector2()
+
+    override var stepSerial = NO_STEP
+        private set
+    private var stepStartX = 0f
+    private var stepStartY = 0f
+    private var stepMoveX = 0f
+    private var stepMoveY = 0f
+
+    override fun beginStep(serial: Int) {
+        stepSerial = serial
+        stepStartX = bounds.getX()
+        stepStartY = bounds.getY()
+    }
+
+    override fun endStep() {
+        stepMoveX = bounds.getX() - stepStartX
+        stepMoveY = bounds.getY() - stepStartY
+    }
+
+    override fun getStepMove(out: Vector2): Vector2 = out.set(stepMoveX, stepMoveY)
 
     override fun getBounds(out: GameRectangle): GameRectangle {
         out.set(bounds)
@@ -120,6 +141,9 @@ class Body(
     override fun postProcess() = postProcess.values().forEach { it.invoke(this) }
 
     override fun reset() {
+        stepSerial = NO_STEP
+        stepMoveX = 0f
+        stepMoveY = 0f
         physics.reset()
         onReset.values().forEach { it.invoke() }
     }
