@@ -10,7 +10,8 @@ data class ViewEdgeRules(
     val top: ViewEdgeRule = ViewEdgeRule.NONE,
     val bottom: ViewEdgeRule = ViewEdgeRule.NONE,
     val delay: Float = 0f,
-    val damage: Int = 0
+    val damage: Int = 0,
+    val warpCap: Float = 3f
 ) {
 
     fun of(edge: Direction) = when (edge) {

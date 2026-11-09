@@ -435,9 +435,10 @@ object DesktopLauncher {
         @Parameter(
             names = ["--viewEdges"],
             description = "Dev option, needs --players 2: the rule at each edge of the shared view, " +
-                "for example left=WALL,right=WALL,top=NONE,bottom=WARP,delay=1.5,damage=3. " +
+                "for example left=WALL,right=WALL,top=NONE,bottom=WARP,delay=1.5,damage=3,cap=3. " +
                 "Rules: NONE, WALL, BOUNCE, WARP, KILL. A missing key keeps its default " +
-                "(left=WALL,right=WALL,top=NONE,bottom=NONE,delay=0,damage=0)."
+                "(left=WALL,right=WALL,top=NONE,bottom=NONE,delay=0,damage=0,cap=3). " +
+                "cap is the most seconds after the delay that a WARP waits for a safe spot."
         )
         var viewEdges: String? = null
 

@@ -104,7 +104,7 @@ private fun parseMode(value: String?, players: Int?, errors: MutableList<String>
     return mode
 }
 
-private val VIEW_EDGE_KEYS = listOf("left", "right", "top", "bottom", "delay", "damage")
+private val VIEW_EDGE_KEYS = listOf("left", "right", "top", "bottom", "delay", "damage", "cap")
 
 private fun parseViewEdges(
     value: String?,
@@ -126,10 +126,14 @@ private fun parseViewEdges(
         }
         val raw = parts[1]
         when (key) {
-            "delay", "damage" -> {
-                val number = raw.toFloatOrNull()?.takeIf { it >= 0f && (key == "delay" || it % 1f == 0f) }
+            "delay", "damage", "cap" -> {
+                val number = raw.toFloatOrNull()?.takeIf { it >= 0f && (key != "damage" || it % 1f == 0f) }
                 if (number == null) errors.add("Invalid --viewEdges $key '$raw'. Use a number of 0 or more")
-                else rules = if (key == "delay") rules.copy(delay = number) else rules.copy(damage = number.toInt())
+                else rules = when (key) {
+                    "delay" -> rules.copy(delay = number)
+                    "cap" -> rules.copy(warpCap = number)
+                    else -> rules.copy(damage = number.toInt())
+                }
             }
 
             else -> {

@@ -1,6 +1,23 @@
 package com.megaman.maverick.game.screens.levels.camera
 
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.world.body.Body
+import com.maverick.game.engine.world.body.BodyType
+import com.maverick.game.engine.world.body.Fixture
+import com.maverick.game.engine.world.container.SimpleGridWorldContainer
+import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.players.TestFreezer
+import com.megaman.maverick.game.players.TestOwnedDamager
+import com.megaman.maverick.game.world.body.BodyLabel
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.addBlockFilter
+import com.megaman.maverick.game.world.body.addBodyLabel
+import com.megaman.maverick.game.world.body.setBodySense
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -44,6 +61,7 @@ private class Session(engine: GameEngine = mockk(relaxed = true)) {
     private fun player(slot: Int, x: Float, y: Float): TestHealthPlayer {
         val player = TestHealthPlayer(services)
         player.body.setSize(10f, 10f).setCenter(x, y)
+        player.body.setBodySense(BodySense.FEET_ON_GROUND, true)
         player.addComponent(FocusComponent({ GameRectangle(player.body) }, { player.body.getCenter(Vector2()) }))
         players.register(PlayerSlot(slot), player)
         player.existenceState = EntityExistenceState.LIVE
@@ -51,7 +69,7 @@ private class Session(engine: GameEngine = mockk(relaxed = true)) {
     }
 }
 
-private class EdgesRig(val rules: ViewEdgeRules, var on: Boolean = true) {
+private class EdgesRig(val rules: ViewEdgeRules, var on: Boolean = true, floor: Boolean = true) {
     val engine = mockk<GameEngine>(relaxed = true)
     val session = Session(engine)
     val camera = OrthographicCamera().also {
@@ -61,11 +79,40 @@ private class EdgesRig(val rules: ViewEdgeRules, var on: Boolean = true) {
     val view = CameraView(camera, CameraRotation())
     val center = Vector3(200f, 40f, 0f)
     val room = Rectangle(0f, -200f, 1000f, 400f)
+    val world = SimpleGridWorldContainer(32)
     val edges = CameraViewEdges(
-        view, center, session.players, rules, ViewEdgeHazard(session.services).also { it.damage = rules.damage }, { room }
+        view, center, session.players, rules, ViewEdgeHazard(session.services).also { it.damage = rules.damage },
+        WarpSpotTest(32f) { world }, { room }
     ) { on }
 
+    init {
+        if (floor) solid(0f, 25f, 1000f, 10f)
+    }
+
     fun update(delta: Float = 0.1f) = edges.update(camera, delta)
+
+    fun solid(x: Float, y: Float, width: Float, height: Float): Body {
+        val body = Body(BodyType.STATIC, x, y, width, height)
+        body.putProperty(ConstKeys.ENTITY, TestFreezer(session.services))
+        world.addBody(body)
+        return body
+    }
+
+    fun hazard(type: FixtureType, owner: MegaGameEntity, x: Float, y: Float, width: Float, height: Float) {
+        val body = Body(BodyType.ABSTRACT, x, y, width, height)
+        val fixture = Fixture(body, type, GameRectangle().setSize(width, height))
+        fixture.properties.put(ConstKeys.ENTITY, owner)
+        body.addFixture(fixture)
+        world.addFixture(fixture)
+    }
+
+    fun warpOut() {
+        session.first.body.setCenter(200f, 40f)
+        session.second.body.setCenter(400f, 40f)
+        update()
+    }
+
+    fun secondCenter(): Vector2 = session.second.body.getCenter(Vector2())
 }
 
 private class TallRig {
@@ -87,7 +134,7 @@ private class TallRig {
     val edges = CameraViewEdges(
         view, controller.settledPosition, session.players,
         ViewEdgeRules(bottom = ViewEdgeRule.WARP, delay = 100f),
-        ViewEdgeHazard(session.services), { room.rectangle }
+        ViewEdgeHazard(session.services), WarpSpotTest(32f) { SimpleGridWorldContainer(32) }, { room.rectangle }
     ) { true }
     val focus = PlayersFocus(session.players, view, ViewEdgeRules(bottom = ViewEdgeRule.WARP)) { edges.isHeld(it) }
 
@@ -415,6 +462,216 @@ class SharedViewTest : DescribeSpec({
             rig.session.second.body.setCenter(400f, 40f)
             rig.update()
             rig.session.second.currentHealth shouldNotBe 0
+        }
+
+        describe("the warp spot test") {
+            val warp = noWalls.copy(right = ViewEdgeRule.WARP)
+
+            it("lands on the side the partner faces") {
+                val rig = EdgesRig(warp)
+                rig.session.first.facing = Facing.LEFT
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(168f, 40f)
+            }
+
+            it("lands on the other side when a solid is on the facing side") {
+                val rig = EdgesRig(warp)
+                rig.solid(225f, 0f, 20f, 80f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(168f, 40f)
+            }
+
+            it("lands on the partner's spot when solids are on both sides") {
+                val rig = EdgesRig(warp)
+                rig.solid(225f, 0f, 20f, 80f)
+                rig.solid(155f, 0f, 20f, 80f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(200f, 40f)
+            }
+
+            it("does not count a one-way block, a slope or a solid that lets the player through") {
+                for (label in arrayOf(BodyLabel.COLLIDE_DOWN_ONLY, BodyLabel.SLOPE, null)) {
+                    val rig = EdgesRig(warp)
+                    val body = rig.solid(225f, 0f, 20f, 80f)
+                    if (label != null) body.addBodyLabel(label) else body.addBlockFilter { _, _ -> true }
+                    rig.warpOut()
+                    rig.secondCenter() shouldBe Vector2(232f, 40f)
+                }
+            }
+
+            it("does not count a solid that only touches the spot") {
+                val rig = EdgesRig(warp)
+                rig.solid(237f, 0f, 20f, 80f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(232f, 40f)
+            }
+
+            it("does not land in a death fixture or a hurtful damager") {
+                for (type in arrayOf(FixtureType.DEATH, FixtureType.DAMAGER)) {
+                    val rig = EdgesRig(warp)
+                    rig.hazard(type, TestOwnedDamager(rig.session.services, null), 225f, 30f, 20f, 20f)
+                    rig.warpOut()
+                    rig.secondCenter() shouldBe Vector2(168f, 40f)
+                }
+            }
+
+            it("lands on a damager that cannot hurt the player, for example the partner's shot") {
+                val rig = EdgesRig(warp)
+                val shot = TestOwnedDamager(rig.session.services, rig.session.first)
+                rig.hazard(FixtureType.DAMAGER, shot, 225f, 30f, 20f, 20f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(232f, 40f)
+            }
+
+            it("does not use a spot that is not fully in the view") {
+                val rig = EdgesRig(warp)
+                rig.session.first.body.setCenter(242f, 40f)
+                rig.session.second.body.setCenter(400f, 40f)
+                rig.update()
+                rig.secondCenter() shouldBe Vector2(210f, 40f)
+            }
+
+            it("waits while the partner is in the air, and warps when it stands on the ground or in water") {
+                for (sense in arrayOf(BodySense.FEET_ON_GROUND, BodySense.IN_WATER)) {
+                    val rig = EdgesRig(warp.copy(warpCap = 5f))
+                    rig.session.first.body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                    rig.warpOut()
+                    rig.update()
+                    rig.edges.isHeld(rig.session.second) shouldBe true
+
+                    rig.session.first.body.setBodySense(sense, true)
+                    rig.update()
+                    rig.edges.isHeld(rig.session.second) shouldBe false
+                    rig.secondCenter() shouldBe Vector2(232f, 40f)
+                }
+            }
+
+            it("lands on the partner's spot when no spot is safe by the end of the cap") {
+                val rig = EdgesRig(warp.copy(delay = 0.25f, warpCap = 0.5f))
+                rig.hazard(FixtureType.DEATH, TestOwnedDamager(rig.session.services, null), 150f, 0f, 100f, 80f)
+                rig.warpOut()
+                repeat(6) { rig.update() }
+                rig.edges.isHeld(rig.session.second) shouldBe true
+
+                rig.update()
+                rig.edges.isHeld(rig.session.second) shouldBe false
+                rig.secondCenter() shouldBe Vector2(200f, 40f)
+            }
+
+            it("lines the spot up with the partner's feet, so a low partner does not put the player in the floor") {
+                val rig = EdgesRig(warp, floor = false)
+                rig.solid(150f, 0f, 100f, 20f)
+                rig.session.first.body.setSize(10f, 4f).setPosition(195f, 20f)
+                rig.session.second.body.setCenter(400f, 40f)
+                rig.update()
+                rig.secondCenter() shouldBe Vector2(232f, 25f)
+            }
+
+            it("lands on the partner's spot at the end of the cap while the partner stays in the air") {
+                val rig = EdgesRig(warp.copy(warpCap = 0.25f))
+                rig.session.first.body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                rig.warpOut()
+                rig.update()
+                rig.edges.isHeld(rig.session.second) shouldBe true
+                rig.update()
+                rig.update()
+                rig.edges.isHeld(rig.session.second) shouldBe false
+                rig.secondCenter() shouldBe Vector2(200f, 40f)
+            }
+
+            it("does not land a side spot over a pit, and lands on the partner's spot when both sides are pits") {
+                val rig = EdgesRig(warp, floor = false)
+                rig.solid(150f, 25f, 60f, 10f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(168f, 40f)
+
+                val ledge = EdgesRig(warp, floor = false)
+                ledge.solid(195f, 25f, 10f, 10f)
+                ledge.warpOut()
+                ledge.secondCenter() shouldBe Vector2(200f, 40f)
+            }
+
+            it("does not count ground that is only under the outer edge of the spot") {
+                val rig = EdgesRig(warp, floor = false)
+                rig.solid(160f, 25f, 46f, 10f)
+                rig.solid(244f, 25f, 3f, 10f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(168f, 40f)
+            }
+
+            it("counts a floor less than one tile below the feet and a one-way platform as ground") {
+                for (label in arrayOf(null, BodyLabel.COLLIDE_DOWN_ONLY)) {
+                    val rig = EdgesRig(warp, floor = false)
+                    rig.solid(195f, 25f, 10f, 10f)
+                    val floor = rig.solid(220f, 5f, 30f, 10f)
+                    if (label != null) floor.addBodyLabel(label)
+                    rig.warpOut()
+                    rig.secondCenter() shouldBe Vector2(232f, 40f)
+                }
+            }
+
+            it("does not count a floor one tile or more below the feet, or a block that collides only from below") {
+                val deep = EdgesRig(warp, floor = false)
+                deep.solid(195f, 25f, 10f, 10f)
+                deep.solid(220f, -10f, 30f, 13f)
+                deep.warpOut()
+                deep.secondCenter() shouldBe Vector2(200f, 40f)
+
+                val upOnly = EdgesRig(warp, floor = false)
+                upOnly.solid(195f, 25f, 10f, 10f)
+                upOnly.solid(150f, 25f, 100f, 10f).also { it.addBodyLabel(BodyLabel.COLLIDE_UP_ONLY) }
+                upOnly.warpOut()
+                upOnly.secondCenter() shouldBe Vector2(200f, 40f)
+            }
+
+            it("does not count a floor with a death fixture in its top as ground") {
+                val rig = EdgesRig(warp)
+                rig.hazard(FixtureType.DEATH, TestOwnedDamager(rig.session.services, null), 220f, 25f, 30f, 10f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(168f, 40f)
+            }
+
+            it("counts water at the spot as ground") {
+                val rig = EdgesRig(warp, floor = false)
+                rig.hazard(FixtureType.WATER, TestOwnedDamager(rig.session.services, null), 220f, 0f, 30f, 80f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(232f, 40f)
+            }
+
+            it("does not land in a teleporter") {
+                val rig = EdgesRig(warp)
+                rig.hazard(FixtureType.TELEPORTER, TestOwnedDamager(rig.session.services, null), 225f, 30f, 20f, 20f)
+                rig.warpOut()
+                rig.secondCenter() shouldBe Vector2(168f, 40f)
+            }
+
+            it("waits after the cap while a solid blocks the partner's spot, for example in a low crevice") {
+                val rig = EdgesRig(warp.copy(delay = 0.25f, warpCap = 0.5f))
+                val ceiling = rig.solid(150f, 42f, 100f, 30f)
+                rig.warpOut()
+                repeat(20) { rig.update() }
+                rig.edges.isHeld(rig.session.second) shouldBe true
+
+                ceiling.physics.collisionOn = false
+                rig.update()
+                rig.edges.isHeld(rig.session.second) shouldBe false
+                rig.secondCenter() shouldBe Vector2(232f, 40f)
+            }
+
+            it("draws the guide gray while the warp waits, and white when it is ready") {
+                val rig = EdgesRig(warp.copy(delay = 5f))
+                val renderer = mockk<ShapeRenderer>(relaxed = true)
+                rig.session.first.body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                rig.warpOut()
+                rig.edges.drawWarpGuides(renderer)
+                verify { renderer.color = Color.GRAY }
+                verify { renderer.circle(232f, 40f, any()) }
+
+                rig.session.first.body.setBodySense(BodySense.FEET_ON_GROUND, true)
+                rig.update()
+                rig.edges.drawWarpGuides(renderer)
+                verify { renderer.color = Color.WHITE }
+            }
         }
     }
 })

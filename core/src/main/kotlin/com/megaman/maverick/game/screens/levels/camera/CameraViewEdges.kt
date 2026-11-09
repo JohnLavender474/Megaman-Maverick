@@ -10,18 +10,22 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraPart
 import com.maverick.game.engine.common.enums.Direction
+import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.entities.facing
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.CameraEdgeBlock
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -32,7 +36,9 @@ import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.state.ViewEdgeRule
 import com.megaman.maverick.game.state.ViewEdgeRules
+import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.isSensing
 import com.megaman.maverick.game.world.body.getCenter
 
 fun viewEdgeInsideRoom(viewCenter: Vector3, viewWidth: Float, viewHeight: Float, room: Rectangle, edge: Direction):
@@ -52,6 +58,7 @@ class CameraViewEdges(
     private val players: MegaPlayers,
     private val rules: ViewEdgeRules,
     private val hazard: ViewEdgeHazard,
+    private val spots: WarpSpotTest,
     private val room: () -> Rectangle?,
     private val enabled: () -> Boolean
 ) : ICameraPart, Resettable {
@@ -70,7 +77,10 @@ class CameraViewEdges(
     private val heldTimes = FloatArray(players.capacity)
     private val heldPositions = Array(players.capacity) { Vector2() }
     private val hasWarpSpot = BooleanArray(players.capacity)
+    private val warpReady = BooleanArray(players.capacity)
     private val warpSpots = Array(players.capacity) { Vector2() }
+    private val fallbackSpots = Array(players.capacity) { Vector2() }
+    private val tryBounds = GameRectangle()
 
     fun isHeld(player: MegaGameEntity) = held[player.playerSlot!!.index]
 
@@ -115,7 +125,7 @@ class CameraViewEdges(
             if (!held[slot] || !hasWarpSpot[slot]) return@forEach
             val center = player.body.getCenter()
             val spot = warpSpots[slot]
-            renderer.color = Color.WHITE
+            renderer.color = if (warpReady[slot]) Color.WHITE else Color.GRAY
             renderer.line(center.x, center.y, spot.x, spot.y)
             renderer.circle(spot.x, spot.y, WARP_GUIDE_RADIUS * ConstVals.PPM)
         }
@@ -201,6 +211,7 @@ class CameraViewEdges(
         heldTimes[slot] = 0f
         heldPositions[slot].set(player.body.getX(), player.body.getY())
         hasWarpSpot[slot] = false
+        warpReady[slot] = false
 
         player.lock(MegaLockGroup.MOVEMENT, MegaLockReason.VIEW_EDGE)
         player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.VIEW_EDGE)
@@ -215,6 +226,7 @@ class CameraViewEdges(
         if (!held[slot]) return
         held[slot] = false
         hasWarpSpot[slot] = false
+        warpReady[slot] = false
 
         player.unlock(MegaLockGroup.MOVEMENT, MegaLockReason.VIEW_EDGE)
         player.unlock(MegaLockGroup.BEHAVIORS, MegaLockReason.VIEW_EDGE)
@@ -248,11 +260,15 @@ class CameraViewEdges(
             player.body.setPosition(heldPositions[slot])
             player.body.physics.velocity.setZero()
 
-            hasWarpSpot[slot] = findWarpSpot(player, warpSpots[slot])
+            // TODO: the cap does not run while no free partner is in view (for example above a NONE top edge), so the
+            //  held player waits until the partner comes back into view (127a review, docs/TODO.md)
+            hasWarpSpot[slot] = findWarpSpot(player, slot)
             heldTimes[slot] += delta
             if (heldTimes[slot] < rules.delay || !hasWarpSpot[slot]) return@forEach
+            if (!warpReady[slot] && heldTimes[slot] < rules.delay + rules.warpCap) return@forEach
 
-            val spot = warpSpots[slot]
+            val spot = if (warpReady[slot]) warpSpots[slot] else fallbackSpots[slot]
+            if (!warpReady[slot] && !spots.isFree(player, spot.x, spot.y)) return@forEach
             release(player)
             player.body.setCenter(spot.x, spot.y)
             damage(player)
@@ -264,20 +280,48 @@ class CameraViewEdges(
         return false
     }
 
-    // TODO: the warp spot is not tested for solids, so a player that warps beside a partner next to a wall or a
-    //  platform can land inside it (047g docs/TODO.md, "Backlog candidates")
-    private fun findWarpSpot(player: MegaGameEntity, out: Vector2): Boolean {
+    private fun findWarpSpot(player: MegaGameEntity, slot: Int): Boolean {
+        warpReady[slot] = false
         var partner: MegaGameEntity? = null
         players.forEach {
             if (partner == null && it != player && players.isLive(it) && !isHeld(it) && isInView(it)) partner = it
         }
         val target = partner ?: return false
 
-        val center = target.body.getCenter()
-        val side = if (center.x > viewCenter.x) -1f else 1f
-        out.set(center.x + side * ConstVals.PPM, center.y)
+        val x = target.body.getCenter().x
+        val y = target.body.getY() + player.body.getHeight() / 2f
+        val side = if (target.facing == Facing.LEFT) -1f else 1f
+        val out = warpSpots[slot]
+        fallbackSpots[slot].set(x, y)
+        out.set(x + side * ConstVals.PPM, y)
+
+        warpReady[slot] = stands(target) && (
+            tryAt(player, x + side * ConstVals.PPM, y, out, true) ||
+                tryAt(player, x - side * ConstVals.PPM, y, out, true) ||
+                tryAt(player, x, y, out, false))
         return true
     }
+
+    private fun tryAt(player: MegaGameEntity, x: Float, y: Float, out: Vector2, needsGround: Boolean): Boolean {
+        val size = player.body
+        tryBounds.setSize(size.getWidth(), size.getHeight()).setCenter(x, y)
+        if (!isFullyInView(tryBounds) || !spots.isSafe(player, x, y)) return false
+        if (needsGround && !spots.hasGround(player, x, y)) return false
+        out.set(x, y)
+        return true
+    }
+
+    // TODO: a partner on a ladder stands, but its side spots have no ground, so the player lands on the partner's spot
+    //  in the ladder without a climb and can fall and warp again (127a review, docs/TODO.md)
+    private fun stands(player: MegaGameEntity): Boolean {
+        val body = player.body
+        return body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.IN_WATER) ||
+            player.isBehaviorActive(BehaviorType.CLIMBING)
+    }
+
+    private fun isFullyInView(area: GameRectangle) =
+        area.getX() >= viewCenter.x - view.viewWidth / 2f && area.getMaxX() <= viewCenter.x + view.viewWidth / 2f &&
+            area.getY() >= viewCenter.y - view.viewHeight / 2f && area.getMaxY() <= viewCenter.y + view.viewHeight / 2f
 
     private fun isInView(player: MegaGameEntity): Boolean {
         val center = player.body.getCenter()

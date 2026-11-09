@@ -95,6 +95,7 @@ import com.megaman.maverick.game.screens.levels.camera.CameraZone
 import com.megaman.maverick.game.screens.levels.camera.CameraZones
 import com.megaman.maverick.game.screens.levels.camera.PlayersFocus
 import com.megaman.maverick.game.screens.levels.camera.isPastCameraEdge
+import com.megaman.maverick.game.screens.levels.camera.WarpSpotTest
 import com.megaman.maverick.game.screens.levels.events.BossSpawnEventHandler
 import com.megaman.maverick.game.screens.levels.events.EndLevelEventHandler
 import com.megaman.maverick.game.screens.levels.respawn.BeamInView
@@ -347,6 +348,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.players,
             game.services.rules.viewEdges,
             ViewEdgeHazard(game.services).also { it.damage = game.services.rules.viewEdges.damage },
+            WarpSpotTest(ConstVals.PPM.toFloat()) { game.levelState.worldContainer },
             { roomBounds.currentGameRoom?.rectangle },
             viewEdgesOn
         ) else null

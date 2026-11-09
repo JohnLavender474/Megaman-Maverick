@@ -133,10 +133,13 @@ class LaunchOptionsResolverTest : DescribeSpec({
         }
 
         it("overrides only the given keys, case-insensitively") {
-            val result = resolve(LaunchOptions(players = "2", viewEdges = "top=wall, bottom=WARP,delay=1.5,damage=3"))
+            val text = "top=wall, bottom=WARP,delay=1.5,damage=3,cap=2.5"
+            val result = resolve(LaunchOptions(players = "2", viewEdges = text))
             result.isValid shouldBe true
             result.resolved!!.rules.viewEdges shouldBe
-                ViewEdgeRules(top = ViewEdgeRule.WALL, bottom = ViewEdgeRule.WARP, delay = 1.5f, damage = 3)
+                ViewEdgeRules(
+                    top = ViewEdgeRule.WALL, bottom = ViewEdgeRule.WARP, delay = 1.5f, damage = 3, warpCap = 2.5f
+                )
         }
 
         it("parses each rule on each edge") {
@@ -160,7 +163,7 @@ class LaunchOptionsResolverTest : DescribeSpec({
         }
 
         it("rejects a bad key, a bad rule and a bad number") {
-            listOf("side=WALL", "top", "top=JUMP", "delay=-1", "delay=x", "damage=1.5").forEach {
+            listOf("side=WALL", "top", "top=JUMP", "delay=-1", "delay=x", "damage=1.5", "cap=-1", "cap=x").forEach {
                 val result = resolve(LaunchOptions(players = "2", viewEdges = it))
                 result.isValid shouldBe false
                 result.errors.size shouldBe 1
