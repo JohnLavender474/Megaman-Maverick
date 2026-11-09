@@ -153,6 +153,7 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - Body fixtures use `FixtureType` (`world/body/FixtureType.kt`). Use `BodyComponentCreator.create(this, body, BodyFixtureDef.of(...))`.
 - Log with `GameLogger.debug(TAG, ...)`, `GameLogger.log(TAG, ...)`, `GameLogger.error(TAG, ...)`.
 - Fail fast. A state that only a mistake can cause (bad map data, a wrong label, a missing entity) throws at once; do not fall back to a default with `as?` or a silent `return`. Where the raw error would be unclear (for example a bare `ClassCastException`), catch it and throw a custom exception made for that case. Its message says what is wrong and how to fix it, and the original error is its `cause`. Put the class next to the code that throws it (examples: `engine/.../components/MissingComponentException.kt`, `core/.../world/collisions/InvalidSlopeLabelException.kt`), and test that it is thrown.
+- Keep an interface method the one entry point where callers use it. Do not add an overload or a second method next to it to pass one more value (for example a `draw(batch, offset)` next to `override fun draw(batch)`). Put the value in a field of the object, which the caller sets before the call (as `Background.cameraDrawOffset` and `GameSprite.drawOffsetX`), or change the interface for all of its implementations. Then each caller goes through the same contract, and a later change cannot miss a path.
 
 ## Package READMEs
 
