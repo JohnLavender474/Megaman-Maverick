@@ -240,6 +240,12 @@ approval, but write the reason in the process log.
   leave a `TODO` comment at the place where it will be needed. At the scope and plan steps, list
   each new API with its first caller in the branch; drop any API that has none. (Lessons from
   `029a`: `ComponentKey` and `nearestTo` were added with no caller and later removed.)
+- Keep concerns separate. Put new state and new API on the type that owns the concern, not on the
+  type that is easiest to reach. For example, the body (`Body`, `IBody`) is the physics and world
+  state of an entity. Draw state, such as a draw offset or a link to the body whose offset a sprite
+  uses, goes on the draw side (`SpritesComponent`, `GameSprite`, the sprites system), not on the
+  body (owner decision, 2026-11-09, `134b` D1). When a design puts state of one concern on a type
+  of another concern, name it as a decision in the brief.
 - On the branch, write docs only inside the branch folder. Do not edit `ITEMS.md`, `ITEM.md`,
   the item `NOTES.md` or other top-level files on the branch. Then two active branches cannot
   conflict in the docs.
