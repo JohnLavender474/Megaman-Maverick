@@ -196,9 +196,13 @@ questions.
    - `CONTRACT.md`: the behavior that the branch changes on purpose, the behavior that it must not
      change, and how to check them, for example the levels to play through and what to look for.
      Only include what the scope can affect.
-3. **Brief.** Write `docs/BRIEF.html` from the template `_templates/branch/docs/BRIEF.html` and
-   publish it as a private Artifact page (load the `artifact-design` skill first). The template
-   holds the styles and the sections below; `038a` is a filled-in example. Write the link in the status block of the branch
+3. **Brief.** Load the `visual-explainer` skill. Write `docs/BRIEF.src.html` from the template
+   `_templates/branch/docs/BRIEF.src.html`. Render it into `temp/<branch>/`, not into the branch
+   folder:
+   `node <visual-explainer skill folder>/kit/render.mjs docs/BRIEF.src.html -o <repo>/temp/<branch>/BRIEF.html`.
+   Fix each `✗` that the render lists, and render again. Then publish
+   `temp/<branch>/BRIEF.html` as a private Artifact page. Commit only `BRIEF.src.html`. A branch
+   folder that already has a `BRIEF.html` from the old template keeps it. Write the link in the status block of the branch
    `process-log.md`. Then ask the decisions with `AskUserQuestion`. The brief fits on about one
    screen and has these parts, in this order:
    - **Goal:** one or two sentences. Then what the player sees change, or "nothing visible".
@@ -224,7 +228,7 @@ Specs and plans for a `mega-refactor-` branch go in the branch folder, not in
 gives a different default path.
 
 If the scope must change during the work, update `docs/SCOPE.md` and `docs/CONTRACT.md`. Update
-the brief, mark what changed, publish it again to the same link, and ask the owner the new
+the brief, mark what changed, render it, publish it again to the same link, and ask the owner the new
 decision. Then update `docs/PLAN.md` to match. A change to `docs/PLAN.md` alone does not need
 approval, but write the reason in the process log.
 

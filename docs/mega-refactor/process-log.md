@@ -1850,3 +1850,15 @@ newest entry at the bottom.
 - Follow-up: `081e` folder made (`planned`). 2 accepted edge cases with `TODO`s point to `134` (a long frame and a
   rising platform can still miss the landing press). `081` open questions 9 and 11 are closed.
 
+## 2026-11-09 — master (docs)
+
+- Summary: the brief is now made with the Visual Explainer plugin and published as an Artifact
+  page (owner decision, 2026-11-09). The template `_templates/branch/docs/BRIEF.html` became
+  `BRIEF.src.html`, with the same 7 sections: Mermaid diagrams (the render draws them as SVG) and
+  one `<ve-ask>` per decision. The page renders into `temp/<branch>/`, and only the source is
+  committed ("Planning", step 3). A branch folder that has an old `BRIEF.html` keeps it. The
+  comparison of the tools is the Artifact page `https://claude.ai/artifact/7yPZF37o4iEAeXc1KwsZgj`.
+- Contract check: not needed (docs only). The template renders with no `✗` with sample text.
+- Follow-up: not checked yet: a kit page has no rule for the claude.ai theme switch
+  (`data-theme`), so it can follow only the system light or dark setting.
+
