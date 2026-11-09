@@ -144,6 +144,12 @@ statuses and column meanings are in `CLAUDE.md`.
 | 134 | [Draw bodies and the camera between physics steps (render interpolation)](items/134-render-interpolation/ITEM.md) | refactor | `O9`, `O5` | active | none | 2026-11-07 | |
 | 135 | [A player held below the view is left behind at a side room exit](items/135-held-player-left-behind/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 136 | [Co-op: a player can skip a spike floor in a tall room by falling below the view](items/136-tall-room-spike-skip/ITEM.md) | feature | `O2`, `O4` | idea | `047` | | |
+| 137 | [One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`](items/137-falling-piece-entity/ITEM.md) | refactor | `O1` | idea | none | | |
+| 138 | [Merge `Wreck` into `MockSpriteEntity`](items/138-wreck-into-mock-sprite/ITEM.md) | refactor | `O1` | idea | none | | |
+| 139 | [A shared simple enemy shot, starting with `JunkShot`](items/139-shared-enemy-shot/ITEM.md) | refactor | `O1` | idea | none | | |
+| 140 | [`TickFrames` as the engine `Animation`, with durations in seconds](items/140-tick-frames-seconds/ITEM.md) | refactor | `O1` | idea | none | | |
+| 141 | [The sabre damage by slash kind and by target](items/141-sabre-damage-rules/ITEM.md) | feature | `O8` | idea | `081` | | |
+| 142 | [Remove the reflection from `FriendlyFireTest` and `EntityExistenceTest`](items/142-tests-no-reflection/ITEM.md) | test | `O6` | idea | none | | |
 
 ## Branches
 
@@ -163,7 +169,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-081b-x-run-jump-shoot`](items/081-playable-x/branches/mega-refactor-081b-x-run-jump-shoot/process-log.md) | 081 | Phase 1 of X: `MegamanX` in slot 0 on `X6_INTRO`, with run, jump and the buster | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-081c-x-wall-slide-air-dash`](items/081-playable-x/branches/mega-refactor-081c-x-wall-slide-air-dash/process-log.md) | 081 | Phase 2 of X: wall slide with the wall kick, and the air dash | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-081d-x-dash-sabre`](items/081-playable-x/branches/mega-refactor-081d-x-dash-sabre/process-log.md) | 081 | Phase 3 of X (ground dash, dash jump, dash wall kick), less knockback, the owner's X tuning and the X6 feel fixes; the sabre moved to `081e` | merged | 2026-11-06 | 2026-11-07 |
-| [`mega-refactor-081e-x-sabre`](items/081-playable-x/branches/mega-refactor-081e-x-sabre/process-log.md) | 081 | Phase 4 of X: the Z-sabre slash on `UP` + `B` | active | 2026-11-07 | |
+| [`mega-refactor-081e-x-sabre`](items/081-playable-x/branches/mega-refactor-081e-x-sabre/process-log.md) | 081 | Phase 4 of X: the Z-sabre slash on `UP` + `B` | merged | 2026-11-07 | 2026-11-09 |
+| [`mega-refactor-081f-x6-intro-fixes`](items/081-playable-x/branches/mega-refactor-081f-x6-intro-fixes/process-log.md) | 081 | Fix the X6 intro stage and `D1000` problems that the `081e` play test found | planned | | |
 | [`mega-refactor-127a-warp-spot-solids`](items/127-warp-spot-solids/branches/mega-refactor-127a-warp-spot-solids/process-log.md) | 127 | Test the view edge warp spot for solids, hazards and enemies, and wait for a safe spot | active | 2026-11-07 | |
 | [`mega-refactor-038a-respawn-routine`](items/038-respawn-routine/branches/mega-refactor-038a-respawn-routine/process-log.md) | 038 | One `RespawnRoutine` runs the death and the respawn in a fixed order, in place of the 5-event chain; the public events stay | merged | 2026-11-06 | 2026-11-06 |
 | [`mega-refactor-038b-level-reset`](items/038-respawn-routine/branches/mega-refactor-038b-level-reset/process-log.md) | 038 | Split `PLAYER_SPAWN` into a spawn event for each slot and a `LEVEL_RESET` that the respawn routine sends; move the level-reset listeners | merged | 2026-11-06 | 2026-11-06 |

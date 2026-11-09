@@ -7,7 +7,7 @@
 - Includes: the work of `069` (dash button), folded in on 2026-11-05. Its research and decisions are in
   `069` `ITEM.md` and `NOTES.md`.
 - Related: `024`, `029`, `031`, `047`, `048`, `051`, `060`, `061`, `067`, `068`, `069`, `113`, `120`, `121`, `122`
-- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (merged, 2026-11-06), `mega-refactor-081d-x-dash-sabre` (merged, 2026-11-07), `mega-refactor-081e-x-sabre` (active, 2026-11-07)
+- Branches: `mega-refactor-081a-player-lifecycle` (merged, 2026-11-06), `mega-refactor-081b-x-run-jump-shoot` (merged, 2026-11-06), `mega-refactor-081c-x-wall-slide-air-dash` (merged, 2026-11-06), `mega-refactor-081d-x-dash-sabre` (merged, 2026-11-07), `mega-refactor-081e-x-sabre` (merged, 2026-11-09), `mega-refactor-081f-x6-intro-fixes` (planned)
 
 ## Goal
 
@@ -81,6 +81,7 @@ as a branch; the letters after it are proposals.
 | 2 | phase 2 | Wall slide and air dash. `airDashBehavior()` and the wall-slide behavior get parameters. |
 | 3 | phase 3 | The dash input (from `069`), the ground dash and the dash wall kick. |
 | 4 | phase 4 | The sabre. |
+| 5 | `081f` | Fixes to the X6 intro stage and to `D1000` that the `081e` play test found (draft scope in the `081f` branch folder). |
 | — | not placed | Extract `CharacterDef` from Megaman and X (open question 7). Crouch, ladder and climb (open question 10). |
 
 ### `081a`: the shared player lifecycle

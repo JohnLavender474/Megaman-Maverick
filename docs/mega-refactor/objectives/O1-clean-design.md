@@ -151,6 +151,10 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `119` | planned | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](../items/119-player-left-world-event/ITEM.md) |
 | `126` | idea | [Movement and damage blocks as lock reasons](../items/126-movement-damage-lock-reasons/ITEM.md) (main) |
 | `130` | planned | [`LevelCamera` and `SharedView`: the camera stack out of `MegaLevelScreen`](../items/130-level-camera/ITEM.md) (main) |
+| `137` | idea | [One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`](../items/137-falling-piece-entity/ITEM.md) (main) |
+| `138` | idea | [Merge `Wreck` into `MockSpriteEntity`](../items/138-wreck-into-mock-sprite/ITEM.md) (main) |
+| `139` | idea | [A shared simple enemy shot, starting with `JunkShot`](../items/139-shared-enemy-shot/ITEM.md) (main) |
+| `140` | idea | [`TickFrames` as the engine `Animation`, with durations in seconds](../items/140-tick-frames-seconds/ITEM.md) (main) |
 
 ## Gaps with no item
 

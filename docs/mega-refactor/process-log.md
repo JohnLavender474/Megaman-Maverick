@@ -1868,3 +1868,25 @@ newest entry at the bottom.
 - Summary: "Diff review", step 3: while a Diffity review is open, give its URL again at the end of each message
   that reports a set of changes, fixes or a review result (owner decision, 2026-11-09, during the `134a` review).
 - Contract check: not needed (docs only).
+
+## 2026-11-09 — mega-refactor-081e-x-sabre
+
+- Summary: phase 4 of X (`081`, squash commit `00796be27`). The Z-sabre slash on `UP` + `B`, on the floor, in the air
+  and on the wall. The hit box is the alpha bounds of the slash art. A running slash switches kind on a state change,
+  with the swing phase mapped (`SabreKind.timeIn`); this is a break from X6, which ends the slash. `UP` + `B` in the
+  ground dash or its end slide ends the dash and starts a floor slash. `SabreBlock` and `MetaWheelF` take damage only
+  from the sabre (a gate in `canBeDamagedBy`). `X6Damage` and `X6_HEALTH` are removed: each target hard-codes its
+  damage (the same values as before), and the sabre does one static damage for every slash kind. The "X6" prefix is
+  removed from the code names: `DebrisPiece`, `Wreck`, `JunkShot`, `TickFrames` (with `TODO`s that point to the new
+  items). The X tests drive the real flows with no reflection (owner decision, 2026-11-09). X's feel from the play
+  test: rise gravity 42 and fall gravity 60 t/s², fall limit 15 t/s, walk 6 t/s with a 0.05 s walk start, ground
+  dash 11 t/s (15 t/s start), air dash 0.4 s at 10 t/s, wall kick side speed 5 t/s.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch: `engine` 639,
+  `core` 1220, `smokeTest` 451, JAR built. 4 mutation checks on the play-test changes (kind switch, rise gravity,
+  phase map, dash end guard), all caught. The owner played the checks, and they pass. Diff review in Diffity: 0 open
+  threads. CI did not run, because the branch was never pushed. Deviation: the play-test changes had no subagent
+  review before the owner played them; the owner played them and approved the merge.
+- Follow-up: new items `137` to `142` from the backlog candidates (the falling pieces, `Wreck`, a shared enemy shot,
+  `TickFrames`, the sabre damage, the reflection in 2 older tests). `081f` folder made (`planned`), with a draft
+  `SCOPE.md` for the X6 intro stage and `D1000` fixes that the play test found. The `docs/x6-intro/*.md` plans still
+  use the old X6 names; offered to the owner, not changed.
