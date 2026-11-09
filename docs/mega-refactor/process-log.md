@@ -1862,3 +1862,9 @@ newest entry at the bottom.
 - Follow-up: not checked yet: a kit page has no rule for the claude.ai theme switch
   (`data-theme`), so it can follow only the system light or dark setting.
 
+
+## 2026-11-09 — master (docs)
+
+- Summary: "Diff review", step 3: while a Diffity review is open, give its URL again at the end of each message
+  that reports a set of changes, fixes or a review result (owner decision, 2026-11-09, during the `134a` review).
+- Contract check: not needed (docs only).

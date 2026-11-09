@@ -314,6 +314,9 @@ skills `diffity-open`, `diffity-resolve` and `diffity-review` give the commands 
    stay uncommitted until the round ends: a commit hides the open threads.
 3. A fix that changes code that a manual check runs means that the owner runs that check again.
    Say which checks.
+   While the review is open, give the Diffity URL again at the end of each message that reports a
+   set of changes, fixes or a review result (owner decision, 2026-11-09). The owner must not have to
+   scroll back for it.
 4. When the owner says that the review is done, commit the fixes, run the automated checks again,
    and stop the Diffity server.
 5. Write each round in the branch process log: the number of threads and what was done with them
