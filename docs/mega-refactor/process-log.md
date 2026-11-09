@@ -1910,3 +1910,30 @@ newest entry at the bottom.
   conflicts. CI did not run, because the branch was never pushed.
 - Follow-up: new items `143` (the cap does not run while no partner is in view), `144` (a partner on a ladder), `145`
   (the landing after the cap tests only solids). `134a` shares 4 files with this merge (text only).
+
+## 2026-11-09 — mega-refactor-134a-draw-interpolation
+
+- Summary: squash commit `b19a1c2fb`. Sprites of bodies and the game camera are drawn between the last 2 world steps,
+  by the leftover fraction of the step accumulator (alpha, measured over `fixedStep / scalar`). Each body keeps its
+  step move; `WorldSystem` gives the draw offset of a body (`IDrawOffsets`, with a guard of 1 tile per step);
+  `GameSprite` draws with `drawOffsetX`/`drawOffsetY` and does not change its own state. The engine part
+  `CameraDrawOffset` moves the game camera for the draw only, when the view settles on the followed value (0 in a
+  scroll, a transition, at a room edge and while the co-op view eases); backgrounds take it through
+  `Background.cameraDrawOffset`. The camera inputs are split: `IFocusable` (follow target), `IRoomSubject` (room
+  subject), `IDrawOffsetSource`; the engine `CameraSubject` holds them, and the `core` `PlayersCameraSubject` holds the
+  player policy (co-op: the mean of the grouped players). `CameraRoomBounds`, `CameraLimitStage` and
+  `CameraDrawOffset` moved to `engine`; `FocusComponent` is now `CameraSubjectComponent`. `--interpolation` is on by
+  default (owner, 2026-11-09), with the `I` dev key when the launch gives the flag. Test map `RefactorTest134`
+  (`REFACTOR_TEST_134`, 6 rooms). Gameplay positions, collisions and the gameplay camera do not change.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes after `master` was merged into
+  the branch: `engine` 660, `core` 1252, `smokeTest` 451, JAR built. Review before the play test: 2 subagents (the
+  play checks and the diff), with fixes (the alpha with `--fixedStepScalar`, the test map). Diffity: thread
+  `7d2ecee3` (the `CameraSubject` split), resolved; 0 open threads. The owner played the test map rooms and
+  `WILY_STAGE_2 room9` (the `GutsTank` fist hitches, a known `134b` case, accepted), then approved the merge; the
+  other real-level checks were not reported. `O5-R2`: 2 `--diagnostics` runs, off / on: mean 1.57 / 1.58 ms, p95
+  2.22 / 2.34 ms, no cost in the noise. One simple conflict at the `master` merge (`SharedViewTest.kt`). CI did not
+  run, because the branch was never pushed.
+- Follow-up: `134` stays `active` for `134b` (the list is in the `134` `ITEM.md`). Bugs filed:
+  `2026-11-09-background-debug-string-each-frame.md`, `2026-11-09-camera-rounding-does-nothing.md`. A note in the
+  `130` `ITEM.md` on the classes that moved to `engine`. `--interpolation` added to the launcher flags in the root
+  `CLAUDE.md`. `047c` shares `MegaLevelScreen.kt`, `PlayersFocus.kt` and `Megaman.kt`; it must take in `master`.

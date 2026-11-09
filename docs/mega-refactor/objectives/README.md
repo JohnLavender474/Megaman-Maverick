@@ -11,7 +11,7 @@ redo risk and the linked items.
 | `O2` | [Multiplayer](O2-multiplayer.md) | active | 10 | 1 | 5 | 4 | 0 |
 | `O3` | [Web play and other platforms](O3-platforms.md) | planned | 5 | 0 | 1 | 3 | 1 |
 | `O4` | [Deeper level design, enemies and bosses, more variety](O4-level-and-gameplay-depth.md) | active | 3 | 1 | 1 | 0 | 1 |
-| `O5` | [Plays well on weak hardware](O5-performance.md) | planned | 2 | 1 | 0 | 0 | 1 |
+| `O5` | [Plays well on weak hardware](O5-performance.md) | active | 2 | 2 | 0 | 0 | 0 |
 | `O6` | [Safe to change](O6-safe-to-change.md) | active | 4 | 1 | 2 | 1 | 0 |
 | `O7` | [Content from data](O7-content-from-data.md) | planned | 3 | 0 | 1 | 2 | 0 |
 | `O8` | [More playable characters and modes](O8-characters-and-modes.md) | active | 4 | 0 | 2 | 1 | 1 |

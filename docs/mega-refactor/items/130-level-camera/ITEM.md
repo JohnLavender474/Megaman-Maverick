@@ -37,6 +37,10 @@ Not approved. The branch `SCOPE.md` decides the final scope. Owner's choice: opt
   the 2-player parts with 2 players and none with 1; a play test of 1 player (a scroll stage, a turned room, a respawn
   during a shake) and the `coop_*` route with 2 players.
 
+- Changed by `134a` (merged 2026-11-09): `CameraRoomBounds`, `CameraLimitStage`, `CameraDrawOffset` and the
+  `CameraSubject` mechanism are now in `engine` (`engine/.../camera/`). `LevelCamera` takes over their build, and the
+  build of `PlayersCameraSubject`, from `MegaLevelScreen.init`.
+
 ## Owner's input
 
 2026-11-06, after the review: "The new view/camera logic is piled into `MegaLevelScreen.kt`, and it's starting to get

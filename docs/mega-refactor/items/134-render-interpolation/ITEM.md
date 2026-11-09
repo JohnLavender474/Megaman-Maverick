@@ -5,7 +5,25 @@
 - Objectives: `O9`, `O5`
 - Depends on: none
 - Related: `010` (fixed tick), `067` (PPM 16, whole-pixel rounding), `081` (playable X, where the judder was found)
-- Branches: `mega-refactor-134a-draw-interpolation` (active, 2026-11-07)
+- Branches: `mega-refactor-134a-draw-interpolation` (merged, 2026-11-09)
+
+## Decisions (owner, 2026-11-09, in `134a`)
+
+- D5: `--interpolation` is on by default (`--interpolation false` turns it off). The hitches of the known `134b`
+  cases (for example the `GutsTank` fist) are accepted until `134b` fixes them.
+- D3 (`134a` brief): a distance guard of 1 tile per step; the explicit snaps are for `134b`.
+
+## `134b` (from the `134a` `docs/TODO.md`)
+
+The known cases, each with a `TODO` at its code. Real-level rooms for them are in the `134a` `docs/CONTRACT.md`.
+
+- Bodies placed outside the world steps against a parent: the `GutsTank` fist (seen by the owner) and tank block,
+  the `BigAssMaverickRobot` hand and orbs, the `PRECIOUS_GUARD` gems (`PreciousGemCluster`). `ElecDevilBodyPieces`
+  and `RotationAnchor` move their children inside the steps.
+- Sprite entities with no body that place a sprite on another body (offset 0 today).
+- The shape renderer draws with the stepped camera (`--debugShapes`, the `WhiteArrowPool` outline).
+- The `I` dev key during a pause changes the sprite offsets at once, but the camera offset only at resume.
+- Explicit snaps at teleports and respawns (`047c` names the co-op respawn).
 
 ## Decisions (owner, 2026-11-07, at the item start)
 

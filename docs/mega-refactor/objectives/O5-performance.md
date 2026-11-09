@@ -46,7 +46,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
 | `O5-R1` | `holds` for reviewed diffs | The last 60 first-parent code commits were searched, and the hits in 14 diffs were read. New per-frame code uses fields, pools or a value class (`CameraController.kt:35-40`, `InputFrame.kt:6`). The search does not see lambdas or boxing, and no runtime number exists. | `009`, `026`, `044` |
-| `O5-R2` | `not checked` | No branch has started under this rule. Before it: 0 of 54 process logs have before-and-after numbers. `051b` changed the per-frame camera path with no measure. | `009` |
+| `O5-R2` | `holds` for `134a` (2026-11-09) | The first branch under this rule: 2 `--diagnostics` runs in `REFACTOR_TEST_134` `open`, flag off and on, level frames only: mean 1.57 / 1.58 ms, p95 2.22 / 2.34 ms, `SpritesSystem` 0.04 / 0.04 ms (branch `process-log.md`). Before it: 0 of 54 process logs have before-and-after numbers. `051b` changed the per-frame camera path with no measure. | `009` |
 | `O5-R2` | accepted gap (`068a`, owner 2026-11-03) | `068a` added slope checks to `MegaCollisionHandler` (every static-dynamic collision in every level) and to `BlockSideRule`, `HeadBlockRule` and the feet contact, with no before-and-after measure. Only one sanity run in `REFACTOR_TEST_068` `shallow`: `resolveCollisions` mean 0.02 ms, `processContacts` mean 0.05 ms, no outlier. | `009` |
 
 ## Redo risk
@@ -71,7 +71,7 @@ None found. Numbers for merged hot-path work (`014c`, `031c`, `031d`, `051b`, `0
 | `116` | idea | [Body senses as typed state, then a sense history](../items/116-body-senses/ITEM.md) |
 | `125` | idea | [Spatial or room index for spawners, if a measure shows a cost](../items/125-spawner-index/ITEM.md) (main) |
 | `128` | idea | [Cull near players, not only by the camera view](../items/128-cull-near-players/ITEM.md) |
-| `134` | idea | [Draw bodies and the camera between physics steps (render interpolation)](../items/134-render-interpolation/ITEM.md) |
+| `134` | active | [Draw bodies and the camera between physics steps (render interpolation)](../items/134-render-interpolation/ITEM.md) |
 
 ## Gaps with no item
 
