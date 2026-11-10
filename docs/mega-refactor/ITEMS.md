@@ -84,7 +84,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | `O4` | idea | none | | |
 | 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | idea | none | | |
 | 076 | [A new tileset for the final stage](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
-| 077 | [New attacks and a panic attack for each robot master](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | idea | none | | |
+| 077 | [Better boss fights for every boss: new and panic attacks, aiming, death animations](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | idea | none | | |
 | 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
