@@ -61,6 +61,10 @@ class Jetto(services: MegaServices) : AbstractEnemy(services), IFreezableEntity,
     companion object {
         const val TAG = "Jetto"
 
+        private val ANIM_KEYS = JettoColor.entries.map { color ->
+            JettoState.entries.map { state -> "${color.name.lowercase()}/${state.name.lowercase()}" }
+        }
+
         private const val SPEED = 12f
 
         private const val CULL_TIME = 0.25f
@@ -341,7 +345,7 @@ class Jetto(services: MegaServices) : AbstractEnemy(services), IFreezableEntity,
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { "${color.name.lowercase()}/${state.name.lowercase()}" }
+                .setKeySupplier { ANIM_KEYS[color.ordinal][state.ordinal] }
                 .applyToAnimations { animations ->
                     JettoColor.entries.map { it.name.lowercase() }.forEach { color ->
                         animDefs.forEach { entry ->

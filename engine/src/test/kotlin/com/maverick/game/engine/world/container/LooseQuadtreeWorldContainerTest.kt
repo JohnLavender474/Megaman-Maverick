@@ -219,50 +219,6 @@ class LooseQuadtreeWorldContainerTest : DescribeSpec({
 
         // ── Copy ──────────────────────────────────────────────────────────────────────
 
-        it("copy should contain the same bodies and fixtures as the original") {
-            val body = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
-            val mockBody = mockk<Body>()
-            val fixture = Fixture(mockBody, TestFixtureType.F, GameRectangle(50f, 50f, 10f, 10f), attachedToBody = false)
-
-            tree.addBody(body)
-            tree.addFixture(fixture)
-
-            val copy = tree.copy()
-
-            val copyBodies = MutableOrderedSet<IBody>()
-            val copyFixtures = MutableOrderedSet<IFixture>()
-            copy.getBodies(4, 4, 6, 6, copyBodies)
-            copy.getFixtures(4, 4, 6, 6, copyFixtures)
-
-            copyBodies shouldContain body
-            copyFixtures shouldContain fixture
-        }
-
-        it("clearing the original after copy should not affect the copy") {
-            val body = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
-            tree.addBody(body)
-
-            val copy = tree.copy()
-            tree.clear()
-
-            val copyBodies = MutableOrderedSet<IBody>()
-            copy.getBodies(4, 4, 6, 6, copyBodies)
-            copyBodies shouldContain body
-        }
-
-        it("adding to the copy after copy should not affect the original") {
-            val body1 = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
-            tree.addBody(body1)
-
-            val copy = tree.copy()
-            val body2 = Body(BodyType.DYNAMIC, 50f, 50f, 10f, 10f)
-            copy.addBody(body2)
-
-            // original should not contain body2
-            tree.getBodies(4, 4, 6, 6, outBodies)
-            outBodies shouldNotContain body2
-        }
-
         // ── forEach* ──────────────────────────────────────────────────────────────────
 
         it("forEachBody single-cell should invoke action for a nearby body") {

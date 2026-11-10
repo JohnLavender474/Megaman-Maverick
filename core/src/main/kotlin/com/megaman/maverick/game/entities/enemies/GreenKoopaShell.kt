@@ -42,7 +42,6 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.KoopaShellTrailSprite
 import com.megaman.maverick.game.entities.feetFixture
 import com.megaman.maverick.game.entities.leftSideFixture
@@ -141,16 +140,7 @@ class GreenKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceab
             }
 
             when (state) {
-                GreenKoopaShellState.IDLE -> {
-                    if (shouldStartRolling()) {
-                        startRolling()
-
-                        facing = when {
-                            targetPlayer.body.getBounds().getX() < body.getBounds().getX() -> Facing.RIGHT
-                            else -> Facing.LEFT
-                        }
-                    }
-                }
+                GreenKoopaShellState.IDLE -> kicker()?.let { startRolling(it) }
                 GreenKoopaShellState.ROLLING -> {
                     val speed = SPEED * ConstVals.PPM * facing.value
                     body.physics.velocity.x = speed
@@ -173,17 +163,22 @@ class GreenKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceab
         }
     }
 
-    private fun shouldStartRolling() = players.anyLive {
-        it.leftSideFixture.getShape().overlaps(body.getBounds()) ||
-            it.rightSideFixture.getShape().overlaps(body.getBounds()) ||
-            it.feetFixture.getShape().overlaps(body.getBounds()) ||
-            it.body.getBounds().overlaps(body.getBounds())
+    private fun kicker(): MegaGameEntity? {
+        var kicker: MegaGameEntity? = null
+        players.forEachLive { if (kicker == null && touches(it)) kicker = it }
+        return kicker
     }
 
-    private fun startRolling() {
+    private fun touches(player: MegaGameEntity) =
+        player.leftSideFixture.getShape().overlaps(body.getBounds()) ||
+            player.rightSideFixture.getShape().overlaps(body.getBounds()) ||
+            player.feetFixture.getShape().overlaps(body.getBounds()) ||
+            player.body.getBounds().overlaps(body.getBounds())
+
+    private fun startRolling(kicker: MegaGameEntity) {
         state = GreenKoopaShellState.ROLLING
         requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
-        facing = if (targetPlayer.body.getBounds().getX() < body.getBounds().getX()) Facing.RIGHT else Facing.LEFT
+        facing = if (kicker.body.getBounds().getX() < body.getBounds().getX()) Facing.RIGHT else Facing.LEFT
     }
 
     private fun getKnockedToDeath(shellBounds: GameRectangle) {
@@ -210,7 +205,7 @@ class GreenKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceab
 
             val player = feet.getEntity().asPlayer
             if (player != null) {
-                if (state == GreenKoopaShellState.IDLE) startRolling()
+                if (state == GreenKoopaShellState.IDLE) startRolling(player)
 
                 spawnWhackForOverlap(headFixture.getShape(), feet.getShape())
 

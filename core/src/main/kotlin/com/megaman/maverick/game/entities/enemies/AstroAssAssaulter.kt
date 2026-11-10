@@ -289,8 +289,9 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
             AnimatorBuilder()
                 .setKeySupplier {
                     if (frozen) "frozen" else when (currentState) {
-                        AstroAssState.STAND, AstroAssState.THROW -> currentState.name.lowercase()
-                        else -> "shoot${if (shootUp) "_up" else ""}"
+                        AstroAssState.STAND -> "stand"
+                        AstroAssState.THROW -> "throw"
+                        else -> if (shootUp) "shoot_up" else "shoot"
                     }
                 }
                 .applyToAnimations { animations ->

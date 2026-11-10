@@ -684,7 +684,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
                         else -> when (currentState) {
                             PreciousWomanState.STAND -> when {
-                                laughing -> "stand${if (laughTimer.time <= LAUGH_1_DUR) "_laugh1" else "_laugh2"}"
+                                laughing -> if (laughTimer.time <= LAUGH_1_DUR) "stand_laugh1" else "stand_laugh2"
                                 throwing -> "stand_throw"
                                 else -> "stand"
                             }

@@ -69,6 +69,8 @@ class Pathfinder(
         val neighborCount = if (allowDiagonal) NEIGHBOR_DX.size else ORTHOGONAL_NEIGHBORS
 
         while (open.isNotEmpty()) {
+            if (Thread.currentThread().isInterrupted) return PathfinderResult(null, false)
+
             val currentNode = open.poll()
             if (currentNode.discovered) continue
 

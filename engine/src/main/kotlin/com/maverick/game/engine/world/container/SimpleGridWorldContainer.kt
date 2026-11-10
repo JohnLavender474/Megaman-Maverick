@@ -29,18 +29,6 @@ class SimpleGridWorldContainer(
     private val bodyCellPool = Array<OrderedSet<IBody>>()
     private val fixtureCellPool = Array<OrderedSet<IFixture>>()
 
-    private constructor(
-        ppm: Int,
-        bufferOffset: Int,
-        bodyMap: LongMap<OrderedSet<IBody>>,
-        fixtureMap: LongMap<OrderedSet<IFixture>>,
-        adjustForExactGridMatch: Boolean,
-        floatRoundingError: Float
-    ) : this(ppm, bufferOffset, adjustForExactGridMatch, floatRoundingError) {
-        bodyMap.forEach { this.bodyMap.put(it.key, OrderedSet(it.value)) }
-        fixtureMap.forEach { this.fixtureMap.put(it.key, OrderedSet(it.value)) }
-    }
-
     // cells are addressed by signed coordinates that can go negative, so both halves of the key must
     // survive round-tripping; a `Long` covers the full `Int` range on each axis with no offset games
     private fun packKey(column: Int, row: Int) = (column.toLong() shl 32) or (row.toLong() and 0xFFFFFFFFL)
@@ -161,8 +149,19 @@ class SimpleGridWorldContainer(
         fixtureMap.clear()
     }
 
-    override fun copy() =
-        SimpleGridWorldContainer(ppm, bufferOffset, bodyMap, fixtureMap, adjustForExactGridMatch, floatRoundingError)
+    override fun getBodies(
+        x: Int,
+        y: Int,
+        out: MutableCollection<IBody>,
+        filter: ((body: IBody, container: IWorldContainer) -> Boolean)?
+    ): Boolean {
+        val bodies = bodyMap.get(packKey(x, y))?.orderedItems() ?: return true
+        for (i in 0 until bodies.size) {
+            val body = bodies[i]
+            if (filter == null || filter(body, this)) out.add(body)
+        }
+        return true
+    }
 
     // exposed for tests: the guarantee that occupied-cell count tracks live contents rather than
     // everything ever inserted is the whole point of pooling, and it is invisible from the outside

@@ -134,6 +134,8 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
         private val MOON_SCYTHE_DEG_OFFSETS_HARD = gdxArrayOf(10f, 30f, 50f, 70f)
 
         private val STAND_SHOOT_DURS = gdxArrayOf(0.5f, 0.5f, 1f, 0.5f, 1f, 0.5f, 0.6f)
+        private val SHOOT_KEYS = kotlin.Array(STAND_SHOOT_DURS.size + 1) { "shoot_$it" }
+        private val GRAVITY_CHANGE_TIMER_KEYS = ProcessState.entries.map { "gravity_change_${it.name.lowercase()}" }
 
         private val ANIM_DEFS = orderedMapOf<String, AnimationDef>(
             "defeated" pairTo AnimationDef(2, 2, 0.1f),
@@ -339,7 +341,7 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
                         shootIndex < STAND_SHOOT_DURS.size &&
                         canShootInStandState()
                     ) {
-                        val timer = timers["shoot_${shootIndex}"]
+                        val timer = timers[SHOOT_KEYS[shootIndex]]
                         timer.update(delta)
                         if (timer.isFinished()) {
                             timer.reset()
@@ -382,7 +384,7 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
                     }
                 }
                 MoonManState.GRAVITY_CHANGE -> {
-                    val timer = timers["gravity_change_${gravityChangeState.name.lowercase()}"]
+                    val timer = timers[GRAVITY_CHANGE_TIMER_KEYS[gravityChangeState.ordinal]]
                     timer.update(delta)
                     if (timer.isFinished()) {
                         timer.reset()
@@ -502,10 +504,10 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
                 MoonManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "gravity_change_begin" else "jump"
                 MoonManState.STAND -> when {
                     body.isSensing(BodySense.FEET_ON_GROUND) ->
-                        if (canShootInStandState()) "shoot_$shootIndex" else "stand"
+                        if (canShootInStandState()) SHOOT_KEYS[shootIndex] else "stand"
                     else -> "jump"
                 }
-                MoonManState.GRAVITY_CHANGE -> "gravity_change_${gravityChangeState.name.lowercase()}"
+                MoonManState.GRAVITY_CHANGE -> GRAVITY_CHANGE_TIMER_KEYS[gravityChangeState.ordinal]
                 else -> currentState.name.lowercase()
             }
         }

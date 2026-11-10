@@ -5,7 +5,7 @@ import com.maverick.game.engine.common.objects.IntPair
 import com.maverick.game.engine.common.objects.Matrix
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.pathfinding.heuristics.ManhattanHeuristic
-import com.maverick.game.engine.world.container.IWorldContainer
+import com.maverick.game.engine.world.pathfinding.IBodyCells
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -38,7 +38,7 @@ class PathfinderTest : DescribeSpec({
             }
         }
 
-        val filter: (Int, Int, IWorldContainer?) -> Boolean =
+        val filter: (Int, Int, IBodyCells?) -> Boolean =
             { x, y, _ -> !matrix.isOutOfBounds(x, y) && !nodesToFilter.contains(x pairTo y) }
 
         return PathfinderParams(

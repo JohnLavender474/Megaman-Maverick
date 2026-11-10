@@ -14,6 +14,9 @@ object MegaPathfinderResultConsumer {
 
     const val TAG = "StandardPathfinderResultConsumer"
 
+    private val pathCell = GameRectangle().setSize(ConstVals.PPM.toFloat())
+    private val trajectory = Vector2()
+
     fun consume(
         result: PathfinderResult,
         body: Body,
@@ -37,12 +40,14 @@ object MegaPathfinderResultConsumer {
             return false
         }
 
-        val worldPath = path.map {
-            val worldPosition = it.toWorldCoordinate()
-            GameRectangle().setSize(ConstVals.PPM.toFloat()).setPosition(worldPosition)
+        var target: Vector2? = null
+        for (i in 0 until path.size) {
+            pathCell.setPosition(path[i].toWorldCoordinate())
+            if (!targetPursuer.overlaps(pathCell)) {
+                target = pathCell.getCenter()
+                break
+            }
         }
-
-        val target: Vector2? = worldPath.firstOrNull { !targetPursuer.overlaps(it) }?.getCenter()
         if (target == null) {
             if (stopOnTargetNull) body.physics.velocity.setZero()
             onTargetNull.invoke()
@@ -50,7 +55,7 @@ object MegaPathfinderResultConsumer {
         }
 
         val angle = MathUtils.atan2(target.y - start.y, target.x - start.x)
-        val trajectory = Vector2(MathUtils.cos(angle), MathUtils.sin(angle)).scl(speed())
+        trajectory.set(MathUtils.cos(angle), MathUtils.sin(angle)).scl(speed())
         trajectoryConsumer(trajectory)
 
         postProcess?.invoke()

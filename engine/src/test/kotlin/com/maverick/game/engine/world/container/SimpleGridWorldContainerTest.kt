@@ -478,42 +478,6 @@ class SimpleGridWorldContainerTest : DescribeSpec({
             visited shouldNotContain fixture2
         }
 
-        it("copy should be independent of the original once the original is cleared and rebuilt") {
-            // given
-            val body = mockk<Body>()
-            val original = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
-            val originalFixture = Fixture(body, TestFixtureType.F1, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
-            grid.addBody(original)
-            grid.addFixture(originalFixture)
-
-            // when - snapshot, then clear and repopulate the original with different contents
-            val snapshot = grid.copy()
-
-            grid.clear()
-
-            val replacement = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)
-            val replacementFixture = Fixture(body, TestFixtureType.F2, GameRectangle(10f, 10f, 10f, 10f), attachedToBody = false)
-            grid.addBody(replacement)
-            grid.addFixture(replacementFixture)
-
-            // then - the snapshot still holds what it held when it was taken
-            snapshot.getBodies(1, 1, outBodies1)
-            outBodies1.size shouldBe 1
-            outBodies1 shouldContain original
-            outBodies1 shouldNotContain replacement
-
-            snapshot.getFixtures(1, 1, outFixtures)
-            outFixtures.size shouldBe 1
-            outFixtures shouldContain originalFixture
-            outFixtures shouldNotContain replacementFixture
-
-            // and the original holds only the replacements
-            outBodies2.clear()
-            grid.getBodies(1, 1, outBodies2)
-            outBodies2.size shouldBe 1
-            outBodies2 shouldContain replacement
-        }
-
         it("clear should empty reused cells rather than leaving stale contents behind") {
             // given - a cell that will be reused across rebuilds, as the world system does each cycle
             val stale = Body(BodyType.DYNAMIC, 10f, 10f, 10f, 10f)

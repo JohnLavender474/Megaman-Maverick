@@ -46,6 +46,7 @@ class LampeonBullet(services: MegaServices) : AbstractProjectile(services), IFac
     companion object {
         const val TAG = "LampeonBullet"
         private val ANGLES = gdxArrayOf(70f, 80f, 90f, 100f, 110f)
+        private val ANIM_KEYS = kotlin.Array(ANGLES.size) { it.toString() }
         private const val RANDOM_SPREAD = 1f
         private val regKeys = (0..4).map { it.toString() }
         private val regions = ObjectMap<String, TextureRegion>()
@@ -162,7 +163,7 @@ class LampeonBullet(services: MegaServices) : AbstractProjectile(services), IFac
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { index.toString() }
+                .setKeySupplier { ANIM_KEYS[index] }
                 .applyToAnimations { animations ->
                     AnimationUtils.loadAnimationDef(AnimationDef(2, 1, 0.1f, true), animations, regions, regKeys)
                 }

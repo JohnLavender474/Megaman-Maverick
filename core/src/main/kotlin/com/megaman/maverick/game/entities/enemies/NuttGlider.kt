@@ -60,6 +60,13 @@ class NuttGlider(services: MegaServices) : AbstractEnemy(services, size = Size.S
         private const val NO_NUTT_SUFFIX = ""
         private const val NUTT_SUFFIX = "_nutt"
 
+        private val STATE_PREFIXES = NuttGliderState.entries.map { it.name.lowercase() }
+        private val ANIM_KEYS = ObjectMap<String, Pair<String, String>>().apply {
+            (listOf("frozen", "stand", "jump") + STATE_PREFIXES).forEach { prefix ->
+                put(prefix, "${prefix}${NUTT_SUFFIX}" to "${prefix}${NO_NUTT_SUFFIX}")
+            }
+        }
+
         private const val CULL_TIME = 2f
 
         private const val STAND_DUR = 0.75f
@@ -357,12 +364,11 @@ class NuttGlider(services: MegaServices) : AbstractEnemy(services, size = Size.S
                             body.isSensing(BodySense.FEET_ON_GROUND) -> "stand"
                             else -> "jump"
                         }
-                        else -> state.name.lowercase()
+                        else -> STATE_PREFIXES[state.ordinal]
                     }
 
-                    val suffix = if (hasNutt) NUTT_SUFFIX else NO_NUTT_SUFFIX
-
-                    return@setKeySupplier "${prefix}${suffix}"
+                    val keys = ANIM_KEYS[prefix]
+                    return@setKeySupplier if (hasNutt) keys.first else keys.second
                 }
                 .setOnChangeKeyListener { _, oldKey, nextKey ->
                     GameLogger.debug(TAG, "onChangeKey(): oldKey=$oldKey, nextKey=$nextKey")

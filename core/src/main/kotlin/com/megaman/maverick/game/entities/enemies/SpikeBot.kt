@@ -64,6 +64,10 @@ class SpikeBot(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
     companion object {
         const val TAG = "SpikeBot"
 
+        private val ANIM_KEYS = SpikeBotType.entries.map { type ->
+            SpikeBotState.entries.map { state -> "${type.name.lowercase()}/${state.name.lowercase()}" }
+        }
+
         private const val STAND_DUR = 0.25f
 
         private const val SHOOT_DUR = 0.5f
@@ -303,7 +307,7 @@ class SpikeBot(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { "${type.name.lowercase()}/${currentState.name.lowercase()}" }
+                .setKeySupplier { ANIM_KEYS[type.ordinal][currentState.ordinal] }
                 .applyToAnimations { animations ->
                     SpikeBotType.entries.map { it.name.lowercase() }.forEach { type ->
                         animDefs.forEach { entry ->

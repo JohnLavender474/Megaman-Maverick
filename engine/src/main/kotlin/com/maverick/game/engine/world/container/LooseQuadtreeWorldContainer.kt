@@ -215,19 +215,4 @@ class LooseQuadtreeWorldContainer(
         root = createRoot()
     }
 
-    override fun copy(): IWorldContainer {
-        val copy = LooseQuadtreeWorldContainer(
-            ppm, worldMinX, worldMinY, worldMaxX, worldMaxY, maxDepth, loosenessFactor
-        )
-        copyNode(root, copy.root)
-        return copy
-    }
-
-    private fun copyNode(src: Node, dst: Node) {
-        dst.bodies.addAll(src.bodies.asIterable())
-        dst.fixtures.addAll(src.fixtures.asIterable())
-        val srcChildren = src.children ?: return
-        dst.subdivide()
-        for (i in 0 until 4) copyNode(srcChildren[i]!!, dst.children!![i]!!)
-    }
 }

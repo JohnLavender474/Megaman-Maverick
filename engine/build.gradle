@@ -24,3 +24,29 @@ test {
     exceptionFormat = "full"
   }
 }
+
+testing {
+  suites {
+    allocationTest(JvmTestSuite) {
+      useJUnitJupiter()
+      dependencies {
+        implementation project()
+        implementation "io.kotest:kotest-runner-junit5:$kotestVersion"
+        implementation "io.kotest:kotest-assertions-core:$kotestVersion"
+      }
+      targets {
+        all {
+          testTask.configure {
+            testLogging {
+              events "skipped", "failed"
+              showStandardStreams = false
+              exceptionFormat = "full"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+tasks.named('test') { dependsOn testing.suites.allocationTest }

@@ -988,13 +988,13 @@ class MegamanMaverickGame(
                 MotionSystem(diagnostics),
                 when (params.pathfinding) {
                     "async" -> AsyncPathfindingSystem(
-                        MegaPathfinderFactory(levelState),
+                        MegaPathfinderFactory(levelState, worldSystem),
                         diagnostics = diagnostics,
                         pathDebugConsumer = pathDebugConsumer
                     )
 
                     "sync" -> SimplePathfindingSystem(
-                        MegaPathfinderFactory(levelState),
+                        MegaPathfinderFactory(levelState, worldSystem),
                         diagnostics = diagnostics,
                         pathDebugConsumer = pathDebugConsumer
                     )

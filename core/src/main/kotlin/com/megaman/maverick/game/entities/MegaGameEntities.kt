@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities
 
+import com.badlogic.gdx.utils.IntMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
@@ -10,13 +11,20 @@ import com.megaman.maverick.game.entities.state.mapObjectId
 object MegaGameEntities {
 
     private val entities = OrderedSet<MegaGameEntity>()
-    private val idToEntities = OrderedMap<Int, OrderedSet<MegaGameEntity>>()
+    // TODO: one shared empty set, so that a lookup with no entities does not allocate a new set on each call. It
+    //  guards only against `add`, and the lookups still give out the mutable index sets. Find a more robust design
+    //  (see docs/issues/2026-11-10-mega-game-entities-shared-empty-set.md)
+    private val noEntities = NoEntities()
+    private val idToEntities = IntMap<OrderedSet<MegaGameEntity>>()
     private val entityTagToEntities = OrderedMap<String, OrderedSet<MegaGameEntity>>()
     private val entityTypeToEntities = OrderedMap<EntityType, OrderedSet<MegaGameEntity>>()
 
     fun add(entity: MegaGameEntity) {
         entities.add(entity)
-        entity.mapObjectId?.let { id -> idToEntities.putIfAbsentAndGet(id) { OrderedSet() }.add(entity) }
+        entity.mapObjectId?.let { id ->
+            val set = idToEntities.get(id) ?: OrderedSet<MegaGameEntity>().also { idToEntities.put(id, it) }
+            set.add(entity)
+        }
         entityTagToEntities.putIfAbsentAndGet(entity.getTag()) { OrderedSet() }.add(entity)
         entityTypeToEntities.putIfAbsentAndGet(entity.getType()) { OrderedSet() }.add(entity)
     }
@@ -26,11 +34,9 @@ object MegaGameEntities {
         entityTagToEntities.get(entity.getTag())?.remove(entity)
         entityTypeToEntities.get(entity.getType())?.remove(entity)
         val id = entity.mapObjectId ?: return
-        if (idToEntities.containsKey(id)) {
-            val set = idToEntities.get(id)
-            set.remove(entity)
-            if (set.isEmpty) idToEntities.remove(id)
-        }
+        val set = idToEntities.get(id) ?: return
+        set.remove(entity)
+        if (set.isEmpty) idToEntities.remove(id)
     }
 
     inline fun <reified T: MegaGameEntity> getOfTag(tag: String, out: OrderedSet<T>): OrderedSet<T> {
@@ -39,7 +45,7 @@ object MegaGameEntities {
         return out
     }
 
-    fun getOfTag(tag: String): OrderedSet<MegaGameEntity> = entityTagToEntities.get(tag, OrderedSet())
+    fun getOfTag(tag: String): OrderedSet<MegaGameEntity> = entityTagToEntities.get(tag) ?: noEntities
 
     fun getOfTags(out: ObjectSet<MegaGameEntity>, tags: Iterable<String>): ObjectSet<MegaGameEntity> {
         tags.forEach { tag ->
@@ -49,7 +55,7 @@ object MegaGameEntities {
         return out
     }
 
-    fun getOfType(type: EntityType): OrderedSet<MegaGameEntity> = entityTypeToEntities.get(type, OrderedSet())
+    fun getOfType(type: EntityType): OrderedSet<MegaGameEntity> = entityTypeToEntities.get(type) ?: noEntities
 
     fun getOfTypes(out: ObjectSet<MegaGameEntity>, types: Iterable<EntityType>): ObjectSet<MegaGameEntity> {
         types.forEach { type ->
@@ -61,7 +67,15 @@ object MegaGameEntities {
 
     fun existsAnyOfId(id: Int) = !getOfId(id).isEmpty
 
-    fun getOfId(id: Int): OrderedSet<MegaGameEntity> = idToEntities.get(id, OrderedSet())
+    fun getOfId(id: Int): OrderedSet<MegaGameEntity> = idToEntities.get(id) ?: noEntities
 
     fun forEach(action: (MegaGameEntity) -> Unit) = entities.forEach { action.invoke(it) }
+
+    private class NoEntities : OrderedSet<MegaGameEntity>() {
+
+        override fun add(key: MegaGameEntity): Boolean = throw UnsupportedOperationException(
+            "The set that MegaGameEntities gives for a key with no entities is shared and read-only; " +
+                "copy it into a set of your own before adding to it"
+        )
+    }
 }

@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman.sprites
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.IAnimation
@@ -39,8 +40,13 @@ class MegamanAnimations(
             MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
         }
 
-        fun buildFullKey(regionKey: String, weapon: MegamanWeapon) =
-            "${regionKey}_${weapon.name.lowercase().replace("_", "")}"
+        private val fullKeys = ObjectMap<MegamanWeapon, ObjectMap<String, String>>()
+
+        fun buildFullKey(regionKey: String, weapon: MegamanWeapon): String {
+            val keys = fullKeys.get(weapon) ?: ObjectMap<String, String>().also { fullKeys.put(weapon, it) }
+            return keys.get(regionKey)
+                ?: "${regionKey}_${weapon.name.lowercase().replace("_", "")}".also { keys.put(regionKey, it) }
+        }
     }
 
     private val animations = OrderedMap<String, IAnimation>()

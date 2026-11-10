@@ -1,12 +1,9 @@
 package com.megaman.maverick.game.entities.utils
 
-import com.maverick.game.engine.common.objects.MutableOrderedSet
+import com.megaman.maverick.game.pathfinding.BlockCells
 import com.maverick.game.engine.pathfinding.heuristics.EuclideanHeuristic
 import com.maverick.game.engine.pathfinding.heuristics.IHeuristic
-import com.maverick.game.engine.world.body.IBody
-import com.maverick.game.engine.world.container.IWorldContainer
-import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.world.body.getEntity
+import com.maverick.game.engine.world.pathfinding.IBodyCells
 
 class DynamicBodyHeuristic : IHeuristic {
 
@@ -14,23 +11,13 @@ class DynamicBodyHeuristic : IHeuristic {
         private const val CONTAINS_BLOCK_SCALAR = 5
     }
 
-    var worldContainer: IWorldContainer? = null
+    var cells: IBodyCells? = null
 
     private val defaultHeuristic = EuclideanHeuristic()
-    private val reusableBodySet = MutableOrderedSet<IBody>()
 
     private fun containsBlock(x: Int, y: Int): Boolean {
-        val container = worldContainer ?: return false
-        container.getBodies(x, y, reusableBodySet)
-
-        var containsBlock = false
-        for (body in reusableBodySet) if (body.getEntity().getType() == EntityType.BLOCK) {
-            containsBlock = true
-            break
-        }
-        reusableBodySet.clear()
-
-        return containsBlock
+        val cells = cells ?: return false
+        return BlockCells.containsBlock(cells, x, y)
     }
 
     override fun calculate(x1: Int, y1: Int, x2: Int, y2: Int): Int {

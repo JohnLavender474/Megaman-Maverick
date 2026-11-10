@@ -1,11 +1,10 @@
 package com.maverick.game.engine.world.container
 
 import com.maverick.game.engine.common.interfaces.IClearable
-import com.maverick.game.engine.common.interfaces.ICopyable
 import com.maverick.game.engine.world.body.IBody
 import com.maverick.game.engine.world.body.IFixture
 
-interface IWorldContainer : IClearable, ICopyable<IWorldContainer> {
+interface IWorldContainer : IClearable {
 
     fun addBody(body: IBody): Boolean
 

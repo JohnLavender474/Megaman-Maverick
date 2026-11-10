@@ -34,7 +34,7 @@ class WorldSystem(
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
     var diagnostics: RuntimeDiagnostics? = null,
     var interpolation: Boolean = false
-) : GameSystem(BodyComponent::class), IDrawOffsets {
+) : GameSystem(BodyComponent::class), IDrawOffsets, IWorldBodies {
 
     companion object {
         const val TAG = "WorldSystem"
@@ -98,6 +98,45 @@ class WorldSystem(
 
     var stepSerial = 0
         private set
+
+    private val containerBodies = Array<IBody>()
+
+    override val bodyCount: Int
+        get() = containerBodies.size
+
+    override fun getBody(index: Int): IBody = containerBodies[index]
+
+    private var passContainer: IWorldContainer? = null
+    private val addActiveFixture: (IFixture) -> Unit = { fixture ->
+        if (fixture.isActive()) passContainer!!.addFixture(fixture)
+    }
+
+    private lateinit var collectFixture: IFixture
+    private lateinit var collectShape: IGameShape2D
+    private val collectFixtureContacts: (IFixture) -> Unit = { fixture -> collectContacts(fixture) }
+    private val collectCandidate: (IFixture, IWorldContainer) -> Boolean = { candidate, _ ->
+        if (candidate.isActive() &&
+            filterContact(collectFixture, candidate) &&
+            collectShape.overlaps(candidate.getShape())
+        ) {
+            val contact = contactPool.fetch()
+            contact.set(collectFixture, candidate)
+            if (!currentContactSet.add(contact))
+                contactPool.free(contact)
+        }
+        true
+    }
+
+    private lateinit var resolveBody: IBody
+    private lateinit var resolveBounds: GameRectangle
+    private val resolveCandidate: (IBody, IWorldContainer) -> Boolean = { candidate, _ ->
+        if (candidate != resolveBody) {
+            val candidateBounds = candidate.getBounds(out2)
+            if (candidateBounds.overlaps(resolveBounds))
+                collisionHandler.handleCollision(resolveBody, candidate)
+        }
+        true
+    }
     var alpha = 1f
         private set
 
@@ -145,9 +184,14 @@ class WorldSystem(
 
             diagnostics?.beginEntry("updateWorldContainer")
             worldContainer.clear()
+            containerBodies.clear()
+            passContainer = worldContainer
             bodyArray.forEach { body ->
-                if (body.physics.collisionOn) worldContainer.addBody(body)
-                body.forEachFixture { if (it.isActive()) worldContainer.addFixture(it) }
+                if (body.physics.collisionOn) {
+                    worldContainer.addBody(body)
+                    containerBodies.add(body)
+                }
+                body.forEachFixture(addActiveFixture)
             }
             diagnostics?.endEntry()
 
@@ -174,6 +218,7 @@ class WorldSystem(
         super.reset()
         accumulator = 0f
         alpha = 1f
+        containerBodies.clear()
 
         priorContactSet.forEach { contactPool.free(it) }
         currentContactSet.forEach { contactPool.free(it) }
@@ -206,11 +251,8 @@ class WorldSystem(
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("addFixtures")
-        bodies.forEach { body ->
-            body.forEachFixture { fixture ->
-                if (fixture.isActive()) worldContainer.addFixture(fixture)
-            }
-        }
+        passContainer = worldContainer
+        bodies.forEach { body -> body.forEachFixture(addActiveFixture) }
         diagnostics?.endEntry()
 
         diagnostics?.endEntry()
@@ -257,29 +299,26 @@ class WorldSystem(
         diagnostics?.endEntry()
     }
 
-    internal fun collectContacts(body: IBody, worldContainer: IWorldContainer) = body.forEachFixture { fixture ->
-        if (!fixture.isActive() || !contactFilter.shouldProceedFiltering(fixture)) return@forEachFixture
+    internal fun collectContacts(body: IBody, worldContainer: IWorldContainer) {
+        passContainer = worldContainer
+        body.forEachFixture(collectFixtureContacts)
+    }
+
+    private fun collectContacts(fixture: IFixture) {
+        if (!fixture.isActive() || !contactFilter.shouldProceedFiltering(fixture)) return
 
         val shape = fixture.getShape()
+        collectFixture = fixture
+        collectShape = shape
 
         val bounds = shape.getBoundingRectangle(out1)
-        worldContainer.forEachFixture(
+        passContainer!!.forEachFixture(
             MathUtils.floor(bounds.getX() / ppm),
             MathUtils.floor(bounds.getY() / ppm),
             MathUtils.ceil(bounds.getMaxX() / ppm),
-            MathUtils.ceil(bounds.getMaxY() / ppm)
-        ) { candidate, _ ->
-            if (candidate.isActive() &&
-                filterContact(fixture, candidate) &&
-                shape.overlaps(candidate.getShape())
-            ) {
-                val contact = contactPool.fetch()
-                contact.set(fixture, candidate)
-                if (!currentContactSet.add(contact))
-                    contactPool.free(contact)
-            }
-            return@forEachFixture true
-        }
+            MathUtils.ceil(bounds.getMaxY() / ppm),
+            collectCandidate
+        )
     }
 
     internal fun resolveCollisions(body: IBody, worldContainer: IWorldContainer) {
@@ -289,18 +328,14 @@ class WorldSystem(
         // active static body every cycle -- a large saving in block-dense rooms.
         if (body.type == BodyType.STATIC) return
 
-        val bodyBounds = body.getBounds(out1)
+        resolveBody = body
+        resolveBounds = body.getBounds(out1)
         worldContainer.forEachBody(
-            MathUtils.floor(bodyBounds.getX() / ppm),
-            MathUtils.floor(bodyBounds.getY() / ppm),
-            MathUtils.ceil(bodyBounds.getMaxX() / ppm),
-            MathUtils.ceil(bodyBounds.getMaxY() / ppm),
-        ) { candidate, _ ->
-            if (candidate == body) return@forEachBody true
-            val candidateBounds = candidate.getBounds(out2)
-            if (candidateBounds.overlaps(bodyBounds))
-                collisionHandler.handleCollision(body, candidate)
-            return@forEachBody true
-        }
+            MathUtils.floor(resolveBounds.getX() / ppm),
+            MathUtils.floor(resolveBounds.getY() / ppm),
+            MathUtils.ceil(resolveBounds.getMaxX() / ppm),
+            MathUtils.ceil(resolveBounds.getMaxY() / ppm),
+            resolveCandidate
+        )
     }
 }

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.megaman.maverick.game.pathfinding.BlockCells
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
@@ -46,7 +47,6 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
-import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
@@ -371,20 +371,8 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { targetPlayer.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ x, y, container ->
-                val rect1 = GameRectangle()
-                val rect2 = GameRectangle()
-                val coordBounds = rect1.set(
-                    x * ConstVals.PPM.toFloat(),
-                    y * ConstVals.PPM.toFloat(),
-                    ConstVals.PPM.toFloat(),
-                    ConstVals.PPM.toFloat(),
-                )
-                // returns false if stopped early (blocking body found) → not passable
-                return@filter container?.forEachBody(x, y) { otherBody, _ ->
-                    !(otherBody.getEntity().getType() == EntityType.BLOCK &&
-                        otherBody.getBounds(rect2).overlaps(coordBounds))
-                } ?: true
+            filter = { x, y, cells ->
+                cells == null || !BlockCells.containsBlockOverlappingCell(cells, x, y)
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic())
         )

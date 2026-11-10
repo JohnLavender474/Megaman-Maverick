@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.megaman.maverick.game.pathfinding.BlockCells
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -16,7 +17,6 @@ import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.IFaceable
-import com.maverick.game.engine.common.objects.MutableOrderedSet
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -41,7 +41,6 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -250,16 +249,8 @@ class SubmarineJoe(services: MegaServices) : AbstractEnemy(services), IAnimatedE
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { targetPlayer.body.getPositionPoint(Position.BOTTOM_CENTER).toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ x, y, container ->
-                val bodySet = MutableOrderedSet<IBody>()
-                container?.getBodies(x, y, bodySet)
-
-                var passable = true
-                for (otherBody in bodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
-                    passable = false
-                    break
-                }
-                return@filter passable
+            filter = { x, y, cells ->
+                cells == null || !BlockCells.containsBlock(cells, x, y)
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic())
         )

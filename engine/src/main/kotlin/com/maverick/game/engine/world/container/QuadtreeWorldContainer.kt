@@ -120,8 +120,6 @@ class QuadtreeWorldContainer : IWorldContainer {
 
     override fun clear() = root.clear()
 
-    override fun copy() = QuadtreeWorldContainer(ppm, root, maxObjectsPerNode, maxDepth)
-
     private inner class QuadtreeNode(
         private val level: Int,
         private val x: Int,

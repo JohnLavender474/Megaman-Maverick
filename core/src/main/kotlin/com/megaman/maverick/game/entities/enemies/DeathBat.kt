@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.megaman.maverick.game.pathfinding.BlockCells
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.ObjectMap
@@ -250,16 +251,8 @@ class DeathBat(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
             startCoordinateSupplier = { body.getCenter().toGridCoordinate() },
             targetCoordinateSupplier = { targetPlayer.body.getCenter().toGridCoordinate() },
             allowDiagonal = { true },
-            filter = filter@{ x, y, container ->
-                val bodySet = MutableOrderedSet<IBody>()
-                container?.getBodies(x, y, bodySet)
-
-                var passable = true
-                for (otherBody in bodySet) if (otherBody.getEntity().getType() == EntityType.BLOCK) {
-                    passable = false
-                    break
-                }
-                return@filter passable
+            filter = { x, y, cells ->
+                cells == null || !BlockCells.containsBlock(cells, x, y)
             },
             properties = props(ConstKeys.HEURISTIC pairTo DynamicBodyHeuristic())
         )
