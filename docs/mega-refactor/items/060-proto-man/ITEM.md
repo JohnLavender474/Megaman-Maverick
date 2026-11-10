@@ -3,7 +3,7 @@
 - Status: idea
 - Type: feature
 - Objectives: `O8`
-- Depends on: `024`, `081`, `084`
+- Depends on: `081a`, `084`; `024` only for `060g`; `081` (`CharacterDef`) only for `060h`
 - Related: `029`, `031`, `047`, `048`
 - Branches: none yet
 
