@@ -67,7 +67,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | `O1` | idea | none | | |
 | 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | `O2`, `O1` | idea | none | | |
-| 060 | [Proto Man as a playable character](items/060-proto-man/ITEM.md) | feature | `O8` | active | `081a`, `084`; `024` for `060g`; `081` for `060h` | 2026-11-10 | |
+| 060 | [Proto Man as a playable character](items/060-proto-man/ITEM.md) | feature | `O8` | active | `081a`, `084`; `024` for `060h`; `081` for `060i` | 2026-11-10 | |
 | 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | `O2`, `O8`, `O1` | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
 | 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | `O1` | done | none | 2026-10-26 | 2026-10-27 |
 | 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | `O1` | done | none | 2026-10-27 | 2026-10-28 |
@@ -160,7 +160,7 @@ statuses and column meanings are in `CLAUDE.md`.
 
 | Branch | Item | Goal | Status | Started | Finished |
 |--------|------|------|--------|---------|----------|
-| [`mega-refactor-060a-proto-run-jump`](items/060-proto-man/branches/mega-refactor-060a-proto-run-jump/process-log.md) | 060 | Phase 1 of Proto Man: `Protoman` in slot 0 on a test level, with idle, step, walk, jump and fall | active | 2026-11-10 | |
+| [`mega-refactor-060a-shared-run-body`](items/060-proto-man/branches/mega-refactor-060a-shared-run-body/process-log.md) | 060 | Refactor only: move Megaman's run, body and momentum into `players/` functions with parameters; Megaman plays the same | active | 2026-11-10 | |
 | [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | merged | 2026-11-02 | 2026-11-02 |
 | [`mega-refactor-118b-batch-1`](items/118-boss-fight-routines/branches/mega-refactor-118b-batch-1/process-log.md) | 118 | `TimberWoman`, `MoonMan` and `ReactorMan` (6 fights) on the fight flow | merged | 2026-11-03 | 2026-11-03 |
 | [`mega-refactor-118c-batch-2`](items/118-boss-fight-routines/branches/mega-refactor-118c-batch-2/process-log.md) | 118 | `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` (10 fights) on the fight flow | merged | 2026-11-03 | 2026-11-04 |

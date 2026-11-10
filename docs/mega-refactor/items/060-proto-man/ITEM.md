@@ -3,9 +3,9 @@
 - Status: active
 - Type: feature
 - Objectives: `O8`
-- Depends on: `081a`, `084`; `024` only for `060g`; `081` (`CharacterDef`) only for `060h`
+- Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`
-- Branches: `mega-refactor-060a-proto-run-jump` (active, 2026-11-10)
+- Branches: `mega-refactor-060a-shared-run-body` (active, 2026-11-10)
 
 ## Goal
 
@@ -52,23 +52,29 @@ waits for it.
   sprite sheet for unique move sets; example: the "flame sword" poses can become a slash like X's Z-sabre.
 
 - (2026-11-10, owner) Merge target: each branch of this item squash-merges directly into `master`.
+- (2026-11-10, owner) `060a` is a refactor-only branch, as `081a` was for X. Mega's run, body and momentum are
+  `Megaman` receiver functions, so a thin `Protoman` cannot call them, and a copy breaks `O8-R1`. No other item covers
+  this move (`084` moved the state, not these functions; the `081` body and controller parameters are in its "not
+  placed" row). The first Proto Man code is in `060b`. The branch started as `mega-refactor-060a-proto-run-jump`
+  with no commits, and was renamed to `mega-refactor-060a-shared-run-body`.
 
 ## Proposed phases
 
-Not approved. One branch per phase. `060a` to `060d` build the MM9/MM10 baseline to completion. Then `060e` and
-`060f` take Proto Man to his Maverick version. His move set, behaviors, look and feel are as refined as possible
-before co-op (`060h`) (owner, 2026-11-10).
+Not approved. One branch per phase. `060a` is a refactor only. `060b` to `060e` build the MM9/MM10 baseline to
+completion. Then `060f` and `060g` take Proto Man to his Maverick version. His move set, behaviors, look and feel are
+as refined as possible before co-op (`060i`) (owner, 2026-11-10).
 
 | Phase | Content | Needs |
 |---|---|---|
-| `060a` | `Protoman` in slot 0 on a test level: idle, step, walk, jump, fall; sliced atlas | `081` |
-| `060b` | Buster: shoot poses, Proto Buster, charge and Proto Strike | |
-| `060c` | Slide and ladder, with Mega's rules | |
-| `060d` | Proto Shield; his damage reaction, stun, collapse, teleport in and out | |
-| `060e` | The "Proto Sabre" (working name) | |
-| `060f` | Experiments: settings, moves and behaviors, from the sheet scan and play tests. Can be more than one branch | |
-| `060g` | Weapon poses and the loadout: Proto Man's variants of the special weapons | `024` |
-| `060h` | `CharacterDef` as the third caller (if `081` has not done it); co-op with mixed characters | `047` |
+| `060a` | Refactor only, contract "Megaman plays the same", no Proto Man code: Mega's run, body (feet, gravity table, water, ice) and momentum move from `Megaman` receiver functions into `players/` functions with parameters | `081a`, `084` |
+| `060b` | `Protoman` in slot 0 on a test level: idle, step, walk, jump, fall; sliced atlas | `060a` |
+| `060c` | Buster: shoot poses, Proto Buster, charge and Proto Strike | |
+| `060d` | Slide and ladder, with Mega's rules | |
+| `060e` | Proto Shield; his damage reaction, stun, collapse, teleport in and out | |
+| `060f` | The "Proto Sabre" (working name) | |
+| `060g` | Experiments: settings, moves and behaviors, from the sheet scan and play tests. Can be more than one branch | |
+| `060h` | Weapon poses and the loadout: Proto Man's variants of the special weapons | `024` |
+| `060i` | `CharacterDef` as the third caller (if `081` has not done it); co-op with mixed characters | `047` |
 
 Sprite source: a fan sheet, "Proto Man (Expanded) (Inti Creates 8-bit-Style)", sprites by Hansungkee and others (the
 credits are on the sheet). Keep the credits.
@@ -76,9 +82,9 @@ credits are on the sheet). Keep the credits.
 ## Open questions
 
 - Does Proto Man share the slide and ladder rules (X6 shares the step routines)?
-- (`060g`) How does Proto Man use each special weapon: Mega's version with his poses, or his own variant? Many
+- (`060h`) How does Proto Man use each special weapon: Mega's version with his poses, or his own variant? Many
   questions are open, so this phase comes late.
-- (`060e`) What is the Proto Sabre: its input, its slash kinds, and how much it shares with X's Z-sabre (`081e`,
+- (`060f`) What is the Proto Sabre: its input, its slash kinds, and how much it shares with X's Z-sabre (`081e`,
   `141`)?
 - Moved to `113`: how does the player pick a character, and can each co-op slot pick its own (`047`)?
 

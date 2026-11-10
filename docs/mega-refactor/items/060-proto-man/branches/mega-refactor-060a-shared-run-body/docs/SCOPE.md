@@ -1,4 +1,4 @@
-# Scope: mega-refactor-060a-proto-run-jump
+# Scope: mega-refactor-060a-shared-run-body
 
 What this branch changes and why. Write this file after the scan, with `CONTRACT.md` and before
 `BRIEF.src.html`. This is Claude's record. The owner approves the brief, not this file. If the scope
