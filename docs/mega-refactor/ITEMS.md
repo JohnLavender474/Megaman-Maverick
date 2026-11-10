@@ -141,7 +141,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 131 | [Room exit: a player past the exit wall outside the shared span](items/131-exit-outside-span/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 132 | [Spread the players after a room transition](items/132-spread-after-transition/ITEM.md) | feature | `O2`, `O9` | idea | `047` | | |
 | 133 | [A cue that shows who waits at a room exit](items/133-exit-wait-cue/ITEM.md) | feature | `O9`, `O2` | idea | `047` | | |
-| 134 | [Draw bodies and the camera between physics steps (render interpolation)](items/134-render-interpolation/ITEM.md) | refactor | `O9`, `O5` | active | none | 2026-11-07 | |
+| 134 | [Draw bodies and the camera between physics steps (render interpolation)](items/134-render-interpolation/ITEM.md) | refactor | `O9`, `O5` | done | none | 2026-11-07 | 2026-11-09 |
 | 135 | [A player held below the view is left behind at a side room exit](items/135-held-player-left-behind/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 136 | [Co-op: a player can skip a spike floor in a tall room by falling below the view](items/136-tall-room-spike-skip/ITEM.md) | feature | `O2`, `O4` | idea | `047` | | |
 | 137 | [One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`](items/137-falling-piece-entity/ITEM.md) | refactor | `O1` | idea | none | | |
@@ -154,6 +154,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 144 | [View edge warp beside a partner on a ladder](items/144-warp-ladder-partner/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 145 | [View edge warp: the landing after the cap tests only solids](items/145-warp-fallback-hazards/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 146 | [A marker `IPlayer` interface, so a player has a type](items/146-player-marker-interface/ITEM.md) | refactor | `O1`, `O8` | idea | none | | |
+| 147 | [Render interpolation for riders and for bodies that move once per frame](items/147-interpolation-riders-frame-moved/ITEM.md) | refactor | `O9`, `O5` | idea | none | | |
 
 ## Branches
 
@@ -243,4 +244,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047j-coop-bottom-warp`](items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/process-log.md) | 047 | The co-op default `bottom=WARP` for tall rooms | merged | 2026-11-06 | 2026-11-07 |
 | [`mega-refactor-047c-slot-respawn`](items/047-co-op/branches/mega-refactor-047c-slot-respawn/process-log.md) | 047 | A dead co-op player respawns near the lead, at a safe spot (shared screen phase 6) | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-134a-draw-interpolation`](items/134-render-interpolation/branches/mega-refactor-134a-draw-interpolation/process-log.md) | 134 | Draw bodies and the camera between the last 2 physics steps, with `--interpolation` (on by default) | merged | 2026-11-07 | 2026-11-09 |
-| [`mega-refactor-134b-interpolation-audit`](items/134-render-interpolation/branches/mega-refactor-134b-interpolation-audit/process-log.md) | 134 | Fix the known render interpolation hitches: bodies placed outside the world steps, bodiless sprites, the shape renderer, snaps | active | 2026-11-09 | |
+| [`mega-refactor-134b-interpolation-audit`](items/134-render-interpolation/branches/mega-refactor-134b-interpolation-audit/process-log.md) | 134 | Fix the known render interpolation hitches: bodies placed outside the world steps, bodiless sprites, the shape renderer, snaps | merged | 2026-11-09 | 2026-11-09 |

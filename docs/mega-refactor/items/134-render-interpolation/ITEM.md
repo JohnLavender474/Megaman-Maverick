@@ -1,17 +1,24 @@
 # 134: Draw bodies and the camera between physics steps (render interpolation)
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O9`, `O5`
 - Depends on: none
 - Related: `010` (fixed tick), `067` (PPM 16, whole-pixel rounding), `081` (playable X, where the judder was found)
-- Branches: `mega-refactor-134a-draw-interpolation` (merged, 2026-11-09), `mega-refactor-134b-interpolation-audit` (active, 2026-11-09)
+- Branches: `mega-refactor-134a-draw-interpolation` (merged, 2026-11-09), `mega-refactor-134b-interpolation-audit` (merged, 2026-11-09)
 
 ## Decisions (owner, 2026-11-09, in `134a`)
 
 - D5: `--interpolation` is on by default (`--interpolation false` turns it off). The hitches of the known `134b`
   cases (for example the `GutsTank` fist) are accepted until `134b` fixes them.
 - D3 (`134a` brief): a distance guard of 1 tile per step; the explicit snaps are for `134b`.
+
+## Decisions (owner, 2026-11-09, at the `134b` brief)
+
+- D1: the draw link lives on the sprites component (`SpritesComponent.drawOffsetBody`), not on the body: the body is
+  physics; draw state goes on the draw side. Rule added to `docs/mega-refactor/CLAUDE.md`.
+- D2: shapes get the camera draw offset only.
+- D3: riders and bodies that move once per frame are a new item: `147`.
 
 ## `134b` (from the `134a` `docs/TODO.md`)
 

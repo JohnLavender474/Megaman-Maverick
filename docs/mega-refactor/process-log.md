@@ -1961,3 +1961,26 @@ newest entry at the bottom.
 - Follow-up: issues `2026-11-02-weapon-spawned-sets-survive-death.md` and `2026-11-02-throw-axe-no-live-check.md`
   closed. Item `146` (a marker `IPlayer`) came from the diff review. No other backlog candidates. `134b` shares 3
   files with this merge (text only; it counts a respawn as fine for the interpolation).
+
+## 2026-11-09 — mega-refactor-134b-interpolation-audit
+
+- Summary: `134` done (squash commit `5e3c11441`). Children that code places on a parent outside the world steps are
+  drawn with the parent's draw offset: `SpritesComponent.drawOffsetBody` (engine), set in the child's own sprites
+  component (owner D1: the body is physics, draw state goes on the draw side; rule added to
+  `docs/mega-refactor/CLAUDE.md`, `c49d23d09`). Links in `GutsTankFist`, `ReactorManProjectile`, `PreciousGem` (through
+  its owner), `BigAssMaverickRobotHand` and `Body`, `FireMetFlame`, `PetitDevilChild`, `ElectrocutieChild`, `Bolt`,
+  `Spike`, `MegamanXSabreSlash`. `IBody.restartStep()` makes a teleport inside a step not count as motion
+  (`PipePortal.pullEntityIn`). The shapes draw with the camera draw offset, and the shape renderer restarts so that the
+  new matrix takes effect (before, shapes drew with the previous frame's matrix). The `I` key does nothing while
+  paused. `Bolt` reads its parent from `PARENT`. Test map rooms `attach` and `pipe`.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes after `master` was merged into
+  the branch: `engine` 667, `core` 1276, `smokeTest` 451, JAR built. Mutation checks on the link read and on
+  `restartStep`, caught. Review before the play test: 2 subagents; findings fixed (a parent wrote the link before the
+  child's `init()`, which crashed the first `PreciousWoman` shield; the robot hand link gave 0). During the play test
+  the 2 new rooms started over a pit (their floors only touched the room edge, so they never spawned); fixed. The owner
+  reported "All tests pass". Diffity: 0 threads. Not done: the `O5-R2` capture (recorded in `O5`). CI did not run, because
+  the branch was never pushed.
+- Follow-up: new item `147` (riders and bodies that move once per frame, owner D3). Filed during the play test:
+  `docs/issues/2026-11-09-per-frame-allocations-hot-paths.md` (a GC audit; the strongest lead for the freezes the
+  owner saw was the machine swapping, 19 of 19 GiB, with 18 JVMs). `081f` shares `MegamanXSabreSlash.kt` (a comment line
+  there; no conflict).
