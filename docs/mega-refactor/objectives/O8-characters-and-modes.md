@@ -72,6 +72,9 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 - `081b`: a third character must not copy `MegamanX` either. The `is Megaman` workarounds (5) grow with each character until `024`. Since `081c`, the jump, the wall slide and the air dash are shared; the other 5 Megaman behaviors (ground slide, crouch, climb, swim, jetpack) still take the `Megaman` type. Since `081d`, X has its own ground dash, so the ground slide stays Megaman's. A third character with a ground dash shares X's code or copies it; `CharacterDef` decides.
 - `081e`: the sabre-only gate (`SabreBlock`, `MetaWheelF`) and the sabre damage are `is MegamanXSabreSlash` checks in each target, with one static damage per target for every slash kind. A second character with a sabre (or a sabre weapon from `024`) must not add a second class check in each target; a damage rule by slash kind and by target is `141`. X's values (`MegamanXValues.kt`) are the owner's tuning from the `081e` play test, not the X6 values; a change to them needs the owner.
 - `029e`: `GameState.weaponsOwned` must become per character or per loadout (`024`).
+- `146a` (2026-11-10): a new player class implements the engine marker `IPlayer`, and player code takes `IPlayer`. The
+  type means "can be a player"; membership is the `PlayerComponent` (test with `asPlayer` or `isPlayer`, never with
+  `is IPlayer`). `060` takes this in.
 
 ## Items
 
@@ -96,7 +99,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `122` | idea | [Human-driven boss](../items/122-human-driven-boss/ITEM.md) (main) |
 | `126` | idea | [Movement and damage blocks as lock reasons](../items/126-movement-damage-lock-reasons/ITEM.md) |
 | `141` | idea | [The sabre damage by slash kind and by target](../items/141-sabre-damage-rules/ITEM.md) (main) |
-| `146` | idea | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) |
+| `146` | done | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) |
+| `148` | idea | [The last player reads take `IPlayer`](../items/148-last-player-reads/ITEM.md) |
 
 ## Gaps with no item
 

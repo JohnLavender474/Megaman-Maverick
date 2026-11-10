@@ -153,14 +153,16 @@ statuses and column meanings are in `CLAUDE.md`.
 | 143 | [View edge warp: the cap does not run while no partner is in view](items/143-warp-cap-out-of-view/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 144 | [View edge warp beside a partner on a ladder](items/144-warp-ladder-partner/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 145 | [View edge warp: the landing after the cap tests only solids](items/145-warp-fallback-hazards/ITEM.md) | feature | `O2` | idea | `047` | | |
-| 146 | [A marker `IPlayer` interface, so a player has a type](items/146-player-marker-interface/ITEM.md) | refactor | `O1`, `O8` | active | none | 2026-11-10 | |
+| 146 | [A marker `IPlayer` interface, so a player has a type](items/146-player-marker-interface/ITEM.md) | refactor | `O1`, `O8` | done | none | 2026-11-10 | 2026-11-10 |
 | 147 | [Render interpolation for riders and for bodies that move once per frame](items/147-interpolation-riders-frame-moved/ITEM.md) | refactor | `O9`, `O5` | idea | none | | |
+| 148 | [The last player reads take `IPlayer`](items/148-last-player-reads/ITEM.md) | refactor | `O1`, `O8` | idea | none | | |
+| 149 | [Tag changes at runtime, with an index that follows them](items/149-runtime-tag-changes/ITEM.md) | refactor | `O1`, `O7` | idea | none | | |
 
 ## Branches
 
 | Branch | Item | Goal | Status | Started | Finished |
 |--------|------|------|--------|---------|----------|
-| [`mega-refactor-146a-player-marker`](items/146-player-marker-interface/branches/mega-refactor-146a-player-marker/process-log.md) | 146 | A marker `IPlayer` in the engine and `IMegaPlayer` in core; player call sites take the player type | active | 2026-11-10 | |
+| [`mega-refactor-146a-player-marker`](items/146-player-marker-interface/branches/mega-refactor-146a-player-marker/process-log.md) | 146 | A marker `IPlayer`, tags in a `TagsComponent`, and `init()` before `canSpawn` | merged | 2026-11-10 | 2026-11-10 |
 | [`mega-refactor-060a-shared-run-body`](items/060-proto-man/branches/mega-refactor-060a-shared-run-body/process-log.md) | 060 | Refactor only: move Megaman's run, body and momentum into `players/` functions with parameters; Megaman plays the same | active | 2026-11-10 | |
 | [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | merged | 2026-11-02 | 2026-11-02 |
 | [`mega-refactor-118b-batch-1`](items/118-boss-fight-routines/branches/mega-refactor-118b-batch-1/process-log.md) | 118 | `TimberWoman`, `MoonMan` and `ReactorMan` (6 fights) on the fight flow | merged | 2026-11-03 | 2026-11-03 |

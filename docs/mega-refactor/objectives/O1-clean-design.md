@@ -86,6 +86,10 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 - `029a`, `061a`: `Players.unregister` and `isLockedBy` need a production caller or removal (2 declarations). `047` is a possible caller for `unregister` (inference).
 - `014`: `BodyKeys` and the string-named `Receivers` keys change only if the owner reads `O1-R4` as covering typed keys in a bag.
 - No redo found in `051`, `062`, `063`, `064`, `084f`, `084g` or `084h`.
+- `146a` (2026-11-10): tags are a component (`TagsComponent`, `entities/state/`) and `ITaggable` is gone; a new entity
+  class needs no tag code, and an `init()` override calls `super.init()` (the tags come from `MegaGameEntity.init()`).
+  The engine runs `init()` before `canSpawn`; `canSpawn` reads `init()` data, props and the session, never per-spawn
+  state, and writes nothing (`CLAUDE.md`). New APIs and their callers: `SCOPE.md` of `146a`.
 
 ## Items
 
@@ -155,7 +159,9 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `138` | idea | [Merge `Wreck` into `MockSpriteEntity`](../items/138-wreck-into-mock-sprite/ITEM.md) (main) |
 | `139` | idea | [A shared simple enemy shot, starting with `JunkShot`](../items/139-shared-enemy-shot/ITEM.md) (main) |
 | `140` | idea | [`TickFrames` as the engine `Animation`, with durations in seconds](../items/140-tick-frames-seconds/ITEM.md) (main) |
-| `146` | idea | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) (main) |
+| `146` | done | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) (main) |
+| `148` | idea | [The last player reads take `IPlayer`](../items/148-last-player-reads/ITEM.md) (main) |
+| `149` | idea | [Tag changes at runtime, with an index that follows them](../items/149-runtime-tag-changes/ITEM.md) (main) |
 
 ## Gaps with no item
 

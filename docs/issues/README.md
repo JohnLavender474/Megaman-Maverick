@@ -142,7 +142,7 @@ related-items: [<mega-refactor item IDs>]
 | [With `--players 2`, only slot 0 dies past a camera edge](2026-11-02-slot-1-no-camera-edge-death.md) | yes | core | open |
 | [A dead player's weapon `spawned` sets are not cleared](2026-11-02-weapon-spawned-sets-survive-death.md) | no | core | closed |
 | [`throwAxe` runs after a `0.1` s delay with no live check](2026-11-02-throw-axe-no-live-check.md) | no | core | closed |
-| [The factory preload runs `init()` twice for 25 `Bullet` and 25 `Block`](2026-11-02-entity-factory-preload-runs-init-twice.md) | yes | core | open |
+| [The factory preload runs `init()` twice for 25 `Bullet` and 25 `Block`](2026-11-02-entity-factory-preload-runs-init-twice.md) | yes | core | closed |
 | [`LocksComponent.reset()` does not call its change hook](2026-11-02-locks-reset-skips-change-hook.md) | no | engine | open |
 | [Question: the screen and the boss read `mini` and `end` from different sources](2026-11-02-boss-props-have-two-sources.md) | question | core | open |
 | [The check that stops an item drop on a cart kill is always true](2026-11-02-cart-kill-drop-check-always-true.md) | yes | core | open |
@@ -157,3 +157,7 @@ related-items: [<mega-refactor item IDs>]
 | [The camera "rounding" in `MegaLevelScreen.render` does nothing](2026-11-09-camera-rounding-does-nothing.md) | yes | core | open |
 | [Hot paths allocate per frame or per step where no item covers it](2026-11-09-per-frame-allocations-hot-paths.md) | yes | engine, core | closed |
 | [The lookups of `MegaGameEntities` give out mutable sets, and the empty set is guarded only against `add`](2026-11-10-mega-game-entities-shared-empty-set.md) | yes | core | open |
+| [`DarknessV4` turns its light queue into data with an inverted loop condition](2026-11-10-darkness-v4-light-loop-inverted.md) | yes | core | open |
+| [A warp spot test may ignore damagers when it tests spots for a dead player](2026-11-10-warp-spot-ignores-damagers-for-dead-player.md) | no | core | open |
+| [A pooled `HeartTank` keeps its spawn-on-contact list from the last life](2026-11-10-heart-tank-spawn-on-contact-not-cleared.md) | yes | core | open |
+| [Some entities keep per-spawn fields from their last pooled life](2026-11-10-stale-per-spawn-fields.md) | no | core | open |

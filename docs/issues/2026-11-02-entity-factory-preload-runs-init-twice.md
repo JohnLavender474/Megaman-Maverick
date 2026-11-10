@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: unknown
@@ -28,3 +28,9 @@ Each entity runs `init()` once. The preload sets `initialized = true`, as `Megam
 ## How to reproduce
 
 Read the code, or count `init()` calls on a preloaded `Bullet` in a test.
+
+## Resolution
+
+Fixed in `mega-refactor-146a-player-marker` (squash `f84ee0d0e`, 2026-11-10): the preload sets
+`entity.initialized = true`, and `GameEngine.spawn()` now runs `init()` (once, guarded by `initialized`) before
+`canSpawn`.

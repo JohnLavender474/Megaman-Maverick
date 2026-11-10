@@ -1,11 +1,11 @@
 # 146: A marker `IPlayer` interface, so a player has a type
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O1`, `O8`
 - Depends on: none
 - Related: `029` (player contract, decision of 2026-10-23), `048` (components), `047c`
-- Branches: `146a` (`mega-refactor-146a-player-marker`)
+- Branches: `146a` (`mega-refactor-146a-player-marker`, merged 2026-11-10)
 
 ## Goal
 

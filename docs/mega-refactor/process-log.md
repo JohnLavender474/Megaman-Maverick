@@ -2039,3 +2039,25 @@ newest entry at the bottom.
   bodies) 1,735,288 bytes per copy -> 0 bytes per fill. The GC measure in play (through the JAR) was not done.
 - Follow-up: the lookups of `MegaGameEntities` still give out mutable sets (new issue). The memory pressure on the
   machine (many JVMs, swap full) stays the strongest lead for the long freezes.
+
+## 2026-11-10 — mega-refactor-146a-player-marker
+
+- Summary: squash `f84ee0d0e`. A player has a type: the engine marker `IPlayer` (a `slot` that throws
+  `PlayerNotRegisteredException` when the entity is not in a slot), and player code takes `IPlayer`. The scope grew
+  twice with the owner: tags moved from `ITaggable` (deleted) to a `TagsComponent` that `MegaGameEntity.init()` adds
+  (default the runtime class name; 4 bases add their tag through `super`; 7 classes keep a different tag; 144
+  duplicate overrides deleted; 47 `init()` overrides now call `super.init()`), and, after a play-test crash in
+  `GAUNTLET_1`, the engine runs `init()` before `canSpawn` with a written `canSpawn` contract (`TellySaucer` picks
+  its side from the player nearest the spawn; the tanks set their value in `onSpawn`). Owner decisions D1-D10 are in
+  the branch `SCOPE.md`; the spawn-flow research is in its `NOTES.md`, and layer 3 (class facts and spawn rules as
+  data) went to `021`.
+- Contract check: `engine:test` 675, `core:test` 1309, `core:smokeTest` 451 (with a tag check of all 446 entity
+  classes), `lwjgl3:jar` built. 3 reviews before the play test (6 agents); the third found no bug. The owner's play
+  test: all checks pass (one crash in round 1, fixed). Diffity: 3 rounds, 0 threads; the owner's questions became D9
+  and the spawn-flow work. CI did not run, because the branch was never pushed.
+- Follow-up: new items `148` (the last `playerSlot!!` reads) and `149` (runtime tag changes). Issues filed:
+  `DarknessV4` light loop, warp spot and dead player, `HeartTank` spawn-on-contact, stale per-spawn fields; the preload
+  double-`init()` issue is closed. Merged with known breaks in 2 active branches (owner decision): `081f` adds 3
+  entities with `getTag()` overrides and no `super.init()` (fix in its `NOTES.md` of `146a`), and `compactor-level`
+  adds a `COMPACTOR` level filter that reads `getTag()` (use `it !is Life && it !is WeaponEnergyBulb`). Each fixes
+  them when it takes in `master`.
