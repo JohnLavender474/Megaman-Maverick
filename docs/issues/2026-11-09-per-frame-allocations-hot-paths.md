@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: engine, core
 gameplay-change: no
@@ -166,3 +166,21 @@ Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktree
   `./gradlew lwjgl3:jar && ./gradlew --stop`, then from `assets/`:
   `$HOME/.jdks/corretto-17.0.13/bin/java -Xlog:gc:file=/home/johnlavender/IdeaProjects/Megaman-Maverick/temp/fix-per-frame-allocations/gc-<master|branch>.log:uptime -jar ../lwjgl3/build/libs/Megaman-Maverick-1.0.1.jar --level RODENT_MAN --room room7`
   Play for 60 s in each run.
+
+## Resolution
+
+Fixed by `fix/per-frame-allocations-hot-paths` (2026-11-10). The squash landed in commit `50d0f7458`, together with
+`fix/koopa-shell-kicker`: another session committed the shared index of the main checkout while both squashes were
+staged. That commit holds 46 files: the 4 Koopa files (`GreenKoopaShell.kt`, `RedKoopaShell.kt`,
+`KoopaShellKickerTest.kt`, `RefactorTest047.tmx`) and the 42 files of this fix. Its message names only the Koopa fix.
+History is not rewritten (owner rule).
+
+- Parts 1 to 5 of the short contract are done. The 7th supplier, `StagedMoonLandingFlag`, needed no change: its keys
+  are `const val` templates, which the compiler builds once.
+- `engine:allocationTest`: world step (200 bodies) 53,216 -> 16 bytes per frame; snapshot (2,000 bodies) 1,735,288
+  bytes per copy -> 0 bytes per fill.
+- The play test found a crash: after the 7th shot, `MoonMan` asked for `SHOOT_KEYS[7]` in a table of 7. The table now
+  has the key `shoot_7` (no animation, as before), commit `f619fffe5` on the branch. The owner's play checks pass.
+- The GC measure through the JAR was not done.
+- Diffity: 0 threads. Owner question on the shared empty set: kept, with a `TODO` at `MegaGameEntities.noEntities` and
+  the new issue `2026-11-10-mega-game-entities-shared-empty-set.md`.

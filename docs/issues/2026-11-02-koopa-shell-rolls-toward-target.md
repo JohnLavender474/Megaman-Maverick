@@ -82,3 +82,6 @@ kicker from the touch test (the first live player in slot order that touches the
 x, on a kick and on a stomp. Test: `KoopaShellKickerTest` (the 2-player cases fail on the old code). The owner's play
 test passes: the stomp case and its mirror in the new co-op room `koopa_kick`, the side kicks, and the 1-player control
 in `SMB3_1`. Diffity: 0 threads.
+
+Note (2026-11-10): commit `50d0f7458` also holds the 42 files of `fix/per-frame-allocations-hot-paths`, which was
+squashed into the same index at the same time (see `2026-11-09-per-frame-allocations-hot-paths.md`, "Resolution").

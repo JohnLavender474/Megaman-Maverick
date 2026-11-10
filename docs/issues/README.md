@@ -155,5 +155,5 @@ related-items: [<mega-refactor item IDs>]
 | [A camera shake that runs at level exit goes on in the next level](2026-11-06-camera-shake-survives-level-exit.md) | no | core | open |
 | [`Background.update` builds a debug string each frame, also when its tag is filtered out](2026-11-09-background-debug-string-each-frame.md) | yes | core | open |
 | [The camera "rounding" in `MegaLevelScreen.render` does nothing](2026-11-09-camera-rounding-does-nothing.md) | yes | core | open |
-| [Hot paths allocate per frame or per step where no item covers it](2026-11-09-per-frame-allocations-hot-paths.md) | yes | engine, core | open |
+| [Hot paths allocate per frame or per step where no item covers it](2026-11-09-per-frame-allocations-hot-paths.md) | yes | engine, core | closed |
 | [The lookups of `MegaGameEntities` give out mutable sets, and the empty set is guarded only against `add`](2026-11-10-mega-game-entities-shared-empty-set.md) | yes | core | open |

@@ -2017,3 +2017,25 @@ newest entry at the bottom.
   they pass. Diffity: 0 threads (its server was stopped by the system for low memory during the play test). CI did not
   run, because the branch was never pushed.
 - Follow-up: the Stage 1 co-op faults in `ROADMAP.md` are all fixed.
+
+## 2026-11-10 — fix/per-frame-allocations-hot-paths
+
+- Summary: closes `2026-11-09-per-frame-allocations-hot-paths.md`. The squash landed in `50d0f7458`, together with
+  `fix/koopa-shell-kicker`: another session committed the shared index of the main checkout while both squashes were
+  staged, so the commit message names only the Koopa fix (42 of its 46 files are this fix; history not rewritten, owner
+  rule). Pathfinding reads a pooled `BodyCellsSnapshot` (engine `IBodyCells`, filled from `WorldSystem` as
+  `IWorldBodies`) in place of a world container copy, and `IWorldContainer.copy()` is gone; the A* loop stops on an
+  interrupt; `BlockCells` holds the block checks of the filters. The world step has no capturing lambdas. Animation keys
+  are prebuilt or cached (`buildFullKey`, 7 entities). `MegaGameEntities` returns a shared empty set for a missing key,
+  and the id map is an `IntMap`. New `engine:allocationTest` suite in its own JVM.
+- Contract check (the short contract in the issue file): `./gradlew engine:test core:test core:smokeTest lwjgl3:jar`
+  passes on the branch: `engine` 670, `allocationTest` 2, `core` 1288, `smokeTest` 451, JAR built. The review before the
+  play test (1 subagent) found 3 faults, fixed in `fc5f480bd`: the world bodies were not cleared on `reset()`, an
+  exception in the factory could hold a snapshot, and the `MoonMan` key supplier still built keys. The play test found
+  a `MoonMan` crash (the shoot key table had no key for the index after the 7th shot), fixed in `f619fffe5`; then the
+  owner's play checks pass. Diffity: 0 threads; the owner's question on the shared empty set gave a `TODO` and the new
+  issue `2026-11-10-mega-game-entities-shared-empty-set.md`. CI did not run, because the branch was never pushed.
+- Measures (`O5-R2`): `engine:allocationTest`, world step (200 bodies) 53,216 -> 16 bytes per frame; snapshot (2,000
+  bodies) 1,735,288 bytes per copy -> 0 bytes per fill. The GC measure in play (through the JAR) was not done.
+- Follow-up: the lookups of `MegaGameEntities` still give out mutable sets (new issue). The memory pressure on the
+  machine (many JVMs, swap full) stays the strongest lead for the long freezes.
