@@ -112,7 +112,11 @@ Changed files: `WorldSystem.kt`, the 3 world containers and `IWorldContainer.kt`
 
 Not changed:
 
-- Path results, the snapshot timing, the contact order (`ContactRuleSelectionTest`, the `WorldSystem` tests), the
+- Path results with the default world container (`--worldContainer simple`): the snapshot holds the bodies of each
+  grid cell, as the old copy of the grid did. With `--worldContainer quadtree` (a dev option) a search can see fewer
+  bodies than before: the old copy of the loose quadtree gave every body of each loose node that overlaps the cell,
+  the snapshot gives only the bodies in the cell (named as an intended change; review finding, 2026-11-09).
+- The snapshot timing, the contact order (`ContactRuleSelectionTest`, the `WorldSystem` tests), the
   animation key strings, the lookup results.
 - Not in this fix: the draw queue (`026`), eager log strings (`044`), the `AsyncPathfindingSystem` interrupt (side
   finding; filed on its own if it stays), the JVM flags of the dev run.
@@ -133,14 +137,32 @@ Checks:
   -> 0 bytes per fill.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
-Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/per-frame-allocations-hot-paths`:
+Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/per-frame-allocations-hot-paths`
+(rooms checked by the review before the play test, 2026-11-09; a `--level` start is `NORMAL` difficulty, so
+`hard_mode_only` objects do not spawn):
 
-- `./run-game-alpha.sh --level RODENT_MAN --room room13`: the `Bat`s chase Megaman around the blocks as before.
-- `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_chase`: the `Bat` path around blocks, as before.
+- `./run-game-alpha.sh --level RODENT_MAN --room room7`: the `Bat` chases Megaman around the blocks as before.
+- `./run-game-alpha.sh --level TEST_1 --room room35`: 2 `Bat`s chase Megaman as before.
+- `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_chase`: the `Bat` chases Megaman as before.
+- `./run-game-alpha.sh --level WILY_STAGE_2 --room fork_room`: take the lower path into `path1_room1`; the 3
+  `SubmarineJoe`s follow Megaman as before.
+- `./run-game-alpha.sh --level GAUNTLET_1`: clear the `room2` wave; the `FloatingCan`s of the `room3` wave chase
+  Megaman as before.
 - `./run-game-alpha.sh --level WILY_STAGE_1 --room room8`: the `DarknessV2` room lights and darkens as before.
-- `./run-game-alpha.sh --level DESERT_MAN --room room2`: `Jetto` animations; `GLACIER_MAN --room room1`: `SpikeBot`;
-  `TIMBER_WOMAN --room room1`: `NuttGlider`. The animations look as before.
+- `./run-game-alpha.sh --level DESERT_MAN --room room2`: the `Jetto` animations and the `LampeonBandito` bullets look as
+  before.
+- `./run-game-alpha.sh --level GLACIER_MAN --room room1`: the `SpikeBot` animations look as before.
+- `./run-game-alpha.sh --level TIMBER_WOMAN --room room1`: the `NuttGlider` animations look as before.
+- `./run-game-alpha.sh --level MOON_MAN --room room5 --weapons all`: the 2 `AstroAssAssaulter`s stand, shoot, throw and
+  freeze as before.
+- `./run-game-alpha.sh --level MOON_MAN --room room14`: the room before the boss. The `MoonMan` shoots and changes the
+  gravity as before.
+- `./run-game-alpha.sh --level PRECIOUS_WOMAN --room room7`: the room before the boss. Her stand, laugh and throw poses
+  look as before.
 - `./run-game-alpha.sh --level REFACTOR_TEST_134 --room open --weapons all`: switch weapons; Megaman's colors and
   poses for each weapon are as before.
-- GC measure, with the other JVMs stopped: `JAVA_TOOL_OPTIONS="-Xlog:gc:file=gc.log:uptime" ./run-game-debug.sh --level
-  RODENT_MAN --room room13` for 60 s, once on `master` and once on the branch; Claude compares the young GC counts.
+- GC measure (Claude compares the young GC counts and pauses), with the other JVMs stopped. The game runs from the JAR,
+  so that the GC log holds only the game JVM. Once in the main checkout (`master`) and once in the worktree:
+  `./gradlew lwjgl3:jar && ./gradlew --stop`, then from `assets/`:
+  `$HOME/.jdks/corretto-17.0.13/bin/java -Xlog:gc:file=/home/johnlavender/IdeaProjects/Megaman-Maverick/temp/fix-per-frame-allocations/gc-<master|branch>.log:uptime -jar ../lwjgl3/build/libs/Megaman-Maverick-1.0.1.jar --level RODENT_MAN --room room7`
+  Play for 60 s in each run.
