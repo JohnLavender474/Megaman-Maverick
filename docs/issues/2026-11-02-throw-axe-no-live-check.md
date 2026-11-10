@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: no
 area: core
 gameplay-change: yes
@@ -28,3 +28,8 @@ Use `AXE_SWINGER`, and take a lethal hit within `0.1` s of the throw.
 ## Notes
 
 `047c` owns this.
+
+## Resolution
+
+Fixed by `047c` (squash commit `2bec65b63`, 2026-11-09): `throwAxe` returns at once when the player is not live
+(`existenceState.liveAfterUpdate`). Test: `MegamanDeathCleanupTest`.

@@ -1937,3 +1937,27 @@ newest entry at the bottom.
   `2026-11-09-background-debug-string-each-frame.md`, `2026-11-09-camera-rounding-does-nothing.md`. A note in the
   `130` `ITEM.md` on the classes that moved to `engine`. `--interpolation` added to the launcher flags in the root
   `CLAUDE.md`. `047c` shares `MegaLevelScreen.kt`, `PlayersFocus.kt` and `Megaman.kt`; it must take in `master`.
+
+## 2026-11-09 — mega-refactor-047c-slot-respawn
+
+- Summary: `047` shared screen phase 6 (squash commit `2bec65b63`). In co-op, a death while the partner is in the level
+  costs one shared life, and after 1 s the player beams down at a safe spot next to the partner (`SlotRespawn`; the
+  spot search `PartnerSpot` moved out of `CameraViewEdges` and is shared with the `127a` warp; `BeamDown` split out of
+  `BeamInView`). The respawn waits while the partner is in the air, during a room transition or a camera turn, up to a
+  cap. At 0 lives the player stays out. The level's respawn routine starts only when no player is alive. With slot 0
+  dead, the level screen rules, the room scan (`PlayersFocus` as the room subject), fights (`Fight.anyPlayerAlive`),
+  the level end and the room handler act on the live player. `GauntletMaster` keeps its waves while a partner is
+  present; `PreciousGem` and `PreciousGemCluster` break only on their owner's death. Two bugs fixed (weapon `spawned`
+  sets cleared at death; no axe throw after death). New rooms `respawn_trans` and `respawn_trans_next` in
+  `RefactorTest047.tmx`. Owner decisions at the brief: one life per death, 1 s and the beam, slot 0 also respawns (the
+  reset only when no player is alive), gauntlet waves go on.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch after the merge of
+  `master`: `engine` 660, `core` 1276, `smokeTest` 451, JAR built. Three review rounds before the play test (2 soft
+  locks, 3 medium bugs and 3 check problems found and fixed); mutation checks on the new rules. The owner played the
+  checks, and they pass. Diffity: 0 threads. `master` (with `134a`) was merged into the branch: one conflict in
+  `PlayersFocus` (`134a` set the room subject to slot 0; `047c` follows the first live player). The resolution keeps
+  slot 0 while it lives; the owner chose to replay the 2 camera checks on the merged branch, and they pass. CI did not
+  run, because the branch was never pushed. Deviation: no unit test for `GauntletMaster` (a manual check covers it).
+- Follow-up: issues `2026-11-02-weapon-spawned-sets-survive-death.md` and `2026-11-02-throw-axe-no-live-check.md`
+  closed. Item `146` (a marker `IPlayer`) came from the diff review. No other backlog candidates. `134b` shares 3
+  files with this merge (text only; it counts a respawn as fine for the interpolation).

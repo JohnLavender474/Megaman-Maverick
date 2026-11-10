@@ -34,7 +34,7 @@ Reason: most later work waits for these items.
 
 | Co-op          | Determinism            | Logic structure     | Safety and data           | Characters       |
 |----------------|------------------------|---------------------|---------------------------|------------------|
-| `047c`         | `011` random source    | `015` state machine | `005` damage test         | `081` playable X |
+|                | `011` random source    | `015` state machine | `005` damage test         | `081` playable X |
 |                |                        | `012` freezes       | `021` entity registry     |                  |
 |                | `017` world-step hooks |                     | `009` allocation baseline |                  |
 
@@ -82,8 +82,7 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 - Cleanup: `027`, `066`, `071`, `083`, `087`, `092`, `093`, `096`, `097`, `098`, `103`, `104`
 - Design: `025`, `042`, `048`, `049`, `052`, `053`, `057`, `058`, `059`, `070`, `086`, `114`
 - Boss fights: `082b` after `082a`. `048` step 6 can move the boss hooks into `BossComponent` now. `013` and `047e` can use the fight routine now
-- Death events: `119` before `047c`
-- Later features: `120` after `030`, `047c`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`
+- Later features: `120` after `030`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`
 - Content: `073` to `080`, `089`, `099`, `115`, `117`; `123` after `017`; `124`
 
 ## Issues
@@ -101,7 +100,6 @@ An item in this list closes these issues, so they need no fix branch of their ow
 - `030`: explosions from Mega's shots
 - `118`: boss props with two sources
 - `119`: slot 1 death acts on P1's objects
-- `047c`: weapon `spawned` sets, `throwAxe` live check
 
 ### Separate fixes, in parallel at any time
 

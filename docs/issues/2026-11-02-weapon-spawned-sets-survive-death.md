@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: no
 area: core
 gameplay-change: yes
@@ -34,3 +34,8 @@ Run `--players 2 --weapons all`, let slot 1 die, and fire `MOON_SCYTHES` with sl
 ## Notes
 
 The fix calls `reset()` in `Megaman.onSpawn`, after `Megaman.kt:338`. If it runs earlier, `onChangeWeapon` no longer destroys the clusters. `047c` owns this.
+
+## Resolution
+
+Fixed by `047c` (squash commit `2bec65b63`, 2026-11-09): `Megaman.onDestroy` calls `weaponsHandler.reset()`, so the
+`spawned` sets and the cooldowns are cleared at each death. Test: `MegamanDeathCleanupTest`.
