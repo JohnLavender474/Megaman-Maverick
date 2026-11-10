@@ -1,11 +1,11 @@
 # 060: Proto Man as a playable character
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060g`; `081` (`CharacterDef`) only for `060h`
 - Related: `029`, `031`, `047`, `048`
-- Branches: none yet
+- Branches: `mega-refactor-060a-proto-run-jump` (active, 2026-11-10)
 
 ## Goal
 
@@ -50,6 +50,8 @@ waits for it.
   `characters = setOf(PROTOMAN)`, as `X6_INTRO` does for X. No launcher option; real selection is `113`.
 - (2026-11-10, owner) Feel: the MM9/MM10 rules first. Later phases move him toward a Maverick version. Scan the
   sprite sheet for unique move sets; example: the "flame sword" poses can become a slash like X's Z-sabre.
+
+- (2026-11-10, owner) Merge target: each branch of this item squash-merges directly into `master`.
 
 ## Proposed phases
 
