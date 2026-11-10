@@ -9,6 +9,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.utils.OrbitUtils
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
+import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.events.Event
@@ -17,6 +18,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
+import com.maverick.game.engine.world.body.IBody
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -52,6 +54,7 @@ class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBo
     val origin = Vector2()
 
     private var maxDistFromOrigin = 0f
+    private var followsPlayer = false
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -78,6 +81,8 @@ class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBo
 
         val gems = spawnProps.get(PreciousGem.TAG) as OrderedMap<PreciousGem, ShieldGemDef>
         this.gems.putAll(gems)
+        updateFollowsPlayer()
+        this.gems.keys().forEach { gem -> gem.drawOffsetBody = { getDrawAnchor() } }
 
         maxDistFromOrigin = spawnProps.getOrDefault(
             "${ConstKeys.MAX}_${ConstKeys.DISTANCE}",
@@ -110,7 +115,15 @@ class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBo
         if (event.key == EventType.PLAYER_JUST_DIED && event.isDeathOf(owner)) destroy()
     }
 
+    private fun updateFollowsPlayer() {
+        followsPlayer = owner.asPlayer != null && gems.values().none { it.released }
+    }
+
+    private fun getDrawAnchor(): IBody = if (followsPlayer) (owner as IBodyEntity).body else body
+
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        updateFollowsPlayer()
+
         gems.forEach { entry ->
             val gem = entry.key
             val def = entry.value

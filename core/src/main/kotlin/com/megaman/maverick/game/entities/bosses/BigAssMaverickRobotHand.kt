@@ -419,6 +419,11 @@ class BigAssMaverickRobotHand(services: MegaServices) : MegaGameEntity(services)
             sprite.hidden = defeated && blink
         }
         .build()
+        .also { component ->
+            component.drawOffsetBody = {
+                if (state == BigAssMaverickRobotHandState.FOLLOW) owner!!.body else null
+            }
+        }
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG)

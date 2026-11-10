@@ -332,6 +332,7 @@ class PetitDevilChild(services: MegaServices) : AbstractEnemy(services, size = S
         val sprite = GameSprite()
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.drawOffsetBody = { parent?.let { (it as PetitDevil).body } }
         spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = targetPlayer.direction.rotation

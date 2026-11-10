@@ -67,6 +67,36 @@ class WorldDrawOffsetsTest : DescribeSpec({
             body.stepSerial shouldBe Body.NO_STEP
             body.getStepMove(out) shouldBe Vector2(0f, 0f)
         }
+
+        it("counts only the move after a restart inside a step") {
+            body.beginStep(1)
+            body.setX(20f)
+            body.restartStep()
+            body.setX(21f)
+            body.endStep()
+            body.getStepMove(out) shouldBe Vector2(1f, 0f)
+        }
+
+        it("clears the last step move at a restart outside a step") {
+            body.beginStep(1)
+            body.setX(2f)
+            body.endStep()
+            body.restartStep()
+            body.getStepMove(out) shouldBe Vector2(0f, 0f)
+        }
+
+        it("draws a body that is teleported inside a step at its new position") {
+            world.process(true, entities, step)
+            body.physics.velocity.x = 10f
+            body.preProcess.put("teleport") {
+                if (body.getX() < 20f) {
+                    body.setX(25f)
+                    body.restartStep()
+                }
+            }
+            world.process(true, entities, step * 1.5f)
+            world.getDrawOffset(body, out).x shouldBe ((world.alpha - 1f) * 10f * step plusOrMinus 1e-4f)
+        }
     }
 
     describe("alpha") {

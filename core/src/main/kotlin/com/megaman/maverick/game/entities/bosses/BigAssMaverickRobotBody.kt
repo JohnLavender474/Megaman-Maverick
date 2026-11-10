@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
@@ -38,6 +39,8 @@ class BigAssMaverickRobotBody(services: MegaServices) : MegaGameEntity(services)
 
     internal val bounds = GameRectangle()
 
+    private var owner: IBodyEntity? = null
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = services.assets.getTextureRegion(
@@ -53,6 +56,7 @@ class BigAssMaverickRobotBody(services: MegaServices) : MegaGameEntity(services)
         super.onSpawn(spawnProps)
         services.events.addListener(this)
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, IRectangle::class)!!)
+        owner = spawnProps.get(ConstKeys.OWNER, IBodyEntity::class)!!
     }
 
     override fun onDestroy() {
@@ -73,6 +77,7 @@ class BigAssMaverickRobotBody(services: MegaServices) : MegaGameEntity(services)
             sprite.setPosition(bounds.getPositionPoint(position), position)
         }
         .build()
+        .also { component -> component.drawOffsetBody = { owner!!.body } }
 
     override fun getType() = EntityType.DECORATION
 }

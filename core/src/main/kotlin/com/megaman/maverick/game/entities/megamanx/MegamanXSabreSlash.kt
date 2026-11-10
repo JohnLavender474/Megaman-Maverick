@@ -175,6 +175,7 @@ class MegamanXSabreSlash(services: MegaServices) : MegaGameEntity(services), IBo
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 2))
         val component = SpritesComponent(sprite)
+        component.drawOffsetBody = { current()?.body }
         component.putPreProcess { _, _ ->
             val x = current()
             if (x == null) {

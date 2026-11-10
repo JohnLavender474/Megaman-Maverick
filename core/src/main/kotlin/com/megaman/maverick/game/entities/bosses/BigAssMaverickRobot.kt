@@ -215,7 +215,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
         body.setBottomCenterToPoint(spawn)
 
         val bigAssBody = MegaEntityFactory.fetch(BigAssMaverickRobotBody::class)!!
-        bigAssBody.spawn(props(ConstKeys.BOUNDS pairTo body.getBounds()))
+        bigAssBody.spawn(props(ConstKeys.BOUNDS pairTo body.getBounds(), ConstKeys.OWNER pairTo this))
         this.bigAssBody = bigAssBody
 
         fallTargetY = spawnProps.get(

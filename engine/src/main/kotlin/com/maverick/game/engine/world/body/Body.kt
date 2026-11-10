@@ -64,6 +64,13 @@ class Body(
         stepMoveY = bounds.getY() - stepStartY
     }
 
+    override fun restartStep() {
+        stepStartX = bounds.getX()
+        stepStartY = bounds.getY()
+        stepMoveX = 0f
+        stepMoveY = 0f
+    }
+
     override fun getStepMove(out: Vector2): Vector2 = out.set(stepMoveX, stepMoveY)
 
     override fun getBounds(out: GameRectangle): GameRectangle {

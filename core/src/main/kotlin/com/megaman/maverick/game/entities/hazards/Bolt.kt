@@ -69,7 +69,7 @@ class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHaz
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        parent = spawnProps.get(ConstKeys.ENTITY) as GameEntity?
+        parent = spawnProps.get(ConstKeys.PARENT) as GameEntity?
         scale = spawnProps.getOrDefault(ConstKeys.SCALE, 1f, Float::class)
         body.setSize(BODY_SIZE.cpy().scl(scale))
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
@@ -113,6 +113,7 @@ class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHaz
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
         val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.drawOffsetBody = { (parent as? Electrocutie)?.body }
         spritesComponent.putPreProcess { _, _ ->
             sprite.setSize(ConstVals.PPM.toFloat() * scale)
             sprite.setOriginCenter()

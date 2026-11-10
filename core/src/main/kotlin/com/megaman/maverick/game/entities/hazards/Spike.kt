@@ -274,6 +274,10 @@ open class Spike(services: MegaServices) : MegaGameEntity(services), IChildEntit
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
         val component = SpritesComponent(sprite)
+        component.drawOffsetBody = {
+            val p = parent
+            if (!body.physics.gravityOn && p is IBodyEntity) p.body else null
+        }
         component.putPreProcess { delta, _ ->
             sprite.setRegion(animation?.let {
                 it.update(delta)

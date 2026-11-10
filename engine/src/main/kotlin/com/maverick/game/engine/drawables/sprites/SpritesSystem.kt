@@ -27,7 +27,7 @@ class SpritesSystem(
                 val component = entity.getComponent(SpritesComponent::class)!!
                 if (component.doUpdateAndDraw.invoke(delta)) {
                     component.preProcess(delta)
-                    getDrawOffset(entity)
+                    getDrawOffset(entity, component)
                     component.sprites.values().forEach { sprite ->
                         sprite.drawOffsetX = drawOffset.x
                         sprite.drawOffsetY = drawOffset.y
@@ -43,12 +43,14 @@ class SpritesSystem(
         diagnostics?.endEntry()
     }
 
-    // TODO: an entity with no body gets offset 0, and a body that another entity moves outside the world steps gets
-    //  only its own step move, so a sprite on another entity's body can be drawn up to 1 step away from it (item
-    //  134, branch 134b)
-    private fun getDrawOffset(entity: IGameEntity): Vector2 {
+    // TODO: a body that code moves once per frame outside the world steps (for example D1000) has a step move of 0,
+    //  so it is drawn at the frame time, up to 1 step ahead of the camera and the stepped bodies (item 134, the
+    //  riders and frame-moved bodies item from the 134b docs/TODO.md)
+    private fun getDrawOffset(entity: IGameEntity, component: SpritesComponent): Vector2 {
         val offsets = drawOffsets ?: return drawOffset.setZero()
-        val body = entity.getComponent(BodyComponent::class)?.body ?: return drawOffset.setZero()
+        val body = component.drawOffsetBody?.invoke()
+            ?: entity.getComponent(BodyComponent::class)?.body
+            ?: return drawOffset.setZero()
         return offsets.getDrawOffset(body, drawOffset)
     }
 }

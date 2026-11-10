@@ -107,4 +107,68 @@ class SpriteDrawOffsetTest : DescribeSpec({
             gameSprite.drawOffsetY shouldBe 0f
         }
     }
+
+    describe("SpritesSystem draw offset body") {
+        val ownBody = Body(BodyType.DYNAMIC)
+        val parentBody = Body(BodyType.DYNAMIC)
+        val offsets = object : IDrawOffsets {
+            override fun getDrawOffset(body: com.maverick.game.engine.world.body.IBody, out: Vector2) =
+                if (body === parentBody) out.set(5f, -3f) else out.set(1f, 2f)
+        }
+
+        fun collect(withBody: Boolean, link: (() -> com.maverick.game.engine.world.body.IBody?)?): GameSprite {
+            val gameSprite = GameSprite()
+            val entity = MockGameEntity()
+            entity.addComponent(
+                SpritesComponent(OrderedMap<Any, GameSprite>().apply { put("s", gameSprite) })
+                    .apply { drawOffsetBody = link }
+            )
+            if (withBody) entity.addComponent(BodyComponent(ownBody))
+            val system = SpritesSystem({}, drawOffsets = offsets).apply { on = true }
+            GameEngine().apply {
+                systems.add(system)
+                spawn(entity)
+                update(1f)
+            }
+            return gameSprite
+        }
+
+        it("gives each sprite the offset of the linked body") {
+            val gameSprite = collect(withBody = true) { parentBody }
+            gameSprite.drawOffsetX shouldBe 5f
+            gameSprite.drawOffsetY shouldBe -3f
+        }
+
+        it("gives the offset of the entity's own body when the link gives null") {
+            val gameSprite = collect(withBody = true) { null }
+            gameSprite.drawOffsetX shouldBe 1f
+            gameSprite.drawOffsetY shouldBe 2f
+        }
+
+        it("gives the offset of the linked body to an entity without a body") {
+            val gameSprite = collect(withBody = false) { parentBody }
+            gameSprite.drawOffsetX shouldBe 5f
+            gameSprite.drawOffsetY shouldBe -3f
+        }
+
+        it("reads the link again each frame") {
+            var attached = true
+            val gameSprite = GameSprite()
+            val entity = MockGameEntity()
+            entity.addComponent(
+                SpritesComponent(OrderedMap<Any, GameSprite>().apply { put("s", gameSprite) })
+                    .apply { drawOffsetBody = { if (attached) parentBody else null } }
+            )
+            entity.addComponent(BodyComponent(ownBody))
+            val engine = GameEngine().apply {
+                systems.add(SpritesSystem({}, drawOffsets = offsets).apply { on = true })
+                spawn(entity)
+                update(1f)
+            }
+            gameSprite.drawOffsetX shouldBe 5f
+            attached = false
+            engine.update(1f)
+            gameSprite.drawOffsetX shouldBe 1f
+        }
+    }
 })

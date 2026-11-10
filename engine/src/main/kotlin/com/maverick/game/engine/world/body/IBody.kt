@@ -28,5 +28,7 @@ interface IBody : IRectangle, IProcessable, IDirectional, IPropertizable, Resett
 
     fun endStep()
 
+    fun restartStep()
+
     fun getStepMove(out: Vector2): Vector2
 }

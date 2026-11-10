@@ -164,8 +164,8 @@ class WorldSystem(
     override fun getDrawOffset(body: IBody, out: Vector2): Vector2 {
         if (!interpolation || body.stepSerial != stepSerial) return out.setZero()
         body.getStepMove(out)
-        // TODO: a teleport inside a step that moves less than 1 tile is drawn as a slide for 1 frame (item 134,
-        //  branch 134b: explicit snaps)
+        // TODO: a teleport inside a step that moves less than 1 tile and does not call restartStep is drawn as a
+        //  slide for 1 frame; PipePortal calls it, other teleports are outside the steps (item 134, 134b audit)
         if (abs(out.x) > ppm || abs(out.y) > ppm) return out.setZero()
         return out.scl(alpha - 1f)
     }

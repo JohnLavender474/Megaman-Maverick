@@ -140,6 +140,7 @@ class PipePortal(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
         val position = DirectionPositionMapper.getPosition(direction)
         entity.body.positionOnPoint(body.getPositionPoint(position), position.opposite())
+        entity.body.restartStep()
 
         entering.put(entity, Timer(TELEPORT_DUR))
 

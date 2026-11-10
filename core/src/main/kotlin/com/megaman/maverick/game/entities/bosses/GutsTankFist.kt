@@ -181,8 +181,6 @@ class GutsTankFist(services: MegaServices) : AbstractEnemy(services, dmgDuration
                 GutsTankFistState.ATTACHED -> {
                     facing = Facing.LEFT
                     body.physics.velocity.setZero()
-                    // TODO: placed outside the world steps, so with render interpolation the attached fist hitches
-                    //  against the tank while the tank moves (owner play test 2026-11-09; item 134, branch 134b)
                     body.setCenter(attachment)
                 }
                 GutsTankFistState.LAUNCHED -> {
@@ -287,6 +285,9 @@ class GutsTankFist(services: MegaServices) : AbstractEnemy(services, dmgDuration
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5))
         sprite.setSize(6f * ConstVals.PPM, 3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
+        component.drawOffsetBody = {
+            if (fistState == GutsTankFistState.ATTACHED) (parent as GutsTank).body else null
+        }
         component.putPreProcess { _, _ ->
             sprite.hidden = damageBlink
             sprite.setCenter(body.getCenter())

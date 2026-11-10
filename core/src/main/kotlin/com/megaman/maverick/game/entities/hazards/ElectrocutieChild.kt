@@ -132,6 +132,7 @@ class ElectrocutieChild(services: MegaServices) : MegaGameEntity(services), IHaz
         val sprite = GameSprite()
         sprite.setSize(1.25f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.drawOffsetBody = { parent?.let { (it as Electrocutie).body } }
         spritesComponent.putPreProcess { _, _ ->
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -54,6 +55,8 @@ class FireMetFlame(services: MegaServices) : AbstractProjectile(services), IAnim
     override lateinit var facing: Facing
     var whooshing = false
 
+    private var launched = false
+
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -71,6 +74,7 @@ class FireMetFlame(services: MegaServices) : AbstractProjectile(services), IAnim
         body.setBottomCenterToPoint(spawn)
         body.physics.gravityOn = false
         whooshing = false
+        launched = false
     }
 
     override fun hitBlock(blockFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) = explodeAndDie()
@@ -92,7 +96,10 @@ class FireMetFlame(services: MegaServices) : AbstractProjectile(services), IAnim
         if (overlapsGameCamera()) services.audio.playSound(SoundAsset.WHOOSH_SOUND, false)
     }
 
-    internal fun launch(impulse: Vector2) = body.physics.velocity.set(impulse)
+    internal fun launch(impulse: Vector2) {
+        launched = true
+        body.physics.velocity.set(impulse)
+    }
 
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.ABSTRACT)
@@ -120,6 +127,7 @@ class FireMetFlame(services: MegaServices) : AbstractProjectile(services), IAnim
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
         sprite.setSize(2f * ConstVals.PPM)
         val spritesComponent = SpritesComponent(sprite)
+        spritesComponent.drawOffsetBody = { if (launched) null else (owner as IBodyEntity).body }
         spritesComponent.putPreProcess { _, _ ->
             sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
             sprite.setFlip(isFacing(Facing.LEFT), false)

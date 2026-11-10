@@ -38,6 +38,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.bosses.ReactorMan
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
 import com.megaman.maverick.game.entities.explosions.ReactorExplosion
@@ -328,6 +329,12 @@ class ReactorManProjectile(services: MegaServices) : AbstractProjectile(services
         )
         .preProcess { _, sprite -> sprite.setCenter(body.getCenter()) }
         .build()
+        .also { component ->
+            component.drawOffsetBody = {
+                val holder = owner
+                if (!active && holder is ReactorMan) holder.body else null
+            }
+        }
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG)

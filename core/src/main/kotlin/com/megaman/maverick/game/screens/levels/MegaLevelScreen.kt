@@ -975,9 +975,16 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     }
 
     override fun draw(renderer: ShapeRenderer) {
-        // TODO: shapes draw with the camera without its draw offset, so the debug shapes and the WhiteArrowPool
-        //  outline can be up to 1 step away from the sprites (item 134, branch 134b)
+        val cameraOffset = cameraDrawOffset.offset
+        val cameraX = gameCamera.position.x
+        val cameraY = gameCamera.position.y
+        gameCamera.position.x += cameraOffset.x
+        gameCamera.position.y += cameraOffset.y
+        gameCamera.update()
+        val shapeType = renderer.currentType
+        renderer.end()
         renderer.projectionMatrix = gameCamera.combined
+        renderer.begin(shapeType)
 
         while (!shapes.isEmpty) {
             val shape = shapes.pop()
@@ -1022,6 +1029,10 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 gameCamBounds.getHeight()
             )
         }
+
+        gameCamera.position.x = cameraX
+        gameCamera.position.y = cameraY
+        gameCamera.update()
     }
 
     override fun reset() {

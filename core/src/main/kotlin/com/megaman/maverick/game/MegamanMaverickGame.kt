@@ -622,7 +622,7 @@ class MegamanMaverickGame(
                 }
             }
 
-            if (params.interpolationToggle?.invoke() == true) getSystem(WorldSystem::class)!!.let {
+            if (!clock.paused && params.interpolationToggle?.invoke() == true) getSystem(WorldSystem::class)!!.let {
                 it.interpolation = !it.interpolation
                 GameLogger.log(TAG, "render(): interpolation = ${it.interpolation}")
             }

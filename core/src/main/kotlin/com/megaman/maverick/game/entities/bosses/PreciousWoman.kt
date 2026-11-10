@@ -26,6 +26,7 @@ import com.maverick.game.engine.common.utils.OrbitUtils
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
+import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
@@ -515,6 +516,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
             gem.putProperty(ConstKeys.SPIN, false)
             gem.onFirstTargetReached = { gem.putProperty(ConstKeys.SPIN, true) }
             gem.runnablesOnDestroy.put(ConstKeys.SPIN) { gem.removeProperty(ConstKeys.SPIN) }
+            gem.drawOffsetBody = { if (gem.isProperty(ConstKeys.SPIN, true)) body else null }
 
             shieldGems.put(gem, ShieldGemDef(angle, SHIELD_GEM_START_OFFSET * ConstVals.PPM, false))
         }

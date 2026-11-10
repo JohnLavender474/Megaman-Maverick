@@ -360,8 +360,8 @@ class GutsTank(services: MegaServices) : AbstractBoss(services, size = Size.LARG
                 return@add
             }
 
-            // TODO: the tank block is placed outside the world steps, so with render interpolation a player on the
-            //  tank can shake against it while it moves (item 134, branch 134b)
+            // TODO: the tank block is placed outside the world steps, so a player on the tank is carried in an uneven
+            //  way and can shake against it while it moves (item 134, the riders item from the 134b docs/TODO.md)
             if (!tankBlock!!.body.getCenter()
                     .epsilonEquals(body.getCenter().add(tankBlockOffset), 0.01f)
             ) tankBlock!!.body.setCenter(body.getCenter().add(tankBlockOffset))

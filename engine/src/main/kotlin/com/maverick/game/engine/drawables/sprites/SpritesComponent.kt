@@ -6,6 +6,7 @@ import com.maverick.game.engine.common.interfaces.UpdateFunction
 import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.components.IGameComponent
+import com.maverick.game.engine.world.body.IBody
 
 class SpritesComponent(
     var sprites: OrderedMap<Any, GameSprite> = OrderedMap(),
@@ -17,6 +18,8 @@ class SpritesComponent(
     companion object {
         const val DEFAULT_KEY = "default_key"
     }
+
+    var drawOffsetBody: (() -> IBody?)? = null
 
     constructor(vararg sprites: GamePair<Any, GameSprite>) : this(OrderedMap<Any, GameSprite>().apply {
         sprites.forEach { put(it.first, it.second) }

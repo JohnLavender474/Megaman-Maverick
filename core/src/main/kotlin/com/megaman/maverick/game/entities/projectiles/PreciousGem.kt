@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.projectiles
 
+import com.maverick.game.engine.world.body.IBody
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -31,6 +32,7 @@ import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
+import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
@@ -105,6 +107,8 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
         EventType.BOSS_DEFEATED
     )
     override var owner: IGameEntity? = null
+
+    var drawOffsetBody: (() -> IBody?)? = null
     override var size = Size.MEDIUM
 
     val firstTarget = Vector2()
@@ -194,6 +198,7 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
         super.onDestroy()
 
         services.events.removeListener(this)
+        drawOffsetBody = null
     }
 
     override fun onHealthDepleted() {
@@ -399,6 +404,7 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
             sprite.setCenter(body.getCenter())
         }
         .build()
+        .also { component -> component.drawOffsetBody = { drawOffsetBody?.invoke() } }
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG)
