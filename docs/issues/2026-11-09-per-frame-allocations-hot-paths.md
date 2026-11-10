@@ -70,3 +70,66 @@ before and after the fix.
 - Side finding (not a GC cost): `AsyncPathfindingSystem` cancels a timed-out search with `future.cancel(true)`, but the
   A* loop does not check the interrupt, so a cancelled search can run while the next one starts with the same
   `DynamicBodyHeuristic`.
+
+## Short contract
+
+Branch: `fix/per-frame-allocations-hot-paths`, off `master`, in `.worktrees/fix/per-frame-allocations-hot-paths`.
+
+Scan (2026-11-09, at `ca36f7d1e`): the 4 parts of "Where" are read from the code. `MegaPathfinderFactory` copies the
+world container once on each frame that creates a pathfinder, and the search reads the copy only through `getBodies`
+(the heuristic and the filters). No caller changes a set that `MegaGameEntities.getOfTag`, `getOfType` or `getOfId`
+returns. `buildFullKey` has 3 callers.
+
+Intended changes (no gameplay change; each part keeps its results and its order):
+
+1. Pathfinding:
+   - The factory takes the snapshot from a small pool of containers and fills it with `copyInto` (cells from the
+     container's own cell pool), in place of `copy()`. A snapshot goes back to the pool only when every search that
+     uses it has ended (a wrapper releases it in `finally`, so a timed-out search that still runs keeps its snapshot).
+     The snapshot is still taken once per frame that starts a search, with the same content as today.
+   - `Bat` reuses its 2 filter rectangles.
+   - `MegaPathfinderResultConsumer` walks the path by index with reused objects; the same node is chosen.
+2. World step: the callbacks of `WorldSystem` (`updateWorldContainer`, `addFixtures`, `collectContacts`,
+   `resolveCollisions`) become reused function fields; the values that the lambdas capture today become fields set
+   before the call. The same functions run in the same order, so the contacts and their order do not change.
+3. Animation keys: `MegamanAnimations.buildFullKey` returns a cached string per `(region key, weapon)`; the 7
+   suppliers named in "Where" (and the `MoonMan` timer keys) return prebuilt strings. The strings do not change.
+4. Entity lookups: `getOfTag`, `getOfType` and `getOfId` return one shared empty set when the key is missing.
+
+Changed files: `SimpleGridWorldContainer.kt` (and `IWorldContainer.kt` if `copyInto` goes there), `MegaPathfinderFactory.kt`,
+`MegaPathfinderResultConsumer.kt`, `Bat.kt`, `WorldSystem.kt`, `MegamanAnimations.kt`, the 7 supplier files,
+`MoonMan.kt`, `MegaGameEntities.kt`, tests.
+
+Not changed:
+
+- Path results, the snapshot timing, the contact order (`ContactRuleSelectionTest`, the `WorldSystem` tests), the
+  animation key strings, the lookup results.
+- Not in this fix: the draw queue (`026`), eager log strings (`044`), the `AsyncPathfindingSystem` interrupt (side
+  finding; filed on its own if it stays), the JVM flags of the dev run.
+
+Checks:
+
+- Unit tests:
+  - `copyInto`: the target holds the same bodies and fixtures per cell as the source, and a second fill reuses the
+    cells (no new set).
+  - Snapshot pool: a snapshot that a running search holds is not refilled; a released snapshot is reused.
+  - `MegaGameEntities`: a missing key gives the shared empty set twice; a present key gives its set.
+  - `buildFullKey`: the cached string equals the old template for every weapon; the second call returns the same
+    instance.
+  - World step: the existing `WorldSystem` and contact tests pass unchanged.
+- Break the code and confirm that each new test can fail.
+- An allocation measure (a test with `ThreadMXBean.getThreadAllocatedBytes`) of `WorldSystem` steps and of the
+  snapshot fill, before and after, written in the process log (`O5-R2`).
+- `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
+
+Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/per-frame-allocations-hot-paths`:
+
+- `./run-game-alpha.sh --level RODENT_MAN --room room13`: the `Bat`s chase Megaman around the blocks as before.
+- `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_chase`: the `Bat` path around blocks, as before.
+- `./run-game-alpha.sh --level WILY_STAGE_1 --room room8`: the `DarknessV2` room lights and darkens as before.
+- `./run-game-alpha.sh --level DESERT_MAN --room room2`: `Jetto` animations; `GLACIER_MAN --room room1`: `SpikeBot`;
+  `TIMBER_WOMAN --room room1`: `NuttGlider`. The animations look as before.
+- `./run-game-alpha.sh --level REFACTOR_TEST_134 --room open --weapons all`: switch weapons; Megaman's colors and
+  poses for each weapon are as before.
+- GC measure, with the other JVMs stopped: `JAVA_TOOL_OPTIONS="-Xlog:gc:file=gc.log:uptime" ./run-game-debug.sh --level
+  RODENT_MAN --room room13` for 60 s, once on `master` and once on the branch; Claude compares the young GC counts.
