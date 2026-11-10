@@ -96,6 +96,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `122` | idea | [Human-driven boss](../items/122-human-driven-boss/ITEM.md) (main) |
 | `126` | idea | [Movement and damage blocks as lock reasons](../items/126-movement-damage-lock-reasons/ITEM.md) |
 | `141` | idea | [The sabre damage by slash kind and by target](../items/141-sabre-damage-rules/ITEM.md) (main) |
+| `146` | idea | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) |
 
 ## Gaps with no item
 

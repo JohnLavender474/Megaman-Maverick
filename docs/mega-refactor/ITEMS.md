@@ -153,6 +153,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 143 | [View edge warp: the cap does not run while no partner is in view](items/143-warp-cap-out-of-view/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 144 | [View edge warp beside a partner on a ladder](items/144-warp-ladder-partner/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 145 | [View edge warp: the landing after the cap tests only solids](items/145-warp-fallback-hazards/ITEM.md) | feature | `O2` | idea | `047` | | |
+| 146 | [A marker `IPlayer` interface, so a player has a type](items/146-player-marker-interface/ITEM.md) | refactor | `O1`, `O8` | idea | none | | |
 
 ## Branches
 

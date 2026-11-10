@@ -155,6 +155,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `138` | idea | [Merge `Wreck` into `MockSpriteEntity`](../items/138-wreck-into-mock-sprite/ITEM.md) (main) |
 | `139` | idea | [A shared simple enemy shot, starting with `JunkShot`](../items/139-shared-enemy-shot/ITEM.md) (main) |
 | `140` | idea | [`TickFrames` as the engine `Animation`, with durations in seconds](../items/140-tick-frames-seconds/ITEM.md) (main) |
+| `146` | idea | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) (main) |
 
 ## Gaps with no item
 
