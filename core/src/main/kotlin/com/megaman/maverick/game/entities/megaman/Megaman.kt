@@ -325,6 +325,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         super.onDestroy()
 
         playerOnDestroy()
+        weaponsHandler.reset()
 
         services.audio.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }

@@ -10,10 +10,13 @@ import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.Players
 import com.maverick.game.engine.players.any
 import com.maverick.game.engine.players.forEach
+import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.input.PlayerInputs
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.entities.state.PlayPhase
+import com.megaman.maverick.game.entities.state.playPhase
 
 class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(capacity)) :
     Players<MegaGameEntity>(capacity) {
@@ -58,6 +61,13 @@ class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(cap
     fun firstLive(): MegaGameEntity? {
         forEach { if (isLive(it)) return it }
         return null
+    }
+
+    fun anyOtherPresent(slot: PlayerSlot): Boolean {
+        forEach {
+            if (it.playerSlot != slot && it.existenceState.liveNow && it.playPhase != PlayPhase.POST_PLAY) return true
+        }
+        return false
     }
 
     inline fun forEachLive(action: (MegaGameEntity) -> Unit) {

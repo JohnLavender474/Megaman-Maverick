@@ -66,6 +66,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 import kotlin.reflect.KClass
+import com.megaman.maverick.game.players.isDeathOf
 
 class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IProjectileEntity, ISpritesEntity,
     IAnimatedEntity, IEventListener, IDirectional {
@@ -212,7 +213,7 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
-        if (owner.asPlayer != null && event.key == EventType.PLAYER_JUST_DIED) destroy()
+        if (event.key == EventType.PLAYER_JUST_DIED && event.isDeathOf(owner)) destroy()
         if (owner.asPlayer == null && event.key.equalsAny(EventType.BEGIN_ROOM_TRANS, EventType.BOSS_DEFEATED)) destroy()
     }
 

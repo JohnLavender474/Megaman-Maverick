@@ -1005,6 +1005,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman /*, private val weaponS
 
     private fun throwAxe() {
         GameLogger.debug(TAG, "throwAxe()")
+        if (!megaman.existenceState.liveAfterUpdate) return
 
         val impulse = GameObjectPools.fetch(Vector2::class)
         when (megaman.direction) {

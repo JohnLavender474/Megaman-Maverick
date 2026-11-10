@@ -1,12 +1,7 @@
 package com.megaman.maverick.game.screens.levels.respawn
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.math.Vector2
-import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.enums.Facing
-import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
@@ -15,10 +10,6 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
-import com.maverick.game.engine.drawables.sprites.GameSprite
-import com.maverick.game.engine.drawables.sprites.setSize
-import com.maverick.game.engine.entities.body
-import com.maverick.game.engine.entities.facing
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -26,21 +17,15 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
-import com.megaman.maverick.game.entities.megaman.components.getMegamanSpritePriority
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
-import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.world.body.getCenter
 
 class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatable, Resettable, IDrawable<Batch> {
 
     companion object {
         const val TAG = "BeamInView"
         private const val PRE_BEAM_DUR = 1f
-        private const val BEAM_DOWN_DUR = 0.5f
-        private const val BEAM_TRANS_DUR = 0.35f
         private const val BLINK_READY_DUR = 0.125f
         private const val FADE_IN_DUR = 0.25f
     }
@@ -51,14 +36,8 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
 
     private val blinkTimer = Timer(BLINK_READY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
-    private val beamDownTimer = Timer(BEAM_DOWN_DUR).setToEnd()
-    private val beamTransitionTimer = Timer(BEAM_TRANS_DUR).setToEnd()
 
-    private val beamCenter = Vector2()
-
-    private lateinit var beamRegion: TextureRegion
-    private lateinit var beamSprite: GameSprite
-    private lateinit var beamLandAnimation: Animation
+    private val beam = BeamDown(game.assets) { game.addDrawable(it) }
 
     private lateinit var ready: MegaFontHandle
 
@@ -74,15 +53,6 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
         GameLogger.debug(TAG, "init()")
 
         if (!initialized) {
-            val atlas = game.assets.getTextureAtlas(TextureAsset.MEGAMAN_BUSTER.source)
-
-            beamRegion = atlas.findRegion(ConstKeys.BEAM)
-            val priority = DrawingPriority()
-            beamSprite = GameSprite(beamRegion, getMegamanSpritePriority(priority))
-            beamSprite.setSize(MEGAMAN_SPRITE_SIZE * ConstVals.PPM)
-
-            beamLandAnimation = Animation(atlas.findRegion(ConstKeys.SPAWN), 1, 7, 0.05f, false)
-
             ready = MegaFontHandle(
                 { ConstKeys.READY.uppercase() },
                 positionX = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f,
@@ -100,11 +70,7 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
 
         blinkTimer.reset()
         preBeamTimer.reset()
-        beamDownTimer.reset()
-        beamTransitionTimer.reset()
-        beamLandAnimation.reset()
-
-        beamSprite.setPosition(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
+        beam.stop()
 
         fadein.init()
 
@@ -112,8 +78,7 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
     }
 
     override fun update(delta: Float) {
-        beamCenter.set(beamSprite.boundingRectangle.getCenter())
-        game.levelState.megamanBeamCenter = beamCenter
+        game.levelState.megamanBeamCenter = beam.center
 
         when {
             !fadein.isFinished() -> {
@@ -123,8 +88,7 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
                 fadein.update(delta)
             }
             !preBeamTimer.isFinished() -> preBeam(delta)
-            !beamDownTimer.isFinished() -> beamDown(delta)
-            !beamTransitionTimer.isFinished() -> beamTrans(delta)
+            !beam.finished -> beamDown(delta)
         }
 
         blinkTimer.update(delta)
@@ -132,17 +96,13 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
             showReadyText = !showReadyText
             blinkTimer.reset()
         }
-
-        if (preBeamTimer.isFinished() && (!beamDownTimer.isFinished() || !beamTransitionTimer.isFinished()))
-            game.addDrawable(beamSprite)
     }
 
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
 
         preBeamTimer.setToEnd()
-        beamDownTimer.setToEnd()
-        beamTransitionTimer.setToEnd()
+        beam.stop()
         fadein.setToEnd()
 
         finished = true
@@ -152,29 +112,14 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
         preBeamTimer.update(delta)
         if (preBeamTimer.isJustFinished()) {
             GameLogger.debug(TAG, "preBeam(): just finished")
-            beamSprite.setRegion(beamRegion)
+            beam.start(player)
         }
     }
 
     private fun beamDown(delta: Float) {
-        beamDownTimer.update(delta)
-
-        val startY = player.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
-        val offsetY = (ConstVals.VIEW_HEIGHT * ConstVals.PPM) * beamDownTimer.getRatio()
-
-        beamSprite.setCenterX(player.body.getCenter().x)
-        beamSprite.y = startY - offsetY
-    }
-
-    private fun beamTrans(delta: Float) {
-        beamTransitionTimer.update(delta)
-        beamLandAnimation.update(delta)
-
-        beamSprite.setRegion(beamLandAnimation.getCurrentRegion())
-        beamSprite.setFlip(player.facing == Facing.LEFT, false)
-
-        if (beamTransitionTimer.isJustFinished()) {
-            GameLogger.debug(TAG, "beamTrans(): just finished")
+        beam.update(delta)
+        if (beam.finished) {
+            GameLogger.debug(TAG, "beamDown(): just finished")
 
             showReadyText = false
 

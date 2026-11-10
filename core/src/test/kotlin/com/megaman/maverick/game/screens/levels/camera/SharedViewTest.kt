@@ -87,7 +87,7 @@ private class EdgesRig(val rules: ViewEdgeRules, var on: Boolean = true, floor: 
     val world = SimpleGridWorldContainer(32)
     val edges = CameraViewEdges(
         view, center, session.players, rules, ViewEdgeHazard(session.services).also { it.damage = rules.damage },
-        WarpSpotTest(32f) { world }, { room }
+        PartnerSpot(WarpSpotTest(32f) { world }, view, center), { room }
     ) { on }
 
     init {
@@ -139,7 +139,8 @@ private class TallRig {
     val edges = CameraViewEdges(
         view, controller.settledPosition, session.players,
         ViewEdgeRules(bottom = ViewEdgeRule.WARP, delay = 100f),
-        ViewEdgeHazard(session.services), WarpSpotTest(32f) { SimpleGridWorldContainer(32) }, { room.rectangle }
+        ViewEdgeHazard(session.services), PartnerSpot(WarpSpotTest(32f) { SimpleGridWorldContainer(32) }, view, controller.settledPosition),
+        { room.rectangle }
     ) { true }
     val focus = PlayersFocus(session.players, view, ViewEdgeRules(bottom = ViewEdgeRule.WARP)) { edges.isHeld(it) }
 
@@ -222,6 +223,26 @@ class SharedViewTest : DescribeSpec({
             session.second.existenceState = EntityExistenceState.UNSPAWNED
             focus.getFocusPosition()
             focus.getDrawOffset(offsets, Vector2()) shouldBe Vector2(0f, 0f)
+        }
+
+        it("keeps the last group focus when every player is dead, so the camera does not go back to an old body") {
+            val session = Session()
+            val focus = PlayersFocus(session.players)
+            session.first.existenceState = EntityExistenceState.UNSPAWNED
+            focus.getFocusPosition()
+            focus.getSubjectBounds()
+            session.second.body.setCenter(500f, 60f)
+            focus.getFocusPosition()
+            focus.getSubjectBounds()
+            session.second.existenceState = EntityExistenceState.UNSPAWNED
+            focus.getSubjectBounds().getCenter(Vector2()) shouldBe Vector2(500f, 60f)
+        }
+
+        it("gives the bounds of slot 1 while slot 0 is dead, so the room scan follows the live player (047c)") {
+            val session = Session()
+            session.first.existenceState = EntityExistenceState.UNSPAWNED
+            val focus = PlayersFocus(session.players)
+            focus.getSubjectBounds().getCenter(Vector2()) shouldBe Vector2(300f, 60f)
         }
 
         it("eases from the old midpoint to the new one over the ease time when the group changes") {

@@ -127,8 +127,9 @@ private class StageFight(
         received.clear()
     }
 
-    fun defeatAndDestroyBoss(leadDiesFirst: Boolean) {
+    fun defeatAndDestroyBoss(leadDiesFirst: Boolean, secondDiesFirst: Boolean = leadDiesFirst) {
         if (leadDiesFirst) lead.existenceState = EntityExistenceState.DESTROY_QUEUED
+        if (secondDiesFirst) second.existenceState = EntityExistenceState.DESTROY_QUEUED
         bossDefeated = true
         bossState = EntityExistenceState.DESTROY_QUEUED
         tick()
@@ -196,7 +197,7 @@ class FightStepsTest : DescribeSpec({
     }
 
     describe("the stage boss plan at the defeat") {
-        it("locks, stops the music, hides the bar and ends the level when slot 0 is alive") {
+        it("locks, stops the music, hides the bar and ends the level when a player is alive") {
             val stage = StageFight()
             stage.throughIntro()
 
@@ -210,6 +211,16 @@ class FightStepsTest : DescribeSpec({
             stage.fight.closed shouldBe true
         }
 
+        it("ends the level with slot 1 when slot 0 dies in the same frame as the boss (047c)") {
+            val stage = StageFight()
+            stage.throughIntro()
+
+            stage.defeatAndDestroyBoss(leadDiesFirst = true, secondDiesFirst = false)
+
+            stage.received shouldContain EventType.VICTORY_EVENT
+            stage.fight.closed shouldBe true
+        }
+
         it("sends VICTORY_EVENT with the boss") {
             val stage = StageFight()
             stage.throughIntro()
@@ -220,7 +231,7 @@ class FightStepsTest : DescribeSpec({
             victory.getProperty(ConstKeys.BOSS) shouldBe stage.boss
         }
 
-        it("does nothing, and keeps the fight open, when slot 0 dies in the same frame as the boss") {
+        it("does nothing, and keeps the fight open, when every player dies in the same frame as the boss") {
             val stage = StageFight()
             stage.throughIntro()
 
@@ -304,7 +315,7 @@ class FightStepsTest : DescribeSpec({
             stage.fight.closed shouldBe false
         }
 
-        it("does nothing, and keeps the fight open until a cancel, when slot 0 dies in the same frame as the boss") {
+        it("does nothing, and keeps the fight open until a cancel, when every player dies in the same frame as the boss") {
             val stage = StageFight(end = false, bossKey = "1")
             stage.throughIntro()
 

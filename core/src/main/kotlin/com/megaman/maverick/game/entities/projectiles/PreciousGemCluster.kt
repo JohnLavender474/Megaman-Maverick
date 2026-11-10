@@ -32,6 +32,7 @@ import com.megaman.maverick.game.utils.extensions.overlaps
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.players.isDeathOf
 
 class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IEventListener,
     IOwnable<IGameEntity> {
@@ -106,7 +107,7 @@ class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBo
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
-        if (owner.asPlayer != null && event.key == EventType.PLAYER_JUST_DIED) destroy()
+        if (event.key == EventType.PLAYER_JUST_DIED && event.isDeathOf(owner)) destroy()
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

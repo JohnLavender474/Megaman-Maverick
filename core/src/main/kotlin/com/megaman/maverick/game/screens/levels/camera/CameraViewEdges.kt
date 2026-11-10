@@ -10,22 +10,18 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraPart
 import com.maverick.game.engine.common.enums.Direction
-import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.body
-import com.maverick.game.engine.entities.facing
-import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.CameraEdgeBlock
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -36,9 +32,7 @@ import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.state.ViewEdgeRule
 import com.megaman.maverick.game.state.ViewEdgeRules
-import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.world.body.isSensing
 import com.megaman.maverick.game.world.body.getCenter
 
 fun viewEdgeInsideRoom(viewCenter: Vector3, viewWidth: Float, viewHeight: Float, room: Rectangle, edge: Direction):
@@ -58,7 +52,7 @@ class CameraViewEdges(
     private val players: MegaPlayers,
     private val rules: ViewEdgeRules,
     private val hazard: ViewEdgeHazard,
-    private val spots: WarpSpotTest,
+    private val spots: PartnerSpot,
     private val room: () -> Rectangle?,
     private val enabled: () -> Boolean
 ) : ICameraPart, Resettable {
@@ -80,7 +74,6 @@ class CameraViewEdges(
     private val warpReady = BooleanArray(players.capacity)
     private val warpSpots = Array(players.capacity) { Vector2() }
     private val fallbackSpots = Array(players.capacity) { Vector2() }
-    private val tryBounds = GameRectangle()
 
     fun isHeld(player: MegaGameEntity) = held[player.playerSlot!!.index]
 
@@ -249,8 +242,6 @@ class CameraViewEdges(
                 return@forEach
             }
 
-            // TODO: a held player with no free partner counts as dead; phase 6 (047c) must keep this when it adds
-            //  the respawn of slot 1 and the rule for the death of every slot (item 047, "Decisions", 2026-11-06)
             if (!hasFreePartner(player)) {
                 release(player)
                 player.depleteHealth()
@@ -265,10 +256,10 @@ class CameraViewEdges(
             hasWarpSpot[slot] = findWarpSpot(player, slot)
             heldTimes[slot] += delta
             if (heldTimes[slot] < rules.delay || !hasWarpSpot[slot]) return@forEach
-            if (!warpReady[slot] && heldTimes[slot] < rules.delay + rules.warpCap) return@forEach
 
-            val spot = if (warpReady[slot]) warpSpots[slot] else fallbackSpots[slot]
-            if (!warpReady[slot] && !spots.isFree(player, spot.x, spot.y)) return@forEach
+            val pastCap = heldTimes[slot] >= rules.delay + rules.warpCap
+            val spot = spots.landing(player, warpReady[slot], pastCap, warpSpots[slot], fallbackSpots[slot])
+                ?: return@forEach
             release(player)
             player.body.setCenter(spot.x, spot.y)
             damage(player)
@@ -284,49 +275,11 @@ class CameraViewEdges(
         warpReady[slot] = false
         var partner: MegaGameEntity? = null
         players.forEach {
-            if (partner == null && it != player && players.isLive(it) && !isHeld(it) && isInView(it)) partner = it
+            if (partner == null && it != player && players.isLive(it) && !isHeld(it) && spots.isInView(it)) partner = it
         }
         val target = partner ?: return false
-
-        val x = target.body.getCenter().x
-        val y = target.body.getY() + player.body.getHeight() / 2f
-        val side = if (target.facing == Facing.LEFT) -1f else 1f
-        val out = warpSpots[slot]
-        fallbackSpots[slot].set(x, y)
-        out.set(x + side * ConstVals.PPM, y)
-
-        warpReady[slot] = stands(target) && (
-            tryAt(player, x + side * ConstVals.PPM, y, out, true) ||
-                tryAt(player, x - side * ConstVals.PPM, y, out, true) ||
-                tryAt(player, x, y, out, false))
+        warpReady[slot] = spots.find(player, target, warpSpots[slot], fallbackSpots[slot])
         return true
-    }
-
-    private fun tryAt(player: MegaGameEntity, x: Float, y: Float, out: Vector2, needsGround: Boolean): Boolean {
-        val size = player.body
-        tryBounds.setSize(size.getWidth(), size.getHeight()).setCenter(x, y)
-        if (!isFullyInView(tryBounds) || !spots.isSafe(player, x, y)) return false
-        if (needsGround && !spots.hasGround(player, x, y)) return false
-        out.set(x, y)
-        return true
-    }
-
-    // TODO: a partner on a ladder stands, but its side spots have no ground, so the player lands on the partner's spot
-    //  in the ladder without a climb and can fall and warp again (127a review, docs/TODO.md)
-    private fun stands(player: MegaGameEntity): Boolean {
-        val body = player.body
-        return body.isSensing(BodySense.FEET_ON_GROUND) || body.isSensing(BodySense.IN_WATER) ||
-            player.isBehaviorActive(BehaviorType.CLIMBING)
-    }
-
-    private fun isFullyInView(area: GameRectangle) =
-        area.getX() >= viewCenter.x - view.viewWidth / 2f && area.getMaxX() <= viewCenter.x + view.viewWidth / 2f &&
-            area.getY() >= viewCenter.y - view.viewHeight / 2f && area.getMaxY() <= viewCenter.y + view.viewHeight / 2f
-
-    private fun isInView(player: MegaGameEntity): Boolean {
-        val center = player.body.getCenter()
-        return center.x > viewCenter.x - view.viewWidth / 2f && center.x < viewCenter.x + view.viewWidth / 2f &&
-            center.y > viewCenter.y - view.viewHeight / 2f && center.y < viewCenter.y + view.viewHeight / 2f
     }
 
     // TODO: the bounce is awkward: a player can be bounced between the edge and a solid, or held at the edge while the

@@ -12,6 +12,7 @@ import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.hasBody
 import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstVals
@@ -23,6 +24,8 @@ import com.megaman.maverick.game.state.ViewEdgeRules
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
+import com.megaman.maverick.game.entities.roomSubject
+import com.maverick.game.engine.camera.IRoomSubject
 
 class PlayersFocus(
     private val players: MegaPlayers,
@@ -30,7 +33,7 @@ class PlayersFocus(
     private val edges: ViewEdgeRules = ViewEdgeRules(),
     private val keepActive: () -> Boolean = { true },
     private val excluded: (MegaGameEntity) -> Boolean = { false }
-) : IFocusable, IDrawOffsetSource, ICameraPart, Resettable {
+) : IFocusable, IRoomSubject, IDrawOffsetSource, ICameraPart, Resettable {
 
     companion object {
         const val EASE_DURATION = 0.5f
@@ -49,11 +52,18 @@ class PlayersFocus(
     private var easeTime = EASE_DURATION
     private var keeperMoved = false
     private val playerDrawOffset = Vector2()
+    private val lastBounds = GameRectangle()
+    private var hasGroup = false
 
     private val lead: MegaGameEntity
         get() = players.get(PlayerSlot(0))!!
 
     fun inGroup(player: MegaGameEntity) = player.hasBody && player.existenceState.liveNow && !excluded(player)
+
+    override fun getSubjectBounds(): GameRectangle {
+        players.forEach { if (inGroup(it)) return lastBounds.set(it.roomSubject.getSubjectBounds()) }
+        return if (hasGroup) lastBounds else lead.roomSubject.getSubjectBounds()
+    }
 
     override fun getFocusPosition(): Vector2 {
         var count = 0
@@ -66,7 +76,12 @@ class PlayersFocus(
                 mask = mask or (1 shl it.playerSlot!!.index)
             }
         }
-        if (count == 0) position.set(lead.focus.getFocusPosition()) else position.scl(1f / count)
+        when {
+            count > 0 -> position.scl(1f / count)
+            hasGroup -> position.set(lastTarget)
+            else -> position.set(lead.focus.getFocusPosition())
+        }
+        if (count > 0) hasGroup = true
 
         val jumped = position.dst(lastTarget) > JUMP_TO_EASE * ConstVals.PPM
         if (groupMask != -1 && (mask != groupMask || jumped)) {
@@ -163,5 +178,6 @@ class PlayersFocus(
         keeperY = null
         groupMask = -1
         easeTime = EASE_DURATION
+        hasGroup = false
     }
 }

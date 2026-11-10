@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.fights
 
 import com.badlogic.gdx.utils.OrderedMap
-import com.maverick.game.engine.players.PlayerSlot
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.state.Routine
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.MusicAsset
@@ -21,9 +21,11 @@ class Fight(
     val closed: Boolean
         get() = phase == Phase.CLOSED
 
-    // TODO: slot 0 alone decides the flow, as in the old screen branches; co-op rules for a fight are item 047e
-    val leadPlayerAlive: Boolean
-        get() = services.players.get(PlayerSlot(0))!!.existenceState.liveAfterUpdate
+    val anyPlayerAlive: Boolean
+        get() {
+            services.players.forEach { if (it.existenceState.liveAfterUpdate) return true }
+            return false
+        }
 
     val gateKey: String?
         get() = plan.gateKey

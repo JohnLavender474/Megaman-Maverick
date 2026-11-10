@@ -97,7 +97,7 @@ object ControllerOn : Step<Fight> {
 object BossDefeatLock : Step<Fight> {
 
     override fun begin(context: Fight) {
-        if (!context.leadPlayerAlive) return
+        if (!context.anyPlayerAlive) return
 
         val services = context.services
 
@@ -118,7 +118,7 @@ object BossDefeatLock : Step<Fight> {
 object NotifyListenersOfBossDefeat : Step<Fight> {
 
     override fun begin(context: Fight) {
-        if (!context.leadPlayerAlive) return
+        if (!context.anyPlayerAlive) return
 
         MegaGameEntities.forEach {
             if (it is IBossListener && it.getType() != EntityType.BOSS) it.onBossDefeated(context.boss)
@@ -131,7 +131,7 @@ object NotifyListenersOfBossDefeat : Step<Fight> {
 object HideBossHealthBar : Step<Fight> {
 
     override fun begin(context: Fight) {
-        if (context.leadPlayerAlive) context.release(FightLease.HEALTH_BAR)
+        if (context.anyPlayerAlive) context.release(FightLease.HEALTH_BAR)
     }
 
     override fun isFinished(context: Fight) = true
@@ -145,26 +145,26 @@ object AwaitBossDefeatEnd : Step<Fight> {
 object LevelVictory : Step<Fight> {
 
     override fun begin(context: Fight) {
-        if (!context.leadPlayerAlive) return
+        if (!context.anyPlayerAlive) return
 
         context.services.events.submitEvent(
             Event(EventType.VICTORY_EVENT, props(ConstKeys.BOSS pairTo context.boss))
         )
     }
 
-    override fun isFinished(context: Fight) = context.leadPlayerAlive
+    override fun isFinished(context: Fight) = context.anyPlayerAlive
 }
 
 object UnlockGate : Step<Fight> {
 
     override fun begin(context: Fight) {
-        if (!context.leadPlayerAlive) return
+        if (!context.anyPlayerAlive) return
         val key = context.gateKey ?: return
 
         context.services.events.submitEvent(Event(EventType.UNLOCK_GATE, props(ConstKeys.KEY pairTo key)))
     }
 
-    override fun isFinished(context: Fight) = context.leadPlayerAlive
+    override fun isFinished(context: Fight) = context.anyPlayerAlive
 }
 
 object ResumeAfterMidBoss : Step<Fight> {

@@ -67,11 +67,12 @@ class PlayersCameraSubjectTest : DescribeSpec({
             rig.drawOffset.source!!.getDrawOffset(rig.offsets, Vector2()) shouldBe Vector2(-2f, 0f)
         }
 
-        it("follows the group with 2 players, and keeps slot 0 as the room subject") {
+        it("follows the group with 2 players; the room subject is the group, with slot 0's bounds while it lives (047c)") {
             val rig = SubjectRig(2)
             rig.policy.applyTo(rig.subject)
             rig.follow.focus shouldBeSameInstanceAs rig.playersFocus
-            rig.roomBounds.subject shouldBeSameInstanceAs rig.focusComponents[0]
+            rig.roomBounds.subject shouldBeSameInstanceAs rig.playersFocus
+            rig.playersFocus!!.getSubjectBounds() shouldBe rig.focusComponents[0].getSubjectBounds()
             rig.drawOffset.source shouldBeSameInstanceAs rig.playersFocus
         }
     }

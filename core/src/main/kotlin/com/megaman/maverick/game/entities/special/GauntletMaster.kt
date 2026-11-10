@@ -28,6 +28,8 @@ import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.extensions.convertToProps
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
+import com.megaman.maverick.game.events.PlayerEventKeys
+import com.maverick.game.engine.players.PlayerSlot
 
 /**
  * Spawns waves of enemies in one room. The next wave spawns only when all enemies of the current wave are dead. When
@@ -166,8 +168,9 @@ class GauntletMaster(services: MegaServices) : MegaGameEntity(services), IEventL
     override fun onEvent(event: Event) {
         when (event.key) {
             EventType.PLAYER_JUST_DIED -> {
-                GameLogger.debug(TAG, "onEvent(): key=$key, PLAYER_JUST_DIED")
-                resetGauntlet()
+                val slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!
+                GameLogger.debug(TAG, "onEvent(): key=$key, PLAYER_JUST_DIED: slot=$slot")
+                if (!players.anyOtherPresent(slot)) resetGauntlet()
             }
 
             EventType.BEGIN_ROOM_TRANS -> if (state != GauntletState.CLEARED) {

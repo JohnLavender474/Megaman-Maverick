@@ -12,6 +12,6 @@ class PlayersCameraSubject(private val players: MegaPlayers, private val players
 
     fun applyTo(subject: CameraSubject) {
         val lead = players.get(PlayerSlot(0))!!
-        subject.set(playersFocus ?: lead.focus, lead.roomSubject, playersFocus ?: playerDrawOffset)
+        subject.set(playersFocus ?: lead.focus, playersFocus ?: lead.roomSubject, playersFocus ?: playerDrawOffset)
     }
 }

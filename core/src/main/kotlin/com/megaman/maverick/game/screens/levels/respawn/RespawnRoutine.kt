@@ -19,6 +19,9 @@ class RespawnRoutine(private val context: RespawnContext) {
     val finished: Boolean
         get() = routine?.finished ?: true
 
+    val defeatRunning: Boolean
+        get() = !finished && !context.respawnBegun
+
     private var routine: Routine<RespawnContext>? = null
     private var deathWaits = false
 

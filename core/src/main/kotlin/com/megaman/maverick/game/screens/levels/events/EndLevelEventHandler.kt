@@ -66,9 +66,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamTransitionTimer.isFinished() &&
             beamEndTimer.isFinished()
 
-    // TODO: the beam-out acts on the lead player in slot 0; with more players, each player needs its own (item 047)
-    private val player: MegaGameEntity
-        get() = game.players.get(PlayerSlot(0))!!
+    // TODO: the beam-out acts on one player, the first live one; with more players, each player needs its own (item 047)
+    private lateinit var player: MegaGameEntity
 
     private val startDelayTimer = Timer(START_DELAY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()
@@ -105,6 +104,8 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
             initialized = true
         }
+
+        player = game.players.firstLive() ?: game.players.get(PlayerSlot(0))!!
 
         startDelayTimer.reset()
 
