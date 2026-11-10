@@ -49,7 +49,8 @@ Intended changes:
 - The `TODO` at `MegaPlayers.anyLive` goes; the `047e` part of that `TODO` (boss intros, `Fight`) is already tracked
   at the boss sites.
 
-Changed files: the 30 entity files, `MegaPlayers.kt` (the `TODO`), tests.
+Changed files: the 30 entity files, `MegaPlayers.kt` (the `TODO`), tests, and a new room `dead_scanner` in
+`RefactorTest047.tmx` (the map of item `047`; no existing room changes).
 
 Not changed:
 
@@ -72,9 +73,15 @@ Checks:
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/players-any-dead-slot`:
 
-- `./run-game-test-coop.sh --level REFACTOR_TEST_127 --room warp_enemy`: slot 0 stays at the far left, out of the
-  `Cactus` scanner; slot 1 walks into the scanner and dies to the needles. While slot 1 is dead (the 1 s before its
-  respawn), the `Cactus` goes back to idle and does not face or shoot at the dead body. To see it for longer, lose all
-  lives with slot 1 first (3 deaths): then slot 1 stays out, and the `Cactus` stays idle.
-- `./run-game-alpha.sh --level DESERT_MAN`: control with 1 player; the `Cactus` and the other enemies react to Megaman as
-  before. The review before the play test names the room with a `Cactus` and a player spawn.
+- `./run-game-test-coop.sh --room dead_scanner` (new room in `RefactorTest047.tmx`, one view; a big `Cactus` at the
+  left wall, a spike 2 tiles right of it, both players spawn inside the scanner): walk slot 0 to the right wall, out of
+  the scanner (the last 5 tiles of floor). Walk slot 1 left into the spike. After its last volley, the `Cactus` goes
+  idle (it closes and stops flashing and shooting) while slot 1 is dead, about 1 s before slot 1 beams in next to slot
+  0. Do it 3 times: after the third death slot 1 stays out (0 lives), and the `Cactus` stays idle. Before the fix it
+  kept flashing and spraying needles every 2 s at the dead body. Then walk slot 0 left into the scanner: the `Cactus`
+  turns, faces and shoots again.
+- `./run-game-alpha.sh --level DESERT_MAN --room room1`: control with 1 player. Walk right. Each `Cactus` faces
+  Megaman, flashes and sprays needles when he is within about 8 tiles, and goes idle when he leaves; the
+  `LampeonBandito` stands and shoots when he is near, as before.
+- `./run-game-alpha.sh --level DESERT_MAN --room room10`: control with 1 player. Walk right and stand on the cart: it
+  moves right while Megaman stands on it, as before.
