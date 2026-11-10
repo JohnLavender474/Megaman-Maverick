@@ -1,11 +1,11 @@
 # 146: A marker `IPlayer` interface, so a player has a type
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O1`, `O8`
 - Depends on: none
 - Related: `029` (player contract, decision of 2026-10-23), `048` (components), `047c`
-- Branches: none yet
+- Branches: `146a` (`mega-refactor-146a-player-marker`)
 
 ## Goal
 
@@ -47,13 +47,18 @@ generic entity), so the func implies that it works for any given entity, but the
 players." Then: "It's typical to have 'marker interfaces'. What would it look like if the `IPlayer` interface extended
 `IGameEntity` and required the player component to be present?" Then: "No fix for now, go ahead and log a new item".
 
+## Decisions
+
+- 2026-11-10: the marker design. The engine gets `IPlayer : IGameEntity` with a non-null slot, and core gets
+  `IMegaPlayer : IPlayer`. Not the `PlayerView` handle. This changes the `029` decision of 2026-10-23 for a marker
+  that holds only the slot; the decision is also recorded in `029`.
+- 2026-11-10: merge target: each branch squash-merges directly into `master`.
+- 2026-11-10: the branch starts now, in parallel with `060a` and `081f` (not after `060a` merges). Expect conflicts in
+  `players/`, `Megaman` and `MegamanX`; the branch merges `master` in after each of them lands.
+- 2026-11-10: `047c`'s `Event.isDeathOf` changes in this item, to take the player type.
+
 ## Open questions
 
-- The `029` decision of 2026-10-23 says "There is no `IPlayer` interface on the player entity". Its reason was against
-  a broad contract (body, facing, health, loadout, input); a marker that holds only the slot keeps "the engine assumes
-  only a slot and an entity". Does the owner change the decision for a marker? Record the answer in `029` and here.
-- Marker `IPlayer` + `IMegaPlayer`, or the `PlayerView` handle? (Claude's recommendation, 2026-11-09: the marker.)
-- `047c`'s `Event.isDeathOf`: change it with this item, or in a small fix before (the owner chose no fix for now).
 
 ## Sources
 
