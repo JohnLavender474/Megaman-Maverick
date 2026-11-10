@@ -67,8 +67,8 @@ also on `master`; the fix shows on a stomp, with the other player standing very 
 - `./run-game-test-coop.sh --room koopa_kick`: stomp the `GreenKoopa` into a shell on the floor. Slot 1 stands to the
   right of the shell, as close as it can without touching it (walking into it kicks it, so stop just before). Slot 0
   jumps and lands on the LEFT half of the shell: the shell rolls RIGHT, away from slot 0, and hits slot 1 (on `master`
-  it rolled LEFT). Make a new shell (the Koopa comes back after the room is entered again, or kick the shell into a
-  wall and catch it) and swap: slot 1 on the left, slot 0 lands on the RIGHT half: the shell rolls LEFT.
+  it rolled LEFT). A rolling shell never stops, so for the mirror case start the room again: slot 1 on the left, slot 0
+  lands on the RIGHT half: the shell rolls LEFT.
 - `./run-game-test-coop.sh --room koopa_kick`: a plain side kick by either player (walk into the shell): it rolls away
   from the kicker, as before.
 - `./run-game-alpha.sh --level SMB3_1`: control with 1 player (the level start; `room1` has no player spawn). Walk left
