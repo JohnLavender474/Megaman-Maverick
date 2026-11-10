@@ -61,6 +61,7 @@ class LavaDrop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
     override fun getType() = EntityType.HAZARD
 
     override fun init(vararg params: Any) {
+        super.init()
         if (fallingRegion == null || splatRegion == null) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             fallingRegion = atlas.findRegion("LavaDrop/Falling")

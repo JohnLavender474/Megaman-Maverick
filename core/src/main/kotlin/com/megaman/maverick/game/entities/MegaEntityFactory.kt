@@ -40,6 +40,7 @@ object MegaEntityFactory : ArgsInitializable<MegaServices>, Resettable {
             (0 until amount).forEach {
                 val entity = fetch(key)!!
                 entity.init()
+                entity.initialized = true
                 free(entity)
             }
         }

@@ -112,7 +112,7 @@ class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBo
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
-        if (event.key == EventType.PLAYER_JUST_DIED && event.isDeathOf(owner)) destroy()
+        if (event.key == EventType.PLAYER_JUST_DIED && owner.asPlayer?.let { event.isDeathOf(it) } == true) destroy()
     }
 
     private fun updateFollowsPlayer() {
@@ -179,6 +179,4 @@ class PreciousGemCluster(services: MegaServices) : MegaGameEntity(services), IBo
     }
 
     override fun getType() = EntityType.PROJECTILE
-
-    override fun getTag() = TAG
 }

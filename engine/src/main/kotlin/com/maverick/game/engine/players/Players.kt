@@ -1,10 +1,8 @@
 package com.maverick.game.engine.players
 
-import com.maverick.game.engine.entities.IGameEntity
+open class Players<E : IPlayer>(final override val capacity: Int) : IPlayers<E> {
 
-open class Players<E : IGameEntity>(final override val capacity: Int) : IPlayers<E> {
-
-    private val entities = arrayOfNulls<IGameEntity>(capacity)
+    private val entities = arrayOfNulls<IPlayer>(capacity)
 
     init {
         if (capacity < 1) throw IllegalArgumentException("Capacity must be at least 1: $capacity")

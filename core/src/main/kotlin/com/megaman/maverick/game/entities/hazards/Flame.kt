@@ -51,6 +51,7 @@ class Flame(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
     private var perpetual = true
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "Flame")
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())

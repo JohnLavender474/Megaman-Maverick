@@ -123,6 +123,4 @@ class ElecExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     }
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

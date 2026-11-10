@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
@@ -18,7 +19,6 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelState
@@ -51,7 +51,7 @@ class DrWilyTest : DescribeSpec({
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
         every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
-        val target = mockk<MegaGameEntity>(relaxed = true)
+        val target = mockk<IPlayer>(relaxed = true)
         every { target.getComponent(BodyComponent::class) } returns BodyComponent(Body(BodyType.ABSTRACT))
         every { target.existenceState } answers {
             if (alive) EntityExistenceState.LIVE else EntityExistenceState.DESTROY_QUEUED

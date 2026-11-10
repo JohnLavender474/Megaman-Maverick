@@ -263,6 +263,4 @@ class BikerKibbo(services: MegaServices) : AbstractEnemy(services), IAnimatedEnt
                 .build()
         )
         .build()
-
-    override fun getTag() = TAG
 }

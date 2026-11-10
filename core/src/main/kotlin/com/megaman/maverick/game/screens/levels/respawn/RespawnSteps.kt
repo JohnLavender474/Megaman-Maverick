@@ -7,7 +7,6 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
 import com.maverick.game.engine.players.forEach
-import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.state.Step
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.state.PlayPhase
@@ -27,7 +26,7 @@ fun defeat(context: RespawnContext) {
     game.audio.unsetMusic()
     game.audio.stopAllLoopingSounds()
 
-    game.gameState.removeLife(lead.playerSlot!!)
+    game.gameState.removeLife(lead.slot)
 
     context.respawnBegun = false
 
@@ -70,7 +69,7 @@ object WaitAndFadeOut : Step<RespawnContext> {
     override fun end(context: RespawnContext, interrupted: Boolean) {
         if (interrupted) return
         context.game.events.submitEvent(
-            Event(EventType.PLAYER_DONE_DYIN, props(PlayerEventKeys.SLOT pairTo context.lead.playerSlot!!))
+            Event(EventType.PLAYER_DONE_DYIN, props(PlayerEventKeys.SLOT pairTo context.lead.slot))
         )
     }
 }
@@ -156,7 +155,7 @@ object Ready : Step<RespawnContext> {
 
         game.events.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
         game.events.submitEvent(
-            Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo context.lead.playerSlot!!))
+            Event(EventType.PLAYER_READY, props(PlayerEventKeys.SLOT pairTo context.lead.slot))
         )
 
         game.audio.playSound(SoundAsset.BEAM_SOUND)

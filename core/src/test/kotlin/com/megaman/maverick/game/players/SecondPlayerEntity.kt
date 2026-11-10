@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.players
 
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -10,7 +11,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.testServices
 
-class SecondPlayerEntity(services: MegaServices) : MegaGameEntity(services), IBodyEntity {
+class SecondPlayerEntity(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IPlayer {
 
     init {
         addComponent(BodyComponent(Body(BodyType.DYNAMIC)))

@@ -10,13 +10,13 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.screens.utils.Fade
 import com.megaman.maverick.game.screens.utils.Fade.FadeType
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -31,7 +31,7 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
     }
 
     // TODO: the beam-in acts on the lead player in slot 0; with more players, each player needs its own (item 047)
-    private val player: MegaGameEntity
+    private val player: IPlayer
         get() = game.players.get(PlayerSlot(0))!!
 
     private val blinkTimer = Timer(BLINK_READY_DUR).setToEnd()

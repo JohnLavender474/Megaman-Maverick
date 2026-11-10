@@ -11,6 +11,7 @@ import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.state.FreezeComponent
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
@@ -31,6 +32,7 @@ class MegamanDeathCleanupTest : DescribeSpec({
         it("resets the weapons handler, so the spawned sets and the cooldowns do not survive the death") {
             val services = testServices(engine = mockk<GameEngine>(relaxed = true))
             val megaman = Megaman(services)
+            megaman.addComponent(TagsComponent(Megaman.TAG))
             services.players.register(PlayerSlot(0), megaman)
             val handler = mockk<MegamanWeaponsHandler>(relaxed = true)
             megaman.weaponsHandler = handler

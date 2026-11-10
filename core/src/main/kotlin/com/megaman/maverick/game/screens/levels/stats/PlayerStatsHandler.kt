@@ -15,14 +15,13 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
-import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.ui.BitsBar
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.currentHealth
 import com.megaman.maverick.game.entities.maxHealth
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -54,7 +53,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
     private val audioMan = game.audio
 
     // TODO: the HUD acts on the lead player in slot 0; which player the HUD shows is a session policy (item 047)
-    private val player: MegaGameEntity
+    private val player: IPlayer
         get() = game.players.get(PlayerSlot(0))!!
 
     private val timerQueue = Queue<Timer>()
@@ -151,7 +150,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
                     Event(
                         EventType.ADD_PLAYER_HEALTH, props(
                             ConstKeys.VALUE pairTo MegaHeartTank.HEALTH_BUMP,
-                            PlayerEventKeys.SLOT pairTo player.playerSlot!!
+                            PlayerEventKeys.SLOT pairTo player.slot
                         )
                     )
                 )
@@ -260,7 +259,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         return remaining
     }
 
-    fun addHealth(collector: MegaGameEntity, value: Int) {
+    fun addHealth(collector: IPlayer, value: Int) {
         val healthMegamanNeeds = collector.maxHealth - collector.currentHealth
 
         GameLogger.debug(TAG, "addHealth(): healthMegamanNeeds=$healthMegamanNeeds, value=$value")

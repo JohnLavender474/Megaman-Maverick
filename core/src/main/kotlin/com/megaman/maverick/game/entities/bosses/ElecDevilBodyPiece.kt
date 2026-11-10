@@ -210,8 +210,6 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
         )
     }
 
-    override fun getTag() = TAG
-
     override fun toString() =
         "{ ElecDevilBodyPiece:[\n" +
             "\tbounds=${body.getBounds()},\n" +

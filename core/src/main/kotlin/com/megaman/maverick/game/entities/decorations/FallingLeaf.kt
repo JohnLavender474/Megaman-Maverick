@@ -141,7 +141,7 @@ class FallingLeaf(services: MegaServices) : MegaGameEntity(services), ICullableE
         fadeTimer.reset()
         fading = false
 
-        val setOfAllLeaves = MegaGameEntities.getOfTag(getTag())
+        val setOfAllLeaves = MegaGameEntities.getOfTag(TAG)
         GameLogger.debug(
             TAG,
             "onSpawn(): " +
@@ -258,6 +258,4 @@ class FallingLeaf(services: MegaServices) : MegaGameEntity(services), ICullableE
     }
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

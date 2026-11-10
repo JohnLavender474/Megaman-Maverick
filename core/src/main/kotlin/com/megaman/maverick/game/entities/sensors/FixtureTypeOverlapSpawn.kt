@@ -40,6 +40,7 @@ class FixtureTypeOverlapSpawn(services: MegaServices) : MegaGameEntity(services)
     override fun getType() = EntityType.SENSOR
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineBodyComponent())
         addComponent(defineUpdatablesComponent())
     }

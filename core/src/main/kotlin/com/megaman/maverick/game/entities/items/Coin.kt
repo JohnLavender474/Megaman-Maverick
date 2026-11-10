@@ -17,13 +17,13 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.getCenter
 
 class Coin(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAnimatedEntity, IAudioEntity {
@@ -72,7 +72,7 @@ class Coin(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAn
         } else doCullAfterTime = false
     }
 
-    override fun contactWithPlayer(player: MegaGameEntity) {
+    override fun contactWithPlayer(player: IPlayer) {
         if (!doContactWithPlayer) return
 
         val coins = services.levelState.coins

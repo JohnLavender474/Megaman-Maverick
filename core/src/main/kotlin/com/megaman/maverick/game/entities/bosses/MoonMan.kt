@@ -729,6 +729,4 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
 
         asteroidsToThrow.add(asteroid pairTo Timer(THROW_ASTEROID_DELAY))
     }
-
-    override fun getTag() = TAG
 }

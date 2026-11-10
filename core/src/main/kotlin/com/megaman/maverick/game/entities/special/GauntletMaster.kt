@@ -90,6 +90,7 @@ class GauntletMaster(services: MegaServices) : MegaGameEntity(services), IEventL
     override fun getType() = EntityType.SPECIAL
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(AudioComponent())
     }

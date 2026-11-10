@@ -8,6 +8,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.forEach
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
@@ -17,7 +18,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.events.EventType
@@ -30,7 +30,7 @@ class LevelRoomHandler(
     private val services: MegaServices,
     private val roomBounds: CameraRoomBounds,
     private val transition: CameraRoomTransition,
-    private val player: () -> MegaGameEntity,
+    private val player: () -> IPlayer,
     private val setBehaviorsOn: (Boolean) -> Unit
 ) {
 

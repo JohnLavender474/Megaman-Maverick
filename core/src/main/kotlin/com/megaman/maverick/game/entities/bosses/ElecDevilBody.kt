@@ -215,8 +215,6 @@ class ElecDevilBody(services: MegaServices) : MegaGameEntity(services), IBodyEnt
 
     override fun getType() = EntityType.OTHER
 
-    override fun getTag() = TAG
-
     override fun toString() =
         "{ ElecDevilBody:[" + if (existenceState.liveNow) "facing=$facing, bounds=${body.getBounds()}] }" else "not spawned] }"
 }

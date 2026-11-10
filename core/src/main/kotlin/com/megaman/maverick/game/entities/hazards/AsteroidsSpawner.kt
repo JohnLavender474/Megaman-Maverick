@@ -171,6 +171,4 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
     )
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

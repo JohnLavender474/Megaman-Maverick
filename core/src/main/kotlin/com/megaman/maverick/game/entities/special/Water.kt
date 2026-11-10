@@ -252,6 +252,4 @@ class Water(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

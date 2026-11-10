@@ -2,6 +2,7 @@ package com.megaman.maverick.game.smoketests
 
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.TagsComponent
 import io.kotest.assertions.fail
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.DescribeSpec
@@ -14,6 +15,7 @@ import kotlin.reflect.KClass
 
 private const val ENTITIES_PACKAGE = "com.megaman.maverick.game.entities"
 private const val KNOWN_FAILURES = "/known-entity-failures.txt"
+private const val EXPECTED_TAGS = "/entity-tags.txt"
 private val NOT_POOLED = setOf("$ENTITIES_PACKAGE.blocks.PushableBlock\$InnerBlock")
 
 private fun KClass<*>.entityId() = java.name.removePrefix("$ENTITIES_PACKAGE.")
@@ -50,21 +52,35 @@ private fun knownFailures(): Set<String> {
     return file.readText().lines().map { it.substringBefore('#').trim() }.filter { it.isNotEmpty() }.toSet()
 }
 
+private fun expectedTags(): Map<String, List<String>> {
+    val file = requireNotNull(EntityInitSmokeTest::class.java.getResource(EXPECTED_TAGS)) { EXPECTED_TAGS }
+    return file.readText().lines().filter { it.isNotBlank() }.associate { line ->
+        line.substringBefore(':').trim() to line.substringAfter(':').split(',').map { it.trim() }
+    }
+}
+
+private fun TagsComponent.toList() = (0 until size).map { get(it) }
+
 class EntityInitSmokeTest : DescribeSpec({
 
     val harness = HeadlessHarness()
     val classes = entityClasses()
     val knownFailures = knownFailures()
+    val expectedTags = expectedTags()
 
     afterSpec { harness.dispose() }
 
     fun initProblem(id: String, clazz: KClass<out MegaGameEntity>): AssertionError? {
         harness.regionMisses.clear()
-        val thrown = runCatching { MegaEntityFactory.fetch(clazz)!!.init() }.exceptionOrNull()
+        val entity = MegaEntityFactory.fetch(clazz)!!
+        val thrown = runCatching { entity.init() }.exceptionOrNull()
         val misses = harness.regionMisses
+        val tags = entity.getComponent(TagsComponent::class)?.toList()
+        val expected = expectedTags[id]
         return when {
             thrown != null -> AssertionError("$id: init() threw, missing regions: $misses", thrown)
             misses.isNotEmpty() -> AssertionError("$id: missing regions: $misses")
+            tags != expected -> AssertionError("$id: tags $tags, expected $expected (see $EXPECTED_TAGS)")
             else -> null
         }
     }

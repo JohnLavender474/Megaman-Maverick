@@ -59,6 +59,7 @@ class RailTrack(services: MegaServices) : MegaGameEntity(services), ICullableEnt
     private var platformRight = false
 
     override fun init(vararg params: Any) {
+        super.init()
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
             gdxArrayOf("left", "right", "middle", "drop").forEach { key ->
@@ -185,8 +186,6 @@ class RailTrack(services: MegaServices) : MegaGameEntity(services), ICullableEnt
     )
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }
 
 class RailTrackPlatform(services: MegaServices) : Block(services), ISpritesEntity, IAnimatedEntity {
@@ -271,6 +270,4 @@ class RailTrackPlatform(services: MegaServices) : Block(services), ISpritesEntit
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

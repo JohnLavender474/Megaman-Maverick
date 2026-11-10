@@ -1,11 +1,11 @@
 package com.megaman.maverick.game.players
 
 import com.maverick.game.engine.damage.IDamagerEntity
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.maverick.game.engine.players.IPlayer
 
 class PlayerDamaged {
 
-    lateinit var player: MegaGameEntity
+    lateinit var player: IPlayer
         internal set
 
     lateinit var damager: IDamagerEntity

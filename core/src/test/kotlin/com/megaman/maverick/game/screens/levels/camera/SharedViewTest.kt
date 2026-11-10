@@ -86,8 +86,8 @@ private class EdgesRig(val rules: ViewEdgeRules, var on: Boolean = true, floor: 
     val room = Rectangle(0f, -200f, 1000f, 400f)
     val world = SimpleGridWorldContainer(32)
     val edges = CameraViewEdges(
-        view, center, session.players, rules, ViewEdgeHazard(session.services).also { it.damage = rules.damage },
-        PartnerSpot(WarpSpotTest(32f) { world }, view, center), { room }
+        view, center, session.players, rules, ViewEdgeHazard(session.services).also { it.init(); it.damage = rules.damage },
+        PartnerSpot(WarpSpotTest(32f, session.services.rules) { world }, view, center), { room }
     ) { on }
 
     init {
@@ -139,7 +139,7 @@ private class TallRig {
     val edges = CameraViewEdges(
         view, controller.settledPosition, session.players,
         ViewEdgeRules(bottom = ViewEdgeRule.WARP, delay = 100f),
-        ViewEdgeHazard(session.services), PartnerSpot(WarpSpotTest(32f) { SimpleGridWorldContainer(32) }, view, controller.settledPosition),
+        ViewEdgeHazard(session.services).also { it.init() }, PartnerSpot(WarpSpotTest(32f, session.services.rules) { SimpleGridWorldContainer(32) }, view, controller.settledPosition),
         { room.rectangle }
     ) { true }
     val focus = PlayersFocus(session.players, view, ViewEdgeRules(bottom = ViewEdgeRule.WARP)) { edges.isHeld(it) }

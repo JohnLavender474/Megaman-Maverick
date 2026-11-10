@@ -33,11 +33,6 @@ class PlayerDeathEventTest : DescribeSpec({
             deathOf(1).isDeathOf(second) shouldBe true
             deathOf(1).isDeathOf(first) shouldBe false
         }
-
-        it("is false for an owner that is not a player") {
-            deathOf(1).isDeathOf(TestFreezer(services)) shouldBe false
-            deathOf(1).isDeathOf(null) shouldBe false
-        }
     }
 
     describe("anyOtherPresent") {

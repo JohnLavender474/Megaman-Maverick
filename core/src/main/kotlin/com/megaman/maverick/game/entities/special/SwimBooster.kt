@@ -69,6 +69,4 @@ class SwimBooster(services: MegaServices) : MegaGameEntity(services), ICullableE
     )
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

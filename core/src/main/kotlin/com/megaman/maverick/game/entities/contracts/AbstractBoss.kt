@@ -15,6 +15,7 @@ import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -179,7 +180,7 @@ abstract class AbstractBoss(
         else -> baseDamage
     }
 
-    open fun onPlayerDamaged(damager: IDamagerEntity, player: MegaGameEntity) {}
+    open fun onPlayerDamaged(damager: IDamagerEntity, player: IPlayer) {}
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)

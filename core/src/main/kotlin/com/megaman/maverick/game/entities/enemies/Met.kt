@@ -355,6 +355,4 @@ class Met(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
         )
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

@@ -214,6 +214,4 @@ class InfernoMeteorShower(services: MegaServices) : MegaGameEntity(services), IC
     )
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

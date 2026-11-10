@@ -15,12 +15,11 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
-import com.maverick.game.engine.players.playerSlot
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
@@ -47,10 +46,10 @@ class Life(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAn
         super.onSpawn(spawnProps)
     }
 
-    override fun contactWithPlayer(player: MegaGameEntity) {
+    override fun contactWithPlayer(player: IPlayer) {
         GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
         destroy()
-        if (services.gameState.addLife(player.playerSlot!!)) requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
+        if (services.gameState.addLife(player.slot)) requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -66,6 +65,4 @@ class Life(services: MegaServices) : AbstractItem(services), ISpritesEntity, IAn
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.1f, true))).build()
-
-    override fun getTag() = TAG
 }

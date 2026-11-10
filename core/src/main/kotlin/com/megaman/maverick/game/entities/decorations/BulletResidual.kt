@@ -75,6 +75,4 @@ class BulletResidual(services: MegaServices) : MegaGameEntity(services), ISprite
         .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.05f, false))).build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

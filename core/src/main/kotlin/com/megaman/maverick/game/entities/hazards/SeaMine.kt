@@ -217,6 +217,4 @@ class SeaMine(services: MegaServices) : MegaGameEntity(services), IBodyEntity, I
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

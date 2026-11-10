@@ -221,10 +221,7 @@ enum class LevelDefinition(
                 healthTanks = MegaHealthTank.entries.associateWith { ConstVals.MAX_HEALTH }
             ),
             difficultyMode = DifficultyMode.HARD,
-            canSpawn = {
-                val tag = it.getTag()
-                tag != Life.TAG && tag != WeaponEnergyBulb.TAG
-            }
+            canSpawn = { it !is Life && it !is WeaponEnergyBulb }
         ),
     ),
     X6_INTRO(
@@ -249,8 +246,7 @@ enum class LevelDefinition(
     //         ),
     //         difficultyMode = DifficultyMode.HARD,
     //         canSpawn = {
-    //             val tag = it.getTag()
-    //             tag != Life.TAG && tag != WeaponEnergyBulb.TAG
+    //             it !is Life && it !is WeaponEnergyBulb
     //         }
     //     ),
     // );
@@ -267,8 +263,7 @@ enum class LevelDefinition(
     //         ),
     //         difficultyMode = DifficultyMode.HARD,
     //         canSpawn = {
-    //             val tag = it.getTag()
-    //             tag != Life.TAG && tag != WeaponEnergyBulb.TAG
+    //             it !is Life && it !is WeaponEnergyBulb
     //         }
     //     ),
     // ),

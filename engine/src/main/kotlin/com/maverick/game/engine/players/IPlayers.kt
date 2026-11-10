@@ -1,25 +1,24 @@
 package com.maverick.game.engine.players
 
 import com.badlogic.gdx.utils.Array
-import com.maverick.game.engine.entities.IGameEntity
 
-interface IPlayers<out E : IGameEntity> {
+interface IPlayers<out E : IPlayer> {
 
     val capacity: Int
 
     fun get(slot: PlayerSlot): E?
 }
 
-inline fun <E : IGameEntity> IPlayers<E>.forEach(action: (E) -> Unit) {
+inline fun <E : IPlayer> IPlayers<E>.forEach(action: (E) -> Unit) {
     for (i in 0 until capacity) get(PlayerSlot(i))?.let(action)
 }
 
-inline fun <E : IGameEntity> IPlayers<E>.any(predicate: (E) -> Boolean): Boolean {
+inline fun <E : IPlayer> IPlayers<E>.any(predicate: (E) -> Boolean): Boolean {
     for (i in 0 until capacity) get(PlayerSlot(i))?.let { if (predicate(it)) return true }
     return false
 }
 
-inline fun <E : IGameEntity> IPlayers<E>.all(predicate: (E) -> Boolean): Boolean {
+inline fun <E : IPlayer> IPlayers<E>.all(predicate: (E) -> Boolean): Boolean {
     for (i in 0 until capacity) get(PlayerSlot(i))?.let { if (!predicate(it)) return false }
     return true
 }

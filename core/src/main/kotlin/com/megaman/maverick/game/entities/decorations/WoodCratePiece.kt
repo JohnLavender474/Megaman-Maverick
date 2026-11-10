@@ -106,6 +106,4 @@ class WoodCratePiece(services: MegaServices) : MegaGameEntity(services), IBodyEn
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

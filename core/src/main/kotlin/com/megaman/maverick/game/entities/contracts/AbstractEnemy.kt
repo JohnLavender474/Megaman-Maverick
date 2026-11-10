@@ -32,7 +32,6 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.entities.facing
-import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
@@ -103,7 +102,7 @@ abstract class AbstractEnemy(
         private val DROP_ENTITIES = gdxArrayOf<GamePair<KClass<out MegaGameEntity>, (AbstractEnemy) -> Number>>(
             Life::class pairTo {
                 when {
-                    it.services.gameState.getLives(it.targetPlayer.playerSlot!!) < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
+                    it.services.gameState.getLives(it.targetPlayer.slot) < LIVES_THRESHOLD -> HIGH_LIFE_CHANCE
                     else -> LOW_LIFE_CHANCE
                 }
             },
@@ -340,7 +339,7 @@ abstract class AbstractEnemy(
         }
 
         // TODO: the one-up goes to the target player's slot; with more players, who gets it is a co-op rule (item 047)
-        if (floatingPointsType == FloatingPointsType.ONE_UP && services.gameState.addLife(targetPlayer.playerSlot!!))
+        if (floatingPointsType == FloatingPointsType.ONE_UP && services.gameState.addLife(targetPlayer.slot))
             requestToPlaySound(SoundAsset.ONE_UP_SOUND, false)
 
         val position = when (targetPlayer.direction) {

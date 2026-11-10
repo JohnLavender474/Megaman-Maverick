@@ -151,6 +151,4 @@ class Pipi(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM)
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

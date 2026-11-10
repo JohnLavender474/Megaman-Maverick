@@ -36,6 +36,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.state.*
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.testServices
@@ -88,7 +89,7 @@ class MegamanXTest : DescribeSpec({
     }
 
     fun hurt() {
-        x.takeDamageFrom(MetaWheelF(x.services)) shouldBe true
+        x.takeDamageFrom(MetaWheelF(x.services).also { it.addComponent(TagsComponent(MetaWheelF.TAG)) }) shouldBe true
     }
 
     fun tapB() {

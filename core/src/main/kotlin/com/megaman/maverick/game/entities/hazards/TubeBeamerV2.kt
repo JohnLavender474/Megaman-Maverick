@@ -397,6 +397,4 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

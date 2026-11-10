@@ -78,6 +78,4 @@ class Nutt(services: MegaServices) : AbstractProjectile(services) {
             sprite.setCenter(body.getCenter())
         }
         .build()
-
-    override fun getTag() = TAG
 }

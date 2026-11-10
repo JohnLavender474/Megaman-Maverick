@@ -64,6 +64,7 @@ class PolygonWater(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     private var splashSound = false
 
     override fun init(vararg params: Any) {
+        super.init()
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
         if (blueReg == null) blueReg = atlas.findRegion(BLUE_REG)
         if (surfaceReg == null) surfaceReg = atlas.findRegion(SURFACE_REG)
@@ -157,6 +158,4 @@ class PolygonWater(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag(): String = TAG
 }

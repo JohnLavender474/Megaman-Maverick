@@ -119,7 +119,7 @@ class MapObjectComponentTest : DescribeSpec({
         it("does not index an entity that spawns with no map id") {
             val runtime = spawn(MapObjectTestEntity(services), Properties())
 
-            MegaGameEntities.getOfTag(runtime.getTag()).contains(runtime) shouldBe true
+            MegaGameEntities.getOfTag(runtime.tags[0]).contains(runtime) shouldBe true
             listOf(-1, 0, 1).forEach { MegaGameEntities.getOfId(it).contains(runtime) shouldBe false }
         }
     }

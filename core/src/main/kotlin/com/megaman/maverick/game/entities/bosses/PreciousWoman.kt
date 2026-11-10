@@ -33,6 +33,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -50,7 +51,6 @@ import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.PreciousBlock
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -306,7 +306,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
         shieldGems.clear()
     }
 
-    override fun onPlayerDamaged(damager: IDamagerEntity, player: MegaGameEntity) {
+    override fun onPlayerDamaged(damager: IDamagerEntity, player: IPlayer) {
         GameLogger.debug(TAG, "onPlayerDamaged(): damager=$damager, player=$player")
         if (currentState == PreciousWomanState.STAND) laughTimer.reset()
     }
@@ -985,7 +985,5 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
     private fun shouldEndWallslide() = body.isSensing(BodySense.FEET_ON_GROUND) ||
         !body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
-
-    override fun getTag() = TAG
 }
 

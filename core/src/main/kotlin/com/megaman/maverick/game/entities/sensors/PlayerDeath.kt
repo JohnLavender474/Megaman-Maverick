@@ -28,6 +28,7 @@ open class PlayerDeath(services: MegaServices) : MegaGameEntity(services), IBody
     private var instant = false
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         addComponent(UpdatablesComponent({ delta -> update(delta) }))
     }
@@ -49,6 +50,4 @@ open class PlayerDeath(services: MegaServices) : MegaGameEntity(services), IBody
     }
 
     override fun getType() = EntityType.SENSOR
-
-    override fun getTag() = TAG
 }

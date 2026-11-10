@@ -962,6 +962,4 @@ class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<
         RodentManState.STAND -> if (body.isSensing(BodySense.FEET_ON_GROUND)) STAND_FRICTION_X else DEFAULT_FRICTION_X
         else -> DEFAULT_FRICTION_X
     }
-
-    override fun getTag() = TAG
 }

@@ -84,6 +84,7 @@ class LavaBeamer(services: MegaServices) : MegaGameEntity(services), IBodyEntity
     override fun getType() = EntityType.HAZARD
 
     override fun init(vararg params: Any) {
+        super.init()
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put("on", atlas.findRegion("$TAG/On"))

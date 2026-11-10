@@ -408,6 +408,4 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
     override fun overlaps(shape: IGameShape2D) = this.bounds.overlaps(shape)
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

@@ -79,6 +79,7 @@ class FlameThrower(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     override fun getType() = EntityType.HAZARD
 
     override fun init(vararg params: Any) {
+        super.init()
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put("flame_column", atlas.findRegion("FlameColumn"))

@@ -31,6 +31,7 @@ class GravityChange(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     override fun getType() = EntityType.SPECIAL
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineBodyComponent())
     }
 

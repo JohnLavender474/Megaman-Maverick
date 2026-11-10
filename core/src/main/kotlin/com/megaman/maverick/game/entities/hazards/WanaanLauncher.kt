@@ -234,6 +234,4 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

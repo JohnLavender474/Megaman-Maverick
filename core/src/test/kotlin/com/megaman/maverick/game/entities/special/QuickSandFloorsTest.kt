@@ -13,6 +13,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.systems.GameSystem
 import com.maverick.game.engine.world.WorldSystem
@@ -60,7 +61,7 @@ private class SandWalker(
     services: MegaServices,
     private val reaction: SandReaction? = SandReaction.SINK,
     private val bodyType: BodyType = BodyType.DYNAMIC
-) : MegaGameEntity(services), IBodyEntity {
+) : MegaGameEntity(services), IBodyEntity, IPlayer {
 
     override fun init(vararg params: Any) {
         super.init()

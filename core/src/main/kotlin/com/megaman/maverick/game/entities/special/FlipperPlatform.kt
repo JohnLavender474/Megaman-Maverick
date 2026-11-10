@@ -22,6 +22,7 @@ import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
+import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IAudioEntity
@@ -79,6 +80,7 @@ class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISprit
     private var block: Block? = null
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         if (leftRegion == null || rightRegion == null || flipToRightRegion == null || flipToLeftRegion == null) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.PLATFORMS_1.source)
@@ -199,7 +201,7 @@ class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISprit
         }
     }
 
-    private fun blockFilter(entity1: MegaGameEntity, entity2: MegaGameEntity): Boolean {
+    private fun blockFilter(entity1: IGameEntity, entity2: IGameEntity): Boolean {
         GameLogger.debug(TAG, "blockFilter(): entity1=$entity1, entity2=$entity2")
         val player = entity1.asPlayer ?: return false
         return player.body.physics.velocity.y > 0f ||
@@ -245,6 +247,4 @@ class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISprit
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

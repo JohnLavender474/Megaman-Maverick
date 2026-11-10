@@ -5,6 +5,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.TagsComponent
 
 // I was kinda dumb when writing the code for PreciousGemCluster, and I ended up writing a lot of the logic so that it
 // is tightly coupled to Precious Woman. Rather than try to refactor that class to be more reusable, instead I've opted
@@ -32,5 +33,5 @@ class MegaPreciousCluster(services: MegaServices): MegaGameEntity(services) {
 
     override fun getType() = EntityType.SPECIAL
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent() = TagsComponent(TAG)
 }

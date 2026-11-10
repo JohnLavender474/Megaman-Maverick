@@ -182,6 +182,4 @@ class Robbit(services: MegaServices) : AbstractEnemy(services, size = Size.LARGE
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

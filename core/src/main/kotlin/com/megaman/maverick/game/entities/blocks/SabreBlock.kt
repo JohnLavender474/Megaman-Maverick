@@ -136,6 +136,4 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
         }
         return component
     }
-
-    override fun getTag() = TAG
 }

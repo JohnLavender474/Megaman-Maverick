@@ -311,8 +311,6 @@ class ElecDevilBodyPieces(services: MegaServices) : MegaGameEntity(services), IB
 
     override fun getType() = EntityType.OTHER
 
-    override fun getTag() = TAG
-
     override fun toString() =
         "{ ElecDevilBodyPieces:[" + when {
             existenceState.liveNow ->

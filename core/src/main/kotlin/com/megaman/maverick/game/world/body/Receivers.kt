@@ -5,12 +5,12 @@ import com.maverick.game.engine.common.objects.PhasedPropertyKey
 import com.maverick.game.engine.common.objects.PropertyKey
 import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.contracts.IWater
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.utils.VelocityAlteration
 
 object Receivers {
@@ -39,7 +39,7 @@ object Receivers {
 
     val HIT_BY_BLOCK = PhasedPropertyKey<(block: Block, delta: Float) -> Unit>(ConstKeys.HIT_BY_BLOCK)
 
-    val HIT_BY_PLAYER = PropertyKey<(player: MegaGameEntity) -> Unit>(ConstKeys.HIT_BY_PLAYER)
+    val HIT_BY_PLAYER = PropertyKey<(player: IPlayer) -> Unit>(ConstKeys.HIT_BY_PLAYER)
 
     val HIT_BY_PROJECTILE = PropertyKey<(projectile: IProjectileEntity) -> Unit>(ConstKeys.HIT_BY_PROJECTILE)
 

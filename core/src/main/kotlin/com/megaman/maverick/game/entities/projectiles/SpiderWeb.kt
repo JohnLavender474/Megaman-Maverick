@@ -31,6 +31,7 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -43,7 +44,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
@@ -82,7 +82,7 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
 
     private val blinkWhiteTimer = Timer(BLINK_WHITE_DUR)
     private val trajectory = Vector2()
-    private var stuckPlayer: MegaGameEntity? = null
+    private var stuckPlayer: IPlayer? = null
     private var presses = 0
 
     override fun init(vararg params: Any) {
@@ -148,7 +148,7 @@ class SpiderWeb(services: MegaServices) : AbstractProjectile(services), IAnimate
         explosion.spawn(props)
     }
 
-    private fun stickTo(player: MegaGameEntity) {
+    private fun stickTo(player: IPlayer) {
         stuckPlayer = player
 
         body.setCenter(player.body.getCenter())

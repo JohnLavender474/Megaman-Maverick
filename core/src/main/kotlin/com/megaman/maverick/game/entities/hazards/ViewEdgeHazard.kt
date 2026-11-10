@@ -20,6 +20,4 @@ class ViewEdgeHazard(services: MegaServices) : MegaGameEntity(services), IHazard
     override fun onBossDefeated(boss: AbstractBoss) {}
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

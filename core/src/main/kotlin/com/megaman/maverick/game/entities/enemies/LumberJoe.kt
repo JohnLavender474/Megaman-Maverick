@@ -460,6 +460,4 @@ class LumberJoe(services: MegaServices) : AbstractEnemy(services, size = Size.ME
             )
         )
     }
-
-    override fun getTag() = TAG
 }

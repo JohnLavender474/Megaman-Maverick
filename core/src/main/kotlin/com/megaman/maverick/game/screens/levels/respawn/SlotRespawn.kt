@@ -10,13 +10,13 @@ import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.facing
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.locks.MegaLockGroup
@@ -42,13 +42,13 @@ class SlotRespawn(
     private val best = Vector2()
     private val fallback = Vector2()
 
-    fun onDeath(player: MegaGameEntity, routineRunning: Boolean, defeatRunning: Boolean) = when {
+    fun onDeath(player: IPlayer, routineRunning: Boolean, defeatRunning: Boolean) = when {
         defeatRunning -> {
             player.setPlayPhase(PlayPhase.POST_PLAY)
             false
         }
         routineRunning -> player.playerSlot == PlayerSlot(0)
-        players.anyOtherPresent(player.playerSlot!!) -> {
+        players.anyOtherPresent(player.slot) -> {
             start(player)
             false
         }
@@ -59,8 +59,8 @@ class SlotRespawn(
         }
     }
 
-    private fun start(player: MegaGameEntity) {
-        val slot = player.playerSlot!!
+    private fun start(player: IPlayer) {
+        val slot = player.slot
         services.gameState.removeLife(slot)
         if (services.gameState.livesExhausted()) {
             player.setPlayPhase(PlayPhase.POST_PLAY)
@@ -72,7 +72,7 @@ class SlotRespawn(
     }
 
     override fun update(delta: Float) = players.forEach { player ->
-        val slot = player.playerSlot!!.index
+        val slot = player.slot.index
         when (stages[slot]) {
             Stage.WAIT -> waitForSpot(player, slot, delta)
             Stage.SPAWN -> if (player.existenceState.liveNow) startBeam(player, slot)
@@ -88,7 +88,7 @@ class SlotRespawn(
         }
     }
 
-    private fun waitForSpot(player: MegaGameEntity, slot: Int, delta: Float) {
+    private fun waitForSpot(player: IPlayer, slot: Int, delta: Float) {
         if (services.levelState.roomTransition || services.gameCamera.rotating) return
         times[slot] += delta
         if (times[slot] < DELAY) return
@@ -108,7 +108,7 @@ class SlotRespawn(
         stages[slot] = Stage.SPAWN
     }
 
-    private fun startBeam(player: MegaGameEntity, slot: Int) {
+    private fun startBeam(player: IPlayer, slot: Int) {
         player.body.physics.gravityOn = false
         player.lock(MegaLockGroup.DAMAGE, MegaLockReason.SPAWN)
         player.lock(MegaLockGroup.BEHAVIORS, MegaLockReason.SPAWN)
@@ -117,7 +117,7 @@ class SlotRespawn(
         beams[slot].start(player)
     }
 
-    private fun beamIn(player: MegaGameEntity, slot: Int, delta: Float) {
+    private fun beamIn(player: IPlayer, slot: Int, delta: Float) {
         beams[slot].update(delta)
         if (!beams[slot].finished) return
 
@@ -130,7 +130,7 @@ class SlotRespawn(
         services.audio.playSound(SoundAsset.BEAM_SOUND)
     }
 
-    private fun partnerOf(player: MegaGameEntity): MegaGameEntity? {
+    private fun partnerOf(player: IPlayer): IPlayer? {
         players.forEach { if (it != player && players.isLive(it) && spots.isInView(it)) return it }
         return null
     }

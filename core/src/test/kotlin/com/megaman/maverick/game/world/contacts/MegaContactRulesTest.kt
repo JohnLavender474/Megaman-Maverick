@@ -8,6 +8,7 @@ import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -39,7 +40,7 @@ import io.mockk.slot
 import io.mockk.unmockkObject
 import io.mockk.verify
 
-private class RulesTestEntity(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IDirectional {
+private class RulesTestEntity(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IDirectional, IPlayer {
     override var direction = Direction.UP
     override fun getType() = EntityType.SPECIAL
 }

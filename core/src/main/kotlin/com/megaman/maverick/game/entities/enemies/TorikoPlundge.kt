@@ -367,6 +367,4 @@ class TorikoPlundge(services: MegaServices) : AbstractEnemy(services), IAnimated
                 .build()
         )
         .build()
-
-    override fun getTag() = TAG
 }

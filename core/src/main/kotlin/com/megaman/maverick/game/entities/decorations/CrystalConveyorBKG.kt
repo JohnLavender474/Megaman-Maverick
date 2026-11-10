@@ -57,6 +57,4 @@ class CrystalConveyorBKG(services: MegaServices) : MegaGameEntity(services), ISp
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

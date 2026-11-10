@@ -42,6 +42,7 @@ class ForceDecoration(services: MegaServices) : MegaGameEntity(services), ISprit
     override fun getType() = EntityType.DECORATION
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null)
             region = services.assets.getTextureRegion(TextureAsset.SPECIALS_1.source, "Force")
         addComponent(defineSpritesComponent())

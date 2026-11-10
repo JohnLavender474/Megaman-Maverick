@@ -54,7 +54,7 @@ private class RespawnRig(lives: Int = 3) {
     val center = Vector3(200f, 40f, 0f)
     val world = SimpleGridWorldContainer(32)
     val beams = Array(2) { mockk<BeamDown>(relaxed = true) }
-    val respawn = SlotRespawn(services, PartnerSpot(WarpSpotTest(32f) { world }, view, center), beams)
+    val respawn = SlotRespawn(services, PartnerSpot(WarpSpotTest(32f, services.rules) { world }, view, center), beams)
     val first = player(0, 200f, 40f)
     val second = player(1, 230f, 40f)
 

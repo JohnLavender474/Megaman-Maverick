@@ -300,6 +300,4 @@ open class Spike(services: MegaServices) : MegaGameEntity(services), IChildEntit
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

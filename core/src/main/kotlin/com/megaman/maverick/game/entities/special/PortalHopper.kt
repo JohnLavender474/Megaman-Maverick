@@ -305,6 +305,4 @@ class PortalHopper(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

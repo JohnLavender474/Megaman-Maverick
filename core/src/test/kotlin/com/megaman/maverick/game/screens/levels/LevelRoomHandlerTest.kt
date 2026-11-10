@@ -16,12 +16,12 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.running
@@ -68,7 +68,7 @@ private class Rig(next: RectangleMapObject) {
     val first = RectangleMapObject(0f, 0f, 200f, 80f).also { it.name = "first" }
     val roomBounds = CameraRoomBounds(follow, transition, Vector2(50f, 50f))
     val behaviors = ArrayList<Boolean>()
-    val player = mockk<MegaGameEntity>(relaxed = true).also {
+    val player = mockk<IPlayer>(relaxed = true).also {
         every { it.getComponent(BodyComponent::class) } returns BodyComponent(Body(BodyType.ABSTRACT))
     }
     val handler = LevelRoomHandler(services, roomBounds, transition, { player }) {

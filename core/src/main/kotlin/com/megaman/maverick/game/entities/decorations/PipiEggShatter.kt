@@ -50,6 +50,7 @@ class PipiEggShatter(services: MegaServices) : MegaGameEntity(services), IBodyEn
     override fun getType() = EntityType.DECORATION
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "Pipi/EggShatter")
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())

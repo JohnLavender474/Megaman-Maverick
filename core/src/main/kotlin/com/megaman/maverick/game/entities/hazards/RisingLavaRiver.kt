@@ -447,6 +447,4 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
         targetPlayer.body.getBounds().getY() > fullBounds.getMaxY() + DIST_TRIGGER_SPEED_UP * ConstVals.PPM
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

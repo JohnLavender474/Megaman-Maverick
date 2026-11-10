@@ -15,6 +15,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
@@ -82,5 +83,5 @@ open class LightSourceEntity(services: MegaServices) : MegaGameEntity(services),
 
     override fun getType() = EntityType.DECORATION
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent() = TagsComponent(TAG)
 }

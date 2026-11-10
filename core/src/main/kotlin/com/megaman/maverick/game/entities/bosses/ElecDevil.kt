@@ -686,6 +686,4 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
     }
 
     internal fun isDamageBlinking() = damageBlink
-
-    override fun getTag() = TAG
 }

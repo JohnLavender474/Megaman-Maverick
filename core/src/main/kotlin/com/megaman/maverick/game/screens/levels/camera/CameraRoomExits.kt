@@ -12,12 +12,12 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.forEach
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.CameraEdgeBlock
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -67,7 +67,7 @@ class CameraRoomExits(
     private val players: MegaPlayers,
     private val roomBounds: CameraRoomBounds,
     private val enabled: () -> Boolean,
-    private val held: (MegaGameEntity) -> Boolean = { false }
+    private val held: (IPlayer) -> Boolean = { false }
 ) : ICameraPart, Resettable {
 
     companion object {
@@ -121,7 +121,7 @@ class CameraRoomExits(
         count = 0
     }
 
-    private fun live(player: MegaGameEntity) = players.isLive(player) && !held(player)
+    private fun live(player: IPlayer) = players.isLive(player) && !held(player)
 
     private fun liveCount(): Int {
         var n = 0

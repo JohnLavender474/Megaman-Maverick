@@ -22,6 +22,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
 
@@ -137,5 +138,5 @@ class MegamanTrailSpriteV2(services: MegaServices) : MegaGameEntity(services), I
 
     override fun getType() = EntityType.DECORATION
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent() = TagsComponent(TAG)
 }

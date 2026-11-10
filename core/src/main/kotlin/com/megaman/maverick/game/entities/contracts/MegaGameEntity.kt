@@ -6,12 +6,15 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.groups.GroupsComponent
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.state.MapObjectComponent
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.entities.state.mapObjectId
+import com.megaman.maverick.game.entities.state.tags
 
 abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.engine), IMegaGameEntity {
 
@@ -28,6 +31,15 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
 
     var timeSpawned = 0L
         private set
+
+    override fun init(vararg params: Any) {
+        super.init(*params)
+        addComponent(defineTagsComponent())
+    }
+
+    protected open fun defineTagsComponent() = TagsComponent(
+        this::class.simpleName ?: throw IllegalStateException("$this has no class name; override defineTagsComponent()")
+    )
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         if (!super.canSpawn(spawnProps)) return false
@@ -59,7 +71,7 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
         timeSpawned = System.currentTimeMillis()
         MegaGameEntities.add(this)
         runnablesOnSpawn.values().forEach { it.invoke() }
-        GameLogger.debug(TAG, "${getTag()}: onSpawn(): this=$this")
+        GameLogger.debug(TAG, "$tags: onSpawn(): this=$this")
     }
 
     override fun onDestroyQueued() {
@@ -71,10 +83,8 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
     override fun onDestroy() {
         MegaGameEntities.remove(this)
         runnablesOnDestroy.values().forEach { it.invoke() }
-        GameLogger.debug(TAG, "${getTag()}: onDestroy(): this=$this")
+        GameLogger.debug(TAG, "$tags: onDestroy(): this=$this")
     }
-
-    override fun getTag() = this::class.simpleName ?: "?"
 
     override fun toString() = "{ ${this::class.simpleName}:[" +
         "mapObjectId=$mapObjectId, existenceState=$existenceState, hashCode=${hashCode()}] }"
@@ -82,5 +92,5 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
 
 // TODO: every entity gets this extension, but only entities with a target need it, and each one targets in its own
 //  way; it moves to the entities that need it (see the TODO at MegaPlayers.targetFor; item 112)
-val MegaGameEntity.targetPlayer: MegaGameEntity
+val MegaGameEntity.targetPlayer: IPlayer
     get() = services.players.targetFor(this)

@@ -212,8 +212,6 @@ class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIU
         )
         .build()
 
-    override fun getTag() = TAG
-
     fun explodeAndDie() {
         GameLogger.debug(TAG, "explodeAndDie()")
         explode()

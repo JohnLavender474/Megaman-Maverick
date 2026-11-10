@@ -93,6 +93,4 @@ class GravitySwitchAura(services: MegaServices) : MegaGameEntity(services), ISpr
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

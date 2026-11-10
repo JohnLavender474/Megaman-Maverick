@@ -36,6 +36,7 @@ class TestStunPulser(services: MegaServices) : MegaGameEntity(services) {
     override fun getType() = EntityType.SPECIAL
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineUpdatablesComponent())
     }
 

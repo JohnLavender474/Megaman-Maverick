@@ -121,6 +121,4 @@ class UnderWaterBubble(services: MegaServices) : MegaGameEntity(services), ICull
     }
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

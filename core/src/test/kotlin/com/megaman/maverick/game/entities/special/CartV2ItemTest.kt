@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.special
 
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -69,7 +70,7 @@ class CartV2ItemTest : DescribeSpec({
 
         override fun getType() = EntityType.SPECIAL
 
-        override fun getTag() = "Crate"
+        override fun defineTagsComponent() = TagsComponent("Crate")
     }
 
     fun step(frames: Int, cartSpeed: Float) = repeat(frames) {

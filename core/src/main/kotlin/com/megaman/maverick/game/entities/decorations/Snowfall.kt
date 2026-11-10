@@ -155,6 +155,4 @@ class Snowfall(services: MegaServices) : MegaGameEntity(services) {
     }
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

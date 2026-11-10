@@ -4,6 +4,7 @@ import com.maverick.game.engine.components.MissingComponentException
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.locks.lock
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
@@ -13,6 +14,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.state.DamageRecoveryComponent
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.StunComponent
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
@@ -124,30 +126,30 @@ class PlayerRulesTest : DescribeSpec({
 
     describe("playerAllowsDamageFrom") {
         it("refuses the player's own shot") {
-            player.playerAllowsDamageFrom(TestOwnedDamager(player.services, player)) shouldBe false
+            player.playerAllowsDamageFrom(TestOwnedDamager(player.services, player), player.services.rules) shouldBe false
         }
 
         it("allows a damager that no player owns") {
-            player.playerAllowsDamageFrom(TestOwnedDamager(player.services, null)) shouldBe true
+            player.playerAllowsDamageFrom(TestOwnedDamager(player.services, null), player.services.rules) shouldBe true
         }
 
         it("follows friendly fire for a teammate's shot") {
             val (coop, coopMate) = session(GameMode.COOP.rules)
-            coop.playerAllowsDamageFrom(TestOwnedDamager(coop.services, coopMate)) shouldBe false
+            coop.playerAllowsDamageFrom(TestOwnedDamager(coop.services, coopMate), coop.services.rules) shouldBe false
 
             val (pvp, pvpMate) = session(GameMode.PVP.rules)
-            pvp.playerAllowsDamageFrom(TestOwnedDamager(pvp.services, pvpMate)) shouldBe true
+            pvp.playerAllowsDamageFrom(TestOwnedDamager(pvp.services, pvpMate), pvp.services.rules) shouldBe true
         }
 
         it("refuses all damage when the player does not stay in the engine") {
             player.existenceState = EntityExistenceState.UNSPAWNED
-            player.playerAllowsDamageFrom(TestOwnedDamager(player.services, null)) shouldBe false
+            player.playerAllowsDamageFrom(TestOwnedDamager(player.services, null), player.services.rules) shouldBe false
         }
     }
 
     describe("playerAfterDamage") {
         it("sends the damage signal with the player and the damager") {
-            var signalled: Pair<MegaGameEntity?, IDamagerEntity?>? = null
+            var signalled: Pair<IPlayer?, IDamagerEntity?>? = null
             player.players.playerDamaged.connect { signalled = it.player to it.damager }
             val damager = TestOwnedDamager(player.services, null)
 
@@ -182,7 +184,7 @@ class PlayerRulesTest : DescribeSpec({
     describe("PlayerDamageNegotiator") {
         fun damager(tag: String, type: EntityType): IDamagerEntity {
             val entity = mockk<MegaGameEntity>(relaxed = true, moreInterfaces = arrayOf(IDamagerEntity::class))
-            every { entity.getTag() } returns tag
+            every { entity.getComponent(TagsComponent::class) } returns TagsComponent(tag)
             every { entity.getType() } returns type
             return entity as IDamagerEntity
         }

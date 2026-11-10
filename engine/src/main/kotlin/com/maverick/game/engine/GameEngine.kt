@@ -80,6 +80,8 @@ class GameEngine(
         entity.existenceState.liveNow || entities.contains(entity) || entitiesToSpawn.contains(entity)
 
     fun spawn(entity: IGameEntity, spawnProps: Properties = Properties()): Boolean {
+        if (!entity.initialized) initialize(entity)
+
         if (!entity.canSpawn(spawnProps)) {
             onSpawnRejected?.invoke(entity)
             return false
@@ -119,7 +121,6 @@ class GameEngine(
     private fun spawnNow(entity: IGameEntity, spawnProps: Properties) {
         entities.add(entity)
 
-        if (!entity.initialized) initialize(entity)
         entity.onSpawn(spawnProps)
         entity.existenceState = when {
             entitiesToRespawn.contains(entity) -> EntityExistenceState.RESPAWN_QUEUED

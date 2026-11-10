@@ -120,6 +120,4 @@ class SaucerRay(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         .build()
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

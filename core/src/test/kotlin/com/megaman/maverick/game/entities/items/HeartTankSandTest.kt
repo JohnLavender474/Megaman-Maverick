@@ -135,6 +135,14 @@ class HeartTankSandTest : DescribeSpec({
     }
 
     describe("a HeartTank that falls on quicksand") {
+        it("takes its value from the spawn props in onSpawn") {
+            val tank = spawnTank()
+
+            step(1)
+
+            tank.heartTank shouldBe MegaHeartTank.C
+        }
+
         it("sinks below the top of the block") {
             val tank = spawnTank()
 

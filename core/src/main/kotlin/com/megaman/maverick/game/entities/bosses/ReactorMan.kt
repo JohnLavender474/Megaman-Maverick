@@ -842,6 +842,4 @@ class ReactorMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
     }
 
     private fun isShielded() = currentState.equalsAny(ReactorManState.GIGA_STAND, ReactorManState.GIGA_RISE)
-
-    override fun getTag() = TAG
 }

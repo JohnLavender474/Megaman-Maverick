@@ -128,6 +128,4 @@ class AcidGoopSupplier(services: MegaServices) : MegaGameEntity(services), IHaza
     )
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

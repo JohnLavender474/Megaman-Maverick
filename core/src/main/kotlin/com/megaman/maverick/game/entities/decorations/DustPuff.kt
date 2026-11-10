@@ -93,7 +93,5 @@ class DustPuff(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
         .animator(Animator(Animation(region!!, 1, 5, 0.05f, false)))
         .build()
 
-    override fun getTag() = TAG
-
     override fun getType() = EntityType.DECORATION
 }

@@ -15,8 +15,6 @@ import io.kotest.matchers.types.shouldBeSameInstanceAs
 private class LookupTestEntity(services: MegaServices) : MegaGameEntity(services) {
 
     override fun getType() = EntityType.OTHER
-
-    override fun getTag() = "LookupTestEntity"
 }
 
 class MegaGameEntitiesTest : DescribeSpec({

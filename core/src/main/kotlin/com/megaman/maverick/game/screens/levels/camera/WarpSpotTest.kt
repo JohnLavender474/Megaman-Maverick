@@ -4,19 +4,24 @@ import com.badlogic.gdx.math.MathUtils
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IBody
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.container.IWorldContainer
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.players.playerAllowsDamageFrom
+import com.megaman.maverick.game.state.SessionRules
 import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBlockFilters
 import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.body.hasBodyLabel
 
-class WarpSpotTest(private val ppm: Float, private val world: () -> IWorldContainer?) {
+class WarpSpotTest(
+    private val ppm: Float,
+    private val rules: SessionRules,
+    private val world: () -> IWorldContainer?
+) {
 
     companion object {
         private const val EDGE_TOLERANCE = 0.01f
@@ -28,7 +33,7 @@ class WarpSpotTest(private val ppm: Float, private val world: () -> IWorldContai
 
     private val area = GameRectangle()
     private val bodyBounds = GameRectangle()
-    private var player: MegaGameEntity? = null
+    private var player: IPlayer? = null
     private var found = false
 
     private val blockAction: (IBody, IWorldContainer) -> Boolean = { body, _ ->
@@ -51,17 +56,17 @@ class WarpSpotTest(private val ppm: Float, private val world: () -> IWorldContai
         !found
     }
 
-    fun isSafe(player: MegaGameEntity, centerX: Float, centerY: Float): Boolean {
+    fun isSafe(player: IPlayer, centerX: Float, centerY: Float): Boolean {
         if (!isFree(player, centerX, centerY)) return false
         return !findFixture(player, hurtAction)
     }
 
-    fun isFree(player: MegaGameEntity, centerX: Float, centerY: Float): Boolean {
+    fun isFree(player: IPlayer, centerX: Float, centerY: Float): Boolean {
         setArea(player, centerX, centerY)
         return !findBody(player, blockAction)
     }
 
-    fun hasGround(player: MegaGameEntity, centerX: Float, centerY: Float): Boolean {
+    fun hasGround(player: IPlayer, centerX: Float, centerY: Float): Boolean {
         setArea(player, centerX, centerY)
         if (findFixture(player, waterAction)) return true
         val feet = area.getY() - EDGE_TOLERANCE * ppm
@@ -73,13 +78,13 @@ class WarpSpotTest(private val ppm: Float, private val world: () -> IWorldContai
         return findBody(player, groundAction)
     }
 
-    private fun setArea(player: MegaGameEntity, centerX: Float, centerY: Float) {
+    private fun setArea(player: IPlayer, centerX: Float, centerY: Float) {
         val size = player.body
         val tolerance = EDGE_TOLERANCE * ppm
         area.setSize(size.getWidth() - 2f * tolerance, size.getHeight() - 2f * tolerance).setCenter(centerX, centerY)
     }
 
-    private fun findBody(player: MegaGameEntity, action: (IBody, IWorldContainer) -> Boolean): Boolean {
+    private fun findBody(player: IPlayer, action: (IBody, IWorldContainer) -> Boolean): Boolean {
         val container = container()
         this.player = player
         found = false
@@ -88,7 +93,7 @@ class WarpSpotTest(private val ppm: Float, private val world: () -> IWorldContai
         return found
     }
 
-    private fun findFixture(player: MegaGameEntity, action: (IFixture, IWorldContainer) -> Boolean): Boolean {
+    private fun findFixture(player: IPlayer, action: (IFixture, IWorldContainer) -> Boolean): Boolean {
         val container = container()
         this.player = player
         found = false
@@ -135,6 +140,6 @@ class WarpSpotTest(private val ppm: Float, private val world: () -> IWorldContai
         val owner = fixture.getEntity()
         if (owner == target || !fixture.getShape().overlaps(area)) return false
         if (type in UNSAFE_FIXTURES) return true
-        return owner is IDamagerEntity && target.playerAllowsDamageFrom(owner)
+        return owner is IDamagerEntity && target.playerAllowsDamageFrom(owner, rules)
     }
 }

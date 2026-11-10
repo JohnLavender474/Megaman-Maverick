@@ -125,6 +125,7 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
     private var ppmDivisor = 2
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.BLACK)
         addComponent(SpritesComponent())
@@ -383,6 +384,4 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag(): String = TAG
 }

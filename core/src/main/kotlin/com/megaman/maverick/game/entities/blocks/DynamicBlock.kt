@@ -38,6 +38,7 @@ open class DynamicBlock(services: MegaServices) : MegaGameEntity(services), IBod
     override fun getType() = EntityType.SPECIAL
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(DrawableShapesComponent(debug = true))
         addComponent(defineUpdatablesComponennt())
         addComponent(defineBodyComponent())

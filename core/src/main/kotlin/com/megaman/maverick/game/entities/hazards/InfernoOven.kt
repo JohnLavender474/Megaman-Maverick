@@ -270,6 +270,4 @@ class InfernoOven(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         .build()
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

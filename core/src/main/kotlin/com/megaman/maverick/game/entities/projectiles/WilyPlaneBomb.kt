@@ -177,6 +177,4 @@ class WilyPlaneBomb(services: MegaServices) : AbstractProjectile(services) {
         }
         return component
     }
-
-    override fun getTag() = TAG
 }

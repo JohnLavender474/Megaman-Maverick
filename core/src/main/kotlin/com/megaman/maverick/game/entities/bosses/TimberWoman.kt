@@ -64,6 +64,7 @@ import com.megaman.maverick.game.entities.hazards.DeadlyLeaf
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.state.hasAnyTag
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
@@ -927,10 +928,8 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
 
             val projectile = fixture.getEntity() as IProjectileEntity
 
-            val tag = projectile.getTag()
-
             val type = when {
-                DEFLECTABLE_PROJECTILES.contains(tag) -> VicinityProjectileType.DEFLECTABLE
+                projectile.hasAnyTag(DEFLECTABLE_PROJECTILES) -> VicinityProjectileType.DEFLECTABLE
                 else -> VicinityProjectileType.OTHER
             }
 
@@ -1210,6 +1209,4 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
                 .build()
         )
         .build()
-
-    override fun getTag() = TAG
 }

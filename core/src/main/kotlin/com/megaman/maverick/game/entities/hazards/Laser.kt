@@ -705,7 +705,5 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         return false
     }
 
-    override fun getTag() = TAG
-
     override fun getType() = EntityType.HAZARD
 }

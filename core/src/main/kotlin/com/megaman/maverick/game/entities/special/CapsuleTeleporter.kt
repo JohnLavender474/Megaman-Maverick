@@ -326,6 +326,4 @@ class CapsuleTeleporter(services: MegaServices) : MegaGameEntity(services), ITel
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

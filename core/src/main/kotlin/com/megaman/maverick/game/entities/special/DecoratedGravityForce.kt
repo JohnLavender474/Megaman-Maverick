@@ -20,6 +20,7 @@ import com.megaman.maverick.game.entities.decorations.ForceDecoration
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.entities.factories.impl.SpecialsFactory
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 
@@ -41,7 +42,7 @@ class DecoratedGravityForce(services: MegaServices) : MegaGameEntity(services), 
 
     override fun getType() = EntityType.SPECIAL
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent() = TagsComponent(TAG)
 
     override fun init(vararg params: Any) {
         super.init()

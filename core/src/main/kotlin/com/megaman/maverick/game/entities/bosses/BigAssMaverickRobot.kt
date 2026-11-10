@@ -647,7 +647,5 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
 
         GameLogger.debug(TAG, "shootOrb(): spawn=$spawn, trajectory=$trajectory")
     }
-
-    override fun getTag() = TAG
 }
 

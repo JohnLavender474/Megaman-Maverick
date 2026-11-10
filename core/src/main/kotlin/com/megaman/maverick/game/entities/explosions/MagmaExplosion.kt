@@ -64,6 +64,7 @@ class MagmaExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEn
     private var scalar = 1f
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
@@ -131,6 +132,4 @@ class MagmaExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEn
     }
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

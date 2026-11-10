@@ -22,7 +22,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.players.playerSlot
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
@@ -87,23 +87,21 @@ class HeartTank(services: MegaServices) : AbstractItem(services), ISpritesEntity
     override fun canSpawn(spawnProps: Properties): Boolean {
         if (!super.canSpawn(spawnProps)) return false
 
-        val value = spawnProps.get(ConstKeys.VALUE)!!
-
-        this.heartTank = when (value) {
-            is MegaHeartTank -> value
-            is String -> MegaHeartTank.valueOf(value.uppercase())
-            else -> throw IllegalArgumentException("Invalid value: $value")
-        }
-
-        val canSpawn = !services.gameState.containsHeartTank(heartTank)
+        val canSpawn = !services.gameState.containsHeartTank(tankOf(spawnProps))
         GameLogger.debug(TAG, "canSpawn(): canSpawn=$canSpawn")
 
         return canSpawn
     }
 
+    private fun tankOf(spawnProps: Properties) = when (val value = spawnProps.get(ConstKeys.VALUE)!!) {
+        is MegaHeartTank -> value
+        is String -> MegaHeartTank.valueOf(value.uppercase())
+        else -> throw IllegalArgumentException("Invalid value: $value")
+    }
+
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        if (!this::heartTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
+        heartTank = tankOf(spawnProps)
         body.setSize(BODY_SIZE * ConstVals.PPM)
         super.onSpawn(spawnProps)
 
@@ -132,7 +130,7 @@ class HeartTank(services: MegaServices) : AbstractItem(services), ISpritesEntity
             body.physics.velocity.y = MIN_SAND_VEL_Y * ConstVals.PPM
     }
 
-    override fun contactWithPlayer(player: MegaGameEntity) {
+    override fun contactWithPlayer(player: IPlayer) {
         GameLogger.debug(TAG, "contactWithPlayer(): player=$player")
 
         destroy()
@@ -149,7 +147,7 @@ class HeartTank(services: MegaServices) : AbstractItem(services), ISpritesEntity
 
         services.events.submitEvent(Event(
                 EventType.ATTAIN_HEART_TANK,
-                props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo player.playerSlot!!)
+                props(ConstKeys.VALUE pairTo heartTank, PlayerEventKeys.SLOT pairTo player.slot)
             ))
     }
 
@@ -194,6 +192,4 @@ class HeartTank(services: MegaServices) : AbstractItem(services), ISpritesEntity
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

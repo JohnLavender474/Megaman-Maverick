@@ -11,6 +11,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.locks.LocksComponent
 import com.maverick.game.engine.locks.isLocked
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
@@ -35,7 +36,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 
-private class SitePlayer(services: MegaServices) : MegaGameEntity(services) {
+private class SitePlayer(services: MegaServices) : MegaGameEntity(services), IPlayer {
     override fun getType() = EntityType.SPECIAL
 }
 

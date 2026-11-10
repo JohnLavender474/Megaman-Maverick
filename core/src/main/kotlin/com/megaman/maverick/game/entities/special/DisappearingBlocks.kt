@@ -152,6 +152,4 @@ class DisappearingBlocks(services: MegaServices) : MegaGameEntity(services), IPa
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag(): String = TAG
 }

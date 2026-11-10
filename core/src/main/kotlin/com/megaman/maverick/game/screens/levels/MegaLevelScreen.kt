@@ -44,10 +44,10 @@ import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.motion.MotionSystem
 import com.maverick.game.engine.pathfinding.AsyncPathfindingSystem
 import com.maverick.game.engine.pathfinding.SimplePathfindingSystem
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.any
 import com.maverick.game.engine.players.forEach
-import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.screens.levels.tiledmap.TiledMapLevelScreen
 import com.maverick.game.engine.screens.levels.tiledmap.TiledMapLoader
 import com.maverick.game.engine.world.WorldSystem
@@ -65,7 +65,6 @@ import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.ViewEdgeHazard
@@ -176,7 +175,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     // TODO: the level rules act on the lead player in slot 0: the checkpoint, the spawn, the camera focus and
     //  snap-back, the gravity aura, the boss-defeat dead checks, pause and the forced resume, and the death handler;
     //  with more players, the lead slot is a session policy and each rule needs a co-op version (item 047)
-    private val player: MegaGameEntity
+    private val player: IPlayer
         get() = game.players.get(PlayerSlot(0))!!
 
     private val anyInPlay: Boolean
@@ -359,7 +358,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 game.cameraRotation.direction == Direction.UP && !roomHasCameraSection()
         }
         val partnerSpot = PartnerSpot(
-            WarpSpotTest(ConstVals.PPM.toFloat()) { game.levelState.worldContainer },
+            WarpSpotTest(ConstVals.PPM.toFloat(), game.services.rules) { game.levelState.worldContainer },
             game.cameraView,
             game.cameraController.settledPosition
         )
@@ -368,7 +367,11 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.cameraController.settledPosition,
             game.players,
             game.services.rules.viewEdges,
-            ViewEdgeHazard(game.services).also { it.damage = game.services.rules.viewEdges.damage },
+            ViewEdgeHazard(game.services).also {
+                it.init()
+                it.initialized = true
+                it.damage = game.services.rules.viewEdges.damage
+            },
             partnerSpot,
             { roomBounds.currentGameRoom?.rectangle },
             viewEdgesOn
@@ -839,7 +842,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 // TODO: SELECT is always X's dash for now, so it never pauses for X; see the dash input TODO in
                 //  MegamanXMoves.kt (item 081)
                 selectAction = if (player is MegamanX) SelectButtonAction.NEXT_WEAPON
-                else game.players.settings(player.playerSlot!!).selectButtonAction
+                else game.players.settings(player.slot).selectButtonAction
             )
         ) {
             GameLogger.debug(TAG, "render(): pause game")

@@ -4,6 +4,7 @@ import com.maverick.game.engine.camera.IDrawOffsetSource
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.world.IDrawOffsets
 import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraPart
@@ -14,9 +15,7 @@ import com.maverick.game.engine.entities.hasBody
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.players.forEach
-import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.focus
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.state.ViewEdgeRule
@@ -32,7 +31,7 @@ class PlayersFocus(
     private val view: CameraView? = null,
     private val edges: ViewEdgeRules = ViewEdgeRules(),
     private val keepActive: () -> Boolean = { true },
-    private val excluded: (MegaGameEntity) -> Boolean = { false }
+    private val excluded: (IPlayer) -> Boolean = { false }
 ) : IFocusable, IRoomSubject, IDrawOffsetSource, ICameraPart, Resettable {
 
     companion object {
@@ -41,8 +40,8 @@ class PlayersFocus(
         const val KEEP_MARGIN = 0.25f
     }
 
-    private var keeperX: MegaGameEntity? = null
-    private var keeperY: MegaGameEntity? = null
+    private var keeperX: IPlayer? = null
+    private var keeperY: IPlayer? = null
 
     private val position = Vector2()
     private val shown = Vector2()
@@ -55,10 +54,10 @@ class PlayersFocus(
     private val lastBounds = GameRectangle()
     private var hasGroup = false
 
-    private val lead: MegaGameEntity
+    private val lead: IPlayer
         get() = players.get(PlayerSlot(0))!!
 
-    fun inGroup(player: MegaGameEntity) = player.hasBody && player.existenceState.liveNow && !excluded(player)
+    fun inGroup(player: IPlayer) = player.hasBody && player.existenceState.liveNow && !excluded(player)
 
     override fun getSubjectBounds(): GameRectangle {
         players.forEach { if (inGroup(it)) return lastBounds.set(it.roomSubject.getSubjectBounds()) }
@@ -73,7 +72,7 @@ class PlayersFocus(
             if (inGroup(it)) {
                 position.add(it.focus.getFocusPosition())
                 count++
-                mask = mask or (1 shl it.playerSlot!!.index)
+                mask = mask or (1 shl it.slot.index)
             }
         }
         when {
@@ -128,16 +127,16 @@ class PlayersFocus(
 
     private fun ViewEdgeRule.leaves() = this == ViewEdgeRule.WARP || this == ViewEdgeRule.KILL
 
-    private fun coordinate(player: MegaGameEntity, horizontal: Boolean): Float {
+    private fun coordinate(player: IPlayer, horizontal: Boolean): Float {
         val center = player.body.getCenter()
         return if (horizontal) center.x else center.y
     }
 
-    private fun keeper(last: MegaGameEntity?, horizontal: Boolean, lowLeaves: Boolean, highLeaves: Boolean):
-        MegaGameEntity? {
+    private fun keeper(last: IPlayer?, horizontal: Boolean, lowLeaves: Boolean, highLeaves: Boolean):
+        IPlayer? {
         if (!lowLeaves && !highLeaves) return null
 
-        var chosen: MegaGameEntity? = null
+        var chosen: IPlayer? = null
         var best = 0f
         players.forEach {
             if (!inGroup(it)) return@forEach
@@ -159,7 +158,7 @@ class PlayersFocus(
         return chosen
     }
 
-    private fun keepInView(center: Float, keeper: MegaGameEntity, horizontal: Boolean, viewSize: Float): Float {
+    private fun keepInView(center: Float, keeper: IPlayer, horizontal: Boolean, viewSize: Float): Float {
         val bounds = keeper.body.getBounds()
         val margin = KEEP_MARGIN * ConstVals.PPM
         val half = viewSize / 2f

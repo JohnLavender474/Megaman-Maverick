@@ -3,6 +3,7 @@ package com.megaman.maverick.game.players
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.interfaces.IDirectional
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.MegamanMaverickGame
@@ -15,7 +16,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.mockk
 
-private class FieldsTestPlayerEntity(services: MegaServices) : MegaGameEntity(services), IDirectional {
+private class FieldsTestPlayerEntity(services: MegaServices) : MegaGameEntity(services), IDirectional, IPlayer {
     override var direction = Direction.UP
     override fun getType() = EntityType.MEGAMAN
 }

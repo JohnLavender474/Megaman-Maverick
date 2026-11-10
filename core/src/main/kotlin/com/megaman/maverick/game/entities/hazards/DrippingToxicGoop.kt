@@ -207,6 +207,4 @@ class DrippingToxicGoop(services: MegaServices) : MegaGameEntity(services), IBod
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

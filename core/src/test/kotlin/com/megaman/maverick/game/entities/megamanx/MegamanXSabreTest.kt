@@ -111,7 +111,7 @@ class MegamanXSabreTest : DescribeSpec({
     fun active(type: BehaviorType) = behaviors.getBehavior(type)!!.isActive()
 
     fun hurtX() {
-        x.takeDamageFrom(MetaWheelF(services)) shouldBe true
+        x.takeDamageFrom(MetaWheelF(services).also { it.init() }) shouldBe true
     }
 
     fun slashes() = spawned.count { it.first is MegamanXSabreSlash }

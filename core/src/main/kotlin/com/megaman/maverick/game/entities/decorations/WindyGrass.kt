@@ -44,6 +44,7 @@ open class WindyGrass(services: MegaServices) : MegaGameEntity(services), ISprit
     override fun getType() = EntityType.DECORATION
 
     override fun init(vararg params: Any) {
+        super.init()
         if (leftRegion == null || rightRegion == null || middleRegion == null) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENVIRONS_1.source)
             leftRegion = atlas.findRegion("$TAG/Left")

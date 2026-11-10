@@ -126,6 +126,4 @@ class BlockPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

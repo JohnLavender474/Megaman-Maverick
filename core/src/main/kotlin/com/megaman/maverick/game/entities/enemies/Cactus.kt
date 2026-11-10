@@ -391,6 +391,4 @@ class Cactus(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
             )
         }
     }
-
-    override fun getTag() = TAG
 }

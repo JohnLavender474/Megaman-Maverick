@@ -12,12 +12,11 @@ import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.players.playerSlot
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 
@@ -34,44 +33,44 @@ class Screw(services: MegaServices) : AbstractEnergyItem(services) {
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (!regions.containsKey(getTag())) {
+        if (!regions.containsKey(TAG)) {
             val map = ObjectMap<String, TextureRegion>()
             val atlas = services.assets.getTextureAtlas(TextureAsset.ITEMS_1.source)
-            animDefs.keys().forEach { key -> map.put(key, atlas.findRegion("${getTag()}/$key")) }
-            regions.put(getTag(), map)
+            animDefs.keys().forEach { key -> map.put(key, atlas.findRegion("${TAG}/$key")) }
+            regions.put(TAG, map)
         }
         super.init()
         addComponent(defineAnimationsComponent())
     }
 
-    override fun contactWithPlayer(player: MegaGameEntity) {
+    override fun contactWithPlayer(player: IPlayer) {
         GameLogger.debug(TAG, "contactWithPlayer()")
         destroy()
         services.events.submitEvent(
             Event(
                 EventType.ADD_CURRENCY, props(
                     ConstKeys.VALUE pairTo if (large) LARGE_AMOUNT else SMALL_AMOUNT,
-                    PlayerEventKeys.SLOT pairTo player.playerSlot!!
+                    PlayerEventKeys.SLOT pairTo player.slot
                 )
             )
         )
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { "${getTag()}/${if (large) "large" else "small"}" }
+        val keySupplier: (String?) -> String? = { "${TAG}/${if (large) "large" else "small"}" }
 
         val animations = ObjectMap<String, IAnimation>()
         animDefs.forEach { entry ->
             val key = entry.key
-            val fullKey = "${getTag()}/$key"
+            val fullKey = "${TAG}/$key"
             try {
-                val region = regions[getTag()][key]
+                val region = regions[TAG][key]
                 val (rows, columns, durations, loop) = entry.value
 
                 animations.put(fullKey, Animation(region, rows, columns, durations, loop))
             } catch (e: Exception) {
                 throw Exception(
-                    "Failed to create animation for key=$key, tag=${getTag()}, fullKey=$fullKey, regions=${regions}", e
+                    "Failed to create animation for key=$key, tag=${TAG}, fullKey=$fullKey, regions=${regions}", e
                 )
             }
         }
@@ -79,6 +78,4 @@ class Screw(services: MegaServices) : AbstractEnergyItem(services) {
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

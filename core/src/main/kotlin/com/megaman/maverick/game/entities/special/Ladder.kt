@@ -34,6 +34,7 @@ class Ladder(services: MegaServices) : MegaGameEntity(services), IBodyEntity {
     private val ladderRectangle = GameRectangle()
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineBodyComponent())
     }
 
@@ -73,6 +74,4 @@ class Ladder(services: MegaServices) : MegaGameEntity(services), IBodyEntity {
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

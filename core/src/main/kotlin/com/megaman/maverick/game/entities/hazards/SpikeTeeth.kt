@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.Disintegration
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.state.hasAnyTag
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.world.body.*
 
@@ -112,7 +113,7 @@ class SpikeTeeth(services: MegaServices) : MegaGameEntity(services), IBodyEntity
             if (entity is SpikeTeeth && entity.body.getY() < body.getY()) explodeAndDie()
         }
         bodyFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { projectile ->
-            if (PROJECTILES.contains(projectile.getTag())) explodeAndDie()
+            if (projectile.hasAnyTag(PROJECTILES)) explodeAndDie()
         }
         body.addFixture(bodyFixture)
 
@@ -148,6 +149,4 @@ class SpikeTeeth(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         .build()
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

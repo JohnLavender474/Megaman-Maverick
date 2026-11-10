@@ -162,6 +162,4 @@ class BulletBillLauncher(services: MegaServices) : MegaGameEntity(services), IBo
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

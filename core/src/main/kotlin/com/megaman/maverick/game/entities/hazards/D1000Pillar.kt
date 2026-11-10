@@ -66,6 +66,7 @@ class D1000Pillar(services: MegaServices) : MegaGameEntity(services), IBodyEntit
     private lateinit var pillarAnimator: Animator
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
         TickFrames.animations(atlas, TAG, D1000Frames.PILLAR, animations)
@@ -149,6 +150,4 @@ class D1000Pillar(services: MegaServices) : MegaGameEntity(services), IBodyEntit
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

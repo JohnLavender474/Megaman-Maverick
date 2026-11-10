@@ -9,6 +9,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.TagsComponent
 
 abstract class Switch(services: MegaServices) : MegaGameEntity(services) {
 
@@ -82,7 +83,11 @@ abstract class Switch(services: MegaServices) : MegaGameEntity(services) {
 
     protected open fun onFinishSwitchToUp() {}
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent(): TagsComponent {
+        val component = super.defineTagsComponent()
+        component.add(TAG)
+        return component
+    }
 
     override fun getType() = EntityType.SPECIAL
 }

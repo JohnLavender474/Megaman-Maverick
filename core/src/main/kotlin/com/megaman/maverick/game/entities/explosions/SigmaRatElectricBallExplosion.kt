@@ -66,6 +66,7 @@ class SigmaRatElectricBallExplosion(services: MegaServices) : MegaGameEntity(ser
     override fun getType() = EntityType.EXPLOSION
 
     override fun init(vararg params: Any) {
+        super.init()
         if (explosionRegion == null || dissipateRegion == null) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             explosionRegion = atlas.findRegion("SigmaRat/ElectricPulse")

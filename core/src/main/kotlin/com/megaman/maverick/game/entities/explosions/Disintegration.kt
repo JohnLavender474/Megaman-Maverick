@@ -48,6 +48,7 @@ class Disintegration(services: MegaServices) : MegaGameEntity(services), ISprite
     private val reusableRect = GameRectangle()
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(AudioComponent())
@@ -99,6 +100,4 @@ class Disintegration(services: MegaServices) : MegaGameEntity(services), ISprite
     }
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

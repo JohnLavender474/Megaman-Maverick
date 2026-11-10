@@ -9,6 +9,7 @@ import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
@@ -42,7 +43,7 @@ open class FeetRiseSinkBlock(services: MegaServices) : Block(services) {
                         TAG,
                         "body.preProcess(): remove feet from body: " +
                             "feetSet.size=${feetSet.size}, " +
-                            "entity=${feet.getEntity().getTag()}"
+                            "entity=${feet.getEntity().tags}"
                     )
                 }
             }

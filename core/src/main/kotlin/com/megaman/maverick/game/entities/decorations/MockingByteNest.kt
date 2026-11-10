@@ -123,6 +123,4 @@ class MockingByteNest(services: MegaServices) : MegaGameEntity(services), ISprit
     )
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

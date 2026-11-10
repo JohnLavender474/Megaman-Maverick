@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.IBody
@@ -77,12 +78,12 @@ fun IBody.hasBlockFilters(): Boolean {
     return filters != null && !filters.isEmpty
 }
 
-fun IBody.getBlockFilters(): Array<(dynamic: MegaGameEntity, static: MegaGameEntity) -> Boolean>? =
-    getProperty(ConstKeys.BLOCK_FILTERS) as Array<(MegaGameEntity, MegaGameEntity) -> Boolean>?
+fun IBody.getBlockFilters(): Array<(dynamic: IGameEntity, static: IGameEntity) -> Boolean>? =
+    getProperty(ConstKeys.BLOCK_FILTERS) as Array<(IGameEntity, IGameEntity) -> Boolean>?
 
-fun IBody.addBlockFilter(filter: (dynamic: MegaGameEntity, static: MegaGameEntity) -> Boolean) {
+fun IBody.addBlockFilter(filter: (dynamic: IGameEntity, static: IGameEntity) -> Boolean) {
     if (!hasBlockFilters()) putProperty(
-        ConstKeys.BLOCK_FILTERS, Array<(dynamic: MegaGameEntity, static: MegaGameEntity) -> Boolean>()
+        ConstKeys.BLOCK_FILTERS, Array<(dynamic: IGameEntity, static: IGameEntity) -> Boolean>()
     )
     getBlockFilters()!!.add(filter)
 }

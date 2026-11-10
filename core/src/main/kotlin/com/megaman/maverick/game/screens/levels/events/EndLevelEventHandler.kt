@@ -23,6 +23,7 @@ import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.entities.facing
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.locks.lock
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.forEach
 import com.megaman.maverick.game.ConstKeys
@@ -30,7 +31,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getMegamanSpritePriority
@@ -67,7 +67,7 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
             beamEndTimer.isFinished()
 
     // TODO: the beam-out acts on one player, the first live one; with more players, each player needs its own (item 047)
-    private lateinit var player: MegaGameEntity
+    private lateinit var player: IPlayer
 
     private val startDelayTimer = Timer(START_DELAY_DUR).setToEnd()
     private val preBeamTimer = Timer(PRE_BEAM_DUR).setToEnd()

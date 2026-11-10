@@ -217,6 +217,4 @@ class CartV2(services: MegaServices) : Block(services), ISpritesEntity, IAnimate
         .build()
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

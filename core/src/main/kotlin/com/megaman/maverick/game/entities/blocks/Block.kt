@@ -24,7 +24,10 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.TagsComponent
+import com.megaman.maverick.game.entities.state.hasTag
 import com.megaman.maverick.game.entities.state.mapObjectId
+import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardBodyDoUpdatePredicate
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
@@ -67,7 +70,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
             TAG,
             "onSpawn(): mapObjectId=$mapObjectId, " +
                 "blocks.size=${MegaGameEntities.getOfType(EntityType.BLOCK).size} " +
-                "tag=${getTag()}, " +
+                "tags=$tags, " +
                 "spawnProps=$spawnProps"
         )
 
@@ -190,7 +193,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
                     filters = filters.replace("\\s+", "").split(",")
                     filters.forEach { tag ->
                         body.addBlockFilter { entity, _ ->
-                            entity.getTag().equals(tag, ignoreCase = true)
+                            entity.hasTag(tag, ignoreCase = true)
                         }
                     }
                 }
@@ -200,18 +203,18 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
                         filters as Iterable<String>
                         filters.forEach { tag ->
                             body.addBlockFilter { entity, _ ->
-                                entity.getTag().equals(tag, ignoreCase = true)
+                                entity.hasTag(tag, ignoreCase = true)
                             }
                         }
                     } catch (e: Exception) {
                         GameLogger.debug(TAG, "onSpawn(): e=$e")
-                        filters as Iterable<(MegaGameEntity, MegaGameEntity) -> Boolean>
+                        filters as Iterable<(IGameEntity, IGameEntity) -> Boolean>
                         filters.forEach { filter -> body.addBlockFilter(filter) }
                     }
                 }
 
                 else -> {
-                    val filter = filters as (MegaGameEntity, MegaGameEntity) -> Boolean
+                    val filter = filters as (IGameEntity, IGameEntity) -> Boolean
                     body.addBlockFilter(filter)
                 }
             }
@@ -283,5 +286,9 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
     override fun getType() = EntityType.BLOCK
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent(): TagsComponent {
+        val component = super.defineTagsComponent()
+        component.add(TAG)
+        return component
+    }
 }

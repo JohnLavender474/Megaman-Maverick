@@ -52,6 +52,7 @@ class SnowballExplosion(services: MegaServices) : MegaGameEntity(services), IBod
     override fun getType() = EntityType.EXPLOSION
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, "SnowballExplode")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

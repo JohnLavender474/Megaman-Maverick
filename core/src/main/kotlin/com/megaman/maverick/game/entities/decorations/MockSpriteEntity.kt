@@ -94,6 +94,4 @@ class MockSpriteEntity(services: MegaServices) : MegaGameEntity(services), ISpri
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

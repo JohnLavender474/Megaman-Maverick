@@ -24,6 +24,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setBounds
+import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
@@ -115,7 +116,7 @@ class GravityBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnti
                 ConstKeys.DRAW pairTo false,
                 ConstKeys.BOUNDS pairTo bounds,
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
-                ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
+                ConstKeys.BLOCK_FILTERS pairTo { entity: IGameEntity, block: IGameEntity ->
                     blockFilter(entity, block)
                 },
                 ConstKeys.DO_UPDATE pairTo bodyComponent.doUpdate
@@ -134,7 +135,7 @@ class GravityBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         innerBlock = null
     }
 
-    private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
+    private fun blockFilter(entity: IGameEntity, block: IGameEntity) =
         entity == this && block == this.innerBlock
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ direction = services.gravity.direction })
@@ -229,8 +230,6 @@ class GravityBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnti
             sprite.setBounds(body.getBounds())
         }
         .build()
-
-    override fun getTag() = TAG
 
     override fun getType() = EntityType.BLOCK
 }

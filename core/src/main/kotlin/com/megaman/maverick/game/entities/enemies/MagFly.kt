@@ -22,6 +22,7 @@ import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.isBehaviorActive
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -34,7 +35,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.damaged
 import com.megaman.maverick.game.players.asPlayer
@@ -220,7 +220,7 @@ class MagFly(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
     private fun getCarryVelocity(target: Float, gravity: Float, friction: Float, delta: Float) =
         (target - gravity * delta) / exp(-friction * delta)
 
-    private fun facingAndMMDirMatch(target: MegaGameEntity) =
+    private fun facingAndMMDirMatch(target: IPlayer) =
         (target.body.getX() > body.getX() && facing == Facing.RIGHT) ||
             (target.body.getX() < body.getX() && facing == Facing.LEFT)
 }

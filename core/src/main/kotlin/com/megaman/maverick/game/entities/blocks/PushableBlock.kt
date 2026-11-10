@@ -17,6 +17,7 @@ import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setBounds
+import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
@@ -131,7 +132,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
                 ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
                 ConstKeys.FIXTURE_LABELS pairTo objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE),
                 ConstKeys.BOUNDS pairTo GameRectangle(body),
-                ConstKeys.BLOCK_FILTERS pairTo { entity: MegaGameEntity, block: MegaGameEntity ->
+                ConstKeys.BLOCK_FILTERS pairTo { entity: IGameEntity, block: IGameEntity ->
                     blockFilter(entity, block)
                 },
                 ConstKeys.CUSTOM_PRE_PROCESS pairTo { blockBody: Body -> blockBody.set(body) },
@@ -148,7 +149,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         block = null
     }
 
-    private fun blockFilter(entity: MegaGameEntity, block: MegaGameEntity) =
+    private fun blockFilter(entity: IGameEntity, block: IGameEntity) =
         entity == this && block == this.block
 
     // TODO: with 2 players, a player on the far side does not stop this move, because the velocity test in preProcess

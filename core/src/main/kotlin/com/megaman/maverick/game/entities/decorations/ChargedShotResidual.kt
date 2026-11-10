@@ -105,6 +105,4 @@ class ChargedShotResidual(services: MegaServices) : MegaGameEntity(services), IS
     }
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

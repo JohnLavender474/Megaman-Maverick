@@ -18,13 +18,12 @@ import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.locks.unlock
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.forEach
-import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.CameraEdgeBlock
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.hazards.ViewEdgeHazard
 import com.megaman.maverick.game.locks.MegaLockGroup
@@ -75,7 +74,7 @@ class CameraViewEdges(
     private val warpSpots = Array(players.capacity) { Vector2() }
     private val fallbackSpots = Array(players.capacity) { Vector2() }
 
-    fun isHeld(player: MegaGameEntity) = held[player.playerSlot!!.index]
+    fun isHeld(player: IPlayer) = held[player.slot.index]
 
     override fun update(camera: Camera, delta: Float): Boolean {
         val on = enabled()
@@ -114,7 +113,7 @@ class CameraViewEdges(
 
     fun drawWarpGuides(renderer: ShapeRenderer) {
         players.forEach { player ->
-            val slot = player.playerSlot!!.index
+            val slot = player.slot.index
             if (!held[slot] || !hasWarpSpot[slot]) return@forEach
             val center = player.body.getCenter()
             val spot = warpSpots[slot]
@@ -170,7 +169,7 @@ class CameraViewEdges(
 
     private fun checkKillOut(direction: Direction, edge: Float, delta: Float) {
         players.forEach { player ->
-            val times = outTimes[player.playerSlot!!.index]
+            val times = outTimes[player.slot.index]
             if (!players.isLive(player) || !isPastCameraEdge(player.body.getBounds(), direction, edge)) {
                 times[direction.ordinal] = 0f
                 return@forEach
@@ -198,8 +197,8 @@ class CameraViewEdges(
     // TODO: a held player is frozen out of view until the warp; the sprite should float back into the view, and
     //  bubbles should move to the warp spot before the warp; this first draft only draws a guide line and circle
     //  (item 047, branch 047g play test, 2026-11-06)
-    private fun hold(player: MegaGameEntity) {
-        val slot = player.playerSlot!!.index
+    private fun hold(player: IPlayer) {
+        val slot = player.slot.index
         held[slot] = true
         heldTimes[slot] = 0f
         heldPositions[slot].set(player.body.getX(), player.body.getY())
@@ -214,8 +213,8 @@ class CameraViewEdges(
         player.body.physics.velocity.setZero()
     }
 
-    private fun release(player: MegaGameEntity) {
-        val slot = player.playerSlot!!.index
+    private fun release(player: IPlayer) {
+        val slot = player.slot.index
         if (!held[slot]) return
         held[slot] = false
         hasWarpSpot[slot] = false
@@ -235,7 +234,7 @@ class CameraViewEdges(
 
     private fun updateHolds(delta: Float) {
         players.forEach { player ->
-            val slot = player.playerSlot!!.index
+            val slot = player.slot.index
             if (!held[slot]) return@forEach
             if (!players.isLive(player)) {
                 release(player)
@@ -266,14 +265,14 @@ class CameraViewEdges(
         }
     }
 
-    private fun hasFreePartner(player: MegaGameEntity): Boolean {
+    private fun hasFreePartner(player: IPlayer): Boolean {
         players.forEach { if (it != player && players.isLive(it) && !isHeld(it)) return true }
         return false
     }
 
-    private fun findWarpSpot(player: MegaGameEntity, slot: Int): Boolean {
+    private fun findWarpSpot(player: IPlayer, slot: Int): Boolean {
         warpReady[slot] = false
-        var partner: MegaGameEntity? = null
+        var partner: IPlayer? = null
         players.forEach {
             if (partner == null && it != player && players.isLive(it) && !isHeld(it) && spots.isInView(it)) partner = it
         }
@@ -320,7 +319,7 @@ class CameraViewEdges(
         }
     }
 
-    private fun damage(player: MegaGameEntity) {
+    private fun damage(player: IPlayer) {
         if (player is IDamageableEntity && player.canBeDamagedBy(hazard)) player.takeDamageFrom(hazard)
     }
 }

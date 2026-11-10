@@ -197,6 +197,4 @@ class LavaRiver(services: MegaServices) : MegaGameEntity(services), ICullableEnt
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

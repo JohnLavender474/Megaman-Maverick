@@ -279,7 +279,5 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         }
     })
 
-    override fun getTag() = TAG
-
     override fun getType() = EntityType.HAZARD
 }

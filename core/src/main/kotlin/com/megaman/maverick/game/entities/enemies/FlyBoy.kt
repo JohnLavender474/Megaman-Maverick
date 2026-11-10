@@ -183,6 +183,4 @@ class FlyBoy(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIU
         body.physics.velocity.x = 1.85f * (targetPlayer.body.getX() - body.getX())
         body.physics.velocity.y = 0f
     }
-
-    override fun getTag() = TAG
 }

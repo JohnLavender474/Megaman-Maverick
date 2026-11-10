@@ -4,12 +4,14 @@ import com.maverick.game.engine.components.require
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.locks.LocksComponent
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.locks.MegaLockGroup
+import com.megaman.maverick.game.state.SessionRules
 
 // TODO: the receiver is AbstractHealthEntity only for `damaged`; it changes when item 048 replaces the base class
 val AbstractHealthEntity.playerInvincible: Boolean
@@ -31,16 +33,16 @@ val AbstractHealthEntity.playerCanMove: Boolean
     }
 
 // TODO: the owner chain of rootPlayer goes 2 levels deep (item 030)
-fun MegaGameEntity.playerAllowsDamageFrom(damager: IDamagerEntity): Boolean {
+fun IPlayer.playerAllowsDamageFrom(damager: IDamagerEntity, rules: SessionRules): Boolean {
     if (!existenceState.liveAfterUpdate) return false
     val source = damager.rootPlayer ?: return true
-    return source != this && services.rules.friendlyFire
+    return source != this && rules.friendlyFire
 }
 
-fun <T> T.playerAfterDamage(damager: IDamagerEntity) where T : MegaGameEntity, T : IBodyEntity {
+fun <T> T.playerAfterDamage(damager: IDamagerEntity) where T : MegaGameEntity, T : IBodyEntity, T : IPlayer {
     knockBackFrom(damager)
     freezeFrom(damager)
-    players.onPlayerDamaged(asPlayer!!, damager)
+    players.onPlayerDamaged(this, damager)
 }
 
 // TODO: the difficulty and the enhancement change the damage here; item 023 moves these rules

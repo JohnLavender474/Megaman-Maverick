@@ -190,6 +190,4 @@ class RocketPlatform(services: MegaServices) : Block(services), IParentEntity<Me
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

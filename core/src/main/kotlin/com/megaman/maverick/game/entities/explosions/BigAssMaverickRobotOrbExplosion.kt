@@ -67,6 +67,7 @@ class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(s
     override fun getType() = EntityType.EXPLOSION
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         if (explosionRegion == null || dissipateRegion == null) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)

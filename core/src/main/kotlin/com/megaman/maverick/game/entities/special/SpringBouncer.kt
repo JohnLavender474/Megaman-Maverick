@@ -223,6 +223,4 @@ class SpringBouncer(services: MegaServices) : MegaGameEntity(services), ISprites
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

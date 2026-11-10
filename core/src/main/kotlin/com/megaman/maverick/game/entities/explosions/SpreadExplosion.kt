@@ -247,6 +247,4 @@ class SpreadExplosion(services: MegaServices) : MegaGameEntity(services), IBodyE
         .build()
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

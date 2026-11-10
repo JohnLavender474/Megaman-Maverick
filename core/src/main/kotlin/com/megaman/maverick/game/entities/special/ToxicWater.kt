@@ -154,6 +154,4 @@ class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

@@ -81,6 +81,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     private lateinit var animator: Animator
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
         TickFrames.animations(atlas, TAG, D1000Frames.CORE, animations)
@@ -240,6 +241,4 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     }
 
     override fun getType() = EntityType.BOSS
-
-    override fun getTag() = TAG
 }

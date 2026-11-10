@@ -3,8 +3,8 @@ package com.megaman.maverick.game.players
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 
 class PlayerRoster(private val players: MegaPlayers) {
 
@@ -12,15 +12,15 @@ class PlayerRoster(private val players: MegaPlayers) {
         const val TAG = "PlayerRoster"
     }
 
-    private val slot0 = ObjectMap<PlayerCharacter, MegaGameEntity>()
-    private val all = Array<MegaGameEntity>()
+    private val slot0 = ObjectMap<PlayerCharacter, IPlayer>()
+    private val all = Array<IPlayer>()
 
-    fun add(entity: MegaGameEntity, slot0Character: PlayerCharacter? = null) {
+    fun add(entity: IPlayer, slot0Character: PlayerCharacter? = null) {
         all.add(entity)
         if (slot0Character != null) slot0.put(slot0Character, entity)
     }
 
-    fun forEach(action: (MegaGameEntity) -> Unit) = all.forEach(action)
+    fun forEach(action: (IPlayer) -> Unit) = all.forEach(action)
 
     // TODO: only slot 0 can change its character; with more than 1 player, a level with no MEGAMAN throws, and
     //  co-op as another character waits for item 047; a level with more than 1 character needs the select screen of

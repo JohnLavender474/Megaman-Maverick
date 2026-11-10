@@ -7,6 +7,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.FixtureLabel
 import com.megaman.maverick.game.world.body.Receivers
@@ -46,5 +47,9 @@ open class AbstractBlock(services: MegaServices) : Block(services) {
         }
     }
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent(): TagsComponent {
+        val component = super.defineTagsComponent()
+        component.add(TAG)
+        return component
+    }
 }

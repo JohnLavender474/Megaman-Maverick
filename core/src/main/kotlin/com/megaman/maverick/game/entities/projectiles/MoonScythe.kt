@@ -37,6 +37,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.AbstractBlock
 import com.megaman.maverick.game.entities.blocks.LadderTop
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.state.hasAnyTag
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
@@ -170,10 +171,7 @@ class MoonScythe(services: MegaServices) : AbstractProjectile(services), IAnimat
             body.physics.collisionOn = active
             body.forEachFixture { fixture -> fixture.setActive(active) }
         }
-        body.addBlockFilter filter@{ block, _ ->
-            val tag = block.getTag()
-            return@filter BLOCK_FILTERS.contains(tag)
-        }
+        body.addBlockFilter { block, _ -> block.hasAnyTag(BLOCK_FILTERS) }
 
         val debugShapes = gdxArrayOf<() -> IDrawableShape?>()
 

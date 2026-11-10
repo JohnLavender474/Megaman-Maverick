@@ -129,6 +129,4 @@ class DebrisPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

@@ -1,68 +1,123 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>146a Player Marker</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">146a · O1, O8 · <span class="chip ok">+ spawn</span></p>
+    <h1>A player gets a type</h1>
+    <p class="lead">A marker <code>IPlayer</code> in the engine gives a player a type and a <code>slot</code> that is never null. Player code takes that type in place of <code>MegaGameEntity</code>, so the compiler tells a player from any other entity.</p>
+    <p class="meta"><b>In play:</b> Nothing changes.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>The type says "can be a player"; the component says "is a player now"</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: a player is a MegaGameEntity with a component">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  E["MegaGameEntity"] -->|"has, after register"| C["PlayerComponent(slot)"]
+  P["MegaPlayers (holds MegaGameEntity)"] -->|"get, forEach"| E
+  A["x.asPlayer"] -->|"checks component, gives"| E
+  F["fun isDeathOf(entity: IGameEntity?)"] -->|"reads playerSlot (nullable)"| C
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>Every player value is a plain <code>MegaGameEntity</code>, and the slot is a nullable lookup.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: IPlayer marker on Megaman and MegamanX">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  I["IPlayer (engine)"] -->|"slot reads"| C["PlayerComponent(slot)"]
+  M["Megaman"] -->|implements| I
+  X["MegamanX"] -->|implements| I
+  P["MegaPlayers (holds IPlayer)"] -->|"get, forEach"| I
+  A["x.asPlayer"] -->|"checks component, gives"| I
+  R["PlayerRoster"] -->|"registers one in slot 0"| P
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>The component stays the source of the slot. The roster holds Megaman and X; only the one in slot 0 has the component.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><code>isDeathOf</code> reads as player-only code</h2></div>
+    <p>Today, <code>players/PlayerExtensions.kt</code>:</p>
+<pre><code>val IGameEntity?.asPlayer: MegaGameEntity?
+    get() = (this as? MegaGameEntity)?.takeIf { it.isPlayer }
+
+fun Event.isDeathOf(entity: IGameEntity?): Boolean {
+    val player = entity.asPlayer ?: return false
+    return getProperty(PlayerEventKeys.SLOT, PlayerSlot::class) == player.playerSlot
+}</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>// engine
+interface IPlayer : IGameEntity {
+    val slot: PlayerSlot
+        get() = playerSlot ?: throw PlayerNotRegisteredException(this)
+}
+
+// core
+val IGameEntity?.asPlayer: IPlayer?
+    get() = (this as? IPlayer)?.takeIf { it.isPlayer }
+
+fun Event.isDeathOf(player: IPlayer): Boolean =
+    getProperty(PlayerEventKeys.SLOT, PlayerSlot::class) == player.slot
+
+// call sites
+fun contactWithPlayer(player: IPlayer)      // was MegaGameEntity
+val target: IPlayer = targetPlayer           // was MegaGameEntity</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>3 decisions</h2></div>
+    <p>The scan found that almost every read on a player goes through extensions on <code>IGameEntity</code> (<code>body</code>, <code>facing</code>, <code>direction</code>, <code>inPlay</code>). No call site reads a member that only a core type can give. The roster keeps Megaman and X both, and registers only one.</p>
+    <p><span class="chip ok">Chosen</span> D1 · No core <code>IMegaPlayer</code> now; the engine <code>IPlayer</code> everywhere.</p>
+    <p><span class="chip ok">Chosen</span> D2 · <code>slot</code> throws <code>PlayerNotRegisteredException</code>; <code>asPlayer</code> keeps the component check.</p>
+    <p><span class="chip ok">Chosen</span> D3 · <code>targetFor</code> and <code>targetPlayer</code> return <code>IPlayer</code> in this branch.</p>
+    <p><span class="chip ok">Chosen</span> D4 · The block filters take <code>IGameEntity</code>; <code>playerAllowsDamageFrom</code> takes <code>IPlayer</code> and the session rules.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Added 2026-11-10 · Tags</p><h2>A TagsComponent replaces ITaggable and 148 copied overrides</h2></div>
+    <p>Only <code>core</code> reads a tag, but <code>ITaggable</code> lives in <code>engine</code>. 148 of 155 overrides return the class name; 7 differ (for example <code>SniperJoe_OLD</code> is <code>"SniperJoe"</code>, which maps use).</p>
+<pre><code>// MegaGameEntity.init()
+addComponent(defineTagsComponent())
+
+protected open fun defineTagsComponent() =
+    TagsComponent(this::class.simpleName!!)
+    // runtime class: FeetRiseSinkBlock
+    // gets "FeetRiseSinkBlock"
+
+// one of the 7 that differ
+override fun defineTagsComponent() =
+    TagsComponent(TAG)  // "SniperJoe"</code></pre>
+    <p>Today 4 bases (<code>Block</code>, <code>AbstractBlock</code>, <code>Switch</code>, <code>Death</code>) give 34 subclasses the parent's tag.</p>
+    <p><span class="chip ok">Chosen</span> D5 · Own name and base name, for example <code>{"FeetRiseSinkBlock", "Block"}</code>.</p>
+    <p><span class="chip ok">Chosen</span> D6 · Two components: <code>TagsComponent</code> in <code>core</code>; <code>GroupsComponent</code> stays.</p>
+    <p><span class="chip ok">Chosen</span> D7 · No single tag: <code>hasTag</code> and <code>hasAnyTag</code>; each class reads its own <code>TAG</code>; <code>ITaggable</code> and <code>getTag()</code> go.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Added 2026-11-10 · Spawn flow</p><h2>The engine runs init() before canSpawn; canSpawn reads no per-spawn state</h2></div>
+    <p>Found at the play test: <code>canSpawn</code> ran before <code>init()</code>, so the <code>GAUNTLET_1</code> filter crashed on missing tags.</p>
+<pre><code>// GameEngine.spawn(), before
+if (!entity.canSpawn(props)) ...
+// init() ran later, in spawnNow
+
+// after
+if (!entity.initialized) initialize(entity)
+if (!entity.canSpawn(props)) ...</code></pre>
+    <p>The contract: <code>canSpawn</code> reads <code>init()</code> data, the spawn props and the session; it never reads per-spawn fields and writes nothing. <code>HeartTank</code> and <code>HealthTank</code> move their parse to <code>onSpawn</code>. Class facts and spawn rules as data go to item <code>021</code>.</p>
+    <p><span class="chip ok">Chosen</span> D10 · From the live player nearest the spawn center, through <code>MegaPlayers.nearestLiveTo</code>, which <code>targetFor</code> also uses.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>A bare type check would count the roster character as a player</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Type is not membership.</b> <code>is IPlayer</code> is true for X in a Megaman level. Every check goes through <code>asPlayer</code> or <code>isPlayer</code>; a core test proves that the character with no slot is not a player.</li>
+      <li><span class="chip warn">risk</span> <b>Conflicts with 060a and 081f.</b> Both are active and change <code>Megaman.kt</code>, <code>Stuns.kt</code> and <code>PlayerDamageNegotiator.kt</code>. This branch merges <code>master</code> in after each one lands.</li>
+      <li><span class="chip warn">risk</span> <b>Tags on the web build.</b> The default tag is the class name at runtime. A future minifier (web, Android) can rename classes; a test can only check the JVM build.</li>
+      <li><span class="chip warn">risk</span> <b>Wide diff.</b> Many files change only a type. The compiler finds each site; the test doubles that act as players must implement <code>IPlayer</code>.</li>
     </ul>
   </section>
 
@@ -70,14 +125,34 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-146a-player-marker</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-test-coop.sh --room target_nearest</code>: enemies aim at the nearer player.</li>
+      <li><code>./run-game-test-coop.sh --room pickups --weapons all</code>: each item goes to the player who touches it.</li>
+      <li><code>./run-game-test-coop.sh --room slot_0_death</code>: a dead player respawns near the other.</li>
+      <li><code>./run-game-test-coop.sh --room koopa_kick</code>: either player kicks the shell; it rolls away from the kicker and hurts the player it hits, as before.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room1</code>: X plays as before.</li>
+      <li><code>./run-game-alpha.sh --level PRECIOUS_WOMAN --room room7 --heartTanks all --healthTanks all</code>: the boss fight, the defeat, the end of the level.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room1</code>: Megaman sinks in the quicksand and jumps out.</li>
+      <li><code>./run-game-test-coop.sh --room group_tall --viewEdges top=BOUNCE,bottom=BOUNCE,damage=2</code>: a player at the top or bottom view edge bounces back and loses 2 health.</li>
+      <li><code>./run-game-alpha.sh --level GAUNTLET_1 --room room1</code>: in <code>room3</code>, Mets and the SniperJoe drop through the ceiling blocks.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_031 --room ground_slide_blocker --weapons MOON_SCYTHES</code>: scythes fly through the blocker wall.</li>
+      <li><code>./run-game-alpha.sh --level GLACIER_MAN --room room1</code>: icicles shatter, break and hurt as before.</li>
+      <li><code>./run-game-alpha.sh --level INTRO_STAGE --room room8</code>: a charged shot makes the copter's teeth explode.</li>
+      <li><code>./run-game-alpha.sh --level TIMBER_WOMAN --room room14 --heartTanks all --healthTanks all</code>: the boss deflects shots as before.</li>
+      <li><code>./run-game-alpha.sh --level MOON_MAN --room room13</code>: the saucer spawns ahead when you walk right, not when you walk back left.</li>
+      <li><code>./run-game-alpha.sh --level MOON_MAN --room room13 --players 2</code>: the same with 2 players; no crash.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room heart</code>: the heart tank shows and raises max health.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room heart --heartTanks A</code>: no heart tank.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room pickups</code>: the health tank shows and fills tank A.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room pickups --healthTanks A</code>: no health tank.</li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_2 --room room9 --heartTanks all --healthTanks all</code>: GutsTank's fist moves and hits; the defeat completes.</li>
+      <li><code>./run-game-alpha.sh --level REACTOR_MAN --room room4</code>: the enemies appear, fire and drop items.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-146a-player-marker/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/146-player-marker-interface/branches/mega-refactor-146a-player-marker/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-146a-player-marker/docs/CONTRACT.md</code></p>
   </section>
 </main>

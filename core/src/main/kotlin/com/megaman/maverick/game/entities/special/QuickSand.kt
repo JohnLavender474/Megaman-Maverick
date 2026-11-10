@@ -24,6 +24,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
@@ -65,7 +66,7 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private val privateFloors = ObjectMap<MegaGameEntity, PrivateSandFloor>()
+    private val privateFloors = ObjectMap<IGameEntity, PrivateSandFloor>()
     private var privateFloorProps: Properties? = null
 
     private var sharedFloor: SharedSandFloor? = null
@@ -139,7 +140,7 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
 
         val sharedProps = floorProps.copy()
         sharedProps.put(
-            ConstKeys.BLOCK_FILTERS, { entity: MegaGameEntity, _: MegaGameEntity -> privateFloors.containsKey(entity) }
+            ConstKeys.BLOCK_FILTERS, { entity: IGameEntity, _: IGameEntity -> privateFloors.containsKey(entity) }
         )
         sharedProps.put(ConstKeys.BLOCK_CONTACT_FILTER, { entity: MegaGameEntity -> !privateFloors.containsKey(entity) })
         val floor = MegaEntityFactory.fetch(SharedSandFloor::class)!!
@@ -160,7 +161,7 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         ) return
 
         val floorProps = privateFloorProps!!.copy()
-        floorProps.put(ConstKeys.BLOCK_FILTERS, { other: MegaGameEntity, _: MegaGameEntity -> other != entity })
+        floorProps.put(ConstKeys.BLOCK_FILTERS, { other: IGameEntity, _: IGameEntity -> other != entity })
         floorProps.put(ConstKeys.BLOCK_CONTACT_FILTER, { other: MegaGameEntity -> other == entity })
         if (entity.sandReaction == SandReaction.SUBMERGE) {
             val min = floorProps.get(ConstKeys.MIN, Float::class)!!
@@ -259,6 +260,4 @@ class QuickSand(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     }
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }

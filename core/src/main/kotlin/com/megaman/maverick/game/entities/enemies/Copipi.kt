@@ -124,6 +124,4 @@ class Copipi(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

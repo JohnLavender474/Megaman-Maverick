@@ -125,6 +125,4 @@ class FireballBar(services: MegaServices) : MegaGameEntity(services), IParentEnt
     )
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

@@ -42,6 +42,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.decorations.Snow
 import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.state.hasAnyTag
+import com.megaman.maverick.game.entities.state.hasTag
 import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -128,7 +130,7 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
 
     override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val projectile = projectileFixture.getEntity()
-        if (projectile.getTag() == Snowball.TAG) return
+        if (projectile.hasTag(Snowball.TAG)) return
         explodeAndDie()
     }
 
@@ -140,7 +142,7 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
 
     override fun hitBody(bodyFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
         val entity = bodyFixture.getEntity()
-        if ((entity is IDamageableEntity && canDamage(entity)) || BODIES_TO_IGNORE.contains(entity.getTag())) return
+        if ((entity is IDamageableEntity && canDamage(entity)) || entity.hasAnyTag(BODIES_TO_IGNORE)) return
         explodeAndDie()
     }
 

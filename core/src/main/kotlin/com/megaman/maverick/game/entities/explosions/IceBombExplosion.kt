@@ -126,6 +126,4 @@ class IceBombExplosion(services: MegaServices) : MegaGameEntity(services), IBody
     }
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

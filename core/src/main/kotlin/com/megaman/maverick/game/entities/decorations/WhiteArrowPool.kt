@@ -133,6 +133,4 @@ class WhiteArrowPool(services: MegaServices) : MegaGameEntity(services), ICullab
     }
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

@@ -132,6 +132,4 @@ class GroundSlope(services: MegaServices) : Block(services) {
         val step = MathUtils.floor(distance / stepWidth)
         return body.getY() + min(body.getHeight(), (step + 1) * stepWidth * ratio)
     }
-
-    override fun getTag() = TAG
 }

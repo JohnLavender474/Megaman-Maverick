@@ -66,6 +66,4 @@ class Wreck(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, 
     }
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

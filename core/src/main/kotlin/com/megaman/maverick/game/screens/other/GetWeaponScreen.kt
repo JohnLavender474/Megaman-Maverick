@@ -20,6 +20,7 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.containsRegion
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.screens.BaseScreen
 import com.megaman.maverick.game.ConstKeys
@@ -30,7 +31,6 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -318,6 +318,6 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
     // TODO: the animation starts from the weapon of the lead player in slot 0; with more players, whose weapon is a
     //  session policy (item 047)
-    private val player: MegaGameEntity
+    private val player: IPlayer
         get() = game.players.get(PlayerSlot(0))!!
 }

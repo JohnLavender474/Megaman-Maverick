@@ -32,6 +32,4 @@ class InfernoDeath(services: MegaServices) : Death(services) {
     }
 
     override fun isActive() = body.getBounds().overlaps(services.gameCamera.getRotatedBounds())
-
-    override fun getTag() = TAG
 }

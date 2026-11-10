@@ -85,6 +85,7 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
     private lateinit var spawnRoom: String
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         if (sawRegion == null || ringRegion == null) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -278,8 +279,6 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
         animationsComponent.putAnimator("saw", sprites["saw"], animator)
         return animationsComponent
     }
-
-    override fun getTag() = TAG
 
     override fun getType() = EntityType.HAZARD
 }

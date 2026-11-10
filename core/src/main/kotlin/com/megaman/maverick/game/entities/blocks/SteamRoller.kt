@@ -392,6 +392,4 @@ class SteamRoller(services: MegaServices) : MegaGameEntity(services), IBodyEntit
     }
 
     override fun getType() = EntityType.OTHER
-
-    override fun getTag() = TAG
 }

@@ -19,6 +19,7 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.locks.LocksComponent
 import com.maverick.game.engine.locks.unlock
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
@@ -43,7 +44,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 
 class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity, IAudioEntity,
-    IEventListener, IFaceable, IDirectional, IDamagerEntity {
+    IEventListener, IFaceable, IDirectional, IDamagerEntity, IPlayer {
 
     companion object {
         const val TAG = "MegamanX"
@@ -182,7 +183,7 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
     }
 
     override fun canBeDamagedBy(damager: IDamagerEntity) =
-        existenceState.liveAfterUpdate && super.canBeDamagedBy(damager) && playerAllowsDamageFrom(damager)
+        existenceState.liveAfterUpdate && super.canBeDamagedBy(damager) && playerAllowsDamageFrom(damager, services.rules)
 
     override fun getDamageDuration(damager: IDamagerEntity) = MegamanValues.DAMAGE_DURATION
 
@@ -254,6 +255,4 @@ class MegamanX(services: MegaServices) : AbstractHealthEntity(services), IBodyEn
     }
 
     override fun getType() = EntityType.MEGAMAN
-
-    override fun getTag() = TAG
 }

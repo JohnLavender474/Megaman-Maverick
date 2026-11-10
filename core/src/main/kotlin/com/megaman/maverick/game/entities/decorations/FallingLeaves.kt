@@ -125,6 +125,4 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
     })
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

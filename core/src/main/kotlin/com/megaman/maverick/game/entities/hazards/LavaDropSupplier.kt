@@ -42,6 +42,7 @@ class LavaDropSupplier(services: MegaServices) : MegaGameEntity(services), IHaza
     override fun getType() = EntityType.HAZARD
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())

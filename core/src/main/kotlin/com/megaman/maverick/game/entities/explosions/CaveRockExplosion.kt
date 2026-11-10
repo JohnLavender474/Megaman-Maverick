@@ -53,6 +53,7 @@ class CaveRockExplosion(services: MegaServices) : MegaGameEntity(services), IDam
     override fun getType() = EntityType.EXPLOSION
 
     override fun init(vararg params: Any) {
+        super.init()
         if (burstRegion == null) burstRegion =
             services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, "CaveRock/Burst")
         addComponent(AudioComponent())

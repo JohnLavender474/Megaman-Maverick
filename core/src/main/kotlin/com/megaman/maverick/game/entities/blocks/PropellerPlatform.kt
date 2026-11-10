@@ -160,6 +160,4 @@ class PropellerPlatform(services: MegaServices) : Block(services), IMotionEntity
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

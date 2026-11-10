@@ -70,6 +70,7 @@ class FireMetSpawner(services: MegaServices) : MegaGameEntity(services), IParent
     override fun getType() = EntityType.HAZARD
 
     override fun init(vararg params: Any) {
+        super.init()
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put("closed", atlas.findRegion("$TAG/Closed"))

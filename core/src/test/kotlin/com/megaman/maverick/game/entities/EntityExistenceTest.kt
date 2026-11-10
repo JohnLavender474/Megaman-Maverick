@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities
 
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.objects.Properties
@@ -74,6 +75,8 @@ class EntityExistenceTest : DescribeSpec({
             child.runnablesOnDestroy.put("count") { childDestroys++ }
             val parent = object : MegaGameEntity(services) {
                 override fun getType() = EntityType.OTHER
+
+                override fun defineTagsComponent() = TagsComponent("Parent")
 
                 override fun onDestroy() {
                     super.onDestroy()

@@ -58,6 +58,7 @@ class TubeBeamer(services: MegaServices) : MegaGameEntity(services), IAudioEntit
     private lateinit var spawnRoom: String
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(AudioComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -137,6 +138,4 @@ class TubeBeamer(services: MegaServices) : MegaGameEntity(services), IAudioEntit
     )
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

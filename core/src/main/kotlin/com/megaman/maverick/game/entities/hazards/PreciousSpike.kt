@@ -141,6 +141,4 @@ class PreciousSpike(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     )
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

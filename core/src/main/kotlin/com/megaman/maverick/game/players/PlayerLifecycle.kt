@@ -16,7 +16,7 @@ import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.locks.clearLocks
-import com.maverick.game.engine.players.playerSlot
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
@@ -66,10 +66,10 @@ fun MegaGameEntity.playerSpawnEnd() {
 }
 
 // TODO: this event fires on each destroy of a player, also when it is not a death (item 119)
-fun <T> T.playerOnDestroy() where T : MegaGameEntity, T : IEventListener {
+fun <T> T.playerOnDestroy() where T : MegaGameEntity, T : IEventListener, T : IPlayer {
     val events = services.events
     events.removeListener(this)
-    events.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo playerSlot!!)))
+    events.submitEvent(Event(EventType.PLAYER_JUST_DIED, props(PlayerEventKeys.SLOT pairTo slot)))
 }
 
 fun IBodyEntity.playerOnRoomTransition(event: Event) {

@@ -30,6 +30,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.HazardsFactory
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -66,9 +67,10 @@ class Electrocutie(services: MegaServices) : MegaGameEntity(services), IHazard, 
 
     override fun getType() = EntityType.HAZARD
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent() = TagsComponent(TAG)
 
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
     }

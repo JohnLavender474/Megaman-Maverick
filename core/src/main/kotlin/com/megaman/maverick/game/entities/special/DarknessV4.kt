@@ -225,7 +225,7 @@ class DarknessV4(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         private set
 
     private val rooms = ObjectSet<String>()
-    private val lightSourceQueue = OrderedMap<MegaGameEntity, LightSourceDef>()
+    private val lightSourceQueue = OrderedMap<IGameEntity, LightSourceDef>()
     private val previousTiles = OrderedSet<BlackTile>()
     private val currentTiles = OrderedSet<BlackTile>()
 
@@ -744,7 +744,5 @@ class DarknessV4(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
     override fun overlaps(shape: IGameShape2D) = this.bounds.overlaps(shape)
 
     override fun getType() = EntityType.SPECIAL
-
-    override fun getTag() = TAG
 }
 

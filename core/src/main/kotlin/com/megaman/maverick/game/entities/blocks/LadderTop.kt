@@ -24,6 +24,4 @@ class LadderTop(services: MegaServices) : Block(services) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
     }
-
-    override fun getTag() = TAG
 }

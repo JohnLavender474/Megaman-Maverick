@@ -24,6 +24,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.hardMode
 
 // TODO: a player class cannot give its own entries yet; item 081 branch 081b adds an overrides parameter, with X as
@@ -52,9 +53,9 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         val entity = damager as MegaGameEntity
         if (entity is IOwnable<*> && entity.owner == player) return 0
 
-        val tag = entity.getTag()
+        val tag = customTagOf(entity)
         return when {
-            custom.containsKey(tag) -> custom[tag].get(damager)
+            tag != null -> custom[tag].get(damager)
             entity is ISizable -> when (entity.size) {
                 Size.LARGE -> 4
                 Size.MEDIUM -> 3
@@ -64,5 +65,11 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
             entityTypes.contains(entity.getType()) -> 3
             else -> 0
         }
+    }
+
+    private fun customTagOf(entity: MegaGameEntity): String? {
+        val tags = entity.tags
+        for (i in 0 until tags.size) if (custom.containsKey(tags[i])) return tags[i]
+        return null
     }
 }

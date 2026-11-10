@@ -227,6 +227,4 @@ class FloorButton(services: MegaServices) : Switch(services), IBodyEntity, ISpri
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

@@ -77,6 +77,7 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.EXPLOSIONS_1.source, TAG)
         addComponent(defineBodyComponent())
@@ -146,6 +147,4 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     }
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

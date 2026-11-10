@@ -7,6 +7,7 @@ import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -18,6 +19,7 @@ class ExplosionOrbTest : DescribeSpec({
     beforeEach {
         orb = ExplosionOrb(testServices())
         orb.addComponent(BodyComponent(Body(BodyType.ABSTRACT)))
+        orb.addComponent(TagsComponent(ExplosionOrb.TAG))
     }
 
     describe("the explosion orb speed") {

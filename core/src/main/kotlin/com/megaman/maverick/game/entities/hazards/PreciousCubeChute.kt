@@ -101,6 +101,4 @@ class PreciousCubeChute(services: MegaServices) : MegaGameEntity(services), ISpr
         .build()
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

@@ -50,6 +50,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ProjectilesFactory
 import com.megaman.maverick.game.entities.projectiles.SniperJoeShield
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -130,7 +131,7 @@ class SniperJoe_OLD(services: MegaServices) : AbstractEnemy(services, size = Siz
     private var setToThrowShield = false
     private var scaleBullet = true
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent() = TagsComponent(TAG)
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {

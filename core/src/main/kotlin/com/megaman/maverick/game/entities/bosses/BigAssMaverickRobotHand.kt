@@ -54,6 +54,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.feetFixture
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb.OrbColor
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.*
@@ -449,5 +450,5 @@ class BigAssMaverickRobotHand(services: MegaServices) : MegaGameEntity(services)
 
     override fun getType() = EntityType.OTHER
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent() = TagsComponent(TAG)
 }

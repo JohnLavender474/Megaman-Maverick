@@ -97,6 +97,7 @@ class Lava(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICul
     private val matrix = Matrix<GameRectangle>()
 
     override fun init(vararg params: Any) {
+        super.init()
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
             regions.put(FLOW, atlas.findRegion("$TAG/${FLOW}"))
@@ -269,6 +270,4 @@ class Lava(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICul
     }
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

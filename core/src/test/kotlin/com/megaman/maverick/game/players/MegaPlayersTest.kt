@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.players
 
+import com.badlogic.gdx.math.Vector2
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.enums.Direction
@@ -30,7 +32,7 @@ import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 
-private class TestPlayerEntity(services: MegaServices) : MegaGameEntity(services), IDirectional {
+private class TestPlayerEntity(services: MegaServices) : MegaGameEntity(services), IDirectional, IPlayer {
     override var direction = Direction.UP
     override fun getType() = EntityType.MEGAMAN
 }
@@ -105,10 +107,10 @@ class MegaPlayersTest : DescribeSpec({
 
         describe("targetFor with 2 players") {
             lateinit var players: MegaPlayers
-            lateinit var left: MegaGameEntity
-            lateinit var right: MegaGameEntity
+            lateinit var left: IPlayer
+            lateinit var right: IPlayer
 
-            fun livePlayer(slot: Int, x: Float): MegaGameEntity {
+            fun livePlayer(slot: Int, x: Float): IPlayer {
                 val entity = playerEntity()
                 entity.getComponent(BodyComponent::class)!!.body.setPosition(x, 0f)
                 entity.existenceState = EntityExistenceState.LIVE
@@ -128,6 +130,13 @@ class MegaPlayersTest : DescribeSpec({
             it("gives the nearest live player") {
                 players.targetFor(seekerAt(10f)) shouldBeSameInstanceAs left
                 players.targetFor(seekerAt(90f)) shouldBeSameInstanceAs right
+            }
+
+            it("nearestLiveTo gives the live player nearest a point, as targetFor does for a seeker") {
+                players.nearestLiveTo(Vector2(10f, 0f)) shouldBeSameInstanceAs left
+                players.nearestLiveTo(Vector2(90f, 0f)) shouldBeSameInstanceAs right
+                left.existenceState = EntityExistenceState.UNSPAWNED
+                players.nearestLiveTo(Vector2(10f, 0f)) shouldBeSameInstanceAs right
             }
 
             it("gives the lower slot on a tie") {
@@ -158,7 +167,7 @@ class MegaPlayersTest : DescribeSpec({
 
             it("anyLive and forEachLive skip a dead player while the other player is live") {
                 left.existenceState = EntityExistenceState.UNSPAWNED
-                val visited = ArrayList<MegaGameEntity>()
+                val visited = ArrayList<IPlayer>()
 
                 players.forEachLive { visited.add(it) }
 
@@ -169,7 +178,7 @@ class MegaPlayersTest : DescribeSpec({
 
             it("anyLive and forEachLive skip a player who is not in play while the other player is live") {
                 left.addComponent(PlayPhaseComponent(PlayPhase.POST_PLAY))
-                val visited = ArrayList<MegaGameEntity>()
+                val visited = ArrayList<IPlayer>()
 
                 players.forEachLive { visited.add(it) }
 
@@ -180,7 +189,7 @@ class MegaPlayersTest : DescribeSpec({
             it("anyLive and forEachLive visit every player when no player is live") {
                 left.existenceState = EntityExistenceState.UNSPAWNED
                 right.addComponent(PlayPhaseComponent(PlayPhase.PRE_PLAY))
-                val visited = ArrayList<MegaGameEntity>()
+                val visited = ArrayList<IPlayer>()
 
                 players.forEachLive { visited.add(it) }
 

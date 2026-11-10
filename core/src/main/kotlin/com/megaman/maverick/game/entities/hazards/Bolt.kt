@@ -60,6 +60,7 @@ class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHaz
     var scale = 1f
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "Bolt")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

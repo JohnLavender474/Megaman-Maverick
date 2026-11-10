@@ -119,6 +119,4 @@ class ExplodingBall(services: MegaServices) : AbstractProjectile(services), IAni
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

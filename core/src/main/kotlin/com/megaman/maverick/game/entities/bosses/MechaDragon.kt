@@ -806,6 +806,4 @@ class MechaDragon(services: MegaServices) : AbstractBoss(services), IFreezableEn
             "updateFacingByRoomSide(): roomSide=$roomSide, facing=$facing, oldFacing=$oldFacing"
         )
     }
-
-    override fun getTag() = TAG
 }

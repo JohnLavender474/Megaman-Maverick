@@ -185,7 +185,5 @@ class Cart(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICul
             )
         )
 
-    override fun getTag() = TAG
-
     override fun getType() = EntityType.SPECIAL
 }

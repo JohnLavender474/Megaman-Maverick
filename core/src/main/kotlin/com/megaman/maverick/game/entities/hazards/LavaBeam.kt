@@ -56,6 +56,7 @@ class LavaBeam(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
     override fun getType() = EntityType.HAZARD
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "LavaBeam")
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())

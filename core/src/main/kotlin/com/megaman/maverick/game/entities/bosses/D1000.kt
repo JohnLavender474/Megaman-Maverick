@@ -25,6 +25,7 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -39,7 +40,6 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.projectiles.Bullet
@@ -220,7 +220,7 @@ class D1000(services: MegaServices) :
 
     override fun canBeDamagedBy(damager: IDamagerEntity) = !stunned && super.canBeDamagedBy(damager)
 
-    override fun onPlayerDamaged(damager: IDamagerEntity, player: MegaGameEntity) {
+    override fun onPlayerDamaged(damager: IDamagerEntity, player: IPlayer) {
         if (damager == this) touchedPlayer = true
     }
 
@@ -619,6 +619,4 @@ class D1000(services: MegaServices) :
         animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

@@ -85,6 +85,4 @@ class StarknerTrailSprite(services: MegaServices) : MegaGameEntity(services), IS
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

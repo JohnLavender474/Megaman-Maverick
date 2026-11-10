@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.mockk
 
-private class ScoredEntity : GameEntity(mockk(relaxed = true)) {
+private class ScoredEntity : GameEntity(mockk(relaxed = true)), IPlayer {
     var score = 0f
     override fun onSpawn(spawnProps: Properties) {}
     override fun onDestroy() {}
@@ -83,6 +83,29 @@ class PlayersTest : DescribeSpec({
         }
     }
 
+    describe("IPlayer.slot") {
+        it("gives the slot of a registered player") {
+            val entity = players().register(PlayerSlot(2), ScoredEntity())
+
+            entity.slot shouldBe PlayerSlot(2)
+        }
+
+        it("throws for an entity that was never registered") {
+            val entity = ScoredEntity()
+
+            val error = shouldThrow<PlayerNotRegisteredException> { entity.slot }
+            error.entity shouldBeSameInstanceAs entity
+        }
+
+        it("throws after the player is unregistered") {
+            val players = players()
+            val entity = players.register(PlayerSlot(0), ScoredEntity())
+            players.unregister(PlayerSlot(0))
+
+            shouldThrow<PlayerNotRegisteredException> { entity.slot }
+        }
+    }
+
     describe("helpers") {
         it("forEach visits the players in slot order and skips empty slots") {
             val players = players()
@@ -90,7 +113,7 @@ class PlayersTest : DescribeSpec({
             players.register(PlayerSlot(0), ScoredEntity())
 
             val visited = mutableListOf<Int>()
-            players.forEach { visited.add(it.playerSlot!!.index) }
+            players.forEach { visited.add(it.slot.index) }
 
             visited shouldBe listOf(0, 2)
         }

@@ -218,7 +218,7 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
 
     override fun onEvent(event: Event) {
         GameLogger.debug(TAG, "onEvent(): event=$event")
-        if (event.key == EventType.PLAYER_JUST_DIED && event.isDeathOf(owner)) destroy()
+        if (event.key == EventType.PLAYER_JUST_DIED && owner.asPlayer?.let { event.isDeathOf(it) } == true) destroy()
         if (owner.asPlayer == null && event.key.equalsAny(EventType.BEGIN_ROOM_TRANS, EventType.BOSS_DEFEATED)) destroy()
     }
 

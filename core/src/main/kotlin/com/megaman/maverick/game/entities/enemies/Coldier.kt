@@ -279,6 +279,4 @@ class Coldier(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity
                 .build()
         )
         .build()
-
-    override fun getTag() = TAG
 }

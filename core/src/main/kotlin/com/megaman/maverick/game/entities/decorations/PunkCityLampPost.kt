@@ -152,8 +152,6 @@ class PunkCityLampPost(services: MegaServices) : MegaGameEntity(services), ISpri
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }
 
 class PunkCityLampPostBlock(services: MegaServices) : Block(services), IOwnable<PunkCityLampPost> {

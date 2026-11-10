@@ -170,6 +170,4 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         .build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

@@ -13,6 +13,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
+import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -178,7 +179,7 @@ abstract class AbstractItem(services: MegaServices) : MegaGameEntity(services), 
         return BodyComponentCreator.create(this, body)
     }
 
-    private fun isBelowCartTop(block: MegaGameEntity) =
+    private fun isBelowCartTop(block: IGameEntity) =
         block is CartV2 && body.getY() < block.body.getY() + block.body.getHeight() / 2f
 
     open fun defineUpdatablesComponent(component: UpdatablesComponent) {

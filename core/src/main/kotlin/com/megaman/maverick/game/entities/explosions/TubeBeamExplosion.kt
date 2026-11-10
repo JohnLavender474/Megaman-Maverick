@@ -117,6 +117,4 @@ class TubeBeamExplosion(services: MegaServices) : MegaGameEntity(services), IBod
     }
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

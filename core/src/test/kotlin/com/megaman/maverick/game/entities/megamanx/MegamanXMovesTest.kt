@@ -22,6 +22,7 @@ import com.maverick.game.engine.world.body.Fixture
 import com.maverick.game.engine.world.container.SimpleGridWorldContainer
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.entities.enemies.MetaWheelF
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.ConstKeys
@@ -187,7 +188,7 @@ class MegamanXMovesTest : DescribeSpec({
 
         it("does not push off when the slide ends from damage") {
             startSlideOnLeftWall()
-            x.takeDamageFrom(MetaWheelF(services)) shouldBe true
+            x.takeDamageFrom(MetaWheelF(services).also { it.addComponent(TagsComponent(MetaWheelF.TAG)) }) shouldBe true
             tick()
 
             active(BehaviorType.WALL_SLIDING) shouldBe false

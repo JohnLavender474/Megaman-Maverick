@@ -2,6 +2,7 @@ package com.megaman.maverick.game.players
 
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.entities.EntityExistenceState
+import com.maverick.game.engine.players.PlayerNotRegisteredException
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.players.isPlayer
 import com.megaman.maverick.game.testServices
@@ -46,6 +47,8 @@ class PlayerRosterTest : DescribeSpec({
 
             players.get(slot0)!! shouldBeSameInstanceAs x
             megaman.isPlayer shouldBe false
+            megaman.asPlayer shouldBe null
+            shouldThrow<PlayerNotRegisteredException> { megaman.slot }
         }
 
         it("puts Megaman back in slot 0 on a Megaman level") {

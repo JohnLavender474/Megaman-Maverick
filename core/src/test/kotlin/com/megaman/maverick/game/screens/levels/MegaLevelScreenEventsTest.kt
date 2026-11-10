@@ -3,9 +3,9 @@ package com.megaman.maverick.game.screens.levels
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.fights.FightPlans
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -22,7 +22,7 @@ private fun boss() = mockk<AbstractBoss>(relaxed = true).also {
 }
 
 private fun gameWithLivePlayer() = mockk<MegamanMaverickGame>(relaxed = true).also {
-    val player = mockk<MegaGameEntity>(relaxed = true)
+    val player = mockk<IPlayer>(relaxed = true)
     every { player.existenceState } returns EntityExistenceState.LIVE
     every { it.players.get(any()) } returns player
 }

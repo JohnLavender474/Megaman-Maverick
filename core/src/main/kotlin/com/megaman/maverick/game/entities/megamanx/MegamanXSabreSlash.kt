@@ -196,6 +196,4 @@ class MegamanXSabreSlash(services: MegaServices) : MegaGameEntity(services), IBo
     }
 
     override fun getType() = EntityType.OTHER
-
-    override fun getTag() = TAG
 }

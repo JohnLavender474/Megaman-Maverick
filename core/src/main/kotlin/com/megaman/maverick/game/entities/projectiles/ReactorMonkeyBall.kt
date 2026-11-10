@@ -208,6 +208,4 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

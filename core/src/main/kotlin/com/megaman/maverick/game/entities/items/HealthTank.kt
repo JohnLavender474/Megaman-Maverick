@@ -18,12 +18,11 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.players.playerSlot
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
@@ -56,24 +55,26 @@ class HealthTank(services: MegaServices) : AbstractItem(services), ISpritesEntit
 
         GameLogger.debug(TAG, "canSpawn(): spawnProps=$spawnProps")
 
-        healthTank = MegaHealthTank.valueOf(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
-        return !services.gameState.containsHealthTank(healthTank)
+        return !services.gameState.containsHealthTank(tankOf(spawnProps))
     }
+
+    private fun tankOf(spawnProps: Properties) =
+        MegaHealthTank.valueOf(spawnProps.get(ConstKeys.VALUE, String::class)!!.uppercase())
 
     override fun onSpawn(spawnProps: Properties) {
         spawnProps.put(ConstKeys.GRAVITY, GRAVITY)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        if (!this::healthTank.isInitialized) throw IllegalStateException("Heart tank value is not initialized")
+        healthTank = tankOf(spawnProps)
         body.setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
         super.onSpawn(spawnProps)
     }
 
-    override fun contactWithPlayer(player: MegaGameEntity) {
+    override fun contactWithPlayer(player: IPlayer) {
         GameLogger.debug(TAG, "contactWithPlayer()")
         destroy()
         services.events.submitEvent(Event(
                 EventType.ATTAIN_HEALTH_TANK,
-                props(ConstKeys.VALUE pairTo healthTank, PlayerEventKeys.SLOT pairTo player.playerSlot!!)
+                props(ConstKeys.VALUE pairTo healthTank, PlayerEventKeys.SLOT pairTo player.slot)
             ))
     }
 
@@ -97,6 +98,4 @@ class HealthTank(services: MegaServices) : AbstractItem(services), ISpritesEntit
         val animator = Animator(animation)
         return AnimationsComponent(this, animator)
     }
-
-    override fun getTag() = TAG
 }

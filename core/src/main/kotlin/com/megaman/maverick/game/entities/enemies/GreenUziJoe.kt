@@ -457,6 +457,4 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
             Direction.RIGHT -> if (targetPlayer.body.getY() < body.getY()) Facing.RIGHT else Facing.LEFT
         }
     }
-
-    override fun getTag() = TAG
 }

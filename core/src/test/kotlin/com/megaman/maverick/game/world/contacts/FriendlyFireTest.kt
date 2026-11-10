@@ -8,6 +8,7 @@ import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -34,12 +35,17 @@ import com.megaman.maverick.game.world.contacts.rules.ProjectileRule
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
-private class TestPlayer(services: MegaServices) : MegaGameEntity(services), IDamagerEntity {
+private class TestPlayer(services: MegaServices) : MegaGameEntity(services), IDamagerEntity, IPlayer {
     override fun getType() = EntityType.SPECIAL
 }
 
 private class TestExplosion(services: MegaServices, override var owner: IGameEntity?) : MegaGameEntity(services),
     IOwnable<IGameEntity>, IDamagerEntity {
+
+    init {
+        init()
+    }
+
     override fun getType() = EntityType.EXPLOSION
 }
 
@@ -47,6 +53,10 @@ private class TestShot(services: MegaServices, override var owner: IGameEntity?)
     IProjectileEntity {
 
     var hitBodies = 0
+
+    init {
+        init()
+    }
     var hitShields = 0
 
     override var size = Size.MEDIUM

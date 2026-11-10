@@ -301,6 +301,4 @@ class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         .build()
 
     override fun getType() = EntityType.HAZARD
-
-    override fun getTag() = TAG
 }

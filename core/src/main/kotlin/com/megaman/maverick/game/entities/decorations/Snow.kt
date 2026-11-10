@@ -97,7 +97,7 @@ class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
         fadingOut = false
         fadeTimer.reset()
 
-        val setOfAllSnow = MegaGameEntities.getOfTag(getTag())
+        val setOfAllSnow = MegaGameEntities.getOfTag(TAG)
 
         GameLogger.debug(
             TAG,
@@ -120,7 +120,7 @@ class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
 
     override fun onDestroy() {
         super.onDestroy()
-        val size = MegaGameEntities.getOfTag(getTag()).size
+        val size = MegaGameEntities.getOfTag(TAG).size
         GameLogger.debug(
             TAG,
             "onDestroy(): snowAmount=$size"
@@ -177,6 +177,4 @@ class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
         }.build()
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

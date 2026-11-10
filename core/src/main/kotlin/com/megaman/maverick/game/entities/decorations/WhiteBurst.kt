@@ -96,7 +96,5 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         .key(TAG).animator(Animator(Animation(region!!, 3, 1, 0.05f, true)))
         .build()
 
-    override fun getTag() = TAG
-
     override fun getType() = EntityType.DECORATION
 }

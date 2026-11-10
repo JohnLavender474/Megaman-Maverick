@@ -15,6 +15,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
@@ -40,9 +41,8 @@ class Force(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICu
 
     override fun getType() = EntityType.SPECIAL
 
-    override fun getTag(): String = TAG
-
     override fun init(vararg params: Any) {
+        super.init()
         addComponent(defineBodyComponent())
     }
 
@@ -65,11 +65,16 @@ class Force(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ICu
                 filterByNotBodySenseSet.add(bodySense)
             }
         filter = { fixture ->
-            val tagFiltered = filterByTagSet.contains(fixture.getEntity().getTag().uppercase())
+            val entityTags = fixture.getEntity().tags
+            var tagFiltered = false
+            for (i in 0 until entityTags.size) if (filterByTagSet.contains(entityTags[i].uppercase())) {
+                tagFiltered = true
+                break
+            }
             val bodySenseFiltered = !fixture.getBody().isSensingAny(filterByNotBodySenseSet)
             if (tagFiltered && bodySenseFiltered) GameLogger.debug(
                 TAG,
-                "Force applied pairTo ${fixture.getEntity().getTag()}"
+                "Force applied pairTo $entityTags"
             )
             tagFiltered && bodySenseFiltered
         }

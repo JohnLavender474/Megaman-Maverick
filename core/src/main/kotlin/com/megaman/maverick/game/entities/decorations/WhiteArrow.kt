@@ -130,6 +130,4 @@ class WhiteArrow(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
     }
 
     override fun getType() = EntityType.DECORATION
-
-    override fun getTag() = TAG
 }

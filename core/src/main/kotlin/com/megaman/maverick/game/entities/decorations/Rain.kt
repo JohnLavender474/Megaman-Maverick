@@ -228,8 +228,6 @@ class RainDrop(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
         return component
     }
 
-    override fun getTag() = TAG
-
     override fun getType() = EntityType.DECORATION
 }
 
@@ -353,8 +351,6 @@ class RainFall(services: MegaServices) : MegaGameEntity(services), ICullableEnti
         val cullOutOfBounds = getGameCameraCullingLogic(services.gameCamera, { rainFallBounds })
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
-
-    override fun getTag() = TAG
 
     override fun getType() = EntityType.DECORATION
 }

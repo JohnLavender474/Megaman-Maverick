@@ -45,6 +45,7 @@ class MuzzleFlash(services: MegaServices) : MegaGameEntity(services), ISpritesEn
     override fun getType() = EntityType.DECORATION
 
     override fun init(vararg params: Any) {
+        super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
         addComponent(defineUpdatablesComponent())
         addComponent(defineCullablesComponent())

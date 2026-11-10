@@ -14,10 +14,10 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.facing
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getMegamanSpritePriority
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -38,14 +38,14 @@ class BeamDown(private val assets: AssetManager, private val addDrawable: (IComp
     private lateinit var beamLandAnimation: Animation
     private var loaded = false
 
-    private var player: MegaGameEntity? = null
+    private var player: IPlayer? = null
 
     val center = Vector2(-100f * ConstVals.PPM, -100f * ConstVals.PPM)
 
     val finished: Boolean
         get() = beamDownTimer.isFinished() && beamTransitionTimer.isFinished()
 
-    fun start(player: MegaGameEntity) {
+    fun start(player: IPlayer) {
         load()
         this.player = player
         beamDownTimer.reset()
@@ -72,7 +72,7 @@ class BeamDown(private val assets: AssetManager, private val addDrawable: (IComp
         if (!finished) addDrawable(beamSprite) else this.player = null
     }
 
-    private fun beamDown(player: MegaGameEntity, delta: Float) {
+    private fun beamDown(player: IPlayer, delta: Float) {
         beamDownTimer.update(delta)
 
         val startY = player.body.getY() + (ConstVals.VIEW_HEIGHT * ConstVals.PPM)
@@ -82,7 +82,7 @@ class BeamDown(private val assets: AssetManager, private val addDrawable: (IComp
         beamSprite.y = startY - offsetY
     }
 
-    private fun beamTrans(player: MegaGameEntity, delta: Float) {
+    private fun beamTrans(player: IPlayer, delta: Float) {
         beamTransitionTimer.update(delta)
         beamLandAnimation.update(delta)
 

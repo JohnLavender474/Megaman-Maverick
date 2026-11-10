@@ -98,6 +98,4 @@ class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable
     })
 
     override fun getType() = EntityType.EXPLOSION
-
-    override fun getTag() = TAG
 }

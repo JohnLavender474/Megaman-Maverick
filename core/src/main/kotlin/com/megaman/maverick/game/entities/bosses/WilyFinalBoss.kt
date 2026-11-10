@@ -3381,6 +3381,4 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         stateMachines.put(WilyFinalBossPhase.PHASE_2, phase2Handler.buildStateMachine())
         stateMachines.put(WilyFinalBossPhase.PHASE_3, phase3Handler.buildStateMachine())
     }
-
-    override fun getTag() = TAG
 }

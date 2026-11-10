@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.maverick.game.engine.players.IPlayer
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.testServices
 import com.badlogic.gdx.graphics.Texture
@@ -15,7 +16,6 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.state.GameState
@@ -36,7 +36,7 @@ class StarknerAliveTest : DescribeSpec({
         val atlas = mockk<TextureAtlas>()
         every { atlas.findRegion(any()) } returns AtlasRegion(mockk<Texture>(relaxed = true), 0, 0, 64, 64)
         every { services.assets.get(any<String>(), TextureAtlas::class.java) } returns atlas
-        val target = mockk<MegaGameEntity>(relaxed = true)
+        val target = mockk<IPlayer>(relaxed = true)
         every { target.getComponent(BodyComponent::class) } returns BodyComponent(Body(BodyType.ABSTRACT))
         every { services.players.targetFor(any()) } returns target
         probe = Starkner(services)

@@ -9,6 +9,7 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.locks.LocksComponent
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
@@ -27,7 +28,7 @@ import com.megaman.maverick.game.entities.state.StunComponent
 import com.megaman.maverick.game.locks.MegaLockGroup
 
 class TestHealthPlayer(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, IFaceable,
-    IEventListener {
+    IEventListener, IPlayer {
 
     override val damageNegotiator = PlayerDamageNegotiator(this)
     override val eventKeyMask = objectSetOf<Any>()
@@ -66,5 +67,10 @@ class TestFreezer(services: MegaServices) : MegaGameEntity(services), IDamagerEn
 
 class TestOwnedDamager(services: MegaServices, override var owner: IGameEntity?) : MegaGameEntity(services),
     IOwnable<IGameEntity>, IDamagerEntity {
+
+    init {
+        init()
+    }
+
     override fun getType() = EntityType.EXPLOSION
 }

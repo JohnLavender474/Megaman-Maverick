@@ -63,6 +63,4 @@ class CameraEdgeBlock(services: MegaServices) : AbstractBlock(services) {
 
         body.addBlockFilter { entity, _ -> entity.asPlayer == null }
     }
-
-    override fun getTag() = TAG
 }

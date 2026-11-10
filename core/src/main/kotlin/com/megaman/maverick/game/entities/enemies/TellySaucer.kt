@@ -100,7 +100,7 @@ class TellySaucer(services: MegaServices) : AbstractEnemy(services, size = Size.
         if (!super.canSpawn(spawnProps)) return false
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        val left = targetPlayer.body.getCenter().x <= spawn.x
+        val left = players.nearestLiveTo(spawn).body.getCenter().x <= spawn.x
 
         val canSpawnLeft = spawnProps.getOrDefault(
             "${ConstKeys.CAN}_${ConstKeys.SPAWN}_${ConstKeys.LEFT}", true, Boolean::class

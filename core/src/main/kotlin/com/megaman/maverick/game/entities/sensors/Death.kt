@@ -13,6 +13,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 
@@ -28,6 +29,7 @@ open class Death(services: MegaServices) : MegaGameEntity(services), IBodyEntity
     private var rooms: ObjectSet<String>? = null
 
     override fun init(vararg params: Any) {
+        super.init()
         GameLogger.debug(TAG, "init()")
         addComponent(defineBodyComponent())
     }
@@ -75,5 +77,9 @@ open class Death(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
     override fun getType() = EntityType.SENSOR
 
-    override fun getTag() = TAG
+    override fun defineTagsComponent(): TagsComponent {
+        val component = super.defineTagsComponent()
+        component.add(TAG)
+        return component
+    }
 }

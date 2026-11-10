@@ -292,7 +292,5 @@ class SmallIceCube(services: MegaServices) : AbstractProjectile(services), IFree
         return component
     }
 
-    override fun getTag() = TAG
-
     override fun getType() = EntityType.HAZARD
 }

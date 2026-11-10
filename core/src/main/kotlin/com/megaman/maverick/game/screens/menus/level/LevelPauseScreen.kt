@@ -21,6 +21,7 @@ import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.containsRegion
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
@@ -30,7 +31,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.currentHealth
 import com.megaman.maverick.game.entities.maxHealth
 import com.megaman.maverick.game.entities.megaman.Megaman
@@ -107,7 +107,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     // TODO: the pause screen acts on the lead player in slot 0; which player the pause screen shows is a session
     //  policy (item 047)
-    private val player: MegaGameEntity
+    private val player: IPlayer
         get() = game.players.get(PlayerSlot(0))!!
     private val state: GameState
         get() = game.gameState

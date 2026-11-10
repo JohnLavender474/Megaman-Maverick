@@ -391,6 +391,4 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
         .build()
 
     override fun getType() = EntityType.SENSOR
-
-    override fun getTag() = TAG
 }

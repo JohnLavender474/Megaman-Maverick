@@ -27,6 +27,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -164,19 +165,19 @@ class RedKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceable
         }
     }
 
-    private fun kicker(): MegaGameEntity? {
-        var kicker: MegaGameEntity? = null
+    private fun kicker(): IPlayer? {
+        var kicker: IPlayer? = null
         players.forEachLive { if (kicker == null && touches(it)) kicker = it }
         return kicker
     }
 
-    private fun touches(player: MegaGameEntity) =
+    private fun touches(player: IPlayer) =
         player.leftSideFixture.getShape().overlaps(body.getBounds()) ||
             player.rightSideFixture.getShape().overlaps(body.getBounds()) ||
             player.feetFixture.getShape().overlaps(body.getBounds()) ||
             player.body.getBounds().overlaps(body.getBounds())
 
-    private fun startRolling(kicker: MegaGameEntity) {
+    private fun startRolling(kicker: IPlayer) {
         state = RedKoopaShellState.ROLLING
         requestToPlaySound(SoundAsset.SMB3_KICK_SOUND, false)
         facing = if (kicker.body.getBounds().getX() < body.getBounds().getX()) Facing.RIGHT else Facing.LEFT
