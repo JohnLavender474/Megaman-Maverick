@@ -82,23 +82,33 @@ returns. `buildFullKey` has 3 callers.
 
 Intended changes (no gameplay change; each part keeps its results and its order):
 
-1. Pathfinding:
-   - The factory takes the snapshot from a small pool of containers and fills it with `copyInto` (cells from the
-     container's own cell pool), in place of `copy()`. A snapshot goes back to the pool only when every search that
-     uses it has ended (a wrapper releases it in `finally`, so a timed-out search that still runs keeps its snapshot).
-     The snapshot is still taken once per frame that starts a search, with the same content as today.
-   - `Bat` reuses its 2 filter rectangles.
+1. Pathfinding (design changed 2026-11-09 by the owner: a pathfinding snapshot, not a world container copy):
+   - `IWorldContainer.copy()` is removed from all 3 containers (`QuadtreeWorldContainer.copy()` shared its live root,
+     so it was not a snapshot). A search reads a `BodyCellsSnapshot` (engine) through `IBodyCells`, which gives only the
+     bodies of a cell, the one query that the filters and the heuristic use. The snapshot is filled from the bodies of
+     the live container: `WorldSystem` keeps them in a list filled in the same loop as the container
+     (`IWorldBodies`; owner choice over a "fetch all bodies" method on the containers).
+   - The factory keeps a pool of snapshots. A snapshot is filled again only when no search uses it (a wrapper
+     releases it in `finally`). It is still filled once per frame that starts a search, with the same bodies.
+   - The A* loop stops when its thread is interrupted, so a timed-out search ends at once.
+   - `BlockCells` (core) holds the 2 block checks of the 4 filters and the heuristic, with thread-local scratch
+     objects (the filters run on worker threads).
    - `MegaPathfinderResultConsumer` walks the path by index with reused objects; the same node is chosen.
 2. World step: the callbacks of `WorldSystem` (`updateWorldContainer`, `addFixtures`, `collectContacts`,
    `resolveCollisions`) become reused function fields; the values that the lambdas capture today become fields set
    before the call. The same functions run in the same order, so the contacts and their order do not change.
 3. Animation keys: `MegamanAnimations.buildFullKey` returns a cached string per `(region key, weapon)`; the 7
    suppliers named in "Where" (and the `MoonMan` timer keys) return prebuilt strings. The strings do not change.
-4. Entity lookups: `getOfTag`, `getOfType` and `getOfId` return one shared empty set when the key is missing.
+4. Entity lookups: `getOfTag`, `getOfType` and `getOfId` return one shared empty set when the key is missing; it
+   throws on `add`. The id map is an `IntMap`.
+5. `engine:allocationTest`: a test suite in its own JVM measures the bytes per world frame and per snapshot fill, and
+   fails above 1 KB. It runs with `engine:test`. In the shared test JVM, MockK instrumentation made the measure flaky.
 
-Changed files: `SimpleGridWorldContainer.kt` (and `IWorldContainer.kt` if `copyInto` goes there), `MegaPathfinderFactory.kt`,
-`MegaPathfinderResultConsumer.kt`, `Bat.kt`, `WorldSystem.kt`, `MegamanAnimations.kt`, the 7 supplier files,
-`MoonMan.kt`, `MegaGameEntities.kt`, tests.
+Changed files: `WorldSystem.kt`, the 3 world containers and `IWorldContainer.kt`, the pathfinding types
+(`PathfinderParams`, `WorldPathfinder`, `Pathfinder`; new `IBodyCells`, `BodyCellsSnapshot`, `IWorldBodies`),
+`MegaPathfinderFactory.kt`, `MegaPathfinderResultConsumer.kt`, `BlockCells.kt`, `DynamicBodyHeuristic.kt`, `Bat.kt`,
+`DeathBat.kt`, `FloatingCan.kt`, `SubmarineJoe.kt`, `MegaGameEntities.kt`, `MegamanAnimations.kt`, the 7 supplier files,
+`engine/build.gradle`, tests.
 
 Not changed:
 
@@ -110,16 +120,17 @@ Not changed:
 Checks:
 
 - Unit tests:
-  - `copyInto`: the target holds the same bodies and fixtures per cell as the source, and a second fill reuses the
-    cells (no new set).
-  - Snapshot pool: a snapshot that a running search holds is not refilled; a released snapshot is reused.
+  - `BodyCellsSnapshot`: it holds each body in the cells that its bounds cover, and keeps them until the next fill.
+  - Snapshot pool: a snapshot that a running search holds is not refilled; a free snapshot is filled again in a new
+    frame with the current bodies.
   - `MegaGameEntities`: a missing key gives the shared empty set twice; a present key gives its set.
   - `buildFullKey`: the cached string equals the old template for every weapon; the second call returns the same
     instance.
   - World step: the existing `WorldSystem` and contact tests pass unchanged.
 - Break the code and confirm that each new test can fail.
-- An allocation measure (a test with `ThreadMXBean.getThreadAllocatedBytes`) of `WorldSystem` steps and of the
-  snapshot fill, before and after, written in the process log (`O5-R2`).
+- `engine:allocationTest`, before and after (`O5-R2`). Measured on 2026-11-09 against an export of `master`
+  `34e5f2370`: world step (200 bodies) 53,216 -> 16 bytes per frame; snapshot (2,000 bodies) 1,735,288 bytes per copy
+  -> 0 bytes per fill.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/per-frame-allocations-hot-paths`:
