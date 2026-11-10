@@ -497,6 +497,10 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   property `event=boss` is the boss room). If that room has no player spawn, give the nearest room
   before it that has one, and say so. Do not name the boss room in the command or next to it. Find
   the rooms in the live TMX file that `LevelDefinition` names.
+- A check that fights a boss adds `--heartTanks all --healthTanks all`, so the owner has the
+  most health and can finish the fight (owner decision, 2026-11-10). With either option the game
+  does not write the save file. Leave the options out only when the check is about health, heart
+  tanks or health tanks.
 
 ## Bugs
 
