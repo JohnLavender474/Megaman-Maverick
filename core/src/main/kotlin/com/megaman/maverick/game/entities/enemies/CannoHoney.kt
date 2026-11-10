@@ -32,7 +32,6 @@ import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.entities.contracts.IParentEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -229,7 +228,7 @@ class CannoHoney(services: MegaServices) : AbstractEnemy(services), IFreezableEn
 
             stateLoopHandler.update(delta)
 
-            if (scanners.any { players.any { player -> player.body.getBounds().overlaps(it) } }) {
+            if (scanners.any { players.anyLive { player -> player.body.getBounds().overlaps(it) } }) {
                 beeCycleDelay.update(delta)
 
                 if (beeCycleDelay.isFinished()) {

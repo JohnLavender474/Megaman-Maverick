@@ -26,7 +26,6 @@ import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IAudioEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -175,7 +174,7 @@ class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISprit
                 block!!.body.setTopRightToPoint(position)
                 block!!.body.translate(-OFFSET_X * ConstVals.PPM, -OFFSET_Y * ConstVals.PPM)
 
-                if (switchDelay.isFinished() && players.any {
+                if (switchDelay.isFinished() && players.anyLive {
                         block!!.body.getBounds().overlaps(it.feetFixture.getShape()) && it.body.physics.velocity.y <= 0f
                     }
                 ) {
@@ -189,7 +188,7 @@ class FlipperPlatform(services: MegaServices) : MegaGameEntity(services), ISprit
                 block!!.body.setTopLeftToPoint(position)
                 block!!.body.translate(OFFSET_X * ConstVals.PPM, -OFFSET_Y * ConstVals.PPM)
 
-                if (switchDelay.isFinished() && players.any {
+                if (switchDelay.isFinished() && players.anyLive {
                         block!!.body.getBounds().overlaps(it.feetFixture.getShape()) && it.body.physics.velocity.y <= 0f
                     }
                 ) {

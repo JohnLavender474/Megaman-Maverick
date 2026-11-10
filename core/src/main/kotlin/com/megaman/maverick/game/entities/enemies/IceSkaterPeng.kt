@@ -26,7 +26,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -319,7 +318,7 @@ class IceSkaterPeng(services: MegaServices) : AbstractEnemy(services), IFreezabl
         (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT)) ||
             (isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT))
 
-    private fun shouldBrake() = players.any { player ->
+    private fun shouldBrake() = players.anyLive { player ->
         sensor.overlaps(player.body.getBounds()) &&
             ((isFacing(Facing.LEFT) && player.body.getX() > body.getMaxX()) ||
                 (isFacing(Facing.RIGHT) && player.body.getMaxX() < body.getX()))

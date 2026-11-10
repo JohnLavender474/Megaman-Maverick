@@ -37,7 +37,6 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.entities.direction
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
@@ -154,7 +153,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
     }
 
     private fun isTriggerEntityInBounds(): Boolean {
-        if (players.any {
+        if (players.anyLive {
                 !triggerEntities.contains(it as IBodyEntity) && it.body.getBounds().overlaps(triggerArea)
             }
         ) return true

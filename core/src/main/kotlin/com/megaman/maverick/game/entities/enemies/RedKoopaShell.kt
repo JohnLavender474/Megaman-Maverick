@@ -27,7 +27,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IBodyEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -175,7 +174,7 @@ class RedKoopaShell(services: MegaServices) : AbstractEnemy(services), IFaceable
         }
     }
 
-    private fun shouldStartRolling() = players.any {
+    private fun shouldStartRolling() = players.anyLive {
         it.leftSideFixture.getShape().overlaps(body.getBounds()) ||
             it.rightSideFixture.getShape().overlaps(body.getBounds()) ||
             it.feetFixture.getShape().overlaps(body.getBounds()) ||

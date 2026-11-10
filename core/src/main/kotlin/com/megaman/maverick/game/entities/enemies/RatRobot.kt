@@ -30,7 +30,6 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.isBehaviorActive
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -144,7 +143,7 @@ class RatRobot(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
             if (frozen) return@add
 
             if (!triggered &&
-                players.any { player ->
+                players.anyLive { player ->
                     !player.isBehaviorActive(BehaviorType.CLIMBING) &&
                         triggers.any { it.overlaps(player.body.getBounds()) }
                 }

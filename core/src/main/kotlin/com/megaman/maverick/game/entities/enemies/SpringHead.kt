@@ -24,7 +24,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -183,7 +182,7 @@ class SpringHead(services: MegaServices) : AbstractEnemy(services, size = Size.S
                     (isFacing(Facing.RIGHT) && !body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)) -> 0f
 
                 else -> when {
-                    players.any { player -> player.body.getBounds().overlaps(speedUpScanner) } -> SPEED_SUPER
+                    players.anyLive { player -> player.body.getBounds().overlaps(speedUpScanner) } -> SPEED_SUPER
                     else -> SPEED_NORMAL
                 } * ConstVals.PPM * facing.value
             }

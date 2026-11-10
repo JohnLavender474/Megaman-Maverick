@@ -32,7 +32,6 @@ import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.entities.direction
 import com.maverick.game.engine.entities.facing
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.players.playerSlot
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
@@ -301,7 +300,7 @@ abstract class AbstractEnemy(
         explosion.spawn(props)
     }
 
-    open fun isMegamanShootingAtMe() = players.any { player ->
+    open fun isMegamanShootingAtMe() = players.anyLive { player ->
         player.shooting && (body.getX() < player.body.getX() && player.facing == Facing.LEFT ||
             body.getX() > player.body.getX() && player.facing == Facing.RIGHT)
     }

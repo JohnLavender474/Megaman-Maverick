@@ -32,7 +32,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponentBuilder
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -360,7 +359,7 @@ class Cactus(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
 
     private fun shouldTurn() = facing != FacingUtils.getPreferredFacingFor(this)
 
-    private fun isMegamanInScanner() = players.any { player -> player.body.getBounds().overlaps(scanner) }
+    private fun isMegamanInScanner() = players.anyLive { player -> player.body.getBounds().overlaps(scanner) }
 
     private fun spawnNeedles() {
         val indexStep = when (type) {

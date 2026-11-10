@@ -34,7 +34,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -428,7 +427,7 @@ class LumberJoe(services: MegaServices) : AbstractEnemy(services, size = Size.ME
     private fun shouldCooldown() = axesThrown >= AXES_BEFORE_COOLDOWN
 
     private fun shouldJump() =
-        players.any { player -> player.body.getBounds().overlaps(jumpSensor) } ||
+        players.anyLive { player -> player.body.getBounds().overlaps(jumpSensor) } ||
             !body.isSensing(BodySense.FEET_ON_GROUND)
 
     private fun shouldStopJump() = body.isSensing(BodySense.FEET_ON_GROUND) && body.physics.velocity.y <= 0f

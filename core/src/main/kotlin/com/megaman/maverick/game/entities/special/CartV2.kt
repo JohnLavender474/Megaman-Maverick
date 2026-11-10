@@ -24,7 +24,6 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
@@ -112,7 +111,7 @@ class CartV2(services: MegaServices) : Block(services), ISpritesEntity, IAnimate
         body.physics.velocity.x *= -1
     }
 
-    private fun shouldMove() = players.any { body.getBounds().overlaps(it.feetFixture.getShape()) }
+    private fun shouldMove() = players.anyLive { body.getBounds().overlaps(it.feetFixture.getShape()) }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val shouldImpulse = shouldMove() && abs(body.physics.velocity.x) < MAX_VEL_X * ConstVals.PPM

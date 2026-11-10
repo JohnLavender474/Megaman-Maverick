@@ -30,7 +30,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -177,7 +176,7 @@ class DrillTankXT(services: MegaServices) : AbstractEnemy(services), IAnimatedEn
 
                     awakenArea.setCenter(body.getCenter())
 
-                    if (players.any { player -> player.body.getBounds().overlaps(awakenArea) }) {
+                    if (players.anyLive { player -> player.body.getBounds().overlaps(awakenArea) }) {
                         state = DrillTankXTState.SURPRISED
                         GameLogger.debug(TAG, "update(): SLEEP -> SURPRISED")
                     }

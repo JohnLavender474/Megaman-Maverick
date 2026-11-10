@@ -42,7 +42,6 @@ import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
 import com.maverick.game.engine.entities.direction
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -224,7 +223,7 @@ class MoonEyeStone(services: MegaServices) : AbstractEnemy(services), IFreezable
                 MoonEyeStoneState.SLEEP -> {
                     body.physics.velocity.setZero()
                     awakenArea.setCenter(body.getCenter())
-                    if (players.any { player -> player.body.getBounds().overlaps(awakenArea) }) nextState()
+                    if (players.anyLive { player -> player.body.getBounds().overlaps(awakenArea) }) nextState()
                 }
                 MoonEyeStoneState.AWAKEN -> {
                     body.physics.velocity.setZero()

@@ -28,7 +28,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -123,7 +122,7 @@ class UnderwaterPenguinBot(services: MegaServices) : AbstractEnemy(services, siz
         updatablesComponent.add {
             when {
                 state == UnderwaterPenguinBotState.WAIT &&
-                    players.any { player -> player.body.getBounds().overlaps(triggerBox) } -> startSwim()
+                    players.anyLive { player -> player.body.getBounds().overlaps(triggerBox) } -> startSwim()
 
                 state == UnderwaterPenguinBotState.BENT &&
                     body.isSensing(BodySense.FEET_ON_GROUND) -> explodeAndDie()

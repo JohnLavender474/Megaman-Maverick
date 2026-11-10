@@ -29,7 +29,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -268,7 +267,7 @@ class LampeonBandito(services: MegaServices) : AbstractEnemy(services), IFreezab
     }
 
     private fun canShoot() =
-        shootDelay.isFinished() && players.any { player -> player.body.getBounds().overlaps(standShootScanner) }
+        shootDelay.isFinished() && players.anyLive { player -> player.body.getBounds().overlaps(standShootScanner) }
 
     private fun shoot() {
         val position = body.getCenter().add(1.5f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)

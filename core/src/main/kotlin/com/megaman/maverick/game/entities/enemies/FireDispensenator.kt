@@ -34,7 +34,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -236,7 +235,7 @@ class FireDispensenator(services: MegaServices) : AbstractEnemy(services, size =
         builder.initialState(FireDispensenatorState.SLEEP.name)
             // sleep
             .transition(FireDispensenatorState.SLEEP.name, FireDispensenatorState.OPEN.name) {
-                players.any { player -> player.body.getBounds().overlaps(scanner) }
+                players.anyLive { player -> player.body.getBounds().overlaps(scanner) }
             }
             // open
             .transition(FireDispensenatorState.OPEN.name, FireDispensenatorState.FIRE.name) { true }
@@ -244,7 +243,7 @@ class FireDispensenator(services: MegaServices) : AbstractEnemy(services, size =
             .transition(FireDispensenatorState.FIRE.name, FireDispensenatorState.CLOSE.name) { true }
             // close
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.OPEN.name) {
-                players.any { player -> player.body.getBounds().overlaps(scanner) }
+                players.anyLive { player -> player.body.getBounds().overlaps(scanner) }
             }
             .transition(FireDispensenatorState.CLOSE.name, FireDispensenatorState.SLEEP.name) { true }
         return builder.build()

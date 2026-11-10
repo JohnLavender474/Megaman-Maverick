@@ -22,7 +22,6 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.entities.facing
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -85,7 +84,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
             var impulse = PROJECTILE_IMPULSE * ConstVals.PPM
             if (isProjectileRightOfBlock) impulse *= -1f
 
-            if (players.any {
+            if (players.anyLive {
                     (impulse > 0f && it.leftSideFixture.overlaps(pushableBody.getBounds())) ||
                         (impulse < 0f && it.rightSideFixture.overlaps(pushableBody.getBounds()))
                 }
@@ -190,7 +189,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         if (body.isSensing(BodySense.FEET_ON_GROUND)) when {
-            players.any {
+            players.anyLive {
                 it.leftSideFixture.overlaps(body.getBounds()) &&
                     it.facing == Facing.LEFT &&
                     it.body.physics.velocity.x < 0f
@@ -199,7 +198,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
                 body.physics.velocity.x -= impulse
             }
 
-            players.any {
+            players.anyLive {
                 it.rightSideFixture.overlaps(body.getBounds()) &&
                     it.facing == Facing.RIGHT &&
                     it.body.physics.velocity.x > 0f
@@ -245,7 +244,7 @@ class PushableBlock(services: MegaServices) : MegaGameEntity(services), IBodyEnt
             if (services.levelState.roomTransition) body.physics.velocity.setZero()
 
             val velocity = body.physics.velocity
-            if (players.any {
+            if (players.anyLive {
                     (velocity.x > 0f && it.leftSideFixture.overlaps(body.getBounds())) ||
                         (velocity.x < 0f && it.rightSideFixture.overlaps(body.getBounds()))
                 }

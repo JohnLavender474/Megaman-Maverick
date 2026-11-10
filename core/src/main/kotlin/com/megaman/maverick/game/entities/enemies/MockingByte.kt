@@ -35,7 +35,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -275,7 +274,7 @@ class MockingByte(services: MegaServices) : AbstractEnemy(services), IAnimatedEn
                     if (currentState == MockingByteState.SLEEP) {
                         awakenArea.setCenter(body.getCenter())
 
-                        if (players.any { player -> player.body.getBounds().overlaps(awakenArea) }) {
+                        if (players.anyLive { player -> player.body.getBounds().overlaps(awakenArea) }) {
                             GameLogger.debug(TAG, "update(): megaman entered awaken area, wake up")
                             stateMachine.next()
                         }

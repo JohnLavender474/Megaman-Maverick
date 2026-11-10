@@ -30,7 +30,6 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.*
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -195,7 +194,7 @@ class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
                 PopoheliState.WAITING -> {
                     body.physics.velocity.setZero()
                     triggers.forEach {
-                        if (players.any { player -> player.body.getBounds().overlaps(it.trigger) }) {
+                        if (players.anyLive { player -> player.body.getBounds().overlaps(it.trigger) }) {
                             body.setCenter(it.start)
                             target.set(it.target)
                             state = PopoheliState.APPROACHING

@@ -31,7 +31,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IDrawableShapesEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -137,7 +136,7 @@ class WalrusBot(services: MegaServices) : AbstractEnemy(services, size = Size.ME
                 }
 
                 WalrusBotState.SHOOT -> {
-                    if (players.any { player -> scannerBox.overlaps(player.body.getBounds()) })
+                    if (players.anyLive { player -> scannerBox.overlaps(player.body.getBounds()) })
                         stateQueudForAfterShoot = WalrusBotState.JET
 
                     shootTimer.update(delta)

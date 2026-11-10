@@ -75,8 +75,6 @@ class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(cap
         forEach { if (noneLive || isLive(it)) action(it) }
     }
 
-    // TODO: the other players.any sites, for example the scanners of Cactus and FireDispensenator, still count a dead
-    //  slot 1 at its last position; this gives a false positive, not a stuck state (item 047e)
     inline fun anyLive(predicate: (MegaGameEntity) -> Boolean): Boolean {
         val noneLive = firstLive() == null
         return any { (noneLive || isLive(it)) && predicate(it) }

@@ -31,7 +31,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.state.EnumStateMachineBuilder
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.updatables.UpdatablesComponent
@@ -577,6 +576,6 @@ class DarkSerket(services: MegaServices) : AbstractEnemy(services), IFreezableEn
     private fun isMegamanOverlappingScanner(): Boolean {
         val position = if (isFacing(Facing.LEFT)) Position.CENTER_RIGHT else Position.CENTER_LEFT
         scanner.positionOnPoint(body.getCenter(), position)
-        return players.any { player -> scanner.overlaps(player.body.getBounds()) }
+        return players.anyLive { player -> scanner.overlaps(player.body.getBounds()) }
     }
 }

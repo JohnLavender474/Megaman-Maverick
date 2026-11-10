@@ -34,7 +34,6 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -202,7 +201,7 @@ class UFOhNoBot(services: MegaServices) : AbstractEnemy(services, size = Size.ME
             }
 
             if (waiting) when {
-                triggers.any { trigger -> players.any { player -> player.body.getBounds().overlaps(trigger) } } -> {
+                triggers.any { trigger -> players.anyLive { player -> player.body.getBounds().overlaps(trigger) } } -> {
                     waiting = false
                     rising = true
 

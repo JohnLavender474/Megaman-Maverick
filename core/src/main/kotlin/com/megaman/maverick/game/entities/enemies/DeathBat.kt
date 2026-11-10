@@ -28,7 +28,6 @@ import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.pathfinding.PathfinderParams
 import com.maverick.game.engine.pathfinding.PathfindingComponent
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
@@ -152,7 +151,7 @@ class DeathBat(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
                     body.physics.velocity.setZero()
 
                     if (!triggered) trigger?.let {
-                        if (players.any { player -> player.body.getBounds().overlaps(it) }) {
+                        if (players.anyLive { player -> player.body.getBounds().overlaps(it) }) {
                             GameLogger.debug(TAG, "update(): Megaman touched trigger")
                             triggered = true
                         }

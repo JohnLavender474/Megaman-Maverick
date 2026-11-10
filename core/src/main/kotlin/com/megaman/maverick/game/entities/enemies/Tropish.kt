@@ -29,7 +29,6 @@ import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -141,7 +140,7 @@ class Tropish(services: MegaServices) : AbstractEnemy(services, size = Size.SMAL
             when {
                 frozen -> body.physics.velocity.setZero()
                 state == TropishState.WAIT &&
-                    players.any { player -> player.body.getBounds().overlaps(triggerBox) } -> startSwim()
+                    players.anyLive { player -> player.body.getBounds().overlaps(triggerBox) } -> startSwim()
                 state == TropishState.BENT && body.isSensing(BodySense.FEET_ON_GROUND) -> explodeAndDie()
             }
         }

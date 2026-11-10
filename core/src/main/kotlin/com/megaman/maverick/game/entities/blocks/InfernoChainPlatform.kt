@@ -22,7 +22,6 @@ import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.entities.isBehaviorActive
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
@@ -117,10 +116,10 @@ class InfernoChainPlatform(services: MegaServices) : FeetRiseSinkBlock(services)
         if (body.isSensing(BodySense.FEET_ON_GROUND)) return false
         return super.shouldMoveDown() ||
             isMegamanWallSlidingOnMe() ||
-            players.any { it.feetGravityFixture.getShape().overlaps(body.getBounds()) }
+            players.anyLive { it.feetGravityFixture.getShape().overlaps(body.getBounds()) }
     }
 
-    private fun isMegamanWallSlidingOnMe() = players.any { player ->
+    private fun isMegamanWallSlidingOnMe() = players.anyLive { player ->
         player.isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             player.body.fixtures.get(FixtureType.SIDE).any { it.getShape().overlaps(body.getBounds()) }
     }

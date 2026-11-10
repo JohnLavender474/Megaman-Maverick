@@ -35,7 +35,6 @@ import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.pathfinding.PathfinderParams
 import com.maverick.game.engine.pathfinding.PathfindingComponent
-import com.maverick.game.engine.players.any
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -249,7 +248,7 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
             when (state) {
                 BatState.HANGING -> {
                     if (!triggered) trigger?.let {
-                        if (players.any { player -> player.body.getBounds().overlaps(it) }) {
+                        if (players.anyLive { player -> player.body.getBounds().overlaps(it) }) {
                             GameLogger.debug(TAG, "update(): Megaman touched trigger")
                             triggered = true
                         }
