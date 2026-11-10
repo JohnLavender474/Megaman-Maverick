@@ -4,7 +4,7 @@
 - Type: feature
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
-- Related: `029`, `031`, `047`, `048`
+- Related: `029`, `031`, `047`, `048`, `146`
 - Branches: `mega-refactor-060a-shared-run-body` (active, 2026-11-10)
 
 ## Goal
@@ -57,6 +57,9 @@ waits for it.
   this move (`084` moved the state, not these functions; the `081` body and controller parameters are in its "not
   placed" row). The first Proto Man code is in `060b`. The branch started as `mega-refactor-060a-proto-run-jump`
   with no commits, and was renamed to `mega-refactor-060a-shared-run-body`.
+- (2026-11-10, owner) `146` (a marker `IPlayer` interface) starts in a separate session. When `146` merges into
+  `master`, `060a` (if not merged yet) and every later `060` branch take it in and use its player type (for example
+  `Protoman` implements `IMegaPlayer`).
 
 ## Proposed phases
 
