@@ -1984,3 +1984,21 @@ newest entry at the bottom.
   `docs/issues/2026-11-09-per-frame-allocations-hot-paths.md` (a GC audit; the strongest lead for the freezes the
   owner saw was the machine swapping, 19 of 19 GiB, with 18 JVMs). `081f` shares `MegamanXSabreSlash.kt` (a comment line
   there; no conflict).
+
+## 2026-11-09 — fix/players-any-dead-slot
+
+- Summary: closes `2026-11-02-players-any-counts-dead-slot.md` (squash commit `662f018dc`). The 36 `players.any` lines in 30
+  entity files (enemy scanners and triggers, `AbstractEnemy.isMegamanShootingAtMe`, `PushableBlock`, `CartV2`,
+  `DropperLift`, `InfernoChainPlatform`, `FlipperPlatform`, `GravitySwitcharoo`) call `players.anyLive`, so a dead or
+  beaming-in player does not count while another player is live. Single player and "every player dead" are unchanged.
+  Since `047c`, either slot can be dead for a while in co-op, so the false trigger was easier to meet. New co-op room
+  `dead_scanner` in `RefactorTest047.tmx`.
+- Contract check (the short contract in the issue file): `./gradlew engine:test core:test core:smokeTest lwjgl3:jar`
+  passes on the branch: `engine` 667, `core` 1279, `smokeTest` 451, JAR built. `CartV2DeadPlayerTest` fails with the
+  old `any`. The review before the play test (1 subagent) found the code correct at all 36 sites; the first co-op check
+  room had no spot outside the `Cactus` scanner, so the new room replaced it. The owner played the checks, and they
+  pass. Diffity: 0 threads. CI did not run, because the branch was never pushed.
+- Follow-up: O2-R5: the `players.any` sites in entities are gone; `MegaLevelScreen` (`anyInPlay`, `anyAlive`) and the
+  `FEET_SAND` rule keep `any` on purpose. `fix/per-frame-allocations-hot-paths` may touch some of the same enemy files
+  (text only).
+

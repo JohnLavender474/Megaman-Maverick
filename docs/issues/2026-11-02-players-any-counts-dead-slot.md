@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -85,3 +85,10 @@ Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktree
   `LampeonBandito` stands and shoots when he is near, as before.
 - `./run-game-alpha.sh --level DESERT_MAN --room room10`: control with 1 player. Walk right and stand on the cart: it
   moves right while Megaman stands on it, as before.
+
+## Resolution
+
+Fixed by `fix/players-any-dead-slot` (squash `662f018dc`, 2026-11-09). The 36 entity `players.any` lines call
+`players.anyLive`. Test: `CartV2DeadPlayerTest`. The owner's play test passes: in the new co-op room `dead_scanner` the
+`Cactus` goes idle while slot 1 is dead (also at 0 lives), and the 1-player controls in `DESERT_MAN` `room1` and `room10`
+behave as before. Diffity: 0 threads.

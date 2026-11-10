@@ -131,7 +131,7 @@ related-items: [<mega-refactor item IDs>]
 | [With `--players 2`, two players on one quicksand area cannot jump out](2026-11-01-two-players-stuck-in-quicksand.md) | yes | core | closed |
 | [A Koopa shell takes its roll direction from the target, not from the player who kicked it](2026-11-02-koopa-shell-rolls-toward-target.md) | no | core | open |
 | [Question: enemies copy their direction from the target player](2026-11-02-enemy-direction-from-target.md) | question | core | open |
-| [With `--players 2`, a dead slot 1 still counts at the `players.any` sites](2026-11-02-players-any-counts-dead-slot.md) | yes | core | open |
+| [With `--players 2`, a dead slot 1 still counts at the `players.any` sites](2026-11-02-players-any-counts-dead-slot.md) | yes | core | closed |
 | [`DarknessV4` loops while its iterator has no next entry](2026-11-02-darkness-v4-inverted-iterator-loop.md) | no | core | open |
 | [Retire Gauntlet 2 and 4 entities that only it or test maps use](2026-11-02-retire-gauntlet-2.md) | yes | core | closed |
 | [The `BODY_TOUCHING_BLOCK` check on an enemy's item drop is never true](2026-11-02-enemy-drop-block-check-never-true.md) | yes | core | open |
