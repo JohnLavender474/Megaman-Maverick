@@ -43,7 +43,7 @@ Intended changes:
   today). The shell rolls away from the kicker's x, in both classes. The duplicate direction line in the `IDLE` branch
   goes.
 
-Changed files: `GreenKoopaShell.kt`, `RedKoopaShell.kt`, tests.
+Changed files: `GreenKoopaShell.kt`, `RedKoopaShell.kt`, tests, and a new room `koopa_kick` in `RefactorTest047.tmx`.
 
 Not changed:
 
@@ -59,11 +59,18 @@ Checks:
 - Break the code and confirm that each new test can fail (`core/src/test/CLAUDE.md`).
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
-Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/koopa-shell-kicker`:
+Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/koopa-shell-kicker`. On the same
+floor a player who touches the shell is always nearer than one who does not, so a side kick rolls away from the kicker
+also on `master`; the fix shows on a stomp, with the other player standing very close. The room `koopa_kick` is new in
+`RefactorTest047.tmx` (flat floor, walls, one `GreenKoopa`, spawn `23`; review before the play test, 2026-11-09).
 
-- `./run-game-test-coop.sh --level SMB3_1 --room room1`: walk right to the first `GreenKoopa` (about 30 tiles) and
-  stomp it into a shell. Slot 1 stands close to the shell on one side; slot 0 kicks the shell from the other side. The
-  shell rolls away from slot 0 (toward slot 1). Then swap the roles. The review before the play test confirms the
-  room and the distances.
-- `./run-game-alpha.sh --level SMB3_1 --room room1`: control with 1 player. Kick a shell from the left and from the
-  right: it rolls away from Megaman, as before.
+- `./run-game-test-coop.sh --room koopa_kick`: stomp the `GreenKoopa` into a shell on the floor. Slot 1 stands to the
+  right of the shell, as close as it can without touching it (walking into it kicks it, so stop just before). Slot 0
+  jumps and lands on the LEFT half of the shell: the shell rolls RIGHT, away from slot 0, and hits slot 1 (on `master`
+  it rolled LEFT). Make a new shell (the Koopa comes back after the room is entered again, or kick the shell into a
+  wall and catch it) and swap: slot 1 on the left, slot 0 lands on the RIGHT half: the shell rolls LEFT.
+- `./run-game-test-coop.sh --room koopa_kick`: a plain side kick by either player (walk into the shell): it rolls away
+  from the kicker, as before.
+- `./run-game-alpha.sh --level SMB3_1`: control with 1 player (the level start; `room1` has no player spawn). Walk left
+  into `room1`, to the `GreenKoopa` on the step pyramid (about 31 tiles), make a shell on the flat floor, kick it from
+  each side and stomp it: it rolls away from Megaman, as before.
