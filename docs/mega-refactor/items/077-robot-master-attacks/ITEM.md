@@ -10,7 +10,7 @@
 ## Goal
 
 Make every boss fight richer: the 8 robot masters, the Wily bosses (for example `GutsTank`), the mini bosses and
-the intro bosses (for example `D1000` in the X6 intro stage). Each boss gets one or two new attacks, at least one of
+the intro bosses (for example `BigAssMaverickRobot` in `INTRO_STAGE`, and `D1000` in `X6_INTRO`). Each boss gets one or two new attacks, at least one of
 them a "panic" attack that it uses only when its health is less than 25%; smarter aiming with some randomness; and a
 richer death animation.
 
@@ -27,7 +27,7 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   one shot leads the player (where the player will be in about 1-2 seconds, from the current position and
   velocity), one aims at the current position, one lands at a random spot near the player, and one lands at a wider
   random spot to distract. The Inferno Man meteors and the Reactor Man lasers already work in this spirit.
-- Death: replace the simple cartoon death (for example the X eyes of `GutsTank` and the X6 intro boss) with a richer
+- Death: replace the simple cartoon death (for example the X eyes of `GutsTank` and of `BigAssMaverickRobot`, the `INTRO_STAGE` boss) with a richer
   dying animation for each boss.
 - A common way to start the panic phase (the health check at 25%), if two or more bosses need the same code.
 - One branch per boss or per small group of bosses, because each boss is its own class. A shared piece (the panic
