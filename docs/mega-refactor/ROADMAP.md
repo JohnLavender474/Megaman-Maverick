@@ -24,7 +24,7 @@ them. `091` also gives a reliable check that a room loads.
 | Crashes                                               | Co-op faults                 | Small items                                  |
 |-------------------------------------------------------|------------------------------|----------------------------------------------|
 | `CeilingCrusher` pooled scratch object                |                              | `072` remove `IMegaGameEntity`               |
-| 4 silent missing regions                              | Koopa shell roll direction   | `091` check that a room loads with no window |
+| 4 silent missing regions                              |                              | `091` check that a room loads with no window |
 |                                                       |                              | `065` every `init()` calls `super.init()`    |
 |                                                       |                              | `105`, `106`, `107` smoke test checks        |
 

@@ -1,6 +1,6 @@
 ---
-status: open
-verified: no
+status: closed
+verified: yes
 area: core
 gameplay-change: yes
 found-by: mega-refactor-047b-player-rules enemy review (2026-11-01)
@@ -74,3 +74,11 @@ also on `master`; the fix shows on a stomp, with the other player standing very 
 - `./run-game-alpha.sh --level SMB3_1`: control with 1 player (the level start; `room1` has no player spawn). Walk left
   into `room1`, to the `GreenKoopa` on the step pyramid (about 31 tiles), make a shell on the flat floor, kick it from
   each side and stomp it: it rolls away from Megaman, as before.
+
+## Resolution
+
+Fixed by `fix/koopa-shell-kicker` (squash `50d0f7458`, 2026-11-10). `GreenKoopaShell` and `RedKoopaShell` take the
+kicker from the touch test (the first live player in slot order that touches the shell) and roll away from the kicker's
+x, on a kick and on a stomp. Test: `KoopaShellKickerTest` (the 2-player cases fail on the old code). The owner's play
+test passes: the stomp case and its mirror in the new co-op room `koopa_kick`, the side kicks, and the 1-player control
+in `SMB3_1`. Diffity: 0 threads.

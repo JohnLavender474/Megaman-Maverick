@@ -2002,3 +2002,18 @@ newest entry at the bottom.
   `FEET_SAND` rule keep `any` on purpose. `fix/per-frame-allocations-hot-paths` may touch some of the same enemy files
   (text only).
 
+
+## 2026-11-10 — fix/koopa-shell-kicker
+
+- Summary: closes `2026-11-02-koopa-shell-rolls-toward-target.md` (squash commit `50d0f7458`). `GreenKoopaShell` and
+  `RedKoopaShell` take the kicker from the touch test (the first live player in slot order that touches the shell) and
+  roll away from the kicker's x, on a kick and on a stomp; before, the direction came from `targetPlayer`. One player:
+  as before. New co-op room `koopa_kick` in `RefactorTest047.tmx`.
+- Contract check (the short contract in the issue file): `./gradlew engine:test core:test core:smokeTest lwjgl3:jar`
+  passes on the branch: `engine` 667, `core` 1285, `smokeTest` 451, JAR built. `KoopaShellKickerTest` (6 cases, Green
+  and Red): the 4 two-player cases fail on the old code, and a shell that never kicks fails all 6. The review before the
+  play test (1 subagent) found that a side kick cannot show the fix (the kicker is always the nearest player) and that
+  `SMB3_1` `room1` has no player spawn; the stomp checks in the new room replaced them. The owner played the checks, and
+  they pass. Diffity: 0 threads (its server was stopped by the system for low memory during the play test). CI did not
+  run, because the branch was never pushed.
+- Follow-up: the Stage 1 co-op faults in `ROADMAP.md` are all fixed.
