@@ -4,7 +4,7 @@
 - Type: refactor
 - Objectives: `O7`, `O3`
 - Depends on: none
-- Related: `003`, `004`, `022`, `023`, `032`, `039`
+- Related: `003`, `004`, `022`, `023`, `032`, `039`, `146`
 - Branches: none yet
 
 ## Goal
@@ -20,6 +20,13 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - No reflection at runtime. A test fails for an unregistered entity class.
 - Prewarm pools per level from the TMX counts. Delete `EntityFactories` (76 call sites).
 - Remove or rename the `_OLD` duplicates first (see `039`).
+- Class-level facts go in the `EntityDef` (from `146a`, 2026-11-10): the default tags (they seed the `TagsComponent`
+  that `MegaGameEntity.init()` adds; today the default is `this::class.simpleName`, which may not hold on TeaVM), the
+  `EntityType`, and the spawn rules as data, the X6 way: the spawner decides from the record and the definition
+  (difficulty, level traits, "already taken" flags) before it touches an instance. The instance `canSpawn` keeps only
+  the rules that need the session. Name the base tags in each entry (no superclass walk: that needs reflection).
+  Research: `items/146-player-marker-interface/branches/mega-refactor-146a-player-marker/docs/NOTES.md` and the
+  `146a` spawn-flow notes.
 
 ## Owner's input
 
