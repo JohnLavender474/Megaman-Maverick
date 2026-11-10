@@ -35,8 +35,8 @@ Found by reading the code; not run.
 
 Branch: `fix/players-any-dead-slot`, off `master`, in `.worktrees/fix/players-any-dead-slot`.
 
-Scan (2026-11-09, at `437a3df09`): 33 code lines in `core/src/main/kotlin/com/megaman/maverick/game/entities/` call
-`players.any` (25 files: enemy scanners and triggers, `AbstractEnemy.isMegamanShootingAtMe`, `PushableBlock`, `CartV2`,
+Scan (2026-11-09, at `437a3df09`): 36 code lines in `core/src/main/kotlin/com/megaman/maverick/game/entities/` call
+`players.any` (30 files: enemy scanners and triggers, `AbstractEnemy.isMegamanShootingAtMe`, `PushableBlock`, `CartV2`,
 `DropperLift`, `InfernoChainPlatform`, `FlipperPlatform`, `GravitySwitcharoo`). Each one asks "is a player here, or doing
 this, now"; none needs a dead player. Since `047c` (2026-11-09), either slot can be dead for a while in co-op (the 1 s
 respawn wait, the wait for a safe spot, or for good at 0 lives), and its body stays where it died, so the false trigger
@@ -44,12 +44,12 @@ is easier to meet than when the issue was found.
 
 Intended changes:
 
-- The 33 entity lines call `players.anyLive` in place of `players.any`. `anyLive` skips a player that is not live
+- The 36 entity lines call `players.anyLive` in place of `players.any`. `anyLive` skips a player that is not live
   (dead, or beaming in) while another player is live; with no live player it visits every player, as `any` does.
 - The `TODO` at `MegaPlayers.anyLive` goes; the `047e` part of that `TODO` (boss intros, `Fight`) is already tracked
   at the boss sites.
 
-Changed files: the 25 entity files, `MegaPlayers.kt` (the `TODO`), tests.
+Changed files: the 30 entity files, `MegaPlayers.kt` (the `TODO`), tests.
 
 Not changed:
 
@@ -65,8 +65,8 @@ Checks:
 - Unit tests:
   - `CartV2` (the `CartV2ItemTest` rig): a dead slot 1 whose feet stay on the cart does not move it while slot 0 is
     live; a live slot 1 on the cart moves it; with one player, the old result.
-  - `MegaPlayers.anyLive`: a dead or beaming slot is skipped while the other is live; with no live player every player
-    counts.
+  - `MegaPlayers.anyLive`: the existing `MegaPlayersTest` cases (a dead slot and a slot not in play are skipped while
+    the other is live; with no live player every player counts) stay unchanged.
 - Break the code and confirm that each new test can fail (`core/src/test/CLAUDE.md`).
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
