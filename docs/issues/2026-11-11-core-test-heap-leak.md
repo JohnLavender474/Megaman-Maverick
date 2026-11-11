@@ -12,7 +12,9 @@ related-items: [060]
 ## Where
 
 - The `core` test suite (`core/src/test/`), which runs in one test JVM with `maxHeapSize = '1g'` (`core/build.gradle`).
-- Not known yet: the object that keeps the old services alive. Candidates are in "Notes".
+- The holder (found 2026-11-11, see "Measurements of the remedies"): MockK `1.14.11` keeps every mock alive for the
+  whole test JVM, with every call it recorded and a stack trace for each call. The recorded calls hold the old
+  entities and services as arguments.
 
 ## What happens
 
@@ -103,17 +105,43 @@ Fit with the measurements above: 163k retained `io.mockk.Invocation` objects wit
 retained `MegaServices` are reachable from mocks (an entity or the services given as an argument to a relaxed
 engine mock). Not yet confirmed with a heap dump of this suite.
 
+## Measurements of the remedies (2026-11-11)
+
+Same suite (`master` at `738de7b23`, 1364 tests, 140 specs), measured with a temporary Kotest listener (a full GC and
+the heap in use after each spec; a class histogram at the end of the suite). Work files:
+`temp/fix-core-test-heap-leak/`.
+
+| Measure at the end of the suite | Baseline `1.14.11` | `1.14.12` + `clearAllStubsFromMemory()` after each spec | `1.14.12` + clear recorded calls | `1.14.11` + clear recorded calls |
+|---|---|---|---|---|
+| Heap in use | 1009 MB | 75 MB | 110 MB | 110 MB |
+| Largest growth over one spec | 230 MB | 4 MB | 20 MB | 20 MB |
+| `io.mockk.Invocation` alive | 157,065 | not in the top list | not in the top list | not in the top list |
+| `MockKStub` alive | 6,898 | 2,159 | 6,898 | 6,898 |
+| `MegaServices` alive | 181 | 63 | 146 | 146 |
+| Failed tests | 0 | 220 | 0 | 0 |
+
+- The recorded calls (with their stack traces) are about 900 MB of the 1 GB. Clearing only them after each spec is
+  enough, also on MockK `1.14.11`.
+- Releasing the mocks (`clearAllStubsFromMemory()`, which frees them only from `1.14.12`) fails 218 tests: about 320
+  entity classes cache their texture regions in a companion map, filled once from the first atlas they see. In tests
+  that atlas is a relaxed mock, so the cached regions are mocks of the first spec; once they are released, later specs
+  reach the real `Texture` code (`TextureData` is null). The 2 other failures: the call throws in a spec that runs
+  before any mock exists. A full release waits for item `028` (a game-owned texture cache in place of the companion
+  maps).
+
 ## Short contract
 
 Branch: `fix/core-test-heap-leak`, off `master`, in `.worktrees/fix/core-test-heap-leak`.
 
 Intended changes:
 
-- Find the object that keeps the services of finished tests alive (a heap dump or a reference path, not a guess), and
-  remove the hold: in test setup and teardown, or in the production code if a static there is the cause.
-- No change to gameplay. A production change is limited to the static that holds the reference.
+- Changed 2026-11-11 (owner), after the research and the measurements above: the holder is MockK's mock registry, so
+  no heap dump is needed. A Kotest project config clears the recorded calls of every mock after each spec
+  (`clearAllMocks` with `recordedCalls = true` and `answers = false`, `childMocks = false`), so the mocks stay usable
+  for the static region caches. MockK stays at `1.14.11`. A `TODO` at the config names item `028`.
+- No change to gameplay or production code.
 
-Changed files: decided by the investigation; written here before the code changes.
+Changed files: `core/src/test/kotlin/io/kotest/provided/ProjectConfig.kt` (new).
 
 Not changed:
 
@@ -121,7 +149,8 @@ Not changed:
 
 Checks:
 
-- The per-spec retained-heap log shows no spec that keeps growth after its end (each spec's growth under 10 MB), and
-  the live `MegaServices` count after the suite stays under 5.
+- Changed 2026-11-11 (owner): the heap in use at the end of the suite is under 200 MB, and `io.mockk.Invocation` is
+  not in the top list of the class histogram. (The old checks, each spec's growth under 10 MB and under 5 live
+  `MegaServices`, need the mocks released, which waits for `028`.)
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch.
 - After the merge, `mega-refactor-060c-protoman-buster` takes in `master`, and its `core:test` passes.

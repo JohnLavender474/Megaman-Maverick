@@ -50,3 +50,13 @@ Title: Game-owned texture and animation cache
 
 Prerequisite for 32. Works with 21 (schema declares atlases and animations), 39 (build-time region check), 3 (smoke test), 15 (service injection), 20 (registry).
 ````
+
+## Finding from `fix/core-test-heap-leak` (2026-11-11)
+
+A second reason for this item, beyond GPU resources: test isolation. About 320 entity classes fill a companion region
+map once, from the first atlas they see. In `core:test` that atlas is a relaxed MockK mock, so the cached regions are
+mocks made in the first spec that loads the class, and they stay for the whole test JVM. They keep that spec's mocks
+alive, and they stop a full release of mocks after each spec: with `clearAllStubsFromMemory()` (MockK `1.14.12`), 218
+tests fail, because later specs call released region mocks and reach the real `Texture` code. The fix branch clears
+only the recorded calls; a full release (and a heap that does not grow per spec) needs this item. Measurements:
+`docs/issues/2026-11-11-core-test-heap-leak.md`.
