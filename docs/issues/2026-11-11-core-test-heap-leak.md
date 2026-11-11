@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: build
 gameplay-change: no
@@ -154,3 +154,12 @@ Checks:
   `MegaServices`, need the mocks released, which waits for `028`.)
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch.
 - After the merge, `mega-refactor-060c-protoman-buster` takes in `master`, and its `core:test` passes.
+
+## Resolution
+
+Fixed in `fix/core-test-heap-leak`, squash commit `8a25a5a6b` (2026-11-11): a Kotest project config
+(`core/src/test/kotlin/io/kotest/provided/ProjectConfig.kt`) clears the recorded calls of every mock after each spec.
+MockK stays at `1.14.11`. On the branch: `engine:test` 675, `allocationTest` 2, `core:test` 1364, `smokeTest` 452,
+JAR built; sampled peak heap of `core:test` 486 MB (before: the full 1 GB by 16 s). `mega-refactor-060c-protoman-buster`
+with the config: 1380 tests, 0 failures. A full release of mocks (and a heap that does not grow per spec) waits for
+item `028`.

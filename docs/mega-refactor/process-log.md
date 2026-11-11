@@ -2124,3 +2124,16 @@ newest entry at the bottom.
   hang itself was not reproduced (see the issue). CI did not run, because the branch was never pushed.
 - Follow-up: a user `SessionStart` and `SessionEnd` hook (`~/.claude/hooks/reap-orphan-gradle.sh`, outside the repo)
   stops test JVMs older than 60 minutes and their daemons. Every active branch gets the flag when it takes in `master`.
+
+## 2026-11-11 — fix/core-test-heap-leak
+
+- Summary: closes `2026-11-11-core-test-heap-leak.md` (squash commit `8a25a5a6b`). A Kotest project config clears the
+  recorded calls of every mock after each spec. Cause: MockK `1.14.11` never frees a mock (mockk#1566), and each
+  mock kept every recorded call with a stack trace, together with the old entities and services; the 2 new `060c`
+  tests pushed `core:test` over its 1 GB heap. Web research and 4 measured remedies are in the issue; the owner chose
+  "clear recorded calls" and changed the short contract after the measurements. MockK stays at `1.14.11`.
+- Contract check: heap in use at the end of `core:test` 1009 MB -> 110 MB; `io.mockk.Invocation` 157,065 -> not in the
+  top list; `engine:test` 675, `allocationTest` 2, `core:test` 1364, `smokeTest` 452, JAR built; `060c` with the config
+  1380 tests pass. No gameplay change, no play test. CI did not run, because the branch was never pushed.
+- Follow-up: a full release of mocks (MockK `1.14.12` `clearAllStubsFromMemory()`) fails 218 tests until item `028`
+  replaces the companion region caches; the `028` notes record this as a second reason for the item.
