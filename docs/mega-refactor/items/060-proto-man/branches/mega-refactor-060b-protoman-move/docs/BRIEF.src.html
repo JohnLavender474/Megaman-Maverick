@@ -1,68 +1,73 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>060b Proto Man Moves</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
+<style>li code, p code { overflow-wrap: anywhere; } .sprites { width: 100%; image-rendering: pixelated; }</style>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 060 · Branch 060b · Objectives O8 · <span class="chip ok">approved 2026-11-11</span></p>
+    <h1>Proto Man walks and jumps</h1>
+    <p class="lead">A thin <code>Protoman</code> class on <code>MegaPlayer</code> calls the shared run, body and jump with his own values and his own sprites, sliced from the fan sheet. A new test level puts him in slot 0.</p>
+    <p class="meta"><b>In play:</b> Proto Man stands, steps, walks, jumps and falls on <code>REFACTOR_TEST_060</code>. No real level changes. No buster, slide or shield yet.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>A third class is a thin layer on MegaPlayer</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: Protoman extends MegaPlayer and calls the shared moves">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  MP["MegaPlayer<br/>lifecycle, damage, progress, camera"] --> M["Megaman"]
+  MP --> X["MegamanX"]
+  MP --> P["Protoman (new)<br/>values, sprites"]
+  P -->|"calls"| R["playerRunButton + runStep"]
+  P -->|"calls"| B["playerBody"]
+  P -->|"calls"| J["playerJumpBehavior"]
+  L["REFACTOR_TEST_060<br/>characters = PROTOMAN"] -->|"slot 0"| P
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">After</span>Proto Man gives only his values, his sprites and his move list. MegaPlayer does the rest.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
-flowchart LR
-  A["<sender>"] --> B["<new owner>"]
-</pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <img class="sprites" alt="Draft frames: Megaman on top, Proto Man below, at 4x, on the same foot line" src="data:image/png;base64,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">
+      <figcaption><span class="fig-n">Sprites</span>The draft atlas: Megaman (top) and Proto Man (bottom) at the same scale. The foot lines match. The shield-up jump waits for 060e.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
-    <p>After:</p>
-<pre><code><new code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>Proto Man is mostly values</h2></div>
+<pre><code>class Protoman(services: MegaServices) : MegaPlayer(services), IScalableGravityEntity {
+    override val cameraFocusHeight = ProtomanValues.BODY_HEIGHT
+    override var direction: Direction   // signs the gravity table, as Megaman
+    internal override fun defineBodyComponent() = playerBody(this, PlayerBodyParams(width = ..., height = ...))
+    internal override fun defineBehaviorsComponent() =
+        BehaviorsComponent().apply { addBehavior(JUMPING, playerJumpBehavior(this@Protoman, jumpParams)) }
+    internal override fun defineControllerComponent() = ControllerComponent(
+        MegaControllerButton.LEFT pairTo playerRunButton(this, Facing.LEFT, runParams, { false }, {}), ...)
+}
+LevelDefinition.REFACTOR_TEST_060(type = TEST_LEVEL, characters = setOf(PlayerCharacter.PROTOMAN), ...)</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>4 decisions</h2></div>
+    <p>Small calls follow Megaman: the plain jump frame, Megaman's idle timing for the scarf flick, the blue beam until 060e, and no slide on DOWN + A until 060d.</p>
+    <p><b>D1 · When does the step frame show?</b></p>
+    <p><span class="chip ok">Chosen</span> As Megaman: at a stop, a landing and the spawn.</p>
+    <p><b>D2 · How does the sheet become an atlas, now and in later branches?</b></p>
+    <p><span class="chip ok">Chosen</span> A prep script, the prepared sheet and the YAML in <code>utils/sprite_slicer/sheets/</code>.</p>
+    <p><b>D3 · The sheet faces left; Megaman's frames face right. Where does the flip go?</b></p>
+    <p><span class="chip ok">Chosen</span> Mirror the frames in the prep step.</p>
+    <p><b>D4 · Where do his walk, jump and gravity values come from?</b></p>
+    <p><span class="chip ok">Chosen</span> His own <code>ProtomanValues</code>, with Megaman's numbers to start.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>A wrong region or foot line shows at once</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Atlas.</b> A missing region fails the smoke test, which runs his init() with the real atlas.</li>
+      <li><span class="chip warn">risk</span> <b>Enemy masks.</b> Some enemies check for the Megaman class and miss Proto Man. The test map has no enemies; 060e handles damage.</li>
+      <li><span class="chip warn">risk</span> <b>A third player at start.</b> postCreate builds one more player; Megaman and X keep their control checks.</li>
     </ul>
   </section>
 
@@ -70,14 +75,19 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-060b-protoman-move</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_060 --room walk</code>: beam-in, stand, scarf flick, walk both ways, stop with the step frame, feet on the floor.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_060 --room jump</code>: short and high jump, fall, land; the pit: death and respawn.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_060 --room water</code>: slower fall and higher jump in water.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_060 --room transition</code>: the room transition carries him.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room movement</code>: Megaman as before.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room flat</code>: X as before.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
-    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-060b-protoman-move/docs/SCOPE.md</code></p>
+    <p>The full scan, the small calls and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/060-proto-man/branches/mega-refactor-060b-protoman-move/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-060b-protoman-move/docs/CONTRACT.md</code></p>
   </section>
 </main>

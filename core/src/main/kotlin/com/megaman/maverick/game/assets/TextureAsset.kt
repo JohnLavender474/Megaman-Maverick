@@ -36,6 +36,7 @@ enum class TextureAsset(src: String) : IAsset {
     WEAPON_GET("WeaponGet.txt"),
     MEGAMAN_BUSTER("Megaman_v3.txt"),
     MEGAMAN_X("MegamanX.txt"),
+    PROTOMAN("Protoman_v2.txt"),
     MEGAMAN_ICE_CUBE("Megaman_v3_ICE.txt"),
     MEGAMAN_MOON_SCYTHE("Megaman_v3_MOON.txt"),
     MEGAMAN_MAGMA_WAVE("Megaman_v3_FIRE.txt"),

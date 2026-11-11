@@ -12,13 +12,17 @@ animations, the camera focus height) and puts its own lines in open hooks (`onPl
 use are plain functions in this package, and a class opts in by calling them.
 
 The research and the decisions are in `docs/mega-refactor/items/081-playable-x/` (branch `081a`) and
-`docs/mega-refactor/items/060-proto-man/` (branch `060j`, the base class).
+`docs/mega-refactor/items/060-proto-man/` (branch `060j`, the base class; branch `060b`, the first class that only
+calls the shared moves).
 
 The examples in this file are hypothetical. The real code is in `MegaPlayer.kt`.
 
 ## Status
 
-`Megaman` and `MegamanX` (`081b`) are the player classes, both on `MegaPlayer` (`060j`). `MegaPlayer` reads the
+`Megaman`, `MegamanX` (`081b`) and `Protoman` (`060b`) are the player classes, all on `MegaPlayer` (`060j`). The
+classes show the two forms of a class: X has its own body and run (the X6 feet and walk); `Protoman` moves like Megaman,
+so it has no move code of its own. It calls `playerBody`, `playerRunButton` and `playerJumpBehavior` with its own
+values file, and gives only its values, its sprites and its list of moves. `MegaPlayer` reads the
 shared values (damage time, start health, freeze) from `MegamanValues` until a character needs other values. Some rules still have another owner, and a `TODO` at the
 function names it: the difficulty change of the damage (`023`), the owner chain of a shot (`030`), the death event
 (`119`), the health base class (`048`), and the locks for stun, freeze and damage (`126`). Only slot 0 can change its character, at the level start (`047` for co-op, `113` for a select screen).
@@ -27,7 +31,7 @@ function names it: the difficulty change of the damage (`023`), the owner chain 
 
 ```mermaid
 flowchart LR
-    Class["a player class<br/>(for example Megaman)"] -- "extends" --> Base["MegaPlayer<br/>lifecycle, shared components,<br/>damage rules, hooks"]
+    Class["a player class<br/>(for example Megaman or Protoman)"] -- "extends" --> Base["MegaPlayer<br/>lifecycle, shared components,<br/>damage rules, hooks"]
     Base -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
     Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt, PlayerAirDash.kt<br/>each with the class's params"]
     Class -- "its run buttons" --> Run["PlayerRun.kt<br/>the run gate and buttons"]
@@ -111,7 +115,13 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
   velocity zero). `MegamanBodyFixturesTest` and its reference file `megaman-body-fixtures.txt` hold Megaman's
   order, sizes and gravity.
 - **A class with its own move set keeps its own body.** X has its own body and run (X6 feet and walk). The shared
-  player run gate and body are for a class that moves like Megaman. `runStep` in `entities/movement/` has no player
-  rules, so any entity with a body and a `RunComponent` can run like Megaman.
+  player run gate and body are for a class that moves like Megaman: such a class (for example `Protoman`) calls
+  them with its own params. `runStep` in `entities/movement/` has no player rules, so any entity with a body and a
+  `RunComponent` can run like Megaman.
+- **A rule with 3 callers lives here.** Each class calls the shared sprite hide and flash rule
+  (`applyHideAndFlash` in `PlayerSprite.kt`) and the direction sign (`Direction.upSign()` in `PlayerGravity.kt`). Some
+  parts are still per class: the updatables list (its frame order differs per class), the land sound and the
+  `GutsTank` side-stick rule (2 callers), each with a `TODO` that names item `060`; and the sprite size and place
+  and the animation key. Share such a part when a third class needs the same rule.
 - **Swap only out of the engine.** `PlayerRoster.putInSlot0` throws when the outgoing player is in the engine. Call it
   before the level screen starts, and set the camera focus after it.

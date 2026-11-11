@@ -74,6 +74,7 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         private val BRIGHTEST_LIGHT_SOURCE = GamePair.of(4, 2.5f)
 
         private val LIGHT_UP_ENTITIES = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> GamePair<Int, Float>>(
+            // TODO: this light names Megaman only, so it misses X and Protoman (item 030)
             Megaman::class pairTo { STANDARD_LIGHT_SOURCE },
             Bullet::class pairTo { STANDARD_LIGHT_SOURCE },
             ChargedShot::class pairTo {

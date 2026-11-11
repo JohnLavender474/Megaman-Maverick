@@ -272,7 +272,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                 Direction.LEFT, Direction.RIGHT -> body.physics.velocity.y = 0f
             }
 
-            val gravity = upSign() * ConstVals.PPM * when {
+            val gravity = direction.upSign() * ConstVals.PPM * when {
                 bodyOverGround -> MegamanXValues.GROUND_GRAVITY
                 upSpeed() > 0f -> MegamanXValues.JUMP_GRAVITY
                 else -> MegamanXValues.FALL_GRAVITY
@@ -390,8 +390,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             val flashOn = tint != null && (flashTime / MegamanXValues.CHARGE_FLASH_TIME).toInt() % 2 == 0
             player.setColor(if (flashOn) tint else Color.WHITE)
 
-            player.setAlpha(if (damageRecovery.flash) 0f else 1f)
-            player.hidden = shouldHideSprite()
+            applyHideAndFlash(player)
         }
         return component
     }
@@ -459,10 +458,5 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             }
         )
         return AnimationsComponent(orderedMapOf<Any, IAnimator>(MEGAMAN_X_SPRITE_KEY pairTo animator), sprites)
-    }
-
-    internal fun upSign() = when (direction) {
-        Direction.UP, Direction.RIGHT -> 1f
-        Direction.DOWN, Direction.LEFT -> -1f
     }
 }

@@ -25,7 +25,6 @@ import com.maverick.game.engine.drawables.sprites.splitAndFlatten
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
-import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -37,12 +36,6 @@ const val MEGAMAN_X_SPRITE_KEY = "MegamanX"
 
 internal val HALF_CHARGE_TINT = Color(0.55f, 0.85f, 1f, 1f)
 internal val FULL_CHARGE_TINT = Color(1f, 0.95f, 0.45f, 1f)
-
-internal fun MegamanX.shouldHideSprite(): Boolean {
-    if (frozen) return false
-    if (!inPlay) return true
-    return teleporting && teleporter !is PipePortal
-}
 
 internal fun MegamanX.animationKey(): String {
     val shoot = if (buster.shooting) "_shoot" else ""

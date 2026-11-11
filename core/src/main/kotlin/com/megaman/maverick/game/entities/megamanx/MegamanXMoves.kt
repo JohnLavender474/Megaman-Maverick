@@ -16,6 +16,7 @@ import com.megaman.maverick.game.players.isRunSidePressed
 import com.megaman.maverick.game.players.playerAirDashBehavior
 import com.megaman.maverick.game.players.playerJumpBehavior
 import com.megaman.maverick.game.players.playerWallSlideBehavior
+import com.megaman.maverick.game.players.upSign
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 import com.megaman.maverick.game.entities.state.stunned
@@ -211,8 +212,8 @@ internal fun MegamanX.jumpBehavior() = playerJumpBehavior(
             isBehaviorActive(BehaviorType.AIR_DASHING) ||
                 (sabre.kind == SabreKind.FLOOR && sabre.time < MegamanXValues.SABRE_FLOOR_JUMP_CANCEL_TIME)
         },
-        jumpSpeed = { upSign() * MegamanXValues.JUMP_SPEED },
-        wallJumpSpeed = { upSign() * MegamanXValues.WALL_KICK_SPEED },
+        jumpSpeed = { direction.upSign() * MegamanXValues.JUMP_SPEED },
+        wallJumpSpeed = { direction.upSign() * MegamanXValues.WALL_KICK_SPEED },
         wallJumpHorizontal = 0f,
         wallJumpAllowed = {
             isBehaviorActive(BehaviorType.WALL_SLIDING) ||

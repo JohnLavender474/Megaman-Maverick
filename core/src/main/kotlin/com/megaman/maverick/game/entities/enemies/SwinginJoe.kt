@@ -216,6 +216,7 @@ class SwinginJoe(services: MegaServices) : AbstractEnemy(services, size = Size.M
             ConstKeys.OWNER pairTo this,
             ConstKeys.POSITION pairTo spawn,
             ConstKeys.TRAJECTORY pairTo trajectory,
+            // TODO: this hit mask names Megaman only, so it misses X and Protoman (item 030)
             ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageableEntity>>(Megaman::class)
         )
 

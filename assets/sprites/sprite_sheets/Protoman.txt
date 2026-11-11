@@ -1,0 +1,33 @@
+Protoman.png
+size: 50, 392
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jump
+  rotate: false
+  xy: 1, 293
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+run
+  rotate: false
+  xy: 1, 1
+  size: 48, 192
+  orig: 48, 192
+  offset: 0, 0
+  index: -1
+run_trans
+  rotate: false
+  xy: 1, 343
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+stand
+  rotate: false
+  xy: 1, 195
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1

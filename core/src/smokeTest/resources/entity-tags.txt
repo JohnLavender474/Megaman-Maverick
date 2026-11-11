@@ -401,6 +401,7 @@ projectiles.ToxicGoopShot: ToxicGoopShot
 projectiles.TubeBeam: TubeBeam
 projectiles.UFOBomb: UFOBomb
 projectiles.WilyPlaneBomb: WilyPlaneBomb
+protoman.Protoman: Protoman
 sensors.Death: Death
 sensors.FixtureTypeOverlapSpawn: FixtureTypeOverlapSpawn
 sensors.Gate: Gate

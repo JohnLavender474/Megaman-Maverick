@@ -342,6 +342,7 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
                 "${ConstKeys.BLOCK}_${ConstKeys.SHATTER}" pairTo true,
                 "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}" pairTo objectSetOf(
                     Axe::class,
+                    // TODO: this shield shatter set names Megaman only, so it misses X and Protoman (item 030)
                     Megaman::class,
                     PreciousBlock::class
                 )

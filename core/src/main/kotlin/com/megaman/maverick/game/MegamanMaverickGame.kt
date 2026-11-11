@@ -86,8 +86,9 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megamanx.MegamanX
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megamanx.MegamanX
+import com.megaman.maverick.game.entities.protoman.Protoman
 import com.megaman.maverick.game.entities.state.PlayerProgressComponent
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.input.GamepadInput
@@ -466,6 +467,12 @@ class MegamanMaverickGame(
         megamanX.initialized = true
         gameState.addListener(megamanX.require(PlayerProgressComponent::class))
         roster.add(megamanX, PlayerCharacter.X)
+
+        val protoman = Protoman(services)
+        protoman.init()
+        protoman.initialized = true
+        gameState.addListener(protoman.require(PlayerProgressComponent::class))
+        roster.add(protoman, PlayerCharacter.PROTOMAN)
 
         val levelScreen = MegaLevelScreen(this)
         levelScreen.init()

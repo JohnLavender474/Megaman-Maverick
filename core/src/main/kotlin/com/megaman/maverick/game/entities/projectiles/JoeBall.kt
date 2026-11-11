@@ -148,6 +148,7 @@ class JoeBall(services: MegaServices) : AbstractProjectile(services), IAnimatedE
                 ConstKeys.SOUND pairTo soundAsset,
                 ConstKeys.POSITION pairTo body.getCenter(),
                 ConstKeys.MASK pairTo objectSetOf<KClass<out IDamageableEntity>>(
+                    // TODO: this hit mask names Megaman only, so it misses X and Protoman (item 030)
                     if (owner.asPlayer != null) AbstractEnemy::class else Megaman::class
                 )
             )

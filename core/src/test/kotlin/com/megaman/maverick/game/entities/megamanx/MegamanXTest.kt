@@ -46,6 +46,9 @@ import com.megaman.maverick.game.world.body.BodyLabel
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.addBodyLabel
 import com.megaman.maverick.game.world.body.receiver
+import com.maverick.game.engine.components.require
+import com.maverick.game.engine.drawables.sprites.GameSprite
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.shouldBe
@@ -410,6 +413,36 @@ class MegamanXTest : DescribeSpec({
         it("shows the damage pose") {
             hurt()
             x.animationKey() shouldBe "damaged"
+        }
+    }
+
+    describe("the sprite") {
+        fun drawn(): GameSprite {
+            val sprites = x.defineSpritesComponent()
+            sprites.preProcess(0f)
+            return sprites.sprites[MEGAMAN_X_SPRITE_KEY]!!
+        }
+
+        it("shows in play") {
+            val sprite = drawn()
+            sprite.hidden shouldBe false
+            sprite.color.a shouldBe 1f
+        }
+
+        it("hides out of play") {
+            x.setPlayPhase(PlayPhase.PRE_PLAY)
+            drawn().hidden shouldBe true
+        }
+
+        it("shows while frozen, also out of play") {
+            x.require(FreezeComponent::class).freeze()
+            x.setPlayPhase(PlayPhase.PRE_PLAY)
+            drawn().hidden shouldBe false
+        }
+
+        it("flashes in the damage recovery") {
+            x.damageRecovery.update(MegamanValues.DAMAGE_FLASH_DURATION, false, true)
+            drawn().color.a shouldBe 0f
         }
     }
 })

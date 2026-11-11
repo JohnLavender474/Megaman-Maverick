@@ -508,6 +508,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
                     "${ConstKeys.FIRST}_${ConstKeys.TARGET}" pairTo target,
                     "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}" pairTo objectSetOf(
                         Axe::class,
+                        // TODO: this shield shatter set names Megaman only, so it misses X and Protoman (item 030)
                         Megaman::class,
                         PreciousBlock::class
                     )
@@ -566,6 +567,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
                     ConstKeys.SPEED pairTo speed,
                     ConstKeys.POSITION pairTo spawn,
                     "${ConstKeys.FIRST}_${ConstKeys.TARGET}" pairTo target,
+                    // TODO: this shield shatter set names Megaman only, so it misses X and Protoman (item 030)
                     "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}" pairTo objectSetOf(Axe::class, Megaman::class)
                 )
             )
@@ -911,6 +913,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
             val gem = entry.key
             gem.shieldShatterClasses = objectSetOf(
                 Axe::class,
+                // TODO: this shield shatter set names Megaman only, so it misses X and Protoman (item 030)
                 Megaman::class,
                 PreciousBlock::class
             )

@@ -146,22 +146,10 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
             } else GameLogger.debug(TAG, "direction-set(): value same as field")
 
             playerGravity.applyDirection(value)
-
-            when (value) {
-                Direction.UP, Direction.RIGHT -> {
-                    jumpVel = MegamanValues.JUMP_VEL
-                    wallJumpVel = MegamanValues.WALL_JUMP_VEL
-
-                    swimVel = MegamanValues.SWIM_VEL_Y
-                }
-
-                Direction.DOWN, Direction.LEFT -> {
-                    jumpVel = -MegamanValues.JUMP_VEL
-                    wallJumpVel = -MegamanValues.WALL_JUMP_VEL
-
-                    swimVel = -MegamanValues.SWIM_VEL_Y
-                }
-            }
+            val sign = value.upSign()
+            jumpVel = MegamanValues.JUMP_VEL * sign
+            wallJumpVel = MegamanValues.WALL_JUMP_VEL * sign
+            swimVel = MegamanValues.SWIM_VEL_Y * sign
         }
 
     lateinit var aButtonTask: AButtonTask

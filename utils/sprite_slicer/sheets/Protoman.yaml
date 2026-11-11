@@ -1,0 +1,18 @@
+# Protoman_prepared.png is made by prepare_protoman.py from the fan sheet "Proto Man (Expanded) (Inti Creates
+# 8-bit-Style)" (sprites by Hansungkee and others; see assets/credits.txt). The script crops the cells, keys the
+# cell colors and mirrors each frame to face right. See
+# docs/mega-refactor/items/060-proto-man/branches/mega-refactor-060b-protoman-move/docs/NOTES.md.
+name: Protoman
+sheet: Protoman_prepared.png
+
+defaults:
+  cell: [48, 48]
+  anchor_y: bottom
+  align_x: overlap
+  align_to: stand
+
+animations:
+  - {name: stand, row: 1, frames: [0, 1], align_to: null}
+  - {name: run_trans, row: 2, frames: [0, 0]}
+  - {name: run, row: 3, frames: [0, 3], align_x: center, offsets: {0: [2, 0]}}
+  - {name: jump, row: 4, frames: [0, 0], align_x: center, offsets: {0: [2, 0]}}

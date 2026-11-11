@@ -20,11 +20,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.special.PipePortal
-import com.megaman.maverick.game.entities.state.frozen
-import com.megaman.maverick.game.entities.state.inPlay
-import com.megaman.maverick.game.entities.state.teleporter
-import com.megaman.maverick.game.entities.state.teleporting
+import com.megaman.maverick.game.players.applyHideAndFlash
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -101,13 +97,6 @@ fun getMegamanSpritePriority(out: DrawingPriority): DrawingPriority {
     return out
 }
 
-fun Megaman.shouldHideSprite(): Boolean {
-    if (frozen) return false
-    if (!inPlay) return true
-    if (teleporting && teleporter !is PipePortal) return true
-    return false
-}
-
 internal fun Megaman.defineMegamanSprite(component: SpritesComponent) {
     val priority = DrawingPriority()
     val sprite = GameSprite(getMegamanSpritePriority(priority))
@@ -124,8 +113,7 @@ internal fun Megaman.defineMegamanSprite(component: SpritesComponent) {
         player.translateY(getSpriteYTranslation() * ConstVals.PPM)
         // TODO: a debug marker for the second player, for now; a real marker is an open choice in item 047
         if ((playerSlot?.index ?: 0) > 0) player.setColor(SECOND_PLAYER_TINT)
-        player.setAlpha(if (damageRecovery.flash) 0f else 1f)
-        player.hidden = shouldHideSprite()
+        applyHideAndFlash(player)
     }
 }
 
