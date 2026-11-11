@@ -2062,6 +2062,21 @@ newest entry at the bottom.
   adds a `COMPACTOR` level filter that reads `getTag()` (use `it !is Life && it !is WeaponEnergyBulb`). Each fixes
   them when it takes in `master`.
 
+## 2026-11-11 — mega-refactor-060j-mega-player
+
+- Summary: squash `2e773ad83`. Refactor only: the abstract `players/MegaPlayer` base class owns the shared player
+  wiring (damage, invincible, facing, events, points, camera subject, progress and heart tanks, freeze, room carry)
+  and final `onSpawn`, `onDestroy`, `onEvent` and `takeDamageFrom` with hooks; `Megaman` and `MegamanX` extend it.
+  The run's movement is the generic `entities/movement/Run.kt`; the move functions take `player: MegaPlayer` (`TODO`s
+  for item `121`); the 2 last `playerSlot!!` reads are `slot` (item `148` done). Every spawn sets the max health from
+  the heart tanks (now also Megaman). This entry was added after the `060b` merge; the `060j` merge docs
+  (`a1be3cd59`) did not add it.
+- Contract check: `engine:test` 675, `core:test` 1337, `core:smokeTest` 451, `lwjgl3:jar` built. Review before the
+  play test (2 agents; 2 low findings, 1 fixed). The owner's play test: all 13 checks pass. Diffity: 0 threads. CI
+  did not run, because the branch was never pushed.
+- Follow-up: `081f` re-applies its 2 hunks in X's animations builder, now in `MegamanX.kt` (owner: "060j now; 081f
+  adapts"; `081` `ITEM.md`). No backlog or bug candidates.
+
 ## 2026-11-11 — mega-refactor-060b-protoman-move
 
 - Summary: squash `e89978212`. `Protoman` is a third player class on `MegaPlayer`, in slot 0 on the new test level
