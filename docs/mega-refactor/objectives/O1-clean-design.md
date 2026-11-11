@@ -92,6 +92,10 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
   The engine runs `init()` before `canSpawn`; `canSpawn` reads `init()` data, props and the session, never per-spawn
   state, and writes nothing (`CLAUDE.md`). New APIs and their callers: `SCOPE.md` of `146a`.
 
+- `151a` (2026-11-11): the level progress family is "completed" (`GameState.levelsCompleted`, `isLevelCompleted`,
+  `IGameStateListener.onAddLevelCompleted`, `MegaPlayer.onLevelCompleted`); "defeated" is the boss vocabulary only.
+  `allLevelsDefeated` is gone. No redo.
+
 ## Items
 
 | Item | Status | Note |
@@ -164,7 +168,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `148` | done | [The last player reads take `IPlayer`](../items/148-last-player-reads/ITEM.md) (main) |
 | `149` | idea | [Tag changes at runtime, with an index that follows them](../items/149-runtime-tag-changes/ITEM.md) (main) |
 | `150` | idea | [Shared movement helpers for bosses and enemies](../items/150-boss-movement-helpers/ITEM.md) (main) |
-| `151` | active | [Rename the level progress vocabulary from "defeated" to "completed"](../items/151-level-completed-rename/ITEM.md) (main) |
+| `151` | done | [Rename the level progress vocabulary from "defeated" to "completed"](../items/151-level-completed-rename/ITEM.md) (main) |
 
 ## Gaps with no item
 

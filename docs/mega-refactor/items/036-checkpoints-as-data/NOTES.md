@@ -223,7 +223,7 @@ Restored:
 
 Not restored, or restored only by ad hoc means:
 1. Background visibility (`backgroundsToHide`). It is not reset. The co-located `EventTrigger`s (item B) fix it, and that works only where someone placed them.
-2. Mini-bosses and bosses. Rooms with `event=boss` start the fight each time the player enters (`MegaLevelScreen.kt:334-357`, `:694-718`). A defeated mini-boss is fought again after a respawn behind it. No per-run "defeated" flag exists, except `game.state.isLevelDefeated` for the end boss on a replay (`:704-711`).
+2. Mini-bosses and bosses. Rooms with `event=boss` start the fight each time the player enters (`MegaLevelScreen.kt:334-357`, `:694-718`). A defeated mini-boss is fought again after a respawn behind it. No per-run "defeated" flag exists, except `game.state.isLevelCompleted` for the end boss on a replay (`:704-711`).
 3. Collected items. All spawners default to `respawnable=true`. Live maps have 0 `respawnable=false` and 0 `reset=false`, so pickups come back. Heart tanks and similar items use `game.state`.
 4. Coins and level points are reset only in `start()` (`:476-478`), not on respawn. I did not check whether that is intended.
 5. Room music on respawn: three code paths.

@@ -1,11 +1,11 @@
 # 151: Rename the level progress vocabulary from "defeated" to "completed"
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `007` (the planned JSON save key), `036`, `060` (`MegaPlayer` hooks)
-- Branches: `151a` (`mega-refactor-151a-level-completed-rename`, started 2026-11-11)
+- Branches: `151a` (`mega-refactor-151a-level-completed-rename`, merged 2026-11-11)
 
 ## Goal
 
@@ -49,6 +49,11 @@ with the rename." After the review: "Go with your recommendations."
   review, accepted with "go with your recommendations").
 - 2026-11-11: the rename is its own item, not a QoL change in `060c`: it crosses 18 files and a listener interface,
   and `060c` is a feature branch on `MegaPlayer`.
+
+## Decisions, later
+
+- 2026-11-11 (owner, at the play checks): the dev flag `--saveFile <name>` went into `151a` as a small QoL change, so a
+  play test can use its own save file. `007` grows it into a path to a slot file.
 
 ## Open questions
 

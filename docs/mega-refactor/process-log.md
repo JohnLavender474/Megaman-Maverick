@@ -2093,3 +2093,21 @@ newest entry at the bottom.
   Proto Man frames (`060c` to `060e`) and the shared updatables order (`060`). `081f` already conflicts with `master`
   in `MegamanXSprites.kt` (from `060j`); `060b` adds the removal of `MegamanX.shouldHideSprite` there, which `081f`
   does not call. It takes the `master` side when it takes in `master`.
+
+## 2026-11-11 — mega-refactor-151a-level-completed-rename
+
+- Summary: squash `91cc4e9da`. The level progress family is renamed from "defeated" to "completed":
+  `GameState.levelsCompleted`, `isLevelCompleted`, `addLevelCompleted`, `removeLevelCompleted`,
+  `allRobotMasterLevelsCompleted`, `IGameStateListener.onAddLevelCompleted` and `onRemoveLevelCompleted`,
+  `PlayerProgressComponent` and `MegaPlayer.onLevelCompleted` (18 Kotlin files). "defeated" stays the boss vocabulary
+  (`AbstractBoss.defeated`, `BOSS_DEFEATED`, `ConstKeys.DEFEATED`, the atlas keys). `allLevelsDefeated` is deleted (0
+  callers; never true, because the ending does not record `WILY_STAGE_3`). The 3 remove messages in
+  `GameState.reset()` for heart tanks, health tanks and enhancements name their own collection. The save string is
+  unchanged. QoL change at the owner's request: the dev flag `--saveFile <name>` chooses the preferences file that
+  holds the save, so a play test uses its own save file.
+- Contract check: `engine:test` 675, `core:test` 1364, `core:smokeTest` 452, `lwjgl3:jar` built. Review before the
+  play test (1 agent; 0 blockers; 2 play checks rewritten so that they run their path). The owner's play test: check
+  1 and 7 `--saveFile` scenarios pass. Diffity: 0 threads. CI did not run, because the branch was never pushed.
+- Follow-up: item `152` (record the last Wily stage as completed at the ending) from the backlog candidate. The
+  open issue `2026-11-02-boss-props-have-two-sources.md` and the `007` and `036` notes now name the new identifiers
+  (the `007` JSON key is `levelsCompleted`). `060c` must use `onLevelCompleted` for Proto Man code under `MegaPlayer`.

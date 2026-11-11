@@ -53,7 +53,7 @@ C. A small `SaveStorage` interface in core: `read(name)`, `write(name, text)`, `
 - File layout: a fixed number of slots, `saves/slot-1.json` to `saves/slot-3.json`, and a separate `settings.json` (item 33). You do not need an index file. Keep "last used slot" in `settings.json`. `list()` finds the slots that exist.
 - Write each file safely: write `slot-N.json.tmp`, rename it over the real file, and keep `slot-N.json.bak`.
 - Schema v1:
-  `{ "version": 1, "gameVersion": "1.0.1", "savedAt": "<ISO time>", "progress": { "levelsDefeated": [...], "heartTanks": [...], "healthTanks": { "A": 0, ... }, "enhancements": [...], "currency": 0, "difficulty": "HARD" }, "unknown": { ... } }`
+  `{ "version": 1, "gameVersion": "1.0.1", "savedAt": "<ISO time>", "progress": { "levelsCompleted": [...], "heartTanks": [...], "healthTanks": { "A": 0, ... }, "enhancements": [...], "currency": 0, "difficulty": "HARD" }, "unknown": { ... } }`
   The `healthTanks` map can store how full each tank is (F4), if the owner wants that. When a name does not match an enum, keep the raw name in `unknown` and do not drop it. Then a retired level does not silently disappear from a save.
 - Migration chain: a list of steps, each `from -> to`, that work on the raw JSON tree (LibGDX `JsonValue`).
   - v0 is the legacy positional string. A frozen copy of the current parser (`LegacySaveV0`) turns it into a v1 tree. Do not call `GameState.fromString` for this, because that code will change later.

@@ -83,6 +83,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `133` | idea | [A cue that shows who waits at a room exit](../items/133-exit-wait-cue/ITEM.md) (main) |
 | `134` | done | [Draw bodies and the camera between physics steps (render interpolation)](../items/134-render-interpolation/ITEM.md) (main) |
 | `147` | idea | [Render interpolation for riders and for bodies that move once per frame](../items/147-interpolation-riders-frame-moved/ITEM.md) (main) |
+| `152` | idea | [Record the last Wily stage as completed at the ending](../items/152-record-final-stage-completed/ITEM.md) (main) |
 
 ## Gaps with no item
 

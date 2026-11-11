@@ -17,7 +17,7 @@ related-items: [118]
 
 ## What happens
 
-The `WilyFinalBoss` map object has no `end`, so the screen reads `true`, and it checks `isLevelDefeated(WILY_STAGE_3)`. The boss reads `false`. The research infers that normal play cannot reach the check: the write at `MegaLevelScreen.kt:829` runs on `END_LEVEL`, and `Wily` ends with `GAME_COMPLETE`.
+The `WilyFinalBoss` map object has no `end`, so the screen reads `true`, and it checks `isLevelCompleted(WILY_STAGE_3)`. The boss reads `false`. The research infers that normal play cannot reach the check: the write at `MegaLevelScreen.kt:829` runs on `END_LEVEL`, and `Wily` ends with `GAME_COMPLETE`.
 
 For a forced `mini`, the screen and the boss can also disagree. In all, 12 lines in 8 subclasses overwrite map props.
 
