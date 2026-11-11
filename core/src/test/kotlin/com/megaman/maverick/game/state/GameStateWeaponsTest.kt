@@ -19,11 +19,11 @@ class GameStateWeaponsTest : DescribeSpec({
             owned() shouldBe setOf(MegamanWeapon.MEGA_BUSTER)
         }
 
-        it("get the reward weapons when a level is defeated, and lose them when it is removed") {
-            state.addLevelDefeated(LevelDefinition.MOON_MAN)
+        it("get the reward weapons when a level is completed, and lose them when it is removed") {
+            state.addLevelCompleted(LevelDefinition.MOON_MAN)
             owned() shouldBe setOf(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.MOON_SCYTHES, MegamanWeapon.RUSH_JET)
 
-            state.removeLevelDefeated(LevelDefinition.MOON_MAN)
+            state.removeLevelCompleted(LevelDefinition.MOON_MAN)
             owned() shouldBe setOf(MegamanWeapon.MEGA_BUSTER)
         }
 
@@ -34,7 +34,7 @@ class GameStateWeaponsTest : DescribeSpec({
 
         it("keep the weapons that a level override added when reset removes the levels") {
             state.addWeapon(MegamanWeapon.FRIGID_SHOT)
-            state.addLevelDefeated(LevelDefinition.DESERT_MAN)
+            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
 
             state.reset()
 
@@ -43,7 +43,7 @@ class GameStateWeaponsTest : DescribeSpec({
 
         it("keep only the buster after clearWeapons") {
             state.addWeapon(MegamanWeapon.FRIGID_SHOT)
-            state.addLevelDefeated(LevelDefinition.DESERT_MAN)
+            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
 
             state.clearWeapons()
 
@@ -51,8 +51,8 @@ class GameStateWeaponsTest : DescribeSpec({
             state.containsWeapon(MegamanWeapon.MEGA_BUSTER) shouldBe true
         }
 
-        it("come back from the save string through the levels defeated, and are not in it") {
-            state.addLevelDefeated(LevelDefinition.GLACIER_MAN)
+        it("come back from the save string through the levels completed, and are not in it") {
+            state.addLevelCompleted(LevelDefinition.GLACIER_MAN)
             state.addWeapon(MegamanWeapon.AXE_SWINGER)
             val saved = state.toString()
             saved shouldBe "GLACIER_MAN;;;;0;NORMAL"

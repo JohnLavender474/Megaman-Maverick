@@ -11,5 +11,6 @@ data class LaunchOptions(
     val autoPerf: Boolean = true,
     val players: String? = null,
     val mode: String? = null,
-    val viewEdges: String? = null
+    val viewEdges: String? = null,
+    val saveFile: String? = null
 )

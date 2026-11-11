@@ -7,9 +7,9 @@ import com.megaman.maverick.game.levels.LevelDefinition
 
 interface IGameStateListener {
 
-    fun onAddLevelDefeated(level: LevelDefinition) {}
+    fun onAddLevelCompleted(level: LevelDefinition) {}
 
-    fun onRemoveLevelDefeated(level: LevelDefinition) {}
+    fun onRemoveLevelCompleted(level: LevelDefinition) {}
 
     fun onAddHeartTank(heartTank: MegaHeartTank) {}
 

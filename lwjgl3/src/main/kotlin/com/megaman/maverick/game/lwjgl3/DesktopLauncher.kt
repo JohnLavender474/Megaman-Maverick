@@ -90,7 +90,8 @@ object DesktopLauncher {
             autoPerf = appArgs.autoPerf,
             players = appArgs.players,
             mode = appArgs.mode,
-            viewEdges = appArgs.viewEdges
+            viewEdges = appArgs.viewEdges,
+            saveFile = appArgs.saveFile
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
 
@@ -113,6 +114,7 @@ object DesktopLauncher {
         println("- Players: " + appArgs.players)
         println("- Mode: " + appArgs.mode)
         println("- View Edges: " + appArgs.viewEdges)
+        println("- Save File: " + appArgs.saveFile)
         println("- Interpolation: " + (appArgs.interpolation ?: DEFAULT_INTERPOLATION))
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Reset Bindings: " + appArgs.resetBindings)
@@ -446,6 +448,13 @@ object DesktopLauncher {
                 "cap is the most seconds after the delay that a WARP waits for a safe spot."
         )
         var viewEdges: String? = null
+
+        @Parameter(
+            names = ["--saveFile"],
+            description = "Dev option: the name of the preferences file that holds the save, in place of the game's " +
+                "own save file, for example test-save (a file under ~/.prefs/). A new name starts with no save."
+        )
+        var saveFile: String? = null
 
         @Parameter(
             names = ["--interpolation"],

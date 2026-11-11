@@ -26,7 +26,7 @@ class GameState : Resettable {
         const val TAG = "GameState"
     }
 
-    private val levelsDefeated = ObjectSet<LevelDefinition>()
+    private val levelsCompleted = ObjectSet<LevelDefinition>()
     private val heartTanksCollected = ObjectSet<MegaHeartTank>()
     private val enhancementsAttained = ObjectSet<MegaEnhancement>()
     private val healthTanksCollected = ObjectMap<MegaHealthTank, Points>()
@@ -50,36 +50,34 @@ class GameState : Resettable {
         GameLogger.debug(TAG, "removeListener(): listener=$listener, removed=$removed")
     }
 
-    fun isLevelDefeated(level: LevelDefinition) = levelsDefeated.contains(level)
+    fun isLevelCompleted(level: LevelDefinition) = levelsCompleted.contains(level)
 
-    fun addLevelDefeated(level: LevelDefinition) {
-        val added = levelsDefeated.add(level)
-        GameLogger.debug(TAG, "addLevelDefeated(): level=$level, added=$added")
+    fun addLevelCompleted(level: LevelDefinition) {
+        val added = levelsCompleted.add(level)
+        GameLogger.debug(TAG, "addLevelCompleted(): level=$level, added=$added")
         if (added) {
             weaponsOwned.addAll(LevelRewards.weaponsFor(level))
-            listeners.forEach { it.onAddLevelDefeated(level) }
+            listeners.forEach { it.onAddLevelCompleted(level) }
         }
     }
 
-    fun removeLevelDefeated(level: LevelDefinition) {
-        val removed = levelsDefeated.remove(level)
-        GameLogger.debug(TAG, "removeLevelDefeated(): level=$level, removed=$removed")
+    fun removeLevelCompleted(level: LevelDefinition) {
+        val removed = levelsCompleted.remove(level)
+        GameLogger.debug(TAG, "removeLevelCompleted(): level=$level, removed=$removed")
         if (removed) {
             LevelRewards.weaponsFor(level).forEach { weaponsOwned.remove(it) }
-            listeners.forEach { it.onRemoveLevelDefeated(level) }
+            listeners.forEach { it.onRemoveLevelCompleted(level) }
         }
     }
 
-    fun allRobotMasterLevelsDefeated() =
-        LevelDefMap.getDefsOfLevelType(LevelType.ROBOT_MASTER_LEVEL).all { level -> isLevelDefeated(level) }
+    fun allRobotMasterLevelsCompleted() =
+        LevelDefMap.getDefsOfLevelType(LevelType.ROBOT_MASTER_LEVEL).all { level -> isLevelCompleted(level) }
 
     fun getNextWilyStage(): LevelDefinition? {
-        if (!allRobotMasterLevelsDefeated()) return null
+        if (!allRobotMasterLevelsCompleted()) return null
         val wilyStages = LevelDefMap.getDefsOfLevelType(LevelType.WILY_LEVEL)
-        return wilyStages.firstOrNull { wilyStage -> !isLevelDefeated(wilyStage) }
+        return wilyStages.firstOrNull { wilyStage -> !isLevelCompleted(wilyStage) }
     }
-
-    fun allLevelsDefeated() = allRobotMasterLevelsDefeated() && getNextWilyStage() == null
 
     fun containsWeapon(weapon: MegamanWeapon) = weapon == MegamanWeapon.MEGA_BUSTER || weaponsOwned.contains(weapon)
 
@@ -292,13 +290,13 @@ class GameState : Resettable {
     override fun reset() {
         GameLogger.debug(TAG, "reset()")
 
-        val levelIter = levelsDefeated.toGdxArray().iterator()
+        val levelIter = levelsCompleted.toGdxArray().iterator()
         while (levelIter.hasNext()) {
             val level = levelIter.next()
             try {
-                removeLevelDefeated(level)
+                removeLevelCompleted(level)
             } catch (e: Exception) {
-                throw Exception("Failed to remove level: ${level}. Levels defeated: $levelsDefeated", e)
+                throw Exception("Failed to remove level: ${level}. Levels completed: $levelsCompleted", e)
             }
         }
 
@@ -308,7 +306,7 @@ class GameState : Resettable {
             try {
                 removeHeartTank(heartTank)
             } catch (e: Exception) {
-                throw Exception("Failed to remove heart tank: ${heartTank}. Levels defeated: $heartTanksCollected", e)
+                throw Exception("Failed to remove heart tank: ${heartTank}. Heart tanks collected: $heartTanksCollected", e)
             }
         }
 
@@ -319,7 +317,7 @@ class GameState : Resettable {
                 removeHealthTank(healthTank)
             } catch (e: Exception) {
                 throw Exception(
-                    "Failed to remove health tank: ${healthTank}. Levels defeated: $healthTanksCollected",
+                    "Failed to remove health tank: ${healthTank}. Health tanks collected: $healthTanksCollected",
                     e
                 )
             }
@@ -331,7 +329,7 @@ class GameState : Resettable {
             try {
                 removeEnhancement(enhancement)
             } catch (e: Exception) {
-                throw Exception("Failed to remove enhancement: ${enhancement}. Levels defeated: $enhancement", e)
+                throw Exception("Failed to remove enhancement: ${enhancement}. Enhancements attained: $enhancementsAttained", e)
             }
         }
 
@@ -344,7 +342,7 @@ class GameState : Resettable {
     override fun toString(): String {
         val builder = StringBuilder()
 
-        val levelDefs = levelsDefeated.sorted().joinToString(",") { it.name }
+        val levelDefs = levelsCompleted.sorted().joinToString(",") { it.name }
         builder.append("$levelDefs;")
 
         val heartTanks = heartTanksCollected.sorted().joinToString(",") { it.name }
@@ -376,8 +374,8 @@ class GameState : Resettable {
         if (lines.size >= 1 && !lines[0].isEmpty()) lines[0].forEach {
             try {
                 val level = LevelDefinition.valueOf(it.uppercase())
-                if (level.type != LevelType.EXTRA_LEVEL) addLevelDefeated(level)
-                else GameLogger.log(TAG, "fromString(): do not record extra level as defeated: $it")
+                if (level.type != LevelType.EXTRA_LEVEL) addLevelCompleted(level)
+                else GameLogger.log(TAG, "fromString(): do not record extra level as completed: $it")
             } catch (e: Exception) {
                 GameLogger.error(TAG, "fromString(): failed to add level: $it", e)
             }

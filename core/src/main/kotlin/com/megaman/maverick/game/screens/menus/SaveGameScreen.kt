@@ -85,7 +85,7 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             override fun onSelect(delta: Float): Boolean {
                 when {
                     game.levelState.isInExtraLevel -> game.startExtraLevel(game.levelState.currentLevel!!)
-                    game.gameState.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
+                    game.gameState.isLevelCompleted(LevelDefinition.INTRO_STAGE) ->
                         game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
                     else -> {
                         game.levelState.currentLevel = LevelDefinition.INTRO_STAGE

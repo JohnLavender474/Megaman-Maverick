@@ -325,7 +325,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                                 // the player can always exit an extra level or a test level
                                 if (game.levelState.isInExtraLevel || game.levelState.isInTestLevel ||
-                                    game.gameState.isLevelDefeated(game.levelState.currentLevel!!)
+                                    game.gameState.isLevelCompleted(game.levelState.currentLevel!!)
                                 ) {
                                     game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
                                     game.audio.fadeOutMusic(EXIT_DUR)

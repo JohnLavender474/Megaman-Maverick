@@ -32,18 +32,18 @@ class MegamanProgressTest : DescribeSpec({
 
     afterEach { unmockkAll() }
 
-    describe("a newly defeated level") {
+    describe("a newly completed level") {
         it("sets the reward weapons of that level") {
-            state.addLevelDefeated(LevelDefinition.DESERT_MAN)
+            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
 
             services.levelState.weaponsAttained!!.contains(MegamanWeapon.NEEDLE_SPIN) shouldBe true
         }
 
-        it("does not set them again for a level that is already defeated") {
-            state.addLevelDefeated(LevelDefinition.DESERT_MAN)
+        it("does not set them again for a level that is already completed") {
+            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
             services.levelState.weaponsAttained = null
 
-            state.addLevelDefeated(LevelDefinition.DESERT_MAN)
+            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
 
             services.levelState.weaponsAttained shouldBe null
         }

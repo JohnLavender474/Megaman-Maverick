@@ -31,7 +31,8 @@ data class ResolvedLaunch(
     val healthTanks: Set<MegaHealthTank>,
     val players: Int = 1,
     val mode: GameMode = GameMode.SINGLE,
-    val rules: SessionRules = mode.rules
+    val rules: SessionRules = mode.rules,
+    val saveFile: String = PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE
 ) {
 
     val savesAllowed: Boolean
@@ -71,6 +72,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val players = parsePlayers(options.players, errors)
     val mode = parseMode(options.mode, players, errors)
     val viewEdges = parseViewEdges(options.viewEdges, players, mode.rules.viewEdges, errors)
+    val saveFile = parseSaveFile(options.saveFile, errors)
     if (level != null && players != null && players > 1 && PlayerCharacter.MEGAMAN !in level.characters)
         errors.add("--level $level plays only with 1 player (${level.characters.joinToString()}); remove --players.")
 
@@ -89,7 +91,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     return LaunchResult(
         ResolvedLaunch(
             start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players!!, mode,
-            mode.rules.copy(viewEdges = viewEdges)
+            mode.rules.copy(viewEdges = viewEdges), saveFile
         ),
         errors
     )
@@ -148,6 +150,13 @@ private fun parseViewEdges(
         }
     }
     return rules
+}
+
+private fun parseSaveFile(value: String?, errors: MutableList<String>): String {
+    if (value == null) return PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE
+    val name = value.trim()
+    if (name.isEmpty()) errors.add("--saveFile needs a name, for example --saveFile test-save.")
+    return name
 }
 
 private fun parsePlayers(value: String?, errors: MutableList<String>): Int? {

@@ -33,10 +33,10 @@ class MegamanWeaponsHandlerOwnershipTest : DescribeSpec({
             handler.hasWeapon(MegamanWeapon.MEGA_BUSTER) shouldBe true
             handler.hasWeapon(MegamanWeapon.FRIGID_SHOT) shouldBe false
 
-            state.addLevelDefeated(LevelDefinition.GLACIER_MAN)
+            state.addLevelCompleted(LevelDefinition.GLACIER_MAN)
             handler.hasWeapon(MegamanWeapon.FRIGID_SHOT) shouldBe true
 
-            state.removeLevelDefeated(LevelDefinition.GLACIER_MAN)
+            state.removeLevelCompleted(LevelDefinition.GLACIER_MAN)
             handler.hasWeapon(MegamanWeapon.FRIGID_SHOT) shouldBe false
         }
 

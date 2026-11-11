@@ -149,7 +149,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
                 if (game.hasSavedState() && game.loadSavedState()) {
                     GameLogger.debug(TAG, "Loaded saved state")
                     when {
-                        game.gameState.isLevelDefeated(LevelDefinition.INTRO_STAGE) ->
+                        game.gameState.isLevelCompleted(LevelDefinition.INTRO_STAGE) ->
                             game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
 
                         else -> {

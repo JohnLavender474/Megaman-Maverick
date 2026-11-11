@@ -6,12 +6,12 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.state.IGameStateListener
 
 class PlayerProgressComponent(
-    private val onLevelDefeated: (LevelDefinition) -> Unit,
+    private val onLevelCompleted: (LevelDefinition) -> Unit,
     private val onHeartTanksChanged: () -> Unit,
     private val onCurrencyAdded: () -> Unit
 ) : IGameComponent, IGameStateListener {
 
-    override fun onAddLevelDefeated(level: LevelDefinition) = onLevelDefeated(level)
+    override fun onAddLevelCompleted(level: LevelDefinition) = onLevelCompleted(level)
 
     override fun onAddHeartTank(heartTank: MegaHeartTank) = onHeartTanksChanged()
 

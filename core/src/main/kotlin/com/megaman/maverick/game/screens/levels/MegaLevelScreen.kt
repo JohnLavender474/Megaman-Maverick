@@ -738,7 +738,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
                 // if this fight ends the level, then check if the victory event should be triggered (when the
                 // boss is already defeated)
-                if (plan.endsLevel && game.gameState.isLevelDefeated(game.levelState.currentLevel!!)) {
+                if (plan.endsLevel && game.gameState.isLevelCompleted(game.levelState.currentLevel!!)) {
                     eventsMan.submitEvent(Event(EventType.VICTORY_EVENT))
                     return
                 }
@@ -774,7 +774,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
                 val level = game.levelState.currentLevel!!
-                if (level.type != LevelType.EXTRA_LEVEL) game.gameState.addLevelDefeated(level)
+                if (level.type != LevelType.EXTRA_LEVEL) game.gameState.addLevelCompleted(level)
 
                 val nextScreen = screenOnCompletion.invoke(game.levelState)
                 game.setCurrentScreen(nextScreen.name)

@@ -111,7 +111,7 @@ abstract class MegaPlayer(services: MegaServices) : AbstractHealthEntity(service
 
     protected open fun teleportableComponent() = TeleportableComponent()
 
-    protected open fun onLevelDefeated(level: LevelDefinition) {}
+    protected open fun onLevelCompleted(level: LevelDefinition) {}
 
     protected open fun onPlayerSpawn(spawnProps: Properties) {}
 
@@ -253,7 +253,7 @@ abstract class MegaPlayer(services: MegaServices) : AbstractHealthEntity(service
     // TODO: X shares Megaman's progress (heart tanks, health tanks, lives) for now; a profile for each character is
     //  in items 047 and 059
     internal fun definePlayerProgressComponent() = PlayerProgressComponent(
-        onLevelDefeated = { level -> onLevelDefeated(level) },
+        onLevelCompleted = { level -> onLevelCompleted(level) },
         onHeartTanksChanged = { setMaxHealthFromHeartTanks() },
         onCurrencyAdded = {
             if (services.gameState.getCurrency() < services.gameState.getMaxCurrency())

@@ -150,7 +150,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                 val key = buttonKey
                 when (key) {
                     BACK_BUTTON_KEY, null -> PRESS_START
-                    Position.CENTER.name -> if (game.gameState.allRobotMasterLevelsDefeated()) DR_WILY else MEGA_MAN
+                    Position.CENTER.name -> if (game.gameState.allRobotMasterLevelsCompleted()) DR_WILY else MEGA_MAN
                     else -> {
                         val position = Position.valueOf(key)
                         levelDefGrid[position].getFormattedName()
@@ -227,7 +227,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         val wilyFace = atlas.findRegion("Wily")
 
         val faceSupplier: () -> TextureRegion = faceSupplier@{
-            if (game.gameState.allRobotMasterLevelsDefeated()) return@faceSupplier wilyFace
+            if (game.gameState.allRobotMasterLevelsCompleted()) return@faceSupplier wilyFace
 
             val position = Position.entries.find { it.name == buttonKey } ?: Position.CENTER
             val megamanFace = megamanFaces[position]
@@ -248,7 +248,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         buttons.put(Position.CENTER.name, object : IMenuButton {
 
             override fun onSelect(delta: Float): Boolean {
-                if (game.gameState.allRobotMasterLevelsDefeated()) {
+                if (game.gameState.allRobotMasterLevelsCompleted()) {
                     val wilyStage = game.gameState.getNextWilyStage()
 
                     if (wilyStage == null) {
@@ -302,7 +302,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         )
         val faceSupplier: () -> TextureRegion = {
             when {
-                game.gameState.isLevelDefeated(levelDef) -> regions[ConstKeys.BLACK]
+                game.gameState.isLevelCompleted(levelDef) -> regions[ConstKeys.BLACK]
                 else -> mugshotRegion
             }
         }
@@ -343,7 +343,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
                 moonPieces.setPosition(x, y)
                 moonPieces.setSize(width, height)
 
-                moonPieces.hidden = game.gameState.isLevelDefeated(levelDef)
+                moonPieces.hidden = game.gameState.isLevelCompleted(levelDef)
             }
         }
     }
@@ -364,7 +364,7 @@ class LevelSelectScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, Positi
         game.getUiCamera().position.set(ConstFuncs.getUiCamInitPos())
 
         val musicAsset = when {
-            game.gameState.allRobotMasterLevelsDefeated() -> MusicAsset.MMX5_STAGE_SELECT_2_MUSIC
+            game.gameState.allRobotMasterLevelsCompleted() -> MusicAsset.MMX5_STAGE_SELECT_2_MUSIC
             else -> MusicAsset.MMX5_STAGE_SELECT_1_MUSIC
         }
         game.audio.playMusic(musicAsset, true)

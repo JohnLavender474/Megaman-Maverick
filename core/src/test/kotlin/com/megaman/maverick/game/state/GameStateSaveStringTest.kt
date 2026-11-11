@@ -13,8 +13,8 @@ class GameStateSaveStringTest : DescribeSpec({
     val saveString = "MOON_MAN,GLACIER_MAN;A,C;B,D;JUMP_BOOST,AIR_DASH_BOOST;42;HARD"
 
     fun filledState() = GameState().apply {
-        addLevelDefeated(LevelDefinition.GLACIER_MAN)
-        addLevelDefeated(LevelDefinition.MOON_MAN)
+        addLevelCompleted(LevelDefinition.GLACIER_MAN)
+        addLevelCompleted(LevelDefinition.MOON_MAN)
         addHeartTank(MegaHeartTank.C)
         addHeartTank(MegaHeartTank.A)
         putHealthTank(MegaHealthTank.D, 10)
@@ -41,8 +41,8 @@ class GameStateSaveStringTest : DescribeSpec({
             state.fromString(saveString)
 
             state.toString() shouldBe saveString
-            state.isLevelDefeated(LevelDefinition.MOON_MAN) shouldBe true
-            state.isLevelDefeated(LevelDefinition.GLACIER_MAN) shouldBe true
+            state.isLevelCompleted(LevelDefinition.MOON_MAN) shouldBe true
+            state.isLevelCompleted(LevelDefinition.GLACIER_MAN) shouldBe true
             state.containsHeartTank(MegaHeartTank.A) shouldBe true
             state.containsHeartTank(MegaHeartTank.C) shouldBe true
             state.getHealthTankValue(MegaHealthTank.B) shouldBe 0

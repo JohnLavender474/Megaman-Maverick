@@ -21,8 +21,8 @@ class InfernoDeath(services: MegaServices) : Death(services) {
 
     override fun canSpawn(spawnProps: Properties): Boolean {
         if (!super.canSpawn(spawnProps)) return false
-        if (services.gameState.isLevelDefeated(LevelDefinition.INFERNO_MAN)) return true
-        return !services.gameState.isLevelDefeated(LevelDefinition.GLACIER_MAN)
+        if (services.gameState.isLevelCompleted(LevelDefinition.INFERNO_MAN)) return true
+        return !services.gameState.isLevelCompleted(LevelDefinition.GLACIER_MAN)
     }
 
     override fun onSpawn(spawnProps: Properties) {

@@ -8,7 +8,7 @@ A second playable character must not copy `Megaman.kt`. Each player class extend
 `onSpawn`, `onDestroy`, `onEvent` and `takeDamageFrom`, the shared components and the shared damage rules. A class
 gives its own parts through abstract members (body, momentum, knockback, stun, behaviors, controller, sprites,
 animations, the camera focus height) and puts its own lines in open hooks (`onPlayerSpawn`, `onPlayerDestroy`,
-`onPlayerEvent`, `afterPlayerDamage`, `onLevelDefeated`, `teleportableComponent`). The moves that only some characters
+`onPlayerEvent`, `afterPlayerDamage`, `onLevelCompleted`, `teleportableComponent`). The moves that only some characters
 use are plain functions in this package, and a class opts in by calling them.
 
 The research and the decisions are in `docs/mega-refactor/items/081-playable-x/` (branch `081a`) and

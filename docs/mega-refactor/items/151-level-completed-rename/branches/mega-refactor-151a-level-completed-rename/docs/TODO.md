@@ -1,14 +1,11 @@
-# TODO: <branch>
+# TODO: mega-refactor-151a-level-completed-rename
 
 ## Tasks
 
-Loose tasks that are not steps in `PLAN.md`.
-
 ## Backlog candidates
 
-Ideas found during this branch that are out of scope. When the branch merges, make each one a
-new item on `master` (a row in `ITEMS.md` and a folder in `items/`).
+- `WILY_STAGE_3` is never recorded as completed: the `GAME_COMPLETE` path skips the add. `036` and the open issue
+  `2026-11-02-boss-props-have-two-sources.md` discuss it. Decide whether the ending should record it.
+
 
 ## Bug candidates
-
-Bugs found during this branch. File each one in the bug tracker (see `CLAUDE.md`).

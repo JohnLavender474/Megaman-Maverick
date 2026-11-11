@@ -284,6 +284,8 @@ class MegamanMaverickGame(
             throw IllegalArgumentException("Invalid launch options: ${launchResult.errors.joinToString("; ")}")
         launch = launchResult.resolved!!
         launchRoom = launch.room
+        if (launch.saveFile != PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
+            GameLogger.log(TAG, "create(): save file: ${launch.saveFile}")
         launchRoomLevel = when (val start = launch.start) {
             is LaunchStart.StartLevel -> start.level
             is LaunchStart.OpenScreen -> start.stagedLevel
@@ -883,18 +885,18 @@ class MegamanMaverickGame(
         val state = this.gameState.toString()
         GameLogger.debug(TAG, "saveState(): state=$state")
 
-        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
+        val saveFile = Gdx.app.getPreferences(launch.saveFile)
         saveFile.putString(ConstKeys.STATE, state)
         saveFile.flush()
     }
 
     fun hasSavedState(): Boolean {
-        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
+        val saveFile = Gdx.app.getPreferences(launch.saveFile)
         return saveFile.contains(ConstKeys.STATE)
     }
 
     fun loadSavedState(): Boolean {
-        val saveFile = Gdx.app.getPreferences(PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
+        val saveFile = Gdx.app.getPreferences(launch.saveFile)
 
         if (saveFile.contains(ConstKeys.STATE)) {
             val state = saveFile.getString(ConstKeys.STATE)

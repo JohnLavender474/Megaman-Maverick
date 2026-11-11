@@ -258,7 +258,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         }
     )
 
-    override fun onLevelDefeated(level: LevelDefinition) {
+    override fun onLevelCompleted(level: LevelDefinition) {
         services.levelState.weaponsAttained = LevelRewards.weaponsFor(level)
     }
 

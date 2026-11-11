@@ -9,27 +9,27 @@ import io.kotest.matchers.shouldBe
 
 class PlayerProgressComponentTest : DescribeSpec({
 
-    var defeated: LevelDefinition? = null
+    var completed: LevelDefinition? = null
     var heartTankChanges = 0
     var currencyAdds = 0
 
     val component = PlayerProgressComponent(
-        onLevelDefeated = { defeated = it },
+        onLevelCompleted = { completed = it },
         onHeartTanksChanged = { heartTankChanges++ },
         onCurrencyAdded = { currencyAdds++ }
     )
 
     beforeEach {
-        defeated = null
+        completed = null
         heartTankChanges = 0
         currencyAdds = 0
     }
 
     describe("PlayerProgressComponent") {
-        it("gives a defeated level to its hook") {
-            component.onAddLevelDefeated(LevelDefinition.DESERT_MAN)
+        it("gives a completed level to its hook") {
+            component.onAddLevelCompleted(LevelDefinition.DESERT_MAN)
 
-            defeated shouldBe LevelDefinition.DESERT_MAN
+            completed shouldBe LevelDefinition.DESERT_MAN
         }
 
         it("calls the heart tank hook once for an added and for a removed tank") {
@@ -47,7 +47,7 @@ class PlayerProgressComponentTest : DescribeSpec({
         }
 
         it("calls no hook for the other members") {
-            component.onRemoveLevelDefeated(LevelDefinition.DESERT_MAN)
+            component.onRemoveLevelCompleted(LevelDefinition.DESERT_MAN)
             component.onPutHealthTank(MegaHealthTank.A)
             component.onRemoveHealthTank(MegaHealthTank.A)
             component.onAddHealthToHealthTank(MegaHealthTank.A, 1)
@@ -56,7 +56,7 @@ class PlayerProgressComponentTest : DescribeSpec({
             component.onRemoveEnhancement(MegaEnhancement.entries.first())
             component.onRemoveCurrency(5)
 
-            defeated shouldBe null
+            completed shouldBe null
             heartTankChanges shouldBe 0
             currencyAdds shouldBe 0
         }

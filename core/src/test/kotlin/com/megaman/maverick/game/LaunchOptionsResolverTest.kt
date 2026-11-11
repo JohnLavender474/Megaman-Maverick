@@ -27,6 +27,22 @@ class LaunchOptionsResolverTest : DescribeSpec({
         }
     }
 
+    describe("--saveFile") {
+        it("is the game's own save file by default") {
+            resolve(LaunchOptions()).resolved!!.saveFile shouldBe PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE
+        }
+
+        it("passes a trimmed name through") {
+            resolve(LaunchOptions(saveFile = " test-save ")).resolved!!.saveFile shouldBe "test-save"
+        }
+
+        it("rejects a blank name") {
+            val result = resolve(LaunchOptions(saveFile = "  "))
+            result.isValid shouldBe false
+            result.errors[0] shouldContain "--saveFile needs a name"
+        }
+    }
+
     describe("--players") {
         it("is 1 by default") {
             resolve(LaunchOptions()).resolved!!.players shouldBe 1

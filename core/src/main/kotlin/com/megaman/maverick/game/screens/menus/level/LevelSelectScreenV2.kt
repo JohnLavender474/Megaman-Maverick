@@ -59,7 +59,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
     private val currentBkgAnim: Animation
         get() {
             var key = if (selectionMade) ConstKeys.SELECTED else ConstKeys.STATIC
-            if (game.gameState.allRobotMasterLevelsDefeated()) key += "_wily"
+            if (game.gameState.allRobotMasterLevelsCompleted()) key += "_wily"
             return backgroundAnims[key]
         }
 
@@ -145,7 +145,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         val wilyFace = atlas.findRegion("${ConstKeys.FACES}/wily")
 
         val faceSupplier: () -> TextureRegion? = faceSupplier@{
-            if (game.gameState.allRobotMasterLevelsDefeated()) return@faceSupplier wilyFace
+            if (game.gameState.allRobotMasterLevelsCompleted()) return@faceSupplier wilyFace
 
             val position = Position.entries.find { it.name == buttonKey } ?: Position.CENTER
             val megamanFace = megamanFaces[position]
@@ -158,7 +158,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         buttons.put(Position.CENTER.name, object : IMenuButton {
 
             override fun onSelect(delta: Float): Boolean {
-                if (game.gameState.allRobotMasterLevelsDefeated()) {
+                if (game.gameState.allRobotMasterLevelsCompleted()) {
                     val wilyStage = game.gameState.getNextWilyStage()
 
                     if (wilyStage == null) {
@@ -195,7 +195,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         )
         val faceSupplier: () -> TextureRegion? = {
             when {
-                game.gameState.isLevelDefeated(levelDef) -> null
+                game.gameState.isLevelCompleted(levelDef) -> null
                 else -> mugshotRegion
             }
         }
@@ -230,7 +230,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
         game.getUiCamera().position.set(ConstFuncs.getUiCamInitPos())
 
         val musicAsset = when {
-            game.gameState.allRobotMasterLevelsDefeated() -> MusicAsset.VINNYZ_WILY_STAGE_SELECT_V1_MUSIC
+            game.gameState.allRobotMasterLevelsCompleted() -> MusicAsset.VINNYZ_WILY_STAGE_SELECT_V1_MUSIC
             else -> MusicAsset.VINNYZ_STAGE_SELECT_V1_MUSIC
         }
         game.audio.playMusic(musicAsset, true)
@@ -256,7 +256,7 @@ class LevelSelectScreenV2(game: MegamanMaverickGame) : MegaMenuScreen(game, Posi
                 game.levelState.currentLevel = selectedLevelDef!!
 
                 if (selectedLevelDef!!.type != LevelType.ROBOT_MASTER_LEVEL ||
-                    game.gameState.isLevelDefeated(selectedLevelDef!!)
+                    game.gameState.isLevelCompleted(selectedLevelDef!!)
                 ) game.startLevel()
                 else game.setCurrentScreen(ScreenEnum.ROBOT_MASTER_INTRO_SCREEN.name)
             }
