@@ -234,6 +234,12 @@ approval, but write the reason in the process log.
 
 ### During the branch
 
+- **A deferred decision gets a `TODO` at the code** (owner decision, 2026-11-10). When the owner or the scope
+  decides to leave something for later (a type to widen for a later caller, a value to move to its own home, a gap
+  that another item closes), put one concise `TODO` comment at each place in the code that the later work must
+  change. It names the later work and its item, for example
+  `// TODO: widen the player type when an enemy clone calls this (item 121)`. One line where possible. Do this
+  without being asked; it is the exception to "no code comments", next to the accepted edge cases.
 - Write code only when other production code calls it. A test alone is not a caller. Do not add
   a type, function, helper, overload or field because a design, a spec or a later branch may need
   it. Until a real caller exists, describe it in the docs (`SCOPE.md`, the item `NOTES.md`), or

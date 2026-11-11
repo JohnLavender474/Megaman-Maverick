@@ -40,6 +40,12 @@ Known limits: clones with one brain and no collision between them stack on one s
 - (2026-11-02, owner) Player enhancements and owned weapons do not apply to clones.
 - (2026-11-02, owner) Build nothing for clones now. The seam comes through `081`, because it has a real caller.
 
+- (2026-11-10, owner, from `060j`) After `060j`, the player moves are plain functions that take `player: MegaPlayer`
+  (`playerRunButton`, `playerBody`, `playerJumpBehavior`, `playerWallSlideBehavior`, `playerAirDashBehavior`), and the
+  run's movement part is the generic `runStep` in `entities/movement/Run.kt`. A clone is not a `MegaPlayer`: this
+  item widens the parameter type to what a clone has when it starts. Each such function has a `TODO` that names this
+  item.
+
 ## Open questions
 
 - Does `081` choose thin classes or one `PlayerEntity(def)`? One class does not fit a per-class pool for clones (see `081`).
