@@ -2111,3 +2111,16 @@ newest entry at the bottom.
 - Follow-up: item `152` (record the last Wily stage as completed at the ending) from the backlog candidate. The
   open issue `2026-11-02-boss-props-have-two-sources.md` and the `007` and `036` notes now name the new identifiers
   (the `007` JSON key is `levelsCompleted`). `060c` must use `onLevelCompleted` for Proto Man code under `MegaPlayer`.
+
+## 2026-11-11 — fix/test-jvm-oom-hang
+
+- Summary: closes `2026-11-11-test-jvm-hangs-on-oom.md` (squash commit `b777da0db`). Every `Test` task
+  (`configure(subprojects)` in the root `build.gradle`) gets `-XX:+ExitOnOutOfMemoryError` and a 20-minute `timeout`.
+  Found during `060c`: 8 test JVMs and their 6 daemons from other sessions had run for 44 hours to 9 days and held about
+  7 GB; the owner had them stopped (by PID).
+- Contract check (the short contract in the issue file): a temporary fill-the-heap test ends the build in 8 s with
+  exit value 3 and leaves no test JVM; `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes on the branch
+  (`engine` 675, `allocationTest` 2, `core` 1364, `smokeTest` 452, JAR built). No gameplay change, no play test. The
+  hang itself was not reproduced (see the issue). CI did not run, because the branch was never pushed.
+- Follow-up: a user `SessionStart` and `SessionEnd` hook (`~/.claude/hooks/reap-orphan-gradle.sh`, outside the repo)
+  stops test JVMs older than 60 minutes and their daemons. Every active branch gets the flag when it takes in `master`.

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: build
 gameplay-change: no
@@ -16,8 +16,7 @@ related-items: []
 
 ## What happens
 
-When the heap of a `Gradle Test Executor` fills up, the JVM does not exit. It stays at about 1% CPU with a full heap.
-The build never ends, so its Gradle daemon stays busy and never reaches its idle timeout. When the `gradlew` client
+A `Gradle Test Executor` can stay alive with a full heap at about 1% CPU, not making progress. The build never ends, so its Gradle daemon stays busy and never reaches its idle timeout. When the `gradlew` client
 stops (a Claude Bash tool call times out, or the session ends), only the client goes. The daemon and the test JVM stay.
 
 Found on 2026-11-11: 8 such test JVMs and their 6 daemons ran on the owner's machine, 4 from
@@ -37,8 +36,10 @@ another reason stops after a time limit.
 
 ## How to reproduce
 
-Add a test that allocates without limit (for example a list of 1 MB arrays in a loop) and run `./gradlew core:test`.
-The executor stays alive after the `OutOfMemoryError`, and the build does not end.
+Not reproduced. A test that fills the heap and keeps it full (a static list of 1 MB arrays) does not hang the JVM:
+Kotest catches the `OutOfMemoryError` in the test thread, the next tests fail too, and the build ends normally
+(105 s, no test JVM left). Inference, not measured: the stuck JVMs had an OOM in one of Gradle's own worker threads
+(for example the one that reports results to the daemon), which then died and left the JVM waiting.
 
 ## Short contract
 
@@ -59,8 +60,8 @@ Not changed:
 Checks:
 
 - With a temporary test that allocates without limit (not committed): `./gradlew core:test` fails within a minute,
-  and no `Gradle Test Executor` of the worktree is left running after the build. Before the change, the same test
-  hangs.
+  and no `Gradle Test Executor` of the worktree is left running after the build. (Before the change, the same test
+  did not hang either; see "How to reproduce".)
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
 ## Notes
@@ -68,3 +69,11 @@ Checks:
 - Fix: `fix/test-jvm-oom-hang`: `-XX:+ExitOnOutOfMemoryError` and a task `timeout` on every `Test` task.
 - A `SessionEnd` hook in the owner's Claude settings stops the Gradle processes of a session's worktree, as a safety
   net for other hang causes.
+
+## Resolution
+
+Fixed in `fix/test-jvm-oom-hang`, squash commit `b777da0db` (2026-11-11): every `Test` task runs with
+`-XX:+ExitOnOutOfMemoryError` and a 20-minute `timeout`. With the fill-the-heap test, the test JVM ends at the first
+OOM ("Terminating due to java.lang.OutOfMemoryError") and the build fails in 8 s with exit value 3; no test JVM is left.
+The flag also ends a JVM whose OOM hits a Gradle worker thread; the timeout ends any other hang. The heap pressure in
+`core:test` (mocks that keep their recorded calls) is not fixed here.
