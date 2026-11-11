@@ -40,6 +40,29 @@ another reason stops after a time limit.
 Add a test that allocates without limit (for example a list of 1 MB arrays in a loop) and run `./gradlew core:test`.
 The executor stays alive after the `OutOfMemoryError`, and the build does not end.
 
+## Short contract
+
+Branch: `fix/test-jvm-oom-hang`, off `master`, in `.worktrees/fix/test-jvm-oom-hang`.
+
+Intended changes:
+
+- In the root `build.gradle`, `configure(subprojects)`: every `Test` task (`test`, `smokeTest`, `allocationTest`)
+  gets `jvmArgs '-XX:+ExitOnOutOfMemoryError'` and `timeout = Duration.ofMinutes(20)`. The full `core:test` takes
+  about 2 minutes today.
+
+Changed files: `build.gradle`.
+
+Not changed:
+
+- The test heap sizes (`core` keeps `maxHeapSize = '1g'`), the test code, CI, gameplay.
+
+Checks:
+
+- With a temporary test that allocates without limit (not committed): `./gradlew core:test` fails within a minute,
+  and no `Gradle Test Executor` of the worktree is left running after the build. Before the change, the same test
+  hangs.
+- `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
+
 ## Notes
 
 - Fix: `fix/test-jvm-oom-hang`: `-XX:+ExitOnOutOfMemoryError` and a task `timeout` on every `Test` task.
