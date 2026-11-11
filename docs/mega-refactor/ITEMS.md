@@ -158,6 +158,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 148 | [The last player reads take `IPlayer`](items/148-last-player-reads/ITEM.md) | refactor | `O1`, `O8` | done | none | 2026-11-10 | 2026-11-11 |
 | 149 | [Tag changes at runtime, with an index that follows them](items/149-runtime-tag-changes/ITEM.md) | refactor | `O1`, `O7` | idea | none | | |
 | 150 | [Shared movement helpers for bosses and enemies](items/150-boss-movement-helpers/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
+| 151 | [Rename the level progress vocabulary from "defeated" to "completed"](items/151-level-completed-rename/ITEM.md) | refactor | `O1` | active | none | 2026-11-11 | |
 
 ## Branches
 
@@ -253,3 +254,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047c-slot-respawn`](items/047-co-op/branches/mega-refactor-047c-slot-respawn/process-log.md) | 047 | A dead co-op player respawns near the lead, at a safe spot (shared screen phase 6) | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-134a-draw-interpolation`](items/134-render-interpolation/branches/mega-refactor-134a-draw-interpolation/process-log.md) | 134 | Draw bodies and the camera between the last 2 physics steps, with `--interpolation` (on by default) | merged | 2026-11-07 | 2026-11-09 |
 | [`mega-refactor-134b-interpolation-audit`](items/134-render-interpolation/branches/mega-refactor-134b-interpolation-audit/process-log.md) | 134 | Fix the known render interpolation hitches: bodies placed outside the world steps, bodiless sprites, the shape renderer, snaps | merged | 2026-11-09 | 2026-11-09 |
+| [`mega-refactor-151a-level-completed-rename`](items/151-level-completed-rename/branches/mega-refactor-151a-level-completed-rename/process-log.md) | 151 | Rename `levelsDefeated`, `isLevelDefeated`, `onLevelDefeated` and the rest of the family to "completed"; delete `allLevelsDefeated` | active | 2026-11-11 | |
