@@ -163,3 +163,4 @@ related-items: [<mega-refactor item IDs>]
 | [Some entities keep per-spawn fields from their last pooled life](2026-11-10-stale-per-spawn-fields.md) | no | core | open |
 | [A currency pickup queues its sound in the players of the roster that are not in the engine](2026-11-11-currency-pickup-sound-idle-players.md) | no | core | open |
 | [A test JVM that runs out of heap hangs, and its Gradle daemon stays busy for days](2026-11-11-test-jvm-hangs-on-oom.md) | yes | build | closed |
+| [`core:test` keeps the services and mocks of finished tests alive and fills its 1 GB heap](2026-11-11-core-test-heap-leak.md) | yes | build | open |
