@@ -42,6 +42,7 @@ all other objectives are affected to one degree or another by how well our syste
 - Check: a branch that adds an `abstract class` under `entities/` must give the reason in `SCOPE.md`.
 - Applies: `always-on`
 - Active: `now`
+- Strength: `preference` (owner, 2026-11-10)
 
 ### `O1-R3`: No new fragile order
 

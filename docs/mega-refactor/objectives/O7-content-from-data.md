@@ -47,6 +47,7 @@ Level authors and other developers build and change content from data and tools,
 - Check: search for `LevelDefinition.` comparisons in gameplay code.
 - Applies: `always-on`
 - Active: `now`
+- Strength: `preference` (owner, 2026-11-10)
 
 ## Current state
 

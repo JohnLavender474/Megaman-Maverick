@@ -24,7 +24,7 @@ These rules apply to every branch, whatever the item's objectives are. The full 
 | Rule | Short form | Active |
 |------|-----------|--------|
 | `O1-R1` | No global session state | after `096` |
-| `O1-R2` | Components, not new inheritance | now |
+| `O1-R2` | Components, not new inheritance (preference) | now |
 | `O1-R3` | No new fragile order | now |
 | `O1-R4` | Typed state, not new property keys | now |
 | `O1-R5` | Code only with a production caller | now |
@@ -42,7 +42,7 @@ These rules apply to every branch, whatever the item's objectives are. The full 
 | `O5-R2` | Measure hot paths before and after | now |
 | `O6-R1` | CI passes | now |
 | `O6-R2` | Named checks for kept and changed behavior | now |
-| `O7-R3` | No level-identity checks | now |
+| `O7-R3` | No level-identity checks (preference) | now |
 | `O8-R2` | Capabilities, not character checks | now |
 | `O9-R1` | Fully playable with an NES-style pad, except as X | now |
 | `O9-R2` | Saves stay loadable | after `007` |
@@ -54,5 +54,9 @@ These rules apply to every branch, whatever the item's objectives are. The full 
   the check says `waiting`. A new kind of violation is still a `conflict`.
 - A branch does not edit this folder. The current state and the redo risk change on `master`, at the merge.
 - A change to a rule needs the owner's approval.
+- A rule with `Strength: preference` is a design preference, not a strict rule. A branch weighs it as one cost
+  among the others and does not rule out an option only because the option breaks it. A choice that goes against it
+  gives the reason in `SCOPE.md` (the objective check says `conflict`, with the reason). A rule with no `Strength`
+  field is strict (owner, 2026-11-10).
 - A conflict between two objectives goes to the owner. No objective wins by default.
 - `docs/mega-refactor/CLAUDE.md` gives the loop steps.
