@@ -157,6 +157,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 147 | [Render interpolation for riders and for bodies that move once per frame](items/147-interpolation-riders-frame-moved/ITEM.md) | refactor | `O9`, `O5` | idea | none | | |
 | 148 | [The last player reads take `IPlayer`](items/148-last-player-reads/ITEM.md) | refactor | `O1`, `O8` | idea | none | | |
 | 149 | [Tag changes at runtime, with an index that follows them](items/149-runtime-tag-changes/ITEM.md) | refactor | `O1`, `O7` | idea | none | | |
+| 150 | [Shared movement helpers for bosses and enemies](items/150-boss-movement-helpers/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 
 ## Branches
 
