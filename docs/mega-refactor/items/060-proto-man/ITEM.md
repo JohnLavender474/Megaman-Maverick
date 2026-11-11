@@ -31,6 +31,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 2026-10-25 (from the `029g` planning): Proto Man is a separate feature item after `029g` and `024`; `CharacterDef`
 waits for it.
 
+2026-11-10 (owner, `060j` scope): "Keep in mind that the base class should be able to support Proto Man and other
+similar playable characters (Bass, Axl, Zero, etc.) in the future."
+
 ## Decisions
 
 - (2026-10-30, from `084`) This item depends on `084` (split `Megaman` into player components). The split of
