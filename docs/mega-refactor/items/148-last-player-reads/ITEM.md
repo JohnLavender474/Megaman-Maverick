@@ -24,6 +24,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 None yet. From the `146a` backlog candidates (2026-11-10).
 
+## Decisions
+
+- (2026-11-10, owner) The 2 reads are fixed in the work on `060`: branch `060j` moves them to the `MegaPlayer` receiver.
+  When `060j` merges, this item is done.
+
 ## Open questions
 
 None.

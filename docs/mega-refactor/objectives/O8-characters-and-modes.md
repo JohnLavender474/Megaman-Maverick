@@ -24,7 +24,9 @@ missions and PvP that use them.
 
 ### `O8-R1`: No copy of `Megaman.kt`
 
-- Rule: a new character uses shared player components, not a copy of `Megaman.kt` or a player base class.
+- Rule: a new character extends `MegaPlayer` and uses the shared player components and functions, not a copy of
+  `Megaman.kt`. `MegaPlayer` holds only what every player class shares; character moves, body values and sprites stay
+  in the character class. (Changed by the owner on 2026-11-10; before, the rule also ruled out a player base class.)
 - Problem: `P1`
 - Check: review the new character class.
 - Applies: `linked items`
@@ -112,6 +114,9 @@ None. The objectives audit of 2026-11-01 gave each gap an item or a note on an e
 
 ## Decisions
 
+- 2026-11-10 (owner, from the `060` `IPlayer` review): an abstract `MegaPlayer` base class owns the shared player wiring and is
+  the receiver of the shared `players/` functions. `O8-R1` changes to match. Built in `060j`, before `060b`. Not a
+  core `IMegaPlayer` interface (`146a` D1 stays). `MegaPlayer` extends `AbstractHealthEntity`, so `048` must move it.
 - 2026-11-01 (owner): X (`081`) comes before Proto Man (`060`), and `081` adds `CharacterDef`. The first X branch plays X in slot 1 behind a dev flag, and it does not wait for `024`.
 
 ## Open questions

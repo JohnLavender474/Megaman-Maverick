@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`, `146`
-- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (active, 2026-11-10)
+- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (active, paused after planning, 2026-11-10), `mega-refactor-060j-mega-player` (active, 2026-11-10)
 
 ## Goal
 
@@ -59,7 +59,16 @@ waits for it.
   with no commits, and was renamed to `mega-refactor-060a-shared-run-body`.
 - (2026-11-10, owner) `146` (a marker `IPlayer` interface) starts in a separate session. When `146` merges into
   `master`, `060a` (if not merged yet) and every later `060` branch take it in and use its player type (for example
-  `Protoman` implements `IMegaPlayer`).
+  `Protoman` implements `IMegaPlayer`). (Replaced: `146a` D1 made no core `IMegaPlayer`; the type is the engine
+  `IPlayer`. See the `MegaPlayer` decision below.)
+
+- (2026-11-10, owner, from the `IPlayer` review, `temp/060-iplayer-review/report.md`) An abstract `MegaPlayer` base class:
+  `MegaPlayer : AbstractHealthEntity, IPlayer, IBodyEntity, IFaceable, IDirectional`. It owns the shared lifecycle
+  wiring and the shared components, and the shared `players/` functions take a `MegaPlayer` receiver in place of the
+  generic bounds. `Megaman`, X and `Protoman` extend it. `O8-R1` changes to allow it ("thin": only what every player
+  class shares). It is built in a refactor-only branch, `060j`, which merges before `060b` goes on. The 2 last
+  `playerSlot!!` reads (item `148`) go in the work on `060` (owner); `060j` does them, because they move to the
+  `MegaPlayer` receiver.
 
 ## Proposed phases
 
@@ -70,7 +79,8 @@ as refined as possible before co-op (`060i`) (owner, 2026-11-10).
 | Phase | Content | Needs |
 |---|---|---|
 | `060a` | Refactor only, contract "Megaman plays the same", no Proto Man code: Mega's run, body (feet, gravity table, water, ice) and momentum move from `Megaman` receiver functions into `players/` functions with parameters | `081a`, `084` |
-| `060b` | `Protoman` in slot 0 on a test level: idle, step, walk, jump, fall; sliced atlas | `060a` |
+| `060j` | Refactor only, contract "Megaman and X play the same": the `MegaPlayer` base class; the shared functions take it; the 2 last `playerSlot!!` reads. Runs between `060a` and `060b` (added later, so its letter is out of order) | `060a` |
+| `060b` | `Protoman` in slot 0 on a test level: idle, step, walk, jump, fall; sliced atlas | `060j` |
 | `060c` | Buster: shoot poses, Proto Buster, charge and Proto Strike | |
 | `060d` | Slide and ladder, with Mega's rules | |
 | `060e` | Proto Shield; his damage reaction, stun, collapse, teleport in and out | |
