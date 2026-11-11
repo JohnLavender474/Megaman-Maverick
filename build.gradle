@@ -64,6 +64,10 @@ configure(subprojects) {
   }
   kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 
+  tasks.withType(Test).configureEach {
+    jvmArgs '-XX:+ExitOnOutOfMemoryError'
+    timeout = java.time.Duration.ofMinutes(20)
+  }
 }
 
 subprojects {
