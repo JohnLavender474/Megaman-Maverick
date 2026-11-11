@@ -183,6 +183,14 @@ slash (we'll need to work out what button or button combo controls this)".
   drag). A press on the landing frame gives the ground move, as in X6. The sabre moved to its own branch `081e`, on
   `UP` + `B` (no new button). Details: the `081d` branch `docs/NOTES.md`.
 
+## Notes for active branches
+
+- (2026-11-11, from the `060j` merge, owner chose this order) `060j` moved X's `defineAnimationsComponent` and
+  `defineSpritesComponent` bodies from `megamanx/MegamanXSprites.kt` into `MegamanX.kt` as member overrides of
+  `MegaPlayer`. `081f` changes 2 places in the animations builder (the `keySupplier` with the prior key, and the
+  `shouldUpdateAnimationPredicate` room-transition pause). When `081f` takes in `master`, git reports a modify/delete
+  conflict there: re-apply those 2 hunks in `MegamanX.kt` and run the checks.
+
 ## Open questions
 
 1. Closed 2026-11-05: a `characters` field on `LevelDefinition` (see "Decisions").

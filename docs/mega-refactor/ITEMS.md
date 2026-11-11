@@ -155,7 +155,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 145 | [View edge warp: the landing after the cap tests only solids](items/145-warp-fallback-hazards/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 146 | [A marker `IPlayer` interface, so a player has a type](items/146-player-marker-interface/ITEM.md) | refactor | `O1`, `O8` | done | none | 2026-11-10 | 2026-11-10 |
 | 147 | [Render interpolation for riders and for bodies that move once per frame](items/147-interpolation-riders-frame-moved/ITEM.md) | refactor | `O9`, `O5` | idea | none | | |
-| 148 | [The last player reads take `IPlayer`](items/148-last-player-reads/ITEM.md) | refactor | `O1`, `O8` | idea | none | | |
+| 148 | [The last player reads take `IPlayer`](items/148-last-player-reads/ITEM.md) | refactor | `O1`, `O8` | done | none | 2026-11-10 | 2026-11-11 |
 | 149 | [Tag changes at runtime, with an index that follows them](items/149-runtime-tag-changes/ITEM.md) | refactor | `O1`, `O7` | idea | none | | |
 | 150 | [Shared movement helpers for bosses and enemies](items/150-boss-movement-helpers/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 
@@ -166,7 +166,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-146a-player-marker`](items/146-player-marker-interface/branches/mega-refactor-146a-player-marker/process-log.md) | 146 | A marker `IPlayer`, tags in a `TagsComponent`, and `init()` before `canSpawn` | merged | 2026-11-10 | 2026-11-10 |
 | [`mega-refactor-060a-shared-run-body`](items/060-proto-man/branches/mega-refactor-060a-shared-run-body/process-log.md) | 060 | Refactor only: move Megaman's run, body and momentum into `players/` functions with parameters; Megaman plays the same | merged | 2026-11-10 | 2026-11-10 |
 | [`mega-refactor-060b-protoman-move`](items/060-proto-man/branches/mega-refactor-060b-protoman-move/process-log.md) | 060 | `Protoman` in slot 0 on a test level: idle, step, walk, jump and fall, with an atlas sliced from the sheet | active | 2026-11-10 | |
-| [`mega-refactor-060j-mega-player`](items/060-proto-man/branches/mega-refactor-060j-mega-player/process-log.md) | 060 | Refactor only: an abstract `MegaPlayer` base class that owns the shared player wiring and is the receiver of the shared `players/` functions; `Megaman` and X move onto it and play the same | active | 2026-11-10 | |
+| [`mega-refactor-060j-mega-player`](items/060-proto-man/branches/mega-refactor-060j-mega-player/process-log.md) | 060 | Refactor only: an abstract `MegaPlayer` base class that owns the shared player wiring and is the receiver of the shared `players/` functions; `Megaman` and X move onto it and play the same | merged | 2026-11-10 | 2026-11-11 |
 | [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | merged | 2026-11-02 | 2026-11-02 |
 | [`mega-refactor-118b-batch-1`](items/118-boss-fight-routines/branches/mega-refactor-118b-batch-1/process-log.md) | 118 | `TimberWoman`, `MoonMan` and `ReactorMan` (6 fights) on the fight flow | merged | 2026-11-03 | 2026-11-03 |
 | [`mega-refactor-118c-batch-2`](items/118-boss-fight-routines/branches/mega-refactor-118c-batch-2/process-log.md) | 118 | `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` (10 fights) on the fight flow | merged | 2026-11-03 | 2026-11-04 |

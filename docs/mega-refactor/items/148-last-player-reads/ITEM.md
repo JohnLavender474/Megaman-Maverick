@@ -1,11 +1,11 @@
 # 148: The last player reads take `IPlayer`
 
-- Status: idea
+- Status: done
 - Type: refactor
 - Objectives: `O1`, `O8`
 - Depends on: none
 - Related: `146`, `060`
-- Branches: none yet
+- Branches: none of its own; done in `060j` (`mega-refactor-060j-mega-player`, merged 2026-11-11)
 
 ## Goal
 

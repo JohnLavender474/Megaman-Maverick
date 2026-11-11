@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: Refactor only: an abstract `MegaPlayer` base class that owns the shared player wiring and is the receiver of the shared `players/` functions; `Megaman` and X move onto it and play the same
 - Done: planning; brief approved; steps 1 to 6 (with owner scope changes A, B, C)
 - Brief: https://claude.ai/artifact/JEMmaKF3ihS4fgGABcNbeq
-- Next: owner play test and Diffity review
+- Next: `060b` (merge `master` in, then its scope and brief)
 - Blocked:
 
 ## Entries
@@ -69,3 +69,13 @@ step 4 receivers need the test doubles on `MegaPlayer`).
   - Play checks (`review-checks.md`): all 13 commands valid; each room holds the setup of its check.
   - Test check (main session): 3 breaks in `runStep` (ice, ramp, gravity sign) fail `RunTest`, `PlayerRunTest` and
     `MegamanRunTest`; restored.
+
+## 2026-11-11
+
+- Owner play test: all 13 checks pass. Diffity (base `845b194ad`): 0 threads.
+- Branch merge: `master` had only docs commits since the start, so no merge of `master` first. Overlap: `081f` edits
+  2 places in X's animations builder, which this branch moved into `MegamanX.kt`. The owner chose "060j now; 081f
+  adapts": the `081` `ITEM.md` ("Notes for active branches") tells `081f` to re-apply its 2 hunks there. `060b`
+  (paused) shares no file. Squash-merged into `master` as `2e773ad83`. `ITEMS.md`: branch merged, item `148` done.
+  `O8-R1` state and redo risk, `O1-R2` state updated. No backlog or bug candidates.
+- Worktree and branch removed; Diffity stopped. Checks on `master`: `engine:test core:test core:smokeTest lwjgl3:jar` pass (2465 tests, 0 failures).
