@@ -3,18 +3,23 @@
 This package holds the players service (`MegaPlayers`) and the rules that every player class shares: how a player
 spawns, dies, moves through a room transition, takes damage and is blocked.
 
-A second playable character must not copy `Megaman.kt` and must not extend a player base class (`O8-R1`, `O1-R2`).
-So the shared player rules are free functions over the entity. Each player class keeps its own Kotlin class and its
-own hooks (`onSpawn`, `onDestroy`, `onEvent`, `takeDamageFrom`), and each hook calls the shared function for its
-part. The class adds only what is its own, for example its sounds, its weapons and its values.
+A second playable character must not copy `Megaman.kt`. Each player class extends the abstract base class
+`MegaPlayer` (`O8-R1` allows a thin base). `MegaPlayer` owns the lifecycle that every player runs: the final
+`onSpawn`, `onDestroy`, `onEvent` and `takeDamageFrom`, the shared components and the shared damage rules. A class
+gives its own parts through abstract members (body, momentum, knockback, stun, behaviors, controller, sprites,
+animations, the camera focus height) and puts its own lines in open hooks (`onPlayerSpawn`, `onPlayerDestroy`,
+`onPlayerEvent`, `afterPlayerDamage`, `onLevelDefeated`, `teleportableComponent`). The moves that only some characters
+use are plain functions in this package, and a class opts in by calling them.
 
-The research and the decisions are in `docs/mega-refactor/items/081-playable-x/` (branch `081a`).
+The research and the decisions are in `docs/mega-refactor/items/081-playable-x/` (branch `081a`) and
+`docs/mega-refactor/items/060-proto-man/` (branch `060j`, the base class).
 
-The examples in this file are hypothetical. The real functions are in `PlayerLifecycle.kt` and `PlayerRules.kt`.
+The examples in this file are hypothetical. The real code is in `MegaPlayer.kt`.
 
 ## Status
 
-`Megaman` and `MegamanX` (`081b`) are the player classes. Some rules still have another owner, and a `TODO` at the
+`Megaman` and `MegamanX` (`081b`) are the player classes, both on `MegaPlayer` (`060j`). `MegaPlayer` reads the
+shared values (damage time, start health, freeze) from `MegamanValues` until a character needs other values. Some rules still have another owner, and a `TODO` at the
 function names it: the difficulty change of the damage (`023`), the owner chain of a shot (`030`), the death event
 (`119`), the health base class (`048`), and the locks for stun, freeze and damage (`126`). Only slot 0 can change its character, at the level start (`047` for co-op, `113` for a select screen).
 
@@ -22,58 +27,79 @@ function names it: the difficulty change of the damage (`023`), the owner chain 
 
 ```mermaid
 flowchart LR
-    Class["a player class<br/>(for example Megaman)"] -- "its hooks call" --> Lifecycle["PlayerLifecycle.kt<br/>spawn, destroy, room transition,<br/>out-of-level kill"]
-    Class -- "its rules call" --> Rules["PlayerRules.kt<br/>invincible, can move,<br/>damage permission, damage tail, damage edit"]
-    Class -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
-    Class -- "its behaviors" --> Moves["PlayerJump.kt, PlayerWallSlide.kt, PlayerAirDash.kt<br/>each with the class's params"]
-    Class -- "its run buttons" --> Run["PlayerRun.kt<br/>run step and buttons, with RunParams"]
+    Class["a player class<br/>(for example Megaman)"] -- "extends" --> Base["MegaPlayer<br/>lifecycle, shared components,<br/>damage rules, hooks"]
+    Base -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
+    Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt, PlayerAirDash.kt<br/>each with the class's params"]
+    Class -- "its run buttons" --> Run["PlayerRun.kt<br/>the run gate and buttons"]
+    Run -- "calls" --> Step["entities/movement/Run.kt<br/>runStep, maxRunSpeed, RunParams<br/>for any body"]
     Class -- "defineBodyComponent" --> Body["PlayerBody.kt<br/>shared fixtures and pre-step,<br/>with PlayerBodyParams and hooks"]
     Body -- "reads" --> Gravity["PlayerGravityComponent<br/>gravity table, signed by direction"]
     Moves --> Input["PlayerInput.kt, the air dash input reads<br/>the run side, A or SELECT"]
     Game["the game, at level start"] -- "putInSlot0" --> Roster["PlayerRoster<br/>one entity per PlayerCharacter;<br/>slot 0 gets the level's character"]
-    Lifecycle --> State["the mechanism components<br/>(entities/state/)"]
-    Rules --> State
+    Base --> State["the mechanism components<br/>(entities/state/)"]
+    Moves --> State
 ```
 
 ## The order of a spawn
 
-The shared spawn work is 2 calls, so that the class can put its own lines between them.
+`MegaPlayer.onSpawn` is final. The class lines go in the `onPlayerSpawn` hook, between the shared spawn start and
+the shared spawn end.
 
 ```mermaid
 sequenceDiagram
-    participant C as player class onSpawn
-    participant S as shared functions
-    C->>C: super.onSpawn
-    C->>S: playerSpawnStart(spawnProps)
-    Note over S: listener, body position and physics, facing,<br/>world gravity, health, lock clears, teleporter
-    C->>C: its own lines (for example weapons, timers)
-    C->>S: playerSpawnEnd()
-    Note over S: camera follow stop
+    participant P as MegaPlayer.onSpawn
+    participant C as the class hook
+    P->>P: max health from the heart tanks
+    P->>P: super.onSpawn (health to max, damage timers)
+    P->>P: spawn start
+    Note over P: listener, body position and physics, facing,<br/>world gravity, health, lock clears, teleporter
+    P->>P: damage timer to the end
+    P->>C: onPlayerSpawn(spawnProps)
+    Note over C: its own lines (for example weapons, timers)
+    P->>P: momentum reset
+    P->>P: spawn end (camera follow stop)
 ```
 
 A spawn sends no level event. The respawn routine sends `LEVEL_RESET` when it resets the level (see `screens/levels/respawn/README.md`).
 
+The other final methods follow the same form: `onDestroy` runs the shared destroy and then `onPlayerDestroy`;
+`onEvent` runs the shared case for each key and then `onPlayerEvent`; `takeDamageFrom` runs the shared damage tail,
+then `afterPlayerDamage`, then the damage sound.
+
 A hypothetical player class:
 
 ```kotlin
-override fun onSpawn(spawnProps: Properties) {
-    super.onSpawn(spawnProps)
-    playerSpawnStart(spawnProps)
-    dashTimer.reset()
-    playerSpawnEnd()
-}
+class Dasher(services: MegaServices) : MegaPlayer(services) {
 
-override val invincible get() = playerInvincible
+    override val cameraFocusHeight = 1.5f
+
+    override fun onPlayerSpawn(spawnProps: Properties) {
+        dashTimer.reset()
+    }
+
+    override fun afterPlayerDamage(damager: IDamagerEntity) {
+        dashTimer.setToEnd()
+    }
+
+    // ... the abstract define...Component members
+}
 ```
 
 ## Rules a change must keep
 
-- **Compute, do not store.** `playerInvincible` and `playerCanMove` read their state at each call. A timer that ends
+- **`MegaPlayer` holds only what every player class shares.** A part that one class has, or that has different
+  values in two classes, stays in the class (an abstract member or a hook). Examples that stay out: the charge, the
+  weapons, the gravity scalar (`IScalableGravityEntity`), `direction`.
+- **A function that every player runs as part of the lifecycle is a private member of `MegaPlayer`.** A move that
+  only some characters use is a plain function in `players/` or a generic helper, and a class opts in by calling it.
+- **A class line goes in its hook at the same point.** The hooks run where the class lines ran before the base
+  class. A new hook needs a caller in a player class.
+- **Compute, do not store.** `MegaPlayer.invincible` and `playerCanMove` read their state at each call. A timer that ends
   writes nothing, so a stored value goes stale.
 - **Fail fast.** The rules read their components with `require(...)`, not with the queries that return a silent
   default. A player class that lacks a component throws at once. The components that each function needs are the
   ones it reads with `require`.
-- **The gravity set comes before the lock clears** in `playerSpawnStart`. The gravity set can start a camera turn
+- **The gravity set comes before the lock clears** in the spawn start of `MegaPlayer`. The gravity set can start a camera turn
   that locks `MOVEMENT`, and the lock clear must remove it.
 - **One copy.** A rule that two player classes need goes here, not into each class. A difference between the
   classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`), not a type check in the shared
@@ -84,7 +110,8 @@ override val invincible get() = playerInvincible
   `onPreStep` hook, which runs where Megaman's old pre-step ran them (before the body size and the out-of-play
   velocity zero). `MegamanBodyFixturesTest` and its reference file `megaman-body-fixtures.txt` hold Megaman's
   order, sizes and gravity.
-- **A class with its own move set keeps its own body.** X has its own body and run (X6 feet and walk). The shared run
-  and body are for a class that moves like Megaman.
+- **A class with its own move set keeps its own body.** X has its own body and run (X6 feet and walk). The shared
+  player run gate and body are for a class that moves like Megaman. `runStep` in `entities/movement/` has no player
+  rules, so any entity with a body and a `RunComponent` can run like Megaman.
 - **Swap only out of the engine.** `PlayerRoster.putInSlot0` throws when the outgoing player is in the engine. Call it
   before the level screen starts, and set the camera focus after it.

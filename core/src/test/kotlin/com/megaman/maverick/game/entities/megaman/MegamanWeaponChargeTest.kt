@@ -18,9 +18,6 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.components.chargeStatus
 import com.megaman.maverick.game.entities.megaman.components.charging
 import com.megaman.maverick.game.entities.megaman.components.clearChargeWhenHurt
-import com.megaman.maverick.game.entities.megaman.components.defineControllerComponent
-import com.megaman.maverick.game.entities.megaman.components.defineMomentumComponent
-import com.megaman.maverick.game.entities.megaman.components.defineStunComponent
 import com.megaman.maverick.game.entities.megaman.components.defineWeaponChargeComponent
 import com.megaman.maverick.game.entities.megaman.components.fullyCharged
 import com.megaman.maverick.game.entities.megaman.components.halfCharged

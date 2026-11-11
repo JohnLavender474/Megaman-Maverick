@@ -15,7 +15,6 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.entities.megaman.components.defineStunComponent
 import com.megaman.maverick.game.entities.state.stunned
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys

@@ -16,6 +16,7 @@ import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
 internal fun Megaman.airDashBehavior(): IBehavior = playerAirDashBehavior(
+    this,
     AirDashParams(
         blocked = {
             (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
@@ -23,8 +24,8 @@ internal fun Megaman.airDashBehavior(): IBehavior = playerAirDashBehavior(
                 (currentWeapon == MegamanWeapon.RUSH_JET &&
                     (weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) || input.isPressed(MegaControllerButton.UP)))
         },
-        canStart = { aButtonTask == AButtonTask.AIR_DASH && airDashInputJustPressed() },
-        held = { airDashInputPressed() },
+        canStart = { aButtonTask == AButtonTask.AIR_DASH && airDashInputJustPressed(this) },
+        held = { airDashInputPressed(this) },
         startDelay = 0f,
         minTime = MegamanValues.AIR_DASH_MIN_TIME,
         maxTime = {

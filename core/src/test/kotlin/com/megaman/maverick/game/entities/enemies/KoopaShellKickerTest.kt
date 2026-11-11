@@ -21,7 +21,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.players.MegaPlayers
-import com.megaman.maverick.game.players.TestHealthPlayer
+import com.megaman.maverick.game.players.TestBodyPlayer
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.core.spec.style.DescribeSpec
@@ -51,8 +51,8 @@ private class ShellRig(slots: Int) {
         return shell
     }
 
-    fun player(slot: Int, width: Float, left: Float, bottom: Float): TestHealthPlayer {
-        val player = TestHealthPlayer(services)
+    fun player(slot: Int, width: Float, left: Float, bottom: Float): TestBodyPlayer {
+        val player = TestBodyPlayer(services)
         player.body.setSize(width, 48f).setPosition(left, bottom)
         for (key in arrayOf("${ConstKeys.LEFT}_${ConstKeys.SIDE}", "${ConstKeys.RIGHT}_${ConstKeys.SIDE}", ConstKeys.FEET))
             player.body.putProperty(key, Fixture(player.body, FixtureType.SIDE, GameRectangle().setSize(1f, 1f)))

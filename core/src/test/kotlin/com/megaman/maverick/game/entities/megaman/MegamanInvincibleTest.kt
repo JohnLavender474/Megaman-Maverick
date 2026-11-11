@@ -4,8 +4,6 @@ import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.locks.LocksComponent
 import com.maverick.game.engine.locks.lock
-import com.megaman.maverick.game.entities.megaman.components.defineFreezeComponent
-import com.megaman.maverick.game.entities.megaman.components.defineStunComponent
 import com.megaman.maverick.game.entities.state.FreezeComponent
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent

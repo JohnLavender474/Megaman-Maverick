@@ -8,10 +8,7 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.set
-import com.maverick.game.engine.common.interfaces.IDirectional
-import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
@@ -22,7 +19,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.blocks.Block
-import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
@@ -62,13 +58,13 @@ class PlayerBodyParams(
     val onPreStep: () -> Unit
 )
 
-fun <T> T.playerBody(params: PlayerBodyParams): Body
-    where T : AbstractHealthEntity, T : IBodyEntity, T : IFaceable, T : IDirectional, T : IScalableGravityEntity {
+// TODO: widen the player type when an enemy clone calls this (item 121)
+fun <T> playerBody(player: T, params: PlayerBodyParams): Body where T : MegaPlayer, T : IScalableGravityEntity {
     val body = Body(BodyType.DYNAMIC)
     body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_Y}", false)
-    body.putProperty(BodyKeys.PASS_THROUGH_ONE_WAY) { isBehaviorActive(BehaviorType.CLIMBING) }
+    body.putProperty(BodyKeys.PASS_THROUGH_ONE_WAY) { player.isBehaviorActive(BehaviorType.CLIMBING) }
     body.putProperty(BodyKeys.FALL_THROUGH_PRESS_UP) {
-        isBehaviorActive(BehaviorType.CLIMBING) && input.isJustPressed(MegaControllerButton.UP)
+        player.isBehaviorActive(BehaviorType.CLIMBING) && player.input.isJustPressed(MegaControllerButton.UP)
     }
     body.physics.applyFrictionX = true
     body.physics.applyFrictionY = true
@@ -83,7 +79,7 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
 
     val onBounce: () -> Unit = {
         PLAYER_BEHAVIORS_TO_END_ON_BOUNCE.forEach { behaviorType ->
-            if (isBehaviorActive(behaviorType)) resetBehavior(behaviorType)
+            if (player.isBehaviorActive(behaviorType)) player.resetBehavior(behaviorType)
         }
         params.onBounce()
     }
@@ -97,15 +93,15 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
     feetFixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, _ -> !body.isSensing(BodySense.IN_WATER) }
     feetFixture.setReceiver(Receivers.ICE_FRICTION_FILTER) {
         !(body.isSensing(BodySense.FEET_ON_GROUND) &&
-            (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isFacing(Facing.LEFT) ||
-                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isFacing(Facing.RIGHT))))
+            (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && player.isFacing(Facing.LEFT) ||
+                (body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && player.isFacing(Facing.RIGHT))))
     }
     feetFixture.setReceiver(Receivers.FEET_BLOCK_CONTACT) { state, block ->
         when (state) {
             ProcessState.BEGIN -> {
                 val blockMakesSound = block.getOrDefaultProperty(
                     "${ConstKeys.FEET}_${ConstKeys.SOUND}",
-                    !block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || when (direction) {
+                    !block.body.hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY) || when (player.direction) {
                         Direction.UP -> body.physics.velocity.y <= 0f
                         Direction.DOWN -> body.physics.velocity.y >= 0f
                         Direction.LEFT -> body.physics.velocity.x >= 0f
@@ -168,7 +164,7 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
         fixture.offsetFromBodyAttachment.y = 0.1f * ConstVals.PPM
         fixture.setReceiver(Receivers.RUNNABLE, onBounce)
         fixture.putProperty(ConstKeys.SIDE, side)
-        fixture.setReceiver(Receivers.SIDE_ICE_FRICTION) { isBehaviorActive(BehaviorType.WALL_SLIDING) }
+        fixture.setReceiver(Receivers.SIDE_ICE_FRICTION) { player.isBehaviorActive(BehaviorType.WALL_SLIDING) }
         fixture.setReceiver(Receivers.STICK_TO_BLOCK) { _, blockFixture -> params.sideSticksTo(blockFixture) }
         body.addFixture(fixture)
         body.putProperty("${side}_${ConstKeys.SIDE}", fixture)
@@ -191,10 +187,10 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
             ProcessState.BEGIN -> {
                 params.onWater(state)
 
-                gravityScalar = params.waterGravityScalar
+                player.gravityScalar = params.waterGravityScalar
 
                 if (!wasInWater) {
-                    if (direction.isVertical()) body.physics.velocity.y = 0f
+                    if (player.direction.isVertical()) body.physics.velocity.y = 0f
                     else body.physics.velocity.x = 0f
                 }
             }
@@ -203,7 +199,7 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
 
             ProcessState.END -> {
                 params.onWater(state)
-                gravityScalar = 1f
+                player.gravityScalar = 1f
             }
         }
     }
@@ -223,7 +219,7 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
         params.onPreStep()
 
         val height = when {
-            isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> params.crouchHeight
+            player.isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> params.crouchHeight
             else -> params.height
         }
         body.setSize(params.width * ConstVals.PPM, height * ConstVals.PPM)
@@ -234,12 +230,12 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
         }
 
         val feetGravityWidth = when {
-            isBehaviorActive(BehaviorType.WALL_SLIDING) -> params.width - 0.35f
+            player.isBehaviorActive(BehaviorType.WALL_SLIDING) -> params.width - 0.35f
             else -> params.width - 0.1f
         }
         feetGravityRect.setWidth(feetGravityWidth * ConstVals.PPM)
         feetGravityFixture.offsetFromBodyAttachment.x = when {
-            isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING) || body.isSensingAll(
+            player.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.WALL_SLIDING) || body.isSensingAll(
                 BodySense.SIDE_TOUCHING_BLOCK_LEFT,
                 BodySense.SIDE_TOUCHING_BLOCK_RIGHT
             ) -> 0f
@@ -254,35 +250,35 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
         leftFixture.offsetFromBodyAttachment.x = -body.getWidth() / 2f
         rightFixture.offsetFromBodyAttachment.x = body.getWidth() / 2f
 
-        if (!inPlay) {
+        if (!player.inPlay) {
             body.physics.velocity.setZero()
             body.physics.gravity.setZero()
             return@put
         }
 
-        val wallSlidingOnIce = isBehaviorActive(BehaviorType.WALL_SLIDING) &&
+        val wallSlidingOnIce = player.isBehaviorActive(BehaviorType.WALL_SLIDING) &&
             (body.isSensingAny(BodySense.SIDE_TOUCHING_ICE_LEFT, BodySense.SIDE_TOUCHING_ICE_RIGHT))
 
-        if (isBehaviorActive(BehaviorType.GROUND_SLIDING)) when (direction) {
+        if (player.isBehaviorActive(BehaviorType.GROUND_SLIDING)) when (player.direction) {
             Direction.UP, Direction.DOWN -> body.physics.velocity.y = 0f
             else -> body.physics.velocity.x = 0f
         }
 
         val gravity = params.gravity
         var gravityValue = when {
-            isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0f
+            player.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> 0f
             body.isSensing(BodySense.IN_WATER) -> when {
-                wallSlidingOnIce || frozen -> gravity.waterIce
+                wallSlidingOnIce || player.frozen -> gravity.waterIce
                 else -> gravity.water
             }
-            bodyOverGround -> gravity.ground
-            wallSlidingOnIce || frozen -> gravity.ice
-            isBehaviorActive(BehaviorType.JUMPING) -> gravity.jump
+            player.bodyOverGround -> gravity.ground
+            wallSlidingOnIce || player.frozen -> gravity.ice
+            player.isBehaviorActive(BehaviorType.JUMPING) -> gravity.jump
             else -> gravity.fall
         }
-        gravityValue *= gravityScalar
+        gravityValue *= player.gravityScalar
 
-        when (direction) {
+        when (player.direction) {
             Direction.UP,
             Direction.DOWN -> {
                 body.physics.gravity.set(0f, gravityValue * ConstVals.PPM)
@@ -297,13 +293,13 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)
                     when {
-                        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(params.height, params.width)
-                        isBehaviorActive(BehaviorType.CROUCHING) -> size.set(params.width)
+                        player.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(params.height, params.width)
+                        player.isBehaviorActive(BehaviorType.CROUCHING) -> size.set(params.width)
                         else -> size.set(params.width, params.height)
                     }
                     it.setSize(size.scl(ConstVals.PPM.toFloat()))
 
-                    val position = DirectionPositionMapper.getInvertedPosition(direction)
+                    val position = DirectionPositionMapper.getInvertedPosition(player.direction)
                     it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
                 }
             }
@@ -320,19 +316,19 @@ fun <T> T.playerBody(params: PlayerBodyParams): Body
                 damagableRect.let {
                     val size = GameObjectPools.fetch(Vector2::class)
                     when {
-                        isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(params.width, params.height)
-                        isBehaviorActive(BehaviorType.CROUCHING) -> size.set(params.width)
+                        player.isBehaviorActive(BehaviorType.GROUND_SLIDING) -> size.set(params.width, params.height)
+                        player.isBehaviorActive(BehaviorType.CROUCHING) -> size.set(params.width)
                         else -> size.set(params.height, params.width)
                     }
                     it.setSize(size.scl(ConstVals.PPM.toFloat()))
 
-                    val position = DirectionPositionMapper.getInvertedPosition(direction)
+                    val position = DirectionPositionMapper.getInvertedPosition(player.direction)
                     it.positionOnPoint(body.getBounds().getPositionPoint(position), position)
                 }
             }
         }
 
-        if (body.isSensing(BodySense.FEET_ON_ICE)) preserveMomentum()
+        if (body.isSensing(BodySense.FEET_ON_ICE)) player.preserveMomentum()
     }
 
     return body

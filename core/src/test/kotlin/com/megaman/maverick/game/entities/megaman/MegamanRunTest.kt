@@ -22,8 +22,6 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.megaman.behaviors.wallSlideBehavior
-import com.megaman.maverick.game.entities.megaman.components.defineControllerComponent
-import com.megaman.maverick.game.entities.megaman.components.defineMomentumComponent
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.state.PlayPhase
@@ -32,7 +30,7 @@ import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.TeleportableComponent
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.levels.LevelDefinition
-import com.megaman.maverick.game.players.playerRun
+import com.megaman.maverick.game.players.playerRunButton
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.testServices
@@ -65,12 +63,12 @@ class MegamanRunTest : DescribeSpec({
 
     fun run(side: Facing, delta: Float = DELTA) {
         press(if (side == Facing.LEFT) MegaControllerButton.LEFT else MegaControllerButton.RIGHT)
-        megaman.playerRun(delta, side, megaman.runParams)
+        playerRunButton(megaman, side, megaman.runParams, megaman.runBlocked, megaman.onRunBlocked).onPressContinued(delta)
     }
 
     fun runWithBothPressed(side: Facing) {
         press(MegaControllerButton.LEFT, MegaControllerButton.RIGHT)
-        megaman.playerRun(DELTA, side, megaman.runParams)
+        playerRunButton(megaman, side, megaman.runParams, megaman.runBlocked, megaman.onRunBlocked).onPressContinued(DELTA)
     }
 
     fun runState() = megaman.getComponent(RunComponent::class)!!

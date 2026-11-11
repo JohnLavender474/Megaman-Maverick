@@ -1,68 +1,102 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>060j Mega Player</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
+<style>li code, p code { overflow-wrap: anywhere; }</style>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 060 · Branch 060j · Objectives O8 · <span class="chip ok">approved 2026-11-10</span></p>
+    <h1>One <code>MegaPlayer</code> base for every player class</h1>
+    <p class="lead">A thin abstract class <code>MegaPlayer</code> owns the wiring that Megaman and X both repeat today, and it is the one receiver type of the shared <code>players/</code> functions. Megaman and X move onto it. Proto Man (<code>060b</code>) is the next class; Bass, Axl and Zero can follow.</p>
+    <p class="meta"><b>In play:</b> nothing changes. Megaman and X play the same.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>Each class repeats the same wiring today</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: Megaman and X each repeat the lifecycle wiring and call shared functions with long bound lists">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  H["AbstractHealthEntity"] --> M["Megaman<br/>lifecycle, damage, progress,<br/>camera, freeze, room carry"]
+  H --> X["MegamanX<br/>same lines, copied"]
+  M -->|"T : 4 bounds"| F["players/ functions<br/>run, body, jump, wall slide, air dash"]
+  X -->|"T : 4 bounds"| F
+  P["Protoman (060b)"] -.->|"third copy"| H
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>About 20 members and the lifecycle skeleton are the same in both classes. Each shared function repeats the same 4 type bounds.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: MegaPlayer holds the shared wiring; classes fill hooks and abstract members">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  H["AbstractHealthEntity"] --> MP["MegaPlayer<br/>lifecycle, damage, progress,<br/>camera, freeze, room carry"]
+  MP --> M["Megaman<br/>body, moves, weapons, sprites"]
+  MP --> X["MegamanX<br/>body, moves, sabre, sprites"]
+  MP --> P["Protoman (060b)"]
+  F["players/ functions"] -->|"receiver: MegaPlayer"| MP
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>Each class gives its body, moves, controller and sprites as abstract members, and puts its own lifecycle lines in small hooks, at the same point as today.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The spawn order is fixed in one place</h2></div>
+    <p>Today, in both <code>Megaman</code> and <code>MegamanX</code>:</p>
+<pre><code>override fun onSpawn(spawnProps: Properties) {
+    super.onSpawn(spawnProps); playerSpawnStart(spawnProps)
+    /* class lines */ ; damageTimer.setToEnd(); /* class lines */
+    require(PostActionMomentumComponent::class).reset(); playerSpawnEnd()
+}
+fun &lt;T&gt; T.playerRun(...) where T : AbstractHealthEntity, T : IBodyEntity, T : IFaceable, T : IDirectional</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>abstract class MegaPlayer(services) : AbstractHealthEntity(services), IPlayer, IBodyEntity,
+    IFaceable, IDirectional, IEventListener, IAudioEntity {
+    protected abstract fun bodyComponent(): BodyComponent        // + behaviors, controller, sprites, ...
+    protected open fun onPlayerSpawn(spawnProps: Properties) {}   // + onPlayerDestroy, onPlayerEvent, ...
+    final override fun onSpawn(spawnProps: Properties) {
+        super.onSpawn(spawnProps); playerSpawnStart(spawnProps); damageTimer.setToEnd()
+        onPlayerSpawn(spawnProps)
+        require(PostActionMomentumComponent::class).reset(); playerSpawnEnd()
+    }
+}
+class Megaman(services) : MegaPlayer(services), IScalableGravityEntity, ... {
+    override fun onPlayerSpawn(spawnProps: Properties) { aButtonTask = JUMP; /* weapons, scalars */ }
+}
+runStep(body, direction, run, side, delta, params)   // see the scope change below</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>4 decisions</h2></div>
+    <p><code>MegaPlayer</code> holds only what every player class shares (rule <code>O8-R1</code>). Buster, charge, weapons and Megaman's gravity scaling stay out, so Zero, Bass and Axl are not blocked.</p>
+    <p><b>D1 · Set the heart-tank max health in the shared spawn, for every class?</b></p>
+    <p><span class="chip ok">Chosen</span> Every class: the shared spawn sets the heart-tank max health.</p>
+    <p><b>D2 · Where do the shared values (damage time, start health, sound) come from?</b></p>
+    <p><span class="chip ok">Chosen</span> Read <code>MegamanValues</code> now, with a short <code>TODO</code> at the reads.</p>
+    <p><b>D3 · How do the class parts become abstract members?</b></p>
+    <p><span class="chip ok">Chosen</span> Move each part body into the class as the member (<code>Megaman.kt</code> to about 700 lines, <code>MegamanX.kt</code> to about 550).</p>
+    <p><b>D4 · Add a test that records the component order of Megaman and X?</b></p>
+    <p><span class="chip ok">Chosen</span> No order test. The review checks the order.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Scope change <span class="chip warn">2026-11-10</span></p><h2>Lifecycle inside MegaPlayer; the run for any entity</h2></div>
+    <p><b>A.</b> The lifecycle functions that only <code>MegaPlayer</code> calls become its private members. A move that only some characters use stays a plain function that a class opts in to.</p>
+    <p><b>C.</b> Body, jump, wall slide and air dash do not split: no boss or enemy moves like the player (bosses use timed states and aimed jump arcs). They become plain functions that take <code>player: MegaPlayer</code>, not extensions, with a <code>TODO</code> for item <code>121</code> (enemy clones). Boss-to-boss copies became item <code>150</code>.</p>
+    <p><b>B.</b> The run splits. The movement part is a plain helper for any entity with a body, so an enemy or boss can move like Megaman. The player part keeps the input and the can-move gate.</p>
+<pre><code>// entities/movement/Run.kt
+fun runStep(body: Body, direction: Direction, run: RunComponent, side: Facing, delta: Float, params: RunParams)
+// players/PlayerRun.kt
+fun playerRunButton(player: MegaPlayer, side: Facing, params: RunParams,
+                    blocked: () -&gt; Boolean, onBlocked: (Facing) -&gt; Unit): ButtonActuator</code></pre>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>A moved line can change the order of play</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Component order.</b> A few of Megaman's components change place in <code>init()</code>. The scan shows that none of them resets another; the review before the play test checks it.</li>
+      <li><span class="chip warn">risk</span> <b>Lifecycle lines.</b> 3 lines move inside <code>onSpawn</code> and <code>onDestroy</code>, each independent of its neighbours. Control checks for spawn, death, respawn and the boss gate.</li>
+      <li><span class="chip warn">risk</span> <b>The base class grows.</b> A later branch can put one character's parts into it. The <code>players/</code> README gets the rule "only what every player class shares".</li>
     </ul>
   </section>
 
@@ -70,14 +104,26 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-060j-mega-player</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room movement --weapons MOON_SCYTHES</code>: beam-in; run, jump, slide, air dash; <code>SELECT</code> changes the weapon.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room stun</code>: stun and recovery.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_aim</code>: a hit: sound, knockback, blink.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room heart</code>: a heart tank raises the max health.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room player_death</code>: death, respawn, full health.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_084 --room carry_left</code>: the room transition carries him.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_084 --room knockback</code>: gravity switches, camera turn, he moves after it.</li>
+      <li><code>./run-game-alpha.sh --level TIMBER_WOMAN --room room14 --heartTanks all --healthTanks all</code>: the boss gate; beat the boss; the get-weapon screen.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room flat</code>: X: beam-in; walk, jump, dash, sabre.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room walls</code>: X: wall slide and wall jump.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room dash</code>: X: air dash on <code>SELECT</code>.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room1 --heartTanks all</code>: X: heart-tank max health at spawn; a hit; the room transition.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room2 --heartTanks all --healthTanks all</code>: X: the boss gate; death and respawn.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-060j-mega-player/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/060-proto-man/branches/mega-refactor-060j-mega-player/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-060j-mega-player/docs/CONTRACT.md</code></p>
   </section>
 </main>

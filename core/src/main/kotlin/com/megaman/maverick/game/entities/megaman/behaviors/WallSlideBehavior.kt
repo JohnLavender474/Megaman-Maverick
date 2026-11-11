@@ -14,6 +14,7 @@ import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
 internal fun Megaman.wallSlideBehavior(): IBehavior = playerWallSlideBehavior(
+    this,
     WallSlideParams(
         blocked = {
             body.isSensing(BodySense.FEET_ON_SAND) || isBehaviorActive(BehaviorType.JETPACKING) ||

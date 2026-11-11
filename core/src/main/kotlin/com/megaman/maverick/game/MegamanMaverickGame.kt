@@ -449,8 +449,6 @@ class MegamanMaverickGame(
         // TODO: should replace EntityFactories with MegaEntityFactory
         EntityFactories.initialize(services)
 
-        // TODO: a player that registers after progress exists keeps the base max health, because the heart tank
-        //  max health is set only when a heart tank changes; a late join must set it from the game state (item 047)
         for (i in 0 until launch.players) {
             val megaman = Megaman(services)
             // manually call init and set initialized to true before megaman is spawned

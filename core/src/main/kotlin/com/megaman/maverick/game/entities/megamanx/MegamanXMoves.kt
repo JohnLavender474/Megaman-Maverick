@@ -39,16 +39,6 @@ import com.maverick.game.engine.components.require
 import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.running
 
-// TODO: the wall grab, the wall kick and the air dash play no sound yet (owner decision D4 of 081c)
-internal fun MegamanX.defineBehaviorsComponent(): BehaviorsComponent {
-    val component = BehaviorsComponent()
-    component.addBehavior(BehaviorType.WALL_SLIDING, wallSlideBehavior())
-    component.addBehavior(BehaviorType.GROUND_DASHING, groundDashBehavior())
-    component.addBehavior(BehaviorType.JUMPING, jumpBehavior())
-    component.addBehavior(BehaviorType.AIR_DASHING, airDashBehavior())
-    return component
-}
-
 // TODO: SELECT is always X's dash button for now, whatever the slot's select action is. The dash button changed
 //  several times (a new R button in 081c; DOWN + A added and then removed in 081d; R replaced by SELECT in 081d), and
 //  no adequate solution exists yet; the dash input of X stays open in item 081
@@ -181,7 +171,8 @@ internal fun MegamanX.setSideSpeed(speed: Float) = when (direction) {
     Direction.RIGHT -> body.physics.velocity.y = -speed
 }
 
-private fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
+internal fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
+    this,
     WallSlideParams(
         blocked = { kickLocked },
         allowedWhileJumping = { wallDelayTimer.isFinished() },
@@ -212,7 +203,8 @@ private fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
     )
 )
 
-private fun MegamanX.jumpBehavior() = playerJumpBehavior(
+internal fun MegamanX.jumpBehavior() = playerJumpBehavior(
+    this,
     JumpParams(
         canStart = { true },
         blocked = {
@@ -253,7 +245,8 @@ private fun MegamanX.jumpBehavior() = playerJumpBehavior(
     )
 )
 
-private fun MegamanX.airDashBehavior() = playerAirDashBehavior(
+internal fun MegamanX.airDashBehavior() = playerAirDashBehavior(
+    this,
     AirDashParams(
         blocked = {
             bodyOverGround || (isBehaviorActive(BehaviorType.AIR_DASHING) && isRunSidePressed(facing.opposite()))
@@ -375,7 +368,7 @@ internal class GroundDash(private val x: MegamanX) : AbstractBehaviorImpl() {
     }
 }
 
-private fun MegamanX.groundDashBehavior(): IBehavior = GroundDash(this).also { groundDash = it }
+internal fun MegamanX.groundDashBehavior(): IBehavior = GroundDash(this).also { groundDash = it }
 
 internal val MegamanX.groundDashJumpable: Boolean
     get() = groundDash?.jumpable == true

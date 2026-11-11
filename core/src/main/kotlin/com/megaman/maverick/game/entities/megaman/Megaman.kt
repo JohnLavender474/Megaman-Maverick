@@ -1,78 +1,87 @@
 package com.megaman.maverick.game.entities.megaman
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.utils.Array
+import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
-import com.maverick.game.engine.audio.AudioComponent
+import com.maverick.game.engine.animations.IAnimator
+import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.common.enums.ProcessState
+import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectSetOf
-import com.maverick.game.engine.common.interfaces.IDirectional
-import com.maverick.game.engine.common.interfaces.IFaceable
+import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.shapes.GameCircle
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.components.require
+import com.maverick.game.engine.controller.ControllerComponent
+import com.maverick.game.engine.controller.buttons.ButtonActuator
 import com.maverick.game.engine.damage.IDamagerEntity
-import com.maverick.game.engine.entities.contracts.IAudioEntity
-import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
+import com.maverick.game.engine.drawables.shapes.IDrawableShape
+import com.maverick.game.engine.drawables.sprites.SpritesComponent
+import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.entities.resetBehavior
 import com.maverick.game.engine.events.Event
-import com.maverick.game.engine.events.IEventListener
 import com.maverick.game.engine.locks.*
-import com.maverick.game.engine.players.IPlayer
-import com.maverick.game.engine.points.PointsComponent
 import com.maverick.game.engine.updatables.UpdatablesComponent
+import com.maverick.game.engine.world.body.BodyComponent
+import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
+import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.controllers.SelectButtonAction
+import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
-import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.enemies.SpringHead
+import com.megaman.maverick.game.entities.megaman.behaviors.*
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
+import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
+import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey
 import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.levels.LevelDefinition
+import com.megaman.maverick.game.levels.LevelRewards
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
-import com.megaman.maverick.game.locks.behaviorsLockHook
 import com.megaman.maverick.game.players.*
 import com.megaman.maverick.game.utils.extensions.startSmoothFollow
 import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
-import com.megaman.maverick.game.world.body.BodySense
-import com.megaman.maverick.game.world.body.getCenter
-import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.utils.misc.FacingUtils
+import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 
-class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, ISpritesEntity,
-    IAudioEntity, IScalableGravityEntity, IEventListener, IFaceable, IDirectional, IDamagerEntity, IPlayer {
+class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IScalableGravityEntity,
+    IDamagerEntity {
 
     companion object {
         const val TAG = "Megaman"
         const val MEGAMAN_EVENT_LISTENER_TAG = "MegamanEventListener"
     }
-
-    override val damageNegotiator = PlayerDamageNegotiator(this)
-    internal val damageRecovery = defineDamageRecoveryComponent()
-
-    override val invincible: Boolean
-        get() = playerInvincible
-    override val damageTimer = Timer(MegamanValues.DAMAGE_DURATION).setToEnd()
 
     val canMove: Boolean
         get() = playerCanMove
@@ -86,15 +95,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     var currentAnimKey: String? = null
         internal set
-
-    override val eventKeyMask = objectSetOf<Any>(
-        EventType.BEGIN_ROOM_TRANS,
-        EventType.CONTINUE_ROOM_TRANS,
-        EventType.END_ROOM_TRANS,
-        EventType.GATE_INIT_OPENING,
-        EventType.STUN_PLAYER,
-        EventType.END_GAME_CAM_ROTATION
-    )
 
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
     internal lateinit var jetpackHandler: MegamanJetpackHandler
@@ -164,8 +164,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
             }
         }
 
-    override lateinit var facing: Facing
-
     lateinit var aButtonTask: AButtonTask
 
     private var weapon: MegamanWeapon? = null
@@ -199,6 +197,12 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
     internal val runParams = defineRunParams()
+    internal val runBlocked: () -> Boolean = {
+        currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround
+    }
+    internal val onRunBlocked: (Facing) -> Unit = { runFacing ->
+        if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting) facing = runFacing
+    }
 
     internal val playerGravity = PlayerGravityComponent(
         PlayerGravityValues(
@@ -217,52 +221,16 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal val wallSlideNotAllowedTimer = Timer(MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY)
 
+    override val cameraFocusHeight = MEGAMAN_BODY_HEIGHT
+
     override fun init(vararg params: Any) {
-        GameLogger.debug(TAG, "init()")
         super.init()
 
-        addComponent(PlayPhaseComponent())
         addComponent(SandReactionComponent(SandReaction.SINK))
-        addComponent(
-            TeleportableComponent(
-                onStart = { _: ITeleporterEntity ->
-                    stopCharging()
-                    standardOnTeleportStart(this)
-                    if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
-                    lock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-                },
-                onContinue = { standardOnTeleportStart(this) },
-                onEnd = {
-                    stopCharging()
-                    standardOnTeleportEnd(this)
-                    aButtonTask = AButtonTask.AIR_DASH
-                    unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-                    services.cameraController.stopSmoothFollow()
-                }
-            )
-        )
-        addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
         addComponent(playerGravity)
-        addComponent(defineBodyComponent())
-        addComponent(defineCameraSubjectComponent())
-        addComponent(definePlayerProgressComponent())
-        addComponent(RunComponent())
         addComponent(defineWeaponChargeComponent())
-        addComponent(defineMomentumComponent())
-        addComponent(defineRoomTransitionCarryComponent())
         addComponent(defineBubbleEmitterComponent())
         addComponent(defineTrailSpriteComponent())
-        addComponent(defineKnockbackComponent())
-        addComponent(defineFreezeComponent())
-        addComponent(defineStunComponent())
-        addComponent(damageRecovery)
-        addComponent(defineBehaviorsComponent())
-        addComponent(defineControllerComponent())
-        addComponent(defineSpritesComponent())
-        addComponent(AudioComponent())
-
-        val animations = MegamanAnimations(services).get()
-        addComponent(defineAnimationsComponent(animations))
 
         weaponsHandler = MegamanWeaponsHandler(this)
         jetpackHandler = MegamanJetpackHandler(this)
@@ -285,12 +253,28 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         })
     }
 
-    override fun onSpawn(spawnProps: Properties) {
-        GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
-        super.onSpawn(spawnProps)
+    override fun teleportableComponent() = TeleportableComponent(
+        onStart = { _: ITeleporterEntity ->
+            stopCharging()
+            standardOnTeleportStart(this)
+            if (isBehaviorActive(BehaviorType.AIR_DASHING)) resetBehavior(BehaviorType.AIR_DASHING)
+            lock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
+        },
+        onContinue = { standardOnTeleportStart(this) },
+        onEnd = {
+            stopCharging()
+            standardOnTeleportEnd(this)
+            aButtonTask = AButtonTask.AIR_DASH
+            unlock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
+            services.cameraController.stopSmoothFollow()
+        }
+    )
 
-        playerSpawnStart(spawnProps)
+    override fun onLevelDefeated(level: LevelDefinition) {
+        services.levelState.weaponsAttained = LevelRewards.weaponsFor(level)
+    }
 
+    override fun onPlayerSpawn(spawnProps: Properties) {
         aButtonTask = AButtonTask.JUMP
 
         weaponsHandler.setAllToMaxAmmo()
@@ -302,96 +286,41 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         movementScalar = spawnProps.getOrDefault("${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}", 1f, Float::class)
         applyMovementScalarToBullet = spawnProps.getOrDefault(ConstKeys.APPLY_SCALAR_TO_CHILDREN, false, Boolean::class)
 
-        damageTimer.setToEnd()
-
         shootAnimTimer.reset()
         wallJumpTimer.reset()
 
         wallSlideNotAllowedTimer.reset()
-        // TODO: a behavior that ends in the component reset pass can write momentum after the momentum component reset, so clear it
-        //  here too; a reset order for components would remove this line (see the 084c docs/NOTES.md)
-        require(PostActionMomentumComponent::class).reset()
         airDashConsumed = false
-
-        playerSpawnEnd()
     }
 
-    override fun onDestroy() {
-        GameLogger.debug(TAG, "onDestroy()")
-        super.onDestroy()
-
-        playerOnDestroy()
+    override fun onPlayerDestroy() {
         weaponsHandler.reset()
 
         services.audio.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
 
     override fun onHealthDepleted() {
-        GameLogger.debug(TAG, "onHealthDepleted()")
         super.onHealthDepleted()
-
-        ExplosionOrb.spawnRing(body.getCenter())
 
         if (services.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL)
             services.audio.playSound(SoundAsset.SMB3_PLAYER_DOWN_SOUND, false)
     }
 
-    override fun onEvent(event: Event) {
+    override fun onPlayerEvent(event: Event) {
         when (event.key) {
-            EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
-                playerOnRoomTransition(event)
-
+            EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS ->
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
-            }
-
-            EventType.END_ROOM_TRANS -> playerOnRoomTransition(event)
 
             EventType.GATE_INIT_OPENING -> {
                 GameLogger.debug(MEGAMAN_EVENT_LISTENER_TAG, "GATE_INIT_OPENING")
 
                 stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
             }
-
-            EventType.STUN_PLAYER -> onStunPlayerEvent(event)
-
-            EventType.END_GAME_CAM_ROTATION -> {
-                unlock(MegaLockGroup.MOVEMENT, MegaLockReason.CAMERA_ROTATION)
-
-                body.physics.gravityOn = true
-            }
         }
     }
 
-    override fun canBeDamagedBy(damager: IDamagerEntity) =
-        existenceState.liveAfterUpdate && super.canBeDamagedBy(damager) && playerAllowsDamageFrom(damager, services.rules)
-
-    override fun getDamageDuration(damager: IDamagerEntity) = MegamanValues.DAMAGE_DURATION
-
-    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
-        val oldHealth = getCurrentHealth()
-
-        if (!super.takeDamageFrom(damager)) return false
-
-        val healthDiff = oldHealth - getCurrentHealth()
-        GameLogger.debug(TAG, "takeDamageFrom(): healthDiff=$healthDiff, damager=$damager")
-
-        playerAfterDamage(damager)
-
+    override fun afterPlayerDamage(damager: IDamagerEntity) {
         stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
-        requestToPlaySound(SoundAsset.MEGAMAN_DAMAGE_SOUND, false)
-
-        return true
-    }
-
-    override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int) = playerEditDamage(baseDamage)
-
-    override fun definePointsComponent(): PointsComponent {
-        val component = super.definePointsComponent()
-
-        val points = component.getPoints(ConstKeys.HEALTH)
-        points.max = MegamanValues.START_HEALTH
-
-        return component
     }
 
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
@@ -427,6 +356,294 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         }
     }
 
+    override fun defineBodyComponent(): BodyComponent {
+        lateinit var weaponPreStep: () -> Unit
+        val body = playerBody(
+            this,
+            PlayerBodyParams(
+                width = MEGAMAN_BODY_WIDTH,
+                height = MEGAMAN_BODY_HEIGHT,
+                crouchHeight = GROUNDSLIDE_CROUCH_HEIGHT,
+                gravity = playerGravity,
+                waterGravityScalar = MegamanValues.WATER_GRAVITY_SCALAR,
+                clampX = MegamanValues.CLAMP_X,
+                clampY = MegamanValues.CLAMP_Y,
+                onBounce = { wallSlideNotAllowedTimer.reset() },
+                onFeetBounce = { if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH },
+                onFeetBlockBegin = { makesSound ->
+                    aButtonTask = AButtonTask.JUMP
+                    if (makesSound && canMakeLandSound) {
+                        requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, false)
+                        canMakeLandSound = false
+                    }
+                },
+                onFeetBlockContinue = { aButtonTask = AButtonTask.JUMP },
+                onFeetBlockEnd = {
+                    if (!bodyOverGround) {
+                        aButtonTask = when {
+                            body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
+                            else -> AButtonTask.AIR_DASH
+                        }
+                    }
+                    if (!body.hasAnyFeetBlock()) canMakeLandSound = true
+                },
+                onHeadHitBlock = {
+                    if (services.levelState.currentLevel!!.type == LevelType.MARIO_LEVEL) {
+                        val shouldMakeBumpSound = when (direction) {
+                            Direction.UP -> body.physics.velocity.y >= 0f
+                            Direction.DOWN -> body.physics.velocity.y <= 0f
+                            Direction.LEFT -> body.physics.velocity.x <= 0f
+                            Direction.RIGHT -> body.physics.velocity.x >= 0f
+                        }
+                        if (shouldMakeBumpSound) requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, false)
+                    }
+                },
+                sideSticksTo = { blockFixture ->
+                    val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
+                    owner !is GutsTank
+                },
+                onWater = { state ->
+                    when (state) {
+                        ProcessState.BEGIN, ProcessState.CONTINUE -> if (
+                            !body.isSensing(BodySense.FEET_ON_GROUND) && !isBehaviorActive(BehaviorType.WALL_SLIDING)
+                        ) aButtonTask = AButtonTask.SWIM
+
+                        ProcessState.END -> aButtonTask = AButtonTask.AIR_DASH
+                    }
+                },
+                onPreStep = { weaponPreStep() }
+            )
+        )
+
+        val debugShapes = Array<() -> IDrawableShape?>()
+        debugShapes.add { body.getProperty(ConstKeys.DAMAGEABLE) as Fixture }
+
+        val needleSpinDamagerFixture = Fixture(body, FixtureType.DAMAGER, GameCircle().setRadius(ConstVals.PPM.toFloat()))
+        body.addFixture(needleSpinDamagerFixture)
+        needleSpinDamagerFixture.drawingColor = Color.ORANGE
+
+        val needleSpinShieldFixture = Fixture(body, FixtureType.SHIELD, GameCircle().setRadius(ConstVals.PPM.toFloat()))
+        body.addFixture(needleSpinShieldFixture)
+        needleSpinShieldFixture.drawingColor = Color.PURPLE
+
+        val axeShieldFixture = Fixture(
+            body,
+            FixtureType.SHIELD,
+            GameRectangle().setHeight(MEGAMAN_BODY_HEIGHT * ConstVals.PPM)
+        )
+        axeShieldFixture.putProperty(ConstKeys.AXE, true)
+        body.addFixture(axeShieldFixture)
+        axeShieldFixture.drawingColor = Color.GREEN
+        debugShapes.add { if (axeShieldFixture.isActive()) axeShieldFixture else null }
+
+        weaponPreStep = {
+            val needleSpinning = currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting
+            needleSpinDamagerFixture.setActive(needleSpinning)
+            needleSpinShieldFixture.setActive(needleSpinning)
+
+            axeShieldFixture.setActive(currentWeapon == MegamanWeapon.AXE_SWINGER)
+            val axeShieldWidth = if (isBehaviorActive(BehaviorType.CLIMBING)) 0.75f else 0.5f
+            (axeShieldFixture.rawShape as GameRectangle).setWidth(axeShieldWidth * ConstVals.PPM)
+            val axeShieldOffsetX = when {
+                isBehaviorActive(BehaviorType.CLIMBING) -> 0f
+                slipSliding -> 0.5f
+                else -> 0.75f
+            }
+            axeShieldFixture.offsetFromBodyAttachment.x = axeShieldOffsetX * ConstVals.PPM * facing.value
+            val axeShieldReflectDir = when (direction) {
+                Direction.UP -> if (isFacing(Facing.LEFT)) Direction.LEFT else Direction.RIGHT
+                Direction.DOWN -> if (isFacing(Facing.LEFT)) Direction.RIGHT else Direction.LEFT
+                Direction.LEFT -> if (isFacing(Facing.LEFT)) Direction.DOWN else Direction.UP
+                Direction.RIGHT -> if (isFacing(Facing.LEFT)) Direction.UP else Direction.DOWN
+            }
+            axeShieldFixture.putProperty("${ConstKeys.REFLECT}_${ConstKeys.DIRECTION}", axeShieldReflectDir)
+        }
+
+        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+
+        return BodyComponentCreator.create(this, body)
+    }
+
+    override fun defineMomentumComponent() = PostActionMomentumComponent(
+        MegamanValues.POST_ACTION_MOMENTUM_DUR,
+        MegamanValues.POST_ACTION_BURST_RESISTANCE,
+        maxSpeed = { getMaxRunSpeed() },
+        overGround = { bodyOverGround },
+        facingBlock = { FacingUtils.isFacingBlock(this) },
+        groundSliding = { isBehaviorActive(BehaviorType.GROUND_SLIDING) }
+    )
+
+    override fun defineKnockbackComponent() = KnockbackComponent(
+        MegamanValues.DMG_X * ConstVals.PPM,
+        MegamanValues.DMG_Y * ConstVals.PPM,
+        objectSetOf(SpringHead::class)
+    )
+
+    override fun defineStunComponent() = StunComponent(
+        MegamanValues.STUN_DUR,
+        onSurface = { body.isSensing(BodySense.FEET_ON_GROUND) || isBehaviorActive(BehaviorType.WALL_SLIDING) },
+        onStun = {
+            // TODO: This assumes that Megaman's body is rotated UP.
+            //    Refactor this to support directionally dynamic bouncing.
+            body.physics.velocity.let {
+                it.x = MegamanValues.STUN_IMPULSE_X * ConstVals.PPM * movementScalar * -facing.value
+                it.y = MegamanValues.STUN_IMPULSE_Y * ConstVals.PPM
+            }
+        }
+    )
+
+    // TODO: the behavior factories check weapons inside their bodies (NEEDLE_SPIN, RUSH_JET, RODENT_CLAWS); these
+    //  checks belong to the loadout and move with item 024
+    override fun defineBehaviorsComponent(): BehaviorsComponent {
+        val behaviorsComponent = BehaviorsComponent()
+
+        behaviorsComponent.addBehavior(BehaviorType.WALL_SLIDING, wallSlideBehavior())
+        behaviorsComponent.addBehavior(BehaviorType.SWIMMING, swimBehavior())
+        behaviorsComponent.addBehavior(BehaviorType.JUMPING, jumpBehavior())
+        behaviorsComponent.addBehavior(BehaviorType.AIR_DASHING, airDashBehavior())
+        behaviorsComponent.addBehavior(BehaviorType.GROUND_SLIDING, groundSlideBehavior())
+        behaviorsComponent.addBehavior(BehaviorType.CROUCHING, crouchBehavior())
+        behaviorsComponent.addBehavior(BehaviorType.CLIMBING, climbBehavior())
+        behaviorsComponent.addBehavior(BehaviorType.JETPACKING, jetpackBehavior())
+
+        return behaviorsComponent
+    }
+
+    override fun defineControllerComponent(): ControllerComponent {
+        val left = playerRunButton(this, Facing.LEFT, runParams, runBlocked, onRunBlocked)
+        val right = playerRunButton(this, Facing.RIGHT, runParams, runBlocked, onRunBlocked)
+
+        val attack = ButtonActuator(
+            onPressContinued = { delta ->
+                if (!inPlay || stunned || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JET ||
+                    (!charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
+                    (charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
+                ) {
+                    stopCharging()
+                    return@ButtonActuator
+                }
+
+                val scalar = when {
+                    services.gameState.containsEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING) -> MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR
+                    else -> 1f
+                }
+
+                require(WeaponChargeComponent::class).update(delta * scalar)
+            },
+            onJustReleased = {
+                if (stunned || damaged || services.gameCamera.rotating || teleporting || !inPlay ||
+                    !weaponsHandler.canFireWeapon(currentWeapon, chargeStatus) ||
+                    services.levelState.roomTransition
+                ) {
+                    GameLogger.debug(
+                        MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                        "attack actuator just released, do not shoot: " +
+                            "stunned=$stunned, damaged=$damaged, cameraRotating=${services.gameCamera.rotating}, " +
+                            "teleporting=$teleporting, inPlay=$inPlay, " +
+                            "canFireWeapon=${weaponsHandler.canFireWeapon(currentWeapon, chargeStatus)}"
+                    )
+
+                    stopCharging()
+
+                    return@ButtonActuator
+                }
+
+                GameLogger.debug(MEGAMAN_CONTROLLER_COMPONENT_TAG, "attack actuator just released, shoot")
+
+                shoot()
+
+                stopCharging()
+            }
+        )
+
+        val select = ButtonActuator(onJustReleased = {
+            when (services.players.settings(slot).selectButtonAction) {
+                SelectButtonAction.NEXT_WEAPON -> {
+                    if (!inPlay || damaged || teleporting) {
+                        GameLogger.debug(
+                            MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                            "select actuator just released, do nothing: inPlay=$inPlay, damaged=$damaged, teleporting=$teleporting"
+                        )
+                        return@ButtonActuator
+                    }
+
+                    GameLogger.debug(
+                        MEGAMAN_CONTROLLER_COMPONENT_TAG,
+                        "select actuator just released, attempt to set to next weapon"
+                    )
+
+                    setToNextWeapon()
+                }
+
+                else -> {}
+            }
+        })
+
+        return ControllerComponent(
+            MegaControllerButton.B pairTo attack,
+            MegaControllerButton.LEFT pairTo left,
+            MegaControllerButton.RIGHT pairTo right,
+            MegaControllerButton.SELECT pairTo select
+        )
+    }
+
+    override fun defineSpritesComponent(): SpritesComponent {
+        val component = SpritesComponent()
+        defineMegamanSprite(component)
+        defineJetpackFlameSprite(component)
+        defineDamagedBurstSprite(component)
+        defineDesertTornatoSprite(component)
+        return component
+    }
+
+    override fun defineAnimationsComponent(): AnimationsComponent {
+        val animations = MegamanAnimations(services).get()
+
+        val megamanAnimKeySupplier: (String?) -> String? = supplier@{
+            val key = getAnimationKey(currentAnimKey)
+
+            if (key == "jump_shoot_down") GameLogger.debug(
+                "${TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
+                "megamanAnimKeySupplier(): key = jump_shoot_down"
+            )
+
+            // if (key != null) game.setDebugText(key) else game.setDebugText("")
+
+            return@supplier when {
+                key != null -> {
+                    currentAnimKey = key
+                    MegamanAnimations.buildFullKey(key, currentWeapon)
+                }
+                else -> null
+            }
+        }
+        val megamanAnimator = Animator(
+            keySupplier = megamanAnimKeySupplier,
+            animations = animations,
+            onChangeKey = { _, currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) },
+            postProcessKey = { _, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) },
+            shouldEqualKeysTriggerChange = this::shouldEqualAnimKeysTriggerChange
+        )
+
+        val decorationsAtlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+
+        val jetpackFlameRegion = decorationsAtlas.findRegion(JETPACK_FLAME_SPRITE_KEY)
+        val jetpackFlameAnimation = Animation(jetpackFlameRegion, 1, 3, 0.1f)
+        val jetpackFlameAnimator = Animator(jetpackFlameAnimation)
+
+        val desertTornadoRegion = decorationsAtlas.findRegion(DESERT_TORNADO_SPRITE_KEY)
+        val desertTornadoAnimation = Animation(desertTornadoRegion, 2, 1, 0.1f)
+        val desertTornadoAnimator = Animator(desertTornadoAnimation)
+
+        val animators = orderedMapOf<Any, IAnimator>(
+            MEGAMAN_SPRITE_KEY pairTo megamanAnimator,
+            JETPACK_FLAME_SPRITE_KEY pairTo jetpackFlameAnimator,
+            DESERT_TORNADO_SPRITE_KEY pairTo desertTornadoAnimator
+        )
+
+        return AnimationsComponent(animators, sprites)
+    }
+
     fun translateAmmo(ammo: Int, weapon: MegamanWeapon = currentWeapon): Int {
         val remaining = weaponsHandler.translateAmmo(weapon, ammo)
         GameLogger.debug(TAG, "translateAmmo(): weapon=$weapon, ammo=$ammo, remaining=$remaining")
@@ -438,6 +655,4 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
         if (shot) shootAnimTimer.reset()
         return shot
     }
-
-    override fun getType() = EntityType.MEGAMAN
 }

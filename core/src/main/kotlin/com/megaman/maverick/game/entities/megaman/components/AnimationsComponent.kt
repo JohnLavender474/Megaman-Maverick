@@ -1,66 +1,12 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.utils.OrderedMap
-import com.maverick.game.engine.animations.*
-import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.getTextureAtlas
-import com.maverick.game.engine.common.extensions.orderedMapOf
-import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.entities.input
-import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
-import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey
-
-internal fun Megaman.defineAnimationsComponent(animations: OrderedMap<String, IAnimation>): AnimationsComponent {
-    val megamanAnimKeySupplier: (String?) -> String? = supplier@{
-        val key = getAnimationKey(currentAnimKey)
-
-        if (key == "jump_shoot_down") GameLogger.debug(
-            "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
-            "megamanAnimKeySupplier(): key = jump_shoot_down"
-        )
-
-        // if (key != null) game.setDebugText(key) else game.setDebugText("")
-
-        return@supplier when {
-            key != null -> {
-                currentAnimKey = key
-                MegamanAnimations.buildFullKey(key, currentWeapon)
-            }
-            else -> null
-        }
-    }
-    val megamanAnimator = Animator(
-        keySupplier = megamanAnimKeySupplier,
-        animations = animations,
-        onChangeKey = { _, currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) },
-        postProcessKey = { _, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) },
-        shouldEqualKeysTriggerChange = this::shouldEqualAnimKeysTriggerChange
-    )
-
-    val decorationsAtlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
-
-    val jetpackFlameRegion = decorationsAtlas.findRegion(JETPACK_FLAME_SPRITE_KEY)
-    val jetpackFlameAnimation = Animation(jetpackFlameRegion, 1, 3, 0.1f)
-    val jetpackFlameAnimator = Animator(jetpackFlameAnimation)
-
-    val desertTornadoRegion = decorationsAtlas.findRegion(DESERT_TORNADO_SPRITE_KEY)
-    val desertTornadoAnimation = Animation(desertTornadoRegion, 2, 1, 0.1f)
-    val desertTornadoAnimator = Animator(desertTornadoAnimation)
-
-    val animators = orderedMapOf<Any, IAnimator>(
-        MEGAMAN_SPRITE_KEY pairTo megamanAnimator,
-        JETPACK_FLAME_SPRITE_KEY pairTo jetpackFlameAnimator,
-        DESERT_TORNADO_SPRITE_KEY pairTo desertTornadoAnimator
-    )
-
-    return AnimationsComponent(animators, sprites)
-}
 
 internal fun Megaman.onChangeAnimationKey(
     currentKey: String?, nextKey: String?, animations: OrderedMap<String, IAnimation>

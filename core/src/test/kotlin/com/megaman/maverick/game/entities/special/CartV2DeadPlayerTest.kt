@@ -21,7 +21,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.players.MegaPlayers
-import com.megaman.maverick.game.players.TestHealthPlayer
+import com.megaman.maverick.game.players.TestBodyPlayer
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.state.GameMode
 import com.megaman.maverick.game.testServices
@@ -77,8 +77,8 @@ private class CartRig(slots: Int) {
         cart.body.physics.velocity.x = 0f
     }
 
-    fun player(slot: Int, onCart: Boolean): TestHealthPlayer {
-        val player = TestHealthPlayer(services)
+    fun player(slot: Int, onCart: Boolean): TestBodyPlayer {
+        val player = TestBodyPlayer(services)
         player.body.putProperty(ConstKeys.ENTITY, player)
         player.body.putProperty(ConstKeys.FEET, Fixture(player.body, FixtureType.FEET, GameRectangle().setSize(16f, player.body.getHeight() + 8f)))
         val x = if (onCart) cart.body.getX() + cart.body.getWidth() / 2f else 30f * PPM
@@ -90,7 +90,7 @@ private class CartRig(slots: Int) {
         return player
     }
 
-    fun kill(player: TestHealthPlayer) {
+    fun kill(player: TestBodyPlayer) {
         player.destroy()
         engine.update(STEP)
         player.existenceState.liveNow shouldBe false

@@ -2,13 +2,9 @@ package com.megaman.maverick.game.players
 
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.behaviors.BehaviorsComponent
-import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
-import com.maverick.game.engine.common.interfaces.IDirectional
-import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.controller.ControllerComponent
 import com.maverick.game.engine.controller.buttons.ButtonStatus
-import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.input.InputFrame
 import com.maverick.game.engine.input.InputSource
 import com.maverick.game.engine.locks.LocksComponent
@@ -18,8 +14,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.entities.EntityType
-import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
+import com.megaman.maverick.game.entities.movement.RunParams
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.entities.state.FreezeComponent
@@ -37,20 +32,12 @@ import io.mockk.mockk
 
 private const val DELTA = 0.1f
 
-private class RunPlayer(services: MegaServices) : AbstractHealthEntity(services), IBodyEntity, IFaceable,
-    IDirectional {
-
-    override val damageNegotiator = PlayerDamageNegotiator(this)
-    override var facing = Facing.RIGHT
-    override var direction: Direction
-        get() = body.direction
-        set(value) {
-            body.direction = value
-        }
+private class RunPlayer(services: MegaServices) : TestMegaPlayer(services) {
 
     var frame = InputFrame.RELEASED
 
     init {
+        facing = Facing.RIGHT
         addComponent(BodyComponent(Body(BodyType.DYNAMIC)))
         addComponent(LocksComponent(MegaLockGroup.entries.size))
         addComponent(PlayPhaseComponent(PlayPhase.IN_PLAY))
@@ -61,8 +48,6 @@ private class RunPlayer(services: MegaServices) : AbstractHealthEntity(services)
         addComponent(ControllerComponent().also { it.input = InputSource { frame } })
         damageTimer.setToEnd()
     }
-
-    override fun getType() = EntityType.MEGAMAN
 }
 
 class PlayerRunTest : DescribeSpec({
@@ -80,10 +65,11 @@ class PlayerRunTest : DescribeSpec({
         ramp2Scalar = 0.8f,
         ramp3Scalar = 1f,
         maxSpeed = { 100f * ConstVals.PPM },
-        movementScalar = { 1f },
-        blocked = { blocked },
-        onBlocked = { blockedFacing = it }
+        movementScalar = { 1f }
     )
+
+    fun run(side: Facing) =
+        playerRunButton(player, side, params(), { blocked }, { blockedFacing = it }).onPressContinued(DELTA)
 
     fun press(side: Facing) {
         player.frame = InputFrame.RELEASED.with(side.runButton(), ButtonStatus.PRESSED)
@@ -95,12 +81,12 @@ class PlayerRunTest : DescribeSpec({
         player = RunPlayer(testServices(engine = mockk<GameEngine>(relaxed = true)))
     }
 
-    describe("the shared run") {
+    describe("the player run gate") {
         it("uses the impulse of the params, scaled by the ramp on the ground") {
             player.body.setBodySense(BodySense.FEET_ON_GROUND, true)
             press(Facing.LEFT)
 
-            player.playerRun(DELTA, Facing.LEFT, params())
+            run(Facing.LEFT)
 
             player.body.physics.velocity.x shouldBe (-10f * DELTA * ConstVals.PPM * 0.5f plusOrMinus 0.001f)
             player.facing shouldBe Facing.LEFT
@@ -111,7 +97,7 @@ class PlayerRunTest : DescribeSpec({
             player.body.setBodySense(BodySense.FEET_ON_ICE, true)
             press(Facing.RIGHT)
 
-            player.playerRun(DELTA, Facing.RIGHT, params())
+            run(Facing.RIGHT)
 
             player.body.physics.velocity.x shouldBe (2f * DELTA * ConstVals.PPM plusOrMinus 0.001f)
         }
@@ -120,7 +106,7 @@ class PlayerRunTest : DescribeSpec({
             blocked = true
             press(Facing.LEFT)
 
-            player.playerRun(DELTA, Facing.LEFT, params())
+            run(Facing.LEFT)
 
             player.running shouldBe false
             blockedFacing shouldBe Facing.LEFT
@@ -131,7 +117,7 @@ class PlayerRunTest : DescribeSpec({
         it("does not call the blocked hook when the run is free") {
             press(Facing.LEFT)
 
-            player.playerRun(DELTA, Facing.LEFT, params())
+            run(Facing.LEFT)
 
             blockedFacing shouldBe null
         }

@@ -16,6 +16,7 @@ import com.megaman.maverick.game.players.JumpParams
 import com.megaman.maverick.game.players.playerJumpBehavior
 
 internal fun Megaman.jumpBehavior(): IBehavior = playerJumpBehavior(
+    this,
     JumpParams(
         canStart = { aButtonTask == AButtonTask.JUMP },
         blocked = { currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting },

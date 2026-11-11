@@ -4,12 +4,8 @@ import com.maverick.game.engine.behaviors.FunctionalBehaviorImpl
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Facing
-import com.maverick.game.engine.common.interfaces.IDirectional
-import com.maverick.game.engine.common.interfaces.IFaceable
-import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
@@ -25,31 +21,31 @@ class WallSlideParams(
     val onEnd: () -> Unit
 )
 
-private fun <T> T.pressedWallSide(): Facing? where T : IBodyEntity = when {
-    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && isRunSidePressed(Facing.LEFT) -> Facing.LEFT
-    body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && isRunSidePressed(Facing.RIGHT) -> Facing.RIGHT
+private fun pressedWallSide(player: MegaPlayer): Facing? = when {
+    player.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) && player.isRunSidePressed(Facing.LEFT) -> Facing.LEFT
+    player.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT) && player.isRunSidePressed(Facing.RIGHT) -> Facing.RIGHT
     else -> null
 }
 
-fun <T> T.playerWallSlideBehavior(params: WallSlideParams): IBehavior
-    where T : AbstractHealthEntity, T : IBodyEntity, T : IFaceable, T : IDirectional = FunctionalBehaviorImpl(
+// TODO: widen the player type when an enemy clone calls this (item 121)
+fun playerWallSlideBehavior(player: MegaPlayer, params: WallSlideParams): IBehavior = FunctionalBehaviorImpl(
     evaluate = {
-        !(!existenceState.liveAfterUpdate || !inPlay || !playerCanMove || params.blocked()) &&
-            (pressedWallSide() != null ||
-                (isBehaviorActive(BehaviorType.WALL_SLIDING) && params.holdsWithoutInput())) && !damaged &&
-            (!isBehaviorActive(BehaviorType.JUMPING) || params.allowedWhileJumping()) &&
-            !isBehaviorActive(BehaviorType.CLIMBING) &&
-            !body.isSensing(BodySense.FEET_ON_GROUND)
+        !(!player.existenceState.liveAfterUpdate || !player.inPlay || !player.playerCanMove || params.blocked()) &&
+            (pressedWallSide(player) != null ||
+                (player.isBehaviorActive(BehaviorType.WALL_SLIDING) && params.holdsWithoutInput())) && !player.damaged &&
+            (!player.isBehaviorActive(BehaviorType.JUMPING) || params.allowedWhileJumping()) &&
+            !player.isBehaviorActive(BehaviorType.CLIMBING) &&
+            !player.body.isSensing(BodySense.FEET_ON_GROUND)
     },
     init = {
         params.onStart()
-        facing = pressedWallSide()!!.opposite()
+        player.facing = pressedWallSide(player)!!.opposite()
         GameLogger.debug(TAG, "init()")
     },
     act = { delta -> params.onAct(delta) },
     end = {
         params.onEnd()
-        body.physics.gravityOn = true
+        player.body.physics.gravityOn = true
         GameLogger.debug(TAG, "end()")
     }
 )

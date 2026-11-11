@@ -108,16 +108,7 @@ fun Megaman.shouldHideSprite(): Boolean {
     return false
 }
 
-internal fun Megaman.defineSpritesComponent(): SpritesComponent {
-    val component = SpritesComponent()
-    defineMegamanSprite(component)
-    defineJetpackFlameSprite(component)
-    defineDamagedBurstSprite(component)
-    defineDesertTornatoSprite(component)
-    return component
-}
-
-private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
+internal fun Megaman.defineMegamanSprite(component: SpritesComponent) {
     val priority = DrawingPriority()
     val sprite = GameSprite(getMegamanSpritePriority(priority))
     component.putSprite(MEGAMAN_SPRITE_KEY, sprite)
@@ -138,7 +129,7 @@ private fun Megaman.defineMegamanSprite(component: SpritesComponent) {
     }
 }
 
-private fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
+internal fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
     val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0), false)
     component.putSprite(JETPACK_FLAME_SPRITE_KEY, sprite)
     component.putPreProcess(JETPACK_FLAME_SPRITE_KEY) { _, flame ->
@@ -164,7 +155,7 @@ private fun Megaman.defineJetpackFlameSprite(component: SpritesComponent) {
     }
 }
 
-private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
+internal fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
     val region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, "MegamanDamageBurst")
     val priority = getMegamanSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value - 1))
@@ -208,7 +199,7 @@ private fun Megaman.defineDamagedBurstSprite(component: SpritesComponent) {
     }
 }
 
-private fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
+internal fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
     val region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, "DesertTornado")
     val priority = getMegamanSpritePriority(DrawingPriority())
     val sprite = GameSprite(region, DrawingPriority(priority.section, priority.value + 1))

@@ -24,45 +24,6 @@ import com.megaman.maverick.game.players.runButton
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.behaviors.BehaviorType
 
-internal fun MegamanX.defineControllerComponent(): ControllerComponent {
-    fun side(facing: Facing) = ButtonActuator(
-        onJustPressed = {
-            require(RunComponent::class).lastPressedSide = facing
-            run(0f, facing)
-        },
-        onPressContinued = { delta -> run(delta, facing) },
-        onJustReleased = { if (!input.isPressed(facing.opposite().runButton())) stopRunning() },
-        onReleaseContinued = { if (!input.isPressed(facing.opposite().runButton())) running = false }
-    )
-
-    val attack = ButtonActuator(
-        onJustPressed = {
-            if (input.isPressed(MegaControllerButton.UP) && sabre.canStart()) sabre.start()
-            when {
-                sabre.active -> sabre.pressHeld = true
-                canAttack() -> buster.shoot(MegaChargeStatus.NOT_CHARGED)
-            }
-        },
-        onPressContinued = { delta ->
-            if (canAttack() && !sabre.pressHeld) require(WeaponChargeComponent::class).update(delta)
-            else stopCharging()
-        },
-        onJustReleased = {
-            val status = chargeStatus
-            if (canAttack() && status != MegaChargeStatus.NOT_CHARGED) buster.shoot(status)
-            sabre.pressHeld = false
-            stopCharging()
-        },
-        onReleaseContinued = { sabre.pressHeld = false }
-    )
-
-    return ControllerComponent(
-        MegaControllerButton.LEFT pairTo side(Facing.LEFT),
-        MegaControllerButton.RIGHT pairTo side(Facing.RIGHT),
-        MegaControllerButton.B pairTo attack
-    )
-}
-
 internal fun MegamanX.canAttack() = inPlay && !stunned && !damaged && !teleporting && !frozen &&
     !services.gameCamera.rotating && !services.levelState.roomTransition
 
@@ -97,7 +58,7 @@ internal fun MegamanX.run(delta: Float, side: Facing) {
     }
 }
 
-private fun MegamanX.stopRunning() {
+internal fun MegamanX.stopRunning() {
     running = false
     require(RunComponent::class).runTime = 0f
 }
@@ -127,25 +88,3 @@ internal fun MegamanX.stopCharging() {
     require(WeaponChargeComponent::class).reset()
 }
 
-internal fun MegamanX.defineFreezeComponent() = FreezeComponent(
-    MashThawRule(
-        MegamanValues.HITS_TO_UNFREEZE,
-        MegamanValues.FROZEN_PUSH_DUR,
-        mashed = { MegamanValues.BUTTONS_TO_UNFREEZE.any { input.isJustReleased(it) } },
-        onMash = { requestToPlaySound(SoundAsset.ICE_SHARD_1_SOUND, false) }
-    ),
-    onThaw = { IceShard.spawn5(body.getCenter()) }
-)
-
-internal fun MegamanX.defineStunComponent() = StunComponent(
-    MegamanValues.STUN_DUR,
-    onSurface = { body.isSensing(BodySense.FEET_ON_GROUND) },
-    onStun = {
-        // TODO: the stun bounce assumes that the body points up, as Megaman's does; the X6 levels have no gravity
-        //  change (item 058)
-        body.physics.velocity.let {
-            it.x = MegamanValues.STUN_IMPULSE_X * ConstVals.PPM * -facing.value
-            it.y = MegamanValues.STUN_IMPULSE_Y * ConstVals.PPM
-        }
-    }
-)

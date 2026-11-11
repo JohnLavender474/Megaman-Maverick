@@ -6,9 +6,11 @@ import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.locks.lock
 import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
+import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
+import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.state.DamageRecoveryComponent
@@ -48,48 +50,48 @@ class PlayerRulesTest : DescribeSpec({
 
     afterEach { unmockkAll() }
 
-    describe("playerInvincible") {
+    describe("invincible") {
         it("is false for a live player in play") {
-            player.playerInvincible shouldBe false
+            player.invincible shouldBe false
         }
 
         it("is true while damaged") {
             player.startDamage()
-            player.playerInvincible shouldBe true
+            player.invincible shouldBe true
         }
 
         it("is true during recovery") {
             player.recovery.update(0f, damaged = false, damageJustFinished = true)
-            player.playerInvincible shouldBe true
+            player.invincible shouldBe true
         }
 
         it("is true with a damage lock") {
             player.lock(MegaLockGroup.DAMAGE, MegaLockReason.TELEPORT)
-            player.playerInvincible shouldBe true
+            player.invincible shouldBe true
         }
 
         it("is true when the player does not stay in the engine") {
             player.existenceState = EntityExistenceState.UNSPAWNED
-            player.playerInvincible shouldBe true
+            player.invincible shouldBe true
         }
 
         it("is true before play and after play") {
             player.setPlayPhase(PlayPhase.PRE_PLAY)
-            player.playerInvincible shouldBe true
+            player.invincible shouldBe true
 
             player.setPlayPhase(PlayPhase.POST_PLAY)
-            player.playerInvincible shouldBe true
+            player.invincible shouldBe true
         }
 
         it("is false while stunned or frozen") {
             player.stun.start()
             player.freeze.freeze()
-            player.playerInvincible shouldBe false
+            player.invincible shouldBe false
         }
 
         it("throws when a component that it reads is missing") {
             player.removeComponent(DamageRecoveryComponent::class)
-            shouldThrow<MissingComponentException> { player.playerInvincible }
+            shouldThrow<MissingComponentException> { player.invincible }
         }
     }
 
@@ -147,37 +149,43 @@ class PlayerRulesTest : DescribeSpec({
         }
     }
 
-    describe("playerAfterDamage") {
+    describe("the damage tail in takeDamageFrom") {
         it("sends the damage signal with the player and the damager") {
             var signalled: Pair<IPlayer?, IDamagerEntity?>? = null
             player.players.playerDamaged.connect { signalled = it.player to it.damager }
             val damager = TestOwnedDamager(player.services, null)
 
-            player.playerAfterDamage(damager)
+            player.takeDamageFrom(damager) shouldBe true
 
             signalled shouldBe (player to damager)
         }
 
         it("freezes the player when the damager is a freezer") {
-            player.playerAfterDamage(TestFreezer(player.services))
+            player.takeDamageFrom(TestFreezingExplosion(player.services)) shouldBe true
             player.freeze.frozen shouldBe true
         }
     }
 
-    describe("playerEditDamage") {
+    describe("the damage edit in takeDamageFrom") {
+        fun damageTaken(): Int {
+            val before = player.getCurrentHealth()
+            player.takeDamageFrom(TestOwnedDamager(player.services, null)) shouldBe true
+            return before - player.getCurrentHealth()
+        }
+
         it("keeps the base damage in normal mode with no enhancement") {
-            player.playerEditDamage(4) shouldBe 4
+            damageTaken() shouldBe 3
         }
 
         it("adds 1 in hard mode") {
             player.services.gameState.setDifficultyMode(DifficultyMode.HARD)
-            player.playerEditDamage(4) shouldBe 5
+            damageTaken() shouldBe 4
         }
 
         it("scales the damage with the damage-increase enhancement") {
             player.services.gameState.addEnhancement(MegaEnhancement.DAMAGE_INCREASE)
-            val scaled = MegaEnhancement.scaleDamage(4, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR)
-            player.playerEditDamage(4) shouldBe scaled
+            val scaled = MegaEnhancement.scaleDamage(3, MegaEnhancement.MEGAMAN_DAMAGE_INCREASE_SCALAR)
+            damageTaken() shouldBe scaled
         }
     }
 
@@ -207,3 +215,12 @@ class PlayerRulesTest : DescribeSpec({
         }
     }
 })
+
+private class TestFreezingExplosion(services: MegaServices) : MegaGameEntity(services), IDamagerEntity, IFreezerEntity {
+
+    init {
+        init()
+    }
+
+    override fun getType() = EntityType.EXPLOSION
+}

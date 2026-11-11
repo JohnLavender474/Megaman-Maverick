@@ -4,7 +4,6 @@ import com.megaman.maverick.game.testServices
 import com.maverick.game.engine.GameEngine
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.behaviors.BehaviorType
-import com.megaman.maverick.game.entities.megaman.components.defineBehaviorsComponent
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

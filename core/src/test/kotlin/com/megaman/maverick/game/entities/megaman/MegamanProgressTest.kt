@@ -5,7 +5,6 @@ import com.maverick.game.engine.audio.AudioComponent
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.entities.megaman.components.definePlayerProgressComponent
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.state.GameState

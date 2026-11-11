@@ -6,19 +6,14 @@ import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
-import com.maverick.game.engine.common.interfaces.IDirectional
-import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.time.Timer
-import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
-import com.maverick.game.engine.players.playerSlot
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
-import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.preserveMomentum
 import com.megaman.maverick.game.entities.state.requestMomentumKill
@@ -45,18 +40,19 @@ class AirDashParams(
     val onEnd: () -> Unit
 )
 
-private fun AbstractHealthEntity.airDashButton() = when (services.players.settings(playerSlot!!).selectButtonAction) {
+private fun airDashButton(player: MegaPlayer) = when (player.services.players.settings(player.slot).selectButtonAction) {
     SelectButtonAction.AIR_DASH -> MegaControllerButton.SELECT
     else -> MegaControllerButton.A
 }
 
-fun AbstractHealthEntity.airDashInputPressed() = input.isPressed(airDashButton())
+// TODO: widen the player type when an enemy clone calls this (item 121)
+fun airDashInputPressed(player: MegaPlayer) = player.input.isPressed(airDashButton(player))
 
-fun AbstractHealthEntity.airDashInputJustPressed() = input.isJustPressed(airDashButton())
+// TODO: widen the player type when an enemy clone calls this (item 121)
+fun airDashInputJustPressed(player: MegaPlayer) = player.input.isJustPressed(airDashButton(player))
 
-fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
-    where T : AbstractHealthEntity, T : IBodyEntity, T : IFaceable, T : IDirectional {
-    val entity = this
+// TODO: widen the player type when an enemy clone calls this (item 121)
+fun playerAirDashBehavior(player: MegaPlayer, params: AirDashParams): IBehavior {
     return object : AbstractBehaviorImpl() {
 
         private val minTimer = Timer(params.minTime)
@@ -67,13 +63,13 @@ fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
         private var decel = 0f
 
         override fun evaluate(delta: Float): Boolean {
-            if (!existenceState.liveAfterUpdate || !inPlay || !playerCanMove || damaged || teleporting ||
+            if (!player.existenceState.liveAfterUpdate || !player.inPlay || !player.playerCanMove || player.damaged || player.teleporting ||
                 maxTimer.isFinished() ||
-                isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING) ||
-                FacingUtils.isFacingBlock(entity) || params.blocked()
+                player.isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.JETPACKING, BehaviorType.WALL_SLIDING) ||
+                FacingUtils.isFacingBlock(player) || params.blocked()
             ) return false
 
-            if (isBehaviorActive(BehaviorType.AIR_DASHING)) return !minTimer.isFinished() || params.held()
+            if (player.isBehaviorActive(BehaviorType.AIR_DASHING)) return !minTimer.isFinished() || params.held()
 
             return params.canStart()
         }
@@ -85,22 +81,22 @@ fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
             maxTimer.resetDuration(params.maxTime())
             time = 0f
 
-            body.physics.gravityOn = false
+            player.body.physics.gravityOn = false
 
             params.onStart()
 
-            if (direction.isVertical()) impulse.y = 0f else impulse.x = 0f
+            if (player.direction.isVertical()) impulse.y = 0f else impulse.x = 0f
 
             decel = params.decel()
 
             val impulseValue = ConstVals.PPM * params.speed()
-            when (direction) {
-                Direction.UP -> impulse.x = impulseValue * facing.value
-                Direction.DOWN -> impulse.x = impulseValue * -facing.value
-                Direction.LEFT -> impulse.y = impulseValue * facing.value
-                Direction.RIGHT -> impulse.y = impulseValue * -facing.value
+            when (player.direction) {
+                Direction.UP -> impulse.x = impulseValue * player.facing.value
+                Direction.DOWN -> impulse.x = impulseValue * -player.facing.value
+                Direction.LEFT -> impulse.y = impulseValue * player.facing.value
+                Direction.RIGHT -> impulse.y = impulseValue * -player.facing.value
             }
-            lastFacing = facing
+            lastFacing = player.facing
         }
 
         override fun act(delta: Float) {
@@ -109,24 +105,24 @@ fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
             time += delta
 
             if (time < params.startDelay) {
-                body.physics.velocity.setZero()
+                player.body.physics.velocity.setZero()
                 return
             }
 
-            if (isFacing(Facing.LEFT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
-                isFacing(Facing.RIGHT) && body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
+            if (player.isFacing(Facing.LEFT) && player.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_LEFT) ||
+                player.isFacing(Facing.RIGHT) && player.body.isSensing(BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
             ) return
 
-            if (facing != lastFacing) impulse.scl(-1f)
-            lastFacing = facing
+            if (player.facing != lastFacing) impulse.scl(-1f)
+            lastFacing = player.facing
 
             if (decel > 0f) impulse.setLength(
                 max(params.minSpeed * ConstVals.PPM, impulse.len() - decel * ConstVals.PPM * delta)
             )
 
-            body.physics.velocity.set(impulse)
+            player.body.physics.velocity.set(impulse)
 
-            preserveMomentum()
+            player.preserveMomentum()
         }
 
         override fun end() {
@@ -135,25 +131,25 @@ fun <T> T.playerAirDashBehavior(params: AirDashParams): IBehavior
             minTimer.reset()
             maxTimer.reset()
 
-            if (!services.gameCamera.rotating) {
-                body.physics.gravityOn = true
+            if (!player.services.gameCamera.rotating) {
+                player.body.physics.gravityOn = true
 
-                if (!teleporting) {
-                    val impulseOnEnd = facing.value * ConstVals.PPM * params.endBump()
-                    when (direction) {
-                        Direction.UP -> body.physics.velocity.x += impulseOnEnd
-                        Direction.DOWN -> body.physics.velocity.x -= impulseOnEnd
-                        Direction.LEFT -> body.physics.velocity.y += impulseOnEnd
-                        Direction.RIGHT -> body.physics.velocity.y -= impulseOnEnd
+                if (!player.teleporting) {
+                    val impulseOnEnd = player.facing.value * ConstVals.PPM * params.endBump()
+                    when (player.direction) {
+                        Direction.UP -> player.body.physics.velocity.x += impulseOnEnd
+                        Direction.DOWN -> player.body.physics.velocity.x -= impulseOnEnd
+                        Direction.LEFT -> player.body.physics.velocity.y += impulseOnEnd
+                        Direction.RIGHT -> player.body.physics.velocity.y -= impulseOnEnd
                     }
                 }
             }
 
             params.onEnd()
 
-            preserveMomentum()
+            player.preserveMomentum()
 
-            requestMomentumKill()
+            player.requestMomentumKill()
         }
     }
 }
