@@ -26,6 +26,9 @@ flowchart LR
     Class -- "its rules call" --> Rules["PlayerRules.kt<br/>invincible, can move,<br/>damage permission, damage tail, damage edit"]
     Class -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
     Class -- "its behaviors" --> Moves["PlayerJump.kt, PlayerWallSlide.kt, PlayerAirDash.kt<br/>each with the class's params"]
+    Class -- "its run buttons" --> Run["PlayerRun.kt<br/>run step and buttons, with RunParams"]
+    Class -- "defineBodyComponent" --> Body["PlayerBody.kt<br/>shared fixtures and pre-step,<br/>with PlayerBodyParams and hooks"]
+    Body -- "reads" --> Gravity["PlayerGravityComponent<br/>gravity table, signed by direction"]
     Moves --> Input["PlayerInput.kt, the air dash input reads<br/>the run side, A or SELECT"]
     Game["the game, at level start"] -- "putInSlot0" --> Roster["PlayerRoster<br/>one entity per PlayerCharacter;<br/>slot 0 gets the level's character"]
     Lifecycle --> State["the mechanism components<br/>(entities/state/)"]
@@ -76,5 +79,12 @@ override val invincible get() = playerInvincible
   classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`), not a type check in the shared
   code. A shared behavior keeps the gate and the physics that every class has; the params give the class's own start
   rules, speeds, timers and side effects.
+- **The body keeps its fixture order.** The order of the fixtures sets the order of the contacts. `playerBody` adds
+  the shared fixtures first; a class adds its own fixtures after the call, and its own pre-step lines in the
+  `onPreStep` hook, which runs where Megaman's old pre-step ran them (before the body size and the out-of-play
+  velocity zero). `MegamanBodyFixturesTest` and its reference file `megaman-body-fixtures.txt` hold Megaman's
+  order, sizes and gravity.
+- **A class with its own move set keeps its own body.** X has its own body and run (X6 feet and walk). The shared run
+  and body are for a class that moves like Megaman.
 - **Swap only out of the engine.** `PlayerRoster.putInSlot0` throws when the outgoing player is in the engine. Call it
   before the level screen starts, and set the camera focus after it.

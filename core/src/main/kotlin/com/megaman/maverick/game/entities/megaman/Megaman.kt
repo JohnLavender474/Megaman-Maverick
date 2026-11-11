@@ -145,17 +145,12 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
                 }
             } else GameLogger.debug(TAG, "direction-set(): value same as field")
 
+            playerGravity.applyDirection(value)
+
             when (value) {
                 Direction.UP, Direction.RIGHT -> {
                     jumpVel = MegamanValues.JUMP_VEL
                     wallJumpVel = MegamanValues.WALL_JUMP_VEL
-
-                    jumpGravity = MegamanValues.JUMP_GRAVITY
-                    fallGravity = MegamanValues.FALL_GRAVITY
-                    groundGravity = MegamanValues.GROUND_GRAVITY
-                    iceGravity = MegamanValues.ICE_GRAVITY
-                    waterGravity = MegamanValues.WATER_GRAVITY
-                    waterIceGravity = MegamanValues.WATER_ICE_GRAVITY
 
                     swimVel = MegamanValues.SWIM_VEL_Y
                 }
@@ -163,13 +158,6 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
                 Direction.DOWN, Direction.LEFT -> {
                     jumpVel = -MegamanValues.JUMP_VEL
                     wallJumpVel = -MegamanValues.WALL_JUMP_VEL
-
-                    jumpGravity = -MegamanValues.JUMP_GRAVITY
-                    fallGravity = -MegamanValues.FALL_GRAVITY
-                    groundGravity = -MegamanValues.GROUND_GRAVITY
-                    iceGravity = -MegamanValues.ICE_GRAVITY
-                    waterGravity = -MegamanValues.WATER_GRAVITY
-                    waterIceGravity = -MegamanValues.WATER_ICE_GRAVITY
 
                     swimVel = -MegamanValues.SWIM_VEL_Y
                 }
@@ -210,12 +198,18 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
 
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
-    internal var fallGravity = 0f
-    internal var jumpGravity = 0f
-    internal var groundGravity = 0f
-    internal var iceGravity = 0f
-    internal var waterGravity = 0f
-    internal var waterIceGravity = 0f
+    internal val runParams = defineRunParams()
+
+    internal val playerGravity = PlayerGravityComponent(
+        PlayerGravityValues(
+            ground = MegamanValues.GROUND_GRAVITY,
+            jump = MegamanValues.JUMP_GRAVITY,
+            fall = MegamanValues.FALL_GRAVITY,
+            ice = MegamanValues.ICE_GRAVITY,
+            water = MegamanValues.WATER_GRAVITY,
+            waterIce = MegamanValues.WATER_ICE_GRAVITY
+        )
+    )
     internal var swimVel = 0f
 
     internal var canMakeLandSound = false
@@ -248,6 +242,7 @@ class Megaman(services: MegaServices) : AbstractHealthEntity(services), IBodyEnt
             )
         )
         addComponent(LocksComponent(MegaLockGroup.entries.size, behaviorsLockHook(this)))
+        addComponent(playerGravity)
         addComponent(defineBodyComponent())
         addComponent(defineCameraSubjectComponent())
         addComponent(definePlayerProgressComponent())

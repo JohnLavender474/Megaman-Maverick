@@ -25,6 +25,7 @@ test {
   useJUnitPlatform()
   maxHeapSize = '1g'
   if (project.hasProperty('updateContactRuleSelection')) systemProperty 'updateContactRuleSelection', 'true'
+  if (project.hasProperty('updateMegamanBodyFixtures')) systemProperty 'updateMegamanBodyFixtures', 'true'
   testLogging {
     events "passed", "skipped", "failed"
     showStandardStreams = false

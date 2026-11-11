@@ -1,0 +1,1360 @@
+## UP stand on ground
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -0.150
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP jump
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -30.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP fall
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP fall frozen
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -112.500
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP ground slide
+body 1.000 x 0.900, direction UP
+velocity 3.000, 0.000
+gravity 0.000, 0.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP crouch
+body 1.000 x 0.900, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -0.150
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.000 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP wall slide on ice
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -112.500
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP climb
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active false, attached true, reflect RIGHT
+## UP in water
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -18.750
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP in water, frozen
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -37.500
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP water end
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask AIR_DASH
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP needle spin
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP axe, facing left
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset -0.750, 0.000, active true, attached true, reflect LEFT
+## UP axe, climbing
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active true, attached true, reflect RIGHT
+## UP side touching block right
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset -0.100, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP head bounce
+body 1.000 x 1.500, direction UP
+velocity 3.000, 4.000
+gravity 0.000, -75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## UP not in play
+body 1.000 x 1.500, direction UP
+velocity 0.000, 0.000
+gravity 0.000, 0.000
+clamp 10633823332454027000000000000000000000.000, 10633823332454027000000000000000000000.000
+friction 1.0, 1.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 0.000 x 0.000 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect RIGHT
+## LEFT stand on ground
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 0.150, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT jump
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 30.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT fall
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT fall frozen
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 112.500, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT ground slide
+body 1.000 x 0.900, direction LEFT
+velocity 0.000, 4.000
+gravity 0.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at -0.050, -0.300, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT crouch
+body 1.000 x 0.900, direction LEFT
+velocity 3.000, 4.000
+gravity 0.150, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.000 at -0.050, -0.050, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT wall slide on ice
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 112.500, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT climb
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active false, attached true, reflect UP
+## LEFT in water
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 18.750, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT in water, frozen
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 37.500, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT water end
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask AIR_DASH
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT needle spin
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT axe, facing left
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset -0.750, 0.000, active true, attached true, reflect DOWN
+## LEFT axe, climbing
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active true, attached true, reflect UP
+## LEFT side touching block right
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset -0.100, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT head bounce
+body 1.000 x 1.500, direction LEFT
+velocity 3.000, 4.000
+gravity 75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## LEFT not in play
+body 1.000 x 1.500, direction LEFT
+velocity 0.000, 0.000
+gravity 0.000, 0.000
+clamp 10633823332454027000000000000000000000.000, 10633823332454027000000000000000000000.000
+friction 1.0, 1.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 0.000 x 0.000 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect UP
+## DOWN stand on ground
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 0.150
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN jump
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 30.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN fall
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN fall frozen
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 112.500
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN ground slide
+body 1.000 x 0.900, direction DOWN
+velocity 3.000, 0.000
+gravity 0.000, 0.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, -0.100, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN crouch
+body 1.000 x 0.900, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 0.150
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.000 at 0.000, -0.100, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN wall slide on ice
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 112.500
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN climb
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active false, attached true, reflect LEFT
+## DOWN in water
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 18.750
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN in water, frozen
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 37.500
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN water end
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask AIR_DASH
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN needle spin
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN axe, facing left
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset -0.750, 0.000, active true, attached true, reflect RIGHT
+## DOWN axe, climbing
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active true, attached true, reflect LEFT
+## DOWN side touching block right
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset -0.100, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN head bounce
+body 1.000 x 1.500, direction DOWN
+velocity 3.000, 4.000
+gravity 0.000, 75.000
+clamp 16.000, 40.000
+friction 6.0, 4.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## DOWN not in play
+body 1.000 x 1.500, direction DOWN
+velocity 0.000, 0.000
+gravity 0.000, 0.000
+clamp 10633823332454027000000000000000000000.000, 10633823332454027000000000000000000000.000
+friction 1.0, 1.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 0.000 x 0.000 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect LEFT
+## RIGHT stand on ground
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -0.150, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT jump
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -30.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT fall
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT fall frozen
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -112.500, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT ground slide
+body 1.000 x 0.900, direction RIGHT
+velocity 0.000, 4.000
+gravity 0.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.500 at 0.050, -0.300, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT crouch
+body 1.000 x 0.900, direction RIGHT
+velocity 3.000, 4.000
+gravity -0.150, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.450, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.450, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.450, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.000 x 1.000 at 0.050, -0.050, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 0.900, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT wall slide on ice
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -112.500, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT climb
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active false, attached true, reflect DOWN
+## RIGHT in water
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -18.750, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT in water, frozen
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -37.500, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 0.5, aButtonTask SWIM
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT water end
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask AIR_DASH
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT needle spin
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active true, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT axe, facing left
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset -0.750, 0.000, active true, attached true, reflect UP
+## RIGHT axe, climbing
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.750 x 1.500, offset 0.000, 0.000, active true, attached true, reflect DOWN
+## RIGHT side touching block right
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset -0.100, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT head bounce
+body 1.000 x 1.500, direction RIGHT
+velocity 3.000, 4.000
+gravity -75.000, 0.000
+clamp 40.000, 16.000
+friction 4.0, 6.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.650 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 1.500 x 1.000 at -0.250, 0.250, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
+## RIGHT not in play
+body 1.000 x 1.500, direction RIGHT
+velocity 0.000, 0.000
+gravity 0.000, 0.000
+clamp 10633823332454027000000000000000000000.000, 10633823332454027000000000000000000000.000
+friction 1.0, 1.0
+gravityScalar 1.0, aButtonTask JUMP
+  PLAYER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  BODY rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  FEET rect 0.500 x 0.250, offset 0.000, -0.750, active true, attached true
+  CONSUMER rect 0.900 x 0.100, offset 0.000, -0.750, active true, attached true
+  HEAD rect 0.750 x 0.250, offset 0.000, 0.750, active true, attached true
+  SIDE rect 0.200 x 1.000, offset -0.500, 0.100, active true, attached true
+  SIDE rect 0.200 x 1.000, offset 0.500, 0.100, active true, attached true
+  DAMAGEABLE rect 0.000 x 0.000 at 0.000, 0.000, offset 0.000, 0.000, active true, attached false
+  WATER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  TELEPORTER_LISTENER rect 1.000 x 1.500, offset 0.000, 0.000, active true, attached true
+  DAMAGER circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD circle r 1.000, offset 0.000, 0.000, active false, attached true
+  SHIELD rect 0.500 x 1.500, offset 0.750, 0.000, active false, attached true, reflect DOWN
