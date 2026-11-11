@@ -162,3 +162,4 @@ related-items: [<mega-refactor item IDs>]
 | [A pooled `HeartTank` keeps its spawn-on-contact list from the last life](2026-11-10-heart-tank-spawn-on-contact-not-cleared.md) | yes | core | open |
 | [Some entities keep per-spawn fields from their last pooled life](2026-11-10-stale-per-spawn-fields.md) | no | core | open |
 | [A currency pickup queues its sound in the players of the roster that are not in the engine](2026-11-11-currency-pickup-sound-idle-players.md) | no | core | open |
+| [A test JVM that runs out of heap hangs, and its Gradle daemon stays busy for days](2026-11-11-test-jvm-hangs-on-oom.md) | yes | build | open |

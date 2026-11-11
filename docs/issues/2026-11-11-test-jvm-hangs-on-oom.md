@@ -1,0 +1,47 @@
+---
+status: open
+verified: yes
+area: build
+gameplay-change: no
+found-by: mega-refactor-060c-protoman-buster (2026-11-11)
+related-items: []
+---
+
+# A test JVM that runs out of heap hangs, and its Gradle daemon stays busy for days
+
+## Where
+
+- `core/build.gradle` (`test { maxHeapSize = '1g' }`), `engine/build.gradle`, and the root `build.gradle`: no `Test`
+  task sets an action for an `OutOfMemoryError` or a timeout.
+
+## What happens
+
+When the heap of a `Gradle Test Executor` fills up, the JVM does not exit. It stays at about 1% CPU with a full heap.
+The build never ends, so its Gradle daemon stays busy and never reaches its idle timeout. When the `gradlew` client
+stops (a Claude Bash tool call times out, or the session ends), only the client goes. The daemon and the test JVM stay.
+
+Found on 2026-11-11: 8 such test JVMs and their 6 daemons ran on the owner's machine, 4 from
+`mega-refactor-081f-x6-intro-fixes` (about 44 hours old, about 1.18 GB each, heap full) and 4 from the deleted
+worktree `fix-quicksand-two-players` (about 9 days old, about 0.6 GB each). Together with the daemons they held about
+7 GB, and swap was 10 of 19 GB full. All ignored `SIGTERM`; `SIGKILL` stopped them. After that, free memory went
+from 7 to 15 GB and swap use from 10 to 1 GB.
+
+The heap of a `081f` JVM held 157,352 retained `io.mockk.Invocation` objects, each with a captured stack trace (about
+960 MB of stack-trace arrays). That is a separate problem (mocks that outlive their tests record every call); this
+issue is about the hang.
+
+## What should happen
+
+A test JVM that runs out of heap exits at once, and the build fails with a clear message. A test task that hangs for
+another reason stops after a time limit.
+
+## How to reproduce
+
+Add a test that allocates without limit (for example a list of 1 MB arrays in a loop) and run `./gradlew core:test`.
+The executor stays alive after the `OutOfMemoryError`, and the build does not end.
+
+## Notes
+
+- Fix: `fix/test-jvm-oom-hang`: `-XX:+ExitOnOutOfMemoryError` and a task `timeout` on every `Test` task.
+- A `SessionEnd` hook in the owner's Claude settings stops the Gradle processes of a session's worktree, as a safety
+  net for other hang causes.
