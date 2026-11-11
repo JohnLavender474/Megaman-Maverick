@@ -2061,3 +2061,20 @@ newest entry at the bottom.
   entities with `getTag()` overrides and no `super.init()` (fix in its `NOTES.md` of `146a`), and `compactor-level`
   adds a `COMPACTOR` level filter that reads `getTag()` (use `it !is Life && it !is WeaponEnergyBulb`). Each fixes
   them when it takes in `master`.
+
+## 2026-11-11 — mega-refactor-060b-protoman-move
+
+- Summary: squash `e89978212`. `Protoman` is a third player class on `MegaPlayer`, in slot 0 on the new test level
+  `REFACTOR_TEST_060` only: stand (scarf flick), step, run, jump and fall, water physics with no swim (owner), room
+  carry and death. After the review the owner changed the scope: the sprite hide and flash rule and
+  `Direction.upSign()` are shared by the 3 player classes (`players/PlayerSprite.kt`, `PlayerGravity.kt`), and the
+  test pool is 3 tiles deep. After the first play check the owner asked for v2 frames in the `Megaman_v3` style:
+  `Protoman_v2` frames and atlas (stand, step, run, jump); the classic atlas and the slicer files stay as the source.
+- Contract check: `engine:test` 675, `core:test` 1361, `core:smokeTest` 452, `lwjgl3:jar` built. Review before the
+  play test by subagents; findings and fixes are in the branch process log. The owner's play test: all 4 Proto Man
+  checks and the 5 control checks pass. Diffity: 1 round, 1 owner remark (blank lines), fixed; 0 open threads. CI did
+  not run, because the branch was never pushed.
+- Follow-up: issue `2026-11-11-currency-pickup-sound-idle-players.md` filed. `TODO`s for the v2 restyle of the other
+  Proto Man frames (`060c` to `060e`) and the shared updatables order (`060`). `081f` already conflicts with `master`
+  in `MegamanXSprites.kt` (from `060j`); `060b` adds the removal of `MegamanX.shouldHideSprite` there, which `081f`
+  does not call. It takes the `master` side when it takes in `master`.
