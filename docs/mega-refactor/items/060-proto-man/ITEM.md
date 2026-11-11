@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`, `146`
-- Branches: `mega-refactor-060a-shared-run-body` (active, 2026-11-10)
+- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10)
 
 ## Goal
 

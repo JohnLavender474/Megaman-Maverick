@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: Refactor only: move Megaman's run, body and momentum into `players/` functions with parameters; Megaman plays the same
-- Done: planning; steps 1 to 5; automated checks pass; `master` (with `146`) merged in
+- Done: planning; steps 1 to 5; automated checks pass; `master` (with `146`) merged in; play test passed; squash-merged into `master`
 - Brief: https://claude.ai/artifact/NvdV27GDt5bc7Y5CSgfnR7
-- Next: owner play test and Diffity review
+- Next: `060b` (`Protoman` load and move)
 - Blocked:
 
 ## Entries
@@ -59,3 +59,10 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   - L3, kept (owner): `PlayerGravityComponent` is added as a component, but no code reads it with `require`. Noted in
     `docs/NOTES.md` for `060b`.
 - `core:test core:smokeTest lwjgl3:jar` pass after the fixes.
+- Owner play test: the 8 checks pass (2026-11-10). Diffity review (base `d7e421d0f`): 0 threads.
+- Branch merge: `master` had no new commits since the `146` merge. The other active branch, `081f`, shares no file
+  with this branch; it changes `StunComponent` (`val duration`, `start(duration)` with a default), which keeps the
+  calls in `PlayerRunTest` valid. Squash-merged into `master` as `2076b66f6`. No backlog or bug candidates in
+  `docs/TODO.md`. `ITEMS.md`, `060` `ITEM.md` and `O8` updated.
+- Worktree and branch removed; Diffity stopped. Checks on `master`: `engine:test core:test core:smokeTest lwjgl3:jar` pass
+  (2460 engine and core tests, 0 failures).
