@@ -83,7 +83,8 @@ as a branch; the letters after it are proposals.
 | 3 | phase 3 | The dash input (from `069`), the ground dash and the dash wall kick. |
 | 4 | phase 4 | The sabre. |
 | 5 | `081f` | Fixes to the X6 intro stage and to `D1000` that the `081e` play test found (draft scope in the `081f` branch folder). |
-| — | not placed | Extract `CharacterDef` from Megaman and X (open question 7). Crouch, ladder and climb (open question 10). |
+| 6 | `081g` | Crouch, ladder and climb (open question 10; owner, 2026-11-12). |
+| — | not placed | Extract `CharacterDef` from Megaman and X (open question 7), after `060c` merges. |
 
 ### `081a`: the shared player lifecycle
 
@@ -186,11 +187,7 @@ slash (we'll need to work out what button or button combo controls this)".
 
 ## Notes for active branches
 
-- (2026-11-11, from the `060j` merge, owner chose this order) `060j` moved X's `defineAnimationsComponent` and
-  `defineSpritesComponent` bodies from `megamanx/MegamanXSprites.kt` into `MegamanX.kt` as member overrides of
-  `MegaPlayer`. `081f` changes 2 places in the animations builder (the `keySupplier` with the prior key, and the
-  `shouldUpdateAnimationPredicate` room-transition pause). When `081f` takes in `master`, git reports a modify/delete
-  conflict there: re-apply those 2 hunks in `MegamanX.kt` and run the checks.
+- None. (The `081f` note on the `060j` conflict was resolved at the `081f` merge, 2026-11-12.)
 
 ## Open questions
 
