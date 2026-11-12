@@ -2146,3 +2146,19 @@ newest entry at the bottom.
   collection shape for one-or-many values. Rules that were only in Claude's memory moved in too (no blank lines between
   short statements, seconds and tiles, tests drive the public flow). The review before the play test now checks the
   diff against it (`docs/mega-refactor/CLAUDE.md`).
+
+## 2026-11-12 — mega-refactor-081f-x6-intro-fixes
+
+- Summary: squash commit `f25897abd`. The X6 intro stage fixes and the D-1000 boss fight, reworked over 15 rounds of
+  owner play tests: the body state machine with move objects, the Director with cues and combos, the trap guard
+  (forecast plus a check at each orb's release), the eye's attacks, and orb volleys that the eye guides with a beam
+  (role scripts; the Wall volley with horizontal pillars). The package README `entities/bosses/d1000/README.md` and
+  the fight diagram `entities/bosses/D1000.md`. New art in the Bosses3 atlas. Branch log and values: the branch
+  `process-log.md` and `docs/NOTES.md`.
+- Contract check: engine 675, core 1674, smoke 457, JAR built; owner play test of rounds 12 to 15c passed. The
+  subagent review before the play test and the Diffity review were not run for rounds 12 to 15c: the owner went
+  straight to the merge. `master` merged into the branch first: one conflict in `MegamanXSprites.kt` (`060j` moved
+  X's animator into `MegamanX.kt`), resolved by moving the branch's room-transition and stun poses there.
+- Overlap: `060c` renames `MegamanXSabreSlash` to `PlayerSabreSlash`, also in `D1000.kt` and `D1000Core.kt`, where
+  `081f` adds new uses. Owner decision: merge `081f` first; `060c` renames the new uses when it takes in `master`.
+- No backlog or bug candidates. The fight code carries a `TODO` (AI-generated from play tests; more scrutiny needed).
