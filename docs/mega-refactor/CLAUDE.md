@@ -295,8 +295,8 @@ makes sure that **every** manual check in the contract will compile, launch and 
 2. Dispatch the review to one or more code-review subagents. You can split the work, for example
    one agent for the branch diff and one agent for each test map or group of checks. Give each
    agent the branch diff, the contract and the rule "do not launch the game".
-3. The review covers the branch diff (bugs, behavior that the contract does not name as a change)
-   and each manual check. For each check, it makes sure that:
+3. The review covers the branch diff (bugs, behavior that the contract does not name as a change,
+   and the rules of `docs/CODE_STYLE.md`) and each manual check. For each check, it makes sure that:
    - the command is valid: the `--level` is a `LevelDefinition` entry, the `--room` is a room in
      the live TMX file of that level and has a player spawn inside it, and each other option value
      (for example `--weapons`) is a valid name;

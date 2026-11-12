@@ -2137,3 +2137,12 @@ newest entry at the bottom.
   1380 tests pass. No gameplay change, no play test. CI did not run, because the branch was never pushed.
 - Follow-up: a full release of mocks (MockK `1.14.12` `clearAllStubsFromMemory()`) fails 218 tests until item `028`
   replaces the companion region caches; the `028` notes record this as a second reason for the item.
+
+## 2026-11-12 — docs: code style doc
+
+- Summary: new `docs/CODE_STYLE.md` (owner request during `060c`): one home for the code style rules. The repo
+  `CLAUDE.md` "Conventions" points to it, and 3 rules moved there from it (LibGDX collections, fail fast, one entry
+  point per interface method). New rules from the owner: named arguments for a `null` or a literal boolean, and one
+  collection shape for one-or-many values. Rules that were only in Claude's memory moved in too (no blank lines between
+  short statements, seconds and tiles, tests drive the public flow). The review before the play test now checks the
+  diff against it (`docs/mega-refactor/CLAUDE.md`).

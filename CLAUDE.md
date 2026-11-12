@@ -146,17 +146,16 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 
 ## Conventions
 
+The code style rules (LibGDX collections, named arguments, fail fast, one entry point per interface method, layout, comments, tests) are in `docs/CODE_STYLE.md`. Read it before you write or review Kotlin code, and give it to each subagent that writes or reviews code.
+
 - Each entity has `companion object { const val TAG = "ClassName" }`. `TAG` is also the atlas region prefix.
 - Tags are a `core` idea, held by `TagsComponent` (`entities/state/`), which `MegaGameEntity.init()` adds from `defineTagsComponent()`, so an `init()` override calls `super.init()`. The default is one tag, the runtime class name, so an entity class needs no tag code. A base class can give its subclasses its own name as a second tag (for example `Block`), and a class whose tag differs from its name overrides `defineTagsComponent()`. An entity can have several tags: match with `hasTag(x)` or `hasAnyTag(set)`, never with one "first" tag; `MegaGameEntities.getOfTag` finds an entity under each tag. A class that needs its own name (an atlas key, a lookup of its own kind) uses its `TAG`. `core/src/smokeTest/resources/entity-tags.txt` lists the tags of every entity class; update it when a class or its tags change.
 - Shared texture regions go in a companion `ObjectMap` and load once in `init()`, before `super.init()`.
 - Components are built in `define...Component()` methods and added in `init()`.
 - Build `Properties` with `props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo spawn)`. Read them with `spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!` or `getOrDefault(key, default, Type::class)`.
 - Scale all sizes, speeds and gravity by `ConstVals.PPM` (for example `SWIM_SPEED * ConstVals.PPM`).
-- Collections are LibGDX types (`Array`, `ObjectMap`, `OrderedMap`, `ObjectSet`). Helpers: `gdxArrayOf`, `objectMapOf`, `objectSetOf`, `orderedMapOf`.
 - Body fixtures use `FixtureType` (`world/body/FixtureType.kt`). Use `BodyComponentCreator.create(this, body, BodyFixtureDef.of(...))`.
 - Log with `GameLogger.debug(TAG, ...)`, `GameLogger.log(TAG, ...)`, `GameLogger.error(TAG, ...)`.
-- Fail fast. A state that only a mistake can cause (bad map data, a wrong label, a missing entity) throws at once; do not fall back to a default with `as?` or a silent `return`. Where the raw error would be unclear (for example a bare `ClassCastException`), catch it and throw a custom exception made for that case. Its message says what is wrong and how to fix it, and the original error is its `cause`. Put the class next to the code that throws it (examples: `engine/.../components/MissingComponentException.kt`, `core/.../world/collisions/InvalidSlopeLabelException.kt`), and test that it is thrown.
-- Keep an interface method the one entry point where callers use it. Do not add an overload or a second method next to it to pass one more value (for example a `draw(batch, offset)` next to `override fun draw(batch)`). Put the value in a field of the object, which the caller sets before the call (as `Background.cameraDrawOffset` and `GameSprite.drawOffsetX`), or change the interface for all of its implementations. Then each caller goes through the same contract, and a later change cannot miss a path.
 
 ## Package READMEs
 
