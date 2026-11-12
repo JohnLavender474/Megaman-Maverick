@@ -45,7 +45,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 
-// TODO: JunkShot is one of many one-off enemy shots; move it into a shared simple enemy shot (item 081)
+// TODO: JunkShot is one of many one-off enemy shots; move it into a shared simple enemy shot (item 139)
 class JunkShot(services: MegaServices) : AbstractProjectile(services, size = Size.SMALL), IAnimatedEntity,
     IDamageableEntity {
 
@@ -53,7 +53,7 @@ class JunkShot(services: MegaServices) : AbstractProjectile(services, size = Siz
         val key: String, val size: Float, val damage: Int, val shootable: Boolean, val def: TickFrameDef,
         val gravity: Float = 0f
     ) {
-        CORE("core", 0.5f * ConstVals.PPM, 4, true, TickFrameDef(15, 14, 7, 7, 3, intArrayOf(0, 1, 2, 1), intArrayOf(2, 2, 3, 2), 0)),
+        CORE("core", 0.5f * ConstVals.PPM, 2, true, TickFrameDef(15, 14, 7, 7, 3, intArrayOf(0, 1, 2, 1), intArrayOf(2, 2, 3, 2), 0)),
         JUNKROID("junkroid", 0.3125f * ConstVals.PPM, 1, true, TickFrameDef(10, 10, 5, 5, 1, intArrayOf(0), intArrayOf(1), 0),
             Junkroid.HURL_GRAVITY
         ),

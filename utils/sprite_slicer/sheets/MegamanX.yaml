@@ -34,11 +34,15 @@ animations:
   # dash_end.png and dash_end_shoot.png (96 x 96, 2 x 2 frames, row by row) are the dash brake, drawn by hand after
   # X6 animation 17; they are also not made by this file. See
   # docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081d-x-dash-sabre/docs/NOTES.md.
+  # stand_shoot.png is frame 0 of the jump_shoot strip (the artist's upright pose with the buster forward), also
+  # made by hand. The jump offsets put frames 1-5 where the owner moved them by hand (def3f36ea); jump_shoot follows
+  # them as a twin. See docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081f-x6-intro-fixes/docs/NOTES.md
+  # ("X sprites round 3").
   - {name: stand, row: 8, frames: [0, 4], align_to: null}
 
   - {name: spawn_in, row: 9, frames: [0, 13], align_x: center}
 
-  - {name: jump, row: 10, frames: [0, 5]}
+  - {name: jump, row: 10, frames: [0, 5], offsets: {1: [2, 0], 3: [1, 0], 4: [1, 0]}}
   - {name: land, row: 10, frames: [6, 6]}
   - {name: jump_shoot, row: 11, frames: [0, 5], twin: jump}
   - {name: land_shoot, row: 11, frames: [6, 6], twin: land}

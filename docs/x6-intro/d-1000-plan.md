@@ -12,8 +12,39 @@ Deviations from the plan in the first version:
 - `ram` and `throw` play their intro frames once, then loop from the X6 loop frame.
 - The X6 numbers are converted to seconds and tiles (× `ConstVals.PPM`), rounded; the code does not
   count X6 frames (`intro-objects-plan.md`, "What the first version changed").
-- The core shot is `X6Shot` (type `CORE`), shared with Junkroid and Hover Gunner. Its frame is in
-  the `Enemies2` atlas, `X6Shot/core`.
+- The core shot is `JunkShot` (type `CORE`), shared with Junkroid and Hover Gunner. Its frame is in
+  the `Enemies2` atlas, `JunkShot/core`.
+
+## CUSTOM changes (2026-11-09, branch `081f`)
+
+The owner found the fight slow in the Maverick room. These values and rules now differ from X6 on purpose. The
+full table (X6 value, new value, reason) is in
+`docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081f-x6-intro-fixes/docs/NOTES.md`,
+"CUSTOM changes". The X6 numbers in the sections below stay as the X6 reference.
+
+- CUSTOM: shorter waits. THINK 0.5 s, walk 1.5 s, crouch hold 0.75 s, ram wind-up 1.5 s, ram time at the wall
+  1.5 s, summon signal 1 s, bomb end 1.5 s (Hard 2.1 s, second bomb at 1 s), entry core delay 1 s.
+- CUSTOM: faster moves. Walk 3 tiles/s, rise 3.75 tiles/s, ram 9.375 tiles/s, core shot 5.625 tiles/s.
+- CUSTOM: shorter stun. Core move 0.5 s, core signal 1 s after its appear animation, stun damage 0.6 s after the
+  landing, stand-up hold 0.5 s.
+- CUSTOM: slam when X is near. At the end of THINK, X within 60 px and no crouch just before: CROUCH at once.
+- CUSTOM: the body is open while it is down. From the landing of a stun until the rise, full charges and the
+  sabre hit the body. X6 uses the deflect table for the whole stun.
+
+## CUSTOM attacks, Overdrive and director (2026-11-09, branch `081f`)
+
+The owner chose new attacks for the Maverick fight. The rules and numbers are in the branch `NOTES.md` table (the
+link above), "New attacks, Overdrive and the director". The X6 table below stays as the X6 reference; the game no
+longer uses it.
+
+- CUSTOM: `D1000Director` picks a plan (an action and an optional combo follow-up) from the context of X, in place
+  of the X6 table. No action 3 times in a row. Combos: ram then slam, summon then ram, slam then Bracket, Fence then
+  ram, Sweep then ram.
+- CUSTOM: bomb patterns Bracket, Sweep (Overdrive) and Pillar Fence; every bomb lands at its target x.
+- CUSTOM: ram additions Wall Crash (junk falls past the body), Dazed Eye, Ricochet Ram (Overdrive).
+- CUSTOM: Ceiling Crash (state `CEILING`) and the shockwave hazard `D1000Shockwave` (Overdrive slams).
+- CUSTOM: the eyeball: Peekaboo open rule, Spotter (state `SPOT`), Spread and Dive, contact damage 2.
+- CUSTOM: Overdrive at half HP: a 1.2 s rage (state `ENRAGE`), then faster values and the Overdrive attacks.
 
 ## Decisions
 
@@ -107,6 +138,9 @@ THINK waits 60 frames, then picks with `r` in 0–15:
 | other | r < 8: RAM, else SUMMON | r < 6: RAM, else BOMB |
 
 Put this table in a pure function, so that a unit test can check it without the engine.
+
+CUSTOM (`081f`): before the table, if X is within 60 px and the last action was not a crouch, THINK picks CROUCH.
+THINK waits 0.5 s, not 60 frames.
 
 Animations per state (strip names from the converter):
 

@@ -38,7 +38,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 
 // TODO: each target gives the slash one static damage for every slash kind; a more dynamic rule (by slash kind and
-//  by target) is still to come (item 081)
+//  by target) is still to come (item 141)
 class MegamanXSabreSlash(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IOwnable<MegamanX>, IDamagerEntity {
 

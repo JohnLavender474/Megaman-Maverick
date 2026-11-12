@@ -72,6 +72,9 @@ decorations.BlockPiece: BlockPiece
 decorations.BulletResidual: BulletResidual
 decorations.ChargedShotResidual: ChargedShotResidual
 decorations.CrystalConveyorBKG: CrystalConveyorBKG
+decorations.D1000BombMarker: D1000BombMarker
+decorations.D1000DebrisWarning: D1000DebrisWarning
+decorations.D1000RubblePile: D1000RubblePile
 decorations.DebrisPiece: DebrisPiece
 decorations.DustPuff: DustPuff
 decorations.FallingLeaf: FallingLeaf
@@ -272,7 +275,9 @@ hazards.AsteroidsSpawner: AsteroidsSpawner
 hazards.Bolt: Bolt
 hazards.BulletBillLauncher: BulletBillLauncher
 hazards.CeilingCrusher: CeilingCrusher
+hazards.D1000CeilingDebris: D1000CeilingDebris
 hazards.D1000Pillar: D1000Pillar
+hazards.D1000Shockwave: D1000Shockwave
 hazards.DeadlyLeaf: DeadlyLeaf
 hazards.DrippingToxicGoop: DrippingToxicGoop
 hazards.ElectrocutieChild: ElectrocutieChild

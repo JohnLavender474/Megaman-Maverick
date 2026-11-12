@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megamanx
 
+import com.megaman.maverick.game.entities.state.roomTransitionPaused
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -442,7 +443,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         SabreKind.entries.forEach { animations.put(it.bodyRegion, Animation(frames(it.bodyRegion, it.stripFrames), 1f)) }
 
         val animator = Animator(
-            keySupplier = { animationKey() },
+            keySupplier = { priorKey -> animationKey(priorKey) },
             animations = animations,
             onChangeKey = { _, currentKey, nextKey ->
                 if (currentKey != null && nextKey != null &&
@@ -451,10 +452,14 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             },
             shouldUpdateAnimationPredicate = { key, animation, _ ->
                 val kind = sabre.kind
-                if (kind != null && key == kind.bodyRegion) {
-                    animation.setIndex(sabre.frame)
-                    false
-                } else true
+                when {
+                    roomTransitionPaused || (services.levelState.roomTransition && key != "run") -> false
+                    kind != null && key == kind.bodyRegion -> {
+                        animation.setIndex(sabre.frame)
+                        false
+                    }
+                    else -> true
+                }
             }
         )
         return AnimationsComponent(orderedMapOf<Any, IAnimator>(MEGAMAN_X_SPRITE_KEY pairTo animator), sprites)

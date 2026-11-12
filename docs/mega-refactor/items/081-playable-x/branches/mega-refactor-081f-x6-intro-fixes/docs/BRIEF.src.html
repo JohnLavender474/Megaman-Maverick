@@ -1,68 +1,102 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>081f X6 Intro Fixes</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 081 · Branch 081f · Objectives O8 · <span class="chip ok">approved 2026-11-09</span> <span class="chip warn">scope grown 2026-11-09</span></p>
+    <h1>X6 intro fixes</h1>
+    <p class="lead">Fix the boss gate and the D-1000 fight that the 081e play test found. Most fixes are a value or one placement; the main bug is a boss body that never leaves the map corner.</p>
+    <p class="meta"><b>In play:</b> the music fades at the boss gate, X runs through the gate, and D-1000 stands on the floor, hurts X, and takes body hits. <b>Added:</b> a faster fight with new attacks, its own looping track, larger art, an eyeball that attacks, and hit boxes that follow the art.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>D-1000's body is placed at spawn, so the world sees it</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: the body stays at the origin of the map">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  S["onSpawn: origin only"] --> B["body at 0,0, still"]
+  B -->|"off camera, no speed"| W["world skips the body"]
+  W -.->|"never runs"| P["preProcess: place body"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>The only code that moves the body runs only for a body the world updates, so no hit on the body or from it ever lands.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: the body is at the boss from the spawn">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  S["onSpawn: sets origin, places body"] --> B["body at the boss"]
+  B -->|"on camera"| W["world updates the body"]
+  W --> P["preProcess: follows the boss"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>The same placement runs once more at spawn; nothing else in the fight changes.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
-    <p>After:</p>
-<pre><code><new code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>Six small fixes, one file each</h2></div>
+<pre><code>// D1000.onSpawn
+origin.set(arena.getX() + ENTRY_X, floor + ENTRY_HEIGHT)
+placeBody()                                   // new; the pre-process calls it too
+
+CROUCH_HEIGHT = 1.375f * PPM                  // was 2f: falls until the feet touch the floor
+rise(delta, hoverTarget())                    // was a fixed 3.5 tiles; X's height, clamped:
+                                              //   box 0.5 tile over the floor .. 0.5 tile under the ceiling
+HALF_WIDTH    = 1.75f  * PPM                  // was 2f: the box reaches the wall
+updateWalk: facePlayer() on every frame       // was only on the first
+
+// PlayerDamageNegotiator: D1000 3, D1000Bomb 3 (was 6); pillar 3; core shot 2 (was 4)
+
+// MegamanXSprites.animationKey(prior)
+if (roomTransitionPaused) hold the frame
+if (roomTransition) stand / landing / walk start / dash end -> "run", else keep prior
+
+// X6Intro_16x14_v1.tmx, boss_room
+&lt;property name="fade_out_music" type="bool" value="true"/&gt;</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>Your 6 answers are in; 2 small questions are left</h2></div>
+    <p><span class="chip ok">Chosen</span> crouch 44 px · damage to X halved (3/3/3/2) · an air pose keeps its frame in the gate · music, gate pose, body, landing, walk and damage all in this branch.</p>
+    <p><span class="chip ok">Chosen</span> D1 · Yes: the 5 old TODOs point at items 137 to 141, and the x6-intro docs use the new names.</p>
+    <p><span class="chip ok">Chosen</span> D2 · No: walking into the gates works. No map change.</p>
+    <p><span class="chip warn">changed 2026-11-09</span> The D-1000 vertical rule: it falls until its feet touch the floor and rises toward X's height, with its hit box between 0.5 tile over the floor and 0.5 tile under the ceiling; the ram wind-up uses the same range; the spawn rectangle grows to the ceiling.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps"><span class="chip warn">changed 2026-11-09</span> Scope added</p><h2>Your 7 additions are in; each X6 change is marked CUSTOM</h2></div>
+    <figure>
+      <div class="frame"><pre class="mermaid" aria-label="The new fight loop">
+flowchart LR
+  T["THINK: the director picks"] --> A["Body attack: ram, bombs, fence, ceiling crash"]
+  T --> E["Eye attack: spotter, spread, dive"]
+  A -->|"eye open while the body commits"| P["Punish window"]
+  E -->|"eye open the whole attack"| P
+  P -->|"eye hit"| S["Stun: body open"]
+  S --> T
+  T -.->|"half HP"| O["Rage, then Overdrive"]
+</pre></div>
+      <figcaption><span class="fig-n">Fig 3</span>Every attack has a warning and ends in a window for a charge or the sabre.</figcaption>
+    </figure>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><b>Pacing:</b> shorter waits, a faster walk and ram.</li>
+      <li><b>Music:</b> <code>MMX6_D1000.ogg</code>, 4 phrases, loops with no fade.</li>
+      <li><b>Art:</b> 1.25x larger, hand-cleaned, the red and X6's dark eyes kept; the body sizes scale with it.</li>
+      <li><b>Attacks:</b> Wall Crash, Dazed Eye, Ricochet Ram, Pillar Fence, Bracket, Sweep, Ceiling Crash, Shockwave, Overdrive at half HP, the adaptive director.</li>
+      <li><b>Eyeball:</b> at 8 tiles; open only while the body commits (dim when closed); Spotter, Spread and Dive; 2 contact damage.</li>
+      <li><b>Hit boxes:</b> 5 to 6 boxes per body frame and 3 on the eyeball, traced from the art; a gap in the art is safe.</li>
+    </ul>
+    <p><span class="chip warn">after the play test</span> 6 small defaults to judge: the aimed bomb lands on X · the closed eye at 45 % · a combo ready at the start · the touch boxes on the full art · the flashing eye hit on the whole ball · the box split of one stand frame.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>The fight changes balance, because body hits are real for the first time</h2></div>
+    <ul>
+      <li><span class="chip warn">risk</span> <b>Balance.</b> The body now hurts X and takes the full charge and the sabre; the halved damage offsets part of it. The play test judges it.</li>
+      <li><span class="chip warn">risk</span> <b>Fall frame under the floor.</b> The fall frame draws below its origin; the lower landing shows more of it for a few frames. The play test looks at the landing.</li>
+      <li><span class="chip warn">risk</span> <b>Difficulty.</b> Many new attacks and a touch area as large as the art; the play test tunes it (each value is one constant).</li>
     </ul>
   </section>
 
@@ -70,15 +104,18 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-081f-x6-intro-fixes</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room2</code>: go into the boss gate standing, walking, after a landing, after a dash, and in a jump. The music fades; X runs, and an air pose holds.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room1</code>: the first gate; the same poses; no fade there.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room2</code>, then through the boss gate: D-1000's feet on the floor; it hovers at X's height, never closer than 0.5 tile to the ceiling; its body, bomb, pillar and core shot hurt X (3, 3, 3, 2); the charge and the sabre hurt the body; it turns to X on the walk and reaches the wall; the defeat explosions are at the boss.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room2</code>, then through the boss gate: the new track loops; each new attack shows its warning; the eye opens while the body commits; a rage at half HP, then Overdrive; the art hurts on touch, a gap does not.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-081f-x6-intro-fixes/docs/SCOPE.md</code></p>
-    <p><code>.../mega-refactor-081f-x6-intro-fixes/docs/CONTRACT.md</code></p>
+    <p><code>docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081f-x6-intro-fixes/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/081-playable-x/branches/mega-refactor-081f-x6-intro-fixes/docs/CONTRACT.md</code></p>
   </section>
 </main>
 </body>

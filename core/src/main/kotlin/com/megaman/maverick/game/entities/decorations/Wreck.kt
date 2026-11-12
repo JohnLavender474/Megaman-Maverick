@@ -25,7 +25,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
 
-// TODO: Wreck draws one still map sprite, as MockSpriteEntity does; merge them (item 081)
+// TODO: Wreck draws one still map sprite, as MockSpriteEntity does; merge them (item 138)
 class Wreck(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
 
     companion object {

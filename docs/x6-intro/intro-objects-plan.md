@@ -9,9 +9,10 @@ What the first version changed from this plan:
 - **Timing and units are Maverick's.** Each X6 number is converted once to seconds and to tiles
   (× `ConstVals.PPM`), rounded, and the code uses `Timer`s that run on `delta`. No code counts X6
   frames. The values do not need to match X6 exactly (the owner, 2026-11-03). Only the animation
-  frame data (`X6FrameDef` ticks) stays in X6 frames.
-- **Damage taken** keeps the X6 hit counts: `X6Damage.negotiator` scales the X6 buster (3), half
-  charge (6) and full charge (12) damage to 30 HP. Other weapons use the standard size table.
+  frame data (`TickFrameDef` ticks) stays in X6 frames.
+- **Damage taken** keeps the X6 hit counts: each target hard-codes its damage for the buster, the half
+  charge and the full charge (`081e` removed `X6Damage`, which scaled the X6 values to 30 HP). Other
+  weapons use the standard size table.
 - **Death explosions do no damage** (`DAMAGER` false), as in X6.
 - **Meta Wheel F**: no stud overlay; the studs are in the roll frames, and `turn_flash` blinks
   with the roll frame in the last 0.35 s of a turn. Wheels turn when they meet; the X6 squeeze
@@ -23,9 +24,9 @@ What the first version changed from this plan:
   diagonal uses the diagonal pose (my call; the X6 pose table was not read).
 - **Map**: `nesmap` has an `objects` list. Each entry is centered on the X6 record point; the
   sabre block is moved 8 px up (`dy`). The `record` field is the X6 record number, for reading.
-- **Shared code**: `entities/utils/X6Frames` (frame tables, strip split, placement),
-  `entities/utils/X6Damage`, `projectiles/X6Shot` (also the D-1000 core shot),
-  `decorations/X6Debris`, `decorations/X6Scenery`. All regions are in the `Enemies2` atlas (page
+- **Shared code**: `entities/utils/TickFrames` (frame tables, strip split, placement),
+  `projectiles/JunkShot` (also the D-1000 core shot),
+  `decorations/DebrisPiece`, `decorations/Wreck`. All regions are in the `Enemies2` atlas (page
   936 × 1998).
 
 ## Scope
@@ -35,13 +36,13 @@ All objects of the X6 intro stage list (`~/IdeaProjects/mmx-demake-tools/docs/st
 
 | X6 object | Records | In this plan | Maverick class |
 |---|---|---|---|
-| Junkroid | 25–30 | yes | `enemies/Junkroid` + `projectiles/X6Shot` |
-| Hover Gunner | 20–24 | yes | `enemies/HoverGunner` + `projectiles/X6Shot` + `decorations/MuzzleFlash` sprite |
+| Junkroid | 25–30 | yes | `enemies/Junkroid` + `projectiles/JunkShot` |
+| Hover Gunner | 20–24 | yes | `enemies/HoverGunner` + `projectiles/JunkShot` + `decorations/MuzzleFlash` sprite |
 | Meta Wheel F | 31–39 | yes | `enemies/MetaWheelF` |
 | Meta Dridler | 45–53 | yes | `enemies/MetaDridler` |
 | Sabre block | 40–44 | yes | `blocks/SabreBlock` |
 | Wrecks (scenery) | 54, 55 | yes | a sprite decoration |
-| Debris of all the above | – | yes | `decorations/X6Debris` |
+| Debris of all the above | – | yes | `decorations/DebrisPiece` |
 | Boss gates | 18, 19 | no: the map already has Maverick `Gate`s | – |
 | D-1000 | 56 | no: `d-1000-plan.md` | – |
 | The Hunters' scene, Zero, High Max | 17, misc | no: no scenes in the first version (D-1000 decision 3) | – |
@@ -99,29 +100,29 @@ Notes on the raw frames:
 
 ```mermaid
 flowchart TD
-    Frames["X6Frames<br/>(D1000Frames, renamed)<br/>strip split, place, unit conversions"]
+    Frames["TickFrames<br/>(D1000Frames, renamed)<br/>strip split, place, unit conversions"]
     Frames --> J[Junkroid]
     Frames --> H[HoverGunner]
     Frames --> W[MetaWheelF]
     Frames --> D[MetaDridler]
     Frames --> S[SabreBlock]
     Frames --> B[D1000 and its parts]
-    J -- "1 shot" --> Shot["X6Shot<br/>straight, 1 HP, bursts on walls"]
+    J -- "1 shot" --> Shot["JunkShot<br/>straight, 1 HP, bursts on walls"]
     H -- "3 + 9 shots" --> Shot
     B -- "core shots" --> Shot
-    J --> Debris["X6Debris<br/>one region, thrown, gravity, flicker"]
+    J --> Debris["DebrisPiece<br/>one region, thrown, gravity, flicker"]
     H --> Debris
     W --> Debris
     S --> Debris
 ```
 
-- **`X6Frames`.** Rename `D1000Frames` and keep one frame table per entity next to it (or in the
+- **`TickFrames`.** Rename `D1000Frames` and keep one frame table per entity next to it (or in the
   entity companion). Callers: the 5 D-1000 classes and the 5 new classes.
-- **`X6Shot`.** `D1000CoreShot` becomes `X6Shot` with a spawn prop for the sprite set (`core`,
+- **`JunkShot`.** `D1000CoreShot` becomes `JunkShot` with a spawn prop for the sprite set (`core`,
   `junkroid`, `junkroid_hard`, `hover_gunner`) and the velocity from the caller. Rules from the
   sheets: 1 HP, any player shot destroys it (not `junkroid_hard`, which disintegrates player shots),
   it bursts on blocks and on the player. Damage per set in `MegamanDamageNegotiator`.
-- **`X6Debris`.** A decoration with one region (a spawn prop), the X6 throw speeds
+- **`DebrisPiece`.** A decoration with one region (a spawn prop), the X6 throw speeds
   (`junk_speed_x` −3.5 … 3.0 px/frame, `junk_speed_y` 2.5 … 6.0 px/frame up, both from the sabre
   block sheet), gravity 0.3125 px/frame², drawn on every second frame, no collision, destroyed off
   screen.
@@ -146,7 +147,7 @@ stateDiagram-v2
   true.
 - Faces the player only in the `idle` pose and only when active.
 - SHOOT: the timer starts at 1; at 0, play `shoot` (ticks 6, 4, 1, 15, 6, 6). Fire at the end of
-  frame 2: `X6Shot` at (±16, +12 above the origin), 2 px/frame forward, no gravity. Interval 153
+  frame 2: `JunkShot` at (±16, +12 above the origin), 2 px/frame forward, no gravity. Interval 153
   frames while the player stays in range.
 - Change from X6 (owner, 2026-11-05): the attack range is 7 tiles, and the interval is 1 s, not
   2 s. The Junkroid hurls the junk from its mouth (the eye slit, frame pixel (21.5, 8.5) of
@@ -155,7 +156,7 @@ stateDiagram-v2
   7.1 tiles in front, at the edge of the attack range. It bursts on the first block that it
   touches.
 - Shot: 8 × 8, damage 1. Hard: `shot_hard`, it cannot be shot down.
-- Death: explosion, 4 `X6Debris` (`debris_1`–`4`).
+- Death: explosion, 4 `DebrisPiece` (`debris_1`–`4`).
 - Damage taken: the standard enemy table (the X6 table: 4 lemons, 2 half charges, 1 full charge).
 
 ### 2. Hover Gunner (`enemies/HoverGunner`)
@@ -180,9 +181,9 @@ stateDiagram-v2
 - FLY 4 px/frame. BURST: stop; frame 20 aim (16 directions); shots at 22, 31, 40; done at 62.
   FAN: aim at frame 0; 9 shots every 10 frames from frame 21 in the order aim, A, aim, B, … (the
   side rule is in the sheet). LEAVE: 2 px/frame up.
-- Shot: `X6Shot` 2 px/frame, damage 3, muzzle offsets from the sheet table. A muzzle flash
+- Shot: `JunkShot` 2 px/frame, damage 3, muzzle offsets from the sheet table. A muzzle flash
   (`muzzle_flash`, ticks 1, 1, 1, 2, 3, 4, 5) at the same offset.
-- Death: explosion, 5 `X6Debris`.
+- Death: explosion, 5 `DebrisPiece`.
 - Record 24 flies left at once when it spawns, so in X6 it is never seen at its marker. Place it at
   its marker; it behaves the same.
 
@@ -207,7 +208,7 @@ stateDiagram-v2
   squeeze rule; likely, not seen in play). My call: first version has the turn only, with a `TODO`
   for the squeeze.
 - Damage: decision 2. `// TODO` at the negotiator: only a sabre slash when X is the player.
-- Death: 5 explosions within ±16 px, 3 `X6Debris`.
+- Death: 5 explosions within ±16 px, 3 `DebrisPiece`.
 
 ### 4. Meta Dridler (`enemies/MetaDridler`)
 
@@ -240,7 +241,7 @@ stateDiagram-v2
 - The block centre is 8 px above the X6 record point (the X6 floor push). The record y is the centre
   before that push.
 - HP 32. Damage: decision 2, with the `TODO` at the damage rule. Hit flash 1 frame, no knock-back.
-- Break: 5 explosions at 0 or ±16 px, 1 at the centre, 3 `X6Debris` (`debris_large`, `_medium`,
+- Break: 5 explosions at 0 or ±16 px, 1 at the centre, 3 `DebrisPiece` (`debris_large`, `_medium`,
   `_small`). No item.
 - A broken block stays broken until the player dies. A damaged block that leaves the view comes back
   with full HP (the normal Maverick spawner cull does this).
@@ -251,7 +252,7 @@ stateDiagram-v2
 
 - Record 54 (claw, x 40, y 1105) and record 55 (small, x 1880, y 1026): a decoration that draws one
   region, no collision. Check if `MockSpriteEntity` can take an atlas region by key; if not, a small
-  `X6Scenery` decoration.
+  `Wreck` decoration.
 - Wreck A needs a redraw first (see "Converted frames"). If there is no redraw, leave both out.
 
 ## Map
@@ -275,8 +276,8 @@ Work in `.worktrees/x6-intro-extra-level`.
 2. **Atlas.** Copy the strips to `assets/sprites/frames/Enemies2/<Tag>/` (enemies),
    `Decorations1/` (debris, wrecks) and `Platforms1/` or `Specials1/` (sabre block), and repack
    each one. All four pages are well under 2048 px.
-3. **Shared parts.** Rename `D1000Frames` to `X6Frames`, `D1000CoreShot` to `X6Shot`; add
-   `X6Debris`. The D-1000 must still pass the smoke test.
+3. **Shared parts.** Rename `D1000Frames` to `TickFrames`, `D1000CoreShot` to `JunkShot`; add
+   `DebrisPiece`. The D-1000 must still pass the smoke test.
 4. **Junkroid**, then **Hover Gunner**, **Meta Wheel F**, **Meta Dridler**, **Sabre block**,
    **wrecks**: one class at a time, each with its frame table, damage values in
    `MegamanDamageNegotiator` and a smoke-test pass.

@@ -74,6 +74,8 @@ spawn_out
   bounds: 307, 535, 48, 336
 stand
   bounds: 457, 535, 48, 240
+stand_shoot
+  bounds: 469, 293, 48, 48
 stand_simplified
   bounds: 453, 923, 48, 96
 victory

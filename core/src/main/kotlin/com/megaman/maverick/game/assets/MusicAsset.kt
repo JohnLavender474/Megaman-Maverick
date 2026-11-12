@@ -41,6 +41,7 @@ enum class MusicAsset(src: String, val loop: Boolean = true, val onCompletion: (
     MMX5_IZZY_GLOW_MUSIC("MMX5_IzzyGlow.ogg"),
     MMX6_GATE_STAGE_MUSIC("MMX6_Gate_Stage.ogg"),
     MMX6_BOSS_FIGHT_MUSIC("MMX6_BossFight.ogg"),
+    MMX6_D1000_MUSIC("MMX6_D1000.ogg"),
     MMX6_INTRO_STAGE_MUSIC("MMX6_IntroStage.ogg"),
     MMX2_MORPH_MOTH_MUSIC("MMX2_MorphMoth.ogg"),
     MM7_FINAL_BOSS_INTRO_MUSIC(

@@ -4,8 +4,8 @@ What this branch changes and why. Write this file after the scan, with `CONTRACT
 `BRIEF.src.html`. This is Claude's record. The owner approves the brief, not this file. If the scope
 changes later, update this file and the brief, and ask the owner again.
 
-- Status: draft (written at the `081e` merge, before the branch exists; it still goes through the scan and the brief)
-- Approved: no
+- Status: approved
+- Approved: 2026-11-09 (brief); scope changes 2026-11-09 (owner answers, see "Scope changes during the work")
 
 ## Goal
 
@@ -74,9 +74,40 @@ Owner's answers (2026-11-09, at the `081e` play test):
    hits land for the first time (a full charge shot 5, the sabre 2), and the defeat explosions spawn at the boss, not
    at (0, 0).
 4. `D1000` landing: `CROUCH_HEIGHT` 44 px (`1.375f * PPM`).
+   Scope change (owner, 2026-11-09, during the work): D-1000 falls until the landing pose's feet touch the floor (the
+   44 px), and it rises toward X's height, clamped so that its hit box bottom is at least 0.5 tile over the floor and
+   its hit box top is at most 0.5 tile under the ceiling (in place of the fixed 3.5-tile stand height). The ceiling is
+   the top of the `D1000` spawn rectangle, which the TMX grows to the room ceiling. The ram wind-up uses the same
+   range (was 2 to 3.5 tiles). With the hit box, the lowest hover origin is floor + 44 px, the landing height.
 5. `D1000` walk: fix both the range (the X6 56 px, so the box edge reaches the wall) and the facing (turn toward X on
    each frame of the walk).
 6. Damage to X: halve the damage of `D1000` to X: body 3, bomb 3, pillar 3, core shot 2 (was 6, 6, 6, 4).
+
+## Scope changes during the work (owner, 2026-11-09)
+
+The owner added these to the branch after the first fixes passed their tests. Each deviation from X6 has a row in
+the CUSTOM tables of `NOTES.md`.
+
+1. Pacing: the fight is too slow for the larger room and the faster X. Shorter waits and faster moves (CUSTOM).
+2. Music: the D-1000 fight plays its own looping track, `MMX6_D1000.ogg`, cut from the owner's `MMX6_d1000.mp3`
+   with the fade-out removed.
+3. Eyeball: it spawns 8 tiles over the floor (was 5).
+4. Art: the D-1000 body art is 1.25 times larger and hand-cleaned, traced from the X6 sprites (the original red and
+   X6's dark eyes on `land` and `stand_up` are kept). The body sizes in `D1000.kt` scale 1.25 times with it
+   (`CROUCH_HEIGHT` 1.75 tiles, from the feet of the new `land` art).
+5. Attacks: Wall Crash, Dazed Eye, Ricochet Ram, Pillar Fence, Bracket, Sweep, Ceiling Crash, the wall-climb
+   Shockwave, Peekaboo, Spotter, Overdrive at half HP and the adaptive director (`D1000Director`).
+6. Eyeball attacks: Spread and Dive (Claude's design, from "has a few attacks of its own"), and contact damage 2.
+7. Hit boxes: per drawn frame BODY, DAMAGER and DAMAGEABLE boxes traced from the art, on the body and on the
+   eyeball (`TickFrameFixtures`).
+
+New APIs and their first callers: `D1000Director.chooseAction` (`D1000` THINK); `D1000Shockwave` (`D1000` slam
+landing); `TickFrames.artFrame`, `placeBox`, `maxBoxes` and `TickFrameFixtures` (`D1000` and `D1000Core`
+pre-process).
+
+Open after the play test (Claude's defaults are in the code): the aimed bomb lands on X; the closed eye is 45 %
+opacity; a combo is ready at the fight start; the DAMAGER uses the full art; the flashing eye is hit on the whole
+ball; the box split of `stand` frame 2.
 
 ## Out of scope
 
@@ -97,9 +128,25 @@ Left for later (owner, 2026-11-09):
   from the halved damage. The play test checks the balance.
 - `JunkShot.Type.CORE` damage: check that no other caller uses the `CORE` type.
 
+## Scan at branch start (2026-11-09, `master` `fd03dfd06`)
+
+- The line references above are true on `master` after the `081e` merge (`D1000.kt:75,78,186-210,401-406,577,582`;
+  `PlayerDamageNegotiator.kt:38-39`; `JunkShot.kt:56`; `D1000Pillar.kt:56`, `DAMAGE = 6`, read through
+  `IHazard.getDamageToMegaman()`).
+- `JunkShot.Type.CORE` has one caller, `D1000Core.kt:152`. So its damage change touches only the core shot.
+- `PlayerDamageNegotiator` serves both characters, but only `X6_INTRO` has a `D1000`, and only X plays it. So the
+  halved damage does not change Megaman's play.
+- The 2 gates of the intro are objects 13 (room1 to room2) and 14 (room2 to `boss_room`), 64 x 96 px at floor level.
+  The `081b` log says that the gate trigger of this map is above standing height; a play check looks at it.
+- `D1000Test.kt` exists (`core/src/test/.../bosses/`); the body test goes there.
+- Small changes in scope (owner may say no in the brief): the 5 code `TODO`s from `081e` point to the new items
+  `137` to `141` in place of "(item 081)"; `docs/x6-intro/d-1000-plan.md` and `intro-objects-plan.md` use the new
+  names (`DebrisPiece`, `Wreck`, `JunkShot`, `TickFrames`).
+
 ## Overlap with other branches
 
-To check at branch start (see "Parallel branches").
+- `127a`, `134a` and `compactor-level` change none of the files of this branch (checked with
+  `git diff --name-only master...<branch>`).
 
 ## Objective check
 
@@ -107,5 +154,22 @@ To fill in at the scan.
 
 | Rule | Effect | Note |
 |------|--------|------|
+| `O1-R2` Components, not new inheritance | no effect | no new class |
+| `O1-R3` No new fragile order | no effect | the body is placed in `onSpawn` and in its pre-process, the same value |
+| `O1-R5` Code only with a production caller | no effect | no new API |
+| `O2-R5` No logic assumes one player | no effect | `facePlayer()` already picks the target player |
+| `O2-R7` Gameplay does not depend on rendering | no effect | the gate fix changes only X's animation key |
+| `O5-R1` No per-frame allocation | no effect | `facePlayer()` on each walk frame allocates nothing |
+| `O6-R2` Named checks for kept and changed behavior | helps | tests for the body place, the crouch height, the walk, the damage, X's transition key |
+| `O8-R1` No copy of `Megaman.kt` | no effect | X gets its own 2 transition cases, as X's key code already is its own; a shared helper is out of scope (it changes Megaman's key code) |
+| `O8-R2` Capabilities, not character checks | no effect | no `is Megaman` or `is MegamanX` check is added |
+
+## Brief answers (2026-11-09)
+
+- D1: yes. The 5 code `TODO`s from `081e` point at the items `137` to `141`; `docs/x6-intro/d-1000-plan.md` and
+  `intro-objects-plan.md` use the new class names. Comment and docs text only.
+- D2: walking into the intro gates works (owner). No map change for the gate triggers.
 
 ## Open questions
+
+None.

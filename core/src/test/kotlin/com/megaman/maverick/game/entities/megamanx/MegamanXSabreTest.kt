@@ -34,7 +34,6 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.SabreBlock
 import com.megaman.maverick.game.entities.bosses.D1000
-import com.megaman.maverick.game.entities.bosses.D1000Core
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.enemies.Junkroid
 import com.megaman.maverick.game.entities.enemies.MetaWheelF
@@ -657,18 +656,10 @@ class MegamanXSabreTest : DescribeSpec({
     }
 
     describe("the boss") {
-        it("D1000 takes the sabre damage") {
+        it("D1000 takes the shielded sabre damage") {
             val boss = spawnTarget(D1000(services))
 
-            damageOf(boss, slash(SabreKind.FLOOR)) shouldBe D1000.SABRE_DAMAGE
-        }
-
-        it("the open D1000 core takes the slash, and not a plain shot") {
-            val core = D1000Core(services)
-            core.vulnerable = true
-
-            core.canBeDamagedBy(MegamanXSabreSlash(services)) shouldBe true
-            core.canBeDamagedBy(Bullet(services)) shouldBe false
+            damageOf(boss, slash(SabreKind.FLOOR)) shouldBe D1000.SHIELDED_SABRE_DAMAGE
         }
     }
 

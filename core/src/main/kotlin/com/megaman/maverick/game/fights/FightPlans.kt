@@ -29,7 +29,7 @@ object FightPlans {
     fun find(bossName: String, props: Properties): FightPlan {
         val music = when (bossName) {
             BigAssMaverickRobot.TAG -> MusicAsset.VINNYZ_INTRO_BOSS_MUSIC_INTRO
-            D1000.TAG -> MusicAsset.MMX6_BOSS_FIGHT_MUSIC
+            D1000.TAG -> MusicAsset.MMX6_D1000_MUSIC
             ElecDevil.TAG -> MusicAsset.JX_SHADOW_DEVIL_8BIT_REMIX_MUSIC
             GutsTank.TAG -> MusicAsset.MMX6_SIGMA_2_BATTLE_INTRO_MUSIC
             TimberWoman.TAG, MoonMan.TAG, ReactorMan.TAG,

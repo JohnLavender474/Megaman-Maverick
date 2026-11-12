@@ -236,7 +236,14 @@ enum class LevelDefinition(
         tmxMapSource = "X6Intro_16x14_v1.tmx",
         music = MusicAsset.MMX6_INTRO_STAGE_MUSIC,
         screenOnCompletion = { ScreenEnum.EXTRAS_SCREEN },
-        characters = setOf(PlayerCharacter.X)
+        characters = setOf(PlayerCharacter.X),
+        // TODO: X starts the intro with every heart tank and health tank, a play-test aid for the D-1000 fight; consider removing this loadout override later (item 081)
+        levelOverride = LevelOverride(
+            loadout = LoadoutOverride(
+                heartTanks = MegaHeartTank.entries.toSet(),
+                healthTanks = MegaHealthTank.entries.associateWith { ConstVals.MAX_HEALTH }
+            )
+        )
     );
 
     // TODO: Gauntlet 2 is retired: its waves need JetMet, and CeilingCrusher has a pooled scratch object fault; restore

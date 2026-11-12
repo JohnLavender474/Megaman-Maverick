@@ -7,10 +7,11 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.drawables.sprites.GameSprite
 
 // TODO: TickFrames times the frames in 60 Hz ticks; change it to the engine Animation with durations in seconds
-//  (item 081)
+//  (item 140)
 class TickFrameDef(
     val width: Int,
     val height: Int,
@@ -64,6 +65,30 @@ object TickFrames {
     fun hasLoop(defs: OrderedMap<String, TickFrameDef>, key: String) = (defs[key]?.loopTo ?: 0) > 0
 
     fun baseKey(key: String) = key.removeSuffix(LOOP_SUFFIX)
+
+    fun artFrame(def: TickFrameDef, key: String, index: Int) =
+        def.order[(if (key.endsWith(LOOP_SUFFIX)) def.loopTo!! else 0) + index]
+
+    fun maxBoxes(table: OrderedMap<String, kotlin.Array<IntArray>>) =
+        table.values().maxOf { frames -> frames.maxOf { it.size / 4 } }
+
+    fun placeBox(
+        out: GameRectangle,
+        def: TickFrameDef,
+        boxes: IntArray,
+        start: Int,
+        originX: Float,
+        originY: Float,
+        facingRight: Boolean
+    ): GameRectangle {
+        val x = boxes[start]
+        val y = boxes[start + 1]
+        val width = boxes[start + 2]
+        val height = boxes[start + 3]
+        val left = if (facingRight) originX + (def.originX - x - width) * SCALE else originX + (x - def.originX) * SCALE
+        val bottom = originY + (def.originY - y - height) * SCALE
+        return out.set(left, bottom, width * SCALE, height * SCALE)
+    }
 
     fun place(sprite: GameSprite, def: TickFrameDef, originX: Float, originY: Float, facingRight: Boolean) {
         val width = def.width * SCALE

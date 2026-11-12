@@ -49,8 +49,8 @@ object MegamanXValues {
     const val PUSH_OFF_TIME = 0.0667f
 
     const val AIR_DASH_HOVER_TIME = 0.1f
-    const val AIR_DASH_TIME = 0.4f
-    const val AIR_DASH_SPEED = 10f
+    const val AIR_DASH_TIME = 0.5f
+    const val AIR_DASH_SPEED = 13f
 
     const val KNOCKBACK_X = 8f
     const val KNOCKBACK_Y = 5.9161f
@@ -68,7 +68,7 @@ object MegamanXValues {
     const val DASH_END_TIME = DASH_END_FRAME_1 + DASH_END_FRAME_2 + DASH_END_FRAME_3 + DASH_END_FRAME_4
     const val DASH_AIR_SPEED = 11f
     const val DASH_WALL_KICK_AWAY_SPEED = 11f
-    const val AIR_DASH_FAST_START_SPEED = 14f
+    const val AIR_DASH_FAST_START_SPEED = 16f
 
     val SABRE_FLOOR_FRAME_TIMES = floatArrayOf(0.05f, 0.0333f, 0.0333f, 0.0333f, 0.05f, 0.0333f, 0.0333f)
     val SABRE_AIR_FRAME_TIMES = floatArrayOf(0.05f, 0.0333f, 0.05f, 0.0333f, 0.0333f, 0.0167f, 0.0167f, 0.0333f)

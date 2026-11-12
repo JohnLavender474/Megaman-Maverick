@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megamanx
 
+import com.megaman.maverick.game.entities.state.roomTransitionPaused
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
@@ -34,10 +35,15 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 
 const val MEGAMAN_X_SPRITE_KEY = "MegamanX"
 
+private val ROOM_TRANSITION_RUN_KEYS =
+    setOf("stand", "land_shoot", "run_trans", "run_trans_shoot", "dash_end", "dash_end_shoot")
+
 internal val HALF_CHARGE_TINT = Color(0.55f, 0.85f, 1f, 1f)
 internal val FULL_CHARGE_TINT = Color(1f, 0.95f, 0.45f, 1f)
 
-internal fun MegamanX.animationKey(): String {
+internal fun MegamanX.animationKey(priorKey: String? = null): String {
+    if (priorKey != null && services.levelState.roomTransition)
+        return if (!roomTransitionPaused && priorKey in ROOM_TRANSITION_RUN_KEYS) "run" else priorKey
     val shoot = if (buster.shooting) "_shoot" else ""
     val rising = when (direction) {
         Direction.UP -> body.physics.velocity.y > 0f
@@ -46,7 +52,7 @@ internal fun MegamanX.animationKey(): String {
         Direction.RIGHT -> body.physics.velocity.x > 0f
     }
     return when {
-        damaged -> if (bodyOverGround) "damaged" else "air_damaged"
+        damaged || stunned -> if (bodyOverGround) "damaged" else "air_damaged"
         sabre.active -> sabre.kind!!.bodyRegion
         isBehaviorActive(BehaviorType.AIR_DASHING) -> "dash$shoot"
         isBehaviorActive(BehaviorType.GROUND_DASHING) -> (if (groundDashBraking) "dash_end" else "dash") + shoot

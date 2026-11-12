@@ -32,7 +32,7 @@ import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 
-// TODO: DebrisPiece, BlockPiece and WoodCratePiece are the same kind of falling piece; merge them into one entity (item 081)
+// TODO: DebrisPiece, BlockPiece and WoodCratePiece are the same kind of falling piece; merge them into one entity (item 137)
 class DebrisPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity {
 
     companion object {
@@ -50,8 +50,8 @@ class DebrisPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntit
 
         private val regions = ObjectMap<String, TextureRegion>()
 
-        fun load(services: MegaServices, keys: Array<String>) {
-            val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
+        fun load(services: MegaServices, keys: Array<String>, asset: TextureAsset = TextureAsset.ENEMIES_2) {
+            val atlas = services.assets.getTextureAtlas(asset.source)
             keys.forEach { key ->
                 if (!regions.containsKey(key))
                     regions.put(key, atlas.findRegion(key) ?: throw IllegalStateException("Missing debris region $key"))
@@ -68,7 +68,21 @@ class DebrisPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntit
                 )
             )
         }
+
+        fun spawnPiece(key: String, position: Vector2, velocity: Vector2) {
+            val debris = MegaEntityFactory.fetch(DebrisPiece::class)!!
+            debris.spawn(
+                props(
+                    ConstKeys.KEY pairTo key,
+                    ConstKeys.POSITION pairTo position.cpy(),
+                    ConstKeys.TRAJECTORY pairTo velocity.cpy()
+                )
+            )
+        }
     }
+
+    var key = ""
+        private set
 
     private val lifeTimer = Timer(LIFE)
     private var region: TextureRegion? = null
@@ -90,17 +104,21 @@ class DebrisPiece(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val key = spawnProps.get(ConstKeys.KEY, String::class)!!
+        key = spawnProps.get(ConstKeys.KEY, String::class)!!
         region = regions.get(key) ?: throw IllegalStateException("Debris region $key is not loaded: call DebrisPiece.load")
 
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val offset = START_OFFSET * ConstVals.PPM
         body.setCenter(position.x + getRandom(-offset, offset), position.y + getRandom(-offset, offset))
 
-        val parentSpeedX = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
-        val speedX = SPEEDS_X[getRandom(0, SPEEDS_X.size - 1)] + parentSpeedX / ConstVals.PPM / 2f
-        val speedY = SPEEDS_Y[getRandom(0, SPEEDS_Y.size - 1)]
-        body.physics.velocity.set(speedX * ConstVals.PPM, speedY * ConstVals.PPM)
+        val given = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
+        if (given != null) body.physics.velocity.set(given)
+        else {
+            val parentSpeedX = spawnProps.getOrDefault(ConstKeys.SPEED, 0f, Float::class)
+            val speedX = SPEEDS_X[getRandom(0, SPEEDS_X.size - 1)] + parentSpeedX / ConstVals.PPM / 2f
+            val speedY = SPEEDS_Y[getRandom(0, SPEEDS_Y.size - 1)]
+            body.physics.velocity.set(speedX * ConstVals.PPM, speedY * ConstVals.PPM)
+        }
 
         lifeTimer.reset()
         elapsed = 0f

@@ -386,6 +386,29 @@ class MegamanXTest : DescribeSpec({
             x.animationKey() shouldBe "stand"
         }
 
+        it("shows the run loop in a room transition, from a ground pose") {
+            x.services.levelState.roomTransition = true
+            listOf("stand", "land_shoot", "run_trans", "run_trans_shoot", "dash_end", "dash_end_shoot").forEach {
+                x.animationKey(it) shouldBe "run"
+            }
+        }
+
+        it("keeps an air pose and a run in a room transition") {
+            x.services.levelState.roomTransition = true
+            listOf("jump", "fall", "fall_shoot", "dash", "run", "run_shoot").forEach { x.animationKey(it) shouldBe it }
+        }
+
+        it("keeps the prior pose in the pause at the start of a room transition") {
+            x.addComponent(RoomTransitionCarryComponent(1f, carries = { false }))
+            x.beginRoomTransitionCarry()
+            x.services.levelState.roomTransition = true
+            x.animationKey("stand") shouldBe "stand"
+        }
+
+        it("uses the state of X outside a room transition") {
+            x.animationKey("jump") shouldBe "stand"
+        }
+
         it("shows the walk start, then the walk") {
             val short = MegamanXValues.WALK_START_TIME / 4f
             step(MegaControllerButton.RIGHT to ButtonStatus.JUST_PRESSED, delta = short)

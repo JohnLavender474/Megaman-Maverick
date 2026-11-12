@@ -37,5 +37,5 @@ fun IGameEntity.onStunPlayerEvent(event: Event) {
     }
 
     stun.onStun()
-    stun.start()
+    stun.start(event.getOrDefaultProperty(ConstKeys.DURATION, stun.duration, Float::class))
 }
