@@ -54,6 +54,15 @@ similar playable characters (Bass, Axl, Zero, etc.) in the future."
 - (2026-11-10, owner) Feel: the MM9/MM10 rules first. Later phases move him toward a Maverick version. Scan the
   sprite sheet for unique move sets; example: the "flame sword" poses can become a slash like X's Z-sabre.
 
+- (2026-11-12, owner, at the `060c` play test) Proto Man plays like X6 Zero, not by the MM9/MM10 rules (this replaces
+  "Feel: the MM9/MM10 rules first" above for his attacks). The item gets him right the first time, in place of later
+  phases. `060f` (the sabre) folds into `060c`, which becomes "buster and sabre":
+  - `B` is the sabre: a 3-slash ground combo (as Zero in X4 to X6; one new frame drawn by hand), 1 slash in each
+    other state. The arc is purple. X's sabre code is shared, not copied.
+  - `UP`+`B` on the ground is the buster: one fixed shot, no charge and no Proto Strike, weaker than a full charge and
+    stronger than a pellet. He stands still to shoot (left and right do nothing; a jump cancels the shot). Where the
+    shot is not available (in the air, a slide, a wall slide), `B` is always the sabre, also with `UP` held.
+
 - (2026-11-10, owner) Merge target: each branch of this item squash-merges directly into `master`.
 - (2026-11-10, owner) `060a` is a refactor-only branch, as `081a` was for X. Mega's run, body and momentum are
   `Megaman` receiver functions, so a thin `Protoman` cannot call them, and a copy breaks `O8-R1`. No other item covers
@@ -84,10 +93,10 @@ as refined as possible before co-op (`060i`) (owner, 2026-11-10).
 | `060a` | Refactor only, contract "Megaman plays the same", no Proto Man code: Mega's run, body (feet, gravity table, water, ice) and momentum move from `Megaman` receiver functions into `players/` functions with parameters | `081a`, `084` |
 | `060j` | Refactor only, contract "Megaman and X play the same": the `MegaPlayer` base class; the shared functions take it; the 2 last `playerSlot!!` reads. Runs between `060a` and `060b` (added later, so its letter is out of order) | `060a` |
 | `060b` | `Protoman` in slot 0 on a test level: idle, step, walk, jump, fall; sliced atlas | `060j` |
-| `060c` | Buster: shoot poses, Proto Buster, charge and Proto Strike | |
+| `060c` | Buster and sabre, X6 Zero style (owner, 2026-11-12): the standing buster shot on `UP`+`B`, the sabre on `B` with a 3-slash ground combo | |
 | `060d` | Slide and ladder, with Mega's rules | |
 | `060e` | Proto Shield; his damage reaction, stun, collapse, teleport in and out | |
-| `060f` | The "Proto Sabre" (working name) | |
+| `060f` | Folded into `060c` (owner, 2026-11-12) | |
 | `060g` | Experiments: settings, moves and behaviors, from the sheet scan and play tests. Can be more than one branch | |
 | `060h` | Weapon poses and the loadout: Proto Man's variants of the special weapons | `024` |
 | `060i` | `CharacterDef` as the third caller (if `081` has not done it); co-op with mixed characters | `047` |
@@ -100,7 +109,7 @@ credits are on the sheet). Keep the credits.
 - Does Proto Man share the slide and ladder rules (X6 shares the step routines)?
 - (`060h`) How does Proto Man use each special weapon: Mega's version with his poses, or his own variant? Many
   questions are open, so this phase comes late.
-- (`060f`) What is the Proto Sabre: its input, its slash kinds, and how much it shares with X's Z-sabre (`081e`,
+- Answered 2026-11-12 (see Decisions): (`060f`) What is the Proto Sabre: its input, its slash kinds, and how much it shares with X's Z-sabre (`081e`,
   `141`)?
 - Moved to `113`: how does the player pick a character, and can each co-op slot pick its own (`047`)?
 
