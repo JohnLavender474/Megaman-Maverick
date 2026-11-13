@@ -2168,3 +2168,7 @@ newest entry at the bottom.
 - Summary: new `docs/WAYS_OF_WORKING.md` (owner request during `081g`): one home for the owner's preferences for the
   approach to a task, beside `docs/CODE_STYLE.md` (how the code looks). The repo `CLAUDE.md` points to it. First rule:
   fix art in the art (the frame strips, the atlas, the slicer data), not with a draw offset in code.
+- Rules that were only in Claude's memory moved in too (owner choice): tracing X6 poses and the sprite ratio of a
+  small X6 sprite; staging by path, the shared main-checkout index and selecting processes by PID; level drafts as
+  playable skeletons and gauntlet waves with only enemies that can die. The game-launch and Gradle rules stay in
+  memory.

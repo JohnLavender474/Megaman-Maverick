@@ -20,3 +20,46 @@ reviews, merges) is in `docs/mega-refactor/CLAUDE.md`.
   Example (owner, 2026-11-12, branch `081g`): X sat 1 to 2 px right of the ladder while he climbed. The fix moved the
   `climb` and `climb_shoot` frames 2 px left in the frame strips and in the atlas, not a `translateX` in the sprite
   pre-process.
+
+- **Trace X6 poses; do not design them.** When you redraw an X6 pose for a Maverick sheet, take the limb shapes from
+  the X6 frame, shrunk to the sheet's scale, and change only the style: flat artist colors, a black outline, a black
+  sole, the artist's cuff lines. Reuse the artist's own parts (the head, the `stand` legs) where the pose matches.
+  Compare each frame next to the X6 frame at the same scale. Draw outlines so that each edge steps at most 1 px per
+  row. (Hand-made leg shapes in the sabre work, 2026-11-05, came out "super obese"; legs traced from X6 were "far
+  better".)
+- **A small X6 sprite may be larger than X6.** Ratio 2 is the default for a converted sprite (the map and the
+  bosses). When ratio 2 makes a small enemy look squished or too low on detail, propose a smaller ratio (for example
+  1.6) for that object only, and scale its body, offsets and shots by the same factor (owner, 2026-11-03, Junkroid and
+  Hover Gunner). In the demake tools, record the ratio in the object's `catalog/nessprite-<name>.json`.
+
+## Git and processes
+
+- **Stage by path.** Never use `git add -A` or `git add .`. The owner keeps local edits during a play test (for
+  example a muted run script), and other sessions change files. Run `git status --short` before each commit. Before a
+  squash merge, run `git diff --stat <base> <branch>` with no path filter, and confirm the list of files.
+- **The main checkout is shared.** All sessions that work on `master` use the same index there, and a plain
+  `git commit` takes what another session staged. Before a merge or a commit in the main checkout, run
+  `git status --short`. If a change is staged or modified that is not yours, stop and ask the owner. Commit with
+  explicit paths where you can, and check `git show --stat HEAD` after the commit.
+- **Select a process by its PID.** Several sessions run Gradle at once on this machine. List the candidates with
+  the PID, the age (`etimes`), the working folder (`readlink /proc/<pid>/cwd`) and the parent, keep only those whose
+  folder is your worktree, and act on those PIDs. Never use `pkill -f <name>`, and never take `pgrep ... | head -1`
+  as yours. (A `pkill -f` on 2026-11-11 stopped the test JVMs of other sessions.) A `pgrep -f` pattern also matches
+  the shell whose command line holds it. A Gradle daemon's folder is `~/.gradle/daemon/<version>`, not the worktree.
+
+## Levels
+
+- **A level draft is a playable skeleton.** Before you draft a TMX level, read `assets/tiled_maps/tmx/Test8.tmx`,
+  `IntroStage_v3.tmx`, `ReactorMan_v3.tmx` and `InfernoMan_16x14_v2.tmx` from start to end.
+  - Put real block geometry in the `blocks` layer (floors, walls, ceilings, platforms), not only spawn points. Copy
+    the block patterns of `Test8.tmx`.
+  - Give each spawn object the entity's real size: copy it from a reference level, or read the entity's `onSpawn`.
+  - Every alternative path joins the main path again; no dead ends.
+  - Tile layers in a level draft: ask the owner whether to paint them to match the blocks or to leave them out
+    (default: leave them out; no empty placeholder layers). A test map is different: it always has a painted `tiles`
+    layer (`docs/mega-refactor/CLAUDE.md`, "Test maps").
+- **A gauntlet wave holds only enemies that can die.** A `GauntletMaster` wave ends only when all its enemies are
+  destroyed, so an enemy that cannot take damage locks the player in the room. Before you put an enemy in a wave,
+  read its class: look for `invincible` (for example `SpringHead`) and other no-damage logic such as a permanent
+  shield, and check that the enemy cannot be culled or stuck out of reach. Keep drafts simple, and check each enemy's
+  real behavior in its code.
