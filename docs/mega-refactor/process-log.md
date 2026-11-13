@@ -2222,3 +2222,19 @@ newest entry at the bottom.
 - Overlap: `139a` (merging next) and `060c` change some of the same caller files (imports and damage rows). Owner
   chose to merge first.
 - Backlog candidate filed as item `155` (LibGDX arrays for the region keys, after `060c` and `139`). No bug candidates.
+
+## 2026-11-13 — merged `mega-refactor-139a-shared-enemy-shot`
+
+- Squash: `efa838734`. Item `139` stays active: more straight shots can move after their class-keyed lookups change
+  (the list is in the `139` `ITEM.md`).
+- Summary: `JunkShot` is `EnemyShot`, a shared simple enemy shot whose typed `Kind` holds the art, size, damage,
+  gravity, death and hit rules. `RollingBotShot` and `FirePellet` are its kinds now. `PlayerDamageNegotiator` has one
+  `EnemyShot` entry that reads `kind.damage` (same values as before: 2, 1, 1, 3, 3, 3). The Rolling Bot kind has no
+  `BODY` fixture, so player and enemy shots still pass through it. `EnemyShotTest` (44 cases, a real `WorldSystem`).
+- Intended change: a Rolling Bot shot no longer makes a faint toxic splash at the `ToxicWaterfall` in `REACTOR_MAN`
+  `room4` (cosmetic; found by the review before the play test).
+- Contract check: `engine` 675, `core` 1782, smoke 452, JAR built (after `master` with `138a` and `137a` merged into the
+  branch: one simple conflict in `D1000Rig.kt`, both renames kept). Owner play checks passed; Diffity: no threads.
+- Overlap: `060c` changes 9 of the files that `137a`, `138a` and `139a` changed. Owner chose to merge these first; the
+  `060` `ITEM.md` "Notes for active branches" lists the files and what changed.
+- No backlog or bug candidates.

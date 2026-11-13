@@ -32,6 +32,15 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 Found in `081e` (2026-11-09), when the "X6" prefix was removed from `X6JunkShot`. A backlog candidate in the `081e`
 branch `docs/TODO.md`.
 
+## Status after `139a` (2026-11-13)
+
+`139a` merged: `JunkShot` is `EnemyShot`, and `RollingBotShot` and `FirePellet` are its kinds. The other straight
+shots that the `139a` scan found each have a lookup keyed by their class or tag, which a move must change first:
+`BunbyRedRocket`, `RocketBomb`, `SharpStar` (the `Asteroid` list), `TeardropBlast` (`BreakableIce`), `PurpleBlast`
+(`Met`, `HeliMet`), `LampeonBullet`, `GreenPelletBlast` (`StandardDamageNegotiator`); `SubmarineMissile` adds a shield
+fixture and an explosion death. About 12 lobbed shots fit later, because a kind has gravity. The table is in the
+`139a` branch `docs/SCOPE.md`.
+
 ## Open questions
 
 - Which shots go in the first branch, after `JunkShot`?

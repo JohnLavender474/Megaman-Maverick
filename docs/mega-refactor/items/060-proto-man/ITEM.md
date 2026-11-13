@@ -104,6 +104,20 @@ as refined as possible before co-op (`060i`) (owner, 2026-11-10).
 Sprite source: a fan sheet, "Proto Man (Expanded) (Inti Creates 8-bit-Style)", sprites by Hansungkee and others (the
 credits are on the sheet). Keep the credits.
 
+## Notes for active branches
+
+- (2026-11-13, from the `137a`, `138a` and `139a` merges; the owner chose to merge them before `060c`) When `060c`
+  takes in `master`, expect text conflicts in these files, which `060c` also changes:
+  - `SabreBlock.kt`, `WoodCrate.kt`, `BigAssMaverickRobot.kt`, `D1000.kt`, `MetaWheelF.kt`, `Junkroid.kt`,
+    `HoverGunner.kt`: `137a` replaced the `DebrisPiece`, `BlockPiece` and `WoodCratePiece` spawns and imports with
+    `FallingPiece` (`FallingPiece.spawn(def, ...)`, `FallingPiece.throwDebris`, `FallingPiece.load`).
+  - `Junkroid.kt`, `HoverGunner.kt`, `D1000Core.kt`: `139a` renamed `JunkShot` to `EnemyShot` (`JunkShot.Type` is
+    `EnemyShot.Kind`, `type` is `kind`), and the `PlayerDamageNegotiator` entry is now one `EnemyShot.TAG` row.
+  - `core/src/smokeTest/resources/entity-tags.txt`: removed lines for `Wreck`, `MockSpriteEntity`, `DebrisPiece`,
+    `BlockPiece`, `WoodCratePiece`, `JunkShot`, `RollingBotShot`, `FirePellet`; added `MapSprite`, `FallingPiece`,
+    `EnemyShot`. Keep both sides.
+  The damage rows that `060c` adds in these files stay as `060c` has them; only the class names around them changed.
+
 ## Open questions
 
 - Does Proto Man share the slide and ladder rules (X6 shares the step routines)?
