@@ -26,7 +26,7 @@ What the first version changed from this plan:
   sabre block is moved 8 px up (`dy`). The `record` field is the X6 record number, for reading.
 - **Shared code**: `entities/utils/TickFrames` (frame tables, strip split, placement),
   `projectiles/JunkShot` (also the D-1000 core shot),
-  `decorations/DebrisPiece`, `decorations/Wreck`. All regions are in the `Enemies2` atlas (page
+  `decorations/DebrisPiece`, `decorations/Wreck` (since `138a`: the wrecks are `decorations/MapSprite` objects). All regions are in the `Enemies2` atlas (page
   936 × 1998).
 
 ## Scope

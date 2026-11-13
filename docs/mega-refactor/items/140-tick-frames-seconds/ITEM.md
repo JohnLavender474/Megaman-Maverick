@@ -12,7 +12,7 @@
 `TickFrames` and `TickFrameDef` (`entities/utils/TickFrames.kt`, 77 lines, renamed from the X6 prefix in `081e`) time
 animation frames in 60 Hz ticks, as the X6 data does. The rest of the game uses the engine `Animation`, with frame
 durations in seconds. The X6 ports (`D1000`, `D1000Core`, `D1000Bomb`, `Junkroid`, `MetaDridler`, `MetaWheelF`,
-`DebrisPiece`, `Wreck`, `JunkShot`) use `TickFrames`, so there are two animation systems. Change these entities to the
+`DebrisPiece`, `JunkShot`; `Wreck` went in `138a`, as a still `MapSprite`) use `TickFrames`, so there are two animation systems. Change these entities to the
 engine `Animation`, with the tick counts converted to seconds, and remove `TickFrames`.
 
 ## Proposed scope

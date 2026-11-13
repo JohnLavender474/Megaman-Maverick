@@ -2190,3 +2190,16 @@ newest entry at the bottom.
   decision: merge `081g` first; `060c` re-applies them when it takes in `master` (the `081` `ITEM.md`, "Notes for
   active branches").
 - No backlog or bug candidates.
+
+## 2026-11-13 — merged `mega-refactor-138a-wreck-into-mock-sprite`
+
+- Squash: `b7f607868`. Item `138` is done.
+- Summary: `MockSpriteEntity` (a developer mock with no user) is now `MapSprite`, a still map sprite: the map gives the
+  atlas and the region, and the sprite fills the object rect at `BACKGROUND` 1. `Wreck` is removed; the 2 X6 intro
+  wrecks are `MapSprite` objects with the rects drawn before (same pixels, checked by a script). `MapSpriteTest`.
+- Contract check: `engine` 675, `core` 1712, smoke 456, JAR built. Review before the play test: no blocking bug; 2 throw
+  tests added; the test setup fixed so the spec also passes alone. Owner play check passed; Diffity: no threads.
+  `master` had only docs changes since the branch start, so it was not merged into the branch.
+- Overlap: `137a` and `139a` (merging next, owner order) and `060c` touch nearby lines of `entity-tags.txt` only.
+- Backlog candidate filed as item `154` (spawners test the camera after it moves). No bug candidates.
+- Notes: `-Pkotest_filter_specs` does nothing in this build; the environment variable `kotest_filter_specs` works.

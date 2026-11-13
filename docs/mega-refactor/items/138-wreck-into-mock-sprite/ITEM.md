@@ -1,6 +1,6 @@
 # 138: Merge `Wreck` into `MockSpriteEntity`
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
