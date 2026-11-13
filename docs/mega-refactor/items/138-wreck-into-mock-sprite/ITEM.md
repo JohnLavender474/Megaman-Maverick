@@ -1,11 +1,11 @@
 # 138: Merge `Wreck` into `MockSpriteEntity`
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `081`, `137`
-- Branches: none yet
+- Branches: `mega-refactor-138a-wreck-into-mock-sprite`
 
 ## Goal
 
@@ -20,6 +20,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   needs it.
 - Change the `Wreck` spawners in the maps (the X6 intro map) to `MockSpriteEntity`, and remove `Wreck`.
 - Each wreck in the X6 intro stage looks the same as before.
+
+## Decisions
+
+- (owner, 2026-11-13) Merge target: each branch squash-merges directly into `master`.
 
 ## Owner's input
 

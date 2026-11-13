@@ -144,9 +144,9 @@ statuses and column meanings are in `CLAUDE.md`.
 | 134 | [Draw bodies and the camera between physics steps (render interpolation)](items/134-render-interpolation/ITEM.md) | refactor | `O9`, `O5` | done | none | 2026-11-07 | 2026-11-09 |
 | 135 | [A player held below the view is left behind at a side room exit](items/135-held-player-left-behind/ITEM.md) | feature | `O2` | idea | `047` | | |
 | 136 | [Co-op: a player can skip a spike floor in a tall room by falling below the view](items/136-tall-room-spike-skip/ITEM.md) | feature | `O2`, `O4` | idea | `047` | | |
-| 137 | [One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`](items/137-falling-piece-entity/ITEM.md) | refactor | `O1` | idea | none | | |
-| 138 | [Merge `Wreck` into `MockSpriteEntity`](items/138-wreck-into-mock-sprite/ITEM.md) | refactor | `O1` | idea | none | | |
-| 139 | [A shared simple enemy shot, starting with `JunkShot`](items/139-shared-enemy-shot/ITEM.md) | refactor | `O1` | idea | none | | |
+| 137 | [One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`](items/137-falling-piece-entity/ITEM.md) | refactor | `O1` | active | none | 2026-11-13 | |
+| 138 | [Merge `Wreck` into `MockSpriteEntity`](items/138-wreck-into-mock-sprite/ITEM.md) | refactor | `O1` | active | none | 2026-11-13 | |
+| 139 | [A shared simple enemy shot, starting with `JunkShot`](items/139-shared-enemy-shot/ITEM.md) | refactor | `O1` | active | none | 2026-11-13 | |
 | 140 | [`TickFrames` as the engine `Animation`, with durations in seconds](items/140-tick-frames-seconds/ITEM.md) | refactor | `O1` | idea | none | | |
 | 141 | [The sabre damage by slash kind and by target](items/141-sabre-damage-rules/ITEM.md) | feature | `O8` | idea | `081` | | |
 | 142 | [Remove the reflection from `FriendlyFireTest` and `EntityExistenceTest`](items/142-tests-no-reflection/ITEM.md) | test | `O6` | idea | none | | |
@@ -257,3 +257,6 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-134a-draw-interpolation`](items/134-render-interpolation/branches/mega-refactor-134a-draw-interpolation/process-log.md) | 134 | Draw bodies and the camera between the last 2 physics steps, with `--interpolation` (on by default) | merged | 2026-11-07 | 2026-11-09 |
 | [`mega-refactor-134b-interpolation-audit`](items/134-render-interpolation/branches/mega-refactor-134b-interpolation-audit/process-log.md) | 134 | Fix the known render interpolation hitches: bodies placed outside the world steps, bodiless sprites, the shape renderer, snaps | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-151a-level-completed-rename`](items/151-level-completed-rename/branches/mega-refactor-151a-level-completed-rename/process-log.md) | 151 | Rename `levelsDefeated`, `isLevelDefeated`, `onLevelDefeated` and the rest of the family to "completed"; delete `allLevelsDefeated` | merged | 2026-11-11 | 2026-11-11 |
+| [`mega-refactor-137a-falling-piece-entity`](items/137-falling-piece-entity/branches/mega-refactor-137a-falling-piece-entity/process-log.md) | 137 | One falling-piece entity for `DebrisPiece`, `BlockPiece` and `WoodCratePiece` | active | 2026-11-13 | |
+| [`mega-refactor-138a-wreck-into-mock-sprite`](items/138-wreck-into-mock-sprite/branches/mega-refactor-138a-wreck-into-mock-sprite/process-log.md) | 138 | Merge `Wreck` into `MockSpriteEntity` | active | 2026-11-13 | |
+| [`mega-refactor-139a-shared-enemy-shot`](items/139-shared-enemy-shot/branches/mega-refactor-139a-shared-enemy-shot/process-log.md) | 139 | A shared simple enemy shot, starting with `JunkShot` | active | 2026-11-13 | |

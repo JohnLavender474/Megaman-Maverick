@@ -1,11 +1,11 @@
 # 137: One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `081`
-- Branches: none yet
+- Branches: `mega-refactor-137a-falling-piece-entity`
 
 ## Goal
 
@@ -21,6 +21,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - Compare the 3 classes and list what is the same and what is different (art, size, speed, gravity, life time, sound).
 - One entity class that takes the differences as spawn properties or as a small typed def.
 - Move the callers of the 3 classes to the new entity. Each piece looks and moves the same as before.
+
+## Decisions
+
+- (owner, 2026-11-13) Merge target: each branch squash-merges directly into `master`.
 
 ## Owner's input
 

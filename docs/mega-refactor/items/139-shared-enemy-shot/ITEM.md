@@ -1,11 +1,11 @@
 # 139: A shared simple enemy shot, starting with `JunkShot`
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `081`
-- Branches: none yet
+- Branches: `mega-refactor-139a-shared-enemy-shot`
 
 ## Goal
 
@@ -22,6 +22,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - One shared simple shot class that takes the differences as spawn data or as a small typed def. `JunkShot` is the
   first caller.
 - Move the other simple shots to it one at a time. Each shot looks, moves and does damage the same as before.
+
+## Decisions
+
+- (owner, 2026-11-13) Merge target: each branch squash-merges directly into `master`.
 
 ## Owner's input
 
