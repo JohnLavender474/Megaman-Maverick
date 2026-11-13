@@ -161,7 +161,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 151 | [Rename the level progress vocabulary from "defeated" to "completed"](items/151-level-completed-rename/ITEM.md) | refactor | `O1` | done | none | 2026-11-11 | 2026-11-11 |
 | 152 | [Record the last Wily stage as completed at the ending](items/152-record-final-stage-completed/ITEM.md) | feature | `O9` | idea | none | | |
 | 153 | [A current-weapon icon on every player's HUD, and a HUD that fades when a player is behind it](items/153-hud-weapon-icon-and-fade/ITEM.md) | feature | `O9`, `O8` | idea | none | | |
-| 154 | [Spawners test the camera after it moves](items/154-spawn-after-camera-move/ITEM.md) | refactor | `O9`, `O1` | idea | none | | |
+| 154 | [Spawners test the camera after it moves](items/154-spawn-after-camera-move/ITEM.md) | refactor | `O9`, `O1` | dropped | none | | 2026-11-13 |
 | 155 | [LibGDX arrays for the falling-piece region keys](items/155-falling-piece-gdx-arrays/ITEM.md) | refactor | `O1` | idea | `060`, `139` | | |
 
 ## Branches
