@@ -88,8 +88,8 @@ decorations.KoopaShellTrailSprite: KoopaShellTrailSprite
 decorations.Lantern: LightSource
 decorations.LavaFall: LavaFall
 decorations.LightSourceEntity: LightSource
+decorations.MapSprite: MapSprite
 decorations.MockingByteNest: MockingByteNest
-decorations.MockSpriteEntity: MockSpriteEntity
 decorations.MuzzleFlash: MuzzleFlash
 decorations.PipiEggShatter: PipiEggShatter
 decorations.PunkCityLampPostBlock: PunkCityLampPostBlock,Block
@@ -117,7 +117,6 @@ decorations.WhiteBurst: WhiteBurst
 decorations.WilySkullHead: WilySkullHead
 decorations.WindyGrass: WindyGrass
 decorations.WoodCratePiece: WoodCratePiece
-decorations.Wreck: Wreck
 enemies.Adamski: Adamski
 enemies.AngryFlameBall: AngryFlameBall
 enemies.Arigock: Arigock
