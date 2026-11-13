@@ -83,7 +83,7 @@ as a branch; the letters after it are proposals.
 | 3 | phase 3 | The dash input (from `069`), the ground dash and the dash wall kick. |
 | 4 | phase 4 | The sabre. |
 | 5 | `081f` | Fixes to the X6 intro stage and to `D1000` that the `081e` play test found (draft scope in the `081f` branch folder). |
-| 6 | `081g` | Crouch, ladder and climb (open question 10; owner, 2026-11-12). |
+| 6 | `081g` | Crouch, ladder and climb (open question 10; owner, 2026-11-12). Merged 2026-11-13. |
 | — | not placed | Extract `CharacterDef` from Megaman and X (open question 7), after `060c` merges. |
 
 ### `081a`: the shared player lifecycle
@@ -187,7 +187,17 @@ slash (we'll need to work out what button or button combo controls this)".
 
 ## Notes for active branches
 
-- None. (The `081f` note on the `060j` conflict was resolved at the `081f` merge, 2026-11-12.)
+- (2026-11-13, from the `081g` merge, owner chose this order) `081g` adds 3 small X rules in files that `060c`
+  rewrites. When `060c` takes in `master`, it re-applies them in its new structure and runs the checks
+  (`MegamanXClimbCrouchTest` covers the first and the third):
+  - `MegamanXBuster.kt`, the shot position: while X climbs, the shot leaves at `MegamanXValues.SHOT_OFFSET_Y_CLIMB`
+    over the body center (in place of the air `+0.1`); while X crouches, it moves `SHOT_OFFSET_X_CROUCH` forward
+    (`facing.value *`). `060c` moves the shot to `players/PlayerBuster.kt`: give these as X's params or hooks.
+  - `MegamanXSabre.kt` `canStart`: no slash while `CLIMBING` (with `AIR_DASHING`). `060c` deletes this file
+    (modify/delete conflict): put the rule in X's sabre start gate in `MegamanXSabreMoves.kt` or `players/PlayerSabre.kt`.
+  - Small text conflicts are possible in `MegamanX.kt` (the behavior list, the animations map),
+    `MegamanXController.kt` (the turn-only run on a ladder or in a crouch), `MegamanXSprites.kt` (the animation keys)
+    and `players/README.md` (`PlayerClimb.kt` in the diagram, `ClimbParams` in "One copy"); keep both sides.
 
 ## Open questions
 
@@ -204,7 +214,7 @@ slash (we'll need to work out what button or button combo controls this)".
    is air dash) and on the new `R` button (see "Decisions").
 9. Closed 2026-11-06 (`081d`): `SELECT` is always X's dash; no `R` button and no `DOWN` + `A` (see "Decisions").
    The `TODO` in `MegamanXMoves.kt` records that no adequate dash button is found yet.
-10. Which phase gets crouch, ladder and climb? They are in the move set above, but not in "Phases".
+10. Closed 2026-11-13 (`081g`): crouch, ladder and climb are step 6 (branch `081g`, merged).
 11. Closed 2026-11-06 (`081d`): the sabre slashes on `UP` + `B` (branch `081e`).
 
 12. During the wall kick lock, X faces the wall (X6), so a shot goes into the wall. Should a shot during the kick go

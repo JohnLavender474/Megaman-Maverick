@@ -2172,3 +2172,21 @@ newest entry at the bottom.
   small X6 sprite; staging by path, the shared main-checkout index and selecting processes by PID; level drafts as
   playable skeletons and gauntlet waves with only enemies that can die. The game-launch and Gradle rules stay in
   memory.
+
+## 2026-11-13 — merged `mega-refactor-081g-x-crouch-ladder`
+
+- Squash: `550304429`. Item `081` stays active (`CharacterDef`).
+- Summary: X's crouch, ladder and climb (open question 10, now closed). Megaman's climb moved to the shared
+  `players/PlayerClimb.kt` (`ClimbParams`), and Megaman and X call it; Megaman plays the same (`MegamanClimbTest`,
+  written on the old code before the move). X grabs from the floor, from a ladder top and in the air, climbs at the
+  X6 speed, uses the X6 climb-down and climb-over poses (new `MegaLockReason.LADDER`), leaves on the floor, turns and
+  shoots on the ladder. X's X6 crouch has a 1-tile body. X passes one-way blocks only while he climbs. Test rooms
+  `ladder` and `crouch` in `RefactorTest081.tmx`.
+- Contract check: `engine` 675, `core` 1706, smoke 457, JAR built. Review before the play test (2 agents): one bug
+  fixed (X grabbed the ladder again at its foot with `DOWN` held) and smaller fixes; the branch log has the list.
+  Owner play test passed after 2 fixes (the climb frames moved 2 px in the art; the crouch shot origin). Diffity: no
+  threads. `master` had only docs changes since the branch start, so it was not merged into the branch.
+- Overlap: `060c` deletes `MegamanXSabre.kt` and rewrites `MegamanXBuster.kt`, where `081g` adds 3 rules. Owner
+  decision: merge `081g` first; `060c` re-applies them when it takes in `master` (the `081` `ITEM.md`, "Notes for
+  active branches").
+- No backlog or bug candidates.
