@@ -148,6 +148,8 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 
 The code style rules (LibGDX collections, named arguments, fail fast, one entry point per interface method, layout, comments, tests) are in `docs/CODE_STYLE.md`. Read it before you write or review Kotlin code, and give it to each subagent that writes or reviews code.
 
+The ways of working (the owner's preferences for the approach to a task, for example where an art fault gets fixed) are in `docs/WAYS_OF_WORKING.md`. Read it before you start a task, and give it to each subagent that does one.
+
 - Each entity has `companion object { const val TAG = "ClassName" }`. `TAG` is also the atlas region prefix.
 - Tags are a `core` idea, held by `TagsComponent` (`entities/state/`), which `MegaGameEntity.init()` adds from `defineTagsComponent()`, so an `init()` override calls `super.init()`. The default is one tag, the runtime class name, so an entity class needs no tag code. A base class can give its subclasses its own name as a second tag (for example `Block`), and a class whose tag differs from its name overrides `defineTagsComponent()`. An entity can have several tags: match with `hasTag(x)` or `hasAnyTag(set)`, never with one "first" tag; `MegaGameEntities.getOfTag` finds an entity under each tag. A class that needs its own name (an atlas key, a lookup of its own kind) uses its `TAG`. `core/src/smokeTest/resources/entity-tags.txt` lists the tags of every entity class; update it when a class or its tags change.
 - Shared texture regions go in a companion `ObjectMap` and load once in `init()`, before `super.init()`.

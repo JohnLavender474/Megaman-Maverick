@@ -2162,3 +2162,9 @@ newest entry at the bottom.
 - Overlap: `060c` renames `MegamanXSabreSlash` to `PlayerSabreSlash`, also in `D1000.kt` and `D1000Core.kt`, where
   `081f` adds new uses. Owner decision: merge `081f` first; `060c` renames the new uses when it takes in `master`.
 - No backlog or bug candidates. The fight code carries a `TODO` (AI-generated from play tests; more scrutiny needed).
+
+## 2026-11-13 — docs: ways-of-working doc
+
+- Summary: new `docs/WAYS_OF_WORKING.md` (owner request during `081g`): one home for the owner's preferences for the
+  approach to a task, beside `docs/CODE_STYLE.md` (how the code looks). The repo `CLAUDE.md` points to it. First rule:
+  fix art in the art (the frame strips, the atlas, the slicer data), not with a draw offset in code.
