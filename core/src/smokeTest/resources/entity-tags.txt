@@ -68,17 +68,16 @@ bosses.SigmaRat: SigmaRat
 bosses.TimberWoman: TimberWoman
 bosses.WilyFinalBoss: WilyFinalBoss
 decorations.AirConditioner: AirConditioner
-decorations.BlockPiece: BlockPiece
 decorations.BulletResidual: BulletResidual
 decorations.ChargedShotResidual: ChargedShotResidual
 decorations.CrystalConveyorBKG: CrystalConveyorBKG
 decorations.D1000BombMarker: D1000BombMarker
 decorations.D1000DebrisWarning: D1000DebrisWarning
 decorations.D1000RubblePile: D1000RubblePile
-decorations.DebrisPiece: DebrisPiece
 decorations.DustPuff: DustPuff
 decorations.FallingLeaf: FallingLeaf
 decorations.FallingLeaves: FallingLeaves
+decorations.FallingPiece: FallingPiece
 decorations.FloatingEmber: FloatingEmber
 decorations.FloatingPoints: FloatingPoints
 decorations.ForceDecoration: ForceDecoration
@@ -116,7 +115,6 @@ decorations.WhiteArrow: WhiteArrow
 decorations.WhiteBurst: WhiteBurst
 decorations.WilySkullHead: WilySkullHead
 decorations.WindyGrass: WindyGrass
-decorations.WoodCratePiece: WoodCratePiece
 enemies.Adamski: Adamski
 enemies.AngryFlameBall: AngryFlameBall
 enemies.Arigock: Arigock

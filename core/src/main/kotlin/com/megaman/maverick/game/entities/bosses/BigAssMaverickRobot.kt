@@ -55,7 +55,7 @@ import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand.BigAssMaverickRobotHandState
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
+import com.megaman.maverick.game.entities.decorations.BlockPieceColor
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.invincible

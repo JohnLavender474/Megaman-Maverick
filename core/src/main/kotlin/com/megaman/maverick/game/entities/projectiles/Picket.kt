@@ -31,7 +31,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.blocks.BreakableBlock
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
-import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
+import com.megaman.maverick.game.entities.decorations.BlockPieceColor
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 

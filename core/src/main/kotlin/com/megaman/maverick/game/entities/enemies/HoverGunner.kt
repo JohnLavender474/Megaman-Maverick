@@ -46,7 +46,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
@@ -201,7 +201,7 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         TickFrames.animations(atlas, TAG, FRAMES, animations)
-        DebrisPiece.load(services, DEBRIS)
+        FallingPiece.load(services, DEBRIS)
         super.init()
         addComponent(
             AnimationsComponentBuilder(this)
@@ -344,7 +344,7 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
                 ConstKeys.DAMAGER pairTo false
             )
         )
-        DebrisPiece.spawnPieces(DEBRIS, body.getCenter())
+        FallingPiece.throwDebris(DEBRIS, body.getCenter())
     }
 
     override fun defineBodyComponent(): BodyComponent {

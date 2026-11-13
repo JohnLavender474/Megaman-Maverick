@@ -7,8 +7,6 @@ import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Matrix
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
@@ -22,10 +20,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
-import com.megaman.maverick.game.entities.decorations.BlockPiece
-import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
+import com.megaman.maverick.game.entities.decorations.BlockPieceColor
+import com.megaman.maverick.game.entities.decorations.FallingPiece
+import com.megaman.maverick.game.entities.decorations.FallingPieceDef
 import com.megaman.maverick.game.entities.enemies.TorikoPlundge
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SpreadExplosion
@@ -114,14 +112,7 @@ class CrumblingBlock(services: MegaServices) : Block(services), ISpritesEntity {
 
                 val impulse = PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
 
-                val piece = MegaEntityFactory.fetch(BlockPiece::class)!!
-                piece.spawn(
-                    props(
-                        ConstKeys.POSITION pairTo spawn,
-                        ConstKeys.IMPULSE pairTo impulse,
-                        ConstKeys.COLOR pairTo BlockPieceColor.GOLD
-                    )
-                )
+                FallingPiece.spawn(FallingPieceDef.BLOCK, BlockPieceColor.GOLD.regionKey, spawn, impulse)
             }
         }
 

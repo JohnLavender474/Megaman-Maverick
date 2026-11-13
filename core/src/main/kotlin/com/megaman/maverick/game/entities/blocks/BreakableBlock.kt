@@ -16,7 +16,6 @@ import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
@@ -27,10 +26,10 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
-import com.megaman.maverick.game.entities.decorations.BlockPiece
-import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
+import com.megaman.maverick.game.entities.decorations.BlockPieceColor
+import com.megaman.maverick.game.entities.decorations.FallingPiece
+import com.megaman.maverick.game.entities.decorations.FallingPieceDef
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
@@ -53,20 +52,9 @@ open class BreakableBlock(services: MegaServices) : Block(services), ISpritesEnt
             for (i in 0 until BRICK_PIECE_IMPULSES.size) {
                 val impulse = BRICK_PIECE_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat())
 
-                val piece = MegaEntityFactory.fetch(BlockPiece::class)!!
-                piece.spawn(
-                    props(
-                        ConstKeys.COLOR pairTo color,
-                        ConstKeys.POSITION pairTo center,
-                        ConstKeys.IMPULSE pairTo impulse,
-                        ConstKeys.THUMP pairTo BRICK_TYPE_THUMP
-                    )
-                )
+                FallingPiece.spawn(FallingPieceDef.BLOCK, color.regionKey, center, impulse)
             }
         }
-
-        // set this to true to make brick pieces "thump" on blocks, else false
-        private const val BRICK_TYPE_THUMP = false
 
         private val BRICK_PIECE_IMPULSES =
             gdxArrayOf(Vector2(-5f, 3f), Vector2(-3f, 5f), Vector2(3f, 5f), Vector2(5f, 3f))

@@ -33,7 +33,7 @@ import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.decorations.D1000BombMarker
 import com.megaman.maverick.game.entities.decorations.D1000DebrisWarning
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.megaman.maverick.game.entities.decorations.D1000RubblePile
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
@@ -157,7 +157,7 @@ class D1000Rig(val arenaHeight: Float = RIG_ARENA_HEIGHT, val arenaWidth: Float 
         live.add(boss)
         spawned.forEach { entity ->
             val telegraph = entity is D1000DebrisWarning || entity is D1000BombMarker || entity is D1000Pillar ||
-                entity is DebrisPiece || entity is D1000RubblePile
+                entity is FallingPiece || entity is D1000RubblePile
             val ticked = entity is D1000Core || telegraph || (flyBombs && entity is D1000Bomb) ||
                 (flyShots && (entity is JunkShot || entity is D1000CeilingDebris)) || (tickWaves && entity is D1000Shockwave)
             if (ticked && !destroyed.contains(entity, true)) live.add(entity)
@@ -165,7 +165,7 @@ class D1000Rig(val arenaHeight: Float = RIG_ARENA_HEIGHT, val arenaWidth: Float 
         if (!points.contains(boss)) points.add(boss)
         points.update(RIG_DELTA)
         live.forEach { entity ->
-            if (entity is D1000Bomb || entity is JunkShot || entity is DebrisPiece || entity is D1000CeilingDebris) fly(entity.getComponent(BodyComponent::class)!!.body)
+            if (entity is D1000Bomb || entity is JunkShot || entity is FallingPiece || entity is D1000CeilingDebris) fly(entity.getComponent(BodyComponent::class)!!.body)
             entity.getComponent(UpdatablesComponent::class)?.updatables?.values()?.forEach { it.update(RIG_DELTA) }
             entity.getComponent(BodyComponent::class)?.body?.preProcess()
         }

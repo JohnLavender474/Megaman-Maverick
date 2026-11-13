@@ -43,7 +43,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
@@ -111,7 +111,7 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         TickFrames.animations(atlas, TAG, FRAMES, animations)
-        DebrisPiece.load(services, DEBRIS)
+        FallingPiece.load(services, DEBRIS)
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -196,7 +196,7 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
                 )
             )
         }
-        DebrisPiece.spawnPieces(DEBRIS, center)
+        FallingPiece.throwDebris(DEBRIS, center)
     }
 
     override fun defineBodyComponent(): BodyComponent {

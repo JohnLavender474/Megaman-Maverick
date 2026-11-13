@@ -12,7 +12,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.decorations.D1000RubblePile
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
+import com.megaman.maverick.game.entities.decorations.FallingPieceDef
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.world.body.getBounds
@@ -117,7 +118,7 @@ class D1000Defeat(private val boss: D1000) {
             val key = if (i < DEBRIS.size) DEBRIS[i] else DEBRIS[UtilMethods.getRandom(0, DEBRIS.size - 1)]
             val velocity = Vector2(UtilMethods.getRandom(DEBRIS_SPEED_MIN, DEBRIS_SPEED_MAX), 0f)
                 .setAngleDeg(UtilMethods.getRandom(DEBRIS_ANGLE_MIN, DEBRIS_ANGLE_MAX))
-            DebrisPiece.spawnPiece(key, randomIn(bounds), velocity)
+            FallingPiece.spawn(FallingPieceDef.DEBRIS, key, randomIn(bounds), velocity)
         }
         boss.requestToPlaySound(SoundAsset.EXPLOSION_1_SOUND, false)
         boss.land(BREAK_SHAKE)

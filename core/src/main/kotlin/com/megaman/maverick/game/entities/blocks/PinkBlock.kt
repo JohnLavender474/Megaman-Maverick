@@ -9,7 +9,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.entities.decorations.BlockPiece.BlockPieceColor
+import com.megaman.maverick.game.entities.decorations.BlockPieceColor
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.megaman.Megaman

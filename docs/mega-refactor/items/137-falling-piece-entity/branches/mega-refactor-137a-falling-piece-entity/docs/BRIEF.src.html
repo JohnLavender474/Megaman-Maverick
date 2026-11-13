@@ -1,68 +1,67 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>137a Falling Piece</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 137 · Branch 137a · Objectives O1 · <span class="chip ok">approved 2026-11-13</span></p>
+    <h1>One falling-piece entity</h1>
+    <p class="lead">DebrisPiece, BlockPiece and WoodCratePiece share the same body, life and draw order; they differ in 7 values. One FallingPiece with a typed def per kind replaces the 3 classes, so a new kind of piece needs no new class.</p>
+    <p class="meta"><b>In play:</b> nothing changes. Robot debris, broken blocks and crate splinters fly, fall, spin and blink as before.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>Three classes become one class and three defs</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: three near-copies">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  E["X6 robots, D-1000,<br/>SabreBlock"] --> D["DebrisPiece"]
+  B["BreakableBlock,<br/>CrumblingBlock"] --> P["BlockPiece"]
+  W["WoodCrate"] --> C["WoodCratePiece"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>Same body, same 2 s life, same draw order, copied 3 times.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: one entity, one def per kind">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  E["X6 robots, D-1000,<br/>SabreBlock"] -->|DEBRIS| F["FallingPiece"]
+  B["BreakableBlock,<br/>CrumblingBlock"] -->|BLOCK| F
+  W["WoodCrate"] -->|WOOD_CRATE| F
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>The def holds gravity, fall clamp, friction, jitter, size, spin and blink.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>A caller names its kind</h2></div>
+    <p>Today, <code>WoodCrate</code>:</p>
+<pre><code>MegaEntityFactory.fetch(WoodCratePiece::class)!!.spawn(props(POSITION pairTo p, IMPULSE pairTo v, ...))</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>FallingPiece.spawn(FallingPieceDef.WOOD_CRATE, key, position, velocity)
+
+enum class FallingPieceDef(val gravity: Float, val fallClamp: Float?, val frictionX: Boolean,
+    val jitter: Float, val size: PieceSize, val spin: Spin?, val blink: Float?) {
+    DEBRIS(...), BLOCK(...), WOOD_CRATE(...)
+}</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>Three decisions</h2></div>
+    <p>No map spawns a piece; only code does. The 3 classes share one pool after the change, so a reused piece can change kind.</p>
+    <p><b>D1</b> <span class="chip ok">Chosen</span> Typed def; per-value properties override it (or replace it, when all 7 are given).</p>
+    <p><b>D2</b> <span class="chip ok">Chosen</span> Region keys and one cache in the piece.</p>
+    <p><b>D3</b> <span class="chip ok">Chosen</span> Reset the spin angle at spawn.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>One pool for three kinds</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>A reused piece keeps a field of its last kind.</b> Each spawn and frame sets every field a kind can change; a test and a new test room that spawns all 3 kinds check it.</li>
+      <li><span class="chip warn">risk</span> <b>Motion changes.</b> A temporary side-by-side suite runs frozen copies of the old 3 classes against the new class with a fixed seed; it is deleted before the merge.</li>
+      <li><span class="chip warn">risk</span> <b>Text conflicts</b> with 060c (imports in 7 caller files) and 139a (one test rig line).</li>
     </ul>
   </section>
 
@@ -70,14 +69,17 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-137a-falling-piece-entity</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_137 --room mixed --weapons MOON_SCYTHES</code>: break the crate, the brick and the gold block in turn; each piece looks and moves like its kind.</li>
+      <li><code>./run-game-alpha.sh --level TIMBER_WOMAN --room room1</code>: wood crate splinters.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_081 --room sabre</code>: robot debris and the sabre block.</li>
+      <li>The other rooms (block break, crumbling block, D-1000 defeat) are in CONTRACT.md.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
-    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-137a-falling-piece-entity/docs/SCOPE.md</code></p>
+    <p>The full scan and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/137-falling-piece-entity/branches/mega-refactor-137a-falling-piece-entity/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-137a-falling-piece-entity/docs/CONTRACT.md</code></p>
   </section>
 </main>

@@ -12,7 +12,7 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.maverick.game.engine.common.UtilMethods
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.entities.decorations.D1000RubblePile
@@ -90,9 +90,9 @@ class D1000DefeatTest : DescribeSpec({
         rig.boss.defeated shouldBe true
     }
 
-    fun fragments() = rig.spawnedOf<DebrisPiece>()
+    fun fragments() = rig.spawnedOf<FallingPiece>()
 
-    fun pieceBody(piece: DebrisPiece) = piece.getComponent(BodyComponent::class)!!.body
+    fun pieceBody(piece: FallingPiece) = piece.getComponent(BodyComponent::class)!!.body
 
     fun explosions() = rig.spawnedOf<Explosion>()
 

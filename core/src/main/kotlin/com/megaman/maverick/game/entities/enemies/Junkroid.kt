@@ -43,7 +43,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
@@ -130,7 +130,7 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
         GameLogger.debug(TAG, "init()")
         val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
         TickFrames.animations(atlas, TAG, FRAMES, animations)
-        DebrisPiece.load(services, DEBRIS)
+        FallingPiece.load(services, DEBRIS)
         super.init()
         addComponent(AnimationsComponent(this, Animator({ if (shooting) "shoot" else "idle" }, animations)))
     }
@@ -204,7 +204,7 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
                 ConstKeys.DAMAGER pairTo false
             )
         )
-        DebrisPiece.spawnPieces(DEBRIS, body.getCenter())
+        FallingPiece.throwDebris(DEBRIS, body.getCenter())
     }
 
     override fun defineBodyComponent(): BodyComponent {

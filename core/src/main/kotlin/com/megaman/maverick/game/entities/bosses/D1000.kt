@@ -50,7 +50,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.D1000BombMarker
 import com.megaman.maverick.game.entities.decorations.D1000DebrisWarning
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.megaman.maverick.game.entities.decorations.D1000RubblePile
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
@@ -298,7 +298,7 @@ class D1000(services: MegaServices) :
         val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
         TickFrames.animations(atlas, TAG, D1000Frames.BODY, animations)
         lamp.load(atlas)
-        DebrisPiece.load(services, D1000Defeat.DEBRIS, TextureAsset.BOSSES_3)
+        FallingPiece.load(services, D1000Defeat.DEBRIS, TextureAsset.BOSSES_3)
         super.init()
         addComponent(defineAnimationsComponent())
     }

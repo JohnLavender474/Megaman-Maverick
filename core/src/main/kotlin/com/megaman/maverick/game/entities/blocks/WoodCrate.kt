@@ -44,7 +44,8 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.*
-import com.megaman.maverick.game.entities.decorations.WoodCratePiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
+import com.megaman.maverick.game.entities.decorations.FallingPieceDef
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.projectiles.*
@@ -187,16 +188,8 @@ class WoodCrate(services: MegaServices) : Block(services), IFireableEntity, ISpr
                 )
                 .scl(ConstVals.PPM.toFloat())
 
-            val index = UtilMethods.getRandom(0, WoodCratePiece.MAX_INDEX)
-
-            val piece = MegaEntityFactory.fetch(WoodCratePiece::class)!!
-            piece.spawn(
-                props(
-                    ConstKeys.POSITION pairTo position,
-                    ConstKeys.IMPULSE pairTo impulse,
-                    ConstKeys.INDEX pairTo index
-                )
-            )
+            val key = FallingPiece.WOOD_CRATE_REGIONS[UtilMethods.getRandom(0, FallingPiece.WOOD_CRATE_REGIONS.size - 1)]
+            FallingPiece.spawn(FallingPieceDef.WOOD_CRATE, key, position, impulse)
         }
     }
 

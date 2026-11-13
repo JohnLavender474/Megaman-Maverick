@@ -31,7 +31,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.damage.SelfSizeDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.decorations.DebrisPiece
+import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
 import com.megaman.maverick.game.world.body.FixtureType
@@ -68,7 +68,7 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
         if (region == null)
             region = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source).findRegion("$TAG/block")
                 ?: throw IllegalStateException("Missing region $TAG/block")
-        DebrisPiece.load(services, DEBRIS)
+        FallingPiece.load(services, DEBRIS)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(UpdatablesComponent({ delta -> damageTimer.update(delta) }))
@@ -105,7 +105,7 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
             spawnExplosion(Vector2(center.x + getRandom(-1, 1) * spread, center.y + getRandom(-1, 1) * spread))
         }
         spawnExplosion(center)
-        DebrisPiece.spawnPieces(DEBRIS, center)
+        FallingPiece.throwDebris(DEBRIS, center)
         services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 
