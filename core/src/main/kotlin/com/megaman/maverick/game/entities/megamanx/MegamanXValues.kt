@@ -38,6 +38,8 @@ object MegamanXValues {
 
     const val SHOT_OFFSET_X = 0.75f
     const val SHOT_OFFSET_Y = 0.1f
+    const val SHOT_OFFSET_Y_CLIMB = 0.45f
+    const val SHOT_OFFSET_X_CROUCH = 0.125f
 
     const val WALL_GRAB_TIME = 0.1333f
     const val WALL_SLIDE_SPEED = 2.6953f
@@ -69,6 +71,14 @@ object MegamanXValues {
     const val DASH_AIR_SPEED = 11f
     const val DASH_WALL_KICK_AWAY_SPEED = 11f
     const val AIR_DASH_FAST_START_SPEED = 16f
+
+    const val CROUCH_HEIGHT = 1f
+    const val CROUCH_FRAME_TIME = 0.05f
+
+    const val CLIMB_SPEED = 5.625f
+    const val CLIMB_FRAME_TIME = 0.0833f
+    const val CLIMB_START_TIME = 0.1f
+    const val CLIMB_FINISH_TIME = 0.1667f
 
     val SABRE_FLOOR_FRAME_TIMES = floatArrayOf(0.05f, 0.0333f, 0.0333f, 0.0333f, 0.05f, 0.0333f, 0.0333f)
     val SABRE_AIR_FRAME_TIMES = floatArrayOf(0.05f, 0.0333f, 0.05f, 0.0333f, 0.0333f, 0.0167f, 0.0167f, 0.0333f)

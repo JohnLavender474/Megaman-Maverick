@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.entities.isBehaviorActive
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.SoundAsset
@@ -76,7 +78,11 @@ class MegamanXBuster(private val x: MegamanX) {
             )
             .also {
                 if (x.running) it.x += x.facing.value * 0.5f
-                if (!x.body.isSensing(BodySense.FEET_ON_GROUND)) it.y += 0.1f
+                if (x.isBehaviorActive(BehaviorType.CROUCHING)) it.x += x.facing.value * MegamanXValues.SHOT_OFFSET_X_CROUCH
+                when {
+                    x.isBehaviorActive(BehaviorType.CLIMBING) -> it.y = MegamanXValues.SHOT_OFFSET_Y_CLIMB
+                    !x.body.isSensing(BodySense.FEET_ON_GROUND) -> it.y += 0.1f
+                }
             }
             .scl(ConstVals.PPM.toFloat())
             .rotateDeg(x.direction.rotation)

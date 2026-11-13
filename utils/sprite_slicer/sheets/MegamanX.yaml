@@ -48,8 +48,10 @@ animations:
   - {name: land_shoot, row: 11, frames: [6, 6], twin: land}
 
   - {name: climb_start, row: 12, frames: [0, 0]}
+  # climb.png (96 x 144, 6 frames) is a hand-made rework (8666af627), not made by this file. Branch 081g moved its
+  # frames and climb_shoot 2 px left by hand, to center X on the ladder.
   - {name: climb, row: 12, frames: [1, 4]}
-  - {name: climb_shoot, row: 12, frames: [5, 5], offsets: {0: [3, 0]}}
+  - {name: climb_shoot, row: 12, frames: [5, 5], offsets: {0: [1, 0]}}
   - {name: climb_finish, row: 12, frames: [6, 7]}
 
   - {name: r13_unknown, row: 13, frames: [0, 0]}

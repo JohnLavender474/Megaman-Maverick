@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megamanx
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.behaviors.BehaviorsComponent
+import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -260,7 +261,13 @@ class MegamanXTest : DescribeSpec({
             body.physics.velocity.y shouldBe 0f
         }
 
-        it("does not count a one-way top as ground while DOWN is held") {
+        fun climb() {
+            val climbing = mockk<IBehavior>(relaxed = true)
+            every { climbing.isActive() } returns true
+            x.getComponent(BehaviorsComponent::class)!!.addBehavior(BehaviorType.CLIMBING, climbing)
+        }
+
+        it("does not count a one-way top as ground while it climbs") {
             val realBody = x.defineBodyComponent().body
             val feetGravity = realBody.getProperty("${ConstKeys.FEET}_${ConstKeys.GRAVITY}") as Fixture
             val consume = feetGravity.receiver(Receivers.CONSUMER)!!
@@ -277,13 +284,19 @@ class MegamanXTest : DescribeSpec({
 
             frame = InputFrame.RELEASED.with(MegaControllerButton.DOWN, ButtonStatus.PRESSED)
             consume(ProcessState.CONTINUE, blockFixture)
+            overGroundNow() shouldBe true
+
+            climb()
+            consume(ProcessState.CONTINUE, blockFixture)
             overGroundNow() shouldBe false
         }
 
-        it("passes a one-way top only while DOWN is held") {
+        it("passes a one-way top only while it climbs, not on DOWN") {
             val passes = body.getProperty(BodyKeys.PASS_THROUGH_ONE_WAY) as () -> Boolean
             passes() shouldBe false
             frame = InputFrame.RELEASED.with(MegaControllerButton.DOWN, ButtonStatus.PRESSED)
+            passes() shouldBe false
+            climb()
             passes() shouldBe true
         }
     }

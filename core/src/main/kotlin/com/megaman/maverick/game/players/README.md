@@ -33,7 +33,7 @@ function names it: the difficulty change of the damage (`023`), the owner chain 
 flowchart LR
     Class["a player class<br/>(for example Megaman or Protoman)"] -- "extends" --> Base["MegaPlayer<br/>lifecycle, shared components,<br/>damage rules, hooks"]
     Base -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
-    Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt, PlayerAirDash.kt<br/>each with the class's params"]
+    Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt,<br/>PlayerAirDash.kt, PlayerClimb.kt<br/>each with the class's params"]
     Class -- "its run buttons" --> Run["PlayerRun.kt<br/>the run gate and buttons"]
     Run -- "calls" --> Step["entities/movement/Run.kt<br/>runStep, maxRunSpeed, RunParams<br/>for any body"]
     Class -- "defineBodyComponent" --> Body["PlayerBody.kt<br/>shared fixtures and pre-step,<br/>with PlayerBodyParams and hooks"]
@@ -106,8 +106,8 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
 - **The gravity set comes before the lock clears** in the spawn start of `MegaPlayer`. The gravity set can start a camera turn
   that locks `MOVEMENT`, and the lock clear must remove it.
 - **One copy.** A rule that two player classes need goes here, not into each class. A difference between the
-  classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`), not a type check in the shared
-  code. A shared behavior keeps the gate and the physics that every class has; the params give the class's own start
+  classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`, `ClimbParams`), not a type check in the
+  shared code. A shared behavior keeps the gate and the physics that every class has; the params give the class's own start
   rules, speeds, timers and side effects.
 - **The body keeps its fixture order.** The order of the fixtures sets the order of the contacts. `playerBody` adds
   the shared fixtures first; a class adds its own fixtures after the call, and its own pre-step lines in the

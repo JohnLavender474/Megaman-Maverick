@@ -21,6 +21,7 @@ import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import com.megaman.maverick.game.players.isRunSidePressed
 import com.megaman.maverick.game.players.runButton
+import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.behaviors.BehaviorType
 
@@ -39,6 +40,10 @@ internal fun MegamanX.run(delta: Float, side: Facing) {
     }
 
     facing = side
+    if (isAnyBehaviorActive(BehaviorType.CLIMBING, BehaviorType.CROUCHING)) {
+        running = false
+        return
+    }
     running = true
 
     val walkStart = bodyOverGround && runState.runTime < MegamanXValues.WALK_START_TIME

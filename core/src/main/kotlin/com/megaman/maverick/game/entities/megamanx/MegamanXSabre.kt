@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megamanx
 
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.assets.SoundAsset
@@ -75,7 +76,8 @@ class MegamanXSabre(private val x: MegamanX) {
     val frame: Int
         get() = kind!!.frameAt(time)
 
-    fun canStart() = !active && x.canAttack() && !x.isBehaviorActive(BehaviorType.AIR_DASHING) &&
+    fun canStart() = !active && x.canAttack() &&
+        !x.isAnyBehaviorActive(BehaviorType.AIR_DASHING, BehaviorType.CLIMBING) &&
         !x.kickLocked && !(x.isBehaviorActive(BehaviorType.WALL_SLIDING) && !x.wallGrabTimer.isFinished())
 
     private fun kindNow() = when {

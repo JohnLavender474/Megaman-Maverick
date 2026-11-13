@@ -82,6 +82,9 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     internal var pressHeldForLanding = false
     internal val landingProbe = GameRectangle()
     internal var groundDash: GroundDash? = null
+    internal lateinit var crouch: Crouch
+    internal var ladderPose: LadderPose? = null
+    internal val ladderPoseTimer = Timer(MegamanXValues.CLIMB_START_TIME).setToEnd()
     internal val wallGrabTimer = Timer(MegamanXValues.WALL_GRAB_TIME)
     internal val kickLockTimer = Timer(MegamanXValues.WALL_KICK_LOCK_TIME).setToEnd()
     internal val pushOffTimer = Timer(MegamanXValues.PUSH_OFF_TIME).setToEnd()
@@ -110,6 +113,8 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         kickLockTimer.setToEnd()
         pushOffTimer.setToEnd()
         wallDelayTimer.setToEnd()
+        ladderPose = null
+        ladderPoseTimer.setToEnd()
     }
 
     override fun onPlayerDestroy() {
@@ -152,6 +157,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             kickLockTimer.update(delta)
             pushOffTimer.update(delta)
             wallDelayTimer.update(delta)
+            updateLadderPose(delta)
             endKickLockOnBlock()
             keepStartPresses()
             resetAirMovesOnLanding()
@@ -163,10 +169,11 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         body.setSize(MegamanXValues.BODY_WIDTH * ConstVals.PPM, MegamanXValues.BODY_HEIGHT * ConstVals.PPM)
         body.physics.applyFrictionX = false
         body.physics.applyFrictionY = false
-        // TODO: X passes every one-way block (a ladder top, and also a one-way platform) while DOWN is held, because X
-        //  cannot climb yet; climb comes in a later phase of item 081
-        val passThroughOneWay: () -> Boolean = { input.isPressed(MegaControllerButton.DOWN) }
+        val passThroughOneWay: () -> Boolean = { isBehaviorActive(BehaviorType.CLIMBING) }
         body.putProperty(BodyKeys.PASS_THROUGH_ONE_WAY, passThroughOneWay)
+        val fallThroughPressUp: () -> Boolean =
+            { isBehaviorActive(BehaviorType.CLIMBING) && input.isJustPressed(MegaControllerButton.UP) }
+        body.putProperty(BodyKeys.FALL_THROUGH_PRESS_UP, fallThroughPressUp)
 
         val playerFixture = Fixture(body, FixtureType.PLAYER, GameRectangle())
         body.addFixture(playerFixture)
@@ -248,6 +255,16 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         )
 
         body.preProcess.put(ConstKeys.DEFAULT) {
+            val height = ConstVals.PPM * when {
+                isBehaviorActive(BehaviorType.CROUCHING) -> MegamanXValues.CROUCH_HEIGHT
+                else -> MegamanXValues.BODY_HEIGHT
+            }
+            if (body.getHeight() != height) {
+                val top = body.getMaxY()
+                body.setSize(body.getWidth(), height)
+                if (direction == Direction.DOWN) body.setMaxY(top)
+            }
+
             fixturesToSizeToBody.forEach { fixture -> (fixture.rawShape as GameRectangle).set(body) }
 
             feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
@@ -326,6 +343,8 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         component.addBehavior(BehaviorType.GROUND_DASHING, groundDashBehavior())
         component.addBehavior(BehaviorType.JUMPING, jumpBehavior())
         component.addBehavior(BehaviorType.AIR_DASHING, airDashBehavior())
+        component.addBehavior(BehaviorType.CROUCHING, crouchBehavior())
+        component.addBehavior(BehaviorType.CLIMBING, climbBehavior())
         return component
     }
 
@@ -440,6 +459,20 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         animations.put("walljump", Animation(frames("walljump", 3), MegamanXValues.WALL_KICK_LOCK_TIME / 3f, false))
         animations.put("walljump_shoot", Animation(frames("walljump_shoot", 3), MegamanXValues.WALL_KICK_LOCK_TIME / 3f, false))
         animations.put("air_damaged", Animation(frames("air_damaged", 3), 0.1f, false))
+        val crouchDown = gdxArrayOf(MegamanXValues.CROUCH_FRAME_TIME, 1f)
+        animations.put("crouch", Animation(frames("crouch", 2), crouchDown, false))
+        animations.put("crouch_shoot", Animation(frames("crouch_shoot", 2), crouchDown, false))
+        animations.put("crouch_rise", Animation(frames("crouch", 2)[0]))
+        animations.put(
+            "climb",
+            Animation(atlas.findRegion("climb")!!.splitAndFlatten(3, 2, Array()), MegamanXValues.CLIMB_FRAME_TIME)
+        )
+        animations.put("climb_shoot", Animation(frames("climb_shoot", 1), 1f))
+        animations.put("climb_start", Animation(frames("climb_start", 1), 1f))
+        animations.put(
+            "climb_finish",
+            Animation(frames("climb_finish", 2), MegamanXValues.CLIMB_FINISH_TIME / 2f, false)
+        )
         SabreKind.entries.forEach { animations.put(it.bodyRegion, Animation(frames(it.bodyRegion, it.stripFrames), 1f)) }
 
         val animator = Animator(
@@ -454,6 +487,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                 val kind = sabre.kind
                 when {
                     roomTransitionPaused || (services.levelState.roomTransition && key != "run") -> false
+                    key == "climb" && body.physics.velocity.isZero -> false
                     kind != null && key == kind.bodyRegion -> {
                         animation.setIndex(sabre.frame)
                         false
