@@ -160,6 +160,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 150 | [Shared movement helpers for bosses and enemies](items/150-boss-movement-helpers/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 151 | [Rename the level progress vocabulary from "defeated" to "completed"](items/151-level-completed-rename/ITEM.md) | refactor | `O1` | done | none | 2026-11-11 | 2026-11-11 |
 | 152 | [Record the last Wily stage as completed at the ending](items/152-record-final-stage-completed/ITEM.md) | feature | `O9` | idea | none | | |
+| 153 | [A current-weapon icon on every player's HUD, and a HUD that fades when a player is behind it](items/153-hud-weapon-icon-and-fade/ITEM.md) | feature | `O9`, `O8` | idea | none | | |
 
 ## Branches
 
