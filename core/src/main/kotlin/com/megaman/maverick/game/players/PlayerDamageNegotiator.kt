@@ -25,7 +25,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.hardMode
 
@@ -40,7 +40,7 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         BigAssMaverickRobot.TAG pairTo dmgNeg(2),
         D1000.TAG pairTo dmgNeg(2),
         D1000Core.TAG pairTo dmgNeg(2),
-        JunkShot.TAG pairTo dmgNeg { (it as JunkShot).type.damage },
+        EnemyShot.TAG pairTo dmgNeg { (it as EnemyShot).kind.damage },
         Junkroid.TAG pairTo dmgNeg(4),
         HoverGunner.TAG pairTo dmgNeg(3),
         MetaWheelF.TAG pairTo dmgNeg(4),

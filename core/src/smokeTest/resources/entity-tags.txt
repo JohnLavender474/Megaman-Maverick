@@ -348,18 +348,17 @@ projectiles.DeathBomb: DeathBomb
 projectiles.DuoBall: DuoBall
 projectiles.ElecBall: ElecBall
 projectiles.ElectricBall: ElectricBall
+projectiles.EnemyShot: EnemyShot
 projectiles.ExplodingBall: ExplodingBall
 projectiles.FallingIcicle: FallingIcicle
 projectiles.Fireball: Fireball
 projectiles.FireMetFlame: FireMetFlame
-projectiles.FirePellet: FirePellet
 projectiles.FireWall: FireWall
 projectiles.GreenPelletBlast: GreenPelletBlast
 projectiles.GroundPebble: GroundPebble
 projectiles.HomingMissile: HomingMissile
 projectiles.IceBomb: IceBomb
 projectiles.JoeBall: JoeBall
-projectiles.JunkShot: JunkShot
 projectiles.KibboHammer: KibboHammer
 projectiles.LampeonBullet: LampeonBullet
 projectiles.MagmaGoop: MagmaGoop
@@ -384,7 +383,6 @@ projectiles.ReactorManProjectile: ReactorManProjectile
 projectiles.ReactorMonkeyBall: ReactorMonkeyBall
 projectiles.RocketBomb: RocketBomb
 projectiles.Rock: Rock
-projectiles.RollingBotShot: RollingBotShot
 projectiles.SealionBall: SealionBall
 projectiles.SharpStar: SharpStar
 projectiles.SigmaRatElectricBall: SigmaRatElectricBall

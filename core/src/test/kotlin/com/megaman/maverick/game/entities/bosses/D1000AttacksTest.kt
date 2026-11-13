@@ -21,7 +21,7 @@ import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
 import com.megaman.maverick.game.world.body.getBounds
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.decorations.D1000BombMarker
 import com.megaman.maverick.game.entities.decorations.D1000DebrisWarning
 import com.megaman.maverick.game.entities.megamanx.MegamanXValues
@@ -94,7 +94,7 @@ class D1000AttacksTest : DescribeSpec({
             rig.startFight()
             rig.placeX(RIG_ARENA_WIDTH / RIG_PPM - 1f, 0f)
             rig.rollFor(D1000Action.SUMMON, opening)
-            rig.ticksUntil(3f) { rig.spawnedOf<JunkShot>().size == 4 } shouldBe true
+            rig.ticksUntil(3f) { rig.spawnedOf<EnemyShot>().size == 4 } shouldBe true
             val start = rig.bossCenter().x
             rig.ticks(1.8f)
             rig.bossCenter().x shouldBe (start plusOrMinus TOLERANCE)
@@ -104,7 +104,7 @@ class D1000AttacksTest : DescribeSpec({
         it("drops the follow-up when a core hit stuns the body") {
             rig.startFight()
             rig.rollFor(D1000Action.SUMMON, opening)
-            rig.ticksUntil(3f) { rig.spawnedOf<JunkShot>().isNotEmpty() && rig.core().vulnerable } shouldBe true
+            rig.ticksUntil(3f) { rig.spawnedOf<EnemyShot>().isNotEmpty() && rig.core().vulnerable } shouldBe true
             rig.core().takeDamageFrom(rig.sabre()) shouldBe true
             rig.rollFor(D1000Action.WALK, d1000Context(last = D1000Action.SUMMON))
             rig.ticksUntil(10f) { rig.bossCenter().x < ENTRY_X - TOLERANCE } shouldBe true
@@ -437,7 +437,7 @@ class D1000AttacksTest : DescribeSpec({
         }
     }
 
-    fun coreShots() = rig.spawnedOf<JunkShot>().filter { it.type == JunkShot.Type.CORE }
+    fun coreShots() = rig.spawnedOf<EnemyShot>().filter { it.kind == EnemyShot.Kind.CORE }
 
     describe("the eyeball") {
         it("damages X on contact: 2, as its shot") {

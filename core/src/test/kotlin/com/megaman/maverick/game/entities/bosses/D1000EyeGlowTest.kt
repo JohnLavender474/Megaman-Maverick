@@ -10,7 +10,7 @@ import com.megaman.maverick.game.entities.bosses.d1000.D1000Frames
 import com.megaman.maverick.game.entities.bosses.d1000.D1000Tier
 import com.megaman.maverick.game.entities.bosses.d1000.D1000Tuning
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
@@ -50,7 +50,7 @@ class D1000EyeGlowTest : DescribeSpec({
         Glow(!it.hidden, if (it.hidden) -1 else Math.round(minOf(it.v, it.v2) * RIG_TEXTURE_SIZE) / D1000Frames.EYE_GLOW_SIZE)
     }
 
-    fun coreShots() = rig.spawnedOf<JunkShot>().count { it.type == JunkShot.Type.CORE }
+    fun coreShots() = rig.spawnedOf<EnemyShot>().count { it.kind == EnemyShot.Kind.CORE }
 
     fun coreTiles(): Vector2 = rig.core().getComponent(com.maverick.game.engine.world.body.BodyComponent::class)!!
         .body.getCenter(Vector2()).let { Vector2((it.x - RIG_ARENA_X) / RIG_PPM, (it.y - RIG_FLOOR) / RIG_PPM) }

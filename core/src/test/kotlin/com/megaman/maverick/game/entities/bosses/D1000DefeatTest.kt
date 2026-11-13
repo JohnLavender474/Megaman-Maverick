@@ -20,7 +20,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.world.body.FixtureType
@@ -115,7 +115,7 @@ class D1000DefeatTest : DescribeSpec({
             eye.canDamage(rig.x) shouldBe false
             eye.canBeDamagedBy(rig.sabre()) shouldBe false
             eye.vulnerable shouldBe false
-            val shots = rig.spawnedOf<JunkShot>().size
+            val shots = rig.spawnedOf<EnemyShot>().size
             val debris = rig.spawnedOf<D1000CeilingDebris>().size
             val bombs = rig.spawnedOf<D1000Bomb>().size
             rig.ticksUntil(D1000Defeat.DEFEAT_DUR + 1f) {
@@ -123,7 +123,7 @@ class D1000DefeatTest : DescribeSpec({
                 if (!rig.destroyed.contains(eye)) active(eye, FixtureType.DAMAGER).size shouldBe 0
                 rig.destroyed.contains(rig.boss)
             } shouldBe true
-            rig.spawnedOf<JunkShot>().size shouldBe shots
+            rig.spawnedOf<EnemyShot>().size shouldBe shots
             rig.spawnedOf<D1000CeilingDebris>().size shouldBe debris
             rig.spawnedOf<D1000Bomb>().size shouldBe bombs
             explosions().isNotEmpty() shouldBe true
@@ -285,10 +285,10 @@ class D1000DefeatTest : DescribeSpec({
             rig.ticksUntil(4f) { abs(coreCenter().x - (RIG_ARENA_X + 7.5f * PPM)) < 0.001f * PPM } shouldBe true
             rig.core().facingRight shouldBe false
             rig.placeX(7.5f + 3f, 0f)
-            val shots = rig.spawnedOf<JunkShot>().size
+            val shots = rig.spawnedOf<EnemyShot>().size
             rig.ticksUntil(3f) {
                 rig.core().facingRight shouldBe false
-                rig.spawnedOf<JunkShot>().size > shots && drawn().first == "core"
+                rig.spawnedOf<EnemyShot>().size > shots && drawn().first == "core"
             } shouldBe true
             rig.ticksUntil(1f) { rig.core().facingRight } shouldBe false
             rig.placeX(HOME_TILES_X + 3f, 0f)

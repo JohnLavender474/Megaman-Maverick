@@ -52,7 +52,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.players.rootPlayer
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -525,11 +525,11 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     }
 
     private fun shoot(trajectory: Vector2) {
-        val shot = MegaEntityFactory.fetch(JunkShot::class)!!
+        val shot = MegaEntityFactory.fetch(EnemyShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
-                ConstKeys.TYPE pairTo JunkShot.Type.CORE,
+                ConstKeys.TYPE pairTo EnemyShot.Kind.CORE,
                 ConstKeys.POSITION pairTo position.cpy(),
                 ConstKeys.TRAJECTORY pairTo trajectory
             )

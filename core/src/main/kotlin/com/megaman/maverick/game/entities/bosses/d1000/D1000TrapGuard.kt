@@ -6,6 +6,7 @@ import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.world.body.IBody
 import com.maverick.game.engine.world.body.IFixture
+import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -14,7 +15,7 @@ import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
 import com.megaman.maverick.game.entities.hazards.D1000Shockwave
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 import kotlin.math.max
@@ -28,7 +29,7 @@ class D1000TrapGuard(private val boss: D1000) {
     companion object {
         const val SLICE_STEPS = 6
         const val PILLAR_SLACK = 0.05f
-        val SHOT_RADIUS = JunkShot.Type.CORE.size / 2f
+        val SHOT_RADIUS = EnemyShot.Kind.CORE.width * ConstVals.PPM / 2f
     }
 
     val escape = D1000Escape()
@@ -85,16 +86,16 @@ class D1000TrapGuard(private val boss: D1000) {
             val center = body.getCenter()
             addPiece(center.x, center.y, body.physics.velocity.x, body.physics.velocity.y, D1000CeilingDebris.radius(piece.key), 0f)
         }
-        MegaGameEntities.getOfTag(JunkShot.TAG).forEach { shot ->
-            if (shot !is JunkShot || !seen(shot) || !shot.existenceState.liveAfterUpdate || shot.owner != boss) return@forEach
+        MegaGameEntities.getOfTag(EnemyShot.TAG).forEach { shot ->
+            if (shot !is EnemyShot || !seen(shot) || !shot.existenceState.liveAfterUpdate || shot.owner != boss) return@forEach
             val body = shot.body
             val center = body.getCenter()
             val first = escape.count
             addBallistic(
                 center.x, center.y, body.physics.velocity.x, body.physics.velocity.y, body.physics.gravity.y,
-                shot.type.size / 2f, 0f
+                shot.kind.width * ConstVals.PPM / 2f, 0f
             )
-            if (shot.type == JunkShot.Type.CORE) for (i in first until escape.count)
+            if (shot.kind == EnemyShot.Kind.CORE) for (i in first until escape.count)
                 shotsAirUntil = max(shotsAirUntil, escape.danger(i).to)
         }
         MegaGameEntities.getOfTag(D1000Core.TAG).forEach { eye ->

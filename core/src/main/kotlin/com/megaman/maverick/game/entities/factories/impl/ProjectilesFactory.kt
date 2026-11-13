@@ -26,7 +26,6 @@ class ProjectilesFactory(private val services: MegaServices) : EntityFactory() {
         const val BOULDER_PROJECTILE = "BoulderProjectile"
         const val SNOW_HEAD = "SnowHead"
         const val UFO_BOMB = "UFOBomb"
-        const val ROLLING_BOT_SHOT = "RollingBotShot"
         const val TOXIC_GOOP_SHOT = "ToxicGoopShot"
         const val REACTOR_MONKEY_BALL = "ReactorMonkeyBall"
         const val TUBE_BEAM = "TubeBeam"
@@ -46,7 +45,6 @@ class ProjectilesFactory(private val services: MegaServices) : EntityFactory() {
         const val FALLING_ICICLE = "FallingIcicle"
         const val SEALION_BALL = "SealionBall"
         const val FIRE_WALL = "FireWall"
-        const val FIRE_PELLET = "FirePellet"
         const val MAGMA_ORB = "MagmaOrb"
         const val MAGMA_METEOR = "MagmaMeteor"
         const val MAGMA_GOOP = "MagmaGoop"
@@ -79,7 +77,6 @@ class ProjectilesFactory(private val services: MegaServices) : EntityFactory() {
         pools.put(BOULDER_PROJECTILE, GameEntityPoolCreator.create { BoulderProjectile(services) })
         pools.put(SNOW_HEAD, GameEntityPoolCreator.create { Snowhead(services) })
         pools.put(UFO_BOMB, GameEntityPoolCreator.create { UFOBomb(services) })
-        pools.put(ROLLING_BOT_SHOT, GameEntityPoolCreator.create { RollingBotShot(services) })
         pools.put(TOXIC_GOOP_SHOT, GameEntityPoolCreator.create { ToxicGoopShot(services) })
         pools.put(REACTOR_MONKEY_BALL, GameEntityPoolCreator.create { ReactorMonkeyBall(services) })
         pools.put(TUBE_BEAM, GameEntityPoolCreator.create { TubeBeam(services) })
@@ -99,7 +96,6 @@ class ProjectilesFactory(private val services: MegaServices) : EntityFactory() {
         pools.put(FALLING_ICICLE, GameEntityPoolCreator.create { FallingIcicle(services) })
         pools.put(SEALION_BALL, GameEntityPoolCreator.create { SealionBall(services) })
         pools.put(FIRE_WALL, GameEntityPoolCreator.create { FireWall(services) })
-        pools.put(FIRE_PELLET, GameEntityPoolCreator.create { FirePellet(services) })
         pools.put(MAGMA_ORB, GameEntityPoolCreator.create { MagmaOrb(services) })
         pools.put(MAGMA_METEOR, GameEntityPoolCreator.create { MagmaMeteor(services) })
         pools.put(MAGMA_GOOP, GameEntityPoolCreator.create { MagmaGoop(services) })

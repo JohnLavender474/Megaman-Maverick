@@ -13,7 +13,7 @@ import com.megaman.maverick.game.entities.decorations.D1000DebrisWarning
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.DescribeSpec

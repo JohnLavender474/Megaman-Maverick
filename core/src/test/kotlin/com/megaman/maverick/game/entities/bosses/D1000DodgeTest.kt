@@ -12,7 +12,7 @@ import com.megaman.maverick.game.entities.decorations.D1000BombMarker
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
 import com.megaman.maverick.game.entities.megamanx.MegamanXValues
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.assertions.withClue
@@ -140,7 +140,7 @@ class D1000DodgeTest : DescribeSpec({
                 if (target != null) xCenter += (target - xCenter).coerceIn(-step, step)
             }
             rig.placeX((xCenter - arena.getX()) / RIG_PPM, 0f)
-            if (noEyeShots) rig.spawnedOf<JunkShot>().forEach { if (live(rig, it)) it.destroy() }
+            if (noEyeShots) rig.spawnedOf<EnemyShot>().forEach { if (live(rig, it)) it.destroy() }
 
             rig.tick()
             tick++

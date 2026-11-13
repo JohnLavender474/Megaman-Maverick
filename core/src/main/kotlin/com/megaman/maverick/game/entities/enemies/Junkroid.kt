@@ -47,7 +47,7 @@ import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.hardMode
@@ -180,11 +180,11 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
     }
 
     private fun shoot() {
-        val type = if (services.gameState.hardMode) JunkShot.Type.JUNKROID_HARD else JunkShot.Type.JUNKROID
+        val type = if (services.gameState.hardMode) EnemyShot.Kind.JUNKROID_HARD else EnemyShot.Kind.JUNKROID
         val side = facing.value.toFloat()
         val spawn = mouthOffset(side, Vector2()).add(origin)
         val trajectory = hurlImpulse(side, Vector2())
-        val shot = MegaEntityFactory.fetch(JunkShot::class)!!
+        val shot = MegaEntityFactory.fetch(EnemyShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,

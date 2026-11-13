@@ -9,7 +9,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.players.PlayerDamageNegotiator
@@ -101,10 +101,10 @@ class D1000FightTest : DescribeSpec({
             negotiator.get(D1000(rig.services).also { it.init() }) shouldBe 2
             negotiator.get(D1000Bomb(rig.services).also { it.init() }) shouldBe 2
             negotiator.get(D1000Pillar(rig.services).also { it.init() }) shouldBe 2
-            val coreShot = JunkShot(rig.services).also {
+            val coreShot = EnemyShot(rig.services).also {
                 it.spawn(
                     props(
-                        ConstKeys.TYPE pairTo JunkShot.Type.CORE,
+                        ConstKeys.TYPE pairTo EnemyShot.Kind.CORE,
                         ConstKeys.POSITION pairTo Vector2(),
                         ConstKeys.TRAJECTORY pairTo Vector2()
                     )

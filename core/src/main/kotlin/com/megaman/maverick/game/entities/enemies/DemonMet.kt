@@ -51,7 +51,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
-import com.megaman.maverick.game.entities.projectiles.FirePellet
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -287,11 +287,12 @@ class DemonMet(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
             val spawn = body.getPositionPoint(Position.BOTTOM_CENTER)
                 .add(0.1f * ConstVals.PPM * facing.value, 0.25f * ConstVals.PPM)
 
-            val firePellet = MegaEntityFactory.fetch(FirePellet::class)!!
+            val firePellet = MegaEntityFactory.fetch(EnemyShot::class)!!
             firePellet.spawn(
                 props(
+                    ConstKeys.TYPE pairTo EnemyShot.Kind.FIRE_PELLET,
                     ConstKeys.POSITION pairTo spawn,
-                    ConstKeys.IMPULSE pairTo impulse
+                    ConstKeys.TRAJECTORY pairTo impulse
                 )
             )
         }

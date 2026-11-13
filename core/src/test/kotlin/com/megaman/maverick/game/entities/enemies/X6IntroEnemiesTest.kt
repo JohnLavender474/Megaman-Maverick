@@ -2,7 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.math.Vector2
 import com.megaman.maverick.game.ConstVals
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -123,13 +123,13 @@ class X6IntroEnemiesTest : DescribeSpec({
         }
     }
 
-    describe("JunkShot gravity") {
+    describe("EnemyShot gravity") {
 
         it("pulls only the Junkroid junk down") {
-            JunkShot.Type.JUNKROID.gravity shouldBe Junkroid.HURL_GRAVITY
-            JunkShot.Type.JUNKROID_HARD.gravity shouldBe Junkroid.HURL_GRAVITY
-            JunkShot.Type.HOVER_GUNNER.gravity shouldBe 0f
-            JunkShot.Type.CORE.gravity shouldBe 0f
+            EnemyShot.Kind.JUNKROID.gravity shouldBe Junkroid.HURL_GRAVITY
+            EnemyShot.Kind.JUNKROID_HARD.gravity shouldBe Junkroid.HURL_GRAVITY
+            EnemyShot.Kind.HOVER_GUNNER.gravity shouldBe 0f
+            EnemyShot.Kind.CORE.gravity shouldBe 0f
         }
     }
 

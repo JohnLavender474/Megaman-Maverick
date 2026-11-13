@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
@@ -48,7 +49,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.hazards.DrippingToxicGoop
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
-import com.megaman.maverick.game.entities.projectiles.RollingBotShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
@@ -61,6 +62,7 @@ class RollingBot(services: MegaServices) : AbstractEnemy(services, size = Size.M
         const val TAG = "RollingBot"
 
         private const val X_VEL = 3f
+        private const val SHOT_SPEED = 8f
 
         private const val ROLL_DURATION = 1f
         private const val OPEN_DELAY = 0.5f
@@ -177,12 +179,13 @@ class RollingBot(services: MegaServices) : AbstractEnemy(services, size = Size.M
             else -> body.getPositionPoint(Position.CENTER_RIGHT).add(0.35f * ConstVals.PPM, 0.1f * ConstVals.PPM)
         }
 
-        val shot = MegaEntityFactory.fetch(RollingBotShot::class)!!
+        val shot = MegaEntityFactory.fetch(EnemyShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
+                ConstKeys.TYPE pairTo EnemyShot.Kind.ROLLING_BOT,
                 ConstKeys.POSITION pairTo position,
-                ConstKeys.LEFT pairTo isFacing(Facing.LEFT)
+                ConstKeys.TRAJECTORY pairTo Vector2(SHOT_SPEED * ConstVals.PPM * facing.value, 0f)
             )
         )
 

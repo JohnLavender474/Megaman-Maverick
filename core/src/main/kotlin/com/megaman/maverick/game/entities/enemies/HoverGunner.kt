@@ -52,7 +52,7 @@ import com.maverick.game.engine.damage.IDamagerEntity
 import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -323,11 +323,11 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         val degrees = direction * 360f / DIRECTIONS
         val trajectory = Vector2(MathUtils.cosDeg(degrees), MathUtils.sinDeg(degrees))
             .scl(SHOT_SPEED * ConstVals.PPM)
-        val shot = MegaEntityFactory.fetch(JunkShot::class)!!
+        val shot = MegaEntityFactory.fetch(EnemyShot::class)!!
         shot.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.TYPE pairTo JunkShot.Type.HOVER_GUNNER,
+                ConstKeys.TYPE pairTo EnemyShot.Kind.HOVER_GUNNER,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory
             )

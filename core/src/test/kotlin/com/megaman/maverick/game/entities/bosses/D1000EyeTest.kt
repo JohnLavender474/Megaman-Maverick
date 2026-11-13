@@ -14,7 +14,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
 import com.megaman.maverick.game.entities.megamanx.SabreKind
 import com.megaman.maverick.game.entities.projectiles.Bullet
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.BossPhase
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.assertions.withClue
@@ -59,7 +59,7 @@ class D1000EyeTest : DescribeSpec({
         return key to rig.core().defaultSprite.regionY / D1000Frames.CORE[key].height
     }
 
-    fun coreShots() = rig.spawnedOf<JunkShot>().count { it.type == JunkShot.Type.CORE }
+    fun coreShots() = rig.spawnedOf<EnemyShot>().count { it.kind == EnemyShot.Kind.CORE }
 
     fun seedRoll(low: Boolean) {
         val seed = (0L until Long.MAX_VALUE).first {

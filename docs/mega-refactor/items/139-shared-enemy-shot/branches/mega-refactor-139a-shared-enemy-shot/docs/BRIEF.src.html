@@ -1,68 +1,69 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>139a Enemy Shot</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 139 · Branch 139a · Objectives O1 · <span class="chip ok">approved 2026-11-13</span></p>
+    <h1>One shared enemy shot</h1>
+    <p class="lead">JunkShot is already a small shared shot: a typed kind holds the region, size, damage, gravity and frames of 4 X6 shots. This branch makes the kind general, gives the class a general name, and moves the first simple Maverick shots into it.</p>
+    <p class="meta"><b>In play:</b> nothing changes. Each moved shot looks, flies and hurts as before.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>One-off shot classes become kinds</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  J["Junkroid, Hover Gunner,<br/>D-1000 core"] --> S["JunkShot<br/>4 kinds"]
+  R["RollingBot"] --> RS["RollingBotShot"]
+  D["DemonMet"] --> F["FirePellet"]
+  RS -. "damage by size" .-> N["PlayerDamageNegotiator"]
+  S -. "damage by tag" .-> N
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>73 projectile classes; about 10 are straight shots, each its own class.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  J["Junkroid, Hover Gunner,<br/>D-1000 core"] --> E["EnemyShot<br/>kind = enum"]
+  R["RollingBot"] --> E
+  D["DemonMet"] --> E
+  E -. "kind.damage" .-> N["PlayerDamageNegotiator"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>A new simple shot is a new kind, not a new class.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>A shooter names its kind</h2></div>
+    <p>Today, <code>RollingBot</code>:</p>
+<pre><code>MegaEntityFactory.fetch(RollingBotShot::class)!!.spawn(props(OWNER pairTo this, POSITION pairTo p, TRAJECTORY pairTo t))</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>MegaEntityFactory.fetch(EnemyShot::class)!!.spawn(props(
+    OWNER pairTo this, POSITION pairTo p, TRAJECTORY pairTo t, TYPE pairTo EnemyShot.Kind.ROLLING_BOT))
+
+// PlayerDamageNegotiator: one entry for every kind
+EnemyShot.TAG pairTo dmgNeg { (it as EnemyShot).kind.damage }</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>Three decisions</h2></div>
+    <p>Damage to a player is keyed by the shot's class or tag today, so a shared class must carry each kind's damage itself.</p>
+    <p><b>D1</b> <span class="chip ok">Chosen</span> Rename JunkShot to EnemyShot.</p>
+    <p><b>D2</b> <span class="chip ok">Chosen</span> One tag entry that reads kind.damage.</p>
+    <p><b>D3</b> <span class="chip ok">Chosen</span> The 4 JunkShot kinds, RollingBotShot and FirePellet.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>A shared class can change who blocks what</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Player shots could start to hit the Rolling Bot shot.</b> JunkShot is damageable, and a player shot stops on a damageable body; the Rolling Bot shot is not damageable today. The kind keeps that off; a test pins it.</li>
+      <li><span class="chip warn">risk</span> <b>Damage moves path.</b> A test pins each kind's damage (2, 1, 1, 3, 3, 3).</li>
+      <li><span class="chip warn">risk</span> <b>Pooled reuse.</b> A reused shot resets every kind field at spawn (fixtures, size, draw order); FirePellet keeps flying after a hit, as today.</li>
     </ul>
   </section>
 
@@ -70,14 +71,17 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-139a-shared-enemy-shot</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REACTOR_MAN --room room1</code>: RollingBot shots fly flat and pass your shots, as before.</li>
+      <li><code>./run-game-alpha.sh --level INFERNO_MAN --room room4</code>: DemonMet's pellet spread.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room1</code>: Junkroid and Hover Gunner shots.</li>
+      <li><code>./run-game-alpha.sh --level X6_INTRO --room room2 --heartTanks all --healthTanks all</code>: go right; the D-1000 eye shots.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
-    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-139a-shared-enemy-shot/docs/SCOPE.md</code></p>
+    <p>The full scan and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/139-shared-enemy-shot/branches/mega-refactor-139a-shared-enemy-shot/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-139a-shared-enemy-shot/docs/CONTRACT.md</code></p>
   </section>
 </main>

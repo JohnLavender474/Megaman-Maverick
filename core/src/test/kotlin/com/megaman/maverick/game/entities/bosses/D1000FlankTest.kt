@@ -10,7 +10,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
@@ -50,7 +50,7 @@ class D1000FlankTest : DescribeSpec({
 
     fun coreTiles() = coreCenter().let { Vector2(tiles(it.x), (it.y - RIG_FLOOR) / RIG_PPM) }
 
-    fun coreShots() = rig.spawnedOf<JunkShot>().filter { it.type == JunkShot.Type.CORE }
+    fun coreShots() = rig.spawnedOf<EnemyShot>().filter { it.kind == EnemyShot.Kind.CORE }
 
     fun animKey() = (rig.core().getComponent(AnimationsComponent::class)!!
         .getAnimator(AnimationsComponent.DEFAULT_KEY) as Animator).currentKey!!
@@ -153,7 +153,7 @@ class D1000FlankTest : DescribeSpec({
     }
 
     describe("the shots") {
-        fun aimedAtX(shot: JunkShot, from: Vector2) {
+        fun aimedAtX(shot: EnemyShot, from: Vector2) {
             val want = rig.xBody.getCenter(Vector2()).sub(from).nor()
             val velocity = shot.getComponent(BodyComponent::class)!!.body.physics.velocity
             velocity.len() shouldBe (D1000Core.SHOT_SPEED plusOrMinus 0.5f)

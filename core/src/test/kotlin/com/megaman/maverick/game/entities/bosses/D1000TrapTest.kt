@@ -23,7 +23,7 @@ import com.megaman.maverick.game.entities.hazards.D1000Pillar
 import com.megaman.maverick.game.entities.hazards.D1000Shockwave
 import com.megaman.maverick.game.entities.megamanx.MegamanXValues
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.projectiles.JunkShot
+import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.FixtureType
@@ -159,19 +159,19 @@ private class D1000Dodger(val rig: D1000Rig, val hard: Boolean) {
         fun hit(entity: IGameEntity, label: String, boxes: List<GameRectangle>) {
             if (hitBy.contains(entity) || boxes.none { it.overlaps(box) }) return
             hitBy.add(entity)
-            if (stunned && entity is JunkShot && entity.type == JunkShot.Type.CORE) stunHits.add("%.2f s".format(time))
+            if (stunned && entity is EnemyShot && entity.kind == EnemyShot.Kind.CORE) stunHits.add("%.2f s".format(time))
             hits.add("$label at %.2f s, X at %.2f tiles $info".format(time, (box.getX() + box.getWidth() / 2f - RIG_ARENA_X) / RIG_PPM).take(1500))
         }
         rig.spawned.forEach { entity ->
             if (rig.destroyed.contains(entity, true)) return@forEach
             when (entity) {
                 is D1000Pillar -> hit(entity, "pillar %.2f".format((entity.baseX - RIG_ARENA_X) / RIG_PPM), damagers(entity))
-                is JunkShot -> {
+                is EnemyShot -> {
                     val velocity = bodyOf(entity).physics.velocity
-                    val core = entity.type == JunkShot.Type.CORE
+                    val core = entity.kind == EnemyShot.Kind.CORE
                     val flat = core && abs(velocity.y) < abs(velocity.x)
                     val dodged = core && (flat || shotsOnlyInStun)
-                    if (!dodged || stunned) hit(entity, "junk ${entity.type}", damagers(entity))
+                    if (!dodged || stunned) hit(entity, "junk ${entity.kind}", damagers(entity))
                 }
                 is D1000CeilingDebris -> hit(entity, "debris ${entity.key}", damagers(entity))
                 is D1000Shockwave -> if (stunned) hit(entity, "shockwave", damagers(entity))
@@ -247,14 +247,14 @@ class D1000TrapTest : DescribeSpec({
             dodger.bodyCounts = false
             dodger.run(0.45f)
             rig.boss.guard.refused.contains(D1000Action.RAM) shouldBe false
-            val shots = rig.spawnedOf<JunkShot>().count { it.type == JunkShot.Type.CORE }
+            val shots = rig.spawnedOf<EnemyShot>().count { it.kind == EnemyShot.Kind.CORE }
             var hitWall = false
             while (!hitWall && dodger.time < 5f) {
                 dodger.tick()
                 hitWall = rig.bossCenter().x <= LEFT_RAM_STOP + TOLERANCE
             }
             hitWall shouldBe true
-            rig.spawnedOf<JunkShot>().count { it.type == JunkShot.Type.CORE } shouldBe shots
+            rig.spawnedOf<EnemyShot>().count { it.kind == EnemyShot.Kind.CORE } shouldBe shots
         }
     }
 
