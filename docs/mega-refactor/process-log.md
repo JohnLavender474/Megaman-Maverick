@@ -2203,3 +2203,22 @@ newest entry at the bottom.
 - Overlap: `137a` and `139a` (merging next, owner order) and `060c` touch nearby lines of `entity-tags.txt` only.
 - Backlog candidate filed as item `154` (spawners test the camera after it moves). No bug candidates.
 - Notes: `-Pkotest_filter_specs` does nothing in this build; the environment variable `kotest_filter_specs` works.
+
+## 2026-11-13 — merged `mega-refactor-137a-falling-piece-entity`
+
+- Squash: `5cf2d17cf`. Item `137` is done.
+- Summary: `DebrisPiece`, `BlockPiece` and `WoodCratePiece` are one pooled `FallingPiece` with a typed
+  `FallingPieceDef` (`DEBRIS`, `BLOCK`, `WOOD_CRATE`). Owner decision: per-value spawn properties override the def,
+  or replace it when all values are given (an owner exception to "an API needs a real caller"; tests cover it). Region
+  keys and one cache; the spin angle resets at each spawn. 12 callers moved; `ConstKeys.THUMP` removed, `JITTER` and
+  `BLINK` added. Test map `RefactorTest137.tmx` (`REFACTOR_TEST_137`, room `mixed`). `FallingPieceTest`. A temporary
+  side-by-side suite with frozen copies of the 3 old classes passed and was deleted before the commit.
+- Intended changes: a reused wood piece starts its spin at 0°; a wood piece no longer spins in a pause or a world
+  hold; the X6 debris throw draws its random values in another order; a missing region or a wrong-type property
+  fails fast.
+- Contract check: `engine` 675, `core` 1738, smoke 454, JAR built (after `master` with `138a` merged into the branch:
+  one simple conflict in `entity-tags.txt`). Review before the play test: no blocking bug; fixes in the branch log.
+  Owner play checks passed; Diffity: no threads.
+- Overlap: `139a` (merging next) and `060c` change some of the same caller files (imports and damage rows). Owner
+  chose to merge first.
+- Backlog candidate filed as item `155` (LibGDX arrays for the region keys, after `060c` and `139`). No bug candidates.

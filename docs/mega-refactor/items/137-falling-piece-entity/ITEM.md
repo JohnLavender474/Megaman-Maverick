@@ -1,6 +1,6 @@
 # 137: One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none

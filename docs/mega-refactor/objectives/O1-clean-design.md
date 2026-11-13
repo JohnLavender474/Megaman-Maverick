@@ -160,10 +160,11 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `119` | planned | [`PLAYER_DESTROYED` and `LEVEL_FAILED`](../items/119-player-left-world-event/ITEM.md) |
 | `126` | idea | [Movement and damage blocks as lock reasons](../items/126-movement-damage-lock-reasons/ITEM.md) (main) |
 | `130` | planned | [`LevelCamera` and `SharedView`: the camera stack out of `MegaLevelScreen`](../items/130-level-camera/ITEM.md) (main) |
-| `137` | active | [One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`](../items/137-falling-piece-entity/ITEM.md) (main) |
+| `137` | done | [One falling-piece entity in place of `DebrisPiece`, `BlockPiece` and `WoodCratePiece`](../items/137-falling-piece-entity/ITEM.md) (main) |
 | `138` | done | [Merge `Wreck` into `MockSpriteEntity`](../items/138-wreck-into-mock-sprite/ITEM.md) (main) |
 | `139` | active | [A shared simple enemy shot, starting with `JunkShot`](../items/139-shared-enemy-shot/ITEM.md) (main) |
 | `154` | idea | [Spawners test the camera after it moves](../items/154-spawn-after-camera-move/ITEM.md) |
+| `155` | idea | [LibGDX arrays for the falling-piece region keys](../items/155-falling-piece-gdx-arrays/ITEM.md) (main) |
 | `140` | idea | [`TickFrames` as the engine `Animation`, with durations in seconds](../items/140-tick-frames-seconds/ITEM.md) (main) |
 | `146` | done | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) (main) |
 | `148` | done | [The last player reads take `IPlayer`](../items/148-last-player-reads/ITEM.md) (main) |
