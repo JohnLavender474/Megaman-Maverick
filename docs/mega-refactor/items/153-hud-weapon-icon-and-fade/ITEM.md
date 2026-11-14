@@ -23,6 +23,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   Proto Man.
 - The health bar, the weapon bar and the icon draw with a lower alpha while a player's body overlaps their screen
   area.
+- Every player's HUD weapon icons go in the `Hud` atlas (`TextureAsset.HUD`, `Hud.txt`), as `060c` did for Proto Man
+  (`protoman_sabre`, `protoman_buster`, 8x8; the owner chose `Hud` over `Bits`). `060c` draws them with a
+  `TODO` (item `153`) at the `as? Protoman` check in `PlayerStatsHandler.draw`.
 
 ## Owner's input
 

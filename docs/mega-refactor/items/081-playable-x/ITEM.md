@@ -187,17 +187,8 @@ slash (we'll need to work out what button or button combo controls this)".
 
 ## Notes for active branches
 
-- (2026-11-13, from the `081g` merge, owner chose this order) `081g` adds 3 small X rules in files that `060c`
-  rewrites. When `060c` takes in `master`, it re-applies them in its new structure and runs the checks
-  (`MegamanXClimbCrouchTest` covers the first and the third):
-  - `MegamanXBuster.kt`, the shot position: while X climbs, the shot leaves at `MegamanXValues.SHOT_OFFSET_Y_CLIMB`
-    over the body center (in place of the air `+0.1`); while X crouches, it moves `SHOT_OFFSET_X_CROUCH` forward
-    (`facing.value *`). `060c` moves the shot to `players/PlayerBuster.kt`: give these as X's params or hooks.
-  - `MegamanXSabre.kt` `canStart`: no slash while `CLIMBING` (with `AIR_DASHING`). `060c` deletes this file
-    (modify/delete conflict): put the rule in X's sabre start gate in `MegamanXSabreMoves.kt` or `players/PlayerSabre.kt`.
-  - Small text conflicts are possible in `MegamanX.kt` (the behavior list, the animations map),
-    `MegamanXController.kt` (the turn-only run on a ladder or in a crouch), `MegamanXSprites.kt` (the animation keys)
-    and `players/README.md` (`PlayerClimb.kt` in the diagram, `ClimbParams` in "One copy"); keep both sides.
+- None. (The `081g` note for `060c` is done: `060c` re-applied the 3 X rules when it took in `master`, see the
+  `process-log.md` entry of 2026-11-14.)
 
 ## Open questions
 

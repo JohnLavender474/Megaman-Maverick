@@ -79,6 +79,18 @@ Not approved. The branch `SCOPE.md` decides the final scope.
     no longer the only motion. Add the new motions from the research (hover with drift, a punch with wind-up and
     recoil, and others) and describe them and their integration with a proper state machine.
 
+## Notes for active branches
+
+- (2026-11-14, from the `060c` merge, squash `3247c7fbe`) `060c` merged before `077a`. When `077a` takes in
+  `master`, the `TODO` at its `BigAssMaverickRobot.kt` damage table applies: `077a` is the branch that merges second.
+  - `060c` rows on `master`: `BigAssMaverickRobot`: `ProtoBuster` 2, `PlayerSabreSlash` full 3 and half 2.
+    `AbstractBoss`: `ProtoBuster` 1, `PlayerSabreSlash` full 2 and half 1. The half or full value comes from
+    `PlayerSabreSlash.fullStrength`.
+  - The `077a` `TODO` names other values (`ProtoBuster` 3, `PlayerSabreSlash` half 3 and full 4). The final numbers in
+    the new `077a` table are the choice of `077a`.
+  - The D-1000 (`D1000.kt`, `D1000Core.kt`) now reacts to the `PlayerSabreSlash` of every player, not only to X's
+    slash.
+
 ## Open questions
 
 - Is 25% measured on the boss's maximum health, and does the panic attack also apply in hard mode only, normal mode

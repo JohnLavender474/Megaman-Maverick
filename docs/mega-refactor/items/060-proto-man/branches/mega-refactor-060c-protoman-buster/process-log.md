@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: Proto Man plays like X6 Zero with a Mega Man buster: sabre and buster weapon slots, a passive shield
-- Done: planning; steps 1 to 40; play test 7 passed; Diffity rounds 1-4 closed
+- Done: planning; steps 1 to 40; play test 7 passed; Diffity rounds 1-4 closed; merged into `master` as `3247c7fbe` (2026-11-14)
 - Brief: https://claude.ai/artifact/PbvwXioKroFpU9hhwxVBQY
-- Next: merge into `master`
+- Next: none
 - Blocked:
 
 ## Entries

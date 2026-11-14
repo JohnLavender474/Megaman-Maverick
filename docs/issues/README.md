@@ -164,3 +164,4 @@ related-items: [<mega-refactor item IDs>]
 | [A currency pickup queues its sound in the players of the roster that are not in the engine](2026-11-11-currency-pickup-sound-idle-players.md) | no | core | open |
 | [A test JVM that runs out of heap hangs, and its Gradle daemon stays busy for days](2026-11-11-test-jvm-hangs-on-oom.md) | yes | build | closed |
 | [`core:test` keeps the services and mocks of finished tests alive and fills its 1 GB heap](2026-11-11-core-test-heap-leak.md) | yes | build | closed |
+| [`ProtomanTest` and `MegamanXTest` fail when they run alone](2026-11-11-player-tests-fail-alone.md) | yes | build | open |

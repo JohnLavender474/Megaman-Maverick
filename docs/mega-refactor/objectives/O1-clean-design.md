@@ -165,6 +165,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `139` | active | [A shared simple enemy shot, starting with `JunkShot`](../items/139-shared-enemy-shot/ITEM.md) (main) |
 | `154` | dropped | [Spawners test the camera after it moves](../items/154-spawn-after-camera-move/ITEM.md) |
 | `155` | idea | [LibGDX arrays for the falling-piece region keys](../items/155-falling-piece-gdx-arrays/ITEM.md) (main) |
+| `156` | idea | [`WhiteBurst` has an `EXPLOSION` fixture that projectiles react to](../items/156-white-burst-explosion-fixture/ITEM.md) (main) |
 | `140` | idea | [`TickFrames` as the engine `Animation`, with durations in seconds](../items/140-tick-frames-seconds/ITEM.md) (main) |
 | `146` | done | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) (main) |
 | `148` | done | [The last player reads take `IPlayer`](../items/148-last-player-reads/ITEM.md) (main) |

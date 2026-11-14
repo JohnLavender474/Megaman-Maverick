@@ -2272,3 +2272,61 @@ newest entry at the bottom.
   core:smokeTest lwjgl3:jar` passes (`engine` 689, `allocationTest` 2, `core` 1782, `smokeTest` 452, JAR built). No
   play test: no gameplay change. The owner spot-checked the diff in Diffity (no threads) and approved. CI did not
   run, because the branch was never pushed.
+
+## 2026-11-14 — merged `mega-refactor-060c-protoman-buster`
+
+- Squash: `3247c7fbe`. Item `060` stays active (`060d`, `060e`, `060g` to `060i`).
+- Summary: Proto Man fights like X6 Zero with a Mega Man buster (`060f` folded in). He has 2 weapon slots, the sabre
+  and the Proto Buster: `B` uses the current slot in every state, and `SELECT` switches it (with `NEXT_WEAPON`,
+  `SELECT_PING_SOUND`). The sabre: a 3-slash floor combo (hit 3 at full strength, hits 1 and 2 at half), one slash in
+  the air, purple arcs generated from the art (`ProtomanSabreMoves.kt`), `UP`+`B` one slash in the buster slot. The
+  buster: `ProtoBuster` pellets at half-charge damage, on the ground, in a run and in the air, with no pose lock and
+  no charge. The guard: hold `DOWN` to pull out the shield; on the ground he crouches (a shorter damage box), in the
+  air he keeps his arc; the `SHIELD` fixture bounces projectiles with a `WhiteBurst` spark; pull-out and put-away
+  frames; the shield on his back in the other poses. Crouch attacks: `DOWN`+`B` on the ground gives a low slash or a
+  crouch shot. Shared parts: `players/PlayerSabre.kt` and the `PlayerSabreSlash` entity (X's `MegamanXSabre` and
+  `MegamanXSabreSlash` are gone; X is on the shared code), `players/PlayerBuster.kt` (`BusterParams`, stand, crouch and
+  climb offsets) and `players/PlayerCharge.kt` (`playerChargeComponent`, Megaman and X). Damage rows for `ProtoBuster`
+  and `PlayerSabreSlash` in the class-keyed tables (`docs/class-entries.md`); `PlayerSabreSlash.fullStrength` gives
+  half and full values. HUD: Proto Man's slot icon under the health bar, from the `Hud` atlas. Test map
+  `RefactorTest060.tmx`: rooms `buster`, `sabre`, `shield`. `players/README.md` updated.
+- Contract changes during the branch (all approved by the owner; `SCOPE.md` has each one):
+  - Scope change (2026-11-12): the Proto Strike and the charge removed; the X6 Zero sabre on `B`, a standing shot on
+    `UP`+`B`.
+  - Scope change 2 (2026-11-13): weapon slots in place of `UP`+`B`, the buster in every state, half and full sabre
+    damage, a passive shield with a spark, the HUD icon (item `153` for the other players).
+  - Scope change 3 (2026-11-13): the guard held on `DOWN`, a full-body shield, pull-out frames, the icon under the
+    health bar; `DOWN`+`A` waits for the `060d` slide.
+  - Scope change 4 (2026-11-13): the crouch guard, one shield size, pull-out and put-away frames.
+  - Scope change 5 (2026-11-14): the shield on his back, crouch attacks.
+  - Art: 37 rounds with the owner: the buster and charge drafts, the sabre poses and arcs, then from round 27 the
+    guard, the back shield and the crouch attacks (round 36: a sabre fix). Sources in
+    `temp/mega-refactor-060c-protoman-buster/sabre/v2/`. At play test 7: stronger half hits (4/12/20; X6 enemies 2/3
+    of full), the floor slash turns, the in-play hit-box drawing removed.
+  - Sound exception (owner, 2026-11-14): `PROTO_SABRE_SOUND` (`proto_sabre.ogg`) is an 8-bit version of the X6 Shadow
+    Giga slash. The owner allows this one X6-derived sound in the repo, as an exception to the "no X6 game data" rule
+    (branch `docs/NOTES.md`, Decisions).
+- Contract check: after `master` was taken in, `engine:test` 689, `core:test` 1900, `core:smokeTest` 462, `lwjgl3:jar`
+  built. Review before the play test by subagents for each round; findings and fixes are in the branch process log.
+  The owner's play test 7 passed. Diffity rounds 1 to 4: 0 open threads, closed. CI did not run, because the branch
+  was never pushed.
+- `master` taken in at `036b74937` (`137a`, `138a`, `139a`, `081f`, `081g` and the 2 engine small-bug branches):
+  - Import conflicts only in `Junkroid.kt`, `HoverGunner.kt`, `MetaWheelF.kt`.
+  - `D1000.kt`, `D1000Core.kt`: the `081f` fight from `master`, with `PlayerSabreSlash` in place of
+    `MegamanXSabreSlash`; the D-1000 tests got the same rename.
+  - `MegamanXSabre.kt`, `MegamanXSabreSlash.kt`: kept deleted. `MegamanX.kt`, `MegamanXSprites.kt`,
+    `MegamanXSabreTest.kt`, `MegamanXBuster.kt`: both sides kept. `MegamanXClimbCrouch.kt`: the shared
+    `setSideSpeed` import.
+  - The 3 `081g` X rules re-applied: `BusterParams.climbOffset` (a ladder shot; `BusterClimbOffsetMissingException`
+    with no offset), `BusterParams.crouchOffset` (X's crouch shot), and `CLIMBING` in the X sabre `canStart`
+    (`MegamanXSabreMoves.kt`). Accepted edge case (`TODO` in `MegamanXBuster.kt`): a crouched shot no longer adds
+    the air offset when the feet sensor misses the ground during a crouch.
+- Follow-up:
+  - Backlog candidate "X: on a ladder `B` is always the buster": closed, no item. The `081g` rule in
+    `megamanXSabreParams` `canStart` blocks the slash while `CLIMBING`, so `UP`+`B` on a ladder falls through to the
+    shot in X's `B` actuator.
+  - Backlog candidate "`WhiteBurst` has an `EXPLOSION` fixture": new item `156`.
+  - Bug candidate filed: `docs/issues/2026-11-11-player-tests-fail-alone.md`.
+  - Item `060` `ITEM.md`: a note for `060d` (the slide, the guard on a ladder, the `TODO`s that name `060d` and
+    `060e`). Item `077` `ITEM.md`: a note for `077a` (the `060c` boss damage rows). Item `153`: the HUD icons go in
+    the `Hud` atlas.

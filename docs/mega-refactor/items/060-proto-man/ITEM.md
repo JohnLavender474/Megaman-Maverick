@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`, `146`
-- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (active, 2026-11-11), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
+- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
 
 ## Goal
 
@@ -106,17 +106,16 @@ credits are on the sheet). Keep the credits.
 
 ## Notes for active branches
 
-- (2026-11-13, from the `137a`, `138a` and `139a` merges; the owner chose to merge them before `060c`) When `060c`
-  takes in `master`, expect text conflicts in these files, which `060c` also changes:
-  - `SabreBlock.kt`, `WoodCrate.kt`, `BigAssMaverickRobot.kt`, `D1000.kt`, `MetaWheelF.kt`, `Junkroid.kt`,
-    `HoverGunner.kt`: `137a` replaced the `DebrisPiece`, `BlockPiece` and `WoodCratePiece` spawns and imports with
-    `FallingPiece` (`FallingPiece.spawn(def, ...)`, `FallingPiece.throwDebris`, `FallingPiece.load`).
-  - `Junkroid.kt`, `HoverGunner.kt`, `D1000Core.kt`: `139a` renamed `JunkShot` to `EnemyShot` (`JunkShot.Type` is
-    `EnemyShot.Kind`, `type` is `kind`), and the `PlayerDamageNegotiator` entry is now one `EnemyShot.TAG` row.
-  - `core/src/smokeTest/resources/entity-tags.txt`: removed lines for `Wreck`, `MockSpriteEntity`, `DebrisPiece`,
-    `BlockPiece`, `WoodCratePiece`, `JunkShot`, `RollingBotShot`, `FirePellet`; added `MapSprite`, `FallingPiece`,
-    `EnemyShot`. Keep both sides.
-  The damage rows that `060c` adds in these files stay as `060c` has them; only the class names around them changed.
+- (2026-11-14, from the `060c` merge, squash `3247c7fbe`) For `060d` (slide and ladder):
+  - `DOWN` + `A` on the ground is the ground slide. Until `060d`, `A` does nothing while `DOWN` is held on the ground
+    (`TODO` in `Protoman.kt`, the `A` actuator).
+  - The guard on a ladder: no guard there, because `DOWN` climbs down (`TODO` at the guard rule in `Protoman.kt`).
+  - On a ladder `B` is always the buster, for every character (scope change 2 of `060c`; `TODO` in `Protoman.kt`, the
+    `B` actuator). X already has the rule (`megamanXSabreParams` `canStart` blocks `CLIMBING`).
+  - `Protoman.kt` also has `TODO`s for `060e` (the shield and body contact in one frame, the damage reaction and stun
+    values, the damaged, stunned and frozen art) and for `060g` (no swim). Find them with `grep -n "TODO" Protoman.kt`.
+  - `DOWN` does not drop Proto Man through a one-way platform today; `SpringBouncer` and `SpiderWeb` also read `DOWN`
+    (`060c` `docs/NOTES.md`).
 
 ## Open questions
 
