@@ -34,7 +34,14 @@ points.
 
 ## What should happen
 
-`this.originY = originY`.
+`rotate` turns the line about the world point (`originX`, `originY`), as `GameRectangle.rotate` and its callers
+expect. `calculateWorldPoints` pivots on `position + origin`, so `rotate` must store the origin relative to
+`position`: `this.originX = originX - position.x` and `this.originY = originY - position.y`. Only
+`this.originY = originY` is not enough: `Fixture.getShape` calls `setCenter` first, which moves `position`, so the
+pivot would still be off by `position`.
+
+Example: local points (0, 0) and (1, 0), `position` (10, 0), so the world points are (10, 0) and (11, 0).
+`rotate(90f, 10f, 0f)` must give (10, 0) and (10, 1). With only the `originY` fix it gives (20, -10) and (20, -9).
 
 ## How to reproduce
 
@@ -46,3 +53,10 @@ its world points with the expected rotation.
 The gameplay effect is not checked. Look for `GameLine` fixtures (for example `Laser`, `LaserRules`) on bodies that
 can rotate, or on direct `rotate` calls with `originX != originY`. If no live case has `originX == originY` by
 chance, the fix changes how those lines behave.
+
+- Live effect today: none. The only `GameLine` fixtures (`Laser`) set `attachedToBody = false`, and no other code
+  calls `rotate` on a `GameLine` (checked on `master` `035e5dbec`).
+- `GamePolygon.rotate` passes the world origin to the LibGDX `Polygon`, which also pivots on `position + origin`, so
+  a polygon with a non-zero `position` turns about the wrong point too. No fixture uses a `GamePolygon` today, so it
+  is not live and not in this fix.
+- Fix: `fix/engine-small-bugs`. The short contract is in `2026-10-22-insertion-order-priority-queue-size.md`.

@@ -24,3 +24,5 @@ Round with math, not with string formatting, or delete it.
 ## How to reproduce
 
 No callers today.
+
+- Fix: `fix/engine-small-bugs`. The short contract is in `2026-10-22-insertion-order-priority-queue-size.md`.

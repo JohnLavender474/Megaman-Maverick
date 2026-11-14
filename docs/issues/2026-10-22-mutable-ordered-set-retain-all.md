@@ -28,3 +28,5 @@ Read the code, or write a unit test.
 ## Notes
 
 Find the callers before a fix.
+
+- Fix: `fix/engine-small-bugs`. The short contract is in `2026-10-22-insertion-order-priority-queue-size.md`.

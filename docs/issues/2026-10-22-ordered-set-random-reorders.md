@@ -28,3 +28,5 @@ Read the code.
 ## Notes
 
 Item `011` replaces random calls.
+
+- Fix: `fix/engine-small-bugs`. The short contract is in `2026-10-22-insertion-order-priority-queue-size.md`.
