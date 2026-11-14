@@ -70,7 +70,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `073` | idea | [More gravity-block puzzles in Moon Man's stage](../items/073-moon-man-gravity-puzzles/ITEM.md) (main) |
 | `074` | idea | [More Starkner sections in Moon Man's stage](../items/074-moon-man-starkner-sections/ITEM.md) (main) |
 | `075` | idea | [A larger oasis section in Desert Man's stage](../items/075-desert-man-oasis/ITEM.md) (main) |
-| `077` | idea | [Better boss fights for every boss: new and panic attacks, aiming, death animations](../items/077-robot-master-attacks/ITEM.md) (main) |
+| `077` | active | [Better boss fights for every boss: new and panic attacks, aiming, death animations](../items/077-robot-master-attacks/ITEM.md) (main) |
 | `078` | idea | [Alt paths in the robot master stages](../items/078-robot-master-alt-paths/ITEM.md) (main) |
 | `079` | idea | [Smarter behavior for simple enemies](../items/079-smarter-enemies/ITEM.md) (main) |
 | `080` | idea | [A larger MockingBit and MockingByte section in Timber Woman's stage](../items/080-timber-woman-mocking-section/ITEM.md) (main) |

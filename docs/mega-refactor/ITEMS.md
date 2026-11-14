@@ -84,7 +84,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | `O4` | idea | none | | |
 | 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | idea | none | | |
 | 076 | [A new tileset for the final stage](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
-| 077 | [Better boss fights for every boss: new and panic attacks, aiming, death animations](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | idea | none | | |
+| 077 | [Better boss fights for every boss: new and panic attacks, aiming, death animations](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | active | none | 2026-11-13 | |
 | 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
@@ -263,3 +263,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-137a-falling-piece-entity`](items/137-falling-piece-entity/branches/mega-refactor-137a-falling-piece-entity/process-log.md) | 137 | One falling-piece entity for `DebrisPiece`, `BlockPiece` and `WoodCratePiece` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-138a-wreck-into-mock-sprite`](items/138-wreck-into-mock-sprite/branches/mega-refactor-138a-wreck-into-mock-sprite/process-log.md) | 138 | Merge `Wreck` into `MockSpriteEntity` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-139a-shared-enemy-shot`](items/139-shared-enemy-shot/branches/mega-refactor-139a-shared-enemy-shot/process-log.md) | 139 | A shared simple enemy shot, starting with `JunkShot` | merged | 2026-11-13 | 2026-11-13 |
+| [`mega-refactor-077a-intro-boss`](items/077-robot-master-attacks/branches/mega-refactor-077a-intro-boss/process-log.md) | 077 | A richer intro-stage boss fight and shared boss health phases | active | 2026-11-13 | |

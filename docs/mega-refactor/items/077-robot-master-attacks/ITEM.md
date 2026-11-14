@@ -1,11 +1,11 @@
 # 077: Better boss fights for every boss: new and panic attacks, aiming, death animations
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O4`
 - Depends on: none
 - Related: `015`, `023`, `118`
-- Branches: none yet
+- Branches: `mega-refactor-077a-intro-boss` (active, 2026-11-13)
 
 ## Goal
 
@@ -58,6 +58,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 > more intricate death/dying animations.
 
 ## Decisions
+
+- 2026-11-13 (owner): merge target: each branch squash-merges directly into `master`.
+- 2026-11-13 (owner): a boss with health phases gets its harder attacks in its last phase in place of the panic
+  attack under 25%. A boss with 1 phase keeps the panic attack.
 
 - 2026-11-10: the item covers every boss (robot masters, Wily bosses, mini bosses, intro bosses), and it also covers
   aiming and death animations. This answers the open question about the mini bosses and the Wily bosses.
