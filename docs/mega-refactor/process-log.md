@@ -2329,4 +2329,5 @@ newest entry at the bottom.
   - Bug candidate filed: `docs/issues/2026-11-11-player-tests-fail-alone.md`.
   - Item `060` `ITEM.md`: a note for `060d` (the slide, the guard on a ladder, the `TODO`s that name `060d` and
     `060e`). Item `077` `ITEM.md`: a note for `077a` (the `060c` boss damage rows). Item `153`: the HUD icons go in
-    the `Hud` atlas.
+    the `Hud` atlas. Item `081` `ITEM.md`: the `081g` note for `060c` is done and removed.
+  - `ROADMAP.md`: no change; it names `060` only as a whole item.
