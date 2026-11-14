@@ -18,7 +18,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | `O6` | active | none | 2026-10-22 | |
 | 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | `O5`, `O6` | planned | none | | |
 | 010 | [One simulation clock: fixed tick for gameplay, separate present phase](items/010-fixed-tick/ITEM.md) | refactor | `O2`, `O6`, `O5` | idea | `011`, `017` | | |
-| 011 | [One seedable, interceptable random source with named streams](items/011-game-random/ITEM.md) | refactor | `O2`, `O6` | planned | none | | |
+| 011 | [One seedable, interceptable random source with named streams](items/011-game-random/ITEM.md) | refactor | `O2`, `O6` | active | none | 2026-11-14 | |
 | 012 | [Named, composable freezes with a reason table](items/012-named-freezes/ITEM.md) | refactor | `O1`, `O2` | planned | none | | |
 | 013 | [Level flow state machine; pause as an overlay](items/013-level-flow-fsm/ITEM.md) | refactor | `O1`, `O2` | planned | `015` | | |
 | 014 | [Table-driven contact and collision rules](items/014-contact-rules-table/ITEM.md) | refactor | `O1` | done | none | 2026-10-22 | 2026-10-22 |
@@ -270,3 +270,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-138a-wreck-into-mock-sprite`](items/138-wreck-into-mock-sprite/branches/mega-refactor-138a-wreck-into-mock-sprite/process-log.md) | 138 | Merge `Wreck` into `MockSpriteEntity` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-139a-shared-enemy-shot`](items/139-shared-enemy-shot/branches/mega-refactor-139a-shared-enemy-shot/process-log.md) | 139 | A shared simple enemy shot, starting with `JunkShot` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-077a-intro-boss`](items/077-robot-master-attacks/branches/mega-refactor-077a-intro-boss/process-log.md) | 077 | A richer intro-stage boss fight and shared boss health phases | merged | 2026-11-13 | 2026-11-15 |
+| [`mega-refactor-011a-game-random`](items/011-game-random/branches/mega-refactor-011a-game-random/process-log.md) | 011 | One seedable, interceptable random source with named streams | active | 2026-11-14 | |

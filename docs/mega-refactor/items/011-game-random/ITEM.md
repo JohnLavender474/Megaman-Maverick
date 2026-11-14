@@ -1,11 +1,11 @@
 # 011: One seedable, interceptable random source with named streams
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Objectives: `O2`, `O6`
 - Depends on: none
 - Related: `008`, `010`, `016`, `055`
-- Branches: none yet
+- Branches: `mega-refactor-011a-game-random` (active)
 
 ## Goal
 
@@ -32,6 +32,10 @@ Answer to review item 10 (2026-10-22, verbatim):
 - Two streams (gameplay, cosmetic) or more (for example one per boss)?
 - In normal play, a random logged seed per run, or a fixed seed?
 - Must the RNG state go into save files? (Probably not.)
+
+## Decisions
+
+- (2026-11-14, owner) Merge target: each branch of this item squash-merges directly into `master`.
 
 ## Sources
 
