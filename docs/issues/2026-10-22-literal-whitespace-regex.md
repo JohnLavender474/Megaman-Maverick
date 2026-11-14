@@ -33,3 +33,7 @@ Items `007` and `008` touch both places.
 
 - 2026-10-22: the `DesktopLauncher.kt` part (`--logLevels`) is fixed in `mega-refactor-008a` (squash
   `c731cf9ab`). `GameState.kt:293` is still open (item `007`).
+
+## Short contract
+
+Fixed in branch `fix/small-bugs-3`. The short contract is in `2026-10-28-pathfinding-component-keeps-old-path.md`.

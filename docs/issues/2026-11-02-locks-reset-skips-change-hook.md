@@ -26,3 +26,7 @@ Clearing a lock has one effect, on every path.
 ## How to reproduce
 
 Hold `SpiderWeb` or another `BEHAVIORS` lock on a player, destroy the player, and spawn it with no spawn handler.
+
+## Short contract
+
+Fixed in branch `fix/small-bugs-3`. The short contract is in `2026-10-28-pathfinding-component-keeps-old-path.md`.
