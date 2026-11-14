@@ -272,3 +272,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-077a-intro-boss`](items/077-robot-master-attacks/branches/mega-refactor-077a-intro-boss/process-log.md) | 077 | A richer intro-stage boss fight and shared boss health phases | merged | 2026-11-13 | 2026-11-15 |
 | [`mega-refactor-011a-game-random`](items/011-game-random/branches/mega-refactor-011a-game-random/process-log.md) | 011 | One seedable, interceptable random source with named streams | active | 2026-11-14 | |
 | [`mega-refactor-159a-intro-boss-art`](items/159-intro-boss-hand-art/branches/mega-refactor-159a-intro-boss-art/process-log.md) | 159 | A cracked death head for the intro boss (the new fist frames were dropped) | merged | 2026-11-15 | 2026-11-15 |
+| [`mega-refactor-077b-desert-man`](items/077-robot-master-attacks/branches/mega-refactor-077b-desert-man/process-log.md) | 077 | A richer Desert Man boss fight on the shared boss parts of `077a` | active | 2026-11-15 | |
