@@ -1,6 +1,9 @@
 package com.megaman.maverick.game.smoketests
 
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.state.TagsComponent
 import io.kotest.assertions.fail
@@ -74,6 +77,10 @@ class EntityInitSmokeTest : DescribeSpec({
         harness.regionMisses.clear()
         val entity = MegaEntityFactory.fetch(clazz)!!
         val thrown = runCatching { entity.init() }.exceptionOrNull()
+        if (thrown == null && entity is AbstractBoss) {
+            val bits = harness.assets.getTextureAtlas(TextureAsset.BITS.source)
+            entity.healthBarRegions.forEach { bits.findRegion(it) }
+        }
         val misses = harness.regionMisses
         val tags = entity.getComponent(TagsComponent::class)?.toList()
         val expected = expectedTags[id]

@@ -44,6 +44,7 @@ enum class SoundAsset(
     MM2_VICTORY_SOUND("mm2_victory.ogg", 9f),
     MM3_ELECTRIC_SAW_SOUND("electric_saw.ogg", 1f),
     MM3_ELECTRIC_PULSE_SOUND("electric_pulse.ogg", 1f),
+    SHOCK_WAVE_HIT_SOUND("shock_wave_hit.ogg", 0.25f),
     DISAPPEARING_BLOCK_SOUND("disappearing_block.ogg", 1f),
     BURST_SOUND("burst.ogg", 1f),
     TELEPORT_SOUND("teleport.ogg", 1f),

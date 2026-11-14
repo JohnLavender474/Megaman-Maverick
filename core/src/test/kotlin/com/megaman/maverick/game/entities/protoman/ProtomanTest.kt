@@ -10,6 +10,7 @@ import com.maverick.game.engine.world.body.Fixture
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.entities.decorations.WhiteBurst
 import com.megaman.maverick.game.entities.blocks.SabreBlock
+import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.enemies.HoverGunner
 import com.megaman.maverick.game.entities.enemies.Junkroid
@@ -1470,6 +1471,13 @@ class ProtomanTest : DescribeSpec({
             damageOf(spawnTarget(MetaWheelF(proto.services)), halfSlash()) shouldBe 6
             proto.sabre.reset()
             damageOf(spawnTarget(MetaWheelF(proto.services)), fullSlash()) shouldBe 9
+        }
+
+        it("BigAssMaverickRobot takes 4 from a half hit and 6 from a full hit, as from a half and a full charge") {
+            fun boss() = BigAssMaverickRobot(proto.services).also { it.init() }
+            damageOf(boss(), halfSlash()) shouldBe 4
+            proto.sabre.reset()
+            damageOf(boss(), fullSlash()) shouldBe 6
         }
 
         fun hitsToBreak(slash: () -> PlayerSabreSlash): Int {

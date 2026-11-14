@@ -22,6 +22,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.HandSide
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.getPositionPoint
 import io.kotest.assertions.withClue
@@ -84,11 +85,9 @@ class BigAssMaverickRobotHandTest : DescribeSpec({
             hand.spawn(
                 props(
                     ConstKeys.OWNER pairTo boss,
+                    ConstKeys.SIDE pairTo HandSide.LEFT,
                     ConstKeys.ORIGIN pairTo Vector2(0f, 30f * PPM),
-                    ConstKeys.RADIUS pairTo PPM,
-                    "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo Vector2(0f, 30f * PPM),
-                    "${ConstKeys.LAUNCH}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo { PPM },
-                    "${ConstKeys.ROTATION}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo { PPM }
+                    "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo Vector2(0f, 30f * PPM)
                 )
             ) shouldBe true
             engine.update(0f)

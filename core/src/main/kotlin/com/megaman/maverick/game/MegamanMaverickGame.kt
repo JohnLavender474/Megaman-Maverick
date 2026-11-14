@@ -502,6 +502,7 @@ class MegamanMaverickGame(
         launch.weapons.forEach { gameState.addWeapon(it) }
         launch.heartTanks.forEach { gameState.addHeartTank(it) }
         launch.healthTanks.forEach { gameState.fillHealthTank(it) }
+        launch.difficulty?.let { gameState.setDifficultyMode(it) }
 
         when (start) {
             LaunchStart.Default -> when (params.runType) {
@@ -878,7 +879,7 @@ class MegamanMaverickGame(
 
     fun saveState() {
         if (!launch.savesAllowed) {
-            GameLogger.error(TAG, "saveState(): not saved, because --heartTanks or --healthTanks was given")
+            GameLogger.error(TAG, "saveState(): not saved, because --heartTanks, --healthTanks or --difficulty was given")
             return
         }
 

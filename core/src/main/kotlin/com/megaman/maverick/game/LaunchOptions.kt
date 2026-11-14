@@ -12,5 +12,6 @@ data class LaunchOptions(
     val players: String? = null,
     val mode: String? = null,
     val viewEdges: String? = null,
-    val saveFile: String? = null
+    val saveFile: String? = null,
+    val difficulty: String? = null
 )

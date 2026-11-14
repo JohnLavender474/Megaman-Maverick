@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.bosses
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -21,7 +22,6 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
@@ -35,6 +35,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.body
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.events.Event
+import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -46,25 +47,49 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.damage.StandardDamageNegotiator
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.difficulty.DifficultyMode
-import com.megaman.maverick.game.entities.state.BossPhase
+import com.megaman.maverick.game.drawables.ui.BossBitsBar
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.blocks.BreakableBlock
-import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand.BigAssMaverickRobotHandState
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.BigAssMaverickRobotMotion
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.BigAssMaverickRobotTuning
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.ClapAim
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.ClapPlan
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.HandAttack
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.HandChoreography
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.HandSide
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.HandState
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.MotionMode
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.OrbAim
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.BlockPieceColor
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.invincible
-import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
+import com.megaman.maverick.game.entities.explosions.IceBombExplosion
+import com.megaman.maverick.game.entities.explosions.MagmaExplosion
+import com.megaman.maverick.game.entities.explosions.ReactorExplosion
+import com.megaman.maverick.game.entities.hazards.MagmaFlame
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.players.PlayerSabreSlash
+import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb.OrbColor
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.Fireball
+import com.megaman.maverick.game.entities.projectiles.MagmaWave
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.projectiles.Needle
+import com.megaman.maverick.game.entities.projectiles.PreciousGem
+import com.megaman.maverick.game.entities.projectiles.PreciousShard
 import com.megaman.maverick.game.entities.projectiles.ProtoBuster
+import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
+import com.megaman.maverick.game.entities.projectiles.SlashWave
+import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -76,8 +101,10 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getPositionPoint
 import java.util.*
 import kotlin.math.abs
+import kotlin.reflect.KClass
 
-class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFaceable {
+class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services, defeatDur = DEFEAT_DUR), IAnimatedEntity,
+    IFaceable {
 
     companion object {
         const val TAG = "BigAssMaverickRobot"
@@ -98,36 +125,10 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
 
         private const val STUNNED_DUR = 0.5f
 
-        private const val SHOOT_ORBS_DELAY = 3f
-        private const val SHOOT_ORBS_DUR = 4f
-        private const val DELAY_BETWEEN_ORBS = 1f
-        private const val ORB_MAX_MOVE_DELAY = 1f
-        private const val ORB_MIN_MOVE_DELAY = 0.25f
-        private const val ORBS_COUNT = 2
-        private const val ORB_MIN_SPEED = 6f
-        private const val ORB_MAX_SPEED = 10f
-
-        private const val SHOOT_ORBS_DELAY_HARD = 2f
-        private const val SHOOT_ORBS_DUR_HARD = 2f
-        private const val DELAY_BETWEEN_ORBS_HARD = 0.5f
-        private const val ORB_MAX_MOVE_DELAY_HARD = 0.5f
-        private const val ORB_MIN_MOVE_DELAY_HARD = 0.1f
-        private const val ORBS_COUNT_HARD = 4
-        private const val ORB_MIN_SPEED_HARD = 8f
-        private const val ORB_MAX_SPEED_HARD = 12f
-
-        private const val LAUNCH_HAND_DELAY = 3f
-        private const val LAUNCH_HAND_DELAY_HARD = 1f
-
-        private const val HAND_RADIUS = 2f
-        private const val HAND_ROTATION_MIN_SPEED = 5f
-        private const val HAND_ROTATION_MAX_SPEED = 8f
-        private const val HAND_LAUNCH_MIN_SPEED = 8f
-        private const val HAND_LAUNCH_MAX_SPEED = 12f
-        private const val CLOSEST_HAND_CHANCE = 75
-
-        private const val HAND_LAUNCH_MIN_SPEED_HARD = 10f
-        private const val HAND_LAUNCH_MAX_SPEED_HARD = 15f
+        const val LEFT_WALL = "${ConstKeys.LEFT}_${ConstKeys.WALL}"
+        const val RIGHT_WALL = "${ConstKeys.RIGHT}_${ConstKeys.WALL}"
+        const val CLAPS = 2
+        const val CLAP_SHAKE_DUR = 0.2f
 
         private const val FALL_GRAVITY = 15.0f
         private const val FALL_IMPULSE = 10f
@@ -137,37 +138,75 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
         private const val SHAKE_DUR = 1f
         private const val SHAKE_INTERVAL = 0.1f
 
+        const val PHASE_SHAKE_DUR = 0.5f
+        const val PHASE_FLASH_DUR = 0.6f
+
+        const val DEFEAT_DUR = 4f
+        const val DEFEAT_SHAKE_END = 1.5f
+        const val DEFEAT_SINK_END = 3.5f
+        const val DEFEAT_SINK = 1f
+        const val DEFEAT_SHAKE = 2f
+        const val DEFEAT_BLINK = 0.05f
+        const val LAST_BLAST_SPREAD = 0.75f
+
         private var headAnimDefs = orderedMapOf(
+            "defeated" pairTo AnimationDef(2, 1, 0.1f, true),
             "stunned" pairTo AnimationDef(2, 1, 0.1f, true),
-            "defeated" pairTo AnimationDef(2, 1, 0.05f, true),
             "down" pairTo AnimationDef(2, 1, gdxArrayOf(1.5f, 0.15f), true),
             "turn" pairTo AnimationDef(2, 1, gdxArrayOf(1.5f, 0.15f), true),
             "turn_up" pairTo AnimationDef(2, 1, gdxArrayOf(1.5f, 0.15f), true)
         )
         private var regions = ObjectMap<String, TextureRegion>()
-    }
 
-    override val damageNegotiator = StandardDamageNegotiator(
-        objectMapOf(
-            Bullet::class pairTo dmgNeg(1),
-            ProtoBuster::class pairTo dmgNeg(2),
+        private val DAMAGE = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
+            Bullet::class pairTo dmgNeg(3),
+            ProtoBuster::class pairTo dmgNeg(4),
             PlayerSabreSlash::class pairTo dmgNeg {
                 it as PlayerSabreSlash
-                if (it.fullStrength) 3 else 2
+                if (it.fullStrength) 6 else 4
             },
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
-                if (it.fullyCharged) 3 else 2
+                if (it.fullyCharged) 6 else 4
             },
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion
-                if (it.fullyCharged) 2 else 1
-            }
+                if (it.fullyCharged) 4 else 3
+            },
+            SmallIceCube::class pairTo dmgNeg(3),
+            IceBombExplosion::class pairTo dmgNeg(2),
+            MagmaWave::class pairTo dmgNeg(3),
+            Fireball::class pairTo dmgNeg(3),
+            MagmaExplosion::class pairTo dmgNeg(2),
+            MagmaFlame::class pairTo dmgNeg(2),
+            MoonScythe::class pairTo dmgNeg(3),
+            PreciousGem::class pairTo dmgNeg(3),
+            PreciousShard::class pairTo dmgNeg(2),
+            Axe::class pairTo dmgNeg(4),
+            Needle::class pairTo dmgNeg(3),
+            SlashWave::class pairTo dmgNeg(3),
+            ReactorManProjectile::class pairTo dmgNeg {
+                it as ReactorManProjectile
+                if (it.big) 6 else 3
+            },
+            ReactorExplosion::class pairTo dmgNeg(3)
         )
-    )
+    }
+
+    override val damageNegotiator: IDamageNegotiator = object : BossDamageNegotiator() {
+        override fun get(damager: IDamagerEntity) = DAMAGE[damager::class]?.get(damager) ?: super.get(damager)
+    }
+    override val healthPhases = 2
+    override val healthBarRegions = gdxArrayOf(ConstKeys.STANDARD, BossBitsBar.PHASE_2_BITS)
     override val invincible: Boolean
         get() = super.invincible || stunned
     override lateinit var facing: Facing
+
+    internal val tuning: BigAssMaverickRobotTuning
+        get() = BigAssMaverickRobotTuning.of(services.gameState.getDifficultyMode() == DifficultyMode.HARD, healthPhase)
+    internal val arena = GameRectangle()
+    internal val motionMode: MotionMode
+        get() = motion.mode
 
     private var fallTargetY = 0f
     private var wasFallTargetReached = false
@@ -175,7 +214,24 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
         get() = body.getBounds().getY() <= fallTargetY
 
     private val allHands = Array<BigAssMaverickRobotHand>()
-    private var launchedHand: BigAssMaverickRobotHand? = null
+    private val freeHands = Array<BigAssMaverickRobotHand>()
+    private var attack: HandAttack? = null
+    private val motion = BigAssMaverickRobotMotion()
+
+    private var attacker: BigAssMaverickRobotHand? = null
+    private var partner: BigAssMaverickRobotHand? = null
+    private var attackTuning = BigAssMaverickRobotTuning.NORMAL
+    private val attackWait = Timer()
+    private var handTarget: IPlayer? = null
+    private val clapPlan = ClapPlan()
+    private var clapsDone = 0
+
+    private var volleyTuning = BigAssMaverickRobotTuning.NORMAL
+    private var volleyRunning = false
+    private var volleyTime = 0f
+    private var orbsShot = 0
+    private val volleyDelay = Timer()
+    private var orbTarget: IPlayer? = null
 
     private var bigAssBody: BigAssMaverickRobotBody? = null
 
@@ -183,11 +239,10 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
     private val stunnedTimer = Timer(STUNNED_DUR)
     private val stunned: Boolean
         get() = !stunnedTimer.isFinished()
+    private val phaseFlashTimer = Timer(PHASE_FLASH_DUR)
 
-    private val shootOrbsDelay = Timer()
-    private lateinit var shootOrbsTimer: Timer
-
-    private val launchHandDelay = Timer()
+    private var defeatTime = 0f
+    private var lastBlast = false
 
     private val turnHeadDelay = Timer(TURN_HEAD_DELAY)
     private val headAngleIndicesSorted = PriorityQueue<Int> comparator@{ index1, index2 ->
@@ -229,6 +284,13 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
             ConstKeys.TARGET, RectangleMapObject::class
         )!!.rectangle.getPositionPoint(Position.BOTTOM_CENTER).y
 
+        val left = spawnProps.get(LEFT_WALL, RectangleMapObject::class)!!.rectangle
+        val right = spawnProps.get(RIGHT_WALL, RectangleMapObject::class)!!.rectangle
+        val ground = spawnProps.get(ConstKeys.GROUND, RectangleMapObject::class)!!.rectangle
+        val ceiling = spawnProps.get(ConstKeys.CEILING, RectangleMapObject::class)!!.rectangle
+        val floor = ground.y + ground.height
+        arena.set(left.x + left.width, floor, right.x - (left.x + left.width), ceiling.y - floor)
+
         wasFallTargetReached = false
 
         body.physics.gravityOn = true
@@ -237,41 +299,27 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
 
         shakeTimer.reset()
 
-        launchedHand = null
+        motion.reset()
+        attack = null
+        attacker = null
+        partner = null
+        handTarget = null
+        orbTarget = null
+        clapsDone = 0
+        attackTuning = tuning
+        attackWait.resetDuration(attackTuning.attackWait)
 
-        val shootOrbsDelayDur = when (services.gameState.getDifficultyMode()) {
-            DifficultyMode.HARD -> SHOOT_ORBS_DELAY_HARD
-            else -> SHOOT_ORBS_DELAY
-        }
-        shootOrbsDelay.resetDuration(shootOrbsDelayDur)
-
-        val launchHandDelayDur = when (services.gameState.getDifficultyMode()) {
-            DifficultyMode.NORMAL -> LAUNCH_HAND_DELAY
-            DifficultyMode.HARD -> LAUNCH_HAND_DELAY_HARD
-        }
-        launchHandDelay.resetDuration(launchHandDelayDur)
-
-        if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
-            shootOrbsTimer = Timer(SHOOT_ORBS_DUR).also { timer ->
-                for (i in 1..ORBS_COUNT) {
-                    val time = i * DELAY_BETWEEN_ORBS
-                    val runnable = TimeMarkedRunnable(time) { shootOrb() }
-                    timer.addRunnable(runnable)
-                }
-            }
-        } else {
-            shootOrbsTimer = Timer(SHOOT_ORBS_DUR_HARD).also { timer ->
-                for (i in 1..ORBS_COUNT_HARD) {
-                    val time = i * DELAY_BETWEEN_ORBS_HARD
-                    val runnable = TimeMarkedRunnable(time) { shootOrb() }
-                    timer.addRunnable(runnable)
-                }
-            }
-        }
-        shootOrbsTimer.setToEnd()
+        volleyTuning = tuning
+        volleyRunning = false
+        volleyTime = 0f
+        orbsShot = 0
+        volleyDelay.resetDuration(volleyTuning.volleyDelay)
 
         stunnedTimer.setToEnd()
+        phaseFlashTimer.setToEnd()
         turnHeadDelay.setToEnd()
+        defeatTime = 0f
+        lastBlast = false
 
         facing = if (targetPlayer.body.getCenter().x < body.getCenter().x) Facing.LEFT else Facing.RIGHT
 
@@ -293,7 +341,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
             if (!wasFallTargetReached) {
                 GameLogger.debug(TAG, "preReady(): just reached fall target")
                 allHands.forEach { it.moveToOrigin() }
-                shakeRoom()
+                shakeRoom(SHAKE_DUR)
             }
 
             shakeTimer.update(delta)
@@ -308,13 +356,17 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
         wasFallTargetReached = fallTargetReached
     }
 
-    private fun shakeRoom() {
-        GameLogger.debug(TAG, "shakeRoom()")
+    private fun shakeRoom(duration: Float) {
+        GameLogger.debug(TAG, "shakeRoom(): duration=$duration")
+        shakeCamera(duration)
+        requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
+    }
 
+    private fun shakeCamera(duration: Float) =
         services.events.submitEvent(
             Event(
                 EventType.SHAKE_CAM, props(
-                    ConstKeys.DURATION pairTo SHAKE_DUR,
+                    ConstKeys.DURATION pairTo duration,
                     ConstKeys.INTERVAL pairTo SHAKE_INTERVAL,
                     ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
                     ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
@@ -322,90 +374,67 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
             )
         )
 
-        requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
-    }
-
     private fun spawnHands(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawnHands()")
+        spawnHand(spawnProps, HandSide.LEFT, ConstKeys.LEFT)
+        spawnHand(spawnProps, HandSide.RIGHT, ConstKeys.RIGHT)
+    }
 
-        val leftHandPosition = spawnProps.get(ConstKeys.LEFT, RectangleMapObject::class)!!.rectangle.getCenter()
-        val leftArmOrigin = spawnProps.get(
-            "${ConstKeys.LEFT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
+    private fun spawnHand(spawnProps: Properties, side: HandSide, key: String) {
+        val origin = spawnProps.get(key, RectangleMapObject::class)!!.rectangle.getCenter()
+        val armOrigin = spawnProps.get(
+            "${key}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
         )!!.rectangle.getCenter()
-        val leftLaunchSpeedSupplier: () -> Float = speed@{
-            val minSpeed: Float
-            val maxSpeed: Float
-            if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
-                minSpeed = HAND_LAUNCH_MIN_SPEED
-                maxSpeed = HAND_LAUNCH_MAX_SPEED
-            } else {
-                minSpeed = HAND_LAUNCH_MIN_SPEED_HARD
-                maxSpeed = HAND_LAUNCH_MAX_SPEED_HARD
-            }
-
-            return@speed ConstVals.PPM * UtilMethods.interpolate(minSpeed, maxSpeed, 1f - getHealthRatio())
-        }
-        val leftRotationSpeedSupplier: () -> Float = speed@{
-            return@speed ConstVals.PPM * UtilMethods.interpolate(
-                -HAND_ROTATION_MIN_SPEED, -HAND_ROTATION_MAX_SPEED, 1f - getHealthRatio()
-            )
-        }
-        val leftHand = MegaEntityFactory.fetch(BigAssMaverickRobotHand::class)!!
-        leftHand.spawn(
+        val hand = MegaEntityFactory.fetch(BigAssMaverickRobotHand::class)!!
+        hand.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.ORIGIN pairTo leftHandPosition,
-                ConstKeys.RADIUS pairTo HAND_RADIUS * ConstVals.PPM,
-                "${ConstKeys.START}_${ConstKeys.DEGREES}" pairTo 180f,
-                "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo leftArmOrigin,
-                "${ConstKeys.LAUNCH}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo leftLaunchSpeedSupplier,
-                "${ConstKeys.ROTATION}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo leftRotationSpeedSupplier
+                ConstKeys.SIDE pairTo side,
+                ConstKeys.ORIGIN pairTo origin,
+                "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo armOrigin
             )
         )
-        allHands.add(leftHand)
+        allHands.add(hand)
+    }
 
-        val rightHandPosition = spawnProps.get(ConstKeys.RIGHT, RectangleMapObject::class)!!.rectangle.getCenter()
-        val rightArmOrigin = spawnProps.get(
-            "${ConstKeys.RIGHT}_${ConstKeys.ARM}_${ConstKeys.ORIGIN}", RectangleMapObject::class
-        )!!.rectangle.getCenter()
-        val rightLaunchSpeedSupplier: () -> Float = speed@{
-            val minSpeed: Float
-            val maxSpeed: Float
-            if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
-                minSpeed = HAND_LAUNCH_MIN_SPEED
-                maxSpeed = HAND_LAUNCH_MAX_SPEED
-            } else {
-                minSpeed = HAND_LAUNCH_MIN_SPEED_HARD
-                maxSpeed = HAND_LAUNCH_MAX_SPEED_HARD
-            }
+    internal fun slotOf(origin: Vector2, side: HandSide, out: Vector2) =
+        motion.slot(origin, side, tuning.hoverAmplitudeScale, out)
 
-            return@speed ConstVals.PPM * UtilMethods.interpolate(minSpeed, maxSpeed, 1f - getHealthRatio())
-        }
-        val rightRotationSpeedSupplier: () -> Float = speed@{
-            return@speed ConstVals.PPM * UtilMethods.interpolate(
-                HAND_ROTATION_MIN_SPEED, HAND_ROTATION_MAX_SPEED, 1f - getHealthRatio()
-            )
-        }
-        val rightHand = MegaEntityFactory.fetch(BigAssMaverickRobotHand::class)!!
-        rightHand.spawn(
+    internal fun flashAt(point: Vector2) {
+        val flash = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!
+        flash.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.ORIGIN pairTo rightHandPosition,
-                ConstKeys.RADIUS pairTo HAND_RADIUS * ConstVals.PPM,
-                "${ConstKeys.ARM}_${ConstKeys.ORIGIN}" pairTo rightArmOrigin,
-                "${ConstKeys.LAUNCH}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo rightLaunchSpeedSupplier,
-                "${ConstKeys.ROTATION}_${ConstKeys.SPEED}_${ConstKeys.SUPPLIER}" pairTo rightRotationSpeedSupplier
+                ConstKeys.POSITION pairTo point,
+                ConstKeys.ACTIVE pairTo false,
+                ConstKeys.HIT pairTo true,
+                ConstKeys.CULL_OUT_OF_BOUNDS pairTo false,
+                ConstKeys.COLOR pairTo OrbColor.ORANGE
             )
         )
-        allHands.add(rightHand)
+        requestToPlaySound(SoundAsset.SMB3_BUMP_SOUND, loop = false)
     }
 
     override fun isReady(delta: Float) =
-        fallTargetReached && !allHands.isEmpty && allHands.all { it.state == BigAssMaverickRobotHandState.ROTATE }
+        fallTargetReached && !allHands.isEmpty && allHands.all { it.state == HandState.IDLE }
 
     override fun onReady() {
         GameLogger.debug(TAG, "onReady()")
         super.onReady()
+    }
+
+    override fun onHealthPhaseStart(phase: Int) {
+        GameLogger.debug(TAG, "onHealthPhaseStart(): phase=$phase")
+        shakeRoom(PHASE_SHAKE_DUR)
+        phaseFlashTimer.reset()
+        allHands.forEach { it.setArmOrbColor(OrbColor.ORANGE) }
+    }
+
+    override fun triggerDefeat() {
+        super.triggerDefeat()
+        attack = null
+        defeatTime = 0f
+        lastBlast = false
     }
 
     override fun spawnExplosionOrbs(spawn: Vector2) {
@@ -434,17 +463,38 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
         )
     }
 
+    private fun spawnLastBlast() {
+        GameLogger.debug(TAG, "spawnLastBlast()")
+        val center = body.fixtures[FixtureType.DAMAGEABLE].first().getShape().getCenter()
+        val spread = LAST_BLAST_SPREAD * ConstVals.PPM
+        for (i in -1..1) for (j in -1..1) {
+            if (i != 0 && j != 0) continue
+            val explosion = MegaEntityFactory.fetch(Explosion::class)!!
+            explosion.spawn(
+                props(
+                    ConstKeys.DAMAGER pairTo false,
+                    ConstKeys.POSITION pairTo GameObjectPools.fetch(Vector2::class)
+                        .set(center.x + i * spread, center.y + j * spread)
+                )
+            )
+        }
+        requestToPlaySound(SoundAsset.BASSY_BLAST_SOUND, loop = false)
+    }
+
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        // big ass body should handle destroying itself
         bigAssBody = null
 
         allHands.forEach { it.destroy() }
         allHands.clear()
 
-        launchedHand = null
+        attack = null
+        attacker = null
+        partner = null
+        handTarget = null
+        orbTarget = null
 
         headAngleIndicesSorted.clear()
     }
@@ -456,14 +506,202 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
         return damaged
     }
 
+    private fun orbTrajectory(aim: OrbAim, target: IPlayer, from: Vector2, out: Vector2): Vector2 {
+        val point = OrbAim.point(
+            aim,
+            target.body.getCenter(),
+            target.body.physics.velocity,
+            arena,
+            { min, max -> getRandom(min, max) },
+            GameObjectPools.fetch(Vector2::class)
+        )
+        val speed = UtilMethods.interpolate(volleyTuning.orbMinSpeed, volleyTuning.orbMaxSpeed, 1f - getHealthRatio())
+        return out.set(point).sub(from).nor().scl(speed * ConstVals.PPM)
+    }
+
+    private fun nextTarget(last: IPlayer?): IPlayer {
+        var first: IPlayer? = null
+        var next: IPlayer? = null
+        players.forEachLive { player ->
+            if (first == null) first = player
+            if (next == null && last != null && player.slot.index > last.slot.index) next = player
+        }
+        return next ?: first ?: targetPlayer
+    }
+
+    private fun nearestHand(free: Array<BigAssMaverickRobotHand>, target: IPlayer): BigAssMaverickRobotHand {
+        val point = target.body.getCenter()
+        var nearest = free[0]
+        for (i in 1 until free.size)
+            if (free[i].body.getCenter().dst2(point) < nearest.body.getCenter().dst2(point)) nearest = free[i]
+        return nearest
+    }
+
+    private fun orderAttack() {
+        val tuning = tuning
+        val target = nextTarget(handTarget)
+
+        val free = freeHands
+        free.clear()
+        allHands.forEach { if (it.state == HandState.IDLE && !it.isBeingStoodUpon()) free.add(it) }
+
+        val total = tuning.totalWeight(free.size)
+        val kind = if (total <= 0) null else tuning.attackFor(getRandom(0, total - 1), free.size)
+        if (kind == null) {
+            attackWait.resetDuration(tuning.attackWait)
+            return
+        }
+
+        GameLogger.debug(TAG, "orderAttack(): kind=$kind, target=$target, free=${free.size}")
+        handTarget = target
+        attackTuning = tuning
+        attack = kind
+        val center = target.body.getCenter()
+        when (kind) {
+            HandAttack.PUNCH -> {
+                val hand = nearestHand(free, target)
+                attacker = hand
+                hand.punch(center, tuning)
+            }
+
+            HandAttack.SLAM -> {
+                val hand = nearestHand(free, target)
+                attacker = hand
+                hand.slam(center, tuning)
+            }
+
+            HandAttack.PINCER_CLAP -> {
+                attacker = allHands.first { it.side == HandSide.LEFT }
+                clapsDone = 0
+                startClap(target)
+            }
+        }
+        partner = allHands.first { it != attacker }
+    }
+
+    private fun startClap(target: IPlayer) {
+        val fist = allHands.first().body
+        ClapAim.plan(
+            target.body.getCenter(),
+            arena,
+            fist.getWidth() / 2f,
+            fist.getHeight() / 2f - BigAssMaverickRobotHand.FEET_OVER_BOTTOM * ConstVals.PPM,
+            clapPlan
+        )
+        GameLogger.debug(TAG, "startClap(): meet=${clapPlan.meet}")
+        allHands.forEach {
+            if (it.side == HandSide.LEFT) it.clap(clapPlan.leftStart, clapPlan.leftStop, attackTuning)
+            else it.clap(clapPlan.rightStart, clapPlan.rightStop, attackTuning)
+        }
+    }
+
+    private fun conductClap() {
+        if (!allHands.all { it.clapStepDone }) return
+        if (allHands.first().state == HandState.CLAP_IMPACT) {
+            clapsDone++
+            if (clapsDone < CLAPS) startClap(handTarget!!) else allHands.forEach { it.returnToSlot() }
+            return
+        }
+        allHands.forEach { it.advanceClap() }
+        if (allHands.first().state == HandState.CLAP_IMPACT) {
+            flashAt(GameObjectPools.fetch(Vector2::class).set(clapPlan.meet))
+            shakeCamera(CLAP_SHAKE_DUR)
+        }
+    }
+
+    private fun conductAttack() {
+        val attacker = attacker!!
+        val partner = partner!!
+        when (attack!!) {
+            HandAttack.PUNCH, HandAttack.SLAM -> {
+                if (partner.state == HandState.IDLE) {
+                    val towardHead = if (body.getCenter().x > partner.body.getCenter().x) 1f else -1f
+                    HandChoreography.partnerOffset(
+                        attacker.state,
+                        attacker.stateTime,
+                        attacker.stateDuration,
+                        attacker.attackDirection,
+                        towardHead,
+                        partner.isBeingStoodUpon(),
+                        attackTuning.partnerScale,
+                        partner.partnerOffset
+                    )
+                } else partner.partnerOffset.setZero()
+            }
+
+            HandAttack.PINCER_CLAP -> conductClap()
+        }
+
+        if (allHands.all { it.state == HandState.IDLE }) {
+            GameLogger.debug(TAG, "conductAttack(): attack $attack done")
+            allHands.forEach { it.partnerOffset.setZero() }
+            attack = null
+            this.attacker = null
+            this.partner = null
+            attackWait.resetDuration(tuning.attackWait)
+        }
+    }
+
+    private fun updateVolley(delta: Float) {
+        if (volleyRunning) {
+            volleyTime += delta
+            val aims = volleyTuning.orbAims
+            while (orbsShot < aims.size && volleyTime >= (orbsShot + 1) * volleyTuning.orbGap) {
+                shootOrb(aims[orbsShot])
+                orbsShot++
+            }
+            if (volleyTime >= volleyTuning.volleyDur) {
+                volleyRunning = false
+                volleyDelay.resetDuration(volleyTuning.volleyDelay)
+            }
+        } else {
+            volleyDelay.update(delta)
+            if (volleyDelay.isFinished()) {
+                volleyTuning = tuning
+                volleyRunning = true
+                volleyTime = 0f
+                orbsShot = 0
+            }
+        }
+    }
+
+    private fun handsArrived(): Boolean {
+        val slot = GameObjectPools.fetch(Vector2::class)
+        val distance = BigAssMaverickRobotMotion.ARRIVED_DISTANCE * ConstVals.PPM
+        return allHands.all {
+            it.state != HandState.IDLE || it.body.getCenter().dst2(it.slotTarget(slot)) <= distance * distance
+        }
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             bigAssBody?.bounds?.setCenter(body.getCenter())
 
             if (defeated) {
+                val before = defeatTime
+                defeatTime += delta
                 explodeOnDefeat(delta)
+                if (before < DEFEAT_SINK_END && defeatTime >= DEFEAT_SINK_END && !lastBlast) {
+                    lastBlast = true
+                    spawnLastBlast()
+                }
                 return@add
+            }
+
+            phaseFlashTimer.update(delta)
+
+            val fighting = bossComponent.phase == BossPhase.FIGHT
+            val attacking = fighting && attack != null
+            if (fighting) {
+                val tuning = tuning
+                val orbitSpeed = tuning.orbitSpeedScale * UtilMethods.interpolate(
+                    BigAssMaverickRobotMotion.ORBIT_MIN_SPEED,
+                    BigAssMaverickRobotMotion.ORBIT_MAX_SPEED,
+                    1f - getHealthRatio()
+                )
+                motion.update(delta, orbitSpeed, tuning.hoverTimeScale, tuning.schedule, handsArrived())
+                if (attacking) conductAttack()
             }
 
             stunnedTimer.update(delta)
@@ -477,43 +715,12 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
 
             turnHeadDelay.update(delta)
 
-            if (bossComponent.phase == BossPhase.FIGHT) {
-                shootOrbsTimer.update(delta)
-                if (shootOrbsTimer.isJustFinished()) {
-                    GameLogger.debug(TAG, "update(): shoot orbs timer just finished")
-                    shootOrbsDelay.reset()
-                } else if (shootOrbsTimer.isFinished()) shootOrbsDelay.update(delta)
+            if (fighting) {
+                if (attack != HandAttack.PINCER_CLAP) updateVolley(delta)
 
-                if (shootOrbsDelay.isJustFinished() && shootOrbsTimer.isFinished()) {
-                    GameLogger.debug(TAG, "update(): shoot orbs delay just finished")
-                    shootOrbsTimer.reset()
-                }
-
-                if (launchedHand == null) {
-                    launchHandDelay.update(delta)
-                    if (launchHandDelay.isFinished()) {
-                        val hands = allHands.filter { !it.isBeingStoodUpon() }
-                        if (hands.isEmpty) launchHandDelay.reset()
-                        else {
-                            val handToLaunch = when {
-                                hands.size == 1 -> hands[0]
-                                getRandom(0, 100) <= CLOSEST_HAND_CHANCE -> {
-                                    hands.sort { h1, h2 ->
-                                        h1.body.getCenter().dst2(targetPlayer.body.getCenter())
-                                            .compareTo(h2.body.getCenter().dst2(targetPlayer.body.getCenter()))
-                                    }
-                                    hands[0]
-                                }
-                                else -> hands.random()
-                            }
-
-                            handToLaunch.launch()
-                            launchedHand = handToLaunch
-                        }
-                    }
-                } else if (launchedHand!!.state == BigAssMaverickRobotHandState.ROTATE) {
-                    launchedHand = null
-                    launchHandDelay.reset()
+                if (!attacking) {
+                    attackWait.update(delta)
+                    if (attackWait.isFinished()) orderAttack()
                 }
             }
         }
@@ -556,7 +763,14 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
         ).preProcess { _, sprite ->
             val position = Position.TOP_CENTER
             sprite.setPosition(body.getPositionPoint(position), position)
-            sprite.hidden = damageBlink && !defeated && !stunned
+            if (defeated) {
+                if (defeatTime < DEFEAT_SHAKE_END) sprite.translateX(HandChoreography.shake(defeatTime) / 2f * DEFEAT_SHAKE)
+                val sink = MathUtils.clamp(
+                    (defeatTime - DEFEAT_SHAKE_END) / (DEFEAT_SINK_END - DEFEAT_SHAKE_END), 0f, 1f
+                )
+                sprite.translateY(-sink * DEFEAT_SINK * ConstVals.PPM)
+            }
+            sprite.hidden = if (defeated) (defeatTime / DEFEAT_BLINK).toInt() % 2 == 1 else damageBlink && !stunned
             sprite.setFlip(isFacing(Facing.LEFT), false)
         }
         .build()
@@ -573,7 +787,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
                                 return@keySupplier "defeated"
                             }
 
-                            stunned -> {
+                            stunned || !phaseFlashTimer.isFinished() -> {
                                 turnHeadDelay.setToEnd()
                                 return@keySupplier "stunned"
                             }
@@ -610,49 +824,25 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
             )
             .build()
 
-    private fun shootOrb() {
-        GameLogger.debug(TAG, "shootOrb()")
+    private fun shootOrb(aim: OrbAim) {
+        val target = nextTarget(orbTarget)
+        orbTarget = target
+        GameLogger.debug(TAG, "shootOrb(): aim=$aim, target=$target")
 
         val spawn = body.getPositionPoint(Position.TOP_CENTER).sub(0f, 1.25f * ConstVals.PPM)
-
-        val minSpeed: Float
-        val maxSpeed: Float
-        if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
-            minSpeed = ORB_MIN_SPEED
-            maxSpeed = ORB_MAX_SPEED
-        } else {
-            minSpeed = ORB_MIN_SPEED_HARD
-            maxSpeed = ORB_MAX_SPEED_HARD
-        }
-
-        val speed = UtilMethods.interpolate(minSpeed, maxSpeed, 1f - getHealthRatio())
-        val trajectory = targetPlayer.body.getCenter().sub(spawn).nor().scl(speed * ConstVals.PPM)
-
-        val minDelay: Float
-        val maxDelay: Float
-        if (services.gameState.getDifficultyMode() == DifficultyMode.NORMAL) {
-            minDelay = ORB_MIN_MOVE_DELAY
-            maxDelay = ORB_MAX_MOVE_DELAY
-        } else {
-            minDelay = ORB_MIN_MOVE_DELAY_HARD
-            maxDelay = ORB_MAX_MOVE_DELAY_HARD
-        }
-        val delay = UtilMethods.interpolate(minDelay, maxDelay, getHealthRatio())
+        val hold = UtilMethods.interpolate(volleyTuning.orbMinHold, volleyTuning.orbMaxHold, getHealthRatio())
 
         val orb = MegaEntityFactory.fetch(BigAssMaverickRobotOrb::class)!!
         orb.spawn(
             props(
                 ConstKeys.OWNER pairTo this,
-                ConstKeys.DELAY pairTo delay,
+                ConstKeys.DELAY pairTo hold,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.SUPPLIER pairTo { from: Vector2, out: Vector2 -> orbTrajectory(aim, target, from, out) },
                 ConstKeys.COLOR pairTo OrbColor.ORANGE
             )
         )
 
-        // requestToPlaySound(SoundAsset.BLAST_2_SOUND, false)
-
-        GameLogger.debug(TAG, "shootOrb(): spawn=$spawn, trajectory=$trajectory")
+        requestToPlaySound(SoundAsset.BLAST_2_SOUND, loop = false)
     }
 }
-

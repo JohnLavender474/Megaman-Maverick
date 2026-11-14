@@ -608,8 +608,11 @@
   <object id="346" name="Target" x="10384" y="1472" width="32" height="32"/>
   <object id="335" name="BigAssMaverickRobot" x="10272" y="672" width="256" height="384">
    <properties>
+    <property name="ceiling" type="object" value="332"/>
+    <property name="ground" type="object" value="329"/>
     <property name="left" type="object" value="342"/>
     <property name="left_arm_origin" type="object" value="343"/>
+    <property name="left_wall" type="object" value="328"/>
     <property name="piece_1" type="object" value="336"/>
     <property name="piece_2" type="object" value="337"/>
     <property name="piece_3" type="object" value="338"/>
@@ -618,6 +621,7 @@
     <property name="piece_6" type="object" value="341"/>
     <property name="right" type="object" value="344"/>
     <property name="right_arm_origin" type="object" value="345"/>
+    <property name="right_wall" type="object" value="331"/>
     <property name="target" type="object" value="346"/>
    </properties>
   </object>

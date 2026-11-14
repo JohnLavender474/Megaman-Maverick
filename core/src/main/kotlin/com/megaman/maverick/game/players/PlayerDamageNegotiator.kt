@@ -16,14 +16,16 @@ import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand
 import com.megaman.maverick.game.entities.bosses.D1000
 import com.megaman.maverick.game.entities.bosses.D1000Core
 import com.megaman.maverick.game.entities.contracts.IHazard
+import com.megaman.maverick.game.entities.contracts.IOwnable
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.enemies.HoverGunner
 import com.megaman.maverick.game.entities.enemies.Junkroid
 import com.megaman.maverick.game.entities.enemies.MetaDridler
 import com.megaman.maverick.game.entities.enemies.MetaWheelF
-import com.megaman.maverick.game.entities.contracts.IOwnable
-import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.explosions.BigAssMaverickRobotOrbExplosion
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.Laser
+import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.tags
@@ -36,8 +38,13 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
     private val services = player.services
 
     private val custom = objectMapOf(
-        BigAssMaverickRobotHand.TAG pairTo dmgNeg(2),
-        BigAssMaverickRobot.TAG pairTo dmgNeg(2),
+        BigAssMaverickRobotHand.TAG pairTo dmgNeg(1),
+        BigAssMaverickRobot.TAG pairTo dmgNeg(1),
+        BigAssMaverickRobotOrbExplosion.TAG pairTo dmgNeg(1),
+        BigAssMaverickRobotOrb.TAG pairTo dmgNeg {
+            val owner = (it as BigAssMaverickRobotOrb).owner
+            if (owner is BigAssMaverickRobot || owner is BigAssMaverickRobotHand) 1 else 3
+        },
         D1000.TAG pairTo dmgNeg(2),
         D1000Core.TAG pairTo dmgNeg(2),
         EnemyShot.TAG pairTo dmgNeg { (it as EnemyShot).kind.damage },

@@ -22,6 +22,8 @@ class HeadlessHarness {
 
     val regionMisses = LinkedHashSet<String>()
 
+    val assets: AssetManager
+
     private val application = HeadlessApplication(object : ApplicationAdapter() {})
 
     init {
@@ -30,7 +32,7 @@ class HeadlessHarness {
         Gdx.gl20 = gl
 
         val resolver = InternalFileHandleResolver()
-        val assets = AssetManager(resolver)
+        assets = AssetManager(resolver)
         assets.setLoader(TextureAtlas::class.java, RecordingAtlasLoader(resolver, regionMisses))
         TextureAsset.entries.forEach { assets.load(it.source, TextureAtlas::class.java) }
         assets.finishLoading()

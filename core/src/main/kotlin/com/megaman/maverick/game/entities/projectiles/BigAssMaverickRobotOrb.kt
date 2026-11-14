@@ -43,6 +43,7 @@ class BigAssMaverickRobotOrb(services: MegaServices) : AbstractProjectile(servic
 
     companion object {
         const val TAG = "BigAssMaverickRobotOrb"
+        const val POP_ON_BOSS_DEFEAT = "pop_on_boss_defeat"
         private const val BALL_SIZE = 1f
         private const val HIT_SIZE = 2f
         private const val HIT_DUR = 0.2f
@@ -62,8 +63,10 @@ class BigAssMaverickRobotOrb(services: MegaServices) : AbstractProjectile(servic
 
     private val moveDelay = Timer()
     private val trajectory = Vector2()
+    private var trajectorySupplier: ((Vector2, Vector2) -> Vector2)? = null
 
     private var active = true
+    private var popOnBossDefeat = true
 
     private var canBeHit = true
     private val hitTimer = Timer(HIT_DUR)
@@ -100,6 +103,13 @@ class BigAssMaverickRobotOrb(services: MegaServices) : AbstractProjectile(servic
         val impulse = spawnProps.getOrDefault(ConstKeys.IMPULSE, Vector2.Zero, Vector2::class)
         body.physics.velocity.set(impulse)
 
+        val supplier = spawnProps.get(ConstKeys.SUPPLIER)
+        trajectorySupplier = try {
+            supplier as ((Vector2, Vector2) -> Vector2)?
+        } catch (e: ClassCastException) {
+            throw InvalidOrbSupplierException(supplier!!, e)
+        }
+
         val delay = spawnProps.getOrDefault(ConstKeys.DELAY, 0f, Float::class)
         moveDelay.resetDuration(delay)
 
@@ -110,8 +120,10 @@ class BigAssMaverickRobotOrb(services: MegaServices) : AbstractProjectile(servic
         hidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
         active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
         canBeHit = spawnProps.getOrDefault(ConstKeys.CAN_BE_HIT, true, Boolean::class)
+        popOnBossDefeat = spawnProps.getOrDefault(POP_ON_BOSS_DEFEAT, true, Boolean::class)
 
         hitTimer.reset()
+        if (spawnProps.getOrDefault(ConstKeys.HIT, false, Boolean::class)) enterHitState()
 
         val drawingSection =
             spawnProps.getOrDefault(ConstKeys.SECTION, DrawingSection.PLAYGROUND, DrawingSection::class)
@@ -136,26 +148,43 @@ class BigAssMaverickRobotOrb(services: MegaServices) : AbstractProjectile(servic
         if (projectile.isAny(MoonScythe::class, Axe::class, PreciousGem::class)) getHit()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        trajectorySupplier = null
+    }
+
     override fun onBossDefeated(boss: AbstractBoss) {
         GameLogger.debug(TAG, "onBossDefeated(): boss=$boss")
+        if (!popOnBossDefeat) return
         getHit()
     }
 
+    internal fun pop() = getHit()
+
     private fun getHit() {
         GameLogger.debug(TAG, "onHit()")
-
-        hit = true
-        body.physics.velocity.setZero()
-
-        val center = body.getCenter()
-        body.setSize(HIT_SIZE * ConstVals.PPM)
-        body.setCenter(center)
-
+        enterHitState()
         requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false)
     }
 
+    private fun enterHitState() {
+        hit = true
+        body.physics.velocity.setZero()
+        val center = body.getCenter()
+        body.setSize(HIT_SIZE * ConstVals.PPM)
+        body.setCenter(center)
+    }
+
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        if (!trajectory.isZero) {
+        val supplier = trajectorySupplier
+        if (supplier != null) {
+            moveDelay.update(delta)
+            if (moveDelay.isJustFinished()) {
+                supplier.invoke(body.getCenter(), trajectory)
+                requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)
+            }
+            if (moveDelay.isFinished() && !hit) body.physics.velocity.set(trajectory)
+        } else if (!trajectory.isZero) {
             moveDelay.update(delta)
             if (moveDelay.isFinished() && !hit) body.physics.velocity.set(trajectory)
             if (moveDelay.isJustFinished()) requestToPlaySound(SoundAsset.BLAST_1_SOUND, false)

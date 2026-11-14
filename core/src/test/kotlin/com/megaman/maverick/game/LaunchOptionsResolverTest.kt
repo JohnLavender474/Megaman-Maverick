@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -354,6 +355,28 @@ class LaunchOptionsResolverTest : DescribeSpec({
 
         it("blocks a save with --healthTanks") {
             resolve(LaunchOptions(healthTanks = "A")).resolved!!.savesAllowed shouldBe false
+        }
+
+        it("blocks a save with --difficulty") {
+            resolve(LaunchOptions(difficulty = "hard")).resolved!!.savesAllowed shouldBe false
+        }
+    }
+
+    describe("--difficulty") {
+        it("is not set by default") {
+            resolve(LaunchOptions()).resolved!!.difficulty shouldBe null
+        }
+
+        it("matches the mode name without case") {
+            resolve(LaunchOptions(difficulty = "hard")).resolved!!.difficulty shouldBe DifficultyMode.HARD
+            resolve(LaunchOptions(difficulty = " Normal ")).resolved!!.difficulty shouldBe DifficultyMode.NORMAL
+        }
+
+        it("rejects other values") {
+            val result = resolve(LaunchOptions(difficulty = "easy"))
+            result.isValid shouldBe false
+            result.errors[0] shouldContain "Invalid --difficulty 'easy'"
+            result.errors[0] shouldContain "Allowed: NORMAL, HARD"
         }
     }
 

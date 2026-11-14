@@ -91,7 +91,8 @@ object DesktopLauncher {
             players = appArgs.players,
             mode = appArgs.mode,
             viewEdges = appArgs.viewEdges,
-            saveFile = appArgs.saveFile
+            saveFile = appArgs.saveFile,
+            difficulty = appArgs.difficulty
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
 
@@ -115,6 +116,7 @@ object DesktopLauncher {
         println("- Mode: " + appArgs.mode)
         println("- View Edges: " + appArgs.viewEdges)
         println("- Save File: " + appArgs.saveFile)
+        println("- Difficulty: " + appArgs.difficulty)
         println("- Interpolation: " + (appArgs.interpolation ?: DEFAULT_INTERPOLATION))
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Reset Bindings: " + appArgs.resetBindings)
@@ -455,6 +457,13 @@ object DesktopLauncher {
                 "own save file, for example test-save (a file under ~/.prefs/). A new name starts with no save."
         )
         var saveFile: String? = null
+
+        @Parameter(
+            names = ["--difficulty"],
+            description = "Dev option: the difficulty mode at start, normal or hard. A later save load or a choice " +
+                "in the difficulty screen replaces it. When given, the game does not write the save file."
+        )
+        var difficulty: String? = null
 
         @Parameter(
             names = ["--interpolation"],

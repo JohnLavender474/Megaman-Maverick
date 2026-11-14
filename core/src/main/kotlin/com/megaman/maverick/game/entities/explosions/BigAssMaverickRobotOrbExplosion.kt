@@ -10,9 +10,9 @@ import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
-import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.setToDirection
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -23,7 +23,6 @@ import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
-import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
@@ -42,7 +41,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
-import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.world.body.getCenter
 
 class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity,
     IAnimatedEntity, IDamagerEntity, IHazard, IDirectional {
@@ -51,6 +50,8 @@ class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(s
         const val TAG = "BigAssMaverickRobotOrbExplosion"
         private const val SHOCK_DUR = 0.5f
         private const val DISSIPATE_DUR = 0.3f
+        private const val PULSE_SIZE = 1f
+        private const val DISSIPATE_SIZE = 0.5f
         private var explosionRegion: TextureRegion? = null
         private var dissipateRegion: TextureRegion? = null
     }
@@ -61,6 +62,7 @@ class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(s
             body.direction = value
         }
 
+    private val outward = Vector2()
     private val shockTimer = Timer(SHOCK_DUR)
     private val dissipateTimer = Timer(DISSIPATE_DUR)
 
@@ -83,9 +85,10 @@ class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(s
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        body.setBottomCenterToPoint(spawn)
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
+        val base = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        val center = outward.setToDirection(direction).scl(body.getHeight() / 2f).add(base)
+        body.setCenter(center.x, center.y)
         shockTimer.reset()
         dissipateTimer.reset()
     }
@@ -114,7 +117,9 @@ class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(s
         )
         body.addFixture(damagerFixture)
         damagerFixture.drawingColor = Color.RED
-        debugShapes.add { damagerFixture}
+        debugShapes.add { damagerFixture }
+
+        body.preProcess.put(ConstKeys.DEFAULT) { damagerFixture.setActive(!shockTimer.isFinished()) }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
@@ -123,10 +128,16 @@ class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(s
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite()
-        sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putPreProcess { _, _ ->
-            sprite.setPosition(body.getPositionPoint(Position.BOTTOM_CENTER), Position.BOTTOM_CENTER)
+            val size = (if (shockTimer.isFinished()) DISSIPATE_SIZE else PULSE_SIZE) * ConstVals.PPM
+            sprite.setSize(size)
+            outward.setToDirection(direction)
+            val center = body.getCenter()
+            sprite.setCenter(
+                center.x + outward.x * (size - body.getHeight()) / 2f,
+                center.y + outward.y * (size - body.getHeight()) / 2f
+            )
             sprite.setOriginCenter()
             sprite.rotation = direction.rotation
         }
@@ -137,7 +148,7 @@ class BigAssMaverickRobotOrbExplosion(services: MegaServices) : MegaGameEntity(s
         val keySuppplier: (String?) -> String? = { if (shockTimer.isFinished()) "dissipate" else "pulse" }
         val animations = objectMapOf<String, IAnimation>(
             "dissipate" pairTo Animation(dissipateRegion!!, 1, 3, 0.1f, false),
-            "pulse" pairTo Animation(explosionRegion!!, 1, 3, 0.1f, true)
+            "pulse" pairTo Animation(explosionRegion!!, 1, 2, 0.1f, true)
         )
         val animator = Animator(keySuppplier, animations)
         return AnimationsComponent(this, animator)

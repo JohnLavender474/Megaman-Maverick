@@ -202,7 +202,7 @@ class PlayerRulesTest : DescribeSpec({
         }
 
         it("gives the table value for a tag in the table") {
-            PlayerDamageNegotiator(player).get(damager(BigAssMaverickRobot.TAG, EntityType.BOSS)) shouldBe 2
+            PlayerDamageNegotiator(player).get(damager(BigAssMaverickRobot.TAG, EntityType.BOSS)) shouldBe 1
         }
 
         it("gives 3 for an enemy or an explosion that is not in the table") {

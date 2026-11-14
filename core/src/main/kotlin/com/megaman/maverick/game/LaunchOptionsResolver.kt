@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
@@ -32,11 +33,12 @@ data class ResolvedLaunch(
     val players: Int = 1,
     val mode: GameMode = GameMode.SINGLE,
     val rules: SessionRules = mode.rules,
-    val saveFile: String = PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE
+    val saveFile: String = PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE,
+    val difficulty: DifficultyMode? = null
 ) {
 
     val savesAllowed: Boolean
-        get() = heartTanks.isEmpty() && healthTanks.isEmpty()
+        get() = heartTanks.isEmpty() && healthTanks.isEmpty() && difficulty == null
 }
 
 class LaunchResult(val resolved: ResolvedLaunch?, val errors: List<String>) {
@@ -73,6 +75,8 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val mode = parseMode(options.mode, players, errors)
     val viewEdges = parseViewEdges(options.viewEdges, players, mode.rules.viewEdges, errors)
     val saveFile = parseSaveFile(options.saveFile, errors)
+    val difficulty = options.difficulty?.takeIf { it.isNotBlank() }
+        ?.let { parseEnumOption<DifficultyMode>("--difficulty", it, errors) }
     if (level != null && players != null && players > 1 && PlayerCharacter.MEGAMAN !in level.characters)
         errors.add("--level $level plays only with 1 player (${level.characters.joinToString()}); remove --players.")
 
@@ -91,7 +95,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     return LaunchResult(
         ResolvedLaunch(
             start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players!!, mode,
-            mode.rules.copy(viewEdges = viewEdges), saveFile
+            mode.rules.copy(viewEdges = viewEdges), saveFile, difficulty
         ),
         errors
     )

@@ -1,10 +1,12 @@
 package com.megaman.maverick.game.entities.contracts
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.audio.SoundRequest
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
+import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
@@ -94,6 +96,11 @@ abstract class AbstractBoss(
         private val DEFAULT_BOSS_BATTLE_MUSIC = MusicAsset.MMX6_BOSS_FIGHT_MUSIC.name
     }
 
+    open val healthPhases = 1
+    open val healthBarRegions: Array<String> = gdxArrayOf(ConstKeys.STANDARD)
+    var healthPhase = 1
+        private set
+
     protected open class BossDamageNegotiator : IDamageNegotiator {
 
         override fun get(damager: IDamagerEntity) = BOSS_DMG_NEG[damager::class]?.get(damager) ?: 0
@@ -119,6 +126,10 @@ abstract class AbstractBoss(
         super.init()
         addComponent(SandReactionComponent(SandReaction.SURFACE))
         addComponent(bossComponent)
+        if (healthPhases < 1 || healthBarRegions.size != healthPhases) throw IllegalStateException(
+            "$TAG: ${this::class.simpleName} has healthPhases=$healthPhases and ${healthBarRegions.size} " +
+                "healthBarRegions; give one bar region per health phase"
+        )
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -138,6 +149,7 @@ abstract class AbstractBoss(
         bossComponent.phase = BossPhase.ENTRANCE
         defeated = false
 
+        healthPhase = 1
         defeatTimer.setToEnd()
         spawnDefeatOrbs = spawnProps.getOrDefault(ConstKeys.ORB, !mini, Boolean::class)
 
@@ -216,6 +228,24 @@ abstract class AbstractBoss(
             }
         }
     }
+
+    // TODO: depleteHealth (a cart or a crusher) sets the health and skips the phase roll-over, so it kills through all phases; no live boss room has either (item 077, branch 077a NOTES "Health phases")
+    override fun translateHealth(health: Int): Boolean {
+        val points = getHealthPoints()
+        val next = points.current + health
+        if (health >= 0 || next > points.min || healthPhase >= healthPhases) return points.translate(health)
+        healthPhase++
+        points.set(maxOf(points.max - (points.min - next), points.min + 1))
+        onHealthPhaseStart(healthPhase)
+        return true
+    }
+
+    override fun getHealthRatio(): Float {
+        val max = getMaxHealth()
+        return ((healthPhases - healthPhase) * max + getCurrentHealth()).toFloat() / (healthPhases * max).toFloat()
+    }
+
+    protected open fun onHealthPhaseStart(phase: Int) {}
 
     protected open fun shouldTriggerDefeat(health: Int) = health <= ConstVals.MIN_HEALTH && !defeated
 

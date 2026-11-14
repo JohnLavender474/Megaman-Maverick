@@ -1,11 +1,18 @@
 Bits.png
-size: 14, 74
+size: 14, 80
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 axe
   rotate: false
   xy: 3, 3
+  size: 8, 2
+  orig: 8, 2
+  offset: 0, 0
+  index: -1
+boss_phase_2
+  rotate: false
+  xy: 3, 75
   size: 8, 2
   orig: 8, 2
   offset: 0, 0
