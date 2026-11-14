@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`, `146`
-- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
+- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060d-protoman-slide-ladder` (active, 2026-11-14), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
 
 ## Goal
 
@@ -82,6 +82,8 @@ similar playable characters (Bass, Axl, Zero, etc.) in the future."
   `playerSlot!!` reads (item `148`) go in the work on `060` (owner); `060j` does them, because they move to the
   `MegaPlayer` receiver.
 
+- (2026-11-14, owner, at the `060d` start) Proto Man shares Megaman's slide and ladder rules.
+
 ## Proposed phases
 
 Not approved. One branch per phase. `060a` is a refactor only. `060b` to `060e` build the MM9/MM10 baseline to
@@ -119,7 +121,7 @@ credits are on the sheet). Keep the credits.
 
 ## Open questions
 
-- Does Proto Man share the slide and ladder rules (X6 shares the step routines)?
+- Answered 2026-11-14 (see Decisions): Does Proto Man share the slide and ladder rules (X6 shares the step routines)?
 - (`060h`) How does Proto Man use each special weapon: Mega's version with his poses, or his own variant? Many
   questions are open, so this phase comes late.
 - Answered 2026-11-12 (see Decisions): (`060f`) What is the Proto Sabre: its input, its slash kinds, and how much it shares with X's Z-sabre (`081e`,
