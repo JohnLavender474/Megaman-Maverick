@@ -1,11 +1,11 @@
 # 159: New hand and head art for the intro boss
 
-- Status: active
+- Status: done
 - Type: feature
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`
-- Branches: `mega-refactor-159a-intro-boss-art` (active, 2026-11-15)
+- Branches: `mega-refactor-159a-intro-boss-art` (merged, 2026-11-15)
 
 ## Goal
 
@@ -24,6 +24,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - 2026-11-15 (owner): merge target `master` directly. Claude drafts each frame from the existing frames and palette;
   the owner approves or redraws each one before it goes into the atlas. First branch scope: slam impact, clap pose,
   open palm, cracked head row.
+
+- 2026-11-15 (owner): the new fist frames are dropped: "I'm satisfied with the boss's fists as they are. Let's just
+  add a 'crack' to the defeated head's sprite." The item is done with `159a` (the cracked head). The fist drafts stay
+  in `temp/159a/` (not committed).
 
 ## Open questions
 

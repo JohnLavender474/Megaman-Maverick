@@ -94,7 +94,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `150` | idea | [Shared movement helpers for bosses and enemies](../items/150-boss-movement-helpers/ITEM.md) |
 | `157` | idea | [D-1000 overdrive on the shared boss health phases](../items/157-d1000-health-phases/ITEM.md) |
 | `158` | idea | [A shared lead-aim helper for bosses](../items/158-boss-lead-aim-helper/ITEM.md) |
-| `159` | active | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) (main) |
+| `159` | done | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) (main) |
 
 ## Gaps with no item
 

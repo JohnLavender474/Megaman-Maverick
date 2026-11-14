@@ -2354,3 +2354,13 @@ newest entry at the bottom.
   main checkout had 2 modified files of another session (`docs/CODE_STYLE.md`, `CullablesSystem.kt`); the owner
   chose to merge and leave them unstaged.
 
+## 2026-11-15 — mega-refactor-159a-intro-boss-art
+
+- Summary: squash of `159a`. The `BigAssMaverickRobot` death head (`Head/defeated`, the aghast face) gets cracks on
+  the dome and the left cheek, drawn in place in the frame file and the `Bosses3` atlas region (palette mode `P`
+  kept; 170 pixels inside the region, 0 outside). No code change. The owner dropped the planned fist frames (slam
+  impact, clap pose, open palm) during planning; the brief's decisions were void.
+- Contract check: `core:smokeTest` (462, 0 failures) and `lwjgl3:jar` pass on the branch; the atlas region script
+  check passes; owner play test passed.
+- Follow-up: item `159` done. No backlog or bug candidates.
+

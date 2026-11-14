@@ -86,7 +86,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `152` | idea | [Record the last Wily stage as completed at the ending](../items/152-record-final-stage-completed/ITEM.md) (main) |
 | `153` | idea | [A current-weapon icon on every player's HUD, and a HUD that fades when a player is behind it](../items/153-hud-weapon-icon-and-fade/ITEM.md) (main) |
 | `154` | dropped | [Spawners test the camera after it moves](../items/154-spawn-after-camera-move/ITEM.md) (main) |
-| `159` | active | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) |
+| `159` | done | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) |
 
 ## Gaps with no item
 
