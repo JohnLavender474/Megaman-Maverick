@@ -61,6 +61,21 @@ them.
   }
   ```
 
+- **A guard is its own statement.** Do not put a `?: return`, `?: continue` or `?: break` inside a loop header, a
+  condition or a call argument. Put the null check on its own line before the code that uses the value. Then the
+  jump target is easy to see, and a `return` in a lambda cannot end the outer function by mistake.
+
+  ```kotlin
+  entities.forEach { entity ->
+      val cullables = entity.getComponent(CullablesComponent::class)?.cullables?.values()
+      if (cullables == null) return@forEach
+      for (cullable in cullables) {
+          ...
+      }
+  }
+  // not: for (cullable in cullables ?: return) { ... }
+  ```
+
 ## Comments
 
 - **No comments in code**, except a `TODO` at the code for an edge case that a change knowingly accepts, or for a
