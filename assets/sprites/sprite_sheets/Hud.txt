@@ -1,0 +1,19 @@
+Hud.png
+size: 20, 11
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+protoman_buster
+  rotate: false
+  xy: 1, 1
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+protoman_sabre
+  rotate: false
+  xy: 11, 1
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1

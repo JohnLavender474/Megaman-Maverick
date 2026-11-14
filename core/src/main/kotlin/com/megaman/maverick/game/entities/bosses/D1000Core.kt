@@ -32,7 +32,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.utils.TickFrameFixtures
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.ConstKeys
@@ -380,7 +380,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         !hidden && abs(point.x - position.x) <= NEAR_X && abs(point.y - position.y) <= NEAR_Y
 
     override fun canBeDamagedBy(damager: IDamagerEntity) =
-        vulnerable && (hurtTime <= 0f || damager is MegamanXSabreSlash) && D1000.weaponDamage(damager) > 0
+        vulnerable && (hurtTime <= 0f || damager is PlayerSabreSlash) && D1000.weaponDamage(damager) > 0
 
     override fun canDamage(damageable: IDamageableEntity) = owner?.defeated != true
 
@@ -449,7 +449,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         val body = owner ?: throw IllegalStateException("$TAG took damage with no D1000 owner")
         services.audio.playSound(SoundAsset.ENEMY_DAMAGE_SOUND, false)
         body.takeEyeDamage(damager, D1000.weaponDamage(damager))
-        if (damager !is MegamanXSabreSlash) {
+        if (damager !is PlayerSabreSlash) {
             hurtTime = HURT_DUR
             return true
         }
@@ -690,7 +690,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         SHOT_TAGS.forEach { tag ->
             MegaGameEntities.getOfTag(tag).forEach { shot -> if (shotThreatens(shot)) return shot }
         }
-        MegaGameEntities.getOfTag(MegamanXSabreSlash.TAG).forEach { slash -> if (slashThreatens(slash)) return slash }
+        MegaGameEntities.getOfTag(PlayerSabreSlash.TAG).forEach { slash -> if (slashThreatens(slash)) return slash }
         return null
     }
 

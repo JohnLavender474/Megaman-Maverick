@@ -19,6 +19,7 @@ import com.megaman.maverick.game.players.ClimbParams
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.players.playerCanMove
 import com.megaman.maverick.game.players.playerClimbBehavior
+import com.megaman.maverick.game.players.setSideSpeed
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 

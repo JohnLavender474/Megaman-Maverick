@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.decorations.FallingPieceDef
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -87,6 +88,11 @@ class WoodCrate(services: MegaServices) : Block(services), IFireableEntity, ISpr
 
         private val DAMAGERS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(5),
+            ProtoBuster::class pairTo dmgNeg(15),
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) ConstVals.MAX_HEALTH else 20
+            },
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
                 if (it.fullyCharged) ConstVals.MAX_HEALTH else 15

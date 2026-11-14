@@ -45,7 +45,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlterator
 import com.megaman.maverick.game.world.body.*
 
-class Bullet(services: MegaServices) : AbstractProjectile(services), IDirectional {
+open class Bullet(services: MegaServices) : AbstractProjectile(services), IDirectional {
 
     companion object {
         const val TAG = "Bullet"
@@ -253,7 +253,7 @@ class Bullet(services: MegaServices) : AbstractProjectile(services), IDirectiona
         return component
     }
 
-    private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
+    protected open fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG)
         .animator(
             AnimatorBuilder()

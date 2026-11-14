@@ -58,6 +58,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import com.maverick.game.engine.common.enums.Direction
+import com.megaman.maverick.game.players.playerChargeStatus
 
 private const val DELTA = 0.05f
 private const val TOLERANCE = 0.001f
@@ -361,7 +362,7 @@ class MegamanXTest : DescribeSpec({
 
         it("shoots a half charged shot on the release after the half charge time") {
             hold(MegaControllerButton.B, MegamanXValues.TIME_TO_HALF_CHARGE + DELTA)
-            x.chargeStatus shouldBe MegaChargeStatus.HALF_CHARGED
+            x.playerChargeStatus shouldBe MegaChargeStatus.HALF_CHARGED
             step(MegaControllerButton.B to ButtonStatus.JUST_RELEASED)
 
             spawned.size shouldBe 2
@@ -390,7 +391,7 @@ class MegamanXTest : DescribeSpec({
             hold(MegaControllerButton.B, 1f)
             hurt()
             step(MegaControllerButton.B to ButtonStatus.PRESSED)
-            x.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+            x.playerChargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
         }
     }
 

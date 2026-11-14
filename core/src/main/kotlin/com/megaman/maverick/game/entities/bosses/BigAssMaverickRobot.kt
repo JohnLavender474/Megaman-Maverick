@@ -60,9 +60,11 @@ import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.invincible
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb.OrbColor
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.ProtoBuster
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -148,6 +150,11 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services), IAni
     override val damageNegotiator = StandardDamageNegotiator(
         objectMapOf(
             Bullet::class pairTo dmgNeg(1),
+            ProtoBuster::class pairTo dmgNeg(2),
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 3 else 2
+            },
             ChargedShot::class pairTo dmgNeg {
                 it as ChargedShot
                 if (it.fullyCharged) 3 else 2

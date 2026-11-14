@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.common.GameLogger
+import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.toOrderedSet
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Updatable
@@ -13,7 +14,9 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
+import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesSystem
+import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
@@ -21,6 +24,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.SoundAsset
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.currentHealth
 import com.megaman.maverick.game.entities.maxHealth
@@ -29,6 +33,8 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.protoman.Protoman
+import com.megaman.maverick.game.entities.protoman.ProtomanWeapon
 import com.megaman.maverick.game.entities.translateHealth
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
@@ -60,6 +66,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
 
     private lateinit var healthBar: BitsBar
     private lateinit var weaponBarSupplier: () -> BitsBar?
+    private val protomanIcons = ObjectMap<ProtomanWeapon, GameSprite>()
 
     private var initialized = false
 
@@ -116,6 +123,16 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             if (megaman !is Megaman) return@supplier null
             val current = megaman.currentWeapon
             if (current == MegamanWeapon.MEGA_BUSTER) null else weaponBars.get(current)
+        }
+
+        ProtomanWeapon.entries.forEach {
+            val icon = GameSprite(assMan.getTextureRegion(TextureAsset.HUD.source, it.hudRegion))
+            icon.setSize(ConstVals.STAT_BIT_WIDTH * ConstVals.PPM)
+            icon.setPosition(
+                ConstVals.HEALTH_BAR_X * ConstVals.PPM,
+                (ConstVals.STATS_BAR_Y - ConstVals.STAT_BIT_WIDTH - ConstVals.STAT_BIT_HEIGHT) * ConstVals.PPM
+            )
+            protomanIcons.put(it, icon)
         }
     }
 
@@ -342,5 +359,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
     override fun draw(drawer: Batch) {
         healthBar.draw(drawer)
         weaponBarSupplier()?.draw(drawer)
+        // TODO: only Proto Man shows a slot icon; an icon for every player and the HUD fade come with item 153
+        (player as? Protoman)?.let { protomanIcons[it.weapon].draw(drawer) }
     }
 }

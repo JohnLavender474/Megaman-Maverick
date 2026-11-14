@@ -14,6 +14,7 @@ import com.megaman.maverick.game.entities.hazards.Saw
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import kotlin.math.ceil
 import kotlin.reflect.KClass
 
@@ -23,6 +24,11 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamagerEntit
     companion object {
         private val LARGE_DMG_NEGS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(3),
+            ProtoBuster::class pairTo dmgNeg(3),
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 5 else 4
+            },
             Fireball::class pairTo dmgNeg(5),
             MagmaFlame::class pairTo dmgNeg(5),
             MagmaWave::class pairTo dmgNeg(5),
@@ -62,6 +68,11 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamagerEntit
 
         private val MEDIUM_DMG_NEGS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(5),
+            ProtoBuster::class pairTo dmgNeg(10),
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 15 else 12
+            },
             Fireball::class pairTo dmgNeg(15),
             MagmaFlame::class pairTo dmgNeg(15),
             MagmaWave::class pairTo dmgNeg(15),
@@ -101,6 +112,11 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamagerEntit
 
         private val SMALL_DMG_NEGS = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(15),
+            ProtoBuster::class pairTo dmgNeg(15),
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) ConstVals.MAX_HEALTH else 20
+            },
             Fireball::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MagmaFlame::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             MagmaWave::class pairTo dmgNeg(ConstVals.MAX_HEALTH),

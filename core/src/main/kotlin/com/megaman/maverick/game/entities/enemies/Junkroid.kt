@@ -44,10 +44,11 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.FallingPiece
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
+import com.megaman.maverick.game.entities.projectiles.ProtoBuster
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.hardMode
@@ -110,8 +111,12 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
         this,
         objectMapOf(
             Bullet::class pairTo dmgNeg(8),
+            ProtoBuster::class pairTo dmgNeg(15),
             ChargedShot::class pairTo dmgNeg { if ((it as ChargedShot).fullyCharged) 30 else 15 },
-            MegamanXSabreSlash::class pairTo dmgNeg(23)
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 23 else 16
+            }
         )
     )
 

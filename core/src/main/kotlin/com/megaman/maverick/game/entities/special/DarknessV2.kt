@@ -77,6 +77,7 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
             // TODO: this light names Megaman only, so it misses X and Protoman (item 030)
             Megaman::class pairTo { STANDARD_LIGHT_SOURCE },
             Bullet::class pairTo { STANDARD_LIGHT_SOURCE },
+            ProtoBuster::class pairTo { STANDARD_LIGHT_SOURCE },
             ChargedShot::class pairTo {
                 it as ChargedShot
                 if (it.fullyCharged) BRIGHTEST_LIGHT_SOURCE else BRIGHTER_LIGHT_SOURCE

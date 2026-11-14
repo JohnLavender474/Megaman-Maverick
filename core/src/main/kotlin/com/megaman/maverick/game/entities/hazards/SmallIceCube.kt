@@ -70,6 +70,7 @@ class SmallIceCube(services: MegaServices) : AbstractProjectile(services), IFree
         private val INSTANT_DEATH_ENTITIES = objectSetOf(
             Axe::class,
             Bullet::class,
+            ProtoBuster::class,
             // TODO: this set names Megaman only, so it misses X and Protoman (item 030)
             Megaman::class,
             SlashWave::class,

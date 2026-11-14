@@ -44,7 +44,7 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.decorations.FallingPiece
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -96,10 +96,18 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
 
     override lateinit var facing: Facing
 
-    override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this, objectMapOf(MegamanXSabreSlash::class pairTo dmgNeg(9)))
+    override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(
+        this,
+        objectMapOf(
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 9 else 6
+            }
+        )
+    )
 
     override fun canBeDamagedBy(damager: IDamagerEntity) =
-        super.canBeDamagedBy(damager) && damager is MegamanXSabreSlash
+        super.canBeDamagedBy(damager) && damager is PlayerSabreSlash
 
     private val animations = ObjectMap<String, IAnimation>()
     private val turnTimer = Timer(TURN_WAIT_DUR + TURN_FLASH_DUR)

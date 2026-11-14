@@ -27,7 +27,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megamanx.MegamanX
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
@@ -225,7 +225,7 @@ class D1000Rig(val arenaHeight: Float = RIG_ARENA_HEIGHT, val arenaWidth: Float 
         ticks(0.6f)
     }
 
-    fun sabre() = MegamanXSabreSlash(services)
+    fun sabre() = PlayerSabreSlash(services)
 
     fun bullet(): Bullet {
         val shot = MegaEntityFactory.fetch(Bullet::class)!!

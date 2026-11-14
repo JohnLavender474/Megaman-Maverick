@@ -9,6 +9,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.interfaces.IActivatable
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -18,6 +19,7 @@ import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
+import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
@@ -44,6 +46,10 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
     override var owner: MegaGameEntity? = null
     override var on = true
 
+    private val lifeTimer = Timer(0f)
+    private var timed = false
+    private var collides = true
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
@@ -51,6 +57,11 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(UpdatablesComponent({ delta ->
+            if (!timed) return@UpdatablesComponent
+            lifeTimer.update(delta)
+            if (lifeTimer.isFinished()) destroy()
+        }))
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -63,6 +74,10 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         on = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
 
         owner = spawnProps.get(ConstKeys.OWNER, MegaGameEntity::class)
+        collides = spawnProps.getOrDefault(ConstKeys.COLLIDE, true, Boolean::class)
+        val duration = spawnProps.get(ConstKeys.DURATION, Float::class)
+        timed = duration != null
+        if (duration != null) lifeTimer.resetDuration(duration)
     }
 
     override fun onDestroy() {
@@ -75,7 +90,7 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         body.setSize(0.25f * ConstVals.PPM)
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.forEachFixture { it.setActive(on) }
+            body.forEachFixture { it.setActive(on && collides) }
         }
 
         return BodyComponentCreator.create(this, body, BodyFixtureDef.of(FixtureType.EXPLOSION))

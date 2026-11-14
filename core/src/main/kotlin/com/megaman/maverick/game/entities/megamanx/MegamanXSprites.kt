@@ -53,7 +53,7 @@ internal fun MegamanX.animationKey(priorKey: String? = null): String {
     }
     return when {
         damaged || stunned -> if (bodyOverGround) "damaged" else "air_damaged"
-        sabre.active -> sabre.kind!!.bodyRegion
+        sabre.active -> sabre.move!!.bodyRegion
         isBehaviorActive(BehaviorType.CLIMBING) -> when {
             ladderPose == LadderPose.CLIMB_DOWN -> "climb_start"
             buster.shooting -> "climb_shoot"

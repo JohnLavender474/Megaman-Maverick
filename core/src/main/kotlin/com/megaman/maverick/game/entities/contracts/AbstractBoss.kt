@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.state.BossComponent
 import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.state.SandReactionComponent
@@ -63,6 +64,11 @@ abstract class AbstractBoss(
 
         protected val BOSS_DMG_NEG = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(1),
+            ProtoBuster::class pairTo dmgNeg(1),
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 2 else 1
+            },
             Fireball::class pairTo dmgNeg(1),
             MagmaFlame::class pairTo dmgNeg(1),
             MagmaWave::class pairTo dmgNeg(1),

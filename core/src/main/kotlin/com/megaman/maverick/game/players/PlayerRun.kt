@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.players
 
+import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.components.require
@@ -81,4 +82,11 @@ fun playerRunButton(
         },
         onReleaseContinued = { if (!player.input.isPressed(otherButton)) onNotRunning() }
     )
+}
+
+fun MegaPlayer.setSideSpeed(speed: Float) = when (direction) {
+    Direction.UP -> body.physics.velocity.x = speed
+    Direction.DOWN -> body.physics.velocity.x = -speed
+    Direction.LEFT -> body.physics.velocity.y = speed
+    Direction.RIGHT -> body.physics.velocity.y = -speed
 }

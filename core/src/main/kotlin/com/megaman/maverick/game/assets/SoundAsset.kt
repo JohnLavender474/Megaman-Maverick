@@ -69,6 +69,7 @@ enum class SoundAsset(
     WIND_1_SOUND("wind_1.ogg", 3f),
     WHIP_SOUND("whip.ogg", 1f),
     WHIP_V2_SOUND("whip_v2.ogg", 1f),
+    PROTO_SABRE_SOUND("proto_sabre.ogg", 1f),
     ASTEROID_EXPLODE_SOUND("asteroid_explode.ogg", 0.5f),
     SOLAR_BLAZE_SOUND("solar_blaze.ogg", 1f),
     BRUSH_SOUND("brush.ogg", 1f),

@@ -35,7 +35,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrameFixtures
 import com.megaman.maverick.game.entities.utils.TickFrames
@@ -124,7 +124,7 @@ class D1000(services: MegaServices) :
         fun weaponDamage(damager: IDamagerEntity) = when (damager) {
             is Bullet -> BULLET_DAMAGE
             is ChargedShot -> if (damager.fullyCharged) FULL_CHARGE_DAMAGE else HALF_CHARGE_DAMAGE
-            is MegamanXSabreSlash -> SABRE_DAMAGE
+            is PlayerSabreSlash -> SABRE_DAMAGE
             else -> 0
         }
 
@@ -204,8 +204,8 @@ class D1000(services: MegaServices) :
         override fun get(damager: IDamagerEntity) = when {
             damager is ChargedShotExplosion -> 0
             damager is ChargedShot && !downed -> SHIELDED_CHARGE_DAMAGE
-            damager is MegamanXSabreSlash && !downed -> SHIELDED_SABRE_DAMAGE
-            damager is Bullet || damager is ChargedShot || damager is MegamanXSabreSlash -> weaponDamage(damager)
+            damager is PlayerSabreSlash && !downed -> SHIELDED_SABRE_DAMAGE
+            damager is Bullet || damager is ChargedShot || damager is PlayerSabreSlash -> weaponDamage(damager)
             else -> super.get(damager)
         }
     }

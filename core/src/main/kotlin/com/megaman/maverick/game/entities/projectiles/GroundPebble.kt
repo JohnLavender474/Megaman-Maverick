@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Size
@@ -66,6 +67,8 @@ class GroundPebble(services: MegaServices) : AbstractHealthEntity(services, dmgD
     override val damageNegotiator = CustomMapDamageNegotiator(
         objectMapOf(
             Bullet::class pairTo dmgNeg(15),
+            ProtoBuster::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            PlayerSabreSlash::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShot::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ChargedShotExplosion::class pairTo dmgNeg {
                 it as ChargedShotExplosion

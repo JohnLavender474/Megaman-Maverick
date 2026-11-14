@@ -12,7 +12,7 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.D1000Shockwave
@@ -470,7 +470,7 @@ class D1000AttacksTest : DescribeSpec({
         it("takes the sabre slash and every buster shot while it is open") {
             rig.startFight()
             rig.ticks(0.35f)
-            rig.core().canBeDamagedBy(MegamanXSabreSlash(rig.services)) shouldBe true
+            rig.core().canBeDamagedBy(PlayerSabreSlash(rig.services)) shouldBe true
             rig.core().canBeDamagedBy(Bullet(rig.services)) shouldBe true
             rig.core().canBeDamagedBy(rig.halfCharge()) shouldBe true
         }

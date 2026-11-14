@@ -328,7 +328,7 @@ items.WeaponEnergyBulb: WeaponEnergyBulb
 megaman.Megaman: Megaman
 megaman.sprites.MegamanTrailSpriteV2: MegamanTrailingSprite_v2
 megamanx.MegamanX: MegamanX
-megamanx.MegamanXSabreSlash: MegamanXSabreSlash
+players.PlayerSabreSlash: PlayerSabreSlash
 projectiles.ArigockBall: ArigockBall
 projectiles.Asteroid: Asteroid
 projectiles.Axe: Axe
@@ -378,6 +378,7 @@ projectiles.PreciousGemBomb: PreciousGemBomb
 projectiles.PreciousGemCluster: PreciousGemCluster
 projectiles.PreciousGem: PreciousGem
 projectiles.PreciousShard: PreciousShard
+projectiles.ProtoBuster: ProtoBuster
 projectiles.PurpleBlast: PurpleBlast
 projectiles.ReactorManProjectile: ReactorManProjectile
 projectiles.ReactorMonkeyBall: ReactorMonkeyBall

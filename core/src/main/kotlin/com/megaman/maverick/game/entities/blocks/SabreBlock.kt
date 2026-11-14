@@ -33,7 +33,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.megaman.maverick.game.entities.explosions.Explosion
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
@@ -58,7 +58,15 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
     override val invincible: Boolean
         get() = !damageTimer.isFinished()
 
-    private val negotiator = SelfSizeDamageNegotiator(this, objectMapOf(MegamanXSabreSlash::class pairTo dmgNeg(9)))
+    private val negotiator = SelfSizeDamageNegotiator(
+        this,
+        objectMapOf(
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 9 else 6
+            }
+        )
+    )
     private val damageTimer = Timer(DAMAGE_DUR)
     private lateinit var damageableFixture: Fixture
     private var health = ConstVals.MAX_HEALTH
@@ -83,7 +91,7 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
     }
 
     override fun canBeDamagedBy(damager: IDamagerEntity) =
-        !invincible && damager is MegamanXSabreSlash
+        !invincible && damager is PlayerSabreSlash
 
     override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
         if (!canBeDamagedBy(damager)) return false

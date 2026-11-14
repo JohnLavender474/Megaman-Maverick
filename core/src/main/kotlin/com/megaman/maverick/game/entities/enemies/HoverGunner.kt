@@ -49,10 +49,11 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.FallingPiece
 import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.damage.IDamagerEntity
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
+import com.megaman.maverick.game.entities.projectiles.ProtoBuster
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
@@ -170,8 +171,12 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         this,
         objectMapOf(
             Bullet::class pairTo dmgNeg(18),
+            ProtoBuster::class pairTo dmgNeg(30),
             ChargedShot::class pairTo dmgNeg(30),
-            MegamanXSabreSlash::class pairTo dmgNeg(30)
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 30 else 20
+            }
         )
     )
 

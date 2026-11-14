@@ -21,7 +21,6 @@ import com.megaman.maverick.game.entities.megaman.components.clearChargeWhenHurt
 import com.megaman.maverick.game.entities.megaman.components.defineWeaponChargeComponent
 import com.megaman.maverick.game.entities.megaman.components.fullyCharged
 import com.megaman.maverick.game.entities.megaman.components.halfCharged
-import com.megaman.maverick.game.entities.megaman.components.stopCharging
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -42,6 +41,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
+import com.megaman.maverick.game.players.stopCharging
 
 private const val HALF = MegamanValues.TIME_TO_HALFWAY_CHARGED
 private const val FULL = MegamanValues.TIME_TO_FULLY_CHARGED

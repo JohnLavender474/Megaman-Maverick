@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megamanx
 
 import com.maverick.game.engine.behaviors.BehaviorsComponent
+import com.megaman.maverick.game.players.SabreState
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.entities.input
@@ -8,6 +9,7 @@ import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
+import com.megaman.maverick.game.players.setSideSpeed
 import com.megaman.maverick.game.players.AirDashParams
 import com.megaman.maverick.game.players.JumpParams
 import com.megaman.maverick.game.players.WallSlideParams
@@ -165,20 +167,13 @@ internal fun MegamanX.setUpSpeed(speed: Float) = when (direction) {
     Direction.RIGHT -> body.physics.velocity.x = speed
 }
 
-internal fun MegamanX.setSideSpeed(speed: Float) = when (direction) {
-    Direction.UP -> body.physics.velocity.x = speed
-    Direction.DOWN -> body.physics.velocity.x = -speed
-    Direction.LEFT -> body.physics.velocity.y = speed
-    Direction.RIGHT -> body.physics.velocity.y = -speed
-}
-
 internal fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
     this,
     WallSlideParams(
         blocked = { kickLocked },
         allowedWhileJumping = { wallDelayTimer.isFinished() },
         holdsWithoutInput = {
-            (!wallGrabTimer.isFinished() || sabre.kind == SabreKind.WALL) && touchedWallSide() != null
+            (!wallGrabTimer.isFinished() || sabre.state == SabreState.WALL) && touchedWallSide() != null
         },
         onStart = {
             wallGrabTimer.reset()
@@ -189,7 +184,7 @@ internal fun MegamanX.wallSlideBehavior() = playerWallSlideBehavior(
             wallGrabTimer.update(delta)
             body.physics.gravityOn = false
             body.physics.velocity.setZero()
-            if (wallGrabTimer.isFinished() && sabre.kind != SabreKind.WALL)
+            if (wallGrabTimer.isFinished() && sabre.state != SabreState.WALL)
                 setUpSpeed(-MegamanXValues.WALL_SLIDE_SPEED * ConstVals.PPM)
         },
         onEnd = {
@@ -210,7 +205,7 @@ internal fun MegamanX.jumpBehavior() = playerJumpBehavior(
         canStart = { true },
         blocked = {
             isBehaviorActive(BehaviorType.AIR_DASHING) ||
-                (sabre.kind == SabreKind.FLOOR && sabre.time < MegamanXValues.SABRE_FLOOR_JUMP_CANCEL_TIME)
+                (sabre.state == SabreState.FLOOR && sabre.time < MegamanXValues.SABRE_FLOOR_JUMP_CANCEL_TIME)
         },
         jumpSpeed = { direction.upSign() * MegamanXValues.JUMP_SPEED },
         wallJumpSpeed = { direction.upSign() * MegamanXValues.WALL_KICK_SPEED },
@@ -219,7 +214,7 @@ internal fun MegamanX.jumpBehavior() = playerJumpBehavior(
             isBehaviorActive(BehaviorType.WALL_SLIDING) ||
                 (!bodyOverGround && touchedWallSide() != null && wallDelayTimer.isFinished())
         },
-        ignoreRelease = { kickLocked || sabre.kind == SabreKind.AIR },
+        ignoreRelease = { kickLocked || sabre.state == SabreState.AIR },
         startPressed = { input.isJustPressed(MegaControllerButton.A) || jumpPressKept },
         downBlocksGroundJump = false,
         endKeepsFall = true,

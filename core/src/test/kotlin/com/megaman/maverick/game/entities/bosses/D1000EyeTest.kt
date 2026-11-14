@@ -11,8 +11,7 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.megamanx.MegamanXSabreSlash
-import com.megaman.maverick.game.entities.megamanx.SabreKind
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.state.BossPhase
@@ -308,8 +307,8 @@ class D1000EyeTest : DescribeSpec({
             idleFight()
             rig.placeX(HOME_TILES_X - 1.5f, HOME_TILES_Y - 1.5f)
             val start = coreCenter()
-            MegaEntityFactory.fetch(MegamanXSabreSlash::class)!!
-                .spawn(props(ConstKeys.OWNER pairTo rig.x, ConstKeys.TYPE pairTo SabreKind.AIR))
+            MegaEntityFactory.fetch(PlayerSabreSlash::class)!!
+                .spawn(props(ConstKeys.OWNER pairTo rig.x, ConstKeys.PARENT pairTo rig.x.sabre))
             seedRoll(low = true)
             rig.ticks(0.25f)
             val moved = coreCenter().sub(start)

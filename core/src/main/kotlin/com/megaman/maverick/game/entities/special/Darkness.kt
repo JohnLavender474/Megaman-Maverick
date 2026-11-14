@@ -71,6 +71,7 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
 
         private val lightUpEntities = objectMapOf<KClass<out IBodyEntity>, (IBodyEntity) -> LightEventDef>(
             Bullet::class pairTo standardProjLightDef,
+            ProtoBuster::class pairTo standardProjLightDef,
             ChargedShot::class pairTo brighterProjLightDef,
             ArigockBall::class pairTo standardProjLightDef,
             CactusMissile::class pairTo brighterProjLightDef,

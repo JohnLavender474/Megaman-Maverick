@@ -70,8 +70,8 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             body.direction = value
         }
 
-    internal val buster = MegamanXBuster(this)
-    internal val sabre = MegamanXSabre(this)
+    internal val buster = PlayerBuster(this, MEGAMAN_X_BUSTER)
+    internal val sabre = PlayerSabre(this, megamanXSabreParams(this))
 
     internal var airDashUsed = false
     internal var dashSpeedInAir = false
@@ -348,6 +348,12 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         return component
     }
 
+    private fun shoot(status: MegaChargeStatus) = buster.shoot(
+        status,
+        crouched = isBehaviorActive(BehaviorType.CROUCHING),
+        climbing = isBehaviorActive(BehaviorType.CLIMBING)
+    )
+
     override fun defineControllerComponent(): ControllerComponent {
         fun side(facing: Facing) = ButtonActuator(
             onJustPressed = {
@@ -361,19 +367,22 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
 
         val attack = ButtonActuator(
             onJustPressed = {
-                if (input.isPressed(MegaControllerButton.UP) && sabre.canStart()) sabre.start()
+                if (input.isPressed(MegaControllerButton.UP) && sabre.canStart()) {
+                    stopCharging()
+                    sabre.start()
+                }
                 when {
                     sabre.active -> sabre.pressHeld = true
-                    canAttack() -> buster.shoot(MegaChargeStatus.NOT_CHARGED)
+                    playerCanAttack -> shoot(MegaChargeStatus.NOT_CHARGED)
                 }
             },
             onPressContinued = { delta ->
-                if (canAttack() && !sabre.pressHeld) require(WeaponChargeComponent::class).update(delta)
+                if (playerCanAttack && !sabre.pressHeld) require(WeaponChargeComponent::class).update(delta)
                 else stopCharging()
             },
             onJustReleased = {
-                val status = chargeStatus
-                if (canAttack() && status != MegaChargeStatus.NOT_CHARGED) buster.shoot(status)
+                val status = playerChargeStatus
+                if (playerCanAttack && status != MegaChargeStatus.NOT_CHARGED) shoot(status)
                 sabre.pressHeld = false
                 stopCharging()
             },
@@ -393,7 +402,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         var flashTime = 0f
         component.putPreProcess(MEGAMAN_X_SPRITE_KEY) { delta, player ->
             player.setSize(MegamanXValues.SPRITE_SIZE * ConstVals.PPM, MegamanXValues.SPRITE_SIZE * ConstVals.PPM)
-            val stripFacesLeft = sabre.kind?.stripFacesLeft ?: (isBehaviorActive(BehaviorType.WALL_SLIDING) && !kickLocked)
+            val stripFacesLeft = sabre.move?.stripFacesLeft ?: (isBehaviorActive(BehaviorType.WALL_SLIDING) && !kickLocked)
             player.setFlip(if (stripFacesLeft) facing == Facing.RIGHT else facing == Facing.LEFT, false)
             player.setOriginCenter()
             player.rotation = direction.rotation
@@ -401,7 +410,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             player.setPosition(body.getPositionPoint(position), position)
 
             // TODO: the charge shows as a tint flash in code, because the 1LMX sheet has no charge frames (item 081)
-            val tint = when (chargeStatus) {
+            val tint = when (playerChargeStatus) {
                 MegaChargeStatus.FULLY_CHARGED -> FULL_CHARGE_TINT
                 MegaChargeStatus.HALF_CHARGED -> HALF_CHARGE_TINT
                 MegaChargeStatus.NOT_CHARGED -> null
@@ -473,7 +482,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             "climb_finish",
             Animation(frames("climb_finish", 2), MegamanXValues.CLIMB_FINISH_TIME / 2f, false)
         )
-        SabreKind.entries.forEach { animations.put(it.bodyRegion, Animation(frames(it.bodyRegion, it.stripFrames), 1f)) }
+        MegamanXSabreMoves.ALL.forEach { animations.put(it.bodyRegion, Animation(frames(it.bodyRegion, it.stripFrames), 1f)) }
 
         val animator = Animator(
             keySupplier = { priorKey -> animationKey(priorKey) },
@@ -484,7 +493,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                 ) animations[currentKey]?.getCurrentTime()?.let { animations[nextKey]?.setCurrentTime(it) }
             },
             shouldUpdateAnimationPredicate = { key, animation, _ ->
-                val kind = sabre.kind
+                val kind = sabre.move
                 when {
                     roomTransitionPaused || (services.levelState.roomTransition && key != "run") -> false
                     key == "climb" && body.physics.velocity.isZero -> false

@@ -17,6 +17,10 @@ val MegaPlayer.playerCanMove: Boolean
         return !movementLocks.isLocked() && !stun.stunned && !damaged && !freeze.frozen
     }
 
+val MegaPlayer.playerCanAttack: Boolean
+    get() = inPlay && !stunned && !damaged && !teleporting && !frozen &&
+        !services.gameCamera.rotating && !services.levelState.roomTransition
+
 // TODO: the owner chain of rootPlayer goes 2 levels deep (item 030)
 fun IPlayer.playerAllowsDamageFrom(damager: IDamagerEntity, rules: SessionRules): Boolean {
     if (!existenceState.liveAfterUpdate) return false

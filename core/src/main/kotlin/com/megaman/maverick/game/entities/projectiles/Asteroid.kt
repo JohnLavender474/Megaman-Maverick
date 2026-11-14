@@ -58,6 +58,7 @@ class Asteroid(services: MegaServices) : AbstractProjectile(services), IOwnable<
 
         private val HIT_PROJS = objectSetOf<KClass<out IProjectileEntity>>(
             Bullet::class,
+            ProtoBuster::class,
             Asteroid::class,
             SharpStar::class,
             MoonScythe::class,

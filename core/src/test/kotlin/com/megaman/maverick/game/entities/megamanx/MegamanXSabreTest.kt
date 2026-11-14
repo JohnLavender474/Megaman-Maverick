@@ -36,6 +36,8 @@ import com.megaman.maverick.game.entities.blocks.SabreBlock
 import com.megaman.maverick.game.entities.bosses.D1000
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.enemies.Junkroid
+import com.megaman.maverick.game.entities.projectiles.ProtoBuster
+import com.megaman.maverick.game.entities.enemies.HoverGunner
 import com.megaman.maverick.game.entities.enemies.MetaWheelF
 import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -57,11 +59,14 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import java.io.File
 import javax.imageio.ImageIO
+import com.megaman.maverick.game.players.playerChargeStatus
+import com.megaman.maverick.game.players.SabreState
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 
 private const val DELTA = 0.01f
 private const val TOLERANCE = 0.001f
 
-private fun MegamanXSabreSlash.hitBox() =
+private fun PlayerSabreSlash.hitBox() =
     body.getFixtures(com.badlogic.gdx.utils.Array<com.maverick.game.engine.world.body.IFixture>(), FixtureType.DAMAGER).first() as Fixture
 
 class MegamanXSabreTest : DescribeSpec({
@@ -113,7 +118,7 @@ class MegamanXSabreTest : DescribeSpec({
         x.takeDamageFrom(MetaWheelF(services).also { it.init() }) shouldBe true
     }
 
-    fun slashes() = spawned.count { it.first is MegamanXSabreSlash }
+    fun slashes() = spawned.count { it.first is PlayerSabreSlash }
     fun bullets() = spawned.count { it.first is Bullet }
     fun chargedShots() = spawned.count { it.first is ChargedShot }
 
@@ -193,7 +198,7 @@ class MegamanXSabreTest : DescribeSpec({
         it("slashes on B with UP held, and fires no shot") {
             slashUp()
 
-            x.sabre.kind shouldBe SabreKind.FLOOR
+            x.sabre.state shouldBe SabreState.FLOOR
             slashes() shouldBe 1
             bullets() shouldBe 0
             spawned[0].second.get(ConstKeys.OWNER) shouldBe x
@@ -210,7 +215,7 @@ class MegamanXSabreTest : DescribeSpec({
         it("does not charge while the slash press is held, and its release fires nothing") {
             slashUp()
             ticks(MegamanXValues.TIME_TO_FULL_CHARGE + DELTA, MegaControllerButton.B to ButtonStatus.PRESSED)
-            x.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+            x.playerChargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
 
             hold(MegaControllerButton.B to ButtonStatus.JUST_RELEASED)
             tick()
@@ -228,7 +233,7 @@ class MegamanXSabreTest : DescribeSpec({
             tick()
             ticks(MegamanXValues.TIME_TO_FULL_CHARGE + DELTA, MegaControllerButton.B to ButtonStatus.PRESSED)
 
-            x.chargeStatus shouldBe MegaChargeStatus.FULLY_CHARGED
+            x.playerChargeStatus shouldBe MegaChargeStatus.FULLY_CHARGED
         }
 
         it("forgets the slash press when B is up, also with no release frame") {
@@ -266,7 +271,7 @@ class MegamanXSabreTest : DescribeSpec({
             overGround = false
             slashUp()
 
-            x.sabre.kind shouldBe SabreKind.AIR
+            x.sabre.state shouldBe SabreState.AIR
         }
 
         it("is a wall slash on a wall slide") {
@@ -277,7 +282,7 @@ class MegamanXSabreTest : DescribeSpec({
             )
             tick()
 
-            x.sabre.kind shouldBe SabreKind.WALL
+            x.sabre.state shouldBe SabreState.WALL
         }
 
         it("does not start during the wall grab") {
@@ -310,7 +315,7 @@ class MegamanXSabreTest : DescribeSpec({
         it("ends the ground dash and starts a floor slash") {
             dashThenSlash(0.2f)
 
-            x.sabre.kind shouldBe SabreKind.FLOOR
+            x.sabre.state shouldBe SabreState.FLOOR
             active(BehaviorType.GROUND_DASHING) shouldBe false
             x.running shouldBe false
             body.physics.velocity.x shouldBe 0f
@@ -320,7 +325,7 @@ class MegamanXSabreTest : DescribeSpec({
         it("ends the dash end slide and starts a floor slash") {
             dashThenSlash(MegamanXValues.DASH_START_DELAY + MegamanXValues.DASH_TIME + 2 * DELTA)
 
-            x.sabre.kind shouldBe SabreKind.FLOOR
+            x.sabre.state shouldBe SabreState.FLOOR
             active(BehaviorType.GROUND_DASHING) shouldBe false
             body.physics.velocity.x shouldBe 0f
             bullets() shouldBe 0
@@ -338,7 +343,7 @@ class MegamanXSabreTest : DescribeSpec({
         it("ends after the floor frames, and destroys the slash") {
             slashUp()
             val slash = x.sabre.slash!!
-            ticks(SabreKind.FLOOR.duration + DELTA)
+            ticks(MegamanXSabreMoves.FLOOR.duration + DELTA)
 
             x.sabre.active shouldBe false
             x.sabre.slash shouldBe null
@@ -400,10 +405,10 @@ class MegamanXSabreTest : DescribeSpec({
         }
 
         it("shows the body frames 1 to 7 by time") {
-            SabreKind.FLOOR.frameAt(0f) shouldBe 1
-            SabreKind.FLOOR.frameAt(0.06f) shouldBe 2
-            SabreKind.FLOOR.frameAt(0.17f) shouldBe 5
-            SabreKind.FLOOR.frameAt(SabreKind.FLOOR.duration) shouldBe 7
+            MegamanXSabreMoves.FLOOR.frameAt(0f) shouldBe 1
+            MegamanXSabreMoves.FLOOR.frameAt(0.06f) shouldBe 2
+            MegamanXSabreMoves.FLOOR.frameAt(0.17f) shouldBe 5
+            MegamanXSabreMoves.FLOOR.frameAt(MegamanXSabreMoves.FLOOR.duration) shouldBe 7
         }
     }
 
@@ -415,7 +420,7 @@ class MegamanXSabreTest : DescribeSpec({
             tick()
 
             x.facing shouldBe Facing.LEFT
-            x.sabre.kind shouldBe SabreKind.AIR
+            x.sabre.state shouldBe SabreState.AIR
         }
 
         it("does not cut the rise on a jump release") {
@@ -427,7 +432,7 @@ class MegamanXSabreTest : DescribeSpec({
                 MegaControllerButton.B to ButtonStatus.JUST_PRESSED
             )
             tick()
-            x.sabre.kind shouldBe SabreKind.AIR
+            x.sabre.state shouldBe SabreState.AIR
             hold(MegaControllerButton.A to ButtonStatus.JUST_RELEASED)
             tick()
 
@@ -461,7 +466,7 @@ class MegamanXSabreTest : DescribeSpec({
 
             active(BehaviorType.WALL_SLIDING) shouldBe true
             body.physics.velocity.y shouldBe 0f
-            x.sabre.kind shouldBe SabreKind.WALL
+            x.sabre.state shouldBe SabreState.WALL
         }
 
         it("ends on a wall kick") {
@@ -476,9 +481,9 @@ class MegamanXSabreTest : DescribeSpec({
     }
 
     describe("the kind switch") {
-        fun sameSlash(slash: MegamanXSabreSlash, kind: SabreKind) {
+        fun sameSlash(slash: PlayerSabreSlash, state: SabreState) {
             x.sabre.slash shouldBe slash
-            slash.kind shouldBe kind
+            x.sabre.state shouldBe state
             slashes() shouldBe 1
             verify(exactly = 0) { engine.destroy(slash) }
         }
@@ -491,9 +496,9 @@ class MegamanXSabreTest : DescribeSpec({
             overGround = false
             tick()
 
-            x.sabre.kind shouldBe SabreKind.AIR
+            x.sabre.state shouldBe SabreState.AIR
             (x.sabre.frame in 4..5) shouldBe true
-            sameSlash(slash, SabreKind.AIR)
+            sameSlash(slash, SabreState.AIR)
         }
 
         it("turns an air slash into a floor slash on a landing, and stops X") {
@@ -510,10 +515,10 @@ class MegamanXSabreTest : DescribeSpec({
             hold(MegaControllerButton.RIGHT to ButtonStatus.PRESSED)
             tick()
 
-            x.sabre.kind shouldBe SabreKind.FLOOR
+            x.sabre.state shouldBe SabreState.FLOOR
             x.running shouldBe false
             body.physics.velocity.x shouldBe 0f
-            sameSlash(slash, SabreKind.FLOOR)
+            sameSlash(slash, SabreState.FLOOR)
         }
 
         it("turns an air slash into a wall slash on a wall slide") {
@@ -525,8 +530,8 @@ class MegamanXSabreTest : DescribeSpec({
             tick()
 
             active(BehaviorType.WALL_SLIDING) shouldBe true
-            x.sabre.kind shouldBe SabreKind.WALL
-            sameSlash(slash, SabreKind.WALL)
+            x.sabre.state shouldBe SabreState.WALL
+            sameSlash(slash, SabreState.WALL)
         }
 
         it("turns a wall slash into an air slash when the wall slide ends") {
@@ -542,31 +547,31 @@ class MegamanXSabreTest : DescribeSpec({
             tick()
 
             active(BehaviorType.WALL_SLIDING) shouldBe false
-            x.sabre.kind shouldBe SabreKind.AIR
-            sameSlash(slash, SabreKind.AIR)
+            x.sabre.state shouldBe SabreState.AIR
+            sameSlash(slash, SabreState.AIR)
         }
 
         it("keeps the largest arc as the largest arc") {
-            SabreKind.FLOOR.frameAt(SabreKind.AIR.timeIn(SabreKind.FLOOR, 0.205f)) shouldBe 4
-            SabreKind.AIR.frameAt(SabreKind.FLOOR.timeIn(SabreKind.AIR, 0.14f)) shouldBe 5
+            MegamanXSabreMoves.FLOOR.frameAt(MegamanXSabreMoves.AIR.timeIn(MegamanXSabreMoves.FLOOR, 0.205f)) shouldBe 4
+            MegamanXSabreMoves.AIR.frameAt(MegamanXSabreMoves.FLOOR.timeIn(MegamanXSabreMoves.AIR, 0.14f)) shouldBe 5
         }
 
         it("maps a wind-up to the first frame with art, and a recovery to the end") {
-            SabreKind.AIR.timeIn(SabreKind.FLOOR, 0.04f) shouldBe 0f
-            SabreKind.AIR.timeIn(SabreKind.FLOOR, 0.25f) shouldBe (SabreKind.FLOOR.duration plusOrMinus TOLERANCE)
+            MegamanXSabreMoves.AIR.timeIn(MegamanXSabreMoves.FLOOR, 0.04f) shouldBe 0f
+            MegamanXSabreMoves.AIR.timeIn(MegamanXSabreMoves.FLOOR, 0.25f) shouldBe (MegamanXSabreMoves.FLOOR.duration plusOrMinus TOLERANCE)
         }
 
         it("never moves the swing back") {
-            SabreKind.entries.forEach { from ->
-                SabreKind.entries.forEach { to ->
-                    var last = -1f
-                    var time = 0f
-                    while (time < from.duration) {
-                        val mapped = from.timeIn(to, time)
-                        (mapped >= last) shouldBe true
-                        last = mapped
-                        time += DELTA
-                    }
+            for (i in 0 until MegamanXSabreMoves.ALL.size) for (j in 0 until MegamanXSabreMoves.ALL.size) {
+                val from = MegamanXSabreMoves.ALL[i]
+                val to = MegamanXSabreMoves.ALL[j]
+                var last = -1f
+                var time = 0f
+                while (time < from.duration) {
+                    val mapped = from.timeIn(to, time)
+                    (mapped >= last) shouldBe true
+                    last = mapped
+                    time += DELTA
                 }
             }
         }
@@ -580,7 +585,7 @@ class MegamanXSabreTest : DescribeSpec({
     }
 
     describe("the hit box") {
-        fun slashAtFrame3(facing: Facing): MegamanXSabreSlash {
+        fun slashAtFrame3(facing: Facing): PlayerSabreSlash {
             x.facing = facing
             body.set(0f, 0f, MegamanXValues.BODY_WIDTH * ConstVals.PPM, MegamanXValues.BODY_HEIGHT * ConstVals.PPM)
             slashUp()
@@ -591,7 +596,7 @@ class MegamanXSabreTest : DescribeSpec({
 
         it("is the art bounds of the frame, in front of X") {
             val box = slashAtFrame3(Facing.RIGHT).hitBox().rawShape as GameRectangle
-            val artPx = MegamanXSabreSlash.artPx()
+            val artPx = x.sabre.params.artPx
             val centerX = MegamanXValues.BODY_WIDTH * ConstVals.PPM / 2f
 
             box.getX() shouldBe ((53 - 56) * artPx + centerX plusOrMinus TOLERANCE)
@@ -601,7 +606,7 @@ class MegamanXSabreTest : DescribeSpec({
 
         it("is mirrored when X faces left") {
             val box = slashAtFrame3(Facing.LEFT).hitBox().rawShape as GameRectangle
-            val artPx = MegamanXSabreSlash.artPx()
+            val artPx = x.sabre.params.artPx
             val centerX = MegamanXValues.BODY_WIDTH * ConstVals.PPM / 2f
 
             box.getMaxX() shouldBe ((56 - 53) * artPx + centerX plusOrMinus TOLERANCE)
@@ -617,9 +622,9 @@ class MegamanXSabreTest : DescribeSpec({
         }
 
         it("matches the alpha bounds of the slash strips") {
-            SabreKind.entries.forEach { kind ->
+            MegamanXSabreMoves.ALL.forEach { kind ->
                 val image = ImageIO.read(File("../assets/sprites/frames/MegamanX/${kind.arcRegion}.png"))
-                val boxes = MegamanXSabreSlash.HIT_BOXES[kind]
+                val boxes = kind.hitBoxes
                 boxes.size shouldBe kind.stripFrames
                 for (index in 0 until kind.stripFrames) {
                     var minX = Int.MAX_VALUE
@@ -645,8 +650,8 @@ class MegamanXSabreTest : DescribeSpec({
         it.spawn(props(ConstKeys.BOUNDS pairTo GameRectangle(0f, 0f, 2f * ConstVals.PPM, 2f * ConstVals.PPM)))
     }
 
-    fun slash(kind: SabreKind) = MegamanXSabreSlash(services).also {
-        it.spawn(props(ConstKeys.OWNER pairTo x, ConstKeys.TYPE pairTo kind))
+    fun slash() = PlayerSabreSlash(services).also {
+        it.spawn(props(ConstKeys.OWNER pairTo x, ConstKeys.PARENT pairTo x.sabre))
     }
 
     fun damageOf(target: AbstractHealthEntity, damager: IDamagerEntity): Int {
@@ -659,15 +664,15 @@ class MegamanXSabreTest : DescribeSpec({
         it("D1000 takes the shielded sabre damage") {
             val boss = spawnTarget(D1000(services))
 
-            damageOf(boss, slash(SabreKind.FLOOR)) shouldBe D1000.SHIELDED_SABRE_DAMAGE
+            damageOf(boss, slash()) shouldBe D1000.SHIELDED_SABRE_DAMAGE
         }
     }
 
     describe("the damage") {
-        it("gives the same damage for every slash kind") {
+        it("gives the slash its target's sabre damage") {
             val wheel = spawnTarget(MetaWheelF(services))
 
-            SabreKind.entries.forEach { damageOf(wheel, slash(it)) shouldBe 9 }
+            damageOf(wheel, slash()) shouldBe 9
         }
 
         it("lets only the slash damage a SabreBlock") {
@@ -677,8 +682,8 @@ class MegamanXSabreTest : DescribeSpec({
             block.canBeDamagedBy(Bullet(services)) shouldBe false
             block.canBeDamagedBy(ChargedShot(services)) shouldBe false
             block.canBeDamagedBy(ChargedShotExplosion(services)) shouldBe false
-            block.canBeDamagedBy(slash(SabreKind.FLOOR)) shouldBe true
-            block.takeDamageFrom(slash(SabreKind.FLOOR)) shouldBe true
+            block.canBeDamagedBy(slash()) shouldBe true
+            block.takeDamageFrom(slash()) shouldBe true
             block.invincible shouldBe true
         }
 
@@ -688,14 +693,21 @@ class MegamanXSabreTest : DescribeSpec({
             wheel.canBeDamagedBy(Bullet(services)) shouldBe false
             wheel.canBeDamagedBy(ChargedShot(services)) shouldBe false
             wheel.canBeDamagedBy(ChargedShotExplosion(services)) shouldBe false
-            wheel.canBeDamagedBy(slash(SabreKind.FLOOR)) shouldBe true
+            wheel.canBeDamagedBy(slash()) shouldBe true
         }
 
         it("gives the slash and the buster their damage on a normal target") {
             val junkroid = spawnTarget(Junkroid(services))
 
-            damageOf(junkroid, slash(SabreKind.FLOOR)) shouldBe 23
+            damageOf(junkroid, slash()) shouldBe 23
             damageOf(junkroid, Bullet(services)) shouldBe 8
+        }
+
+        it("keeps the HoverGunner's own slash and ProtoBuster damage") {
+            val gunner = spawnTarget(HoverGunner(services))
+
+            damageOf(gunner, slash()) shouldBe 30
+            damageOf(gunner, ProtoBuster(services)) shouldBe 30
         }
     }
 })

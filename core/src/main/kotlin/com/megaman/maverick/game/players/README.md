@@ -38,6 +38,9 @@ flowchart LR
     Run -- "calls" --> Step["entities/movement/Run.kt<br/>runStep, maxRunSpeed, RunParams<br/>for any body"]
     Class -- "defineBodyComponent" --> Body["PlayerBody.kt<br/>shared fixtures and pre-step,<br/>with PlayerBodyParams and hooks"]
     Body -- "reads" --> Gravity["PlayerGravityComponent<br/>gravity table, signed by direction"]
+    Class -- "its B button calls" --> Buster["PlayerBuster.kt<br/>one BusterShot per charge level:<br/>speed, wait, pose, cap, sound, fetch"]
+    Class -- "charges with" --> Charge["PlayerCharge.kt<br/>charge component, status, stop"]
+    Buster -- "reads" --> Charge
     Moves --> Input["PlayerInput.kt, the air dash input reads<br/>the run side, A or SELECT"]
     Game["the game, at level start"] -- "putInSlot0" --> Roster["PlayerRoster<br/>one entity per PlayerCharacter;<br/>slot 0 gets the level's character"]
     Base --> State["the mechanism components<br/>(entities/state/)"]
@@ -123,5 +126,45 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
   parts are still per class: the updatables list (its frame order differs per class), the land sound and the
   `GutsTank` side-stick rule (2 callers), each with a `TODO` that names item `060`; and the sprite size and place
   and the animation key. Share such a part when a third class needs the same rule.
+- **The buster gives the shot; the class gives the button.** `PlayerBuster` spawns the shot of a charge level from
+  its `BusterParams` (the shot class, the cap or none, the wait and pose times, the speed, the spawn offset). A
+  `null` half- or full-charge shot falls back to the shot below it, so a class with no charge passes only the
+  uncharged shot. A class that shoots from a crouch or a ladder passes a crouch or climb offset and asks for it per
+  shot (`shoot(status, crouched = true)`, `shoot(status, climbing = true)`); such a shot with no offset for it is a
+  mistake and throws. The fire rule
+  (on the press or on the release)
+  stays in each class's `B` actuator, because X's actuator also drives the sabre. A class reads the charge with
+  `playerChargeStatus` and stops it with `stopCharging()`; Megaman adds his weapon gate on top. Megaman's own shots
+  still go through his weapon handler (item `024`). Research and decisions: `docs/mega-refactor/items/060-proto-man/`.
+- **The sabre is data; the class gives the button.** `PlayerSabre` runs a slash from its `SabreParams`: one move
+  list for each `SabreState` (floor, crouch, air, wall), the atlas, the start rule and the state rule. The class
+  can name the state of a new slash (`start(state = ...)`), for a state that its state rule only keeps (Proto Man's
+  crouch slash: the state rule keeps `CROUCH` while that slash runs on the ground). A press during a move
+  chains the next move of the same list, so a combo is a longer list, and a list of 1 has no combo. A state change in
+  the middle of a move ends the slash, or turns it into the first move of the new state at the same swing phase, by
+  the character's `endOnStateChange`. A landing move (`landingMoves`) can take over an air move that lands before
+  its swing ends, at the same time and with no new sound. One damager class,
+  `PlayerSabreSlash` (`entities/players/`), draws the arc over the body and places the hit box of each frame for
+  every character, so a damage table needs one sabre entry. Each move is full or half strength
+  (`SabreMove.fullStrength`), and a table entry reads the strength from the slash, as a `ChargedShot` entry reads
+  `fullyCharged`. A class can start a slash that does not chain (`start(chains = false)`), for a single slash next to
+  another weapon. A state with no list is a mistake and throws.
+- **Weapon slots and a guard are class parts.** A class with more than one weapon keeps its own slot list and its
+  own `SELECT` actuator; it switches only when the shared `selectButtonAction` of its slot is `NEXT_WEAPON`, as
+  Megaman does, and its `B` actuator reads the slot. A shield is a `SHIELD` fixture that the class adds after
+  `playerBody` and places in its own pre-step; the shared `SHIELD` contact rule gives each projectile its own
+  `hitShield` reaction. The fixture is placed in the body's own frame: the engine turns it with the body direction,
+  so the class does not turn it again. A `HIT_BY_PROJECTILE` receiver runs before `hitShield`, so it only records
+  the contact; the class shows its feedback after the contact pass, and only when the projectile reacted (it turned
+  back or died). The guard is computed: it is up while its button is held and no break holds (an attack, a hit, a
+  stun, a freeze, a teleport, a room transition), after a pull-out time; the button and the breaks are read live, so
+  a release drops it at once. The class reads the shield box from its art in one place (Proto Man: `ArtBox` values
+  in `ProtomanValues`), so new art changes one value. A class that crouches in its guard owns its crouch box: it
+  resizes the shared `BODY` and `DAMAGEABLE` fixtures in its own pre-step, which must run after the `playerBody`
+  `DEFAULT` pre-step, because that step resets both fixtures on each step. An attack from the crouch breaks the
+  guard like any attack; the class keeps its crouch box for the whole attack, and the guard starts again from its
+  pull-out when the attack ends with the button still held.
+  A HUD hook draws the slot of the class (item `153` makes it a rule for every player). Proto Man is the first such
+  class (`entities/protoman/`).
 - **Swap only out of the engine.** `PlayerRoster.putInSlot0` throws when the outgoing player is in the engine. Call it
   before the level screen starts, and set the camera focus after it.

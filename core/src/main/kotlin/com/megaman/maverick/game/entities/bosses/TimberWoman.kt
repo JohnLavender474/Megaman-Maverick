@@ -166,7 +166,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
 
         private const val PROJECTILE_LISTENER_WIDTH = 8f
         private const val PROJECTILE_LISTENER_HEIGHT = 2f
-        private val DEFLECTABLE_PROJECTILES = objectSetOf(Bullet.TAG, ChargedShot.TAG)
+        private val DEFLECTABLE_PROJECTILES = objectSetOf(Bullet.TAG, ChargedShot.TAG, ProtoBuster.TAG)
 
         private const val ROOM_SHAKE_DUR = 0.5f
         private const val ROOM_SHAKE_INTERVAL = 0.1f

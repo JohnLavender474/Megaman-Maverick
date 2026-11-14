@@ -57,6 +57,7 @@ import com.megaman.maverick.game.entities.explosions.SpreadExplosion
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.*
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -85,6 +86,8 @@ class Cactus(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
 
         private val damagers = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
             Bullet::class pairTo dmgNeg(10),
+            ProtoBuster::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
+            PlayerSabreSlash::class pairTo dmgNeg(ConstVals.MAX_HEALTH),
             ArigockBall::class pairTo dmgNeg(10),
             CactusMissile::class pairTo dmgNeg(10),
             LampeonBullet::class pairTo dmgNeg(ConstVals.MAX_HEALTH),

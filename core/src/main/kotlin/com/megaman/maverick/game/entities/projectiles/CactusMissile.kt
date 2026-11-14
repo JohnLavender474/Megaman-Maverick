@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
@@ -66,6 +67,8 @@ class CactusMissile(services: MegaServices) : AbstractProjectile(services), IHea
 
         private val damageNegotiations = objectMapOf<KClass<out IDamagerEntity>, Int>(
             Bullet::class pairTo 10,
+            ProtoBuster::class pairTo ConstVals.MAX_HEALTH,
+            PlayerSabreSlash::class pairTo ConstVals.MAX_HEALTH,
             Fireball::class pairTo ConstVals.MAX_HEALTH,
             ChargedShot::class pairTo ConstVals.MAX_HEALTH,
             ChargedShotExplosion::class pairTo ConstVals.MAX_HEALTH
