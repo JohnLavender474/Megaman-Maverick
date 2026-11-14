@@ -31,7 +31,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 021 | [Entity registry with stable readable IDs and aliases](items/021-entity-registry/ITEM.md) | refactor | `O7`, `O3` | planned | none | | |
 | 022 | [Typed property schema per entity, exported to Tiled](items/022-spawn-prop-schema/ITEM.md) | feature | `O7` | planned | `021` | | |
 | 023 | [Damage profiles keyed by damage tags](items/023-damage-profiles/ITEM.md) | refactor | `O1` | planned | `005` | | |
-| 024 | [One `WeaponDef` per weapon; loadout per character](items/024-weapon-defs/ITEM.md) | refactor | `O8`, `O1` | planned | `029` | | |
+| 024 | [One `WeaponDef` per weapon; loadout per character](items/024-weapon-defs/ITEM.md) | refactor | `O8`, `O1` | active | `029` | 2026-11-14 | |
 | 025 | [Level manifest: traits, variants and rewards instead of level-identity checks](items/025-level-manifest/ITEM.md) | refactor | `O7`, `O1` | idea | none | | |
 | 026 | [Per-level render layers and an allocation-free draw queue](items/026-render-layers/ITEM.md) | refactor | `O5`, `O4` | planned | none | | |
 | 027 | [Non-null APIs instead of `!!`](items/027-non-null-apis/ITEM.md) | refactor | `O1` | planned | none | | |
@@ -175,6 +175,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-060c-protoman-buster`](items/060-proto-man/branches/mega-refactor-060c-protoman-buster/process-log.md) | 060 | Proto Man's sabre and buster, X6 Zero style (`060f` folded in): sabre and buster weapon slots on `B` and `SELECT`, a crouch guard with the shield on `DOWN`, and crouch attacks; shared `players/` sabre, buster and charge | merged | 2026-11-11 | 2026-11-14 |
 | [`mega-refactor-060d-protoman-slide-ladder`](items/060-proto-man/branches/mega-refactor-060d-protoman-slide-ladder/process-log.md) | 060 | Proto Man's slide and ladder, with Megaman's shared rules | active | 2026-11-14 | |
 | [`mega-refactor-060j-mega-player`](items/060-proto-man/branches/mega-refactor-060j-mega-player/process-log.md) | 060 | Refactor only: an abstract `MegaPlayer` base class that owns the shared player wiring and is the receiver of the shared `players/` functions; `Megaman` and X move onto it and play the same | merged | 2026-11-10 | 2026-11-11 |
+| [`mega-refactor-024a-weapon-defs`](items/024-weapon-defs/branches/mega-refactor-024a-weapon-defs/process-log.md) | 024 | Refactor only: Megaman's 10 weapons become `WeaponDef` objects in a registry; Megaman plays the same | active | 2026-11-14 | |
 | [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | merged | 2026-11-02 | 2026-11-02 |
 | [`mega-refactor-118b-batch-1`](items/118-boss-fight-routines/branches/mega-refactor-118b-batch-1/process-log.md) | 118 | `TimberWoman`, `MoonMan` and `ReactorMan` (6 fights) on the fight flow | merged | 2026-11-03 | 2026-11-03 |
 | [`mega-refactor-118c-batch-2`](items/118-boss-fight-routines/branches/mega-refactor-118c-batch-2/process-log.md) | 118 | `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` (10 fights) on the fight flow | merged | 2026-11-03 | 2026-11-04 |

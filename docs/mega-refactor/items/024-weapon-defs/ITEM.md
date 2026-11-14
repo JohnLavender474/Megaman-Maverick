@@ -1,11 +1,11 @@
 # 024: One `WeaponDef` per weapon; loadout per character
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Objectives: `O8`, `O1`
 - Depends on: `029`
 - Related: `007`, `023`, `025`, `040`, `084`
-- Branches: none yet
+- Branches: `mega-refactor-024a-weapon-defs` (active)
 
 ## Goal
 
@@ -32,6 +32,13 @@ X (`MegamanX`, item `081`) has only the buster. Until this item gives each chara
 | `LevelPauseScreen`, the ammo bars and the weapon select | 0 ammo, and no weapon change |
 | `MegamanMaverickGame.resetPlayerProgress` | resets the weapon of each `Megaman` in `PlayerRoster` |
 | `EndLevelEventHandler`, the beam-out | uses the buster beam art (item `081` owns X's beam art) |
+
+## Decisions
+
+- (2026-11-14, owner) Merge target: each branch of this item squash-merges directly into `master`.
+- (2026-11-14, proposed at item start) Split: `024a` refactor only (Megaman's weapons as `WeaponDef`s, plays the
+  same); `024b` a loadout per character (removes the `is Megaman` workarounds). `060h` builds on them. The `024a`
+  brief confirms it.
 
 ## Owner's input
 
