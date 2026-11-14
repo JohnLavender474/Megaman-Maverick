@@ -54,7 +54,9 @@ reviews, merges) is in `docs/mega-refactor/CLAUDE.md`.
   (`./gradlew lwjgl3:jar`), and hand it back for play. Do not write new unit tests, run mutation checks, update
   broken tests or dispatch review agents in these rounds. Small changes are made directly, not through an agent.
   When the owner says the moveset is final, do one pass: tests for the final design, mutation checks, the full
-  automated checks and the review before the play test. The merge rules do not change: a branch still merges only
+  automated checks and the review before the play test. Keep a short checklist of the tests to write and the tests an
+  iteration broke, one line each, in the branch `docs/TEST-DEBT.md`; the final pass works from it. The merge rules
+  do not change: a branch still merges only
   with every check of its contract passed. (Owner, 2026-11-14, branch `077a`: waiting for test rewrites at each
   boss change was too slow.)
 
