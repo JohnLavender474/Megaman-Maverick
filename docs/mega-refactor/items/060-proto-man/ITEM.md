@@ -102,6 +102,7 @@ as refined as possible before co-op (`060i`) (owner, 2026-11-10).
 | `060g` | Experiments: settings, moves and behaviors, from the sheet scan and play tests. Can be more than one branch | |
 | `060h` | Weapon poses and the loadout: Proto Man's variants of the special weapons | `024` |
 | `060i` | `CharacterDef` as the third caller (if `081` has not done it); co-op with mixed characters | `047` |
+| `060k` | The owner's own edits of the Proto Man frames (owner, 2026-11-14: Claude's art rounds went in circles). Claude does no drawing: atlas repack, strip size and frame-count checks, muzzle points and shot offsets, and the smoke test on request | `060d` |
 
 Sprite source: a fan sheet, "Proto Man (Expanded) (Inti Creates 8-bit-Style)", sprites by Hansungkee and others (the
 credits are on the sheet). Keep the credits.
