@@ -166,7 +166,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 156 | [`WhiteBurst` has an `EXPLOSION` fixture that projectiles react to](items/156-white-burst-explosion-fixture/ITEM.md) | refactor | `O1` | idea | none | | |
 | 157 | [D-1000 overdrive on the shared boss health phases](items/157-d1000-health-phases/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 158 | [A shared lead-aim helper for bosses](items/158-boss-lead-aim-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
-| 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | idea | none | | |
+| 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | active | none | 2026-11-15 | |
 
 ## Branches
 
@@ -271,3 +271,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-139a-shared-enemy-shot`](items/139-shared-enemy-shot/branches/mega-refactor-139a-shared-enemy-shot/process-log.md) | 139 | A shared simple enemy shot, starting with `JunkShot` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-077a-intro-boss`](items/077-robot-master-attacks/branches/mega-refactor-077a-intro-boss/process-log.md) | 077 | A richer intro-stage boss fight and shared boss health phases | merged | 2026-11-13 | 2026-11-15 |
 | [`mega-refactor-011a-game-random`](items/011-game-random/branches/mega-refactor-011a-game-random/process-log.md) | 011 | One seedable, interceptable random source with named streams | active | 2026-11-14 | |
+| [`mega-refactor-159a-intro-boss-art`](items/159-intro-boss-hand-art/branches/mega-refactor-159a-intro-boss-art/process-log.md) | 159 | New intro-boss frames: slam impact, clap pose, open palm, cracked head row | active | 2026-11-15 | |

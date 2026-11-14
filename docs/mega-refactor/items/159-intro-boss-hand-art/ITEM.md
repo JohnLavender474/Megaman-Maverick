@@ -1,11 +1,11 @@
 # 159: New hand and head art for the intro boss
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`
-- Branches: none yet
+- Branches: `mega-refactor-159a-intro-boss-art` (active, 2026-11-15)
 
 ## Goal
 
@@ -16,6 +16,14 @@ New `BigAssMaverickRobot` hand art (an open palm, a clap pose, a slam impact fra
 Not approved. The branch `SCOPE.md` decides the final scope.
 
 ## Owner's input
+
+- 2026-11-15: "Let's start item 159".
+
+## Decisions
+
+- 2026-11-15 (owner): merge target `master` directly. Claude drafts each frame from the existing frames and palette;
+  the owner approves or redraws each one before it goes into the atlas. First branch scope: slam impact, clap pose,
+  open palm, cracked head row.
 
 ## Open questions
 
