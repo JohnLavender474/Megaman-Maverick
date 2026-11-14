@@ -61,6 +61,19 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 - 2026-11-10: the item covers every boss (robot masters, Wily bosses, mini bosses, intro bosses), and it also covers
   aiming and death animations. This answers the open question about the mini bosses and the Wily bosses.
+- 2026-11-13 (owner): one branch per boss. The owner picks each boss as the work goes on. The first boss is the
+  `INTRO_STAGE` boss, `BigAssMaverickRobot`. Research: `temp/077-intro-boss/` (`boss-review.md`,
+  `overdrive-health.md`).
+- 2026-11-13 (owner): a shared "overdrive" mechanism for every fight: the boss health bar has more than one phase.
+  A boss with 2 phases has 2 × `MAX_HEALTH` bits. A lost bit takes the color of the next phase in place of going
+  empty, and at 0 the bar rolls over to the next phase at once, with no rest time (not as in the Wily final boss, which
+  has a scripted rest between phases). In the next phase the boss is harder: new attacks, quicker attacks.
+- 2026-11-13 (owner, `BigAssMaverickRobot`):
+  - Mega Buster damage goes up: a pellet 1 → 2, a half charge 2 → 3, a full charge 3 → 4.
+  - The body that stays on screen after the head dies is on purpose. It is not a bug.
+  - The hand motion: keep the circular orbit, because it refers to the final fight of Mega Man X1, but the orbit is
+    no longer the only motion. Add the new motions from the research (hover with drift, a punch with wind-up and
+    recoil, and others) and describe them and their integration with a proper state machine.
 
 ## Open questions
 
