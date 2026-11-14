@@ -47,6 +47,17 @@ reviews, merges) is in `docs/mega-refactor/CLAUDE.md`.
   as yours. (A `pkill -f` on 2026-11-11 stopped the test JVMs of other sessions.) A `pgrep -f` pattern also matches
   the shell whose command line holds it. A Gradle daemon's folder is `~/.gradle/daemon/<version>`, not the worktree.
 
+## Gameplay iteration
+
+- **Iterate fast; test when the design is final.** While the owner play-tests and changes a moveset or a feel (a
+  boss's attacks, timings, motion), each round is: change the production code, build the game
+  (`./gradlew lwjgl3:jar`), and hand it back for play. Do not write new unit tests, run mutation checks, update
+  broken tests or dispatch review agents in these rounds. Small changes are made directly, not through an agent.
+  When the owner says the moveset is final, do one pass: tests for the final design, mutation checks, the full
+  automated checks and the review before the play test. The merge rules do not change: a branch still merges only
+  with every check of its contract passed. (Owner, 2026-11-14, branch `077a`: waiting for test rewrites at each
+  boss change was too slow.)
+
 ## Levels
 
 - **A level draft is a playable skeleton.** Before you draft a TMX level, read `assets/tiled_maps/tmx/Test8.tmx`,
