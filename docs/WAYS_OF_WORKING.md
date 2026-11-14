@@ -50,9 +50,10 @@ reviews, merges) is in `docs/mega-refactor/CLAUDE.md`.
 ## Gameplay iteration
 
 - **Iterate fast; test when the design is final.** While the owner play-tests and changes a moveset or a feel (a
-  boss's attacks, timings, motion), each round is: change the production code, build the game
-  (`./gradlew lwjgl3:jar`), and hand it back for play. Do not write new unit tests, run mutation checks, update
-  broken tests or dispatch review agents in these rounds. Small changes are made directly, not through an agent.
+  boss's attacks, timings, motion), each round is: change the production code and hand it back for
+  play. Do not run Gradle (not even `lwjgl3:jar`): the run scripts (`./gradlew lwjgl3:run`) compile the change when
+  the owner launches, so a build of your own only adds a wait. Do not write new unit tests, run mutation checks,
+  update broken tests or dispatch review agents in these rounds. Small changes are made directly, not through an agent.
   When the owner says the moveset is final, do one pass: tests for the final design, mutation checks, the full
   automated checks and the review before the play test. Meanwhile, keep the spec in plain words: one line per rule of
   behavior that must stay true (and one line per existing test that a round broke), in the branch
