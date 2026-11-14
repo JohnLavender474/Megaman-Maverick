@@ -5,7 +5,7 @@
 - Objectives: `O4`
 - Depends on: none
 - Related: `015`, `023`, `118`
-- Branches: `mega-refactor-077a-intro-boss` (active, 2026-11-13)
+- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`)
 
 ## Goal
 
@@ -81,15 +81,12 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ## Notes for active branches
 
-- (2026-11-14, from the `060c` merge, squash `3247c7fbe`) `060c` merged before `077a`. When `077a` takes in
-  `master`, the `TODO` at its `BigAssMaverickRobot.kt` damage table applies: `077a` is the branch that merges second.
-  - `060c` rows on `master`: `BigAssMaverickRobot`: `ProtoBuster` 2, `PlayerSabreSlash` full 3 and half 2.
-    `AbstractBoss`: `ProtoBuster` 1, `PlayerSabreSlash` full 2 and half 1. The half or full value comes from
-    `PlayerSabreSlash.fullStrength`.
-  - The `077a` `TODO` names other values (`ProtoBuster` 3, `PlayerSabreSlash` half 3 and full 4). The final numbers in
-    the new `077a` table are the choice of `077a`.
-  - The D-1000 (`D1000.kt`, `D1000Core.kt`) now reacts to the `PlayerSabreSlash` of every player, not only to X's
-    slash.
+- (2026-11-15) `077a` merged. The `060c` note is done: the boss table has `ProtoBuster` 4 and `PlayerSabreSlash`
+  half 4 / full 6 (equal to the half and full charge, the rule of the boss tables on `master`).
+- Shared parts that later boss branches can use: `AbstractBoss.healthPhases` and `onHealthPhaseStart` (a phased bar
+  and intro fill in passes), the per-difficulty, per-phase tuning row pattern, and the rule that a fight's damage to
+  the player goes in `PlayerDamageNegotiator` (`docs/WAYS_OF_WORKING.md`). Owner decisions of `077a` are in its branch
+  `docs/NOTES.md` "Decisions".
 
 ## Open questions
 

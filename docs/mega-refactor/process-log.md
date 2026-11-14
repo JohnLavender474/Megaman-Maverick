@@ -2331,3 +2331,26 @@ newest entry at the bottom.
     `060e`). Item `077` `ITEM.md`: a note for `077a` (the `060c` boss damage rows). Item `153`: the HUD icons go in
     the `Hud` atlas. Item `081` `ITEM.md`: the `081g` note for `060c` is done and removed.
   - `ROADMAP.md`: no change; it names `060` only as a whole item.
+
+## 2026-11-15 — mega-refactor-077a-intro-boss
+
+- Summary: squash `c4b402a80`. The `INTRO_STAGE` boss `BigAssMaverickRobot` gets a second health phase (shared
+  `AbstractBoss.healthPhases`, roll-over with carried damage, a two-color bar, an intro fill in passes), a hand state
+  machine that the boss conducts (orbit and hover modes, pair choreography), a punch with a tell and recoil, an aimed
+  slam to the floor or a wall with perimeter shock waves, a phase-2 pincer clap, mixed-aim orbs, a 4 s death with an
+  aghast blinking face, and an arena from map references. Damage on the boss: pellet 3 / half 4 / full 6, special
+  weapons 3 (Axe 4), `ProtoBuster` 4, sabre 4 / 6; every damager of the fight takes 1 bit from the player. Tuning rows
+  per difficulty and phase. QoL: `--difficulty normal|hard`. The owner tuned the fight in fast play-test rounds
+  (tests deferred, then written in the final pass; `docs/WAYS_OF_WORKING.md` "Gameplay iteration").
+- Contract check: automated checks on the branch pass (`engine:test` 689, `core:test` 2020, `core:smokeTest` 462,
+  `lwjgl3:jar`), and the same checks pass on `master` after the squash (689 / 2020 / 462, 0 failures; the main
+  checkout's 2 unstaged files of another session were in the tree); every `TEST-DEBT.md` rule has a test with a mutation check; review before the merge by 2 subagents
+  (findings fixed in `96ff3767b`); owner play test passed (normal and hard); no Diffity threads. Owner decisions at the
+  merge: hard phase 1 keeps 3-orb volleys, half sabre 4, no Proto Man play test on this boss. `master` was merged into
+  the branch first (`060c`, 2 simple conflicts in `BigAssMaverickRobot.kt`).
+- Follow-up: new items `157` (D-1000 overdrive on health phases), `158` (shared lead-aim helper), `159` (new hand and
+  head art). No bug candidates. Item `077` stays active (one branch per boss; the owner picks the next boss).
+  `060d` also changes `ProtomanTest.kt` and `core/src/test/CLAUDE.md`; it merges second and resolves the overlap. The
+  main checkout had 2 modified files of another session (`docs/CODE_STYLE.md`, `CullablesSystem.kt`); the owner
+  chose to merge and leave them unstaged.
+

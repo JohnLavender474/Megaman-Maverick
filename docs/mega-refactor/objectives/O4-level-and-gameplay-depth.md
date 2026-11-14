@@ -92,6 +92,9 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `121` | idea | [Enemy clones of a playable character](../items/121-playable-character-clones/ITEM.md) (main) |
 | `136` | idea | [Co-op: a player can skip a spike floor in a tall room](../items/136-tall-room-spike-skip/ITEM.md) |
 | `150` | idea | [Shared movement helpers for bosses and enemies](../items/150-boss-movement-helpers/ITEM.md) |
+| `157` | idea | [D-1000 overdrive on the shared boss health phases](../items/157-d1000-health-phases/ITEM.md) |
+| `158` | idea | [A shared lead-aim helper for bosses](../items/158-boss-lead-aim-helper/ITEM.md) |
+| `159` | idea | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) (main) |
 
 ## Gaps with no item
 

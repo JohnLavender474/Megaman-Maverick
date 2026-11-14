@@ -172,6 +172,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `149` | idea | [Tag changes at runtime, with an index that follows them](../items/149-runtime-tag-changes/ITEM.md) (main) |
 | `150` | idea | [Shared movement helpers for bosses and enemies](../items/150-boss-movement-helpers/ITEM.md) (main) |
 | `151` | done | [Rename the level progress vocabulary from "defeated" to "completed"](../items/151-level-completed-rename/ITEM.md) (main) |
+| `157` | idea | [D-1000 overdrive on the shared boss health phases](../items/157-d1000-health-phases/ITEM.md) (main) |
+| `158` | idea | [A shared lead-aim helper for bosses](../items/158-boss-lead-aim-helper/ITEM.md) (main) |
 
 ## Gaps with no item
 

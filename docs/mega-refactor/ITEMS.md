@@ -164,6 +164,9 @@ statuses and column meanings are in `CLAUDE.md`.
 | 154 | [Spawners test the camera after it moves](items/154-spawn-after-camera-move/ITEM.md) | refactor | `O9`, `O1` | dropped | none | | 2026-11-13 |
 | 155 | [LibGDX arrays for the falling-piece region keys](items/155-falling-piece-gdx-arrays/ITEM.md) | refactor | `O1` | idea | `060`, `139` | | |
 | 156 | [`WhiteBurst` has an `EXPLOSION` fixture that projectiles react to](items/156-white-burst-explosion-fixture/ITEM.md) | refactor | `O1` | idea | none | | |
+| 157 | [D-1000 overdrive on the shared boss health phases](items/157-d1000-health-phases/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
+| 158 | [A shared lead-aim helper for bosses](items/158-boss-lead-aim-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
+| 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | idea | none | | |
 
 ## Branches
 
@@ -266,4 +269,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-137a-falling-piece-entity`](items/137-falling-piece-entity/branches/mega-refactor-137a-falling-piece-entity/process-log.md) | 137 | One falling-piece entity for `DebrisPiece`, `BlockPiece` and `WoodCratePiece` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-138a-wreck-into-mock-sprite`](items/138-wreck-into-mock-sprite/branches/mega-refactor-138a-wreck-into-mock-sprite/process-log.md) | 138 | Merge `Wreck` into `MockSpriteEntity` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-139a-shared-enemy-shot`](items/139-shared-enemy-shot/branches/mega-refactor-139a-shared-enemy-shot/process-log.md) | 139 | A shared simple enemy shot, starting with `JunkShot` | merged | 2026-11-13 | 2026-11-13 |
-| [`mega-refactor-077a-intro-boss`](items/077-robot-master-attacks/branches/mega-refactor-077a-intro-boss/process-log.md) | 077 | A richer intro-stage boss fight and shared boss health phases | active | 2026-11-13 | |
+| [`mega-refactor-077a-intro-boss`](items/077-robot-master-attacks/branches/mega-refactor-077a-intro-boss/process-log.md) | 077 | A richer intro-stage boss fight and shared boss health phases | merged | 2026-11-13 | 2026-11-15 |
