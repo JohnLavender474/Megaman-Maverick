@@ -62,6 +62,13 @@ reviews, merges) is in `docs/mega-refactor/CLAUDE.md`.
   with every check of its contract passed. (Owner, 2026-11-14, branch `077a`: waiting for test rewrites at each
   boss change was too slow.)
 
+- **Damage to the player per fight goes in the player damage table.** Set what a fight's damagers do to the player in
+  `PlayerDamageNegotiator` (`players/`), one entry per damager tag, not in a value on the damager class. When a damager
+  class is shared by several owners (for example `BigAssMaverickRobotOrb`, used by 3 bosses), the entry chooses by its
+  owner: `dmgNeg { if ((it as X).owner is SomeBoss) 1 else 3 }`, and the `else` keeps the damage of the other owners.
+  Then one place holds the whole damage of a fight. (Owner, 2026-11-14, branch `077a`: every damager of the intro
+  boss does 1 bit.)
+
 ## Levels
 
 - **A level draft is a playable skeleton.** Before you draft a TMX level, read `assets/tiled_maps/tmx/Test8.tmx`,
