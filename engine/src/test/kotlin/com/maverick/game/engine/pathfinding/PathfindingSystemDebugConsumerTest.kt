@@ -12,7 +12,7 @@ import io.mockk.mockk
 
 class PathfindingSystemDebugConsumerTest : DescribeSpec({
 
-    val result = PathfinderResult(gdxArrayOf(IntPair(0, 0), IntPair(1, 0)), true)
+    val result = PathfinderResult(gdxArrayOf(IntPair(0, 0), IntPair(1, 0)))
     val factory = object : IPathfinderFactory {
         override fun getPathfinder(params: PathfinderParams) = object : IPathfinder {
             override fun call() = result

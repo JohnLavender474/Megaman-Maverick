@@ -23,7 +23,8 @@ class CullablesSystem(
         entities.forEach { entity ->
             try {
                 val cullables = entity.getComponent(CullablesComponent::class)?.cullables?.values()
-                for (cullable in cullables ?: return) if (cullable.shouldBeCulled(delta)) {
+                if (cullables == null) return@forEach
+                for (cullable in cullables) if (cullable.shouldBeCulled(delta)) {
                     culler.cull(entity)
                     break
                 }

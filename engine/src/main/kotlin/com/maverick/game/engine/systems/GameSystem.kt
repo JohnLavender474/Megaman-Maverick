@@ -102,6 +102,7 @@ abstract class GameSystem(
         entities.forEach { onEntityLeft(it) }
         entities.clear()
         entitiesToAdd.clear()
+        entitiesToRemove.clear()
     }
 
     override fun dispose() = disposables.forEach { it.dispose() }

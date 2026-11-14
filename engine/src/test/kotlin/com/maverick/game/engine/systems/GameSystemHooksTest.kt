@@ -130,6 +130,22 @@ class GameSystemHooksTest : DescribeSpec({
             system.contains(c) shouldBe false
         }
 
+        it("drops a remove that is deferred before a reset, so a new add after the reset keeps the entity") {
+            val system = HookSystem()
+            val a = entity("a")
+            system.add(a)
+            system.duringProcess = { system.remove(a) shouldBe 2 }
+            system.update(0f)
+
+            system.reset()
+            system.add(a)
+            system.update(0f)
+
+            system.calls shouldBe listOf("join:a", "leave:a", "join:a")
+            system.contains(a) shouldBe true
+            system.members shouldBe listOf(a)
+        }
+
         it("keeps the members in join order") {
             val system = HookSystem()
             val a = entity("a")

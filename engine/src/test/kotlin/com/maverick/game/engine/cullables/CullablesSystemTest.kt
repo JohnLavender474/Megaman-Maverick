@@ -3,11 +3,13 @@ package com.maverick.game.engine.cullables
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.MockGameEntity
+import com.maverick.game.engine.diagnostics.RuntimeDiagnostics
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.IGameEntity
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 
@@ -54,6 +56,34 @@ class CullablesSystemTest : DescribeSpec({
                 val contains = culledEntities.contains(entity)
                 contains shouldBe (times != 0)
             }
+        }
+
+        it("should go on with the next entities when a member loses its cullables component during the update") {
+            val diagnostics = mockk<RuntimeDiagnostics>(relaxed = true)
+            val a = MockGameEntity()
+            val b = MockGameEntity()
+            val c = MockGameEntity()
+            val removingCuller = spyk(object : GameEntityCuller {
+                override fun cull(entity: IGameEntity) {
+                    if (entity == a) b.removeComponent(CullablesComponent::class)
+                }
+            })
+            val system = CullablesSystem(removingCuller, diagnostics)
+            for (entity in listOf(a, b, c)) {
+                val component = CullablesComponent()
+                component.put("key", object : ICullable {
+                    override fun shouldBeCulled(delta: Float) = true
+                })
+                entity.addComponent(component)
+                system.add(entity)
+            }
+
+            system.update(1f)
+
+            verify(exactly = 1) { removingCuller.cull(a) }
+            verify(exactly = 0) { removingCuller.cull(b) }
+            verify(exactly = 1) { removingCuller.cull(c) }
+            verify(exactly = 1) { diagnostics.endEntry() }
         }
 
         it("should not cull entities with no cullable component") {

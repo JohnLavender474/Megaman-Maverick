@@ -8,6 +8,5 @@ import com.maverick.game.engine.common.objects.Properties
 
 data class PathfinderResult(
     val path: Array<IntPair>?,
-    val targetReached: Boolean,
     override val properties: Properties = Properties()
 ) : IPropertizable

@@ -53,7 +53,7 @@ class Pathfinder(
         if (startCoordinate == targetCoordinate ||
             (!returnBestPathOnFailure && startCoordinate.toVector2(out1)
                 .dst(targetCoordinate.toVector2(out2)) > maxDistance)
-        ) return PathfinderResult(null, true)
+        ) return PathfinderResult(null)
 
         val startNode = Node(startCoordinate.x, startCoordinate.y)
         map.put(key(startNode.x, startNode.y), startNode)
@@ -69,7 +69,7 @@ class Pathfinder(
         val neighborCount = if (allowDiagonal) NEIGHBOR_DX.size else ORTHOGONAL_NEIGHBORS
 
         while (open.isNotEmpty()) {
-            if (Thread.currentThread().isInterrupted) return PathfinderResult(null, false)
+            if (Thread.currentThread().isInterrupted) return PathfinderResult(null)
 
             val currentNode = open.poll()
             if (currentNode.discovered) continue
@@ -88,7 +88,7 @@ class Pathfinder(
 
             if (currentNode.x == targetCoordinate.x && currentNode.y == targetCoordinate.y) {
                 val path = buildPath(currentNode)
-                return PathfinderResult(path, false)
+                return PathfinderResult(path)
             }
 
             for (i in 0 until neighborCount) {
@@ -127,8 +127,8 @@ class Pathfinder(
 
         return if (returnBestPathOnFailure && bestNode != null) {
             val bestPath = buildPath(bestNode)
-            PathfinderResult(bestPath, false)
-        } else PathfinderResult(null, false)
+            PathfinderResult(bestPath)
+        } else PathfinderResult(null)
     }
 
     private fun buildPath(node: Node): Array<IntPair> {

@@ -188,6 +188,5 @@ class WorldPathfinderTest : DescribeSpec({
 
         // Then
         result.path shouldBe null
-        result.targetReached shouldBe true
     }
 })

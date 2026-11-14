@@ -108,8 +108,6 @@ class PathfinderTest : DescribeSpec({
 
             // when
             val result = pathfinder.call()
-            val targetReached = result.targetReached
-            targetReached shouldBe false
             val path = result.path
 
             // then
@@ -258,7 +256,6 @@ class PathfinderTest : DescribeSpec({
 
             // then
             result.path shouldBe null
-            result.targetReached shouldBe true
         }
 
         describe("Pathfinder with maxIterations and maxDistance") {
