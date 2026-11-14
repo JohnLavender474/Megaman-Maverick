@@ -50,7 +50,8 @@ Intended changes:
   relative to `position` (`calculateWorldPoints` pivots on `position + origin`), so `rotate` stores
   `originX - position.x` and `originY - position.y`. With only `originY = originY`, a line with a non-zero `position`
   (for example after `setCenter`) still turns about the wrong point.
-- `Float.round` (`FloatExtensions.kt`) is deleted. It has no callers.
+- `Float.round` (`FloatExtensions.kt`) rounds with `BigDecimal` and `RoundingMode.HALF_UP` (the rounding of `%.Nf`),
+  not through a formatted string. It is kept: `PendulumTest` and `AnimationTest` call it.
 - `OrderedSet.random()` (`ObjectSetExtensions.kt`) reads the element at a random index through `orderedItems()`, and
   does not change the order of the set.
 
