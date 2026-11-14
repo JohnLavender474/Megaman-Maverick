@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.UtilMethods
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.shouldBe
 
 class GameLineTest : DescribeSpec({
@@ -240,6 +241,40 @@ class GameLineTest : DescribeSpec({
                 println(line)
                 val bounds = line.getBoundingRectangle(outRect)
                 bounds shouldBe GameRectangle(-4f, 1f, 2f, 2f)
+            }
+        }
+
+        describe("rotate about a world point") {
+            it("turns a line at the zero position about a point with originX != originY") {
+                val line = GameLine(3f, 1f, 5f, 1f)
+                line.rotate(90f, 2f, 1f)
+                line.calculateWorldPoints(out1, out2)
+                out1.x shouldBe (2f plusOrMinus 0.0001f)
+                out1.y shouldBe (2f plusOrMinus 0.0001f)
+                out2.x shouldBe (2f plusOrMinus 0.0001f)
+                out2.y shouldBe (4f plusOrMinus 0.0001f)
+            }
+
+            it("turns a moved line about the world point, not about the point offset by its position") {
+                val line = GameLine(0f, 0f, 1f, 0f)
+                line.translate(10f, 0f)
+                line.rotate(90f, 10f, 0f)
+                line.calculateWorldPoints(out1, out2)
+                out1.x shouldBe (10f plusOrMinus 0.0001f)
+                out1.y shouldBe (0f plusOrMinus 0.0001f)
+                out2.x shouldBe (10f plusOrMinus 0.0001f)
+                out2.y shouldBe (1f plusOrMinus 0.0001f)
+            }
+
+            it("turns a line moved by setCenter about the world point, as Fixture.getShape does") {
+                val line = GameLine(0f, 0f, 2f, 0f)
+                line.setCenter(5f, 3f)
+                line.rotate(180f, 5f, 3f)
+                line.calculateWorldPoints(out1, out2)
+                out1.x shouldBe (6f plusOrMinus 0.0001f)
+                out1.y shouldBe (3f plusOrMinus 0.0001f)
+                out2.x shouldBe (4f plusOrMinus 0.0001f)
+                out2.y shouldBe (3f plusOrMinus 0.0001f)
             }
         }
     }

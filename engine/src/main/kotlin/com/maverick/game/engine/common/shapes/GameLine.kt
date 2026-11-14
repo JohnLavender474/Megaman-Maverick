@@ -186,8 +186,8 @@ class GameLine : IGameShape2D, IScalable, IRotatable, IRotatableShape, Resettabl
         setLocalPoints(localPoint1, localPoint2)
         setPosition(position)
         this.rotation = rotation
-        this.originX = originX
-        this.originY = originX
+        this.originX = originX - position.x
+        this.originY = originY - position.y
     }
 
     fun getLength(): Float {

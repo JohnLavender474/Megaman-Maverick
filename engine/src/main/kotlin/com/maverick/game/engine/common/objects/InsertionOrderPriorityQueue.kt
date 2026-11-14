@@ -17,7 +17,8 @@ class InsertionOrderPriorityQueue<T: Comparable<T>> : Queue<T>, MutableCollectio
     })
     private var index = 0L
 
-    override val size = queue.size
+    override val size: Int
+        get() = queue.size
 
     override fun add(e: T): Boolean {
         val entry = e pairTo index

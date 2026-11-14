@@ -8,10 +8,11 @@ class MutableOrderedSet<T> : OrderedSet<T>(), MutableCollection<T> {
         get() = super.size
 
     override fun retainAll(elements: Collection<T>): Boolean {
+        val items = orderedItems()
         var changed = false
-        elements.forEach {
-            if (!contains(it)) {
-                remove(it)
+        for (i in items.size - 1 downTo 0) {
+            if (!elements.contains(items[i])) {
+                removeIndex(i)
                 changed = true
             }
         }

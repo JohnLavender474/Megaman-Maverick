@@ -68,14 +68,7 @@ fun <T> ObjectSet<T>.addAllAndReturn(vararg elements: T): ObjectSet<T> {
 fun <T> OrderedSet<T>.random(): T {
     if (isEmpty) throw IllegalStateException("Cannot fetch random element if set is empty")
 
-    val randomIndex = MathUtils.random(0, size - 1)
-
-    // TODO: OrderedSet doesn't allow fetching elements by index without removing,
-    //   so remove the element and then add it back to the set
-    val item = removeIndex(randomIndex)
-    add(item)
-
-    return item
+    return orderedItems()[MathUtils.random(0, size - 1)]
 }
 
 fun <T> OrderedSet<T>.superRandom(): T? {
