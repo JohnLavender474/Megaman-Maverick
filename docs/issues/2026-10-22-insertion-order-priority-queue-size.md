@@ -1,8 +1,8 @@
 ---
-status: open
+status: closed
 verified: yes
 area: engine
-gameplay-change: unknown
+gameplay-change: no
 found-by: mega-refactor review (2026-10-22)
 related-items: [026]
 ---
@@ -76,3 +76,7 @@ Checks:
   only elements of the set.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 - No play test: no gameplay change.
+
+## Resolution
+
+Fixed in `fix/engine-small-bugs`, squash commit `4522cf9db` (2026-11-14). `size` is a getter that reads the live queue size. `InsertionOrderPriorityQueueTest` checks it after adds, an `offer`, a `poll` and a `clear`.

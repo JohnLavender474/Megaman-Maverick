@@ -52,8 +52,8 @@ related-items: [<mega-refactor item IDs>]
 | Issue | Verified | Area | Status |
 |-------|----------|------|--------|
 | [`CullablesSystem` skips culling for the remaining entities after one entity without a cullable](2026-10-22-cullables-system-early-return.md) | yes | engine | open |
-| [`InsertionOrderPriorityQueue.size` is always 0](2026-10-22-insertion-order-priority-queue-size.md) | yes | engine | open |
-| [`MutableOrderedSet.retainAll` removes nothing and reports the wrong result](2026-10-22-mutable-ordered-set-retain-all.md) | yes | engine | open |
+| [`InsertionOrderPriorityQueue.size` is always 0](2026-10-22-insertion-order-priority-queue-size.md) | yes | engine | closed |
+| [`MutableOrderedSet.retainAll` removes nothing and reports the wrong result](2026-10-22-mutable-ordered-set-retain-all.md) | yes | engine | closed |
 | [`replace("\\s+", "")` treats the pattern as literal text](2026-10-22-literal-whitespace-regex.md) | yes | core | open |
 | [The room-music block on respawn reads the room before Mega moves, and can throw](2026-10-22-respawn-stale-room-music.md) | yes | core | closed |
 | [A pause during a gate opening turns physics and behaviors on again when the game resumes](2026-10-22-pause-during-gate-reenables-physics.md) | yes | core | open |
@@ -63,10 +63,10 @@ related-items: [<mega-refactor item IDs>]
 | [Volume changes in game are not saved](2026-10-22-volume-not-saved.md) | yes | core | open |
 | [The save keeps which health tanks the player has, not how full they are](2026-10-22-health-tank-fill-not-saved.md) | yes | core | open |
 | [`runQueue` runs the last added runnable first](2026-10-22-run-queue-lifo.md) | yes | core | open |
-| [`OrderedSet.random()` changes the order of the set](2026-10-22-ordered-set-random-reorders.md) | yes | engine | open |
+| [`OrderedSet.random()` changes the order of the set](2026-10-22-ordered-set-random-reorders.md) | yes | engine | closed |
 | [`superRandom()` makes a new clock-seeded `Random` on each call](2026-10-22-super-random-reseeds.md) | yes | engine | open |
 | [The frame delta is not clamped](2026-10-22-frame-delta-not-clamped.md) | yes | core | open |
-| [`Float.round` throws in comma-decimal locales](2026-10-22-float-round-locale.md) | yes | engine | open |
+| [`Float.round` throws in comma-decimal locales](2026-10-22-float-round-locale.md) | yes | engine | closed |
 | [`GapingFish` crashes on spawn: the atlas has no `GapingFish/frozen` region](2026-10-23-gaping-fish-missing-frozen-region.md) | yes | content | closed |
 | [`engine` pins `gdx-freetype:1.11.0` against `gdxVersion` 1.14.2 and pulls the unused `gdx-tools:1.6.3`](2026-10-22-engine-gradle-dependencies.md) | yes | build | open |
 | [12 TexturePacker projects point to missing source folders, and 3 atlases have no project](2026-10-22-stale-tps-files.md) | yes | content | open |
@@ -86,7 +86,7 @@ related-items: [<mega-refactor item IDs>]
 | [Five contact debug logs name the wrong phase or fixture type](2026-10-22-wrong-contact-log-texts.md) | yes | core | closed |
 | [`hitExplosion` gets its two shapes in the reverse order](2026-10-22-projectile-explosion-shape-order.md) | yes | core | open |
 | [`BouncingPebble` bounces to the right when its right side hits a block](2026-10-22-bouncing-pebble-right-side-bounce.md) | no | core | open |
-| [`GameLine.rotate` sets `originY` to the `originX` value](2026-10-25-game-line-rotate-origin-y.md) | yes | engine | open |
+| [`GameLine.rotate` sets `originY` to the `originX` value](2026-10-25-game-line-rotate-origin-y.md) | yes | engine | closed |
 | [`isPerformanceSubpar()` is true for the high tiers and has no caller](2026-10-25-is-performance-subpar-inverted.md) | yes | core | open |
 | [A gamepad model with no saved bindings gets code `0` on all 8 buttons after "LOAD SAVED SETTINGS"](2026-10-25-preferred-controller-code-zero.md) | yes | core | closed |
 | [Leaving the keyboard or gamepad settings screen during a level restarts the level](2026-10-25-bindings-screen-restarts-level.md) | yes | core | closed |

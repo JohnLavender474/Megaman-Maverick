@@ -1,8 +1,8 @@
 ---
-status: open
+status: closed
 verified: yes
 area: engine
-gameplay-change: unknown
+gameplay-change: no
 found-by: mega-refactor review (2026-10-22)
 related-items: [018]
 ---
@@ -30,3 +30,7 @@ Read the code, or write a unit test.
 Find the callers before a fix.
 
 - Fix: `fix/engine-small-bugs`. The short contract is in `2026-10-22-insertion-order-priority-queue-size.md`.
+
+## Resolution
+
+Fixed in `fix/engine-small-bugs`, squash commit `4522cf9db` (2026-11-14). `retainAll` walks the set from the end and removes each element that is not in the argument; it returns `true` only when it removed one. `MutableOrderedSetTest` has 3 cases.

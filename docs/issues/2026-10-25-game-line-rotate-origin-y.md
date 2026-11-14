@@ -1,8 +1,8 @@
 ---
-status: open
+status: closed
 verified: yes
 area: engine
-gameplay-change: unknown
+gameplay-change: no
 found-by: mega-refactor 020 scan (2026-10-25)
 related-items: [020]
 ---
@@ -60,3 +60,7 @@ chance, the fix changes how those lines behave.
   a polygon with a non-zero `position` turns about the wrong point too. No fixture uses a `GamePolygon` today, so it
   is not live and not in this fix.
 - Fix: `fix/engine-small-bugs`. The short contract is in `2026-10-22-insertion-order-priority-queue-size.md`.
+
+## Resolution
+
+Fixed in `fix/engine-small-bugs`, squash commit `4522cf9db` (2026-11-14). `rotate` stores `originX - position.x` and `originY - position.y`, so the line turns about the world point that it gets, as `GameRectangle.rotate`, `Body.getBounds` and `Fixture.getShape` expect. `GameLineTest` has 3 new cases: the zero position, a translated line, and a line moved by `setCenter`. No live code rotates a `GameLine`, so there is no gameplay change. The same fault in `GamePolygon.rotate` (see Notes) is not fixed.

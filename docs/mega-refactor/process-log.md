@@ -2238,3 +2238,21 @@ newest entry at the bottom.
 - Overlap: `060c` changes 9 of the files that `137a`, `138a` and `139a` changed. Owner chose to merge these first; the
   `060` `ITEM.md` "Notes for active branches" lists the files and what changed.
 - No backlog or bug candidates.
+
+## 2026-11-14 — fix/engine-small-bugs
+
+- Summary: closes 5 `engine` issues (squash commit `4522cf9db`): `InsertionOrderPriorityQueue.size` (was always 0),
+  `MutableOrderedSet.retainAll` (removed nothing), `GameLine.rotate` (pivot), `Float.round` (comma-decimal locales) and
+  `OrderedSet.random()` (changed the set order). The short contract is in
+  `docs/issues/2026-10-22-insertion-order-priority-queue-size.md`.
+- Contract changes during the branch: the owner asked for a second check of the `GameLine` fix. The first plan
+  (`originY = originY`) was not enough: `calculateWorldPoints` pivots on `position + origin`, and `Fixture.getShape`
+  moves `position` with `setCenter` before `rotate`. So `rotate` stores the origin relative to `position`.
+  `Float.round` is kept, not deleted, because `PendulumTest` and `AnimationTest` call it.
+- Contract check: the 9 new test cases fail on `master` and pass on the branch; `./gradlew engine:test core:test
+  core:smokeTest lwjgl3:jar` passes (`engine` 687, `allocationTest` 2, `core` 1782, `smokeTest` 452, JAR built). No
+  gameplay change, so no play test: no live code reads the queue `size`, calls `retainAll` on a `MutableOrderedSet` or
+  rotates a `GameLine` (the `Laser` fixtures are not attached to the body). CI did not run, because the branch was
+  never pushed.
+- Follow-up: `GamePolygon.rotate` has the same pivot fault (noted in the `GameLine` issue). It is not live, because no
+  fixture uses a `GamePolygon`.
