@@ -51,7 +51,7 @@ related-items: [<mega-refactor item IDs>]
 
 | Issue | Verified | Area | Status |
 |-------|----------|------|--------|
-| [`CullablesSystem` skips culling for the remaining entities after one entity without a cullable](2026-10-22-cullables-system-early-return.md) | yes | engine | open |
+| [`CullablesSystem` skips culling for the remaining entities after one entity without a cullable](2026-10-22-cullables-system-early-return.md) | yes | engine | closed |
 | [`InsertionOrderPriorityQueue.size` is always 0](2026-10-22-insertion-order-priority-queue-size.md) | yes | engine | closed |
 | [`MutableOrderedSet.retainAll` removes nothing and reports the wrong result](2026-10-22-mutable-ordered-set-retain-all.md) | yes | engine | closed |
 | [`replace("\\s+", "")` treats the pattern as literal text](2026-10-22-literal-whitespace-regex.md) | yes | core | open |
@@ -68,7 +68,7 @@ related-items: [<mega-refactor item IDs>]
 | [The frame delta is not clamped](2026-10-22-frame-delta-not-clamped.md) | yes | core | open |
 | [`Float.round` throws in comma-decimal locales](2026-10-22-float-round-locale.md) | yes | engine | closed |
 | [`GapingFish` crashes on spawn: the atlas has no `GapingFish/frozen` region](2026-10-23-gaping-fish-missing-frozen-region.md) | yes | content | closed |
-| [`engine` pins `gdx-freetype:1.11.0` against `gdxVersion` 1.14.2 and pulls the unused `gdx-tools:1.6.3`](2026-10-22-engine-gradle-dependencies.md) | yes | build | open |
+| [`engine` pins `gdx-freetype:1.11.0` against `gdxVersion` 1.14.2 and pulls the unused `gdx-tools:1.6.3`](2026-10-22-engine-gradle-dependencies.md) | yes | build | closed |
 | [12 TexturePacker projects point to missing source folders, and 3 atlases have no project](2026-10-22-stale-tps-files.md) | yes | content | open |
 | [`WILY_CASTLE_SCREEN` is in `ScreenEnum` but not registered](2026-10-22-wily-castle-screen-not-registered.md) | yes | core | open |
 | [The TMX background `section` property has no effect](2026-10-22-background-section-ignored.md) | yes | core | open |

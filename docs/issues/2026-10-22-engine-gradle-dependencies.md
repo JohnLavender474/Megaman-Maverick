@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: build
 gameplay-change: no
@@ -28,3 +28,8 @@ Read `engine/build.gradle`.
 ## Short contract
 
 Fixed in branch `fix/engine-small-bugs-2`. The short contract is in `2026-10-22-cullables-system-early-return.md`.
+
+## Resolution
+
+Fixed in `fix/engine-small-bugs-2`, squash commit `1525b0142` (2026-11-14). `gdx-freetype` uses `$gdxVersion`, and
+`gdx-tools` is removed. `lwjgl3:jar` builds.

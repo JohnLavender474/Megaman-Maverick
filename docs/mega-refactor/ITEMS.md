@@ -73,7 +73,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | `O1` | done | none | 2026-10-27 | 2026-10-28 |
 | 064 | [Entity instance identity: `id` and `group`](items/064-entity-instance-identity/ITEM.md) | refactor | `O1` | done | none | 2026-10-27 | 2026-10-28 |
 | 065 | [Every `init()` calls `super.init()`](items/065-init-calls-super/ITEM.md) | refactor | `O1` | planned | none | | |
-| 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | `O1` | active | none | 2026-11-14 | |
+| 066 | [`GameSystem.reset()` clears pending removes](items/066-game-system-reset-pending-removes/ITEM.md) | refactor | `O1` | done | none | 2026-11-14 | 2026-11-14 |
 | 067 | [PPM 16 with 1x pixel art](items/067-ppm-16/ITEM.md) | refactor | `O5`, `O3` | planned | none | | |
 | 068 | [Floor slopes for extra levels](items/068-slopes/ITEM.md) | feature | `O8`, `O4` | done | none | 2026-11-03 | 2026-11-03 |
 | 069 | [A dash button for X](items/069-dash-button/ITEM.md) | feature | `O8` | dropped | `031`, `081a` | | 2026-11-05 |
@@ -90,7 +90,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
 | 081 | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | active | `047b`, `084` | 2026-11-06 | |
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | `O9` | planned | `012`, `031` | | |
-| 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | `O1` | active | none | 2026-11-14 | |
+| 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | `O1` | done | none | 2026-11-14 | 2026-11-14 |
 | 084 | [Split `Megaman` into player components](items/084-split-megaman/ITEM.md) | refactor | `O8`, `O1` | done | none | 2026-10-30 | 2026-11-01 |
 | 085 | [Remove the dead `ConstKeys.FOCUS` override in `Megaman`](items/085-dead-focus-override/ITEM.md) | refactor | `O1` | dropped | none | | 2026-10-31 |
 | 086 | [Player movement modifiers as a component](items/086-player-movement-modifiers/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |

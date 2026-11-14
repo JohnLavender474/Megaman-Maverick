@@ -2256,3 +2256,19 @@ newest entry at the bottom.
   never pushed.
 - Follow-up: `GamePolygon.rotate` has the same pivot fault (noted in the `GameLine` issue). It is not live, because no
   fixture uses a `GamePolygon`.
+
+## 2026-11-14 — fix/engine-small-bugs-2
+
+- Summary: closes 2 `engine` issues and items `066` and `083` (squash commit `1525b0142`):
+  `CullablesSystem` stopped the whole pass at one entity with no component, `engine/build.gradle` pinned
+  `gdx-freetype:1.11.0` and pulled the unused `gdx-tools`, `GameSystem.reset()` kept deferred removes, and
+  `PathfinderResult.targetReached` (inverted, no reader) is removed. The short contract is in
+  `docs/issues/2026-10-22-cullables-system-early-return.md`.
+- Contract changes during the branch: the owner added a code-style rule first (`docs/CODE_STYLE.md`, "A guard is its
+  own statement", commit `744f733d2`), and the `CullablesSystem` fix follows it. Item `083`: remove was chosen over
+  rename and fix, by the rule that code needs a production caller. The culling issue's `gameplay-change` became `no`:
+  an entity joins the system only with the component, and the only code that removes it does so in `onSpawn`.
+- Contract check: the 2 new test cases fail on `master` and pass on the branch; `./gradlew engine:test core:test
+  core:smokeTest lwjgl3:jar` passes (`engine` 689, `allocationTest` 2, `core` 1782, `smokeTest` 452, JAR built). No
+  play test: no gameplay change. The owner spot-checked the diff in Diffity (no threads) and approved. CI did not
+  run, because the branch was never pushed.

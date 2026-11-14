@@ -79,7 +79,7 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 - Performance: `018`, `020`, `026`, `044`, `045`, `046`, `067`, `116`
 - Saves and checkpoints: `007` → `034`; `036` → `037`
 - Tooling: `003`, `008`, `039`, `040`, `043`, `090`, `100`
-- Cleanup: `027`, `066`, `071`, `083`, `087`, `092`, `093`, `096`, `097`, `098`, `103`, `104`
+- Cleanup: `027`, `071`, `087`, `092`, `093`, `096`, `097`, `098`, `103`, `104`
 - Design: `025`, `042`, `048`, `049`, `052`, `053`, `057`, `058`, `059`, `070`, `086`, `114`
 - Boss fights: `082b` after `082a`. `048` step 6 can move the boss hooks into `BossComponent` now. `013` and `047e` can use the fight routine now
 - Later features: `120` after `030`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`

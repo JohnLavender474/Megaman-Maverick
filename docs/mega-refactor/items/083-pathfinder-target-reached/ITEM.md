@@ -1,11 +1,11 @@
 # 083: `PathfinderResult.targetReached` means what it says
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `016`
-- Branches: `fix/engine-small-bugs-2` (short contract in `docs/issues/2026-10-22-cullables-system-early-return.md`)
+- Branches: `fix/engine-small-bugs-2`, merged in squash commit `1525b0142` (2026-11-14; short contract in `docs/issues/2026-10-22-cullables-system-early-return.md`)
 
 ## Goal
 
@@ -26,3 +26,8 @@ remove.
 ## Sources
 
 - `016d` branch `docs/TODO.md` (backlog candidate, 2026-10-29); found while writing `MegaPathfinderFactoryTest`.
+
+## Resolution
+
+Done in `fix/engine-small-bugs-2`, squash commit `1525b0142` (2026-11-14). `PathfinderResult.targetReached` is
+removed: no production code read it. The tests that asserted on it assert on `path` only.

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: engine
 gameplay-change: no
@@ -76,3 +76,9 @@ Checks:
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes. The JAR build is the check for the dependency
   change.
 - No play test: no gameplay change.
+
+## Resolution
+
+Fixed in `fix/engine-small-bugs-2`, squash commit `1525b0142` (2026-11-14). The null check is its own statement
+(`if (cullables == null) return@forEach`) before the inner loop. A `CullablesSystemTest` case removes the component of
+a member during the update and checks that the next member still culls and that `endEntry()` runs.

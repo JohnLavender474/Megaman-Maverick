@@ -1,11 +1,11 @@
 # 066: `GameSystem.reset()` clears pending removes
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `064`
-- Branches: `fix/engine-small-bugs-2` (short contract in `docs/issues/2026-10-22-cullables-system-early-return.md`)
+- Branches: `fix/engine-small-bugs-2`, merged in squash commit `1525b0142` (2026-11-14; short contract in `docs/issues/2026-10-22-cullables-system-early-return.md`)
 
 ## Goal
 
@@ -26,3 +26,9 @@ branch.
 ## Sources
 
 - `064a` branch `docs/TODO.md` (backlog candidate, 2026-10-27).
+
+## Resolution
+
+Done in `fix/engine-small-bugs-2`, squash commit `1525b0142` (2026-11-14). `GameSystem.reset()` also clears
+`entitiesToRemove`. A `GameSystemHooksTest` case defers a remove, resets, adds the entity again and checks that it
+stays in the system.
