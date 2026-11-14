@@ -1,11 +1,11 @@
 # 083: `PathfinderResult.targetReached` means what it says
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `016`
-- Branches: none yet
+- Branches: `fix/engine-small-bugs-2` (short contract in `docs/issues/2026-10-22-cullables-system-early-return.md`)
 
 ## Goal
 

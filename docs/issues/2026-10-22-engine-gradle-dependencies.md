@@ -24,3 +24,7 @@ Use `$gdxVersion` for `gdx-freetype`, and remove `gdx-tools`.
 ## How to reproduce
 
 Read `engine/build.gradle`.
+
+## Short contract
+
+Fixed in branch `fix/engine-small-bugs-2`. The short contract is in `2026-10-22-cullables-system-early-return.md`.

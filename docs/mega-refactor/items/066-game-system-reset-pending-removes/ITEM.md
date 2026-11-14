@@ -1,11 +1,11 @@
 # 066: `GameSystem.reset()` clears pending removes
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O1`
 - Depends on: none
 - Related: `064`
-- Branches: none yet
+- Branches: `fix/engine-small-bugs-2` (short contract in `docs/issues/2026-10-22-cullables-system-early-return.md`)
 
 ## Goal
 
