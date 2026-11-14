@@ -1,12 +1,10 @@
 # Plan: mega-refactor-159a-intro-boss-art
 
-How to do the work in `SCOPE.md`. Write this file after the owner approves the brief. It needs
-no approval. When the plan changes, write the reason in the process log.
-
 ## Steps
 
-### 1. <step>
+### 1. Cracks in `Head/defeated`
 
-- Changes:
-- Check:
-- Done: no
+- Changes: the crack drawing (`temp/159a/draft.py`, step 2 of the drafts) written into the frame file and the atlas
+  region in place.
+- Check: a script compares the atlas with `master` (only the region changes); `core:smokeTest`, `lwjgl3:jar`.
+- Done: yes (the Gradle checks run before the merge)
