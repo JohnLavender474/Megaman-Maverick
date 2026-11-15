@@ -52,7 +52,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 042 | [Split god classes and extract reusable motion and attack components](items/042-reusable-components/ITEM.md) | refactor | `O1`, `O4` | planned | none | | |
 | 043 | [Lighter clone without a history rewrite](items/043-lighter-clone/ITEM.md) | tooling | `O1` | planned | none | | |
 | 044 | [Lazy debug and log strings](items/044-lazy-logging/ITEM.md) | refactor | `O5` | planned | none | | |
-| 045 | [Clear ownership rules and debug checks for `GameObjectPools`](items/045-pool-ownership/ITEM.md) | refactor | `O1`, `O5` | planned | none | | |
+| 045 | [Clear ownership rules and debug checks for `GameObjectPools`, and no per-frame allocation of pooled types](items/045-pool-ownership/ITEM.md) | refactor | `O1`, `O5` | planned | none | | |
 | 046 | [Backgrounds as pure functions of the camera, with visible-cell drawing](items/046-backgrounds/ITEM.md) | refactor | `O5`, `O1` | planned | none | | |
 | 047 | [Co-op with multiple controllers](items/047-co-op/ITEM.md) | feature | `O2` | active | `029`, `031` | 2026-11-01 | |
 | 048 | [Replace entity inheritance with components](items/048-components-not-inheritance/ITEM.md) | refactor | `O1` | planned | none | | |

@@ -116,7 +116,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `039` | planned | [Retire unused assets and review dead code](../items/039-retire-dead-assets-code/ITEM.md) (main) |
 | `042` | planned | [Split god classes and extract reusable motion and attack components](../items/042-reusable-components/ITEM.md) (main) |
 | `043` | planned | [Lighter clone without a history rewrite](../items/043-lighter-clone/ITEM.md) (main) |
-| `045` | planned | [Clear ownership rules and debug checks for `GameObjectPools`](../items/045-pool-ownership/ITEM.md) (main) |
+| `045` | planned | [Clear ownership rules and debug checks for `GameObjectPools`, and no per-frame allocation of pooled types](../items/045-pool-ownership/ITEM.md) (main) |
 | `048` | planned | [Replace entity inheritance with components](../items/048-components-not-inheritance/ITEM.md) (main) |
 | `049` | idea | [Reduce repetitive object-oriented patterns](../items/049-reduce-repetitive-patterns/ITEM.md) (main) |
 | `052` | idea | [Make values configurable](../items/052-configurable-values/ITEM.md) (main) |

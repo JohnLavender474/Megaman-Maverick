@@ -2364,3 +2364,8 @@ newest entry at the bottom.
   check passes; owner play test passed.
 - Follow-up: item `159` done. No backlog or bug candidates.
 
+
+## 2026-11-15 — `045` scope widened (docs only)
+
+- From the `011a` Diffity review: the owner asked for work that replaces per-frame `new Vector2()` (and the other pooled types) and adds a rule so that new code does not repeat it. No item had this goal. The owner chose to add it to `045`, not to make a new item.
+- `045` `ITEM.md`: goal, two scope points (the sweep, the `docs/CODE_STYLE.md` rule), the owner's words. Title changed in `ITEMS.md`, `O1` and `O5`.
