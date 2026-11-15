@@ -62,6 +62,11 @@ reviews, merges) is in `docs/mega-refactor/CLAUDE.md`.
   with every check of its contract passed. (Owner, 2026-11-14, branch `077a`: waiting for test rewrites at each
   boss change was too slow.)
 
+- **No JAR build during a play test round.** After the play checks are handed over, a fix runs only the unit tests
+  (`engine:test`, `core:test`), and only when the owner says no game runs from the worktree. Do not run `lwjgl3:jar`:
+  the owner's next launch compiles the change. The full automated checks run once, when the round closes. (Owner,
+  2026-11-14, branch `024a`: the play test already covers the JAR build.)
+
 - **Damage to the player per fight goes in the player damage table.** Set what a fight's damagers do to the player in
   `PlayerDamageNegotiator` (`players/`), one entry per damager tag, not in a value on the damager class. When a damager
   class is shared by several owners (for example `BigAssMaverickRobotOrb`, used by 3 bosses), the entry chooses by its
