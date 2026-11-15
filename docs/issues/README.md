@@ -165,3 +165,4 @@ related-items: [<mega-refactor item IDs>]
 | [A test JVM that runs out of heap hangs, and its Gradle daemon stays busy for days](2026-11-11-test-jvm-hangs-on-oom.md) | yes | build | closed |
 | [`core:test` keeps the services and mocks of finished tests alive and fills its 1 GB heap](2026-11-11-core-test-heap-leak.md) | yes | build | closed |
 | [`ProtomanTest` and `MegamanXTest` fail when they run alone](2026-11-11-player-tests-fail-alone.md) | yes | build | open |
+| [Projectiles explode on spikes and on every other `DEATH` fixture](2026-11-14-projectiles-explode-on-death-fixtures.md) | yes | core | open |
