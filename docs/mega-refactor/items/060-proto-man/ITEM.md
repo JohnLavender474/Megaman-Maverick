@@ -83,6 +83,12 @@ similar playable characters (Bass, Axl, Zero, etc.) in the future."
   `MegaPlayer` receiver.
 
 - (2026-11-14, owner, at the `060d` start) Proto Man shares Megaman's slide and ladder rules.
+- (2026-11-15, owner, at the `060d` play test) The 2 weapon slots (`060c`, 2026-11-13) go in a new branch, `060l`,
+  after `060d`: X's input, `B` is the buster (later the current special weapon of `060h`) and `UP`+`B` is the sabre.
+  On a ladder `B` stays the buster (the `060c` rule). `SELECT` stays for the special weapons. Claude's research
+  (pros: both attacks without `SELECT`, one input for Proto Man and X, less slot code; cons: `DOWN`+`B` can be only
+  one crouch attack, `UP`+`B` at a ladder grabs it, the sabre is no longer the plain `B` of 2026-11-12) is in the
+  `060d` session of 2026-11-15; the 2 open points are under "Open questions".
 
 ## Proposed phases
 
@@ -102,6 +108,7 @@ as refined as possible before co-op (`060i`) (owner, 2026-11-10).
 | `060g` | Experiments: settings, moves and behaviors, from the sheet scan and play tests. Can be more than one branch | |
 | `060h` | Weapon poses and the loadout: Proto Man's variants of the special weapons | `024` |
 | `060i` | `CharacterDef` as the third caller (if `081` has not done it); co-op with mixed characters | `047` |
+| `060l` | One input in place of the 2 weapon slots (owner, 2026-11-15): `B` is the buster, `UP`+`B` is the sabre, as X; `ProtomanWeapon`, the 2 HUD slot icons and the slot branches go | `060d` |
 | `060k` | The owner's own edits of the Proto Man frames (owner, 2026-11-14: Claude's art rounds went in circles). Claude does no drawing: atlas repack, strip size and frame-count checks, muzzle points and shot offsets, and the smoke test on request | `060d` |
 
 Sprite source: a fan sheet, "Proto Man (Expanded) (Inti Creates 8-bit-Style)", sprites by Hansungkee and others (the
@@ -127,6 +134,10 @@ credits are on the sheet). Keep the credits.
   questions are open, so this phase comes late.
 - Answered 2026-11-12 (see Decisions): (`060f`) What is the Proto Sabre: its input, its slash kinds, and how much it shares with X's Z-sabre (`081e`,
   `141`)?
+- (`060l`) `DOWN`+`B` on the ground: the crouch shot or the crouch slash (`UP`+`DOWN`+`B` cannot be pressed on a
+  d-pad, so only one of them stays)?
+- (`060l`) Does `UP`+`B` on the ground start the 3-slash combo (later presses chain it), or a single slash as today's
+  buster slot?
 - Moved to `113`: how does the player pick a character, and can each co-op slot pick its own (`047`)?
 
 ## Sources
