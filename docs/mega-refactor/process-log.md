@@ -2471,7 +2471,9 @@ newest entry at the bottom.
   `lwjgl3:jar`); 135 Desert Man tests from `TEST-DEBT.md`, each file with a mutation check; owner approved 2 `internal`
   members for the tests (`DesertManState`, `currentState`). Review before the merge by 1 subagent: 7 findings, all
   fixed (X friction reset in `onSpawn`, dead timer and roll, stale docs, style items). Owner play test passed
-  ("Very fun"). No Diffity round.
+  ("Very fun"). No Diffity round. The same checks pass on \`master\` after the squash (\`engine:test\` 698, \`core:test\`
+  2255, \`core:smokeTest\` 467, 0 failures; the branch counts included stale result files of tests that \`master\`
+  removed).
 - Follow-up: no new items (one tuning note in the `077` `ITEM.md`). The bug candidate (literal `"\\s+"` replace of the
   light source keys) is already fixed in the active `fix/small-bugs-3`, which changes one other line of
   `DesertMan.kt`. Item `077` stays active. The main checkout had 1 modified file of another session
