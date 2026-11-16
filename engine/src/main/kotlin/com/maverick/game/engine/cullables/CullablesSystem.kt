@@ -22,8 +22,7 @@ class CullablesSystem(
 
         entities.forEach { entity ->
             try {
-                val cullables = entity.getComponent(CullablesComponent::class)?.cullables?.values()
-                if (cullables == null) return@forEach
+                val cullables = entity.getComponent(CullablesComponent::class)?.cullables?.values() ?: return@forEach
                 for (cullable in cullables) if (cullable.shouldBeCulled(delta)) {
                     culler.cull(entity)
                     break
