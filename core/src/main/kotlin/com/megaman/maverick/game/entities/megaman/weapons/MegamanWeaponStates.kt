@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman.weapons
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.entities.EntityExistenceState
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.focus
@@ -16,8 +17,16 @@ import kotlin.math.min
 
 class MoonScythesState(cooldown: Float) : WeaponState(cooldown) {
 
+    private companion object {
+        val OLDEST_FIRST = Comparator<MoonScythe> { o1, o2 -> sortOrder(o1).compareTo(sortOrder(o2)) }
+
+        fun sortOrder(scythe: MoonScythe) =
+            if (scythe.existenceState == EntityExistenceState.LIVE) scythe.spawnOrder else Long.MAX_VALUE
+    }
+
     val maxWaitTime = Timer(1f).setToEnd()
     private val outArray = Array<MegaGameEntity>()
+    private val countedScythes = Array<MoonScythe>()
 
     override fun canFire(stat: MegaChargeStatus): Boolean {
         if (maxWaitTime.isFinished()) return true
@@ -27,21 +36,19 @@ class MoonScythesState(cooldown: Float) : WeaponState(cooldown) {
     }
 
     fun fadeExtraScythes() {
-        val allMoonScythes = getAllSpawned(outArray)
-        // TODO: outArray is not cleared on this return, so it keeps old entries (bug candidate in the 024a TODO.md)
-        if (allMoonScythes.size <= 4) return
-        // TODO: scythes of this shot are still spawn-queued, so their stale spawnOrder sorts them as oldest (011a TODO.md)
-        allMoonScythes.sort { o1, o2 -> o1.spawnOrder.compareTo(o2.spawnOrder) }
-        var aliveCount = allMoonScythes.size
-        val iter = allMoonScythes.iterator()
-        while (iter.hasNext() && aliveCount > 4) {
-            val moonScythe = iter.next() as MoonScythe
-            if (!moonScythe.fading && moonScythe.existenceState.liveAfterUpdate) {
-                moonScythe.fading = true
-                --aliveCount
-            }
+        outArray.clear()
+        getAllSpawned(outArray).forEach { entity ->
+            val scythe = entity as MoonScythe
+            val existence = scythe.existenceState
+            if (existence.liveAfterUpdate && (existence != EntityExistenceState.LIVE || !scythe.fading))
+                countedScythes.add(scythe)
         }
-        allMoonScythes.clear()
+        val extraCount = countedScythes.size - MegamanValues.MAX_MOON_SCYTHES
+        if (extraCount > 0) {
+            countedScythes.sort(OLDEST_FIRST)
+            for (i in 0 until extraCount) countedScythes[i].fading = true
+        }
+        countedScythes.clear()
     }
 
     override fun update(delta: Float) {

@@ -46,6 +46,19 @@ reviews, merges) is in `docs/mega-refactor/CLAUDE.md`.
   folder is your worktree, and act on those PIDs. Never use `pkill -f <name>`, and never take `pgrep ... | head -1`
   as yours. (A `pkill -f` on 2026-11-11 stopped the test JVMs of other sessions.) A `pgrep -f` pattern also matches
   the shell whose command line holds it. A Gradle daemon's folder is `~/.gradle/daemon/<version>`, not the worktree.
+- **Mutation checks: few, batched runs** (owner, 2026-11-16). A mutation check shows that a new test fails when its
+  rule breaks. Each run recompiles `core`, so the cost is the number of Gradle runs, not the number of tests:
+  - Scope: one mutation per rule (or per group of asserts on one rule), only for new or changed rules. Rules that a
+    move keeps "rule for rule" are covered by the tests written on the old code; a move needs no new mutations.
+  - Batch: put 3 to 6 independent mutations in one run. Each mutation breaks a different rule, and the failing case
+    names show which mutation each failure belongs to. Split a batch only when 2 mutations make the same case fail.
+  - Run only the target specs: `--tests 'full.package.ClassName'` (a `*Name` pattern finds nothing with Kotest).
+  - Keep the compiler warm for the loop: run it with the daemon and the Kotlin compiler in the daemon, and a short
+    idle time, so the daemon stops by itself after the loop:
+    `./gradlew --daemon -Dorg.gradle.daemon.idletimeout=120000 -Pkotlin.compiler.execution.strategy=in-process ...`.
+    Do not use `./gradlew --stop`: it stops the daemons of every session.
+  - Restore the code exactly after each run (`git diff` of the mutated file is empty, or equal to the uncommitted
+    change it had before), and write the mutations and the failing cases in the branch process log.
 
 ## Gameplay iteration
 
