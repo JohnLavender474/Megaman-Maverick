@@ -2412,3 +2412,26 @@ newest entry at the bottom.
   `entities/megaman/weapons/MegamanWeaponFire.kt`; the `011a` guard test catches a missed call. The main checkout had
   1 modified file of another session (`CullablesSystem.kt`); it stays unstaged. Its `docs/CODE_STYLE.md` edit was
   committed on the owner's request (`e168a3e91`).
+
+## 2026-11-15 — mega-refactor-011a-game-random
+
+- Summary: squash `ba810edbd`. Every random value comes from one `GameRandom` per session, `MegaServices.random`
+  (`engine/.../common/random/`, with a README): a `SeededRandom` on `java.util.Random` (the same draws per call as
+  the old `getRandom`), seeded from the new launch option `--randSeed <long>` or the clock; the launcher prints
+  `- Rand Seed:`. About 225 sites moved; the engine helpers take a `GameRandom`; `UtilMethods.random`, `getRandom*`,
+  `superRandom`, `OrderedSet.random()` and the other old random helpers are deleted. `GameEngine.spawnCount` and
+  `MegaGameEntity.spawnOrder` replace the wall-clock `timeSpawned`. `RandomSourceGuardTest` fails on a direct random
+  call in `core`, `engine` or `lwjgl3`. Owner decisions: `D1` inject, `D2` one stream (not the recommended two),
+  `D3` clock seed and the option, `D4` source-scan test.
+- Contract check: automated checks on the branch after `master` was merged in; review before the play test by 2
+  subagents (fixes in `af5d68302`); owner play test passed (7 checks); Diffity round 1 with 0 threads and 2 chat
+  comments (the `seed` option renamed to `randSeed`; the `new Vector2()` question went to `045`, `78be0497e`). 1
+  conflict with `024a` in `MegamanWeaponsHandler.kt`: `024a` moved the code, so the 2 `011a` edits went to
+  `MegamanWeaponStates.kt` and `MegamanWeaponFire.kt`. On `master` after the squash: `engine:test` 698, `core:test`
+  2141, `core:smokeTest` 468, 0 failures; `lwjgl3:jar` builds (the main checkout's unstaged `CullablesSystem.kt` of
+  another session was in the tree).
+- Follow-up: item `011` done; new item `161` (a type-aware random-call check). Bug filed:
+  `docs/issues/2026-11-14-moon-scythes-stale-spawn-order.md`. Closed: `docs/issues/2026-10-22-super-random-reseeds.md`.
+  Rule `O2-R2` is active and holds. Overlap (owner decision: merge `011a` now): `077b` adds 8 `getRandom(...)` calls
+  in `DesertMan.kt`; when it merges `master`, it changes them to `services.random.nextFloat(...)` (`getRandom(Float,
+  Float)`) or `nextInt(...)` (`getRandom(Int, Int)`, inclusive), and the guard test finds a missed call.

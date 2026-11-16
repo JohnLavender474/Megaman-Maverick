@@ -34,7 +34,7 @@ Reason: most later work waits for these items.
 
 | Co-op          | Determinism            | Logic structure     | Safety and data           | Characters       |
 |----------------|------------------------|---------------------|---------------------------|------------------|
-|                | `011` random source    | `015` state machine | `005` damage test         | `081` playable X |
+|                |                        | `015` state machine | `005` damage test         | `081` playable X |
 |                |                        | `012` freezes       | `021` entity registry     |                  |
 |                | `017` world-step hooks |                     | `009` allocation baseline |                  |
 
@@ -91,7 +91,6 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 
 An item in this list closes these issues, so they need no fix branch of their own.
 
-- `011`: `superRandom`, `OrderedSet.random`
 - `010`: frame delta clamp
 - `012`, `013`: pause during a gate, health fill during a pause, `START` release, focus-loss pause
 - `036`: silent checkpoint change, same-name "4" spawns

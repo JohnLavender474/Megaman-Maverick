@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: engine
 gameplay-change: unknown
@@ -24,3 +24,7 @@ Use one random source (`011`).
 ## How to reproduce
 
 Read the code.
+
+## Resolution
+
+Closed by `mega-refactor-011a-game-random` (squash `ba810edbd`, 2026-11-15). `superRandom` is deleted; all code draws from `MegaServices.random`.

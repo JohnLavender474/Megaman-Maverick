@@ -29,7 +29,7 @@ These rules apply to every branch, whatever the item's objectives are. The full 
 | `O1-R4` | Typed state, not new property keys | now |
 | `O1-R5` | Code only with a production caller | now |
 | `O2-R1` | Input only through `InputFrame` | now |
-| `O2-R2` | Random values only from the seeded source | after `011` |
+| `O2-R2` | Random values only from the seeded source | now |
 | `O2-R3` | One fixed tick in all play | after `010` |
 | `O2-R4` | Stable iteration order; players in slot order | now |
 | `O2-R5` | No logic assumes one player | now |

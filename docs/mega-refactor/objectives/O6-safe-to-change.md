@@ -86,7 +86,8 @@ None found.
 | `091` | planned | [Check that a test room loads with no visible game window](../items/091-room-load-check/ITEM.md) (main) |
 | `009` | planned | [Allocation and GC baseline per branch](../items/009-gc-baseline/ITEM.md) |
 | `010` | idea | [One simulation clock: fixed tick for gameplay, separate present phase](../items/010-fixed-tick/ITEM.md) |
-| `011` | planned | [One seedable, interceptable random source with named streams](../items/011-game-random/ITEM.md) |
+| `011` | done | [One seedable, interceptable random source with named streams](../items/011-game-random/ITEM.md) |
+| `161` | idea | [A type-aware check for direct random calls](../items/161-random-call-lint/ITEM.md) (main) |
 | `100` | idea | [CI result before a merge](../items/100-ci-before-merge/ITEM.md) (main) |
 | `101` | idea | [Typed Tiled fields and checks for camera sections and rooms](../items/101-map-object-schema/ITEM.md) |
 | `105` | idea | [Fail a test task that runs 0 tests](../items/105-empty-test-run-check/ITEM.md) (main) |

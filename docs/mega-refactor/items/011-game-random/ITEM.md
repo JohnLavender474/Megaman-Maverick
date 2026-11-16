@@ -1,11 +1,11 @@
 # 011: One seedable, interceptable random source with named streams
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O2`, `O6`
 - Depends on: none
 - Related: `008`, `010`, `016`, `055`
-- Branches: `mega-refactor-011a-game-random` (active)
+- Branches: `mega-refactor-011a-game-random` (merged 2026-11-15)
 
 ## Goal
 
@@ -29,13 +29,16 @@ Answer to review item 10 (2026-10-22, verbatim):
 
 ## Open questions
 
-- Two streams (gameplay, cosmetic) or more (for example one per boss)?
-- In normal play, a random logged seed per run, or a fixed seed?
 - Must the RNG state go into save files? (Probably not.)
 
 ## Decisions
 
 - (2026-11-14, owner) Merge target: each branch of this item squash-merges directly into `master`.
+- (2026-11-14, owner, `011a` `D1`) Access: inject `MegaServices.random: GameRandom`; a helper with no `services` takes a `GameRandom` parameter.
+- (2026-11-14, owner, `011a` `D2`) One stream, not gameplay and cosmetic streams. A split is a later decision.
+- (2026-11-14, owner, `011a` `D3`) A clock seed per run, printed at start, and `--randSeed <long>` to fix it (renamed from `--seed` in the `011a` diff review, 2026-11-15).
+- (2026-11-14, owner, `011a` `D4`) Guard: a `core` source-scan test (`RandomSourceGuardTest`). A type-aware check is item `161`.
+- (2026-11-15) Done with `011a`. The scripted and recording sources of the proposed scope have no caller yet; they go with replay (`055`).
 
 ## Sources
 

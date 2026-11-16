@@ -18,7 +18,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | `O6` | active | none | 2026-10-22 | |
 | 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | `O5`, `O6` | planned | none | | |
 | 010 | [One simulation clock: fixed tick for gameplay, separate present phase](items/010-fixed-tick/ITEM.md) | refactor | `O2`, `O6`, `O5` | idea | `011`, `017` | | |
-| 011 | [One seedable, interceptable random source with named streams](items/011-game-random/ITEM.md) | refactor | `O2`, `O6` | active | none | 2026-11-14 | |
+| 011 | [One seedable, interceptable random source with named streams](items/011-game-random/ITEM.md) | refactor | `O2`, `O6` | done | none | 2026-11-14 | 2026-11-15 |
 | 012 | [Named, composable freezes with a reason table](items/012-named-freezes/ITEM.md) | refactor | `O1`, `O2` | planned | none | | |
 | 013 | [Level flow state machine; pause as an overlay](items/013-level-flow-fsm/ITEM.md) | refactor | `O1`, `O2` | planned | `015` | | |
 | 014 | [Table-driven contact and collision rules](items/014-contact-rules-table/ITEM.md) | refactor | `O1` | done | none | 2026-10-22 | 2026-10-22 |
@@ -168,6 +168,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 158 | [A shared lead-aim helper for bosses](items/158-boss-lead-aim-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | done | none | 2026-11-15 | 2026-11-15 |
 | 160 | [Ladder shot height at a ladder foot](items/160-ladder-foot-shot/ITEM.md) | feature | `O9` | idea | none | | |
+| 161 | [A type-aware check for direct random calls](items/161-random-call-lint/ITEM.md) | tooling | `O6`, `O2` | idea | `011` | | |
 
 ## Branches
 
@@ -273,6 +274,6 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-138a-wreck-into-mock-sprite`](items/138-wreck-into-mock-sprite/branches/mega-refactor-138a-wreck-into-mock-sprite/process-log.md) | 138 | Merge `Wreck` into `MockSpriteEntity` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-139a-shared-enemy-shot`](items/139-shared-enemy-shot/branches/mega-refactor-139a-shared-enemy-shot/process-log.md) | 139 | A shared simple enemy shot, starting with `JunkShot` | merged | 2026-11-13 | 2026-11-13 |
 | [`mega-refactor-077a-intro-boss`](items/077-robot-master-attacks/branches/mega-refactor-077a-intro-boss/process-log.md) | 077 | A richer intro-stage boss fight and shared boss health phases | merged | 2026-11-13 | 2026-11-15 |
-| [`mega-refactor-011a-game-random`](items/011-game-random/branches/mega-refactor-011a-game-random/process-log.md) | 011 | One seedable, interceptable random source with named streams | active | 2026-11-14 | |
+| [`mega-refactor-011a-game-random`](items/011-game-random/branches/mega-refactor-011a-game-random/process-log.md) | 011 | One seedable, interceptable random source with named streams | merged | 2026-11-14 | 2026-11-15 |
 | [`mega-refactor-159a-intro-boss-art`](items/159-intro-boss-hand-art/branches/mega-refactor-159a-intro-boss-art/process-log.md) | 159 | A cracked death head for the intro boss (the new fist frames were dropped) | merged | 2026-11-15 | 2026-11-15 |
 | [`mega-refactor-077b-desert-man`](items/077-robot-master-attacks/branches/mega-refactor-077b-desert-man/process-log.md) | 077 | A richer Desert Man boss fight on the shared boss parts of `077a` | active | 2026-11-15 | |

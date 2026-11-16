@@ -64,7 +64,7 @@ related-items: [<mega-refactor item IDs>]
 | [The save keeps which health tanks the player has, not how full they are](2026-10-22-health-tank-fill-not-saved.md) | yes | core | open |
 | [`runQueue` runs the last added runnable first](2026-10-22-run-queue-lifo.md) | yes | core | open |
 | [`OrderedSet.random()` changes the order of the set](2026-10-22-ordered-set-random-reorders.md) | yes | engine | closed |
-| [`superRandom()` makes a new clock-seeded `Random` on each call](2026-10-22-super-random-reseeds.md) | yes | engine | open |
+| [`superRandom()` makes a new clock-seeded `Random` on each call](2026-10-22-super-random-reseeds.md) | yes | engine | closed |
 | [The frame delta is not clamped](2026-10-22-frame-delta-not-clamped.md) | yes | core | open |
 | [`Float.round` throws in comma-decimal locales](2026-10-22-float-round-locale.md) | yes | engine | closed |
 | [`GapingFish` crashes on spawn: the atlas has no `GapingFish/frozen` region](2026-10-23-gaping-fish-missing-frozen-region.md) | yes | content | closed |
@@ -168,3 +168,4 @@ related-items: [<mega-refactor item IDs>]
 | [Projectiles explode on spikes and on every other `DEATH` fixture](2026-11-14-projectiles-explode-on-death-fixtures.md) | yes | core | open |
 | [X's landing probe skips one-way blocks while `DOWN` is held](2026-11-14-x-landing-probe-one-way-down.md) | no | core | open |
 | [Moon Scythes can fade live scythes too soon, because the count array keeps old entries](2026-11-14-moon-scythes-stale-array.md) | no | core | open |
+| [Moon Scythes of a new shot sort as the oldest and fade first](2026-11-14-moon-scythes-stale-spawn-order.md) | yes | core | open |
