@@ -39,6 +39,9 @@ X (`MegamanX`, item `081`) has only the buster. Until this item gives each chara
 - (2026-11-14, proposed at item start) Split: `024a` refactor only (Megaman's weapons as `WeaponDef`s, plays the
   same); `024b` a loadout per character (removes the `is Megaman` workarounds). `060h` builds on them. The `024a`
   brief confirms it.
+- (2026-11-15, owner) The loadout is per character. Defeating a boss can give each playable character a completely
+  different weapon (for example, Desert Man gives Megaman Needle Spin and Proto Man a "Tornado Sabre"; `060` `NOTES.md`).
+  So `024b` keys the rewards and the owned weapons by character.
 
 ## Owner's input
 

@@ -41,3 +41,10 @@ Two read-only agents. Paths are relative to `core/src/main/kotlin/com/megaman/ma
   shield up), SLIDE 2, CLIMB 2 + 1, HURT 3, STUNNED 2, COLLAPSE 2. The PROTO SHIELD row has 15 frames.
 - Unique moves on the sheet: TOP SPIN, WIRE, CHARGE KICK, BREAK DASH, ROLL, MEGA BALL KICK, PILE DRIVER, FLAME SWORD,
   TENGU BLADE, SPEEN, ABSORB, HADOKEN.
+
+## `060h`: weapon ideas from the owner (2026-11-15)
+
+- Each character has its own loadout, so one boss can give each character a different weapon (owner decision for
+  `024b`, 2026-11-15). Proto Man's weapon from a boss does not have to be his variant of Megaman's weapon.
+- Example: Desert Man gives Megaman Needle Spin, and gives Proto Man **Tornado Sabre**: Proto Man spins his sabre
+  around himself in a full circle.
