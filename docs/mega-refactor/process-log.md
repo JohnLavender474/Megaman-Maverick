@@ -2541,3 +2541,19 @@ newest entry at the bottom.
 - Merge note: another session ran `git commit` in the main checkout right after `git merge --squash fix/moon-scythes`,
   so commit `00c3adad5` ("docs: ways of working: mutation checks ...") holds the 4 fix files with its docs change.
   The files on `master` match the branch. History stays as it is.
+
+## 2026-11-16 — fix/background-pixel-perfect
+
+- Summary: closes `docs/issues/2026-11-16-background-hidden-after-pixel-perfect-toggle.md` (squash commit
+  `b0d72a70d`). After a pixel-perfect change in game, each `Background` made a new viewport with a 0×0 screen size, so
+  no background drew until the next window resize. `Background.onEvent` now updates the new viewport to the screen
+  size. Visible change: the backgrounds stay after the setting change.
+- Found in an owner play test of `DESERT_MAN` (no sunset at the `room14` → `room15` exit). A read-only scan by 1
+  subagent ranked the cause; the owner confirmed the pixel-perfect change in that run.
+- The new test is in `core:smokeTest` (`BackgroundViewportSmokeTest`), because `viewport.update` calls
+  `camera.update`, which needs the LibGDX natives that only that suite loads. It failed without the fix.
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` pass on the branch (702, 2277, 469;
+  0 failures). Owner play checks passed (experimental and control).
+- Not fixed, recorded by the scan: `MegaLevelScreen.eventKeyMask` is a hash `ObjectSet`, so the delivery order of
+  `SHOW_BACKGROUNDS` and `HIDE_BACKGROUNDS` events in one frame can change between launches. The current maps cannot
+  reach it.

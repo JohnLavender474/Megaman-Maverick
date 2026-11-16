@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -58,3 +58,9 @@ Checks:
   resume, walk into `room15`: the sky and the sunset draw. Change it back and look again.
 - Play check (control): `./run-game-alpha.sh --level DESERT_MAN --room room14` with no setting change: the sky and the
   sunset draw in `room15` as before.
+
+## Resolution
+
+Fixed in `fix/background-pixel-perfect`, squash commit `b0d72a70d` (2026-11-16). `Background.onEvent` calls
+`viewport.update(Gdx.graphics.width, Gdx.graphics.height)` on the new viewport. `BackgroundViewportSmokeTest` covers
+both values. The owner's play checks passed (experimental and control).
