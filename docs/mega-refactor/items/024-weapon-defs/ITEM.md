@@ -42,6 +42,13 @@ X (`MegamanX`, item `081`) has only the buster. Until this item gives each chara
 - (2026-11-15, owner) The loadout is per character. Defeating a boss can give each playable character a completely
   different weapon (for example, Desert Man gives Megaman Needle Spin and Proto Man a "Tornado Sabre"; `060` `NOTES.md`).
   So `024b` keys the rewards and the owned weapons by character.
+- (2026-11-15, owner) Bosses beaten are shared across characters. Only the weapon that a boss gives is per character.
+- (2026-11-15, owner) Two characters can share one `WeaponDef` when the attack is the same or similar enough for
+  both. A def must be "pure": it holds no state that changes during play, so no state can leak from one character to
+  the other. All play state stays in the `WeaponState` that `newState` makes for each player (as in `024a`).
+  For `024b`: the look fields (atlas, animation keys, HUD region) can differ per character, so the scan decides where
+  they live. A def field that is a mutable collection (today `movesBlockedWhileFiring`, an `ObjectSet`) can still be
+  changed at run time; the brief asks whether to make it read-only.
 
 ## Owner's input
 
@@ -51,8 +58,8 @@ Answer to review item 23 (2026-10-22, verbatim):
 
 ## Open questions
 
-- Is progress (bosses beaten) shared across characters, as in X6?
-- Can two characters share a `WeaponDef` with different sprites?
+- Answered 2026-11-15 (see Decisions): Is progress (bosses beaten) shared across characters, as in X6?
+- Answered 2026-11-15 (see Decisions): Can two characters share a `WeaponDef` with different sprites?
 - Must saved weapon ids stay readable from the old save?
 
 ## Sources
