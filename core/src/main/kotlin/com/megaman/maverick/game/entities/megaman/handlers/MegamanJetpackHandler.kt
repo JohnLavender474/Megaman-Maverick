@@ -30,7 +30,7 @@ class MegamanJetpackHandler(private val megaman: Megaman) : Updatable, Resettabl
     }
 
     override fun update(delta: Float) {
-        if (!megaman.services.gameState.containsWeapon(MegamanWeapons.RUSH_JET)) return
+        if (!megaman.weaponsHandler.hasWeapon(MegamanWeapons.RUSH_JET)) return
 
         if (isActive()) {
             timePerBitTimer.update(delta)

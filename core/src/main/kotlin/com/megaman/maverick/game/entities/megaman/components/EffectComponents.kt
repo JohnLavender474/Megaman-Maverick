@@ -17,6 +17,7 @@ import com.megaman.maverick.game.entities.state.BubbleEmitterComponent
 import com.megaman.maverick.game.entities.state.TrailSpriteComponent
 import com.megaman.maverick.game.entities.utils.isHeadUnderWater
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.entities.megaman.weapons.currentLook
 
 internal fun Megaman.defineBubbleEmitterComponent() = BubbleEmitterComponent(
     MegamanValues.UNDER_WATER_BUBBLE_DELAY,
@@ -52,7 +53,7 @@ private fun Megaman.tryToSpawnTrailSprite(): Boolean {
         isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
             var key = "groundslide"
             if (shooting) {
-                when (currentWeapon.trailWhileFiring) {
+                when (currentLook.trailWhileFiring) {
                     TrailWhileFiring.NONE -> return false
                     TrailWhileFiring.SHOOT_KEY -> key += "_shoot"
                     TrailWhileFiring.PLAIN_KEY -> {}
@@ -64,7 +65,7 @@ private fun Megaman.tryToSpawnTrailSprite(): Boolean {
         isBehaviorActive(BehaviorType.AIR_DASHING) -> {
             var key = "airdash"
             if (shooting) {
-                when (currentWeapon.trailWhileFiring) {
+                when (currentLook.trailWhileFiring) {
                     TrailWhileFiring.NONE -> return false
                     TrailWhileFiring.SHOOT_KEY -> key += "_shoot"
                     TrailWhileFiring.PLAIN_KEY -> {}

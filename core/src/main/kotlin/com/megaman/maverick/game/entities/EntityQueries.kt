@@ -7,7 +7,7 @@ import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.contracts.AbstractHealthEntity
 import com.megaman.maverick.game.entities.contracts.IHealthEntity
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.MegaPlayer
 import com.megaman.maverick.game.entities.state.CameraSubjectComponent
 import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.camera.IRoomSubject
@@ -42,9 +42,8 @@ fun IGameEntity.translateHealth(value: Int) = health.translateHealth(value)
 
 fun IGameEntity.depleteHealth() = health.depleteHealth()
 
-// TODO: the shoot animation is Megaman's; it moves to the loadout with item 024
 val IGameEntity.shooting: Boolean
-    get() = (this as? Megaman)?.shooting == true
+    get() = (this as? MegaPlayer)?.shooting == true
 
 val IGameEntity.feetFixture: Fixture
     get() = body.getProperty(ConstKeys.FEET) as Fixture

@@ -49,7 +49,6 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.locks.behaviorsLockHook
@@ -91,6 +90,10 @@ abstract class MegaPlayer(services: MegaServices) : AbstractHealthEntity(service
 
     final override lateinit var facing: Facing
 
+    abstract val character: PlayerCharacter
+
+    abstract val shooting: Boolean
+
     protected abstract val cameraFocusHeight: Float
 
     internal abstract fun defineBodyComponent(): BodyComponent
@@ -110,8 +113,6 @@ abstract class MegaPlayer(services: MegaServices) : AbstractHealthEntity(service
     internal abstract fun defineAnimationsComponent(): AnimationsComponent
 
     protected open fun teleportableComponent() = TeleportableComponent()
-
-    protected open fun onLevelCompleted(level: LevelDefinition) {}
 
     protected open fun onPlayerSpawn(spawnProps: Properties) {}
 
@@ -253,7 +254,6 @@ abstract class MegaPlayer(services: MegaServices) : AbstractHealthEntity(service
     // TODO: X shares Megaman's progress (heart tanks, health tanks, lives) for now; a profile for each character is
     //  in items 047 and 059
     internal fun definePlayerProgressComponent() = PlayerProgressComponent(
-        onLevelCompleted = { level -> onLevelCompleted(level) },
         onHeartTanksChanged = { setMaxHealthFromHeartTanks() },
         onCurrencyAdded = {
             if (services.gameState.getCurrency() < services.gameState.getMaxCurrency())

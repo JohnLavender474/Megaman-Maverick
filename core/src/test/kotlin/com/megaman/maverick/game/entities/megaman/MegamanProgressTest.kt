@@ -5,8 +5,6 @@ import com.maverick.game.engine.audio.AudioComponent
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
-import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
@@ -31,23 +29,6 @@ class MegamanProgressTest : DescribeSpec({
     }
 
     afterEach { unmockkAll() }
-
-    describe("a newly completed level") {
-        it("sets the reward weapons of that level") {
-            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
-
-            services.levelState.weaponsAttained!!.contains(MegamanWeapons.NEEDLE_SPIN) shouldBe true
-        }
-
-        it("does not set them again for a level that is already completed") {
-            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
-            services.levelState.weaponsAttained = null
-
-            state.addLevelCompleted(LevelDefinition.DESERT_MAN)
-
-            services.levelState.weaponsAttained shouldBe null
-        }
-    }
 
     describe("added currency") {
         it("plays the pickup sound while the currency is below the max") {

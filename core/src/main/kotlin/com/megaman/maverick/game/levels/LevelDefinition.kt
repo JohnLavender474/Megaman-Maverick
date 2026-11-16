@@ -3,6 +3,7 @@ package com.megaman.maverick.game.levels
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.putIfAbsentAndGet
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.IAsset
@@ -13,6 +14,7 @@ import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.players.PlayerCharacter
 
@@ -132,7 +134,9 @@ enum class LevelDefinition(
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
         levelOverride = LevelOverride(
-            loadout = LoadoutOverride(weapons = setOf(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.MOON_SCYTHES))
+            loadout = LoadoutOverride(
+                weapons = objectSetOf<WeaponDef<*>>(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.MOON_SCYTHES)
+            )
         )
     ),
     REFACTOR_TEST_031(
@@ -141,7 +145,9 @@ enum class LevelDefinition(
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
         levelOverride = LevelOverride(
-            loadout = LoadoutOverride(weapons = setOf(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.MOON_SCYTHES))
+            loadout = LoadoutOverride(
+                weapons = objectSetOf<WeaponDef<*>>(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.MOON_SCYTHES)
+            )
         )
     ),
     REFACTOR_TEST_084(

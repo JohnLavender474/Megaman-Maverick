@@ -87,7 +87,8 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.players.weapons
+import com.megaman.maverick.game.levels.WeaponRewardListener
 import com.megaman.maverick.game.entities.megamanx.MegamanX
 import com.megaman.maverick.game.entities.protoman.Protoman
 import com.megaman.maverick.game.entities.state.PlayerProgressComponent
@@ -466,6 +467,8 @@ class MegamanMaverickGame(
             roster.add(megaman, if (i == 0) PlayerCharacter.MEGAMAN else null)
         }
 
+        gameState.addListener(WeaponRewardListener(levelState, players))
+
         val megamanX = MegamanX(services)
         megamanX.init()
         megamanX.initialized = true
@@ -501,7 +504,7 @@ class MegamanMaverickGame(
 
         val start = launch.start
         if (start is LaunchStart.StartLevel) start.level.levelOverride?.let { applyLevelOverride(it) }
-        launch.weapons.forEach { gameState.addWeapon(it) }
+        launch.weapons.forEach { gameState.addWeaponToEachLoadout(it) }
         launch.heartTanks.forEach { gameState.addHeartTank(it) }
         launch.healthTanks.forEach { gameState.fillHealthTank(it) }
         launch.difficulty?.let { gameState.setDifficultyMode(it) }
@@ -847,8 +850,7 @@ class MegamanMaverickGame(
         GameLogger.debug(TAG, "resetPlayerProgress()")
         gameState.reset()
         gameState.clearWeapons()
-        // TODO: only Megaman has weapons; the loadout of each character is item 024
-        roster.forEach { if (it is Megaman) it.currentWeapon = MegamanWeapons.MEGA_BUSTER }
+        roster.forEach { it.weapons?.selectFirstWeapon() }
         gameState.resetLives()
         levelState.weaponsAttained = null
     }
@@ -864,7 +866,7 @@ class MegamanMaverickGame(
         loadout.heartTanks.forEach { gameState.addHeartTank(it) }
         loadout.healthTanks.forEach { (tank, value) -> gameState.putHealthTank(tank, value) }
         loadout.enhancements.forEach { gameState.addEnhancement(it) }
-        loadout.weapons.forEach { gameState.addWeapon(it) }
+        loadout.weapons.forEach { gameState.addWeaponToEachLoadout(it) }
         override.difficultyMode?.let { gameState.setDifficultyMode(it) }
         override.lives?.let { gameState.setLives(it) }
     }

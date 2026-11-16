@@ -12,6 +12,7 @@ import com.megaman.maverick.game.state.ViewEdgeRules
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import com.megaman.maverick.game.players.CharacterLoadouts
 
 class LaunchOptionsResolverTest : DescribeSpec({
 
@@ -269,17 +270,18 @@ class LaunchOptionsResolverTest : DescribeSpec({
 
     describe("--weapons") {
         it("gives no weapon when the option is not given") {
-            resolve(LaunchOptions()).resolved!!.weapons shouldBe emptySet()
+            resolve(LaunchOptions()).resolved!!.weapons.toSet() shouldBe emptySet()
         }
 
         it("splits, trims and parses the weapons, case-insensitively") {
             val result = resolve(LaunchOptions(weapons = "moon_scythes, RUSH_JET ,"))
             result.isValid shouldBe true
-            result.resolved!!.weapons shouldBe setOf(MegamanWeapons.MOON_SCYTHES, MegamanWeapons.RUSH_JET)
+            result.resolved!!.weapons.toSet() shouldBe setOf(MegamanWeapons.MOON_SCYTHES, MegamanWeapons.RUSH_JET)
         }
 
         it("gives every weapon with 'all'") {
-            resolve(LaunchOptions(weapons = "ALL")).resolved!!.weapons shouldBe MegamanWeapons.all.toSet()
+            resolve(LaunchOptions(weapons = "ALL")).resolved!!.weapons.toSet() shouldBe
+                CharacterLoadouts.all.flatMap { it.weapons.toList() }.toSet()
         }
 
         it("rejects an unknown weapon and suggests the nearest name") {

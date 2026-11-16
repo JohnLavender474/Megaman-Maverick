@@ -70,6 +70,11 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             body.direction = value
         }
 
+    override val character = PlayerCharacter.X
+
+    override val shooting: Boolean
+        get() = buster.shooting
+
     internal val buster = PlayerBuster(this, MEGAMAN_X_BUSTER)
     internal val sabre = PlayerSabre(this, megamanXSabreParams(this))
 

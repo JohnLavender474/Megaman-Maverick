@@ -64,8 +64,9 @@ import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.entities.utils.standardOnTeleportEnd
 import com.megaman.maverick.game.entities.utils.standardOnTeleportStart
 import com.megaman.maverick.game.events.EventType
-import com.megaman.maverick.game.levels.LevelDefinition
-import com.megaman.maverick.game.levels.LevelRewards
+import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
+import com.megaman.maverick.game.players.PlayerCharacter
+import com.megaman.maverick.game.players.PlayerWeaponsComponent
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
@@ -100,13 +101,13 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
     internal lateinit var jetpackHandler: MegamanJetpackHandler
 
-    var shooting: Boolean
+    override val character = PlayerCharacter.MEGAMAN
+
+    override var shooting: Boolean
         get() = !shootAnimTimer.isFinished()
         set(value) {
             if (value) shootAnimTimer.reset() else shootAnimTimer.setToEnd()
         }
-    val ammo: Int
-        get() = if (currentWeapon.infiniteAmmo) Int.MAX_VALUE else weaponsHandler.getAmmo(currentWeapon)
 
     override var direction: Direction
         get() = body.direction
@@ -152,8 +153,8 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
     lateinit var aButtonTask: AButtonTask
 
-    private var weapon: WeaponDef? = null
-    var currentWeapon: WeaponDef
+    private var weapon: WeaponDef<Megaman>? = null
+    var currentWeapon: WeaponDef<Megaman>
         get() = weapon!!
         set(value) {
             weaponsHandler.onChangeWeapon(value, weapon)
@@ -222,6 +223,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         jetpackHandler = MegamanJetpackHandler(this)
 
         currentWeapon = MegamanWeapons.MEGA_BUSTER
+        addComponent(defineWeaponsComponent())
         aButtonTask = AButtonTask.JUMP
 
         addComponent(GravityDeviceComponent {
@@ -239,6 +241,14 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         })
     }
 
+    private fun defineWeaponsComponent() = PlayerWeaponsComponent(
+        loadout = MEGAMAN_LOADOUT,
+        currentWeaponSupplier = { currentWeapon },
+        selectWeapon = { currentWeapon = it },
+        ammoOf = { weaponsHandler.getAmmo(it) },
+        translateAmmoOf = { weapon, delta -> translateAmmo(delta, weapon) }
+    )
+
     override fun teleportableComponent() = TeleportableComponent(
         onStart = { _: ITeleporterEntity ->
             stopCharging()
@@ -255,10 +265,6 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
             services.cameraController.stopSmoothFollow()
         }
     )
-
-    override fun onLevelCompleted(level: LevelDefinition) {
-        services.levelState.weaponsAttained = LevelRewards.weaponsFor(level)
-    }
 
     override fun onPlayerSpawn(spawnProps: Properties) {
         aButtonTask = AButtonTask.JUMP
@@ -630,7 +636,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         return AnimationsComponent(animators, sprites)
     }
 
-    fun translateAmmo(ammo: Int, weapon: WeaponDef = currentWeapon): Int {
+    fun translateAmmo(ammo: Int, weapon: WeaponDef<Megaman> = currentWeapon): Int {
         val remaining = weaponsHandler.translateAmmo(weapon, ammo)
         GameLogger.debug(TAG, "translateAmmo(): weapon=$weapon, ammo=$ammo, remaining=$remaining")
         return remaining

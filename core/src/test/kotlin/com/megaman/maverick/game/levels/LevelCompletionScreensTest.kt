@@ -52,7 +52,7 @@ class LevelCompletionScreensTest : DescribeSpec({
     fun noWeapons() = LevelState()
 
     fun withWeapons() = LevelState().apply {
-        weaponsAttained = OrderedSet<WeaponDef>().apply { add(MegamanWeapons.NEEDLE_SPIN) }
+        weaponsAttained = OrderedSet<WeaponDef<*>>().apply { add(MegamanWeapons.NEEDLE_SPIN) }
     }
 
     describe("screenOnCompletion") {

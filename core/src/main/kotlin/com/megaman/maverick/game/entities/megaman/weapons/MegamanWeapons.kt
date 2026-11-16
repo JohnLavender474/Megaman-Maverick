@@ -22,71 +22,56 @@ import com.megaman.maverick.game.weapons.WeaponDef
 
 object MegamanWeapons {
 
-    val MEGA_BUSTER: WeaponDef = WeaponDef(
+    val MEGA_BUSTER: WeaponDef<Megaman> = WeaponDef(
         id = "mega_buster",
-        atlas = TextureAsset.MEGAMAN_BUSTER,
         cooldown = 0.1f,
         fire = ::fireMegaBuster,
         chargeable = true,
         alwaysOwned = true,
-        infiniteAmmo = true,
-        jumpDownChargeKeys = true
+        infiniteAmmo = true
     )
 
-    val FRIGID_SHOT: WeaponDef = WeaponDef(
+    val FRIGID_SHOT: WeaponDef<Megaman> = WeaponDef(
         id = "frigid_shot",
-        atlas = TextureAsset.MEGAMAN_ICE_CUBE,
         cooldown = 0.1f,
         fire = ::fireFrigidShot,
-        cost = { 1 },
-        hudBitRegion = ConstKeys.ICE
+        cost = { 1 }
     )
 
-    val INFERNAL_BARRAGE: WeaponDef = WeaponDef(
+    val INFERNAL_BARRAGE: WeaponDef<Megaman> = WeaponDef(
         id = "infernal_barrage",
-        atlas = TextureAsset.MEGAMAN_MAGMA_WAVE,
         cooldown = 0.5f,
         fire = ::fireInfernalBarrage,
-        cost = { 3 },
-        hudBitRegion = ConstKeys.FIRE
+        cost = { 3 }
     )
 
-    val MOON_SCYTHES: WeaponDef = WeaponDef(
+    val MOON_SCYTHES: WeaponDef<Megaman> = WeaponDef(
         id = "moon_scythes",
-        atlas = TextureAsset.MEGAMAN_MOON_SCYTHE,
         cooldown = 0.1f,
         fire = ::fireMoonScythes,
         newState = { MoonScythesState(MOON_SCYTHES.cooldown) },
-        cost = { 3 },
-        hudBitRegion = ConstKeys.MOON
+        cost = { 3 }
     )
 
-    val PRECIOUS_GUARD: WeaponDef = WeaponDef(
+    val PRECIOUS_GUARD: WeaponDef<Megaman> = WeaponDef(
         id = "precious_guard",
-        atlas = TextureAsset.MEGAMAN_PRECIOUS_GUARD,
         cooldown = 0.1f,
         fire = ::firePreciousGuard,
         newState = { megaman -> PreciousGuardState(megaman, PRECIOUS_GUARD.cooldown) },
         cost = { (it as PreciousGuardState).cost },
-        onDeselect = { _, state -> destroyPreciousGuardGems(state) },
-        hudBitRegion = "precious"
+        onDeselect = { _, state -> destroyPreciousGuardGems(state) }
     )
 
-    val AXE_SWINGER: WeaponDef = WeaponDef(
+    val AXE_SWINGER: WeaponDef<Megaman> = WeaponDef(
         id = "axe_swinger",
-        atlas = TextureAsset.MEGAMAN_AXE_THROW,
         cooldown = 0.5f,
         fire = ::fireAxeSwinger,
         cost = { 1 },
-        axeShield = true,
-        shootKey = { _, baseKey -> "${baseKey}_axe_throw" },
-        keepsAnimTimeAcrossKeys = true,
-        hudBitRegion = "axe"
+        axeShield = true
     )
 
-    val NEEDLE_SPIN: WeaponDef = WeaponDef(
+    val NEEDLE_SPIN: WeaponDef<Megaman> = WeaponDef(
         id = "needle_spin",
-        atlas = TextureAsset.MEGAMAN_NEEDLE_SPIN,
         cooldown = 0.25f,
         fire = ::fireNeedleSpin,
         cost = { 2 },
@@ -99,16 +84,11 @@ object MegamanWeapons {
             BehaviorType.SWIMMING,
             BehaviorType.WALL_SLIDING
         ),
-        spinFixturesWhileFiring = true,
-        shootKey = { _, _ -> "needle_spin" },
-        trailWhileFiring = TrailWhileFiring.NONE,
-        showsTornadoWhileFiring = true,
-        hudBitRegion = "needle"
+        spinFixturesWhileFiring = true
     )
 
-    val RODENT_CLAWS: WeaponDef = WeaponDef(
+    val RODENT_CLAWS: WeaponDef<Megaman> = WeaponDef(
         id = "rodent_claws",
-        atlas = TextureAsset.MEGAMAN_RATTY_CLAWS,
         cooldown = 0.1f,
         fire = ::fireRodentClaws,
         newState = { RodentClawsState(RODENT_CLAWS.cooldown) },
@@ -117,26 +97,18 @@ object MegamanWeapons {
             if (megaman.isBehaviorActive(BehaviorType.WALL_SLIDING)) megaman.body.physics.gravityOn = true
         },
         stopsRunWhileFiring = true,
-        gripsWall = true,
-        shootKey = ::rodentClawsShootKey,
-        trailWhileFiring = TrailWhileFiring.PLAIN_KEY,
-        restartsSameKeyOnPress = true,
-        hudBitRegion = "rat"
+        gripsWall = true
     )
 
-    val REACTOR_SHOT: WeaponDef = WeaponDef(
+    val REACTOR_SHOT: WeaponDef<Megaman> = WeaponDef(
         id = "reactor_shot",
-        atlas = TextureAsset.MEGAMAN_REACTOR_SHOT,
         cooldown = 0.5f,
         fire = ::fireReactorShot,
-        cost = { 2 },
-        jumpDownChargeKeys = true,
-        hudBitRegion = "reactor"
+        cost = { 2 }
     )
 
-    val RUSH_JET: WeaponDef = WeaponDef(
+    val RUSH_JET: WeaponDef<Megaman> = WeaponDef(
         id = "rush_jet",
-        atlas = TextureAsset.MEGAMAN_RUSH_JETPACK,
         cooldown = 0.1f,
         fire = ::fireRushJet,
         airDash = WeaponAirDash(
@@ -146,36 +118,6 @@ object MegamanWeapons {
             onEnd = { it.jetpackHandler.reset() }
         ),
         enablesJetpack = true,
-        stopsChargeOnHold = true,
-        airDashKey = "jetpack_airdash",
-        hudBitRegion = "rush_jet"
+        stopsChargeOnHold = true
     )
-
-    val all: Array<WeaponDef> = gdxArrayOf(
-        MEGA_BUSTER,
-        FRIGID_SHOT,
-        INFERNAL_BARRAGE,
-        MOON_SCYTHES,
-        PRECIOUS_GUARD,
-        AXE_SWINGER,
-        NEEDLE_SPIN,
-        RODENT_CLAWS,
-        REACTOR_SHOT,
-        RUSH_JET
-    )
-
-    fun byId(id: String): WeaponDef? = all.firstOrNull { it.id.equals(id, ignoreCase = true) }
-
-    private fun rodentClawsShootKey(megaman: Megaman, baseKey: String): String {
-        val slashIndex = (megaman.weaponsHandler.stateOf(RODENT_CLAWS) as RodentClawsState).keySlashIndex
-        GameLogger.debug(MEGAMAN_ANIM_KEY_SUPPLIER_TAG, "slashIndex=$slashIndex")
-
-        val newBaseKey = if (baseKey.equalsAny("slip", "run")) "stand" else baseKey
-
-        val atlas = megaman.services.assets.getTextureAtlas(RODENT_CLAWS.atlas.source)
-
-        return if (atlas.containsRegion("${newBaseKey}_slash$slashIndex")) "${newBaseKey}_slash$slashIndex"
-        else if (atlas.containsRegion("${newBaseKey}_slash1")) "${newBaseKey}_slash1"
-        else "stand_slash1"
-    }
 }

@@ -20,6 +20,7 @@ import com.megaman.maverick.game.entities.state.teleporter
 import com.megaman.maverick.game.entities.state.teleporting
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.entities.megaman.weapons.currentLook
 
 const val MEGAMAN_ANIM_KEY_SUPPLIER_TAG = "MEGA_MAN_ANIM_KEY_SUPPLIER"
 
@@ -73,7 +74,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         }
     }
 
-    isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey(currentWeapon.airDashKey)
+    isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey(currentLook.airDashKey)
 
     isBehaviorActive(BehaviorType.CROUCHING) -> amendKey("crouch")
 
@@ -93,13 +94,13 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 }
 
 fun Megaman.amendKey(baseKey: String) = when {
-    shooting -> currentWeapon.shootKey?.invoke(this, baseKey)
+    shooting -> currentLook.shootKey?.invoke(this, baseKey)
         ?: if (baseKey == "jump" && isProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", true)) "jump_shoot_down"
         else "${baseKey}_shoot"
 
     baseKey == "jump" &&
         input.isPressed(MegaControllerButton.DOWN) &&
-        currentWeapon.jumpDownChargeKeys -> {
+        currentLook.jumpDownChargeKeys -> {
         if (fullyCharged) "jump_down_charge_full"
         else if (halfCharged) "jump_down_charge_half"
         else "jump_down"

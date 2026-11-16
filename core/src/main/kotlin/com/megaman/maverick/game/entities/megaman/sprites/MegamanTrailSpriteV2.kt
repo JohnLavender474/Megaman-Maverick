@@ -21,7 +21,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.*
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
 import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -115,7 +115,7 @@ class MegamanTrailSpriteV2(services: MegaServices) : MegaGameEntity(services), I
 
         val atlas = services.assets.getTextureAtlas(TextureAsset.MEGAMAN_TRAIL_SPRITE_V2.source)
 
-        MegamanWeapons.all.forEach { weapon ->
+        MEGAMAN_LOADOUT.weapons.forEach { weapon ->
             MegamanAnimationDefs.getKeys().forEach { key ->
                 val fullKey = "${weapon.id}/$key"
                 if (!atlas.containsRegion(fullKey)) {

@@ -40,7 +40,7 @@ class MegamanCurrentWeaponTest : DescribeSpec({
         it("calls the handler before it stores the new weapon") {
             megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
 
-            val seen = ArrayList<WeaponDef>()
+            val seen = ArrayList<WeaponDef<*>>()
             every { handler.onChangeWeapon(any(), any()) } answers { seen.add(megaman.currentWeapon) }
 
             megaman.currentWeapon = MegamanWeapons.FRIGID_SHOT

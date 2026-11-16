@@ -142,6 +142,11 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         movementScalar = { 1f }
     )
 
+    override val character = PlayerCharacter.PROTOMAN
+
+    override val shooting: Boolean
+        get() = buster.shooting
+
     internal val buster = PlayerBuster(this, PROTOMAN_BUSTER)
     internal val sabre: PlayerSabre = PlayerSabre(this, protomanSabreParams(this))
 

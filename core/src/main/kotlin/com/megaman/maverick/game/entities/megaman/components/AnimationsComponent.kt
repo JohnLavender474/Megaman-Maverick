@@ -6,6 +6,7 @@ import com.maverick.game.engine.entities.input
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
+import com.megaman.maverick.game.entities.megaman.weapons.currentLook
 
 internal fun Megaman.onChangeAnimationKey(
     currentKey: String?, nextKey: String?, animations: OrderedMap<String, IAnimation>
@@ -13,7 +14,7 @@ internal fun Megaman.onChangeAnimationKey(
     // Special case for Axe Throw weapon: need to ensure that if Megaman is "shooting" (throwing),
     // then if the animation key changes, the new animation starts at the same time stamp as what
     // the current animation is at.
-    if (currentWeapon.keepsAnimTimeAcrossKeys &&
+    if (currentLook.keepsAnimTimeAcrossKeys &&
         currentKey != null && nextKey != null &&
         currentKey.contains("axe_throw")
     ) {
@@ -28,7 +29,7 @@ internal fun Megaman.shouldEqualAnimKeysTriggerChange(key: String?): Boolean {
     // standing. This is because every slash sequence besides the STAND animation uses
     // the same animation repeatedly. Without this check, then Mega Man will appear to
     // be frozen still if the player rapid fires the SHOOT button.
-    return key != null && currentWeapon.restartsSameKeyOnPress &&
+    return key != null && currentLook.restartsSameKeyOnPress &&
         weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.NOT_CHARGED) &&
         input.isPressed(MegaControllerButton.B) &&
         key.contains("slash") && !key.contains("stand")

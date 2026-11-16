@@ -12,6 +12,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import com.megaman.maverick.game.players.PlayerCharacter
 
 class MegamanWeaponsHandlerOwnershipTest : DescribeSpec({
 
@@ -23,6 +24,7 @@ class MegamanWeaponsHandlerOwnershipTest : DescribeSpec({
         val services = testServices(gameState = state)
         val megaman = mockk<Megaman>(relaxed = true)
         every { megaman.services } returns services
+        every { megaman.character } returns PlayerCharacter.MEGAMAN
         handler = MegamanWeaponsHandler(megaman)
     }
 
@@ -41,7 +43,7 @@ class MegamanWeaponsHandlerOwnershipTest : DescribeSpec({
         }
 
         it("gives a gained weapon full ammo") {
-            state.addWeapon(MegamanWeapons.AXE_SWINGER)
+            state.addWeapon(PlayerCharacter.MEGAMAN, MegamanWeapons.AXE_SWINGER)
             handler.getAmmo(MegamanWeapons.AXE_SWINGER) shouldBe MegamanValues.MAX_WEAPON_AMMO
         }
 

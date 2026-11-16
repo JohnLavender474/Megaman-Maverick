@@ -33,7 +33,10 @@ import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.currentHealth
 import com.megaman.maverick.game.entities.maxHealth
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
+import com.megaman.maverick.game.players.CharacterLoadout
+import com.megaman.maverick.game.players.CharacterLoadouts
+import com.megaman.maverick.game.players.weapons
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
@@ -63,6 +66,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             MegaHealthTank.A, MegaHealthTank.C, MegaHealthTank.B, MegaHealthTank.D
         )
 
+        // TODO: one layout for every character, Megaman's; a layout per loadout comes with a second loadout (item 060h)
         private val FULL_TABLE = TableBuilder<Any>()
             .row(gdxArrayOf(MegamanWeapons.MEGA_BUSTER, MegamanWeapons.REACTOR_SHOT))
             .row(gdxArrayOf(MegamanWeapons.NEEDLE_SPIN, MegamanWeapons.RODENT_CLAWS))
@@ -76,7 +80,6 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             .build()
 
         private const val OPTIONS_PREFIX = "options"
-        private const val WEAPONS_PREFIX = "weapons"
         private const val HEALTH_TANKS_PREFIX = "health_tanks"
 
         private const val SELECTED_SUFFIX = "_selected"
@@ -110,6 +113,10 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
     //  policy (item 047)
     private val player: IPlayer
         get() = game.players.get(PlayerSlot(0))!!
+
+    // TODO: a player with no weapons sees Megaman's grid and owned weapons with 0 ammo, as before (item 060h)
+    private val gridLoadout: CharacterLoadout<*>
+        get() = player.weapons?.loadout ?: MEGAMAN_LOADOUT
     private val state: GameState
         get() = game.gameState
     private val audioMan: MegaAudioManager
@@ -205,18 +212,18 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             levelPauseScreenAtlas.findRegion("$OPTIONS_PREFIX/gear${SELECTED_SUFFIX}")
         )
 
-        MegamanWeapons.all.forEach { weapon ->
-            val key = weapon.id
+        // TODO: the regions are keyed by weapon id, so a shared def with a look per character needs a (character, def) key (item 060h)
+        CharacterLoadouts.all.forEach { loadout ->
+            loadout.weapons.forEach { weapon ->
+                val key = weapon.id
+                val region = loadout.lookOf(weapon).pauseRegion
 
-            if (levelPauseScreenAtlas.containsRegion("$WEAPONS_PREFIX/$key")) {
-                buttonRegions.put(
-                    key,
-                    levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key")
-                )
-                buttonRegions.put(
-                    "$key$SELECTED_SUFFIX",
-                    levelPauseScreenAtlas.findRegion("$WEAPONS_PREFIX/$key$SELECTED_SUFFIX")
-                )
+                if (levelPauseScreenAtlas.containsRegion(region)) {
+                    buttonRegions.put(key, levelPauseScreenAtlas.findRegion(region))
+                    buttonRegions.put(
+                        "$key$SELECTED_SUFFIX", levelPauseScreenAtlas.findRegion("$region$SELECTED_SUFFIX")
+                    )
+                }
             }
         }
 
@@ -269,11 +276,12 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
             for (j in 0 until columnCount) {
                 when (val element = FULL_TABLE.get(i, j).element) {
-                    is WeaponDef -> {
-                        if (state.containsWeapon(element)) {
+                    is WeaponDef<*> -> {
+                        if (state.ownsWeapon(gridLoadout.character, element)) {
                             row.add(element)
 
                             val button = createWeaponButton(element)
+                            // TODO: the button is keyed by weapon id; a shared def needs a (character, def) key (item 060h)
                             buttons.put(element.toString().lowercase(), button)
 
                             val bitsBarX = WEAPON_BITS_COLUMN_1_X + j * WEAPON_BITS_COLUMN_OFFSET
@@ -284,11 +292,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                                 }
 
                                 else -> {
-                                    // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
-                                    {
-                                        val megaman = player
-                                        if (megaman is Megaman) megaman.weaponsHandler.getAmmo(element) else 0
-                                    }
+                                    { player.weapons?.ammo(element) ?: 0 }
                                 }
                             }
                             val bitsBar = LevelPauseScreenBitsBar(
@@ -400,8 +404,9 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         )
         buttonSprites.put(ConstKeys.SETTINGS, settingsButtonSprite)
 
-        MegamanWeapons.all.forEach { weapon ->
-            if (!state.containsWeapon(weapon)) return@forEach
+        val loadout = gridLoadout
+        loadout.weapons.forEach { weapon ->
+            if (!state.ownsWeapon(loadout.character, weapon)) return@forEach
 
             val key = weapon.id
             try {
@@ -567,13 +572,11 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     private fun resetFillHealthTimer() = fillHealthTimer.clearRunnables().resetDuration(0f).setToEnd(false)
 
-    private fun createWeaponButton(weapon: WeaponDef) = object : IMenuButton {
+    private fun createWeaponButton(weapon: WeaponDef<*>) = object : IMenuButton {
 
         override fun onSelect(delta: Float): Boolean {
             GameLogger.debug(TAG, "createWeaponButton(): onSelect(): weapon=$weapon")
-            // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
-            val megaman = player
-            if (megaman is Megaman) megaman.currentWeapon = weapon
+            player.weapons?.select(weapon)
             return true
         }
 
@@ -639,7 +642,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                     // Moving from a weapon to the exit button should be intercepted and changed if there are any
                     // health tanks. In this case, find the first available health tank and move the selection there.
-                    if (oldNode.element is WeaponDef &&
+                    if (oldNode.element is WeaponDef<*> &&
                         nextNode.element == ConstKeys.EXIT &&
                         state.hasAnyHealthTanks()
                     ) {

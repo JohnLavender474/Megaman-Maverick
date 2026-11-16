@@ -3,7 +3,8 @@ package com.megaman.maverick.game
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.badlogic.gdx.utils.ObjectSet
+import com.megaman.maverick.game.players.CharacterLoadouts
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.players.PlayerCharacter
@@ -28,7 +29,7 @@ data class ResolvedLaunch(
     val logTags: Set<String>,
     val logAllTags: Boolean,
     val autoPerf: Boolean,
-    val weapons: Set<WeaponDef>,
+    val weapons: ObjectSet<WeaponDef<*>>,
     val heartTanks: Set<MegaHeartTank>,
     val healthTanks: Set<MegaHealthTank>,
     val players: Int = 1,
@@ -198,18 +199,20 @@ private inline fun <reified E : Enum<E>> parseEnumListOption(
     return if (names.any { it.equals(ALL_ENTRIES, ignoreCase = true) }) enumValues<E>().toSet() else named.toSet()
 }
 
-private fun parseWeaponListOption(value: String?, errors: MutableList<String>): Set<WeaponDef> {
+private fun parseWeaponListOption(value: String?, errors: MutableList<String>): ObjectSet<WeaponDef<*>> {
     val names = value?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-    val named = names.filterNot { it.equals(ALL_ENTRIES, ignoreCase = true) }.mapNotNull { name ->
-        val weapon = MegamanWeapons.byId(name)
+    val weapons = ObjectSet<WeaponDef<*>>()
+    names.filterNot { it.equals(ALL_ENTRIES, ignoreCase = true) }.forEach { name ->
+        val weapon = CharacterLoadouts.weaponById(name)
         if (weapon == null) {
-            val allowed = MegamanWeapons.all.map { it.id.uppercase() }
+            val allowed = CharacterLoadouts.all.flatMap { loadout -> loadout.weapons.map { it.id.uppercase() } }
             val suggestion = nearestName(name, allowed)?.let { " Did you mean $it?" } ?: ""
             errors.add("Invalid --weapons '$name'.$suggestion Allowed: ${allowed.joinToString(", ")}")
-        }
-        weapon
+        } else weapons.add(weapon)
     }
-    return if (names.any { it.equals(ALL_ENTRIES, ignoreCase = true) }) MegamanWeapons.all.toSet() else named.toSet()
+    if (names.any { it.equals(ALL_ENTRIES, ignoreCase = true) })
+        CharacterLoadouts.all.forEach { loadout -> loadout.weapons.forEach { weapons.add(it) } }
+    return weapons
 }
 
 inline fun <reified E : Enum<E>> parseEnumOption(

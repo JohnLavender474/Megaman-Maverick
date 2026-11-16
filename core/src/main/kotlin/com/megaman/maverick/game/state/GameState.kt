@@ -13,10 +13,11 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
+import com.megaman.maverick.game.players.CharacterLoadouts
+import com.megaman.maverick.game.players.PlayerCharacter
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.levels.LevelDefMap
 import com.megaman.maverick.game.levels.LevelDefinition
-import com.megaman.maverick.game.levels.LevelRewards
 import com.megaman.maverick.game.levels.LevelType
 import kotlin.math.min
 
@@ -30,7 +31,7 @@ class GameState : Resettable {
     private val heartTanksCollected = ObjectSet<MegaHeartTank>()
     private val enhancementsAttained = ObjectSet<MegaEnhancement>()
     private val healthTanksCollected = ObjectMap<MegaHealthTank, Points>()
-    private val weaponsOwned = ObjectSet<WeaponDef>()
+    private val extraWeapons = ObjectMap<PlayerCharacter, ObjectSet<WeaponDef<*>>>()
     private var currency = Points(ConstVals.MIN_CURRENCY, ConstVals.MAX_CURRENCY, ConstVals.MIN_CURRENCY)
     private var difficultyMode = DifficultyMode.NORMAL
 
@@ -56,7 +57,6 @@ class GameState : Resettable {
         val added = levelsCompleted.add(level)
         GameLogger.debug(TAG, "addLevelCompleted(): level=$level, added=$added")
         if (added) {
-            weaponsOwned.addAll(LevelRewards.weaponsFor(level))
             listeners.forEach { it.onAddLevelCompleted(level) }
         }
     }
@@ -65,7 +65,6 @@ class GameState : Resettable {
         val removed = levelsCompleted.remove(level)
         GameLogger.debug(TAG, "removeLevelCompleted(): level=$level, removed=$removed")
         if (removed) {
-            LevelRewards.weaponsFor(level).forEach { weaponsOwned.remove(it) }
             listeners.forEach { it.onRemoveLevelCompleted(level) }
         }
     }
@@ -79,16 +78,28 @@ class GameState : Resettable {
         return wilyStages.firstOrNull { wilyStage -> !isLevelCompleted(wilyStage) }
     }
 
-    fun containsWeapon(weapon: WeaponDef) = weapon.alwaysOwned || weaponsOwned.contains(weapon)
+    fun ownsWeapon(character: PlayerCharacter, weapon: WeaponDef<*>): Boolean {
+        val loadout = CharacterLoadouts.of(character)
+        if (!loadout.contains(weapon)) return false
+        if (weapon.alwaysOwned || extraWeapons[character]?.contains(weapon) == true) return true
+        return loadout.isRewardOfAny(levelsCompleted, weapon)
+    }
 
-    fun addWeapon(weapon: WeaponDef) {
-        val added = weaponsOwned.add(weapon)
-        GameLogger.debug(TAG, "addWeapon(): weapon=$weapon, added=$added")
+    fun addWeapon(character: PlayerCharacter, weapon: WeaponDef<*>) {
+        if (!CharacterLoadouts.of(character).contains(weapon))
+            throw IllegalArgumentException("The $character loadout has no weapon $weapon")
+        val owned = extraWeapons[character] ?: ObjectSet<WeaponDef<*>>().also { extraWeapons.put(character, it) }
+        val added = owned.add(weapon)
+        GameLogger.debug(TAG, "addWeapon(): character=$character, weapon=$weapon, added=$added")
+    }
+
+    fun addWeaponToEachLoadout(weapon: WeaponDef<*>) = CharacterLoadouts.all.forEach { loadout ->
+        if (loadout.contains(weapon)) addWeapon(loadout.character, weapon)
     }
 
     fun clearWeapons() {
         GameLogger.debug(TAG, "clearWeapons()")
-        weaponsOwned.clear()
+        extraWeapons.clear()
     }
 
     fun containsHeartTank(heartTank: MegaHeartTank) = heartTanksCollected.contains(heartTank)

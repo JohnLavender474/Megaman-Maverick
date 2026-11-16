@@ -25,6 +25,7 @@ import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
+import com.megaman.maverick.game.entities.megaman.weapons.currentLook
 
 const val MEGAMAN_SPRITE_KEY = "Megaman"
 const val MEGAMAN_SPRITE_SIZE = 3f
@@ -211,7 +212,7 @@ internal fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
         tornado.setOriginCenter()
         tornado.rotation = getSpriteRotation()
 
-        if (!currentWeapon.showsTornadoWhileFiring || !shooting) {
+        if (!currentLook.showsTornadoWhileFiring || !shooting) {
             tornado.hidden = true
             return@putPreProcess
         }

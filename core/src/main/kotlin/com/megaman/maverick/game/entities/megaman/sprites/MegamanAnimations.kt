@@ -14,7 +14,7 @@ import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.drawables.sprites.splitAndFlatten
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimationDefs.CHARGING_FRAME_DUR
 import java.util.function.Supplier
@@ -27,9 +27,9 @@ class MegamanAnimations(
     companion object {
         const val TAG = "MegamanAnimations"
 
-        private val fullKeys = ObjectMap<WeaponDef, ObjectMap<String, String>>()
+        private val fullKeys = ObjectMap<WeaponDef<*>, ObjectMap<String, String>>()
 
-        fun buildFullKey(regionKey: String, weapon: WeaponDef): String {
+        fun buildFullKey(regionKey: String, weapon: WeaponDef<*>): String {
             val keys = fullKeys.get(weapon) ?: ObjectMap<String, String>().also { fullKeys.put(weapon, it) }
             return keys.get(regionKey)
                 ?: "${regionKey}_${weapon.id.replace("_", "")}".also { keys.put(regionKey, it) }
@@ -41,8 +41,8 @@ class MegamanAnimations(
     private var initialized = false
 
     override fun init(vararg params: Any) {
-        MegamanWeapons.all.forEach { weapon ->
-            val assetSource = weapon.atlas.source
+        MEGAMAN_LOADOUT.weapons.forEach { weapon ->
+            val assetSource = MEGAMAN_LOADOUT.lookOf(weapon).atlas.source
             val atlas = services.assets.getTextureAtlas(assetSource)
 
             MegamanAnimationDefs.getKeys().forEach { defKey ->

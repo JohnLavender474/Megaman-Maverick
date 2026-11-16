@@ -20,6 +20,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
+import com.megaman.maverick.game.players.PlayerCharacter
 
 class MegamanDeathCleanupTest : DescribeSpec({
 
@@ -46,11 +47,12 @@ class MegamanDeathCleanupTest : DescribeSpec({
     describe("the axe throw") {
         fun throwAxe(state: EntityExistenceState): GameEngine {
             val engine = mockk<GameEngine>(relaxed = true)
-            val gameState = GameState().also { it.addWeapon(MegamanWeapons.AXE_SWINGER) }
+            val gameState = GameState().also { it.addWeapon(PlayerCharacter.MEGAMAN, MegamanWeapons.AXE_SWINGER) }
             val services = testServices(engine = engine, gameState = gameState)
             MegaEntityFactory.init(services)
             val megaman = mockk<Megaman>(relaxed = true)
             every { megaman.services } returns services
+            every { megaman.character } returns PlayerCharacter.MEGAMAN
             every { megaman.existenceState } returns state
             every { megaman.getComponent(PlayPhaseComponent::class) } returns PlayPhaseComponent(PlayPhase.IN_PLAY)
             every { megaman.getComponent(FreezeComponent::class) } returns null

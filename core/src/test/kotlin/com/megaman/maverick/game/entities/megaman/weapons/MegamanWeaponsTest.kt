@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.weapons
 
 import com.maverick.game.engine.components.IGameComponent
+import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
@@ -9,6 +10,7 @@ import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.testServices
+import com.megaman.maverick.game.weapons.TrailWhileFiring
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
@@ -16,6 +18,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.reflect.KClass
+import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
+import com.megaman.maverick.game.players.PlayerCharacter
 
 private val IDS = listOf(
     "mega_buster", "frigid_shot", "infernal_barrage", "moon_scythes", "precious_guard",
@@ -34,15 +38,42 @@ private val DISPLAY_NAMES = listOf(
 
 private val NORMAL_COSTS = listOf(0, 1, 3, 3, 6, 1, 2, 2, 2, 0)
 
+private val ATLASES = listOf(
+    TextureAsset.MEGAMAN_BUSTER, TextureAsset.MEGAMAN_ICE_CUBE, TextureAsset.MEGAMAN_MAGMA_WAVE,
+    TextureAsset.MEGAMAN_MOON_SCYTHE, TextureAsset.MEGAMAN_PRECIOUS_GUARD, TextureAsset.MEGAMAN_AXE_THROW,
+    TextureAsset.MEGAMAN_NEEDLE_SPIN, TextureAsset.MEGAMAN_RATTY_CLAWS, TextureAsset.MEGAMAN_REACTOR_SHOT,
+    TextureAsset.MEGAMAN_RUSH_JETPACK
+)
+
+private val HUD_BIT_REGIONS = listOf(
+    null, "ice", "fire", "moon", "precious", "axe", "needle", "rat", "reactor", "rush_jet"
+)
+
+private val PAUSE_REGIONS = IDS.map { "weapons/$it" }
+
+private val GET_WEAPON_REGIONS = IDS.map { "megaman/$it" }
+
+private val AIR_DASH_KEYS = listOf(
+    "airdash", "airdash", "airdash", "airdash", "airdash", "airdash", "airdash", "airdash", "airdash",
+    "jetpack_airdash"
+)
+
+private val TRAILS = listOf(
+    TrailWhileFiring.SHOOT_KEY, TrailWhileFiring.SHOOT_KEY, TrailWhileFiring.SHOOT_KEY, TrailWhileFiring.SHOOT_KEY,
+    TrailWhileFiring.SHOOT_KEY, TrailWhileFiring.SHOOT_KEY, TrailWhileFiring.NONE, TrailWhileFiring.PLAIN_KEY,
+    TrailWhileFiring.SHOOT_KEY, TrailWhileFiring.SHOOT_KEY
+)
+
 class MegamanWeaponsTest : DescribeSpec({
 
     lateinit var handler: MegamanWeaponsHandler
 
     fun newHandler(): MegamanWeaponsHandler {
         val state = GameState()
-        MegamanWeapons.all.forEach { state.addWeapon(it) }
+        MEGAMAN_LOADOUT.weapons.forEach { state.addWeapon(PlayerCharacter.MEGAMAN, it) }
         val megaman = mockk<Megaman>(relaxed = true)
         every { megaman.services } returns testServices(gameState = state)
+        every { megaman.character } returns PlayerCharacter.MEGAMAN
         every { megaman.getComponent(any<KClass<IGameComponent>>()) } returns null
         return MegamanWeaponsHandler(megaman).also { it.reset() }
     }
@@ -53,21 +84,40 @@ class MegamanWeaponsTest : DescribeSpec({
 
     describe("the weapon list") {
         it("has the ids in the select order") {
-            MegamanWeapons.all.map { it.id } shouldBe IDS
+            MEGAMAN_LOADOUT.weapons.map { it.id } shouldBe IDS
         }
 
         it("gives the same animation key for each weapon") {
-            MegamanWeapons.all.map { MegamanAnimations.buildFullKey("stand", it) } shouldBe STAND_KEYS
+            MEGAMAN_LOADOUT.weapons.map { MegamanAnimations.buildFullKey("stand", it) } shouldBe STAND_KEYS
         }
 
         it("gives the same display name for each weapon") {
-            MegamanWeapons.all.map { it.displayName } shouldBe DISPLAY_NAMES
+            MEGAMAN_LOADOUT.weapons.map { it.displayName } shouldBe DISPLAY_NAMES
+        }
+
+        it("gives the same look values for each weapon") {
+            MEGAMAN_LOADOUT.weapons.map { MEGAMAN_LOADOUT.lookOf(it).atlas } shouldBe ATLASES
+            MEGAMAN_LOADOUT.weapons.map { MEGAMAN_LOADOUT.lookOf(it).hudBitRegion } shouldBe HUD_BIT_REGIONS
+            MEGAMAN_LOADOUT.weapons.map { MEGAMAN_LOADOUT.lookOf(it).pauseRegion } shouldBe PAUSE_REGIONS
+            MEGAMAN_LOADOUT.weapons.map { MEGAMAN_LOADOUT.lookOf(it).getWeaponRegion } shouldBe GET_WEAPON_REGIONS
+            MEGAMAN_LOADOUT.weapons.map { MEGAMAN_LOADOUT.lookOf(it).airDashKey } shouldBe AIR_DASH_KEYS
+            MEGAMAN_LOADOUT.weapons.map { MEGAMAN_LOADOUT.lookOf(it).trailWhileFiring } shouldBe TRAILS
+            MEGAMAN_LOADOUT.weapons.filter { MEGAMAN_LOADOUT.lookOf(it).jumpDownChargeKeys } shouldBe
+                listOf(MegamanWeapons.MEGA_BUSTER, MegamanWeapons.REACTOR_SHOT)
+            MEGAMAN_LOADOUT.weapons.filter { MEGAMAN_LOADOUT.lookOf(it).showsTornadoWhileFiring } shouldBe
+                listOf(MegamanWeapons.NEEDLE_SPIN)
+            MEGAMAN_LOADOUT.weapons.filter { MEGAMAN_LOADOUT.lookOf(it).keepsAnimTimeAcrossKeys } shouldBe
+                listOf(MegamanWeapons.AXE_SWINGER)
+            MEGAMAN_LOADOUT.weapons.filter { MEGAMAN_LOADOUT.lookOf(it).restartsSameKeyOnPress } shouldBe
+                listOf(MegamanWeapons.RODENT_CLAWS)
+            MEGAMAN_LOADOUT.weapons.filter { MEGAMAN_LOADOUT.lookOf(it).shootKey != null } shouldBe
+                listOf(MegamanWeapons.AXE_SWINGER, MegamanWeapons.NEEDLE_SPIN, MegamanWeapons.RODENT_CLAWS)
         }
     }
 
     describe("the cost of a shot") {
         it("is the normal cost of each weapon at every charge level") {
-            MegamanWeapons.all.forEachIndexed { i, weapon ->
+            MEGAMAN_LOADOUT.weapons.forEachIndexed { i, weapon ->
                 val cost = NORMAL_COSTS[i]
                 handler.translateAmmo(weapon, cost - MegamanValues.MAX_WEAPON_AMMO)
                 MegaChargeStatus.entries.forEach { stat ->
@@ -89,14 +139,14 @@ class MegamanWeaponsTest : DescribeSpec({
         }
 
         it("makes only the buster chargeable") {
-            MegamanWeapons.all.filter { handler.isChargeable(it) } shouldBe listOf(MegamanWeapons.MEGA_BUSTER)
+            MEGAMAN_LOADOUT.weapons.filter { handler.isChargeable(it) } shouldBe listOf(MegamanWeapons.MEGA_BUSTER)
         }
     }
 
     describe("the state of a weapon") {
         it("is a separate object for each player") {
             val other = newHandler()
-            MegamanWeapons.all.forEach { handler.stateOf(it) shouldNotBeSameInstanceAs other.stateOf(it) }
+            MEGAMAN_LOADOUT.weapons.forEach { handler.stateOf(it) shouldNotBeSameInstanceAs other.stateOf(it) }
         }
 
         it("keeps the claws combo of each player apart") {
@@ -124,9 +174,9 @@ class MegamanWeaponsTest : DescribeSpec({
         )
 
         it("are the 7 moves for Needle Spin, and none for the other weapons") {
-            MegamanWeapons.all.forEach { weapon ->
+            MEGAMAN_LOADOUT.weapons.forEach { weapon ->
                 blocked.forEach { move ->
-                    weapon.movesBlockedWhileFiring.contains(move) shouldBe (weapon == MegamanWeapons.NEEDLE_SPIN)
+                    weapon.preventsWhileFiring(move) shouldBe (weapon == MegamanWeapons.NEEDLE_SPIN)
                 }
             }
         }

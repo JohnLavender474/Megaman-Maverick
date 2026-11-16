@@ -13,6 +13,10 @@ import com.megaman.maverick.game.entities.state.StunComponent
 
 abstract class TestMegaPlayer(services: MegaServices) : MegaPlayer(services) {
 
+    override val character = PlayerCharacter.MEGAMAN
+
+    override val shooting = false
+
     override val cameraFocusHeight = 1.5f
 
     override var direction: Direction

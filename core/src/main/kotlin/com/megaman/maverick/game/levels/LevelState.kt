@@ -23,7 +23,7 @@ class LevelState {
     var levelPoints = 0
     var timeSinceLastFloatingPoints = 0f
     var lastFloatingPointsType: FloatingPointsType? = null
-    var weaponsAttained: OrderedSet<WeaponDef>? = null
+    var weaponsAttained: OrderedSet<WeaponDef<*>>? = null
 
     val isInExtraLevel: Boolean
         get() = currentLevel?.type == LevelType.EXTRA_LEVEL

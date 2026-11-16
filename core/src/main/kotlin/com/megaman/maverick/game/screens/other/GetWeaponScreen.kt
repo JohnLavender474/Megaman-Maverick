@@ -2,7 +2,6 @@ package com.megaman.maverick.game.screens.other
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.animations.Animation
@@ -31,8 +30,9 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.players.CharacterLoadouts
+import com.megaman.maverick.game.players.PlayerWeaponsComponent
+import com.megaman.maverick.game.players.weapons
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -44,17 +44,12 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     companion object {
         const val TAG = "GetWeaponScreen"
 
-        private const val MEGAMAN_REG_PREFIX = "megaman/"
         private val MEGAMAN_START = Vector2(ConstVals.VIEW_WIDTH / 2f, -5f)
         private val MEGAMAN_END = Vector2(4f, ConstVals.VIEW_HEIGHT / 2f)
 
         private val EVENT_DURS = gdxArrayOf(0.5f, 0.4f, 2f, 0.5f)
 
-        private val ANIM_DEFS = ObjectMap<String, AnimationDef>().also {
-            MegamanWeapons.all.forEach { weapon ->
-                it.put(weapon.id, AnimationDef(2, 2, 0.1f, false))
-            }
-        }
+        private val ANIM_DEF = AnimationDef(rows = 2, cols = 2, duration = 0.1f, loop = false)
 
         private const val TEXT_X = 10f
         private const val TEXT_Y = 4f
@@ -103,25 +98,22 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         val weaponGetAtlas = game.assets.getTextureAtlas(TextureAsset.WEAPON_GET.source)
         overlaySprite.setRegion(weaponGetAtlas.findRegion("overlay"))
-        MegamanWeapons.all.forEach { weapon ->
-            val baseKey = weapon.id
+        CharacterLoadouts.all.forEach { loadout ->
+            loadout.weapons.forEach weapon@{ weapon ->
+                val key = loadout.lookOf(weapon).getWeaponRegion
+                if (!weaponGetAtlas.containsRegion(key)) {
+                    GameLogger.error(TAG, "init(): no region for key: $key")
+                    return@weapon
+                }
 
-            val fullKey = "${MEGAMAN_REG_PREFIX}${weapon.id}"
-            if (!weaponGetAtlas.containsRegion(fullKey)) {
-                GameLogger.error(TAG, "init(): no region for full key: $fullKey")
-                return@forEach
+                val region = weaponGetAtlas.findRegion(key)
+
+                val (rows, columns, durations, loop) = ANIM_DEF
+                val animation = Animation(region, rows, columns, durations, loop)
+
+                megamanAnimators.put(key, Animator(animation))
+                megamanAnimators.put("${key}_reversed", Animator(animation.reversed()))
             }
-
-            val region = weaponGetAtlas.findRegion(fullKey)
-
-            val (rows, columns, durations, loop) = ANIM_DEFS[baseKey]
-            val animation = Animation(region, rows, columns, durations, loop)
-
-            val animator1 = Animator(animation)
-            megamanAnimators.put(baseKey, animator1)
-
-            val animator2 = Animator(animation.reversed())
-            megamanAnimators.put("${baseKey}_reversed", animator2)
         }
         GameLogger.debug(TAG, "init(): megaman animators: $megamanAnimators")
 
@@ -151,7 +143,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         eventQueue.addLast(GetWeaponEvent(GetWeaponEventType.MEGAMAN_MOVE))
         for (i in 0 until weaponsAttained.size) {
             val currentWeapon = weaponsAttained[i]
-            val previousWeapon = if (i == 0) (player as Megaman).currentWeapon else weaponsAttained[i - 1]
+            val previousWeapon = if (i == 0) playerWeapons.currentWeapon else weaponsAttained[i - 1]
 
             eventQueue.addLast(
                 GetWeaponEvent(
@@ -193,7 +185,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                     GameObjectPools.fetch(Vector2::class)
                 )
 
-                val animKey = "${(player as Megaman).currentWeapon.id}_reversed"
+                val animKey = "${playerWeapons.currentLook.getWeaponRegion}_reversed"
                 val animator = megamanAnimators.get(animKey)
                 // Animator with 0f delta so that the sprite stays at the first animation region
                 animator.animate(megamanSprite, 0f)
@@ -218,7 +210,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                 }
 
                 try {
-                    var animKey = weapon.id
+                    var animKey = playerWeapons.loadout.lookOf(weapon).getWeaponRegion
                     if (eventType == GetWeaponEventType.MEGAMAN_TRANS) animKey += "_reversed"
 
                     val animator = megamanAnimators.get(animKey)
@@ -321,4 +313,8 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
     //  session policy (item 047)
     private val player: IPlayer
         get() = game.players.get(PlayerSlot(0))!!
+
+    private val playerWeapons: PlayerWeaponsComponent<*>
+        get() = player.weapons
+            ?: throw IllegalStateException("The get-weapon screen needs a player with weapons: $player")
 }

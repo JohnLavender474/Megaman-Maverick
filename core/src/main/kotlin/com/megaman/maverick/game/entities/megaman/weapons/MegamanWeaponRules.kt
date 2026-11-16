@@ -4,4 +4,4 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 
 internal fun Megaman.currentWeaponPrevents(move: BehaviorType) =
-    currentWeapon.movesBlockedWhileFiring.contains(move) && shooting
+    currentWeapon.preventsWhileFiring(move) && shooting

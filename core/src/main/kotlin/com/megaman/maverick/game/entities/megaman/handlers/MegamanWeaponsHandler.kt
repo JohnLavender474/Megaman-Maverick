@@ -16,7 +16,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.GROUND_SLIDE_SPRITE_OFFSET_Y
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.running
@@ -36,10 +36,10 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
     private val services: MegaServices
         get() = megaman.services
 
-    private val states = ObjectMap<WeaponDef, WeaponState>()
+    private val states = ObjectMap<WeaponDef<Megaman>, WeaponState>()
 
     init {
-        MegamanWeapons.all.forEach { weapon -> states.put(weapon, weapon.newState(megaman)) }
+        MEGAMAN_LOADOUT.weapons.forEach { weapon -> states.put(weapon, weapon.newState(megaman)) }
     }
 
     override fun reset() {
@@ -53,7 +53,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
 
     override fun update(delta: Float) = states.values().forEach { state -> state.update(delta) }
 
-    fun stateOf(weapon: WeaponDef): WeaponState = states[weapon]
+    fun stateOf(weapon: WeaponDef<Megaman>): WeaponState = states[weapon]
 
     fun getSpawnPosition(): Vector2 {
         val out = GameObjectPools.fetch(Vector2::class).set(megaman.body.getCenter())
@@ -191,9 +191,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
         return out
     }
 
-    fun hasWeapon(weapon: WeaponDef) = services.gameState.containsWeapon(weapon)
+    fun hasWeapon(weapon: WeaponDef<Megaman>) = services.gameState.ownsWeapon(megaman.character, weapon)
 
-    fun onChangeWeapon(current: WeaponDef, previous: WeaponDef?) {
+    fun onChangeWeapon(current: WeaponDef<Megaman>, previous: WeaponDef<Megaman>?) {
         GameLogger.debug(TAG, "onChangeWeapon(): current=$current, previous=$previous")
 
         megaman.shooting = false
@@ -201,9 +201,9 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
         if (previous != null) previous.onDeselect(megaman, states[previous])
     }
 
-    fun isChargeable(weapon: WeaponDef) = hasWeapon(weapon) && weapon.chargeable
+    fun isChargeable(weapon: WeaponDef<Megaman>) = hasWeapon(weapon) && weapon.chargeable
 
-    fun translateAmmo(weapon: WeaponDef, delta: Int): Int {
+    fun translateAmmo(weapon: WeaponDef<Megaman>, delta: Int): Int {
         if (!hasWeapon(weapon)) return delta
 
         val state = states[weapon]
@@ -227,21 +227,21 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
 
     fun setAllToMaxAmmo() = states.keys().forEach { setToMaxAmmo(it) }
 
-    fun setToMaxAmmo(weapon: WeaponDef) {
+    fun setToMaxAmmo(weapon: WeaponDef<Megaman>) {
         states[weapon]?.ammo = MegamanValues.MAX_WEAPON_AMMO
     }
 
-    fun getAmmo(weapon: WeaponDef) = when {
+    fun getAmmo(weapon: WeaponDef<Megaman>) = when {
         !hasWeapon(weapon) -> 0
         weapon.infiniteAmmo -> MegamanValues.MAX_WEAPON_AMMO
         else -> states[weapon].ammo
     }
 
-    fun isAtMaxAmmo(weapon: WeaponDef) = getAmmo(weapon) >= MegamanValues.MAX_WEAPON_AMMO
+    fun isAtMaxAmmo(weapon: WeaponDef<Megaman>) = getAmmo(weapon) >= MegamanValues.MAX_WEAPON_AMMO
 
-    fun isDepleted(weapon: WeaponDef) = getAmmo(weapon) == 0
+    fun isDepleted(weapon: WeaponDef<Megaman>) = getAmmo(weapon) == 0
 
-    fun canFireWeapon(weapon: WeaponDef, stat: MegaChargeStatus): Boolean {
+    fun canFireWeapon(weapon: WeaponDef<Megaman>, stat: MegaChargeStatus): Boolean {
         if (!megaman.inPlay) {
             GameLogger.debug(TAG, "canFireWeapon(): cannot fire $weapon: megaman is not ready")
             return false
@@ -268,7 +268,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
         return weapon.cost(state) <= state.ammo
     }
 
-    fun fireWeapon(weapon: WeaponDef, statToTry: MegaChargeStatus): Boolean {
+    fun fireWeapon(weapon: WeaponDef<Megaman>, statToTry: MegaChargeStatus): Boolean {
         GameLogger.debug(TAG, "fireWeapon(): weapon=$weapon, statToTry=$statToTry")
 
         var stat = statToTry

@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.toOrderedSet
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.pairTo
@@ -24,12 +23,14 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.drawables.ui.BitsBar
 import com.megaman.maverick.game.entities.currentHealth
 import com.megaman.maverick.game.entities.maxHealth
-import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.players.CharacterLoadouts
+import com.megaman.maverick.game.players.PlayerWeaponsComponent
+import com.megaman.maverick.game.players.weapons
 import com.megaman.maverick.game.weapons.WeaponDef
+import com.megaman.maverick.game.weapons.WeaponLook
 import com.megaman.maverick.game.entities.translateHealth
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
@@ -75,30 +76,29 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             { player.maxHealth })
         healthBar.init()
 
-        val weaponBars = ObjectMap<WeaponDef, BitsBar>()
-        MegamanWeapons.all.forEach {
-            val bitSource = it.hudBitRegion
-            if (bitSource == null) return@forEach
+        val weaponBars = ObjectMap<WeaponLook<*>, BitsBar>()
+        CharacterLoadouts.all.forEach { loadout ->
+            loadout.weapons.forEach weapon@{ weapon ->
+                val look = loadout.lookOf(weapon)
+                val bitSource = look.hudBitRegion ?: return@weapon
 
-            val weaponBar = BitsBar(
-                assMan,
-                bitSource,
-                ConstVals.WEAPON_BAR_X * ConstVals.PPM,
-                ConstVals.STATS_BAR_Y * ConstVals.PPM,
-                { (player as Megaman).ammo },
-                { MegamanValues.MAX_WEAPON_AMMO }
-            )
+                val weaponBar = BitsBar(
+                    assMan,
+                    bitSource,
+                    ConstVals.WEAPON_BAR_X * ConstVals.PPM,
+                    ConstVals.STATS_BAR_Y * ConstVals.PPM,
+                    { player.weapons?.let { it.ammo(it.currentWeapon) } ?: 0 },
+                    { MegamanValues.MAX_WEAPON_AMMO }
+                )
 
-            weaponBar.init()
-            weaponBars.put(it, weaponBar)
+                weaponBar.init()
+                weaponBars.put(look, weaponBar)
+            }
         }
 
         weaponBarSupplier = supplier@{
-            // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
-            val megaman = player
-            if (megaman !is Megaman) return@supplier null
-            val current = megaman.currentWeapon
-            weaponBars.get(current)
+            val weapons = player.weapons ?: return@supplier null
+            weaponBars.get(weapons.currentLook)
         }
     }
 
@@ -167,19 +167,20 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         timerQueue.addLast(timer)
     }
 
-    fun addWeaponEnergy(megaman: Megaman, ammo: Int) {
+    fun addWeaponEnergy(weapons: PlayerWeaponsComponent<*>, ammo: Int) {
         GameLogger.debug(TAG, "addWeaponEnergy(): ammo=$ammo")
 
-        if (!MegamanWeapons.all.any { canAddWeaponEnergyTo(megaman, it) }) {
+        val loadoutWeapons = weapons.loadout.weapons
+        if (!loadoutWeapons.any { canAddWeaponEnergyTo(weapons, it) }) {
             GameLogger.debug(TAG, "addWeaponEnergy(): no weapons to add energy to")
             return
         }
 
-        val currentWeapon = megaman.currentWeapon
+        val currentWeapon = weapons.currentWeapon
         var remainingAmmo = ammo
 
         if (!currentWeapon.infiniteAmmo) {
-            remainingAmmo = addWeaponEnergyTo(megaman, currentWeapon, ammo)
+            remainingAmmo = addWeaponEnergyTo(weapons, currentWeapon, ammo)
 
             GameLogger.debug(
                 TAG, "addWeaponEnergy(): " +
@@ -187,23 +188,21 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             )
         }
 
-        val weapons = MegamanWeapons.all.toOrderedSet()
-        weapons.remove(megaman.currentWeapon)
-
-        for (weapon in weapons) {
-            if (weapon.infiniteAmmo) continue
+        for (i in 0 until loadoutWeapons.size) {
+            val weapon = loadoutWeapons[i]
+            if (weapon === currentWeapon || weapon.infiniteAmmo) continue
 
             if (remainingAmmo <= 0) {
                 GameLogger.debug(TAG, "addWeaponEnergy(): loop: remaining ammo depleted")
                 break
             }
 
-            if (!state.containsWeapon(weapon)) {
-                GameLogger.debug(TAG, "addWeaponEnergy(): loop: megaman does not have weapon $weapon")
+            if (!state.ownsWeapon(weapons.loadout.character, weapon)) {
+                GameLogger.debug(TAG, "addWeaponEnergy(): loop: the player does not have weapon $weapon")
                 continue
             }
 
-            remainingAmmo = addWeaponEnergyTo(megaman, weapon, remainingAmmo)
+            remainingAmmo = addWeaponEnergyTo(weapons, weapon, remainingAmmo)
 
             GameLogger.debug(
                 TAG, "addWeaponEnergy(): loop: added ammo to weapon $weapon: remainingAmmo=$remainingAmmo"
@@ -215,13 +214,13 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
     }
 
-    private fun canAddWeaponEnergyTo(megaman: Megaman, weapon: WeaponDef) =
+    private fun canAddWeaponEnergyTo(weapons: PlayerWeaponsComponent<*>, weapon: WeaponDef<*>) =
         !weapon.infiniteAmmo &&
-            state.containsWeapon(weapon) &&
-            megaman.weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
+            state.ownsWeapon(weapons.loadout.character, weapon) &&
+            weapons.ammo(weapon) < MegamanValues.MAX_WEAPON_AMMO
 
-    private fun addWeaponEnergyTo(megaman: Megaman, weapon: WeaponDef, ammoToAdd: Int): Int {
-        val currentAmmo = megaman.weaponsHandler.getAmmo(weapon)
+    private fun addWeaponEnergyTo(weapons: PlayerWeaponsComponent<*>, weapon: WeaponDef<*>, ammoToAdd: Int): Int {
+        val currentAmmo = weapons.ammo(weapon)
         val maxAmmo = MegamanValues.MAX_WEAPON_AMMO
 
         GameLogger.debug(
@@ -235,10 +234,10 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             return ammoToAdd
         }
 
-        val remaining = megaman.translateAmmo(ammoToAdd, weapon)
+        val remaining = weapons.translateAmmo(weapon, ammoToAdd)
         GameLogger.debug(
             TAG, "addWeaponEnergyTo(): " +
-                "weapon energy now: ${megaman.weaponsHandler.getAmmo(weapon)}, remaining=$remaining"
+                "weapon energy now: ${weapons.ammo(weapon)}, remaining=$remaining"
         )
         return remaining
     }

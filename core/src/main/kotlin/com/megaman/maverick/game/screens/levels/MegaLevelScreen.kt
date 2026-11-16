@@ -68,7 +68,7 @@ import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.depleteHealth
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.hazards.ViewEdgeHazard
-import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.players.weapons
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.sensors.Gate
@@ -658,9 +658,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.ADD_WEAPON_ENERGY -> {
                 val ammo = event.getProperty(ConstKeys.VALUE, Int::class)!!
                 val slot = event.getProperty(PlayerEventKeys.SLOT, PlayerSlot::class)!!
-                // TODO: only Megaman has weapons; another character (X, item 081) skips this until the loadout of item 024
-                val player = game.players.get(slot)!!
-                if (player is Megaman) playerStatsHandler.addWeaponEnergy(player, ammo)
+                val weapons = game.players.get(slot)!!.weapons
+                if (weapons != null) playerStatsHandler.addWeaponEnergy(weapons, ammo)
             }
 
             EventType.ADD_PLAYER_HEALTH -> {
