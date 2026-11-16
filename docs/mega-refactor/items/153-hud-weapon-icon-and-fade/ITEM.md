@@ -19,13 +19,13 @@
 Not approved. The branch `SCOPE.md` decides the final scope.
 
 - `PlayerStatsHandler` draws one icon for the current weapon of the player in slot 0, for every player class: Mega
-  Man (each `MegamanWeapon`), X (his buster) and Proto Man (his slots). It takes over the icon that `060c` adds for
-  Proto Man.
+  Man (each `MegamanWeapon`), X (his buster) and Proto Man (his buster; his special weapons come with `060h`). `060l`
+  (2026-11-16) removed the 2 slot icons that `060c` added for Proto Man.
 - The health bar, the weapon bar and the icon draw with a lower alpha while a player's body overlaps their screen
   area.
-- Every player's HUD weapon icons go in the `Hud` atlas (`TextureAsset.HUD`, `Hud.txt`), as `060c` did for Proto Man
-  (`protoman_sabre`, `protoman_buster`, 8x8; the owner chose `Hud` over `Bits`). `060c` draws them with a
-  `TODO` (item `153`) at the `as? Protoman` check in `PlayerStatsHandler.draw`.
+- Every player's HUD weapon icons go in a `Hud` atlas (the owner chose `Hud` over `Bits` in `060c`). `060l`
+  (2026-11-16, owner) deleted the `Hud` atlas (`TextureAsset.HUD`, `Hud.txt`, `Hud.png`, `assets/sprites/frames/Hud/`)
+  with Proto Man's 2 slot icons, the only regions in it, so this item makes the atlas again.
 
 ## Owner's input
 

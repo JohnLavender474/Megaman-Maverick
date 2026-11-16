@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`, `146`
-- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060d-protoman-slide-ladder` (merged, 2026-11-15), `mega-refactor-060l-protoman-one-input` (active, 2026-11-15), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
+- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060d-protoman-slide-ladder` (merged, 2026-11-15), `mega-refactor-060l-protoman-one-input` (merged, 2026-11-16), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
 
 ## Goal
 
@@ -90,6 +90,12 @@ similar playable characters (Bass, Axl, Zero, etc.) in the future."
   one crouch attack, `UP`+`B` at a ladder grabs it, the sabre is no longer the plain `B` of 2026-11-12) is in the
   `060d` session of 2026-11-15; the 2 open points are under "Open questions".
 
+- (2026-11-15, owner, at the `060l` brief) `DOWN`+`B` on the ground is the crouch shot; the crouch slash goes (its
+  frames stay in the atlas). `UP`+`B` on the ground and in a slide starts the 3-slash combo. The HUD slot icons and the
+  `Hud` atlas go.
+- (2026-11-16, owner, at the `060l` play test) Sabre damage on standard large enemies: 10, or 12 for a full slash (was
+  4 and 5); X's sabre gets the same values. One slash can hit the same enemy 2 or 3 times; kept.
+
 ## Proposed phases
 
 Not approved. One branch per phase. `060a` is a refactor only. `060b` to `060e` build the MM9/MM10 baseline to
@@ -134,9 +140,9 @@ credits are on the sheet). Keep the credits.
   questions are open, so this phase comes late.
 - Answered 2026-11-12 (see Decisions): (`060f`) What is the Proto Sabre: its input, its slash kinds, and how much it shares with X's Z-sabre (`081e`,
   `141`)?
-- (`060l`) `DOWN`+`B` on the ground: the crouch shot or the crouch slash (`UP`+`DOWN`+`B` cannot be pressed on a
+- Answered 2026-11-15 at the `060l` brief (the crouch shot; the crouch slash goes): (`060l`) `DOWN`+`B` on the ground: the crouch shot or the crouch slash (`UP`+`DOWN`+`B` cannot be pressed on a
   d-pad, so only one of them stays)?
-- (`060l`) Does `UP`+`B` on the ground start the 3-slash combo (later presses chain it), or a single slash as today's
+- Answered 2026-11-15 at the `060l` brief (the 3-slash combo): (`060l`) Does `UP`+`B` on the ground start the 3-slash combo (later presses chain it), or a single slash as today's
   buster slot?
 - Moved to `113`: how does the player pick a character, and can each co-op slot pick its own (`047`)?
 

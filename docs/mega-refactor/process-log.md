@@ -2435,3 +2435,22 @@ newest entry at the bottom.
   Rule `O2-R2` is active and holds. Overlap (owner decision: merge `011a` now): `077b` adds 8 `getRandom(...)` calls
   in `DesertMan.kt`; when it merges `master`, it changes them to `services.random.nextFloat(...)` (`getRandom(Float,
   Float)`) or `nextInt(...)` (`getRandom(Int, Int)`, inclusive), and the guard test finds a missed call.
+
+## 2026-11-16 — mega-refactor-060l-protoman-one-input
+
+- Summary: squash `cca9af357`. Proto Man has one attack input, as X: `B` is the buster (standing, jump, slide and
+  ladder shots), `UP`+`B` the sabre (the 3-slash floor combo on the ground and in a slide, one air slash in the air).
+  `DOWN`+`B` on the ground is the crouch shot only; the crouch slash and `SabreState.CROUCH` go (the frames stay in the
+  atlas), and `PlayerSabre.start` takes no `state` or `chains` argument (X's sabre plays the same). `ProtomanWeapon`,
+  the `SELECT` switch, the HUD slot icons and the whole `Hud` atlas go. Scope change 1 (owner, play test): sabre
+  damage on standard large enemies 10, or 12 for a full slash (was 4 and 5), so one floor combo kills `Robbit`; X's
+  sabre gets the same values; the multi-hit of one slash on one enemy is kept (owner).
+- Contract check: automated checks on the branch after `master` was merged in (`024a`, `011a`; one simple import
+  conflict in `PlayerStatsHandler.kt`): `engine:test` 698, `core:test` 2120, `core:smokeTest` 467, `lwjgl3:jar`;
+  review before the play test by 2 subagents (no bug; 1 test gap and the ladder check text fixed); each new case seen
+  to fail on a mutation; owner play test passed; Diffity round 1 with 0 threads.
+- Follow-up: no backlog or bug candidates. `153` `ITEM.md` notes that it makes the `Hud` atlas again; `O8` updated.
+  Overlap: `024b` (active) also changes `Protoman.kt` and `PlayerStatsHandler.kt`; its approved scope says the branch
+  that merges second resolves it. The main checkout had 1 modified file of another session (`CullablesSystem.kt`); it
+  stays unstaged.
+
