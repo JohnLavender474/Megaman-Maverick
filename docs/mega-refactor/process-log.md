@@ -2455,3 +2455,24 @@ newest entry at the bottom.
   that merges second resolves it. The main checkout had 1 modified file of another session (`CullablesSystem.kt`); it
   stays unstaged.
 
+
+## 2026-11-16 — mega-refactor-077b-desert-man
+
+- Summary: squash `740ef9101`. Desert Man gets 2 health phases with the same hits to kill as before (each damage
+  value 2 × the old value; item decision of 2026-11-15), tuning rows per difficulty and phase, a roll per `STAND`
+  attack with no attack twice in a row, a rebuilt long punch (wind-up, eased extend and retract, arm, fist and
+  speed-line sprites, fixtures each tick, wall stop), a tornado spin-up with a locked direction, a phase-2 burrow
+  (sink art, trail, splash tell, erupt jump aimed at the target), 2 new attacks (fist throw with an aimed needle fan;
+  needle spin with a crossed-arms crouch, a tucked rise and an approach jump), a one-shot intro pose and a grey limb
+  outline for the black sunset background. Fix: the boss owns its wall rectangles (a pooled rectangle crashed
+  `clampToArena`). New art in `Bosses2` (13 regions added, Desert Man frames recolored; no other region changed).
+  The owner tuned the fight in fast play-test rounds; the tests came in the final pass.
+- Contract check: automated checks pass on the branch after 2 `master` merges (2974 unit tests, 468 smoke tests,
+  `lwjgl3:jar`); 135 Desert Man tests from `TEST-DEBT.md`, each file with a mutation check; owner approved 2 `internal`
+  members for the tests (`DesertManState`, `currentState`). Review before the merge by 1 subagent: 7 findings, all
+  fixed (X friction reset in `onSpawn`, dead timer and roll, stale docs, style items). Owner play test passed
+  ("Very fun"). No Diffity round.
+- Follow-up: no new items (one tuning note in the `077` `ITEM.md`). The bug candidate (literal `"\\s+"` replace of the
+  light source keys) is already fixed in the active `fix/small-bugs-3`, which changes one other line of
+  `DesertMan.kt`. Item `077` stays active. The main checkout had 1 modified file of another session
+  (`CullablesSystem.kt`); it stays unstaged.

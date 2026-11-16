@@ -93,6 +93,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   the player goes in `PlayerDamageNegotiator` (`docs/WAYS_OF_WORKING.md`). Owner decisions of `077a` are in its branch
   `docs/NOTES.md` "Decisions".
 
+- (2026-11-16) `077b` merged. Desert Man tuning left for a later pass: `DesertManTuning.punchExtendSpeed` never
+  changes the punch, because every row is faster than the 30 tiles/s peak cap allows; remove the field or lower the
+  cap. Later boss branches can copy the `077b` test rig (`core/src/test/.../bosses/desertman/DesertManRig.kt`: a
+  scripted `GameRandom` picks the attack) and the fast play-test loop with `TEST-DEBT.md`.
+
 ## Open questions
 
 - Is 25% measured on the boss's maximum health, and does the panic attack also apply in hard mode only, normal mode
