@@ -2572,7 +2572,8 @@ newest entry at the bottom.
   test-only API, README and contract control checks fixed); owner play test passed; Diffity round 1 with 0 threads.
   `master` merged into the branch (`024b` and others; one conflict in `Megaman.kt`: the typed `WeaponDef<Megaman>` and
   the weapons component kept, the old `aButtonTask` field dropped). Checks on the branch: `engine:test` 702,
-  `core:test` 2381, `core:smokeTest` 469, `lwjgl3:jar`.
+  `core:test` 2381, `core:smokeTest` 469, `lwjgl3:jar`; the same checks pass on `master` after the squash (702 /
+  2381 / 469, 0 failures; the jar builds).
 - Follow-up: new item `163` (one shot pose in `PlayerBuster`); the teleport `A` task folds into `060e`; issue
   `2026-11-16-swim-stroke-sign-down-right.md`. Owner at the merge: `060k` also takes Proto Man's trailing sprites and a
   cleanup of almost all his frames. The main checkout had 1 modified file of another session
