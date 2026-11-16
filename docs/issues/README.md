@@ -167,3 +167,4 @@ related-items: [<mega-refactor item IDs>]
 | [`ProtomanTest` and `MegamanXTest` fail when they run alone](2026-11-11-player-tests-fail-alone.md) | yes | build | open |
 | [Projectiles explode on spikes and on every other `DEATH` fixture](2026-11-14-projectiles-explode-on-death-fixtures.md) | yes | core | open |
 | [X's landing probe skips one-way blocks while `DOWN` is held](2026-11-14-x-landing-probe-one-way-down.md) | no | core | open |
+| [Moon Scythes can fade live scythes too soon, because the count array keeps old entries](2026-11-14-moon-scythes-stale-array.md) | no | core | open |

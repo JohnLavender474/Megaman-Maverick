@@ -2390,3 +2390,25 @@ newest entry at the bottom.
   `blocked = { currentWeaponPrevents(BehaviorType.GROUND_SLIDING) }` (`060d` `docs/NOTES.md`). Next in `060`: `060k`
   (the owner's frame edits), then `060l` (one input). The main checkout had 2 modified files of another session
   (`docs/CODE_STYLE.md`, `CullablesSystem.kt`); they stay unstaged.
+
+## 2026-11-15 — mega-refactor-024a-weapon-defs
+
+- Summary: squash `8ce4b9abc`. Megaman's 10 weapons are `WeaponDef` objects (`weapons/`, with a README) in
+  `MegamanWeapons` (select order, `byId`); the `MegamanWeapon` enum and the per-weapon `when`s are gone. Each player
+  has one `WeaponState` per def (ammo, cooldown, spawned entities; subclasses for Moon Scythes, Precious Guard and
+  Rodent Claws). Every single-weapon rule is a def field or hook (owner decision D3), for example
+  `movesBlockedWhileFiring`, read through `currentWeaponPrevents(move)`. Ids are the old enum names in lower case,
+  so every derived string stays the same. New `docs/CODE_STYLE.md` rule "Names" (the owner, from the `firingBlocks`
+  name); new `docs/WAYS_OF_WORKING.md` rule "No JAR build during a play test round" (`bf0c4f1bc`).
+- Contract check: automated checks on the branch after `master` was merged in: `engine:test` 689, `core:test` 2136,
+  `core:smokeTest` 468, `lwjgl3:jar`; review before the play test by 2 subagents (no bug; style fixes); mutation
+  check; owner play test passed (5 checks); Diffity round 1 with 0 threads. 1 simple conflict with `060d` in
+  `GroundSlideBehavior.kt`, resolved as `blocked = { currentWeaponPrevents(BehaviorType.GROUND_SLIDING) }`.
+- Follow-up: bug filed: `docs/issues/2026-11-14-moon-scythes-stale-array.md`. No backlog candidates. Next: `024b` (a
+  loadout per character, the `is Megaman` workarounds), then `060h`. Overlap for `011a` (owner decision: `024a`
+  merged first): its 2 hunks in the old `MegamanWeaponsHandler.kt` move to the new files. The Moon Scythes sort
+  (`spawnOrder`) goes to `MoonScythesState.fadeExtraScythes` in `entities/megaman/weapons/MegamanWeaponStates.kt`;
+  nothing tests it, so check it by hand. The claws slash angles (`services.random`) go to `fireRodentClaws` in
+  `entities/megaman/weapons/MegamanWeaponFire.kt`; the `011a` guard test catches a missed call. The main checkout had
+  1 modified file of another session (`CullablesSystem.kt`); it stays unstaged. Its `docs/CODE_STYLE.md` edit was
+  committed on the owner's request (`e168a3e91`).
