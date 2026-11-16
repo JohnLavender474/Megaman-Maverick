@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: no
@@ -37,3 +37,10 @@ Items `007` and `008` touch both places.
 ## Short contract
 
 Fixed in branch `fix/small-bugs-3`. The short contract is in `2026-10-28-pathfinding-component-keeps-old-path.md`.
+
+## Resolution
+
+Fixed in `fix/small-bugs-3`, squash commit `c52ce18f6` (2026-11-16). All 9 `replace("\\s+", "")` calls in `core`
+use `Regex("\\s+")`: `GameState.fromString`, `LightSourceUtils`, `ElecDevil`, `DesertMan`, `BulbBlaster`, `Block`
+(3 calls) and `Laser`. `GameStateSaveStringTest` reads a save string with whitespace. No live map has whitespace in
+these values, so no gameplay change.

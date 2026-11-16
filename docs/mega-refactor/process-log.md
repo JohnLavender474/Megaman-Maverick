@@ -2509,3 +2509,18 @@ newest entry at the bottom.
 - Why not a branch: a small cleanup that the owner asked for, with no gameplay change (`docs/mega-refactor/CLAUDE.md`
   "Small ad-hoc changes on `master`").
 - Checks: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` pass on `master` before the commit.
+
+## 2026-11-16 — fix/small-bugs-3
+
+- Summary: closes 3 issues (squash commit `c52ce18f6`): `PathfindingComponent` kept its old path and interval
+  through a destroy and a new spawn, and `AsyncPathfindingSystem` let a search that ended after the destroy write into
+  the reset component; `LocksComponent.reset()` skipped its change hook; 9 `replace("\\s+", "")` calls in `core`
+  treated the pattern as literal text. The short contract is in
+  `docs/issues/2026-10-28-pathfinding-component-keeps-old-path.md`. No gameplay change in live data.
+- Picked up by the owner on 2026-11-16 (the branch had waited since 2026-11-14). `master` was merged in first (no
+  conflict). Review by 1 subagent: no code defects; 3 low findings. Fixed: a test for the interval half of the
+  pathfinding reset (it fails with `intervalTimer.reset()` removed); the stale `PlayerSpawnEventHandler` name in 2 issue
+  files (fixed on `master`, as the issue rules ask). Left as is: the `Thread.sleep(20)` in the async test (it can only
+  make the test pass without the fix on a slow machine, never fail with it).
+- Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` pass on the branch (702, 2272, 467;
+  0 failures). No play test (the short contract asks for none).

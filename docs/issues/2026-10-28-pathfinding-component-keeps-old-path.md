@@ -1,6 +1,6 @@
 ---
-status: open
-verified: no
+status: closed
+verified: yes
 area: engine
 gameplay-change: unknown
 found-by: pathfinding debug-shapes research (2026-10-28)
@@ -65,7 +65,9 @@ Not changed, with the caller check on `master` `a0cf393e7`:
   labels and the keys threw before the fix (`valueOf`, `toInt`), and a filter tag did not match.
 - Gameplay, for the locks: the only `onChange` is `behaviorsLockHook` on `MegaPlayer`. At a destroy with a
   `BEHAVIORS` lock held, the player's behaviors are allowed again at once, not at the unlock in
-  `PlayerSpawnEventHandler`. A respawn goes through that handler, so a respawn sees no change.
+  the respawn steps (`RespawnSteps.kt`, `SlotRespawn.kt`; `PlayerSpawnEventHandler` when this was written). They
+  lock a player that is unspawned or already spawned, and no destroy comes between the lock and the unlock, so a
+  respawn sees no change.
 - Gameplay, for the pathfinding: a respawned `Bat`, `SubmarineJoe`, `DeathBat` or `FloatingCan` no longer follows its
   old path in its first frames, and gets its first path after the interval, as on a first spawn.
 - `SimplePathfindingSystem`, the pathfinders, the other components and the lock API.
@@ -79,3 +81,11 @@ Checks:
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 - No play test: no gameplay change in live data. The respawn change for the 4 pathfinding enemies is the issue's
   intended fix and is not visible in normal play.
+
+## Resolution
+
+Fixed in `fix/small-bugs-3`, squash commit `c52ce18f6` (2026-11-16). `PathfindingComponent.reset()` sets
+`currentPath` to `null` and resets `intervalTimer`, and `AsyncPathfindingSystem.onEntityLeft` cancels and drops the
+pending search. `PathfindingRespawnTest` checks that a respawn consumes no old path, waits a full search interval, and
+gets no path from a search that ended after the destroy. The 2 other issues of the branch are closed in the same
+commit.

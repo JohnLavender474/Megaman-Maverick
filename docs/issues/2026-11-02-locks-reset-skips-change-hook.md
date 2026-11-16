@@ -1,6 +1,6 @@
 ---
-status: open
-verified: no
+status: closed
+verified: yes
 area: engine
 gameplay-change: unknown
 found-by: 120 research (2026-11-02)
@@ -17,7 +17,7 @@ related-items: [087, 120]
 
 `remove` and `clear` call `onChange`, but `reset()` only clears the bits. A `BEHAVIORS` lock held at destroy leaves the allowed behaviors off, and `Megaman.onSpawn` does not clear that group. Behaviors stay off until a later `unlock` brings the group to zero.
 
-Today `PlayerSpawnEventHandler.kt:214` does that unlock. A direct `destroy()` and `spawn()` with no spawn handler, as `120` plans, does not. Found by reading the code. Not run.
+Today the respawn steps do that unlock (`RespawnSteps.kt`, the `Ready` step; `PlayerSpawnEventHandler.kt:214` when this issue was filed). A direct `destroy()` and `spawn()` with no spawn handler, as `120` plans, does not. Found by reading the code. Not run.
 
 ## What should happen
 
@@ -30,3 +30,9 @@ Hold `SpiderWeb` or another `BEHAVIORS` lock on a player, destroy the player, an
 ## Short contract
 
 Fixed in branch `fix/small-bugs-3`. The short contract is in `2026-10-28-pathfinding-component-keeps-old-path.md`.
+
+## Resolution
+
+Fixed in `fix/small-bugs-3`, squash commit `c52ce18f6` (2026-11-16). `LocksComponent.reset()` calls
+`onChange(group, false)` for each locked group after it clears the state, as `clear()` does. A `LocksTest` case checks
+the hook calls for locked and free groups.

@@ -54,7 +54,7 @@ related-items: [<mega-refactor item IDs>]
 | [`CullablesSystem` skips culling for the remaining entities after one entity without a cullable](2026-10-22-cullables-system-early-return.md) | yes | engine | closed |
 | [`InsertionOrderPriorityQueue.size` is always 0](2026-10-22-insertion-order-priority-queue-size.md) | yes | engine | closed |
 | [`MutableOrderedSet.retainAll` removes nothing and reports the wrong result](2026-10-22-mutable-ordered-set-retain-all.md) | yes | engine | closed |
-| [`replace("\\s+", "")` treats the pattern as literal text](2026-10-22-literal-whitespace-regex.md) | yes | core | open |
+| [`replace("\\s+", "")` treats the pattern as literal text](2026-10-22-literal-whitespace-regex.md) | yes | core | closed |
 | [The room-music block on respawn reads the room before Mega moves, and can throw](2026-10-22-respawn-stale-room-music.md) | yes | core | closed |
 | [A pause during a gate opening turns physics and behaviors on again when the game resumes](2026-10-22-pause-during-gate-reenables-physics.md) | yes | core | open |
 | [When a health fill ends during a pause, all systems turn on while the game is still paused](2026-10-22-health-fill-end-unpauses-systems.md) | no | core | open |
@@ -101,7 +101,7 @@ related-items: [<mega-refactor item IDs>]
 | [`SpiderWeb.onDestroy` does not call `super.onDestroy()`](2026-10-27-spider-web-skips-super-on-destroy.md) | yes | core | closed |
 | [A moving `CartV2` pushes dropped items that lie on the ground in front of it](2026-10-28-cart-pushes-dropped-items.md) | yes | core | closed |
 | [The end-level beam sets the Megaman beam flag to `true` when the beam ends](2026-10-28-end-level-beam-flag-left-true.md) | question | core | open |
-| [`PathfindingComponent` keeps its old path through a destroy and a new spawn](2026-10-28-pathfinding-component-keeps-old-path.md) | no | engine | open |
+| [`PathfindingComponent` keeps its old path through a destroy and a new spawn](2026-10-28-pathfinding-component-keeps-old-path.md) | yes | engine | closed |
 | [Refine the final Dr. Wily boss fight](2026-10-29-refine-wily-final-boss-fight.md) | question | core, content | open |
 | [Question: a `down` gravity area turns the camera upside down, so the level shows upside down](2026-10-29-gravity-change-turns-camera-upside-down.md) | question | core | open |
 | [Needle Spin does not bounce Megaman up while he rises from a jump and JUMP is held](2026-10-29-needle-spin-no-bounce-while-jump-held.md) | yes | core | open |
@@ -143,7 +143,7 @@ related-items: [<mega-refactor item IDs>]
 | [A dead player's weapon `spawned` sets are not cleared](2026-11-02-weapon-spawned-sets-survive-death.md) | no | core | closed |
 | [`throwAxe` runs after a `0.1` s delay with no live check](2026-11-02-throw-axe-no-live-check.md) | no | core | closed |
 | [The factory preload runs `init()` twice for 25 `Bullet` and 25 `Block`](2026-11-02-entity-factory-preload-runs-init-twice.md) | yes | core | closed |
-| [`LocksComponent.reset()` does not call its change hook](2026-11-02-locks-reset-skips-change-hook.md) | no | engine | open |
+| [`LocksComponent.reset()` does not call its change hook](2026-11-02-locks-reset-skips-change-hook.md) | yes | engine | closed |
 | [Question: the screen and the boss read `mini` and `end` from different sources](2026-11-02-boss-props-have-two-sources.md) | question | core | open |
 | [The check that stops an item drop on a cart kill is always true](2026-11-02-cart-kill-drop-check-always-true.md) | yes | core | open |
 | [Question: a moving `CartV2` kills a boss in one hit](2026-11-02-cart-kills-boss-in-one-hit.md) | question | core | open |
