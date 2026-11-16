@@ -2448,7 +2448,8 @@ newest entry at the bottom.
 - Contract check: automated checks on the branch after `master` was merged in (`024a`, `011a`; one simple import
   conflict in `PlayerStatsHandler.kt`): `engine:test` 698, `core:test` 2120, `core:smokeTest` 467, `lwjgl3:jar`;
   review before the play test by 2 subagents (no bug; 1 test gap and the ladder check text fixed); each new case seen
-  to fail on a mutation; owner play test passed; Diffity round 1 with 0 threads.
+  to fail on a mutation; owner play test passed; Diffity round 1 with 0 threads. The same checks pass on `master` after the
+  squash (698 / 2120 / 467, 0 failures; the jar builds).
 - Follow-up: no backlog or bug candidates. `153` `ITEM.md` notes that it makes the `Hud` atlas again; `O8` updated.
   Overlap: `024b` (active) also changes `Protoman.kt` and `PlayerStatsHandler.kt`; its approved scope says the branch
   that merges second resolves it. The main checkout had 1 modified file of another session (`CullablesSystem.kt`); it
