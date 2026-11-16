@@ -31,7 +31,7 @@ class Tree(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, I
         private var region: TextureRegion? = null
     }
 
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
 
     override fun getType() = EntityType.DECORATION
 
@@ -46,7 +46,7 @@ class Tree(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, I
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
     }
 
     private fun defineSpritesComponent(): SpritesComponent {

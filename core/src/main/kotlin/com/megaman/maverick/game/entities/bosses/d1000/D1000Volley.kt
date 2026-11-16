@@ -13,6 +13,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.D1000BombMarker
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
+import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -259,7 +260,7 @@ internal class D1000Volley(private val boss: D1000) : D1000Move {
     private fun playerSpeedY() = boss.targetPlayer.body.physics.velocity.y
 
     private fun huntHeight() =
-        D1000Orbs.aimHeight(boss.targetPlayer.body.getCenter(Vector2()).y, playerSpeedY(), boss.tuning, low, high)
+        D1000Orbs.aimHeight(boss.targetPlayer.body.getCenter().y, playerSpeedY(), boss.tuning, low, high)
 
     private fun pickLane(role: D1000Role): Float {
         if (horizontal) return when (role) {
@@ -384,7 +385,7 @@ internal class D1000Volley(private val boss: D1000) : D1000Move {
             D1000Orbs.roles(pattern, 0, D1000Orbs.count(pattern, boss.tuning), forecastRoles)
         }
         val flight = D1000Bomb.flightTime(throwY, boss.floor)
-        var x = D1000Orbs.clampLane(boss.arena, boss.core?.body?.getCenter(Vector2())?.x ?: origin.x)
+        var x = D1000Orbs.clampLane(boss.arena, boss.core?.body?.getCenter()?.x ?: origin.x)
         var t = startIn + move
         var sweep = 0
         for (i in 0 until forecastRoles.size) {

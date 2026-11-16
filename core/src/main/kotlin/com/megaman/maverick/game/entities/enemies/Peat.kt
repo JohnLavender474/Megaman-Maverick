@@ -102,8 +102,8 @@ class Peat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL),
                 if (delayTimer.isFinished()) {
                     moving = true
 
-                    startPosition = body.getCenter(false)
-                    targetPosition = targetPlayer.body.getCenter(false)
+                    startPosition = body.getCenter(Vector2())
+                    targetPosition = targetPlayer.body.getCenter(Vector2())
 
                     val midX = (startPosition!!.x + targetPosition!!.x) / 2f
                     val midY = (startPosition!!.y + targetPosition!!.y) / 2f

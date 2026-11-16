@@ -67,7 +67,7 @@ class CeilingCrusher(services: MegaServices) : MegaGameEntity(services), IBodyEn
     private val dropDelayTimer = Timer(DROP_DELAY)
     private val raiseDelayTimer = Timer(RAISE_DELAY)
     private var block: Block? = null
-    private lateinit var start: Vector2
+    private val start = Vector2()
     private lateinit var ceilingCrusherState: CeilingCrusherState
 
     private var height = 0
@@ -92,7 +92,7 @@ class CeilingCrusher(services: MegaServices) : MegaGameEntity(services), IBodyEn
         super.onSpawn(spawnProps)
         height = spawnProps.getOrDefault(ConstKeys.HEIGHT, 1, Int::class)
         body.setSize(0.75f * ConstVals.PPM, height * 2.25f * ConstVals.PPM)
-        start = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
+        start.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER))
         body.setBottomCenterToPoint(start)
         for (i in 1 until height) {
             val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))

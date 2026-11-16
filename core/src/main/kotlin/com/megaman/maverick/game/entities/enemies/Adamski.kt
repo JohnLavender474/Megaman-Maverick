@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
@@ -81,7 +82,7 @@ class Adamski(services: MegaServices) : AbstractEnemy(services, size = Size.SMAL
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, targetPlayer.body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
         val motion = SineWave(
-            body.getCenter(false),
+            body.getCenter(Vector2()),
             (if (left) -SPEED else SPEED) * ConstVals.PPM,
             AMPLITUDE * ConstVals.PPM * if (flip) -1f else 1f,
             FREQUENCY

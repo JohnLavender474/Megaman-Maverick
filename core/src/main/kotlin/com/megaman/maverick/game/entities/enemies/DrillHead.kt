@@ -21,6 +21,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
@@ -55,6 +56,7 @@ import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -121,7 +123,7 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
     private lateinit var drillSpawnType: DrillSpawnType
 
     private val currentHoverSpot = Vector2()
-    private val hoverSpots = Array<Vector2>()
+    private val hoverSpots = OwnedArray { Vector2() }
     private val tempVec2Set = OrderedSet<Vector2>()
 
     override fun init(vararg params: Any) {
@@ -141,7 +143,7 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
             val cullBounds = spawnProps.get(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}",
                 RectangleMapObject::class
-            )!!.rectangle.toGameRectangle(false)
+            )!!.rectangle.toGameRectangle(GameRectangle())
 
             spawnProps.put(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}_${ConstKeys.SUPPLIER}",
@@ -188,8 +190,7 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.HOVER)) {
-                val hoverSpot = (value as RectangleMapObject).rectangle.getCenter(false)
-                hoverSpots.add(hoverSpot)
+                (value as RectangleMapObject).rectangle.getCenter(hoverSpots.add())
             }
         }
 
@@ -212,7 +213,6 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        hoverSpots.forEach { GameObjectPools.free(it) }
         hoverSpots.clear()
 
         currentHoverSpot.setZero()
@@ -331,7 +331,7 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
     }
 
     private fun setNextPosition() {
-        tempVec2Set.addAll(hoverSpots)
+        hoverSpots.forEach { tempVec2Set.add(it) }
         tempVec2Set.remove(currentHoverSpot)
 
         val nextHoverSpot = services.random.pick(tempVec2Set.orderedItems())

@@ -5,11 +5,11 @@ import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.utils.GameObjectPools
 
-fun GameRectangle.getSize(reclaim: Boolean = true) = getSize(GameObjectPools.fetch(Vector2::class, reclaim))
+fun GameRectangle.getSize() = getSize(GameObjectPools.fetch(Vector2::class))
 
-fun GameRectangle.getCenter(reclaim: Boolean = true) = getCenter(GameObjectPools.fetch(Vector2::class, reclaim))
+fun GameRectangle.getCenter() = getCenter(GameObjectPools.fetch(Vector2::class))
 
-fun GameRectangle.getPosition(reclaim: Boolean = true) = getPosition(GameObjectPools.fetch(Vector2::class, reclaim))
+fun GameRectangle.getPosition() = getPosition(GameObjectPools.fetch(Vector2::class))
 
-fun GameRectangle.getPositionPoint(position: Position, reclaim: Boolean = true) =
-    getPositionPoint(position, GameObjectPools.fetch(Vector2::class, reclaim))
+fun GameRectangle.getPositionPoint(position: Position) =
+    getPositionPoint(position, GameObjectPools.fetch(Vector2::class))

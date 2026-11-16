@@ -584,7 +584,7 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
             val yOffset = ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM / 2f
 
             val start = row pairTo column
-            val startPosition = startBody.getPositionOf(row, column)
+            val startPosition = startBody.getPositionOf(row, column, Vector2())
             when {
                 firstLaunch -> startPosition.add(0f, yOffset).setX(startX)
                 else -> startPosition.add(xOffset, yOffset)
@@ -605,7 +605,7 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
             }
 
             val (targetRow, targetColumn) = target
-            val targetPosition = targetBody.getPositionOf(targetRow, targetColumn).add(xOffset, yOffset)
+            val targetPosition = targetBody.getPositionOf(targetRow, targetColumn, Vector2()).add(xOffset, yOffset)
 
             launchQueue.addLast(
                 ElecDevilLaunchQueueElement(

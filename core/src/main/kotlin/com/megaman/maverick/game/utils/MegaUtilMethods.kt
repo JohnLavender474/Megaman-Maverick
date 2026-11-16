@@ -42,8 +42,7 @@ object MegaUtilMethods {
         target: Vector2,
         verticalBaseImpulse: Float,
         horizontalScalar: Float = 1f,
-        verticalScalar: Float = 1f,
-        out: Vector2 = GameObjectPools.fetch(Vector2::class)
+        verticalScalar: Float = 1f
     ) = calculateJumpImpulse(
         source.x,
         source.y,
@@ -52,15 +51,15 @@ object MegaUtilMethods {
         horizontalScalar,
         verticalBaseImpulse,
         verticalScalar,
-        out
+        GameObjectPools.fetch(Vector2::class)
     )
 
-    fun calculateJumpImpulse(
+    private fun calculateJumpImpulse(
         sourceX: Float, sourceY: Float,
         targetX: Float, targetY: Float,
         horizontalScalar: Float, verticalBaseImpulse: Float,
         verticalScalar: Float,
-        out: Vector2 = GameObjectPools.fetch(Vector2::class)
+        out: Vector2
     ): Vector2 {
         val horizontalDistance = targetX - sourceX
         val verticalDistance = targetY - sourceY

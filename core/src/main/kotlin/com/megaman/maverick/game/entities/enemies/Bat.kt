@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.megaman.maverick.game.pathfinding.BlockCells
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -182,7 +183,7 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(false)
+        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(GameRectangle())
         triggered = trigger == null
 
         spawnProps.forEach { key, value ->

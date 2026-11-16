@@ -189,4 +189,27 @@ class WorldPathfinderTest : DescribeSpec({
         // Then
         result.path shouldBe null
     }
+
+    it("keeps its own copy of the start and the target, so a caller can reuse its objects at once") {
+        val start = IntPair(0, 0)
+        val target = IntPair(2, 0)
+        val pathfinder = WorldPathfinder(
+            start = start,
+            target = target,
+            cells = null,
+            worldWidth = 3,
+            worldHeight = 3,
+            allowDiagonal = false,
+            allowOutOfWorldBounds = false,
+            filter = null,
+            heuristic = heuristic
+        )
+        start.set(2, 2)
+        target.set(0, 2)
+
+        val path = pathfinder.call().path!!
+
+        path.first() shouldBe IntPair(0, 0)
+        path.last() shouldBe IntPair(2, 0)
+    }
 })

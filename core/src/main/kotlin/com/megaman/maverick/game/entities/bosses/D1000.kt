@@ -59,6 +59,7 @@ import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.StunType
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -1041,7 +1042,7 @@ class D1000(services: MegaServices) :
                 if (side == 0) forecast(D1000Action.SPREAD, startIn) else {
                     guard.addFootprint(boxes, 0f, 0f, D1000Escape.HORIZON, true)
                     core?.let { eye ->
-                        val point = D1000Core.flankPoint(arena, player, side, Vector2())
+                        val point = D1000Core.flankPoint(arena, player, side, GameObjectPools.fetch(Vector2::class))
                         val arrive = startIn + eye.body.getCenter().dst(point) / D1000Core.FLANK_SPEED
                         for (i in 0 until tuning.flankShots) addAimedShot(
                             point.x, point.y, D1000Core.SHOT_SPEED, arrive + tuning.flankPause + i * D1000Core.FLANK_SHOT_GAP

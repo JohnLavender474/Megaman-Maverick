@@ -36,7 +36,7 @@ class ForceDecoration(services: MegaServices) : MegaGameEntity(services), ISprit
         private var region: TextureRegion? = null
     }
 
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
     private var rotation = 0f
 
     override fun getType() = EntityType.DECORATION
@@ -51,7 +51,7 @@ class ForceDecoration(services: MegaServices) : MegaGameEntity(services), ISprit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
         val cull = spawnProps.getOrDefault(ConstKeys.CULL, true, Boolean::class)
         if (cull) addComponent(createCullablesComponent()) else removeComponent(CullablesComponent::class)

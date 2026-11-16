@@ -141,6 +141,7 @@ class MegamanMaverickGameParams {
     var debugWindow: Boolean = false
     var debugShapes: Boolean = false
     var debugPathfinding: Boolean = false
+    var poolChecks: Boolean = false
     var debugText: Boolean = false
     var fixedStepScalar: Float = 1f
     var pixelPerfect: Boolean = false
@@ -280,6 +281,7 @@ class MegamanMaverickGame(
 
     override fun create() {
         settings.performance = params.performance
+        GameObjectPools.debugChecks = params.poolChecks
 
         val launchResult = resolveLaunchOptions(params.launchOptions)
         if (!launchResult.isValid)

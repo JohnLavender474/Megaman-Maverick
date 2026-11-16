@@ -38,7 +38,7 @@ open class WindyGrass(services: MegaServices) : MegaGameEntity(services), ISprit
         private var middleRegion: TextureRegion? = null
     }
 
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
     private val animationsToRemove = Array<String>()
 
     override fun getType() = EntityType.DECORATION
@@ -60,7 +60,7 @@ open class WindyGrass(services: MegaServices) : MegaGameEntity(services), ISprit
         GameLogger.debug(TAG, "spawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
 
         val tiles = bounds.getWidth().toInt() / ConstVals.PPM
         for (i in 0 until tiles) {

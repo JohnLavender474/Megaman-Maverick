@@ -241,8 +241,8 @@ class GutsTank(services: MegaServices) : AbstractBoss(services, size = Size.LARG
         )
 
         heliMetTargets.clear()
-        val fly1Target = spawnProps.get(FLY1, RectangleMapObject::class)!!.rectangle.getCenter(false)
-        val fly2Target = spawnProps.get(FLY2, RectangleMapObject::class)!!.rectangle.getCenter(false)
+        val fly1Target = spawnProps.get(FLY1, RectangleMapObject::class)!!.rectangle.getCenter(Vector2())
+        val fly2Target = spawnProps.get(FLY2, RectangleMapObject::class)!!.rectangle.getCenter(Vector2())
         heliMetTargets.addAll(fly1Target, fly2Target)
 
         moveState = GutsTankMoveState.MOVE

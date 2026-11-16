@@ -67,6 +67,7 @@ import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -142,7 +143,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         d1.compareTo(d2)
     }
 
-    private val obstacles = Array<GameRectangle>()
+    private val obstacles = OwnedArray { GameRectangle() }
     private val ignoring = ObjectSet<Int>()
     private val ignoringEntities = ObjectSet<IGameEntity>()
 
@@ -215,8 +216,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
                 val id = (value as RectangleMapObject).toProps().get(ConstKeys.ID, Int::class)!!
                 ignoring.add(id)
             } else if (key.toString().contains(ConstKeys.OBSTACLE)) {
-                val obstacle = (value as RectangleMapObject).getShape() as GameRectangle
-                obstacles.add(obstacle)
+                obstacles.add().set((value as RectangleMapObject).rectangle)
             }
         }
 
@@ -258,7 +258,6 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
 
         lightSourceKeys.clear()
 
-        obstacles.forEach { GameObjectPools.free(it) }
         obstacles.clear()
 
         ignoring.clear()
@@ -578,15 +577,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
                 )
             )
 
-            // Propagate obstacles to the reflected laser. Obstacles are blocks the beam must stop at
-            // that aren't laser-colliding physics blocks; they only reach the first laser (from the
-            // beamer's spawn props), so without copying them forward a reflected laser would pass
-            // straight through them. Owned copies are used so each laser frees its own rectangles in
-            // `onDestroy` without double-freeing shared references.
-            obstacles.forEach { obstacle ->
-                val obstacle = GameObjectPools.fetch(GameRectangle::class, false).set(obstacle)
-                reflectingLaser!!.obstacles.add(obstacle)
-            }
+            obstacles.forEach { obstacle -> reflectingLaser!!.obstacles.add().set(obstacle) }
         }
 
         reflectingLaser!!.setReflector(reflector, this)

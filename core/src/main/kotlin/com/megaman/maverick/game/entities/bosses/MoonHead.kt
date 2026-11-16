@@ -52,6 +52,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.AsteroidsSpawner
 import com.megaman.maverick.game.entities.projectiles.Asteroid
 import com.megaman.maverick.game.entities.projectiles.PreciousGem
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -222,10 +223,12 @@ class MoonHead(services: MegaServices) : AbstractBoss(services, dmgDuration = DA
         val totalDistance = body.getCenter().dst(target) * DISTANCE_FACTOR
         var winningArcMotion = arcMotion1
 
+        val pos1 = GameObjectPools.fetch(Vector2::class)
+        val pos2 = GameObjectPools.fetch(Vector2::class)
         for (i in 0..ARC_FACTOR_CALCULATIONS) {
             val t = i * (totalDistance / ARC_FACTOR_CALCULATIONS)
-            val pos1 = arcMotion1.compute(t)
-            val pos2 = arcMotion2.compute(t)
+            arcMotion1.compute(t, pos1)
+            arcMotion2.compute(t, pos2)
 
             mockBody.setCenter(pos1)
             val hitsBlockPos1 = blocks.any { it.body.getBounds().overlaps(mockBody) }

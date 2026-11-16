@@ -143,7 +143,7 @@ class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<
         pendulum = Pendulum(
             length = DEFAULT_LENGTH * ConstVals.PPM,
             gravity = PENDULUM_GRAVITY * ConstVals.PPM,
-            anchor = bounds.getCenter(false).add(0f, DEFAULT_LENGTH * ConstVals.PPM),
+            anchor = bounds.getCenter(Vector2()).add(0f, DEFAULT_LENGTH * ConstVals.PPM),
             targetFPS = 1 / 60f,
             random = services.random,
             defaultAngle = PI.toFloat() / 1.5f
@@ -229,7 +229,7 @@ class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<
                 val key = "${ConstKeys.RING}_$i"
                 builder.sprite(key, ring).preProcess { _, sprite ->
                     val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
-                    val center = pendulum.getPointFromAnchor(distance)
+                    val center = pendulum.getPointFromAnchor(distance, GameObjectPools.fetch(Vector2::class))
                     sprite.setPosition(center, Position.BOTTOM_CENTER)
                 }
             }

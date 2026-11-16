@@ -37,11 +37,11 @@ fun IBody.overlapsGameCam(): Boolean {
     return getBounds().overlaps(services.gameCamera.getRotatedBounds())
 }
 
-fun IBody.getBounds(reclaim: Boolean = true) = getBounds(GameObjectPools.fetch(GameRectangle::class, reclaim))
+fun IBody.getBounds() = getBounds(GameObjectPools.fetch(GameRectangle::class))
 
-fun IBody.getPosition(reclaim: Boolean = true) = getPosition(GameObjectPools.fetch(Vector2::class, reclaim))
+fun IBody.getPosition() = getPosition(GameObjectPools.fetch(Vector2::class))
 
-fun IBody.getCenter(reclaim: Boolean = true) = getCenter(GameObjectPools.fetch(Vector2::class, reclaim))
+fun IBody.getCenter() = getCenter(GameObjectPools.fetch(Vector2::class))
 
 fun IBody.setCenterX(x: Float): IBody {
     val center = getCenter()
@@ -55,10 +55,10 @@ fun IBody.setCenterY(y: Float): IBody {
     return this
 }
 
-fun IBody.getSize(reclaim: Boolean = true) = getSize(GameObjectPools.fetch(Vector2::class, reclaim))
+fun IBody.getSize() = getSize(GameObjectPools.fetch(Vector2::class))
 
-fun IBody.getPositionPoint(position: Position, reclaim: Boolean = true) =
-    getPositionPoint(position, GameObjectPools.fetch(Vector2::class, reclaim))
+fun IBody.getPositionPoint(position: Position) =
+    getPositionPoint(position, GameObjectPools.fetch(Vector2::class))
 
 fun IBody.setEntity(entity: IBodyEntity) {
     forEachFixture { it.setEntity(entity) }

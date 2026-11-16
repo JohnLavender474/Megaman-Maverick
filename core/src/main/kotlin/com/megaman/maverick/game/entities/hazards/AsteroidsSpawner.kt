@@ -10,6 +10,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.entities.contracts.ICullableEntity
@@ -70,7 +71,7 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SPAWNER)) {
-                val spawner = (value as RectangleMapObject).rectangle.toGameRectangle(false)
+                val spawner = (value as RectangleMapObject).rectangle.toGameRectangle(GameRectangle())
                 spawners.put(spawner, Timer(services.random.nextFloat(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)))
             }
         }

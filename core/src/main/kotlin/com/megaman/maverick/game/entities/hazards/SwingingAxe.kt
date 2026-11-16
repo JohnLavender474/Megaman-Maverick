@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Properties
@@ -125,7 +126,7 @@ class SwingingAxe(services: MegaServices) : MegaGameEntity(services), ISpritesEn
 
     private fun setPendulum(bounds: GameRectangle) {
         pendulum = Pendulum(
-            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(false), 1 / 60f, services.random
+            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(Vector2()), 1 / 60f, services.random
         )
         putMotionDefinition(
             ConstKeys.PENDULUM, MotionComponent.MotionDefinition(motion = pendulum, function = { value, _ ->

@@ -32,7 +32,7 @@ class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable
 
     override var owner: IGameEntity? = null
 
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
     private lateinit var timer: Timer
     private lateinit var frequency: Timer
 
@@ -49,7 +49,7 @@ class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable
         GameLogger.debug(TAG, "onSpawn(): spawnProps = $spawnProps")
         super.onSpawn(spawnProps)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class) ?: this
 
         val dur = spawnProps.getOrDefault(ConstKeys.DURATION, DEFAULT_DUR, Float::class)

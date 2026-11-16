@@ -1035,14 +1035,14 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
             for (i in 1..4) {
                 val (col, row) = colRowOrder[i - 1]
 
-                val flyInStart = spawnProps
-                    .get("fly_in_start_$i", RectangleMapObject::class)!!
-                    .rectangle.getCenter(false)
+                val flyInStart = Vector2(
+                    spawnProps.get("fly_in_start_$i", RectangleMapObject::class)!!.rectangle.getCenter()
+                )
                 flyInStartPositions[col, row] = flyInStart
 
-                val flyInTarget = spawnProps
-                    .get("fly_in_target_$i", RectangleMapObject::class)!!
-                    .rectangle.getCenter(false)
+                val flyInTarget = Vector2(
+                    spawnProps.get("fly_in_target_$i", RectangleMapObject::class)!!.rectangle.getCenter()
+                )
                 flyInTargetPositions[col, row] = flyInTarget
             }
 
@@ -1950,8 +1950,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
                 val warningSign = warningSigns.get(key)
 
-                val bottomCenter = GameObjectPools.fetch(Vector2::class, false)
-                    .set(warningSign.center.x, warningSign.center.y - 0.5f * ConstVals.PPM)
+                val bottomCenter = Vector2(warningSign.center.x, warningSign.center.y - 0.5f * ConstVals.PPM)
 
                 val delay = services.random.nextFloat(0.5f, 0.75f)
 
@@ -1963,8 +1962,6 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                             ConstKeys.OWNER pairTo this@WilyFinalBoss
                         )
                     )
-
-                    GameObjectPools.free(bottomCenter)
                 }
 
                 MegaUtilMethods.delayRun(services, delay) { requestToPlaySound(SoundAsset.ASTEROID_EXPLODE_SOUND, false) }
@@ -1974,10 +1971,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         override fun reset() {
             GameLogger.debug(TAG, "Phase1Handler: reset()")
 
-            flyInStartPositions.forEach { _, _, v -> v?.let { GameObjectPools.free(it) } }
             flyInStartPositions.clear()
-
-            flyInTargetPositions.forEach { _, _, v -> v?.let { GameObjectPools.free(it) } }
             flyInTargetPositions.clear()
 
             stateTimers.values().forEach { it.reset() }
@@ -2122,6 +2116,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         // Sway state
         private var swayTheta = 0f
         private var swayAnchor: Vector2? = null
+        private val swayAnchorPosition = Vector2()
 
         // Charge state
         private var chargePhase = ChargePhase.APPROACH
@@ -2256,7 +2251,6 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
             swayTheta = 0f
 
-            swayAnchor?.let { GameObjectPools.free(it) }
             swayAnchor = null
 
             val center = body.getCenter()
@@ -2382,7 +2376,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         override fun update(delta: Float) {
             // Sine-based lateral sway (like lazor phase)
             if (swayAnchor == null)
-                swayAnchor = GameObjectPools.fetch(Vector2::class, false).set(body.getCenter())
+                swayAnchor = swayAnchorPosition.set(body.getCenter())
 
             val phase2StateMachine =
                 stateMachines.get(WilyFinalBossPhase.PHASE_2) as StateMachine<WilyPhase2State>
@@ -2896,10 +2890,10 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
             spawnProps.forEach { key, value ->
                 if (key.toString().contains("phase3_intro")) {
                     val rect = (value as RectangleMapObject).rectangle
-                    introPositions.add(rect.getCenter(false))
+                    introPositions.add(Vector2(rect.getCenter()))
                 } else if (key.toString().contains("phase3_spawn")) {
                     val rect = (value as RectangleMapObject).rectangle
-                    spawnPositions.add(rect.getCenter(false))
+                    spawnPositions.add(Vector2(rect.getCenter()))
                 }
             }
 
@@ -3229,10 +3223,8 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         override fun reset() {
             GameLogger.debug(TAG, "Phase3Handler: reset()")
 
-            introPositions.forEach { GameObjectPools.free(it) }
             introPositions.clear()
 
-            spawnPositions.forEach { GameObjectPools.free(it) }
             spawnPositions.clear()
 
             destroyFakeCapsules()

@@ -5,4 +5,4 @@ import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.toGameCircle
 import com.megaman.maverick.game.utils.GameObjectPools
 
-fun Circle.toGameCircle(reclaim: Boolean = true) = toGameCircle(GameObjectPools.fetch(GameCircle::class, reclaim))
+fun Circle.toGameCircle() = toGameCircle(GameObjectPools.fetch(GameCircle::class))

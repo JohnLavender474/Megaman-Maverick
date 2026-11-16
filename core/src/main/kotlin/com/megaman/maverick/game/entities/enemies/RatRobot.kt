@@ -47,9 +47,8 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
-import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -82,7 +81,7 @@ class RatRobot(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
 
     private val freezeHandler = FreezableEntityHandler(this)
 
-    private val triggers = Array<GameRectangle>()
+    private val triggers = OwnedArray { GameRectangle() }
     private var triggered = false
 
     override fun init(vararg params: Any) {
@@ -109,8 +108,7 @@ class RatRobot(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.TRIGGER)) {
-                val trigger = (value as RectangleMapObject).rectangle.toGameRectangle(false)
-                triggers.add(trigger)
+                triggers.add().set((value as RectangleMapObject).rectangle)
             }
         }
         triggered = triggers.isEmpty
@@ -129,7 +127,6 @@ class RatRobot(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        triggers.forEach { GameObjectPools.free(it) }
         triggers.clear()
 
         frozen = false

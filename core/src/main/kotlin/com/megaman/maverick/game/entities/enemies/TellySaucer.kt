@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
@@ -125,7 +126,7 @@ class TellySaucer(services: MegaServices) : AbstractEnemy(services, size = Size.
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, targetPlayer.body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
 
-        val sinePos = body.getCenter(false)
+        val sinePos = body.getCenter(Vector2())
         val speed = ConstVals.PPM * if (left) -SPEED else SPEED
         val amplitude = ConstVals.PPM * if (flip) -AMPLITUDE else AMPLITUDE
         sine = SineWave(sinePos, speed, amplitude, FREQUENCY)

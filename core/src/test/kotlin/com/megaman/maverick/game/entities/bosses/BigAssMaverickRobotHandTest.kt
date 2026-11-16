@@ -78,7 +78,7 @@ class BigAssMaverickRobotHandTest : DescribeSpec({
             val boss = BigAssMaverickRobot(services)
             boss.addComponent(BodyComponent(bossBody))
             withClue("boss body") {
-                boss.body.getPositionPoint(Position.CENTER, reclaim = false).x shouldBe (bossCenter.x plusOrMinus 0.01f)
+                boss.body.getPositionPoint(Position.CENTER, Vector2()).x shouldBe (bossCenter.x plusOrMinus 0.01f)
             }
 
             val hand = MegaEntityFactory.fetch(BigAssMaverickRobotHand::class)!!
@@ -93,8 +93,8 @@ class BigAssMaverickRobotHandTest : DescribeSpec({
             engine.update(0f)
             engine.update(0f)
 
-            val handCenter = hand.body.getPositionPoint(Position.CENTER, reclaim = false).cpy()
-            val blockTop = oldBlock.body.getPositionPoint(Position.TOP_CENTER, reclaim = false).cpy()
+            val handCenter = hand.body.getPositionPoint(Position.CENTER, Vector2()).cpy()
+            val blockTop = oldBlock.body.getPositionPoint(Position.TOP_CENTER, Vector2()).cpy()
             withClue("hand=$handCenter block=$blockTop live=${hand.existenceState} ${oldBlock.existenceState}") {
                 handCenter.x shouldBe (bossCenter.x plusOrMinus 0.01f)
                 handCenter.y shouldBe (bossCenter.y plusOrMinus 0.01f)

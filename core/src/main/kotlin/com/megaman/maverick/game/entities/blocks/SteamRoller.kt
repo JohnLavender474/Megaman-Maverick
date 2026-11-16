@@ -163,7 +163,7 @@ class SteamRoller(services: MegaServices) : MegaGameEntity(services), IBodyEntit
 
             blocks.add(block)
 
-            val offset = blockBound.getCenter(false).sub(body.getCenter())
+            val offset = Vector2(blockBound.getCenter()).sub(body.getCenter())
             blockOffsets.put(block, offset)
         }
     }
@@ -172,7 +172,6 @@ class SteamRoller(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        blockOffsets.values().forEach { GameObjectPools.free(it) }
         blockOffsets.clear()
 
         blocks.forEach { it.destroy() }

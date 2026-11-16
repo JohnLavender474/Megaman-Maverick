@@ -59,6 +59,7 @@ import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
 import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -206,7 +207,7 @@ class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<
     private var minWallRunJumpY = 0f
     private var maxWallRunJumpY = 0f
 
-    private val ratSpawns = Array<Vector2>()
+    private val ratSpawns = OwnedArray { Vector2() }
     private val spawnRatDelay = Timer(SPAWN_RAT_DELAY)
 
     private var timesAtStandState = 0
@@ -289,8 +290,7 @@ class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<
             key.toString().let {
                 when {
                     it.contains(ConstKeys.CHILD) -> {
-                        val ratSpawn = (value as RectangleMapObject).rectangle.getCenter(false)
-                        ratSpawns.add(ratSpawn)
+                        (value as RectangleMapObject).rectangle.getCenter(ratSpawns.add())
                     }
 
                     it == ConstKeys.LEFT -> {
@@ -346,7 +346,6 @@ class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<
     }
 
     private fun clear() {
-        ratSpawns.forEach { GameObjectPools.free(it) }
         ratSpawns.clear()
 
         children.forEach { it.destroy() }
@@ -836,9 +835,10 @@ class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<
     private fun spawnRats() {
         GameLogger.debug(TAG, "spawnRats(): before: children=${children.size}")
 
-        for (ratSpawn in ratSpawns) {
+        for (i in 0 until ratSpawns.size) {
             if (children.size >= MAX_RATS) break
 
+            val ratSpawn = ratSpawns[i]
             val rat = MegaEntityFactory.fetch(RatRobot::class)!!
             rat.spawn(props(ConstKeys.POSITION pairTo ratSpawn, ConstKeys.DROP_ITEM_ON_DEATH pairTo false))
 

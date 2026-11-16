@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.enemies
 
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.megaman.maverick.game.pathfinding.BlockCells
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -119,7 +120,7 @@ class DeathBat(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.TOP_CENTER)
         body.setTopCenterToPoint(spawn)
 
-        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(false)
+        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(GameRectangle())
         triggered = trigger == null
 
         loop.reset()

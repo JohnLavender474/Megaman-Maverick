@@ -42,7 +42,6 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 
 class UnderwaterPenguinBot(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity,
@@ -60,8 +59,8 @@ class UnderwaterPenguinBot(services: MegaServices) : AbstractEnemy(services, siz
     override lateinit var facing: Facing
 
     private lateinit var state: UnderwaterPenguinBotState
-    private lateinit var triggerBox: GameRectangle
-    private lateinit var startPosition: Vector2
+    private val triggerBox = GameRectangle()
+    private val startPosition = Vector2()
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
@@ -79,8 +78,8 @@ class UnderwaterPenguinBot(services: MegaServices) : AbstractEnemy(services, siz
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        triggerBox = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle.toGameRectangle()
-        startPosition = spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter()
+        triggerBox.set(spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)!!.rectangle)
+        spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter(startPosition)
 
         state = UnderwaterPenguinBotState.WAIT
         body.physics.gravityOn = false

@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.menus
 
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -53,8 +54,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
     private val screenSlide = ScreenSlide(
         game.getUiCamera(),
-        getDefaultCameraPosition(false),
-        getDefaultCameraPosition(false).add(GameSettingsPanel.SLIDE_TRAJ),
+        getDefaultCameraPosition(Vector3()),
+        getDefaultCameraPosition(Vector3()).add(GameSettingsPanel.SLIDE_TRAJ),
         GameSettingsPanel.SLIDE_DUR,
         true
     )

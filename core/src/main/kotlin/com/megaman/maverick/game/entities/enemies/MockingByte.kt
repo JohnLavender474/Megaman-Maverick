@@ -543,7 +543,8 @@ class MockingByte(services: MegaServices) : AbstractEnemy(services), IAnimatedEn
                 nest.owner = this
 
                 val returnPositions = reusableVec2Array
-                returnPositions.addAll(nest.returnPositions)
+                returnPositions.clear()
+                nest.returnPositions.forEach { returnPositions.add(it) }
                 returnPositions.sort { a, b ->
                     (a.dst2(targetPlayer.body.getCenter()) - b.dst2(targetPlayer.body.getCenter())).toInt()
                 }

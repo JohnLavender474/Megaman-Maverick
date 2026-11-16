@@ -48,7 +48,7 @@ class Lift(services: MegaServices) : Block(services), ISpritesEntity, IDirection
         }
 
     private lateinit var currentState: LiftState
-    private lateinit var stopPoint: Vector2
+    private val stopPoint = Vector2()
 
     override fun init(vararg params: Any) {
         super.init()
@@ -60,7 +60,7 @@ class Lift(services: MegaServices) : Block(services), ISpritesEntity, IDirection
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         currentState = LiftState.STOPPED
-        stopPoint = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        stopPoint.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter())
         body.setCenter(stopPoint)
         if (spawnProps.containsKey(ConstKeys.DIRECTION)) {
             var direction = spawnProps.get(ConstKeys.DIRECTION)

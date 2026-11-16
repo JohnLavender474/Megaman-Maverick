@@ -101,6 +101,52 @@ them.
   by `ConstVals.PPM`. A value ported from another game (for example X6 frames or pixels per frame) is converted once
   into a named constant, not counted in frames at run time.
 
+## Allocation and pooled objects
+
+- **No `new` of a math object in per-frame code.** In code that runs each frame (an `update`, an updatable, a body
+  `preProcess`, a sprite or shape supplier, a system), do not call `Vector2(...)`, `GameRectangle(...)` or a
+  constructor of another type in `GameObjectPools`. Choose by how long the value lives:
+
+  | The value lives | Use |
+  |---|---|
+  | Only in this frame | a pool scratch: `GameObjectPools.fetch(Vector2::class)`, or a helper with no `out`, such as `body.getCenter()` |
+  | For the life of the entity or the spawn | an owned field, made once and set each time: `private val home = Vector2()`, then `home.set(...)` |
+  | A list for the spawn | an `OwnedArray`: `points.clear()`, then `points.add().set(...)` |
+  | Once per spawn or event, in a pooled entity | an owned field, set each time (see the next rule) |
+  | Once per level load or screen build, outside a pooled entity | a plain `new` |
+
+  ```kotlin
+  body.preProcess.put(ConstKeys.DEFAULT) {
+      val size = GameObjectPools.fetch(Vector2::class).set(WIDTH, HEIGHT)   // not Vector2(WIDTH, HEIGHT)
+      body.setSize(size)
+  }
+  ```
+
+- **A pooled entity makes its objects once.** An entity from `MegaEntityFactory` lives through many spawns. Make
+  its vectors, shapes, sprites, timers, motions and lambdas in field initializers or in `init()` (or the first time
+  a spawn needs one more, then keep it). `onSpawn`, `onDestroy` and event handlers only `set(...)`, `reset()`,
+  `clear()`, hide or show; they do not call a constructor, and `onDestroy` does not remove what the next spawn
+  makes again. A value that a spawn keeps (an anchor, a home point) is an owned field, never a pool scratch.
+
+  ```kotlin
+  private val anchor = Vector2()
+  private lateinit var pendulum: Pendulum                 // made in init() with anchor
+
+  override fun onSpawn(spawnProps: Properties) {
+      spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(anchor)   // not getCenter(Vector2())
+      pendulum.length = spawnProps.get(ConstKeys.LENGTH, Float::class)!! * ConstVals.PPM
+      pendulum.reset()
+  }
+  ```
+
+- **Never keep a scratch.** A pool scratch is valid until the end of the frame after next, and then another caller
+  gets it. Do not put one in a field, a list, a delayed runnable or a lambda that runs later; copy it. An entity
+  copies what it keeps from its spawn props into its own fields (`trajectory.set(...)`, not
+  `trajectory = spawnProps.get(...)`). No `free()` exists. The rules and the `--poolChecks` debug flag are in
+  `core/.../utils/README.md`.
+- **No pool fetch in a default parameter.** Take an `out` parameter, or give a function with no `out` that returns a
+  scratch (`PoolOwnershipGuardTest` checks it).
+
 ## Tests
 
 - **Drive the public flow.** Spawn for real, hit through the public damage path, and read results through public

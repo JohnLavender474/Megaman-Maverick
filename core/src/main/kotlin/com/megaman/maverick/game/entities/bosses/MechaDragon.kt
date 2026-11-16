@@ -127,7 +127,7 @@ class MechaDragon(services: MegaServices) : AbstractBoss(services), IFreezableEn
         )
         private val regions = ObjectMap<String, TextureRegion>()
 
-        private fun extractVector2(value: Any?) = (value as RectangleMapObject).rectangle.getCenter(false)
+        private fun extractVector2(value: Any?) = (value as RectangleMapObject).rectangle.getCenter(Vector2())
     }
 
     private enum class MechaDragonState { INIT, HOVER_IN_PLACE, FLY_TO_TARGET, CHARGE_TO_OTHER_SIDE, TURNING_AROUND }

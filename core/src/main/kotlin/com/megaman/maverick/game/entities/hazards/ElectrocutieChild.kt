@@ -39,6 +39,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -60,7 +61,7 @@ class ElectrocutieChild(services: MegaServices) : MegaGameEntity(services), IHaz
     override var parent: IGameEntity? = null
 
     private lateinit var direction: Direction
-    private lateinit var spawn: Vector2
+    private val spawn = Vector2()
     private var resetBodyPosition = true
 
     override fun getType() = EntityType.HAZARD
@@ -81,7 +82,7 @@ class ElectrocutieChild(services: MegaServices) : MegaGameEntity(services), IHaz
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
         parent = spawnProps.get(ConstKeys.PARENT) as GameEntity?
-        spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
+        spawn.set(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
         resetBodyPosition = true
     }
@@ -107,8 +108,8 @@ class ElectrocutieChild(services: MegaServices) : MegaGameEntity(services), IHaz
         debugShapes.add { shieldFixture}
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            val size = if (direction.isVertical()) Vector2(0.85f * ConstVals.PPM, 0.35f * ConstVals.PPM)
-            else Vector2(0.35f * ConstVals.PPM, 0.85f * ConstVals.PPM)
+            val size = if (direction.isVertical()) GameObjectPools.fetch(Vector2::class).set(0.85f * ConstVals.PPM, 0.35f * ConstVals.PPM)
+            else GameObjectPools.fetch(Vector2::class).set(0.35f * ConstVals.PPM, 0.85f * ConstVals.PPM)
 
             body.setSize(size)
             body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(size) }
@@ -148,10 +149,10 @@ class ElectrocutieChild(services: MegaServices) : MegaGameEntity(services), IHaz
             sprite.setCenter(bodyPosition)
 
             val offset = when (direction) {
-                Direction.UP -> Vector2(0f, 0.15f * ConstVals.PPM)
-                Direction.DOWN -> Vector2(0f, -0.15f * ConstVals.PPM)
-                Direction.LEFT -> Vector2(-0.15f * ConstVals.PPM, 0f)
-                Direction.RIGHT -> Vector2(0.15f * ConstVals.PPM, 0f)
+                Direction.UP -> GameObjectPools.fetch(Vector2::class).set(0f, 0.15f * ConstVals.PPM)
+                Direction.DOWN -> GameObjectPools.fetch(Vector2::class).set(0f, -0.15f * ConstVals.PPM)
+                Direction.LEFT -> GameObjectPools.fetch(Vector2::class).set(-0.15f * ConstVals.PPM, 0f)
+                Direction.RIGHT -> GameObjectPools.fetch(Vector2::class).set(0.15f * ConstVals.PPM, 0f)
             }
             sprite.translate(offset.x, offset.y)
         }

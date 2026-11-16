@@ -22,6 +22,7 @@ import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
@@ -133,11 +134,11 @@ class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
                 spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TRIGGER) }.forEach {
                     val value = it.second
                     if (value is RectangleMapObject) {
-                        val trigger = value.rectangle.toGameRectangle(false)
+                        val trigger = value.rectangle.toGameRectangle(GameRectangle())
                         val start =
-                            (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(false)
+                            (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(Vector2())
                         val target =
-                            (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(false)
+                            (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(Vector2())
                         triggers.add(TriggerDef(trigger, start, target))
                     }
                 }
@@ -273,7 +274,7 @@ class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
             body.forEachFixture { it.setActive(!waiting) }
             if (waiting) return@put
 
-            damagerFixture2.offsetFromBodyAttachment = Vector2(
+            damagerFixture2.offsetFromBodyAttachment.set(
                 FLAMES * FLAME_PADDING * facing.value * 0.75f * ConstVals.PPM, -0.75f * ConstVals.PPM
             )
             damagerFixture2.setActive(attacking)

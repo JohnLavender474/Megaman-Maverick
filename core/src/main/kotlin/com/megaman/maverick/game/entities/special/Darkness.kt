@@ -118,7 +118,7 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
     private val rooms = ObjectSet<String>()
 
     private lateinit var tiles: Matrix<BlackTile>
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
 
     private var key = -1
     private var darkMode = false
@@ -144,7 +144,7 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
         key = spawnProps.getOrDefault(ConstKeys.KEY, -1, Int::class)
         spawnProps.get(ConstKeys.ROOM, String::class)!!.split(",").forEach { t -> rooms.add(t) }
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         ppmDivisor = spawnProps.getOrDefault("${ConstKeys.PPM}_${ConstKeys.DIVISOR}", DEFAULT_PPM_DIVISOR, Int::class)
         val rows = (bounds.getHeight() / (ConstVals.PPM / ppmDivisor)).toInt()
         val columns = (bounds.getWidth() / (ConstVals.PPM / ppmDivisor)).toInt()

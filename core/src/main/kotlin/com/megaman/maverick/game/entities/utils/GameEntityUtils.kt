@@ -12,6 +12,7 @@ import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullableOnEvent
 import com.maverick.game.engine.cullables.CullableOnUncontained
@@ -127,7 +128,7 @@ fun convertObjectPropsToEntitySuppliers(props: Properties): Array<GamePair<() ->
                 )
 
                 childProps.put(ConstKeys.CHILD_KEY, key)
-                childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle(false))
+                childProps.put(ConstKeys.BOUNDS, value.rectangle.toGameRectangle(GameRectangle()))
 
                 childEntitySuppliers.add(childEntitySupplier pairTo childProps)
             }

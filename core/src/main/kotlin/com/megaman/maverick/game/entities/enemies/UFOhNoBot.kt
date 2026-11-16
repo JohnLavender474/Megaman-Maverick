@@ -54,9 +54,8 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.projectiles.UFOBomb
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
 
@@ -92,7 +91,7 @@ class UFOhNoBot(services: MegaServices) : AbstractEnemy(services, size = Size.ME
     private val freezeHandler = FreezableEntityHandler(this)
 
     private val dropTimer = Timer()
-    private val triggers = Array<GameRectangle>()
+    private val triggers = OwnedArray { GameRectangle() }
 
     private val start = Vector2()
     private val target = Vector2()
@@ -134,8 +133,7 @@ class UFOhNoBot(services: MegaServices) : AbstractEnemy(services, size = Size.ME
         when {
             waiting -> {
                 spawnProps.getAllMatching { it.toString().contains(ConstKeys.TRIGGER) }.forEach {
-                    val trigger = (it.second as RectangleMapObject).rectangle.toGameRectangle(false)
-                    triggers.add(trigger)
+                    triggers.add().set((it.second as RectangleMapObject).rectangle)
                 }
 
                 start.set(spawnProps.get(ConstKeys.START, RectangleMapObject::class)!!.rectangle.getCenter())
@@ -158,7 +156,6 @@ class UFOhNoBot(services: MegaServices) : AbstractEnemy(services, size = Size.ME
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        triggers.forEach { GameObjectPools.free(it) }
         triggers.clear()
 
         frozen = false

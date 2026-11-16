@@ -131,13 +131,13 @@ class JetpackBlaster(services: MegaServices) : AbstractEnemy(services, size = Si
             spawnProps.containsKey(ConstKeys.TARGET) -> spawnProps.get(
                 ConstKeys.TARGET,
                 RectangleMapObject::class
-            )!!.rectangle.getCenter(false)
+            )!!.rectangle.getCenter(Vector2())
 
             else -> {
                 val target1 =
-                    spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.getCenter(false)
+                    spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.getCenter(Vector2())
                 val target2 =
-                    spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.getCenter(false)
+                    spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.getCenter(Vector2())
 
                 val megamanCenter = targetPlayer.body.getCenter()
 

@@ -3,7 +3,6 @@ package com.maverick.game.engine.common.shapes
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.random.GameRandom
@@ -16,7 +15,7 @@ fun Rectangle.getRandomPositionInBounds(random: GameRandom, out: Vector2): Vecto
 }
 
 fun Rectangle.toBoundingBox(out: BoundingBox): BoundingBox =
-    out.set(Vector3(x, y, 0f), Vector3(x + width, y + height, 0f))
+    out.inf().ext(x, y, 0f).ext(x + width, y + height, 0f)
 
 fun Rectangle.isInCamera(camera: Camera, out: BoundingBox) = BoundingBoxUtils.isInCamera(toBoundingBox(out), camera)
 

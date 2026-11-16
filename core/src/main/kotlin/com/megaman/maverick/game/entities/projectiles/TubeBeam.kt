@@ -49,7 +49,7 @@ class TubeBeam(services: MegaServices) : AbstractProjectile(services), IAnimated
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
     private lateinit var cullTimer: Timer
-    private lateinit var trajectory: Vector2
+    private val trajectory = Vector2()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -66,7 +66,7 @@ class TubeBeam(services: MegaServices) : AbstractProjectile(services), IAnimated
         services.events.addListener(this)
 
         direction = spawnProps.get(ConstKeys.DIRECTION, Direction::class)!!
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
 
         val size = GameObjectPools.fetch(Vector2::class)
         if (direction.isHorizontal()) {

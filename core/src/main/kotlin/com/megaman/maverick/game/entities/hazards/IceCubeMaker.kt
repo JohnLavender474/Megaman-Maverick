@@ -13,6 +13,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -80,7 +81,7 @@ class IceCubeMaker(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         runBounds = spawnProps.get(
             "${ConstKeys.RUN}_${ConstKeys.BOUNDS}",
             RectangleMapObject::class
-        )?.rectangle?.toGameRectangle(false)
+        )?.rectangle?.toGameRectangle(GameRectangle())
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains("${ConstKeys.IGNORE}_${ConstKeys.HIT}")) {

@@ -2,7 +2,6 @@ package com.maverick.game.engine.common.interfaces
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.random.GameRandom
@@ -164,7 +163,7 @@ interface IRectangle : IDimensionable {
     }
 
     fun toBoundingBox(out: BoundingBox): BoundingBox =
-        out.set(Vector3(getX(), getY(), 0f), Vector3(getX() + getWidth(), getY() + getHeight(), 0f))
+        out.inf().ext(getX(), getY(), 0f).ext(getX() + getWidth(), getY() + getHeight(), 0f)
 
     fun isInCamera(camera: Camera, out: BoundingBox) = BoundingBoxUtils.isInCamera(toBoundingBox(out), camera)
 

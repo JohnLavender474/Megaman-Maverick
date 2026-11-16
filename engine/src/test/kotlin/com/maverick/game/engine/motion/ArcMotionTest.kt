@@ -44,7 +44,7 @@ class ArcMotionSpec : DescribeSpec({
                 val distanceCovered = speed * delta
                 val totalDistance = startPosition.dst(targetPosition)
                 val t = (distanceCovered / totalDistance).coerceIn(0f, 1f)
-                val expectedPosition = ArcMotion.computeBezierPoint(t, arcFactor, startPosition, targetPosition)
+                val expectedPosition = ArcMotion.computeBezierPoint(t, arcFactor, startPosition, targetPosition, Vector2())
 
                 arcMotion.getMotionValue(out) shouldBe expectedPosition
             }
@@ -60,7 +60,7 @@ class ArcMotionSpec : DescribeSpec({
                 val distanceCovered = speed * delta * 2
                 val totalDistance = startPosition.dst(targetPosition)
                 val t = (distanceCovered / totalDistance).coerceIn(0f, 1f)
-                val expectedPosition = ArcMotion.computeBezierPoint(t, arcFactor, startPosition, targetPosition)
+                val expectedPosition = ArcMotion.computeBezierPoint(t, arcFactor, startPosition, targetPosition, Vector2())
 
                 println(
                     "start=$startPosition, target=$targetPosition, expected=$expectedPosition, current=${

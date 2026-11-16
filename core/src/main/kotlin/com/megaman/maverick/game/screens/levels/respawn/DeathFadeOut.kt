@@ -3,9 +3,11 @@ package com.megaman.maverick.game.screens.levels.respawn
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.extensions.toGameRectangle
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.megaman.maverick.game.ConstKeys
@@ -28,6 +30,7 @@ class DeathFadeOut(private val game: MegamanMaverickGame) : Initializable, Updat
 
     private val fadeout = Fade(FadeType.FADE_OUT, FADE_OUT_DUR)
     private val deathTimer = Timer(ON_DEATH_DELAY).setToEnd()
+    private val uiBounds = GameRectangle()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -48,7 +51,7 @@ class DeathFadeOut(private val game: MegamanMaverickGame) : Initializable, Updat
         }
 
         if (deathTimer.isFinished()) {
-            val bounds = game.getUiCamera().toGameRectangle()
+            val bounds = game.getUiCamera().toGameRectangle(uiBounds)
             fadeout.setPosition(bounds.getX(), bounds.getY())
             fadeout.setSize(bounds.getWidth(), bounds.getHeight())
 

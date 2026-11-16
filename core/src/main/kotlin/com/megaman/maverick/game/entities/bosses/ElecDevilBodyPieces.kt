@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
@@ -50,6 +51,7 @@ import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -173,7 +175,7 @@ class ElecDevilBodyPieces(services: MegaServices) : MegaGameEntity(services), IB
         LightSourceUtils.sendLightSourceEvent(
             this,
             lightSourceKeys,
-            owner!!.getPositionOf(row, column).add(
+            owner!!.getPositionOf(row, column, GameObjectPools.fetch(Vector2::class)).add(
                 ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM / 2f,
                 ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM / 2f
             ),
@@ -223,7 +225,7 @@ class ElecDevilBodyPieces(services: MegaServices) : MegaGameEntity(services), IB
 
             val key = ElecDevilConstants.getRowColumnKey(row, column)
             body.preProcess.put(key) {
-                damager.setPosition(owner!!.getPositionOf(row, column))
+                damager.setPosition(owner!!.getPositionOf(row, column, GameObjectPools.fetch(Vector2::class)))
 
                 damagerFixture.setActive(on && isPieceActive(row, column))
                 damagerFixture.drawingColor = if (damagerFixture.isActive()) Color.RED else Color.GRAY

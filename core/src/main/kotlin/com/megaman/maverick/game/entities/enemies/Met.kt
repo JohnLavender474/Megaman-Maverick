@@ -271,8 +271,8 @@ class Met(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
         body.preProcess.put(ConstKeys.DEFAULT) {
             body.physics.velocityClamp.set(
                 when {
-                    direction.isVertical() -> Vector2(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
-                    else -> Vector2(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)
+                    direction.isVertical() -> GameObjectPools.fetch(Vector2::class).set(VELOCITY_CLAMP_X, VELOCITY_CLAMP_Y)
+                    else -> GameObjectPools.fetch(Vector2::class).set(VELOCITY_CLAMP_Y, VELOCITY_CLAMP_X)
                 }
             ).scl(ConstVals.PPM.toFloat())
 

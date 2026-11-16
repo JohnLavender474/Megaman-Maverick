@@ -3,9 +3,11 @@ package com.megaman.maverick.game.screens.levels.respawn
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.extensions.toGameRectangle
 import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -42,6 +44,7 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
     private lateinit var ready: MegaFontHandle
 
     private val fadein = Fade(FadeType.FADE_IN, FADE_IN_DUR)
+    private val uiBounds = GameRectangle()
 
     private var initialized = false
     private var showReadyText = false
@@ -82,7 +85,7 @@ class BeamInView(private val game: MegamanMaverickGame) : Initializable, Updatab
 
         when {
             !fadein.isFinished() -> {
-                val bounds = game.getUiCamera().toGameRectangle()
+                val bounds = game.getUiCamera().toGameRectangle(uiBounds)
                 fadein.setPosition(bounds.getX(), bounds.getY())
                 fadein.setSize(bounds.getWidth(), bounds.getHeight())
                 fadein.update(delta)

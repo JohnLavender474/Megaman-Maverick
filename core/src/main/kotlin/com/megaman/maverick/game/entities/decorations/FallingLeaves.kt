@@ -6,6 +6,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.entities.contracts.ICullableEntity
@@ -69,11 +70,11 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
         when (cullBoundsType) {
             CullBoundsType.BODY -> putCullable(
                 ConstKeys.CULL_OUT_OF_BOUNDS,
-                getGameCameraCullingLogic(services.gameCamera, { bounds })
+                getGameCameraCullingLogic(services.gameCamera, { this.bounds })
             )
             CullBoundsType.OTHER -> {
                 val other =
-                    spawnProps.get(ConstKeys.OTHER, RectangleMapObject::class)!!.rectangle.toGameRectangle(false)
+                    spawnProps.get(ConstKeys.OTHER, RectangleMapObject::class)!!.rectangle.toGameRectangle(GameRectangle())
                 putCullable(
                     ConstKeys.CULL_OUT_OF_BOUNDS,
                     getGameCameraCullingLogic(services.gameCamera, { other })

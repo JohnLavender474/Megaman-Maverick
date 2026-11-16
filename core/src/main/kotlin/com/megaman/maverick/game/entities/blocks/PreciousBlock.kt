@@ -25,7 +25,6 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPosition
 import com.megaman.maverick.game.world.body.getBounds
@@ -40,6 +39,7 @@ class PreciousBlock(services: MegaServices) : ShieldBlock(services), ISpritesEnt
 
     private val cells = Matrix<GameRectangle>()
     private var spawn: Vector2? = null
+    private val spawnPosition = Vector2()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -72,7 +72,7 @@ class PreciousBlock(services: MegaServices) : ShieldBlock(services), ISpritesEnt
         if (spawnProps.containsKey("${ConstKeys.TRAJECTORY}_${ConstKeys.DEF}")) {
             val trajectoryDefinition = spawnProps.get("${ConstKeys.TRAJECTORY}_${ConstKeys.DEF}", String::class)!!
 
-            spawn = bounds.getCenter(false)
+            spawn = bounds.getCenter(spawnPosition)
 
             val trajectory = Trajectory(trajectoryDefinition, ConstVals.PPM)
             putMotionDefinition(
@@ -94,10 +94,7 @@ class PreciousBlock(services: MegaServices) : ShieldBlock(services), ISpritesEnt
         sprites.clear()
         animators.clear()
 
-        if (this.spawn != null) {
-            GameObjectPools.free(this.spawn!!)
-            this.spawn = null
-        }
+        spawn = null
 
         removeMotionDefinition(ConstKeys.TRAJECTORY)
     }

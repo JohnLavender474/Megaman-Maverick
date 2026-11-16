@@ -23,6 +23,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.damage.IDamagerEntity
@@ -361,7 +362,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
                 }
 
                 key.toString().contains(ConstKeys.WALL) -> {
-                    val bounds = (value as RectangleMapObject).rectangle.toGameRectangle(false)
+                    val bounds = (value as RectangleMapObject).rectangle.toGameRectangle(GameRectangle())
                     walls.add(bounds)
                 }
             }

@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -54,7 +55,7 @@ class SniperJoeShield(services: MegaServices) : AbstractProjectile(services), IF
     override lateinit var facing: Facing
 
     private lateinit var type: String
-    private lateinit var trajectory: Vector2
+    private val trajectory = Vector2()
 
     private val rotationTimer = Timer(ROTATION_DURATION)
     private val thrownRotations = Loop(gdxArrayOf(0f, 90f, 180f, 270f))
@@ -77,7 +78,7 @@ class SniperJoeShield(services: MegaServices) : AbstractProjectile(services), IF
                 spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
             else spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!
+        trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)!!
         type = spawnProps.getOrDefault(ConstKeys.TYPE, ORANGE_TYPE, String::class)
         facing = Facing.valueOf(spawnProps.getOrDefault(ConstKeys.FACING, "left", String::class).uppercase())
@@ -147,8 +148,8 @@ class SniperJoeShield(services: MegaServices) : AbstractProjectile(services), IF
             body.physics.velocity.set(trajectory)
 
             val rotated = thrownRotations.getCurrent().equalsAny(1, 3)
-            val size = if (rotated) Vector2(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
-            else Vector2(0.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
+            val size = if (rotated) GameObjectPools.fetch(Vector2::class).set(0.75f * ConstVals.PPM, 0.5f * ConstVals.PPM)
+            else GameObjectPools.fetch(Vector2::class).set(0.5f * ConstVals.PPM, 0.75f * ConstVals.PPM)
 
             bodyShapes.forEach {
                 it as GameRectangle

@@ -208,8 +208,8 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
             }
 
             val size = (when {
-                direction.isVertical() -> Vector2(10f, 0.75f)
-                else -> Vector2(0.75f, 10f)
+                direction.isVertical() -> GameObjectPools.fetch(Vector2::class).set(10f, 0.75f)
+                else -> GameObjectPools.fetch(Vector2::class).set(0.75f, 10f)
             }).scl(ConstVals.PPM.toFloat())
             shootScanner.setSize(size)
             turnAroundScanner.setSize(size)

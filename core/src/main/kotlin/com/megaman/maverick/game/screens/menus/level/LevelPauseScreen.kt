@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.screens.menus.level
 
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -137,8 +138,8 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     private val settingsScreenSlide = ScreenSlide(
         game.getUiCamera(),
-        getDefaultCameraPosition(false),
-        getDefaultCameraPosition(false).add(GameSettingsPanel.SLIDE_TRAJ),
+        getDefaultCameraPosition(Vector3()),
+        getDefaultCameraPosition(Vector3()).add(GameSettingsPanel.SLIDE_TRAJ),
         GameSettingsPanel.SLIDE_DUR,
         true
     )

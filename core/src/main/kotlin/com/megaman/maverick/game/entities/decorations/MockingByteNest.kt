@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.decorations
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.getTextureRegion
@@ -33,7 +32,7 @@ import com.megaman.maverick.game.entities.enemies.MockingByte
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 
@@ -49,7 +48,7 @@ class MockingByteNest(services: MegaServices) : MegaGameEntity(services), ISprit
     override var owner: MockingByte? = null
 
     val position = Vector2()
-    val returnPositions = Array<Vector2>()
+    val returnPositions = OwnedArray { Vector2() }
 
     var hidden = false
     var riseAmount = 0f
@@ -79,8 +78,7 @@ class MockingByteNest(services: MegaServices) : MegaGameEntity(services), ISprit
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains("${ConstKeys.RETURN}_${ConstKeys.POSITION}")) {
-                val returnPosition = (value as RectangleMapObject).rectangle.getCenter(false)
-                returnPositions.add(returnPosition)
+                (value as RectangleMapObject).rectangle.getCenter(returnPositions.add())
             }
         }
         if (returnPositions.isEmpty) throw IllegalStateException(
@@ -94,7 +92,6 @@ class MockingByteNest(services: MegaServices) : MegaGameEntity(services), ISprit
 
         owner = null
 
-        returnPositions.forEach { GameObjectPools.free(it) }
         returnPositions.clear()
     }
 

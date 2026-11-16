@@ -14,18 +14,22 @@ class ArcMotion(
 
     companion object {
 
-        fun computeBezierPoint(t: Float, arcFactor: Float, startPosition: Vector2, targetPosition: Vector2): Vector2 {
-            val controlPoint = Vector2(
-                ((startPosition.x + targetPosition.x) / 2f) + (arcFactor * (targetPosition.y - startPosition.y)),
+        fun computeBezierPoint(
+            t: Float,
+            arcFactor: Float,
+            startPosition: Vector2,
+            targetPosition: Vector2,
+            out: Vector2
+        ): Vector2 {
+            val controlX =
+                ((startPosition.x + targetPosition.x) / 2f) + (arcFactor * (targetPosition.y - startPosition.y))
+            val controlY =
                 ((startPosition.y + targetPosition.y) / 2f) + (arcFactor * (startPosition.x - targetPosition.x))
-            )
 
-            val x =
-                ((1 - t).pow(2) * startPosition.x) + (2 * (1 - t) * t * controlPoint.x) + (t.pow(2) * targetPosition.x)
-            val y =
-                ((1 - t).pow(2) * startPosition.y) + (2 * (1 - t) * t * controlPoint.y) + (t.pow(2) * targetPosition.y)
+            val x = ((1 - t).pow(2) * startPosition.x) + (2 * (1 - t) * t * controlX) + (t.pow(2) * targetPosition.x)
+            val y = ((1 - t).pow(2) * startPosition.y) + (2 * (1 - t) * t * controlY) + (t.pow(2) * targetPosition.y)
 
-            return Vector2(x, y)
+            return out.set(x, y)
         }
     }
 
@@ -44,26 +48,26 @@ class ArcMotion(
     val totalDistance: Float
         get() = startPosition.dst(targetPosition)
 
-    private var currentPosition = startPosition.cpy()
+    private val currentPosition = startPosition.cpy()
 
     override fun update(delta: Float) {
         distanceCovered += speed * delta
 
         if (!continueBeyondTarget && distanceCovered >= totalDistance) {
-            currentPosition = targetPosition.cpy()
+            currentPosition.set(targetPosition)
             return
         }
 
         val t = distanceCovered / totalDistance
-        currentPosition = computeBezierPoint(t, arcFactor, startPosition, targetPosition)
+        computeBezierPoint(t, arcFactor, startPosition, targetPosition, currentPosition)
     }
 
-    fun compute(t: Float) = computeBezierPoint(t, arcFactor, startPosition, targetPosition)
+    fun compute(t: Float, out: Vector2) = computeBezierPoint(t, arcFactor, startPosition, targetPosition, out)
 
     override fun getMotionValue(out: Vector2): Vector2? = out.set(currentPosition)
 
     override fun reset() {
-        currentPosition = startPosition.cpy()
+        currentPosition.set(startPosition)
         distanceCovered = 0f
     }
 

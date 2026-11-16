@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.objects.Properties
@@ -34,6 +35,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -45,9 +47,15 @@ class SpikeBall(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
     companion object {
         const val TAG = "SpikeBall"
         private const val PENDULUM_GRAVITY = 10f
+        private const val CHAIN_LINK_SPACING = 0.25f
         private var spikeRegion: TextureRegion? = null
         private var chainRegion: TextureRegion? = null
     }
+
+    private val anchor = Vector2()
+    private val chainSprites = Array<GameSprite>()
+    private var chainLinks = 0
+    private lateinit var pendulum: Pendulum
 
     override fun getType() = EntityType.HAZARD
 
@@ -61,53 +69,48 @@ class SpikeBall(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         addComponent(MotionComponent())
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
+
+        pendulum = Pendulum(ConstVals.PPM.toFloat(), PENDULUM_GRAVITY * ConstVals.PPM, anchor, 1 / 60f, services.random)
+        putMotionDefinition(
+            ConstKeys.PENDULUM,
+            MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
+        )
     }
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(anchor)
         val length = spawnProps.get(ConstKeys.LENGTH, Float::class)!!
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
-        val pendulum =
-            Pendulum(
-                length * ConstVals.PPM, gravity * ConstVals.PPM, spawn, 1 / 60f, services.random
-            )
-        putMotionDefinition(
-            ConstKeys.PENDULUM,
-            MotionDefinition(motion = pendulum, function = { value, _ ->
-                body.setCenter(value)
-            })
-        )
+        pendulum.length = length * ConstVals.PPM
+        pendulum.gravity = gravity * ConstVals.PPM
+        pendulum.reset()
 
-        var tempDistance = 0f
-        var tempIndex = 0
-        while (tempDistance < length) {
-            val chainSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
-            chainSprite.setSize(0.25f * ConstVals.PPM)
-            chainSprite.setRegion(chainRegion!!)
-
-            val key = "chain_$tempIndex"
-            sprites.put(key, chainSprite)
-
-            val chainDistance = tempDistance * ConstVals.PPM
-
-            putSpritePreProcess(key) { _, sprite ->
-                val center = pendulum.getPointFromAnchor(chainDistance)
-                sprite.setCenter(center)
-            }
-
-            tempDistance += 0.25f
-            tempIndex++
+        chainLinks = 0
+        var distance = 0f
+        while (distance < length) {
+            if (chainLinks == chainSprites.size) addChainSprite(chainLinks)
+            distance += CHAIN_LINK_SPACING
+            chainLinks++
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        clearMotionDefinitions()
-        val spritesIter = sprites.iterator()
-        while (spritesIter.hasNext) {
-            val spriteEntry = spritesIter.next()
-            if (spriteEntry.key != TAG) spritesIter.remove()
+    private fun addChainSprite(index: Int) {
+        val chainSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 0))
+        chainSprite.setSize(0.25f * ConstVals.PPM)
+        chainSprite.setRegion(chainRegion!!)
+        chainSprites.add(chainSprite)
+
+        val key = "chain_$index"
+        sprites.put(key, chainSprite)
+
+        val chainDistance = index * CHAIN_LINK_SPACING * ConstVals.PPM
+        putSpritePreProcess(key) { _, sprite ->
+            sprite.hidden = index >= chainLinks
+            if (!sprite.hidden) {
+                val center = pendulum.getPointFromAnchor(chainDistance, GameObjectPools.fetch(Vector2::class))
+                sprite.setCenter(center)
+            }
         }
     }
 

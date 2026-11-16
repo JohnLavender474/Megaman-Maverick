@@ -36,7 +36,7 @@ class DecoratedGravityForce(services: MegaServices) : MegaGameEntity(services), 
     private val decorations = Array<ForceDecoration>()
     private var gravityChange: GravityChange? = null
     private var force: Force? = null
-    private lateinit var bounds: GameRectangle
+    private val bounds = GameRectangle()
 
     private val matrix = Matrix<GameRectangle>()
 
@@ -68,7 +68,7 @@ class DecoratedGravityForce(services: MegaServices) : MegaGameEntity(services), 
         force = EntityFactories.fetch(EntityType.SPECIAL, SpecialsFactory.FORCE)!! as Force
         force!!.spawn(spawnPropsCopy)
 
-        bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+        bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
 
         val direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, "up", String::class).uppercase())

@@ -32,12 +32,8 @@ class Pendulum(
     private var angleAccel = 0f
     private var accumulator = 0f
 
-    fun getPointFromAnchor(distance: Float): Vector2 {
-        val point = Vector2()
-        point.x = anchor.x + sin(angle) * distance
-        point.y = anchor.y + cos(angle) * distance
-        return point
-    }
+    fun getPointFromAnchor(distance: Float, out: Vector2): Vector2 =
+        out.set(anchor.x + sin(angle) * distance, anchor.y + cos(angle) * distance)
 
     fun applyForce(force: Float) {
         angleVel += force
@@ -61,7 +57,7 @@ class Pendulum(
             angleVel *= (1 - (damping * delta))
             angle += angleVel * targetFPS * scalar
         }
-        endPoint.set(getPointFromAnchor(length))
+        getPointFromAnchor(length, endPoint)
     }
 
     override fun reset() {

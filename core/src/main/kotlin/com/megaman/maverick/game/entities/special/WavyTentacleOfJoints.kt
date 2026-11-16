@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.special
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.Properties
@@ -13,7 +12,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
 import kotlin.math.sqrt
 
@@ -41,7 +40,7 @@ class WavyTentacleOfJoints(services: MegaServices) : MegaGameEntity(services), U
     var waveAmplitude = DEFAULT_WAVE_AMPLITUDE
     var wavePhaseOffset = DEFAULT_WAVE_PHASE_OFFSET
 
-    private val joints = Array<Vector2>()
+    private val joints = OwnedArray { Vector2() }
 
     val jointCount: Int
         get() = joints.size
@@ -77,9 +76,7 @@ class WavyTentacleOfJoints(services: MegaServices) : MegaGameEntity(services), U
         joints.clear()
         val jointCount = segmentCount + 1
         repeat(jointCount) {
-            val joint = GameObjectPools.fetch(Vector2::class, false)
-                .set(-100f, -100f).scl(ConstVals.PPM.toFloat())
-            joints.add(joint)
+            joints.add().set(-100f, -100f).scl(ConstVals.PPM.toFloat())
         }
 
         updateJoints()
@@ -88,7 +85,6 @@ class WavyTentacleOfJoints(services: MegaServices) : MegaGameEntity(services), U
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        joints.forEach { GameObjectPools.free(it) }
         joints.clear()
     }
 

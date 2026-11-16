@@ -18,6 +18,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
@@ -147,7 +148,7 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
             val cullBounds = spawnProps.get(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}",
                 RectangleMapObject::class
-            )!!.rectangle.toGameRectangle(false)
+            )!!.rectangle.toGameRectangle(GameRectangle())
 
             spawnProps.put(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}_${ConstKeys.SUPPLIER}",
@@ -182,7 +183,8 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
             if (key.toString().contains(ConstKeys.POSITION)) {
                 val position = (value as RectangleMapObject)
                     .rectangle
-                    .getPositionPoint(Position.BOTTOM_CENTER, false)
+                    .toGameRectangle()
+                    .getPositionPoint(Position.BOTTOM_CENTER, Vector2())
                 positionSuppliers.add { position }
             }
         }

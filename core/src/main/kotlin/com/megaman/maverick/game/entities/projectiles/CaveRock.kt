@@ -39,7 +39,6 @@ class CaveRock(services: MegaServices) : AbstractProjectile(services) {
         private var rockRegion: TextureRegion? = null
     }
 
-    var trajectory: Vector2? = null
     var passThroughBlocks = false
 
     override fun init(vararg params: Any) {
@@ -63,7 +62,6 @@ class CaveRock(services: MegaServices) : AbstractProjectile(services) {
             body.physics.velocity.set(impulse)
         }
 
-        trajectory = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)
         body.physics.gravity.y =
             spawnProps.getOrDefault(ConstKeys.GRAVITY, STANDARD_GRAVITY * ConstVals.PPM, Float::class)
     }

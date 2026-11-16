@@ -117,7 +117,6 @@ import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.SpawnsManager
 import com.megaman.maverick.game.utils.extensions.getRotatedBounds
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.world.body.getBounds
@@ -742,7 +741,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                     return
                 }
 
-                bossSpawnProps.put(ConstKeys.BOUNDS, bossMapObject.rectangle.toGameRectangle())
+                bossSpawnProps.put(ConstKeys.BOUNDS, GameRectangle(bossMapObject.rectangle))
 
                 FightPlans.resolve(plan, bossSpawnProps)
 

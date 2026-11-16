@@ -3,8 +3,10 @@ package com.megaman.maverick.game.screens.levels.spawns
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.utils.Array
+import com.maverick.game.engine.common.extensions.toGameRectangle
 import com.maverick.game.engine.common.interfaces.Resettable
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.utils.extensions.toProps
@@ -25,6 +27,7 @@ class PlayerCheckpointManager(
     private var current: RectangleMapObject? = null
 
     private val reusableArray = Array<RectangleMapObject>()
+    private val cameraBounds = GameRectangle()
 
     fun set(spawns: Array<RectangleMapObject>) {
         this.spawns.addAll(spawns)
@@ -66,9 +69,8 @@ class PlayerCheckpointManager(
         return null
     }
 
-    private fun shouldPop(spawn: RectangleMapObject) = camera.toGameRectangle().overlaps(
-        spawn.rectangle.toGameRectangle()
-    )
+    private fun shouldPop(spawn: RectangleMapObject) =
+        camera.toGameRectangle(cameraBounds).overlaps(spawn.rectangle.toGameRectangle())
 
     override fun run() {
         if (spawns.isEmpty) return

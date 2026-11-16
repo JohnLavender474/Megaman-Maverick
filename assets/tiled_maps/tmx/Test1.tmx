@@ -792,14 +792,14 @@
   </object>
   <object id="141" name="SpikeBall" x="17152" y="224" width="32" height="32">
    <properties>
-    <property name="length" type="int" value="4"/>
+    <property name="length" type="float" value="4"/>
     <property name="spawn_room" value="room11"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
   <object id="142" name="SpikeBall" x="17024" y="288" width="32" height="32">
    <properties>
-    <property name="length" type="int" value="3"/>
+    <property name="length" type="float" value="3"/>
     <property name="spawn_room" value="room11"/>
     <property name="spawn_type" value="spawn_room"/>
    </properties>

@@ -14,6 +14,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.toGameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -281,7 +282,7 @@ class RainFall(services: MegaServices) : MegaGameEntity(services), ICullableEnti
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SPAWN) && value is RectangleMapObject) {
-                val rainSpawner = value.rectangle.toGameRectangle(false)
+                val rainSpawner = value.rectangle.toGameRectangle(GameRectangle())
                 GameLogger.debug(TAG, "onSpawn(): adding rain spawner $rainSpawner")
                 rainSpawners.add(rainSpawner)
             } else if (key.toString().contains(ConstKeys.IGNORE) && value is RectangleMapObject) {

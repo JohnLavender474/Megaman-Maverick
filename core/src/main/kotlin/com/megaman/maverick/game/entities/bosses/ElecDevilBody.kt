@@ -44,7 +44,6 @@ import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
@@ -125,9 +124,7 @@ class ElecDevilBody(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     }
 
     // if facing right, then column 0 is at the far left, otherwise is at the far right
-    internal fun getPositionOf(row: Int, column: Int): Vector2 {
-        // fetched Vector2 should be freed manually
-        val out = GameObjectPools.fetch(Vector2::class, false)
+    internal fun getPositionOf(row: Int, column: Int, out: Vector2): Vector2 {
         val x = body.getX().plus(
             ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM * when {
                 isFacing(Facing.RIGHT) -> column

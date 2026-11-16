@@ -125,7 +125,7 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
     private fun setToPendulum(bounds: GameRectangle, spawnProps: Properties) {
         val length = spawnProps.getOrDefault(ConstKeys.LENGTH, LENGTH, Float::class)
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
-        val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(false), 1 / 60f, services.random)
+        val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(Vector2()), 1 / 60f, services.random)
 
         putMotionDefinition(
             ConstKeys.PENDULUM, MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
@@ -134,7 +134,7 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
         for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
             sprite.hidden = services.levelState.roomTransition
             val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
-            val center = pendulum.getPointFromAnchor(distance)
+            val center = pendulum.getPointFromAnchor(distance, GameObjectPools.fetch(Vector2::class))
             sprite.setCenter(center)
         }
 
@@ -167,7 +167,7 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
         val startRotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
         val speed = spawnProps.getOrDefault(ConstKeys.SPEED, ROTATION_SPEED, Float::class)
         val rotation =
-            RotatingLine(bounds.getCenter(false), length * ConstVals.PPM, speed * ConstVals.PPM, startRotation)
+            RotatingLine(bounds.getCenter(Vector2()), length * ConstVals.PPM, speed * ConstVals.PPM, startRotation)
         putMotionDefinition(
             ConstKeys.ROTATION, MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
         )

@@ -378,7 +378,7 @@ class DarknessV4(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
                     val radiance = event.getProperty(ConstKeys.RADIANCE, Float::class)!!
 
                     val lightSourceDef = lightSourcePool.fetch()
-                    lightSourceDef.center = center
+                    lightSourceDef.center.set(center)
                     lightSourceDef.radius = radius
                     lightSourceDef.radiance = radiance
 
@@ -420,7 +420,7 @@ class DarknessV4(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
             val lightSourceDef = lightSourcePool.fetch()
 
             LIGHT_UP_ENTITIES[entity::class].invoke(entity).let { (first, second) ->
-                lightSourceDef.center = entity.body.getCenter(false)
+                lightSourceDef.center.set(entity.body.getCenter())
                 lightSourceDef.radius = first * ConstVals.PPM
                 lightSourceDef.radiance = second
             }
@@ -533,7 +533,7 @@ class DarknessV4(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         players.forEach { player ->
             if (player.inPlay && player.body.getBounds().overlaps(bounds)) {
                 val lightSourceDef = lightSourcePool.fetch()
-                lightSourceDef.center = player.body.getCenter()
+                lightSourceDef.center.set(player.body.getCenter())
 
                 when (player.lightOrNull ?: PlayerLight.STANDARD) {
                     PlayerLight.FULL_CHARGE -> {
@@ -560,7 +560,7 @@ class DarknessV4(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
             val beamCenter = services.levelState.megamanBeamCenter
             if (beamCenter != null) {
                 val lightSourceDef = lightSourcePool.fetch()
-                lightSourceDef.center = beamCenter
+                lightSourceDef.center.set(beamCenter)
                 lightSourceDef.radius = MEGAMAN_FULL_CHARGING_RADIUS * ConstVals.PPM
                 lightSourceDef.radiance = MEGAMAN_FULL_CHARGING_RADIANCE
                 lightSourceQueue.put(targetPlayer, lightSourceDef)

@@ -58,7 +58,7 @@ import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
-import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.*
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -112,7 +112,7 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     // Blocks the beam must stop at, supplied via OBSTACLE-prefixed spawn props. This mirrors the
     // manual obstacle handling in the Laser class and acts as a reliable fallback when physics
     // contact detection intermittently fails to clamp the beam.
-    private val obstacles = Array<GameRectangle>()
+    private val obstacles = OwnedArray { GameRectangle() }
     private val tempVec2Set = ObjectSet<Vector2>()
 
     private var spawnRoom: String? = null
@@ -170,8 +170,7 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
                 val id = (value as RectangleMapObject).properties.get(ConstKeys.ID, Int::class.java)
                 ignoreIds.add(id)
             } else if (key.toString().contains(ConstKeys.OBSTACLE)) {
-                val obstacle = (value as RectangleMapObject).getShape() as GameRectangle
-                obstacles.add(obstacle)
+                obstacles.add().set((value as RectangleMapObject).rectangle)
             }
         }
 
@@ -197,7 +196,6 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
 
         ignoreIds.clear()
 
-        obstacles.forEach { GameObjectPools.free(it) }
         obstacles.clear()
 
         rawLine.reset()

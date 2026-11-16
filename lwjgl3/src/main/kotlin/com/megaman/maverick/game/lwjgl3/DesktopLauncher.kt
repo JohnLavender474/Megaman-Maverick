@@ -39,6 +39,7 @@ object DesktopLauncher {
     private const val DEFAULT_DEBUG_WINDOW = false
     private const val DEFAULT_DEBUG_SHAPES = false
     private const val DEFAULT_DEBUG_PATHFINDING = false
+    private const val DEFAULT_POOL_CHECKS = false
     private const val DEFAULT_DEBUG_TEXT = false
     private const val DEFAULT_LOG_LEVELS = ""
     private const val DEFAULT_FIXED_STEP_SCALAR = 1.0f
@@ -128,6 +129,7 @@ object DesktopLauncher {
         println("- Fullscreen: " + appArgs.fullScreen)
         println("- Debug Shapes: " + appArgs.debugShapes)
         println("- Debug Pathfinding: " + appArgs.debugPathfinding)
+        println("- Pool Checks: " + appArgs.poolChecks)
         println("- Debug Text: " + appArgs.debugText)
         println("- Log Level: " + appArgs.logLevels)
         println("- Fixed Step Scalar: " + appArgs.fixedStepScalar)
@@ -158,6 +160,7 @@ object DesktopLauncher {
         params.debugWindow = appArgs.debugWindow
         params.debugShapes = appArgs.debugShapes
         params.debugPathfinding = appArgs.debugPathfinding
+        params.poolChecks = appArgs.poolChecks
         params.musicVolume = appArgs.musicVolume
         params.soundVolume = appArgs.soundVolume
         params.pixelPerfect = appArgs.pixelPerfect
@@ -307,6 +310,14 @@ object DesktopLauncher {
                 "$DEFAULT_DEBUG_PATHFINDING.")
         )
         var debugPathfinding = DEFAULT_DEBUG_PATHFINDING
+
+        @Parameter(
+            names = ["--poolChecks"],
+            description = ("Poison each pooled scratch object at reclaim (NaN) and never reuse it, so that a " +
+                "scratch object that is kept too long shows at once. Dev runs only. Default value = " +
+                "$DEFAULT_POOL_CHECKS.")
+        )
+        var poolChecks = DEFAULT_POOL_CHECKS
 
         @Parameter(
             names = ["--debugText"],

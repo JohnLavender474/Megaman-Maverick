@@ -48,7 +48,7 @@ class PendulumTest :
 
             it("should calculate point from anchor correctly") {
                 val distance = 5f
-                val point = pendulum.getPointFromAnchor(distance)
+                val point = pendulum.getPointFromAnchor(distance, Vector2())
 
                 val expectedX = 5f
                 val expectedY = 0f

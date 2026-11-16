@@ -10,8 +10,8 @@ import com.maverick.game.engine.pathfinding.PathfinderResult
 import com.maverick.game.engine.pathfinding.heuristics.IHeuristic
 
 class WorldPathfinder(
-    private val start: IntPair,
-    private val target: IntPair,
+    start: IntPair,
+    target: IntPair,
     private val cells: IBodyCells?,
     private val worldWidth: Int,
     private val worldHeight: Int,
@@ -23,6 +23,9 @@ class WorldPathfinder(
     private val maxDistance: Int = DEFAULT_MAX_DISTANCE,
     private val returnBestPathOnFailure: Boolean = DEFAULT_RETURN_BEST_PATH_ON_FAILURE
 ) : IPathfinder {
+
+    private val start = IntPair(start.x, start.y)
+    private val target = IntPair(target.x, target.y)
 
     private fun outOfWorldBounds(x: Int, y: Int) = x < 0 || y < 0 || x >= worldWidth || y >= worldHeight
 

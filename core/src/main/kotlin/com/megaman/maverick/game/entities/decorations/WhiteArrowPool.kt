@@ -67,25 +67,25 @@ class WhiteArrowPool(services: MegaServices) : MegaGameEntity(services), ICullab
         when (direction) {
             Direction.UP -> {
                 for (i in 0 until cells.columns)
-                    spawns.add(cells[i, 0]!!.getPositionPoint(Position.BOTTOM_CENTER, false))
+                    spawns.add(cells[i, 0]!!.getPositionPoint(Position.BOTTOM_CENTER, Vector2()))
                 maxOffset = cells.rows
             }
 
             Direction.DOWN -> {
                 for (i in 0 until cells.columns)
-                    spawns.add(cells[i, cells.rows - 1]!!.getPositionPoint(Position.TOP_CENTER, false))
+                    spawns.add(cells[i, cells.rows - 1]!!.getPositionPoint(Position.TOP_CENTER, Vector2()))
                 maxOffset = cells.rows
             }
 
             Direction.LEFT -> {
                 for (i in 0 until cells.rows)
-                    spawns.add(cells[cells.columns - 1, i]!!.getPositionPoint(Position.CENTER_RIGHT, false))
+                    spawns.add(cells[cells.columns - 1, i]!!.getPositionPoint(Position.CENTER_RIGHT, Vector2()))
                 maxOffset = cells.columns
             }
 
             Direction.RIGHT -> {
                 for (i in 0 until cells.rows)
-                    spawns.add(cells[0, i]!!.getPositionPoint(Position.CENTER_LEFT, false))
+                    spawns.add(cells[0, i]!!.getPositionPoint(Position.CENTER_LEFT, Vector2()))
                 maxOffset = cells.columns
             }
         }

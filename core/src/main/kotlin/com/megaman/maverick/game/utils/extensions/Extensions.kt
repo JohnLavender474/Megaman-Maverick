@@ -21,6 +21,7 @@ import com.maverick.game.engine.common.extensions.getSound
 import com.maverick.game.engine.common.objects.IntPair
 import com.maverick.game.engine.common.objects.Matrix
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GamePolygon
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
@@ -60,9 +61,9 @@ fun MapObject.convertToProps(): Properties = when (this) {
 }
 
 fun MapObject.getShape(): IGameShape2D = when (this) {
-    is RectangleMapObject -> rectangle.toGameRectangle(false)
-    is PolygonMapObject -> polygon.toGamePolygon(false)
-    is CircleMapObject -> circle.toGameCircle(false)
+    is RectangleMapObject -> GameRectangle(rectangle)
+    is PolygonMapObject -> GamePolygon(polygon)
+    is CircleMapObject -> GameCircle(circle)
     is PolylineMapObject -> polyline.toGameLines()[0]
     else -> throw IllegalArgumentException("Unknown map object type: $this")
 }
@@ -109,14 +110,7 @@ fun MapProperties.toProps(): Properties {
     return props
 }
 
-fun Camera.toGameRectangle(out: GameRectangle = GameObjectPools.fetch(GameRectangle::class)): GameRectangle {
-    out.setSize(viewportWidth, viewportHeight)
-    out.setCenter(position.x, position.y)
-    return out
-}
-
-fun getDefaultCameraPosition(reclaim: Boolean = true) =
-    getDefaultCameraPosition(GameObjectPools.fetch(Vector3::class, reclaim))
+fun getDefaultCameraPosition() = getDefaultCameraPosition(GameObjectPools.fetch(Vector3::class))
 
 fun getDefaultCameraPosition(out: Vector3): Vector3 {
     out.x = ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f

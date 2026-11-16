@@ -40,7 +40,6 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.players.asPlayer
-import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.VelocityAlteration
 import com.megaman.maverick.game.utils.VelocityAlterationType
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
@@ -130,12 +129,9 @@ class SpringBouncer(services: MegaServices) : MegaGameEntity(services), ISprites
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         val bounceIter = bounces.iterator()
         while (bounceIter.hasNext()) {
-            val (bounceBounds, bounceTimer) = bounceIter.next()
+            val (_, bounceTimer) = bounceIter.next()
             bounceTimer.update(delta)
-            if (bounceTimer.isFinished()) {
-                GameObjectPools.free(bounceBounds)
-                bounceIter.remove()
-            }
+            if (bounceTimer.isFinished()) bounceIter.remove()
         }
     })
 
@@ -185,8 +181,7 @@ class SpringBouncer(services: MegaServices) : MegaGameEntity(services), ISprites
     }
 
     private fun bounce(fixture: IFixture): VelocityAlteration {
-        val bounceBounds = GameObjectPools.fetch(GameRectangle::class, false)
-            .set(fixture.getShape().getBoundingRectangle())
+        val bounceBounds = GameRectangle(fixture.getShape().getBoundingRectangle())
         val bounceTimer = Timer(BOUNCE_DUR)
         bounces.add(bounceBounds pairTo bounceTimer)
 

@@ -28,7 +28,7 @@ import com.megaman.maverick.game.entities.explosions.Explosion
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints
 import com.megaman.maverick.game.entities.special.WavyTentacleOfJoints.TentacleState
 import com.megaman.maverick.game.entities.utils.hardMode
-import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.math.sqrt
@@ -104,7 +104,7 @@ class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), ID
 
     // --- Joint entities ---
 
-    private val jointPositions = Array<Vector2>()
+    private val jointPositions = OwnedArray { Vector2() }
     private val jointEntities = Array<WilyCapsuleTentacleJoint>()
 
     // --- Anchor and idle offset ---
@@ -222,7 +222,6 @@ class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), ID
 
         lines.clear()
 
-        jointPositions.forEach { GameObjectPools.free(it) }
         jointPositions.clear()
 
         for (joint in jointEntities) joint.destroy()
@@ -344,10 +343,8 @@ class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), ID
             val jointCount = tentacle!!.jointCount
             val lastJointIndex = jointCount - 1
             repeat(jointCount) { i ->
-                val pos = GameObjectPools.fetch(Vector2::class, false)
-                    .set(-100f, -100f).scl(ConstVals.PPM.toFloat())
+                val pos = jointPositions.add().set(-100f, -100f).scl(ConstVals.PPM.toFloat())
                 tentacle!!.getJoint(i, pos)
-                jointPositions.add(pos)
 
                 if (i == lastJointIndex) {
                     // Spawn scissor at the tip instead of a regular joint
