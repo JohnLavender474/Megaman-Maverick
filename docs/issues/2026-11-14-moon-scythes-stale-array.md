@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: no
 area: core
 gameplay-change: yes
@@ -44,3 +44,8 @@ because it is a refactor with the contract "Megaman plays the same". `011a` chan
 
 The fix is in branch `fix/moon-scythes`, with the stale spawn order fault. The short contract is in
 `2026-11-14-moon-scythes-stale-spawn-order.md`.
+
+## Resolution
+
+Fixed by `fix/moon-scythes` (2026-11-16): `fadeExtraScythes` clears its array before each count. The squash content is
+in `00c3adad5` (see `2026-11-14-moon-scythes-stale-spawn-order.md`, "Resolution").

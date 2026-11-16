@@ -2524,3 +2524,20 @@ newest entry at the bottom.
   make the test pass without the fix on a slow machine, never fail with it).
 - Contract check: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` pass on the branch (702, 2272, 467;
   0 failures). No play test (the short contract asks for none).
+
+## 2026-11-16 — fix/moon-scythes
+
+- Summary: closes 2 issues (`2026-11-14-moon-scythes-stale-array.md`, `2026-11-14-moon-scythes-stale-spawn-order.md`).
+  `MoonScythesState.fadeExtraScythes` clears its array before each count, counts each live non-fading scythe once
+  plus the queued scythes of the new shot, sorts the queued shot as newest, and fades the oldest over 4
+  (`MegamanValues.MAX_MOON_SCYTHES`). Visible change: never more than 4 scythes fly; the older ones stop, fade and do
+  no more damage. The short contract is in `docs/issues/2026-11-14-moon-scythes-stale-spawn-order.md`.
+- Done end to end by a subagent (owner request, 2026-11-16), with a review subagent. Play test round 1: shot 2 faded
+  the older scythes, shot 3 did not. Cause: a queued scythe taken from the pool keeps `fading = true` from its life as
+  a trail until its spawn lands, so the count skipped it. New `MoonScythesThreeShotsTest` (real `UpdatablesSystem`,
+  real `MegaEntityFactory` pool, trails) failed on it and passes with the fix. Play test round 2 passed.
+- Contract check: after `master` was merged into the branch, `engine:test core:test core:smokeTest lwjgl3:jar` pass
+  (702, 2277, 467; 0 failures).
+- Merge note: another session ran `git commit` in the main checkout right after `git merge --squash fix/moon-scythes`,
+  so commit `00c3adad5` ("docs: ways of working: mutation checks ...") holds the 4 fix files with its docs change.
+  The files on `master` match the branch. History stays as it is.

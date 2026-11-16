@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -86,3 +86,14 @@ Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktree
 - Control: `./run-game-alpha.sh --level DESERT_MAN --room room16 --weapons MOON_SCYTHES --heartTanks all --healthTanks all`:
   go right into the boss room and fight Desert Man with Moon Scythes. The scythes fly, bounce on the walls, leave the
   trail and hurt the boss. Expected change: on each new shot the older scythes stop, fade and do no more damage.
+
+Cause found in the play test (2026-11-16): the owner saw shot 2 fade the older scythes and shot 3 not. A new shot
+takes its scythes from the pool, and an instance that was a trail in its last life still has `fading = true` until
+its spawn lands. The count skipped such queued scythes, so it was too low on some shots. `MoonScythesThreeShotsTest`
+reproduces it with real trails and pool reuse; the fix counts a queued scythe whatever its old `fading` value.
+
+## Resolution
+
+Fixed by `fix/moon-scythes` (2026-11-16), with `2026-11-14-moon-scythes-stale-array.md`. The squash content is in
+`00c3adad5`: another session's commit in the main checkout took the staged squash, so that commit has a docs message.
+Tests: `MoonScythesStateTest`, `MoonScythesThreeShotsTest`.
