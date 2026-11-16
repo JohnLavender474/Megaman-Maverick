@@ -11,7 +11,7 @@ import com.maverick.game.engine.world.body.BodyType
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.behaviors.airDashBehavior
 import com.megaman.maverick.game.entities.megaman.components.getSpriteDirection
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -30,7 +30,7 @@ class MegamanAirDashDirectionTest : DescribeSpec({
 
         megaman = Megaman(testServices(engine = mockk<GameEngine>(relaxed = true)))
         megaman.weaponsHandler = mockk(relaxed = true)
-        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+        megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.facing = Facing.RIGHT
 
         body = Body(BodyType.DYNAMIC)

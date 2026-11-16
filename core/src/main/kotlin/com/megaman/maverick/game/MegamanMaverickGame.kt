@@ -86,7 +86,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.megamanx.MegamanX
 import com.megaman.maverick.game.entities.protoman.Protoman
 import com.megaman.maverick.game.entities.state.PlayerProgressComponent
@@ -846,7 +846,7 @@ class MegamanMaverickGame(
         gameState.reset()
         gameState.clearWeapons()
         // TODO: only Megaman has weapons; the loadout of each character is item 024
-        roster.forEach { if (it is Megaman) it.currentWeapon = MegamanWeapon.MEGA_BUSTER }
+        roster.forEach { if (it is Megaman) it.currentWeapon = MegamanWeapons.MEGA_BUSTER }
         gameState.resetLives()
         levelState.weaponsAttained = null
     }

@@ -1,21 +1,15 @@
 package com.megaman.maverick.game.entities.megaman.sprites
 
-import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.equalsAny
-import com.maverick.game.engine.common.extensions.getTextureAtlas
-import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstKeys
-import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.components.fullyCharged
 import com.megaman.maverick.game.entities.megaman.components.halfCharged
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.roomTransitionPaused
@@ -79,10 +73,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         }
     }
 
-    isBehaviorActive(BehaviorType.AIR_DASHING) -> when {
-        currentWeapon == MegamanWeapon.RUSH_JET -> amendKey("jetpack_airdash")
-        else -> amendKey("airdash")
-    }
+    isBehaviorActive(BehaviorType.AIR_DASHING) -> amendKey(currentWeapon.airDashKey)
 
     isBehaviorActive(BehaviorType.CROUCHING) -> amendKey("crouch")
 
@@ -102,32 +93,13 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 }
 
 fun Megaman.amendKey(baseKey: String) = when {
-    shooting -> when (currentWeapon) {
-        MegamanWeapon.NEEDLE_SPIN -> "needle_spin"
-        MegamanWeapon.AXE_SWINGER -> "${baseKey}_axe_throw"
-        MegamanWeapon.RODENT_CLAWS -> {
-            val slashIndex = getOrDefaultProperty("slash_index", 1, Int::class)
-            GameLogger.debug(MEGAMAN_ANIM_KEY_SUPPLIER_TAG, "slashIndex=$slashIndex")
+    shooting -> currentWeapon.shootKey?.invoke(this, baseKey)
+        ?: if (baseKey == "jump" && isProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", true)) "jump_shoot_down"
+        else "${baseKey}_shoot"
 
-            // Should not animate slashes for "slip" or "run", so default to "stand"
-            val newBaseKey = if (baseKey.equalsAny("slip", "run")) "stand" else baseKey
-
-            val atlas = services.assets.getTextureAtlas(TextureAsset.MEGAMAN_RATTY_CLAWS.source)
-
-            if (atlas.containsRegion("${newBaseKey}_slash$slashIndex"))
-                "${newBaseKey}_slash$slashIndex"
-            else if (atlas.containsRegion("${newBaseKey}_slash1"))
-                "${newBaseKey}_slash1"
-            else "stand_slash1"
-        }
-        else -> {
-            if (baseKey == "jump" && isProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", true)) "jump_shoot_down"
-            else "${baseKey}_shoot"
-        }
-    }
     baseKey == "jump" &&
         input.isPressed(MegaControllerButton.DOWN) &&
-        currentWeapon.equalsAny(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.REACTOR_SHOT) -> {
+        currentWeapon.jumpDownChargeKeys -> {
         if (fullyCharged) "jump_down_charge_full"
         else if (halfCharged) "jump_down_charge_half"
         else "jump_down"

@@ -15,7 +15,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.behaviors.crouchBehavior
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.setBodySense
@@ -50,7 +50,7 @@ class MegamanCrouchDelayTest : DescribeSpec({
 
         val megaman = Megaman(testServices(engine = mockk<GameEngine>(relaxed = true)))
         megaman.weaponsHandler = mockk(relaxed = true)
-        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+        megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.existenceState = EntityExistenceState.LIVE
 
         val body = Body(BodyType.DYNAMIC)

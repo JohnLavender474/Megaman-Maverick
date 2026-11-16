@@ -13,7 +13,7 @@ import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.levels.LevelDefMap
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelRewards
@@ -30,7 +30,7 @@ class GameState : Resettable {
     private val heartTanksCollected = ObjectSet<MegaHeartTank>()
     private val enhancementsAttained = ObjectSet<MegaEnhancement>()
     private val healthTanksCollected = ObjectMap<MegaHealthTank, Points>()
-    private val weaponsOwned = ObjectSet<MegamanWeapon>()
+    private val weaponsOwned = ObjectSet<WeaponDef>()
     private var currency = Points(ConstVals.MIN_CURRENCY, ConstVals.MAX_CURRENCY, ConstVals.MIN_CURRENCY)
     private var difficultyMode = DifficultyMode.NORMAL
 
@@ -79,9 +79,9 @@ class GameState : Resettable {
         return wilyStages.firstOrNull { wilyStage -> !isLevelCompleted(wilyStage) }
     }
 
-    fun containsWeapon(weapon: MegamanWeapon) = weapon == MegamanWeapon.MEGA_BUSTER || weaponsOwned.contains(weapon)
+    fun containsWeapon(weapon: WeaponDef) = weapon.alwaysOwned || weaponsOwned.contains(weapon)
 
-    fun addWeapon(weapon: MegamanWeapon) {
+    fun addWeapon(weapon: WeaponDef) {
         val added = weaponsOwned.add(weapon)
         GameLogger.debug(TAG, "addWeapon(): weapon=$weapon, added=$added")
     }

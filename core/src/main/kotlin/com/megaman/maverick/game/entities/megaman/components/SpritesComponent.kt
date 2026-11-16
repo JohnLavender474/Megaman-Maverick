@@ -19,7 +19,6 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
 import com.megaman.maverick.game.players.applyHideAndFlash
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -212,7 +211,7 @@ internal fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
         tornado.setOriginCenter()
         tornado.rotation = getSpriteRotation()
 
-        if (currentWeapon != MegamanWeapon.NEEDLE_SPIN || !shooting) {
+        if (!currentWeapon.showsTornadoWhileFiring || !shooting) {
             tornado.hidden = true
             return@putPreProcess
         }

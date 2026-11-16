@@ -23,7 +23,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.megaman.behaviors.wallSlideBehavior
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.entities.state.RunComponent
@@ -103,7 +103,7 @@ class MegamanRunTest : DescribeSpec({
     fun stopped() = body.physics.velocity.x == 0f && body.physics.velocity.y == 0f
 
     fun slashOnGround() {
-        megaman.currentWeapon = MegamanWeapon.RODENT_CLAWS
+        megaman.currentWeapon = MegamanWeapons.RODENT_CLAWS
         megaman.shooting = true
         body.putProperty(ConstKeys.BODY_OVER_GROUND, { true })
     }
@@ -116,7 +116,7 @@ class MegamanRunTest : DescribeSpec({
 
         megaman = Megaman(services)
         megaman.weaponsHandler = mockk(relaxed = true)
-        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+        megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.facing = Facing.RIGHT
 
         body = Body(BodyType.DYNAMIC)
@@ -349,7 +349,7 @@ class MegamanRunTest : DescribeSpec({
         }
 
         it("does not stop the run in the air") {
-            megaman.currentWeapon = MegamanWeapon.RODENT_CLAWS
+            megaman.currentWeapon = MegamanWeapons.RODENT_CLAWS
             megaman.shooting = true
             body.putProperty(ConstKeys.BODY_OVER_GROUND, { false })
 

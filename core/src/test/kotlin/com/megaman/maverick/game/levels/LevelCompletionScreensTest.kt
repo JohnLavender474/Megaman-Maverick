@@ -1,7 +1,8 @@
 package com.megaman.maverick.game.levels
 
 import com.badlogic.gdx.utils.OrderedSet
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.screens.ScreenEnum
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -51,7 +52,7 @@ class LevelCompletionScreensTest : DescribeSpec({
     fun noWeapons() = LevelState()
 
     fun withWeapons() = LevelState().apply {
-        weaponsAttained = OrderedSet<MegamanWeapon>().apply { add(MegamanWeapon.NEEDLE_SPIN) }
+        weaponsAttained = OrderedSet<WeaponDef>().apply { add(MegamanWeapons.NEEDLE_SPIN) }
     }
 
     describe("screenOnCompletion") {

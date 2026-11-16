@@ -1,10 +1,11 @@
 package com.megaman.maverick.game.entities.megaman.behaviors
 
 import com.maverick.game.engine.behaviors.IBehavior
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
 import com.megaman.maverick.game.players.GroundSlideParams
 import com.megaman.maverick.game.players.playerGroundSlideBehavior
 import com.megaman.maverick.game.world.body.BodySense
@@ -28,6 +29,6 @@ internal fun Megaman.groundSlideBehavior(): IBehavior = playerGroundSlideBehavio
         maxTime = MegamanValues.GROUND_SLIDE_MAX_TIME,
         cooldown = MegamanValues.GROUND_SLIDE_COOLDOWN,
         speed = { groundSlideSpeed() },
-        blocked = { currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting }
+        blocked = { currentWeaponPrevents(BehaviorType.GROUND_SLIDING) }
     )
 )

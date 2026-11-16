@@ -12,7 +12,7 @@ import com.megaman.maverick.game.entities.items.Life
 import com.megaman.maverick.game.entities.items.WeaponEnergyBulb
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.players.PlayerCharacter
 
@@ -132,7 +132,7 @@ enum class LevelDefinition(
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
         levelOverride = LevelOverride(
-            loadout = LoadoutOverride(weapons = setOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MOON_SCYTHES))
+            loadout = LoadoutOverride(weapons = setOf(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.MOON_SCYTHES))
         )
     ),
     REFACTOR_TEST_031(
@@ -141,7 +141,7 @@ enum class LevelDefinition(
         music = MusicAsset.MM3_SNAKE_MAN_MUSIC,
         screenOnCompletion = { ScreenEnum.SAVE_GAME_SCREEN },
         levelOverride = LevelOverride(
-            loadout = LoadoutOverride(weapons = setOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MOON_SCYTHES))
+            loadout = LoadoutOverride(weapons = setOf(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.MOON_SCYTHES))
         )
     ),
     REFACTOR_TEST_084(

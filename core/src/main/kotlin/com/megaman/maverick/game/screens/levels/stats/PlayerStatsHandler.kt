@@ -32,7 +32,8 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.entities.protoman.Protoman
 import com.megaman.maverick.game.entities.protoman.ProtomanWeapon
 import com.megaman.maverick.game.entities.translateHealth
@@ -43,12 +44,6 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
 
     companion object {
         const val TAG = "PlayerStatsHandler"
-        private const val RUSH_JET = "rush_jet"
-        private const val PRECIOUS = "precious"
-        private const val AXE = "axe"
-        private const val NEEDLE = "needle"
-        private const val RAT = "rat"
-        private const val REACTOR = "reactor"
         private const val SPECIAL_ITEM_DUR = 0.5f
     }
 
@@ -87,22 +82,10 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             { player.maxHealth })
         healthBar.init()
 
-        val weaponBars = ObjectMap<MegamanWeapon, BitsBar>()
-        MegamanWeapon.entries.forEach {
-            if (it == MegamanWeapon.MEGA_BUSTER) return@forEach
-
-            val bitSource = when (it) {
-                MegamanWeapon.MOON_SCYTHES -> ConstKeys.MOON
-                MegamanWeapon.INFERNAL_BARRAGE -> ConstKeys.FIRE
-                MegamanWeapon.FRIGID_SHOT -> ConstKeys.ICE
-                MegamanWeapon.RUSH_JET -> RUSH_JET
-                MegamanWeapon.PRECIOUS_GUARD -> PRECIOUS
-                MegamanWeapon.AXE_SWINGER -> AXE
-                MegamanWeapon.NEEDLE_SPIN -> NEEDLE
-                MegamanWeapon.RODENT_CLAWS -> RAT
-                MegamanWeapon.REACTOR_SHOT -> REACTOR
-                else -> throw IllegalStateException("No bit source for weapon $it")
-            }
+        val weaponBars = ObjectMap<WeaponDef, BitsBar>()
+        MegamanWeapons.all.forEach {
+            val bitSource = it.hudBitRegion
+            if (bitSource == null) return@forEach
 
             val weaponBar = BitsBar(
                 assMan,
@@ -122,7 +105,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             val megaman = player
             if (megaman !is Megaman) return@supplier null
             val current = megaman.currentWeapon
-            if (current == MegamanWeapon.MEGA_BUSTER) null else weaponBars.get(current)
+            weaponBars.get(current)
         }
 
         ProtomanWeapon.entries.forEach {
@@ -204,7 +187,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
     fun addWeaponEnergy(megaman: Megaman, ammo: Int) {
         GameLogger.debug(TAG, "addWeaponEnergy(): ammo=$ammo")
 
-        if (!MegamanWeapon.entries.any { canAddWeaponEnergyTo(megaman, it) }) {
+        if (!MegamanWeapons.all.any { canAddWeaponEnergyTo(megaman, it) }) {
             GameLogger.debug(TAG, "addWeaponEnergy(): no weapons to add energy to")
             return
         }
@@ -212,7 +195,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         val currentWeapon = megaman.currentWeapon
         var remainingAmmo = ammo
 
-        if (currentWeapon != MegamanWeapon.MEGA_BUSTER) {
+        if (!currentWeapon.infiniteAmmo) {
             remainingAmmo = addWeaponEnergyTo(megaman, currentWeapon, ammo)
 
             GameLogger.debug(
@@ -221,11 +204,12 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             )
         }
 
-        val weapons = MegamanWeapon.entries.toOrderedSet()
-        weapons.remove(MegamanWeapon.MEGA_BUSTER)
+        val weapons = MegamanWeapons.all.toOrderedSet()
         weapons.remove(megaman.currentWeapon)
 
         for (weapon in weapons) {
+            if (weapon.infiniteAmmo) continue
+
             if (remainingAmmo <= 0) {
                 GameLogger.debug(TAG, "addWeaponEnergy(): loop: remaining ammo depleted")
                 break
@@ -248,12 +232,12 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         audioMan.playSound(SoundAsset.ENERGY_FILL_SOUND, false)
     }
 
-    private fun canAddWeaponEnergyTo(megaman: Megaman, weapon: MegamanWeapon) =
-        weapon != MegamanWeapon.MEGA_BUSTER &&
+    private fun canAddWeaponEnergyTo(megaman: Megaman, weapon: WeaponDef) =
+        !weapon.infiniteAmmo &&
             state.containsWeapon(weapon) &&
             megaman.weaponsHandler.getAmmo(weapon) < MegamanValues.MAX_WEAPON_AMMO
 
-    private fun addWeaponEnergyTo(megaman: Megaman, weapon: MegamanWeapon, ammoToAdd: Int): Int {
+    private fun addWeaponEnergyTo(megaman: Megaman, weapon: WeaponDef, ammoToAdd: Int): Int {
         val currentAmmo = megaman.weaponsHandler.getAmmo(weapon)
         val maxAmmo = MegamanValues.MAX_WEAPON_AMMO
 

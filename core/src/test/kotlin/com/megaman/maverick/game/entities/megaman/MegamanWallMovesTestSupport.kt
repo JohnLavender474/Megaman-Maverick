@@ -19,7 +19,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.state.PostActionMomentumComponent
 import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.TeleportableComponent
@@ -44,7 +44,7 @@ class MegamanMovesRig {
         megaman.existenceState = EntityExistenceState.LIVE
         megaman.weaponsHandler = mockk(relaxed = true)
         megaman.jetpackHandler = mockk(relaxed = true)
-        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+        megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.facing = Facing.RIGHT
         megaman.aButtonTask = AButtonTask.AIR_DASH
         megaman.jumpVel = MegamanValues.JUMP_VEL

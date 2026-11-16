@@ -16,7 +16,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.behaviors.climbBehavior
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.setBodySense
@@ -106,7 +106,7 @@ class MegamanClimbTest : DescribeSpec({
             place(4.2f, 0f)
             touch(head = true, feet = true)
             rig.press(MegaControllerButton.UP to ButtonStatus.PRESSED)
-            rig.megaman.currentWeapon = MegamanWeapon.NEEDLE_SPIN
+            rig.megaman.currentWeapon = MegamanWeapons.NEEDLE_SPIN
             rig.megaman.shooting = true
             climb.evaluate(0f) shouldBe false
         }

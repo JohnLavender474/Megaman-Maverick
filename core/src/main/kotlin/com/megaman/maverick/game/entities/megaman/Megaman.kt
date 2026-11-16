@@ -54,7 +54,8 @@ import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
@@ -105,10 +106,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
             if (value) shootAnimTimer.reset() else shootAnimTimer.setToEnd()
         }
     val ammo: Int
-        get() = when (currentWeapon) {
-            MegamanWeapon.MEGA_BUSTER -> Int.MAX_VALUE
-            else -> weaponsHandler.getAmmo(currentWeapon)
-        }
+        get() = if (currentWeapon.infiniteAmmo) Int.MAX_VALUE else weaponsHandler.getAmmo(currentWeapon)
 
     override var direction: Direction
         get() = body.direction
@@ -154,8 +152,8 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
     lateinit var aButtonTask: AButtonTask
 
-    private var weapon: MegamanWeapon? = null
-    var currentWeapon: MegamanWeapon
+    private var weapon: WeaponDef? = null
+    var currentWeapon: WeaponDef
         get() = weapon!!
         set(value) {
             weaponsHandler.onChangeWeapon(value, weapon)
@@ -186,10 +184,10 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
     internal var wallJumpVel = 0f
     internal val runParams = defineRunParams()
     internal val runBlocked: () -> Boolean = {
-        currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting && bodyOverGround
+        currentWeapon.stopsRunWhileFiring && shooting && bodyOverGround
     }
     internal val onRunBlocked: (Facing) -> Unit = { runFacing ->
-        if (currentWeapon == MegamanWeapon.RODENT_CLAWS && shooting) facing = runFacing
+        if (currentWeapon.stopsRunWhileFiring && shooting) facing = runFacing
     }
 
     internal val playerGravity = PlayerGravityComponent(
@@ -223,7 +221,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         weaponsHandler = MegamanWeaponsHandler(this)
         jetpackHandler = MegamanJetpackHandler(this)
 
-        currentWeapon = MegamanWeapon.MEGA_BUSTER
+        currentWeapon = MegamanWeapons.MEGA_BUSTER
         aButtonTask = AButtonTask.JUMP
 
         addComponent(GravityDeviceComponent {
@@ -266,7 +264,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         aButtonTask = AButtonTask.JUMP
 
         weaponsHandler.setAllToMaxAmmo()
-        currentWeapon = MegamanWeapon.MEGA_BUSTER
+        currentWeapon = MegamanWeapons.MEGA_BUSTER
 
         canMakeLandSound = false
 
@@ -425,11 +423,11 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         debugShapes.add { if (axeShieldFixture.isActive()) axeShieldFixture else null }
 
         weaponPreStep = {
-            val needleSpinning = currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting
+            val needleSpinning = currentWeapon.spinFixturesWhileFiring && shooting
             needleSpinDamagerFixture.setActive(needleSpinning)
             needleSpinShieldFixture.setActive(needleSpinning)
 
-            axeShieldFixture.setActive(currentWeapon == MegamanWeapon.AXE_SWINGER)
+            axeShieldFixture.setActive(currentWeapon.axeShield)
             val axeShieldWidth = if (isBehaviorActive(BehaviorType.CLIMBING)) 0.75f else 0.5f
             (axeShieldFixture.rawShape as GameRectangle).setWidth(axeShieldWidth * ConstVals.PPM)
             val axeShieldOffsetX = when {
@@ -503,7 +501,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
         val attack = ButtonActuator(
             onPressContinued = { delta ->
-                if (!inPlay || stunned || damaged || teleporting || currentWeapon == MegamanWeapon.RUSH_JET ||
+                if (!inPlay || stunned || damaged || teleporting || currentWeapon.stopsChargeOnHold ||
                     (!charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
                     (charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
                 ) {
@@ -632,7 +630,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         return AnimationsComponent(animators, sprites)
     }
 
-    fun translateAmmo(ammo: Int, weapon: MegamanWeapon = currentWeapon): Int {
+    fun translateAmmo(ammo: Int, weapon: WeaponDef = currentWeapon): Int {
         val remaining = weaponsHandler.translateAmmo(weapon, ammo)
         GameLogger.debug(TAG, "translateAmmo(): weapon=$weapon, ammo=$ammo, remaining=$remaining")
         return remaining

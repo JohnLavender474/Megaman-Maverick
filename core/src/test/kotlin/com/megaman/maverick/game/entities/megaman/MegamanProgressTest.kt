@@ -5,7 +5,7 @@ import com.maverick.game.engine.audio.AudioComponent
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.testServices
@@ -36,7 +36,7 @@ class MegamanProgressTest : DescribeSpec({
         it("sets the reward weapons of that level") {
             state.addLevelCompleted(LevelDefinition.DESERT_MAN)
 
-            services.levelState.weaponsAttained!!.contains(MegamanWeapon.NEEDLE_SPIN) shouldBe true
+            services.levelState.weaponsAttained!!.contains(MegamanWeapons.NEEDLE_SPIN) shouldBe true
         }
 
         it("does not set them again for a level that is already completed") {

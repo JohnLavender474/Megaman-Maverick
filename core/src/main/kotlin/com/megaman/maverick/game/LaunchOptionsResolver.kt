@@ -3,7 +3,8 @@ package com.megaman.maverick.game
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.players.PlayerCharacter
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -27,7 +28,7 @@ data class ResolvedLaunch(
     val logTags: Set<String>,
     val logAllTags: Boolean,
     val autoPerf: Boolean,
-    val weapons: Set<MegamanWeapon>,
+    val weapons: Set<WeaponDef>,
     val heartTanks: Set<MegaHeartTank>,
     val healthTanks: Set<MegaHealthTank>,
     val players: Int = 1,
@@ -68,7 +69,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     if (room != null && !levelGiven) errors.add("--room '$room' needs --level.")
     if (screen in SCREENS_THAT_NEED_A_LEVEL && !levelGiven) errors.add("--screen $screen needs --level.")
 
-    val weapons = parseEnumListOption<MegamanWeapon>("--weapons", options.weapons, errors)
+    val weapons = parseWeaponListOption(options.weapons, errors)
     val heartTanks = parseEnumListOption<MegaHeartTank>("--heartTanks", options.heartTanks, errors)
     val healthTanks = parseEnumListOption<MegaHealthTank>("--healthTanks", options.healthTanks, errors)
     val players = parsePlayers(options.players, errors)
@@ -184,6 +185,20 @@ private inline fun <reified E : Enum<E>> parseEnumListOption(
     val named = names.filterNot { it.equals(ALL_ENTRIES, ignoreCase = true) }
         .mapNotNull { parseEnumOption<E>(optionName, it, errors) }
     return if (names.any { it.equals(ALL_ENTRIES, ignoreCase = true) }) enumValues<E>().toSet() else named.toSet()
+}
+
+private fun parseWeaponListOption(value: String?, errors: MutableList<String>): Set<WeaponDef> {
+    val names = value?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+    val named = names.filterNot { it.equals(ALL_ENTRIES, ignoreCase = true) }.mapNotNull { name ->
+        val weapon = MegamanWeapons.byId(name)
+        if (weapon == null) {
+            val allowed = MegamanWeapons.all.map { it.id.uppercase() }
+            val suggestion = nearestName(name, allowed)?.let { " Did you mean $it?" } ?: ""
+            errors.add("Invalid --weapons '$name'.$suggestion Allowed: ${allowed.joinToString(", ")}")
+        }
+        weapon
+    }
+    return if (names.any { it.equals(ALL_ENTRIES, ignoreCase = true) }) MegamanWeapons.all.toSet() else named.toSet()
 }
 
 inline fun <reified E : Enum<E>> parseEnumOption(

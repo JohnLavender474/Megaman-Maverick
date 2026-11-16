@@ -36,7 +36,7 @@ import com.megaman.maverick.game.entities.megaman.components.GROUNDSLIDE_CROUCH_
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.entities.state.PostActionMomentumComponent
@@ -137,7 +137,7 @@ class MegamanGroundSlideTest : DescribeSpec({
         megaman.existenceState = EntityExistenceState.LIVE
         megaman.weaponsHandler = mockk(relaxed = true)
         megaman.jetpackHandler = mockk(relaxed = true)
-        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+        megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.shooting = false
         megaman.facing = Facing.RIGHT
         megaman.aButtonTask = AButtonTask.JUMP
@@ -222,14 +222,14 @@ class MegamanGroundSlideTest : DescribeSpec({
         }
 
         it("does not start while Needle Spin shoots") {
-            megaman.currentWeapon = MegamanWeapon.NEEDLE_SPIN
+            megaman.currentWeapon = MegamanWeapons.NEEDLE_SPIN
             megaman.shooting = true
             start()
             slide.isActive() shouldBe false
         }
 
         it("starts with Needle Spin when it does not shoot") {
-            megaman.currentWeapon = MegamanWeapon.NEEDLE_SPIN
+            megaman.currentWeapon = MegamanWeapons.NEEDLE_SPIN
             start()
             slide.isActive() shouldBe true
         }

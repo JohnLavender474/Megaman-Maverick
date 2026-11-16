@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.screens.levels.tiledmap.TiledMapLoadResult
 import com.maverick.game.engine.world.container.IWorldContainer
 import com.megaman.maverick.game.entities.decorations.FloatingPoints.FloatingPointsType
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.weapons.WeaponDef
 
 class LevelState {
 
@@ -23,7 +23,7 @@ class LevelState {
     var levelPoints = 0
     var timeSinceLastFloatingPoints = 0f
     var lastFloatingPointsType: FloatingPointsType? = null
-    var weaponsAttained: OrderedSet<MegamanWeapon>? = null
+    var weaponsAttained: OrderedSet<WeaponDef>? = null
 
     val isInExtraLevel: Boolean
         get() = currentLevel?.type == LevelType.EXTRA_LEVEL

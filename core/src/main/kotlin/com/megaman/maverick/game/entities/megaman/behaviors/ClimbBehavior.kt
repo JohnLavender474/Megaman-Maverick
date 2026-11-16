@@ -1,10 +1,11 @@
 package com.megaman.maverick.game.entities.megaman.behaviors
 
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.maverick.game.engine.behaviors.IBehavior
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
 import com.megaman.maverick.game.players.ClimbParams
 import com.megaman.maverick.game.players.playerClimbBehavior
 import com.megaman.maverick.game.world.body.BodySense
@@ -19,7 +20,7 @@ internal fun Megaman.climbBehavior(): IBehavior = playerClimbBehavior(
     this,
     ClimbParams(
         speed = { MegamanValues.CLIMB_VEL * movementScalar },
-        blocked = { currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting },
+        blocked = { currentWeaponPrevents(BehaviorType.CLIMBING) },
         feetGrabAllowed = { true },
         holdStill = { shooting },
         leavesOnFloor = false,

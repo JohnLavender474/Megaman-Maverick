@@ -36,7 +36,8 @@ import com.megaman.maverick.game.entities.maxHealth
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.entities.translateHealth
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.menus.MegaMenuScreen
@@ -63,12 +64,12 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         )
 
         private val FULL_TABLE = TableBuilder<Any>()
-            .row(gdxArrayOf(MegamanWeapon.MEGA_BUSTER, MegamanWeapon.REACTOR_SHOT))
-            .row(gdxArrayOf(MegamanWeapon.NEEDLE_SPIN, MegamanWeapon.RODENT_CLAWS))
-            .row(gdxArrayOf(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.AXE_SWINGER))
-            .row(gdxArrayOf(MegamanWeapon.INFERNAL_BARRAGE, MegamanWeapon.RUSH_JET))
-            .row(gdxArrayOf(MegamanWeapon.MOON_SCYTHES, null)) // adapter 1
-            .row(gdxArrayOf(MegamanWeapon.PRECIOUS_GUARD, null)) // adapter 2
+            .row(gdxArrayOf(MegamanWeapons.MEGA_BUSTER, MegamanWeapons.REACTOR_SHOT))
+            .row(gdxArrayOf(MegamanWeapons.NEEDLE_SPIN, MegamanWeapons.RODENT_CLAWS))
+            .row(gdxArrayOf(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.AXE_SWINGER))
+            .row(gdxArrayOf(MegamanWeapons.INFERNAL_BARRAGE, MegamanWeapons.RUSH_JET))
+            .row(gdxArrayOf(MegamanWeapons.MOON_SCYTHES, null)) // adapter 1
+            .row(gdxArrayOf(MegamanWeapons.PRECIOUS_GUARD, null)) // adapter 2
             // Both rows of health tanks have the exit and settings buttons on purpose
             .row(gdxArrayOf(HEALTH_TANKS[0], HEALTH_TANKS[1], ConstKeys.EXIT, ConstKeys.SETTINGS))
             .row(gdxArrayOf(HEALTH_TANKS[2], HEALTH_TANKS[3], ConstKeys.EXIT, ConstKeys.SETTINGS))
@@ -204,8 +205,8 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
             levelPauseScreenAtlas.findRegion("$OPTIONS_PREFIX/gear${SELECTED_SUFFIX}")
         )
 
-        MegamanWeapon.entries.forEach { weapon ->
-            val key = weapon.name.lowercase()
+        MegamanWeapons.all.forEach { weapon ->
+            val key = weapon.id
 
             if (levelPauseScreenAtlas.containsRegion("$WEAPONS_PREFIX/$key")) {
                 buttonRegions.put(
@@ -268,7 +269,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
             for (j in 0 until columnCount) {
                 when (val element = FULL_TABLE.get(i, j).element) {
-                    is MegamanWeapon -> {
+                    is WeaponDef -> {
                         if (state.containsWeapon(element)) {
                             row.add(element)
 
@@ -277,8 +278,8 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
                             val bitsBarX = WEAPON_BITS_COLUMN_1_X + j * WEAPON_BITS_COLUMN_OFFSET
                             val bitsBarY = WEAPON_BITS_ROWS_1_Y + (WEAPON_ROWS - i - 1) * WEAPON_BITS_ROW_OFFSET
-                            val bitsSupplier: () -> Int = when (element) {
-                                MegamanWeapon.MEGA_BUSTER -> {
+                            val bitsSupplier: () -> Int = when {
+                                element.infiniteAmmo -> {
                                     { player.currentHealth }
                                 }
 
@@ -399,10 +400,10 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
         )
         buttonSprites.put(ConstKeys.SETTINGS, settingsButtonSprite)
 
-        MegamanWeapon.entries.forEach { weapon ->
+        MegamanWeapons.all.forEach { weapon ->
             if (!state.containsWeapon(weapon)) return@forEach
 
-            val key = weapon.name.lowercase()
+            val key = weapon.id
             try {
                 val buttonSprite = GameSprite(buttonRegions[key])
                 buttonSprite.setBounds(
@@ -566,7 +567,7 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
 
     private fun resetFillHealthTimer() = fillHealthTimer.clearRunnables().resetDuration(0f).setToEnd(false)
 
-    private fun createWeaponButton(weapon: MegamanWeapon) = object : IMenuButton {
+    private fun createWeaponButton(weapon: WeaponDef) = object : IMenuButton {
 
         override fun onSelect(delta: Float): Boolean {
             GameLogger.debug(TAG, "createWeaponButton(): onSelect(): weapon=$weapon")
@@ -632,13 +633,13 @@ class LevelPauseScreen(game: MegamanMaverickGame) :
                     // If moving up or down from the EXIT button causes the EXIT button to continue to be hovered,
                     // then force the hover to the MEGA_BUSTER weapon.
                     if (oldNode.element == ConstKeys.EXIT && nextNode.element == ConstKeys.EXIT) {
-                        val (row, column) = table.findPositionOf(MegamanWeapon.MEGA_BUSTER) ?: IntPair(0, 0)
+                        val (row, column) = table.findPositionOf(MegamanWeapons.MEGA_BUSTER) ?: IntPair(0, 0)
                         nextNode = table.get(row, column)
                     }
 
                     // Moving from a weapon to the exit button should be intercepted and changed if there are any
                     // health tanks. In this case, find the first available health tank and move the selection there.
-                    if (oldNode.element is MegamanWeapon &&
+                    if (oldNode.element is WeaponDef &&
                         nextNode.element == ConstKeys.EXIT &&
                         state.hasAnyHealthTanks()
                     ) {

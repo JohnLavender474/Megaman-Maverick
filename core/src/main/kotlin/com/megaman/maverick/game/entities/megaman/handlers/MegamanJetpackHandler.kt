@@ -8,7 +8,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 
 class MegamanJetpackHandler(private val megaman: Megaman) : Updatable, Resettable {
 
@@ -23,19 +23,19 @@ class MegamanJetpackHandler(private val megaman: Megaman) : Updatable, Resettabl
         if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) return true
 
         if (megaman.isBehaviorActive(BehaviorType.AIR_DASHING) &&
-            megaman.currentWeapon == MegamanWeapon.RUSH_JET
+            megaman.currentWeapon.enablesJetpack
         ) return true
 
         return false
     }
 
     override fun update(delta: Float) {
-        if (!megaman.services.gameState.containsWeapon(MegamanWeapon.RUSH_JET)) return
+        if (!megaman.services.gameState.containsWeapon(MegamanWeapons.RUSH_JET)) return
 
         if (isActive()) {
             timePerBitTimer.update(delta)
             if (timePerBitTimer.isFinished()) {
-                megaman.weaponsHandler.translateAmmo(MegamanWeapon.RUSH_JET, -1)
+                megaman.weaponsHandler.translateAmmo(MegamanWeapons.RUSH_JET, -1)
                 timePerBitTimer.reset()
             }
 
@@ -51,9 +51,9 @@ class MegamanJetpackHandler(private val megaman: Megaman) : Updatable, Resettabl
                 recoveryTimer.update(delta)
 
                 if (recoveryTimer.isFinished() &&
-                    !megaman.weaponsHandler.isAtMaxAmmo(MegamanWeapon.RUSH_JET)
+                    !megaman.weaponsHandler.isAtMaxAmmo(MegamanWeapons.RUSH_JET)
                 ) {
-                    megaman.translateAmmo(1, MegamanWeapon.RUSH_JET)
+                    megaman.translateAmmo(1, MegamanWeapons.RUSH_JET)
                     recoveryTimer.reset()
                 }
             }

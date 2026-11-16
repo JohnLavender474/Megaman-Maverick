@@ -9,7 +9,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.behaviors.wallSlideBehavior
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.setBodySense
@@ -103,7 +103,7 @@ class MegamanWallSlideTest : DescribeSpec({
 
         it("does not start during a needle spin") {
             pressIntoLeftWall()
-            rig.megaman.currentWeapon = MegamanWeapon.NEEDLE_SPIN
+            rig.megaman.currentWeapon = MegamanWeapons.NEEDLE_SPIN
             rig.megaman.shooting = true
             slide.evaluate(0f) shouldBe false
         }
@@ -124,7 +124,7 @@ class MegamanWallSlideTest : DescribeSpec({
         }
 
         it("holds still with the rodent claws") {
-            rig.megaman.currentWeapon = MegamanWeapon.RODENT_CLAWS
+            rig.megaman.currentWeapon = MegamanWeapons.RODENT_CLAWS
             rig.body.physics.velocity.y = -3f
             slide.act(0.1f)
             rig.body.physics.velocity.y shouldBe 0f

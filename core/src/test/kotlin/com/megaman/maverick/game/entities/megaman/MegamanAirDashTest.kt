@@ -12,7 +12,7 @@ import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.megaman.behaviors.airDashBehavior
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.setBodySense
 import io.kotest.core.spec.style.DescribeSpec
@@ -73,16 +73,16 @@ class MegamanAirDashTest : DescribeSpec({
             rig.overGround = true
             pressA()
             dash.evaluate(0f) shouldBe false
-            rig.megaman.currentWeapon = MegamanWeapon.RUSH_JET
+            rig.megaman.currentWeapon = MegamanWeapons.RUSH_JET
             dash.evaluate(0f) shouldBe true
         }
 
         it("does not start with the Rush Jet empty or with UP held") {
-            rig.megaman.currentWeapon = MegamanWeapon.RUSH_JET
-            every { rig.megaman.weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) } returns true
+            rig.megaman.currentWeapon = MegamanWeapons.RUSH_JET
+            every { rig.megaman.weaponsHandler.isDepleted(MegamanWeapons.RUSH_JET) } returns true
             pressA()
             dash.evaluate(0f) shouldBe false
-            every { rig.megaman.weaponsHandler.isDepleted(MegamanWeapon.RUSH_JET) } returns false
+            every { rig.megaman.weaponsHandler.isDepleted(MegamanWeapons.RUSH_JET) } returns false
             rig.press(MegaControllerButton.A to ButtonStatus.JUST_PRESSED, MegaControllerButton.UP to ButtonStatus.PRESSED)
             dash.evaluate(0f) shouldBe false
         }
@@ -100,7 +100,7 @@ class MegamanAirDashTest : DescribeSpec({
         }
 
         it("does not start during a needle spin") {
-            rig.megaman.currentWeapon = MegamanWeapon.NEEDLE_SPIN
+            rig.megaman.currentWeapon = MegamanWeapons.NEEDLE_SPIN
             rig.megaman.shooting = true
             pressA()
             dash.evaluate(0f) shouldBe false
@@ -134,7 +134,7 @@ class MegamanAirDashTest : DescribeSpec({
         }
 
         it("moves faster with the Rush Jet") {
-            rig.megaman.currentWeapon = MegamanWeapon.RUSH_JET
+            rig.megaman.currentWeapon = MegamanWeapons.RUSH_JET
             startDash()
             pressA(ButtonStatus.PRESSED)
             dash.update(0.01f)
@@ -207,7 +207,7 @@ class MegamanAirDashTest : DescribeSpec({
         }
 
         it("resets the jetpack with the Rush Jet") {
-            rig.megaman.currentWeapon = MegamanWeapon.RUSH_JET
+            rig.megaman.currentWeapon = MegamanWeapons.RUSH_JET
             startDash()
             dash.end()
             verify { rig.megaman.jetpackHandler.reset() }

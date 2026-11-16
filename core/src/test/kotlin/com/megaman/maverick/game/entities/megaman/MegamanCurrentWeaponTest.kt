@@ -1,7 +1,8 @@
 package com.megaman.maverick.game.entities.megaman
 
 import com.maverick.game.engine.GameEngine
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
@@ -26,26 +27,26 @@ class MegamanCurrentWeaponTest : DescribeSpec({
 
     describe("currentWeapon") {
         it("gives the handler the old weapon as previous, and null on the first set") {
-            megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
-            megaman.currentWeapon = MegamanWeapon.FRIGID_SHOT
+            megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
+            megaman.currentWeapon = MegamanWeapons.FRIGID_SHOT
 
-            megaman.currentWeapon shouldBe MegamanWeapon.FRIGID_SHOT
+            megaman.currentWeapon shouldBe MegamanWeapons.FRIGID_SHOT
             verifyOrder {
-                handler.onChangeWeapon(MegamanWeapon.MEGA_BUSTER, null)
-                handler.onChangeWeapon(MegamanWeapon.FRIGID_SHOT, MegamanWeapon.MEGA_BUSTER)
+                handler.onChangeWeapon(MegamanWeapons.MEGA_BUSTER, null)
+                handler.onChangeWeapon(MegamanWeapons.FRIGID_SHOT, MegamanWeapons.MEGA_BUSTER)
             }
         }
 
         it("calls the handler before it stores the new weapon") {
-            megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+            megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
 
-            val seen = ArrayList<MegamanWeapon>()
+            val seen = ArrayList<WeaponDef>()
             every { handler.onChangeWeapon(any(), any()) } answers { seen.add(megaman.currentWeapon) }
 
-            megaman.currentWeapon = MegamanWeapon.FRIGID_SHOT
+            megaman.currentWeapon = MegamanWeapons.FRIGID_SHOT
 
-            seen shouldBe listOf(MegamanWeapon.MEGA_BUSTER)
-            megaman.currentWeapon shouldBe MegamanWeapon.FRIGID_SHOT
+            seen shouldBe listOf(MegamanWeapons.MEGA_BUSTER)
+            megaman.currentWeapon shouldBe MegamanWeapons.FRIGID_SHOT
         }
     }
 })

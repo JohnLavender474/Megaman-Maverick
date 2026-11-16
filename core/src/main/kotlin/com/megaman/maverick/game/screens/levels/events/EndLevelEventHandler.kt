@@ -34,8 +34,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.MEGAMAN_SPRITE_SIZE
 import com.megaman.maverick.game.entities.megaman.components.getMegamanSpritePriority
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
-import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.events.EventType
@@ -86,17 +85,17 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (!initialized) {
-            MegamanWeapon.entries.forEach { weapon ->
-                val atlas = game.assets.getTextureAtlas(MegamanAnimations.getAssetSourceForWeapon(weapon))
-                val key = weapon.name
+            MegamanWeapons.all.forEach { weapon ->
+                val atlas = game.assets.getTextureAtlas(weapon.atlas.source)
+                val key = weapon.id
                 atlas.findRegion(ConstKeys.BEAM)?.let { BEAM_REGIONS.put(key, it) }
                 atlas.findRegion(ConstKeys.SPAWN)?.let {
                     BEAM_TRANS_ANIMS.put(key, Animation(it, 1, 7, 0.05f, false).reversed())
                 }
             }
 
-            beamRegion = BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)
-            beamTransAnim = BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name)
+            beamRegion = BEAM_REGIONS.get(MegamanWeapons.MEGA_BUSTER.id)
+            beamTransAnim = BEAM_TRANS_ANIMS.get(MegamanWeapons.MEGA_BUSTER.id)
 
             val priority = DrawingPriority()
             beamSprite = GameSprite(beamRegion, getMegamanSpritePriority(priority))
@@ -173,11 +172,11 @@ class EndLevelEventHandler(private val game: MegamanMaverickGame) : Initializabl
 
             // TODO: another character (X, item 081) beams out with Megaman's buster beam until it has its own beam art
             val weaponKey = when (val megaman = player) {
-                is Megaman -> megaman.currentWeapon.name
-                else -> MegamanWeapon.MEGA_BUSTER.name
+                is Megaman -> megaman.currentWeapon.id
+                else -> MegamanWeapons.MEGA_BUSTER.id
             }
-            beamRegion = BEAM_REGIONS.get(weaponKey) ?: BEAM_REGIONS.get(MegamanWeapon.MEGA_BUSTER.name)
-            beamTransAnim = (BEAM_TRANS_ANIMS.get(weaponKey) ?: BEAM_TRANS_ANIMS.get(MegamanWeapon.MEGA_BUSTER.name))
+            beamRegion = BEAM_REGIONS.get(weaponKey) ?: BEAM_REGIONS.get(MegamanWeapons.MEGA_BUSTER.id)
+            beamTransAnim = (BEAM_TRANS_ANIMS.get(weaponKey) ?: BEAM_TRANS_ANIMS.get(MegamanWeapons.MEGA_BUSTER.id))
                 .also { it.reset() }
 
             beamSprite.setOriginCenter()

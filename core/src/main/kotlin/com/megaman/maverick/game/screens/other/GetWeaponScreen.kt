@@ -32,7 +32,8 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.setToDefaultPosition
@@ -50,8 +51,8 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         private val EVENT_DURS = gdxArrayOf(0.5f, 0.4f, 2f, 0.5f)
 
         private val ANIM_DEFS = ObjectMap<String, AnimationDef>().also {
-            MegamanWeapon.entries.forEach { weapon ->
-                it.put(weapon.name.lowercase(), AnimationDef(2, 2, 0.1f, false))
+            MegamanWeapons.all.forEach { weapon ->
+                it.put(weapon.id, AnimationDef(2, 2, 0.1f, false))
             }
         }
 
@@ -102,10 +103,10 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
 
         val weaponGetAtlas = game.assets.getTextureAtlas(TextureAsset.WEAPON_GET.source)
         overlaySprite.setRegion(weaponGetAtlas.findRegion("overlay"))
-        MegamanWeapon.entries.forEach { weapon ->
-            val baseKey = weapon.name.lowercase()
+        MegamanWeapons.all.forEach { weapon ->
+            val baseKey = weapon.id
 
-            val fullKey = "${MEGAMAN_REG_PREFIX}${weapon.name.lowercase()}"
+            val fullKey = "${MEGAMAN_REG_PREFIX}${weapon.id}"
             if (!weaponGetAtlas.containsRegion(fullKey)) {
                 GameLogger.error(TAG, "init(): no region for full key: $fullKey")
                 return@forEach
@@ -192,7 +193,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                     GameObjectPools.fetch(Vector2::class)
                 )
 
-                val animKey = "${(player as Megaman).currentWeapon.name.lowercase()}_reversed"
+                val animKey = "${(player as Megaman).currentWeapon.id}_reversed"
                 val animator = megamanAnimators.get(animKey)
                 // Animator with 0f delta so that the sprite stays at the first animation region
                 animator.animate(megamanSprite, 0f)
@@ -203,7 +204,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
             }
 
             GetWeaponEventType.MEGAMAN_TRANS, GetWeaponEventType.WEAPON_EVENT -> {
-                val weapon = props.get(ConstKeys.WEAPON, MegamanWeapon::class)!!
+                val weapon = props.get(ConstKeys.WEAPON, WeaponDef::class)!!
 
                 if (eventType == GetWeaponEventType.MEGAMAN_TRANS) updateEventTimer(delta)
                 else {
@@ -217,7 +218,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
                 }
 
                 try {
-                    var animKey = weapon.name.lowercase()
+                    var animKey = weapon.id
                     if (eventType == GetWeaponEventType.MEGAMAN_TRANS) animKey += "_reversed"
 
                     val animator = megamanAnimators.get(animKey)
@@ -300,7 +301,7 @@ class GetWeaponScreen(private val game: MegamanMaverickGame) : BaseScreen(), Ini
         when (new.type) {
             GetWeaponEventType.MEGAMAN_TRANS -> textHandle.clearText()
             GetWeaponEventType.WEAPON_EVENT -> {
-                val weaponName = new.props.get(ConstKeys.WEAPON, MegamanWeapon::class)!!.name.replace("_", " ")
+                val weaponName = new.props.get(ConstKeys.WEAPON, WeaponDef::class)!!.displayName
                 for (i in 0 until weaponName.length) {
                     val text = weaponName.subSequence(0, i + 1).toString()
                     val runnable = Runnable { textHandle.setText(text) }

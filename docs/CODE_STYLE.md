@@ -38,6 +38,16 @@ them.
   change the interface for all of its implementations. Then each caller goes through the same contract, and a later
   change cannot miss a path.
 
+## Names
+
+- **Explicit, not clever.** A name says what it computes in plain words, and a reader with no context reads it one
+  way only. Do not use a pun or a word with a second meaning in the game (for example "blocks" next to block
+  entities). When a clever name seems better, give it to the owner as a suggestion; do not choose it.
+
+  ```kotlin
+  fun Megaman.currentWeaponPrevents(move: BehaviorType)   // not firingBlocks(move)
+  ```
+
 ## Errors
 
 - **Fail fast.** A state that only a mistake can cause (bad map data, a wrong label, a missing entity) throws at once;

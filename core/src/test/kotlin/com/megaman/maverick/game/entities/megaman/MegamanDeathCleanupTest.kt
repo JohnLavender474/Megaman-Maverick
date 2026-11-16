@@ -5,7 +5,7 @@ import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.projectiles.Axe
 import com.megaman.maverick.game.entities.state.FreezeComponent
@@ -46,7 +46,7 @@ class MegamanDeathCleanupTest : DescribeSpec({
     describe("the axe throw") {
         fun throwAxe(state: EntityExistenceState): GameEngine {
             val engine = mockk<GameEngine>(relaxed = true)
-            val gameState = GameState().also { it.addWeapon(MegamanWeapon.AXE_SWINGER) }
+            val gameState = GameState().also { it.addWeapon(MegamanWeapons.AXE_SWINGER) }
             val services = testServices(engine = engine, gameState = gameState)
             MegaEntityFactory.init(services)
             val megaman = mockk<Megaman>(relaxed = true)
@@ -56,7 +56,7 @@ class MegamanDeathCleanupTest : DescribeSpec({
             every { megaman.getComponent(FreezeComponent::class) } returns null
             val handler = MegamanWeaponsHandler(megaman).also { it.reset() }
 
-            handler.fireWeapon(MegamanWeapon.AXE_SWINGER, MegaChargeStatus.NOT_CHARGED) shouldBe true
+            handler.fireWeapon(MegamanWeapons.AXE_SWINGER, MegaChargeStatus.NOT_CHARGED) shouldBe true
             if (state == EntityExistenceState.LIVE) {
                 services.updatables.values().forEach { it.update(0.2f) }
             } else {

@@ -13,6 +13,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
@@ -28,7 +29,7 @@ internal fun Megaman.swimBehavior(): IBehavior {
             if (!existenceState.liveAfterUpdate || !inPlay || !canMove) return false
 
             if (damaged || !body.isSensing(BodySense.IN_WATER) || body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) ||
-                (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting)
+                currentWeaponPrevents(BehaviorType.SWIMMING)
             ) return false
 
             return when {

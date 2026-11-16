@@ -7,7 +7,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
 import com.megaman.maverick.game.players.WallSlideParams
 import com.megaman.maverick.game.players.playerWallSlideBehavior
 import com.megaman.maverick.game.world.body.BodySense
@@ -18,7 +18,7 @@ internal fun Megaman.wallSlideBehavior(): IBehavior = playerWallSlideBehavior(
     WallSlideParams(
         blocked = {
             body.isSensing(BodySense.FEET_ON_SAND) || isBehaviorActive(BehaviorType.JETPACKING) ||
-                !wallSlideNotAllowedTimer.isFinished() || (currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting) ||
+                !wallSlideNotAllowedTimer.isFinished() || currentWeaponPrevents(BehaviorType.WALL_SLIDING) ||
                 !wallJumpTimer.isFinished()
         },
         allowedWhileJumping = { false },
@@ -33,7 +33,7 @@ internal fun Megaman.wallSlideBehavior(): IBehavior = playerWallSlideBehavior(
                 else -> body.physics.frictionOnSelf.x = friction
             }
 
-            if (currentWeapon == MegamanWeapon.RODENT_CLAWS) {
+            if (currentWeapon.gripsWall) {
                 when {
                     direction.isVertical() -> body.physics.velocity.y = 0f
                     else -> body.physics.velocity.x = 0f

@@ -4,7 +4,7 @@ import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.state.GameState
 import io.kotest.core.spec.style.DescribeSpec
@@ -30,23 +30,23 @@ class MegamanWeaponsHandlerOwnershipTest : DescribeSpec({
 
     describe("hasWeapon") {
         it("reads the owned weapons in the game state") {
-            handler.hasWeapon(MegamanWeapon.MEGA_BUSTER) shouldBe true
-            handler.hasWeapon(MegamanWeapon.FRIGID_SHOT) shouldBe false
+            handler.hasWeapon(MegamanWeapons.MEGA_BUSTER) shouldBe true
+            handler.hasWeapon(MegamanWeapons.FRIGID_SHOT) shouldBe false
 
             state.addLevelCompleted(LevelDefinition.GLACIER_MAN)
-            handler.hasWeapon(MegamanWeapon.FRIGID_SHOT) shouldBe true
+            handler.hasWeapon(MegamanWeapons.FRIGID_SHOT) shouldBe true
 
             state.removeLevelCompleted(LevelDefinition.GLACIER_MAN)
-            handler.hasWeapon(MegamanWeapon.FRIGID_SHOT) shouldBe false
+            handler.hasWeapon(MegamanWeapons.FRIGID_SHOT) shouldBe false
         }
 
         it("gives a gained weapon full ammo") {
-            state.addWeapon(MegamanWeapon.AXE_SWINGER)
-            handler.getAmmo(MegamanWeapon.AXE_SWINGER) shouldBe MegamanValues.MAX_WEAPON_AMMO
+            state.addWeapon(MegamanWeapons.AXE_SWINGER)
+            handler.getAmmo(MegamanWeapons.AXE_SWINGER) shouldBe MegamanValues.MAX_WEAPON_AMMO
         }
 
         it("gives no ammo for a weapon that is not owned") {
-            handler.getAmmo(MegamanWeapon.AXE_SWINGER) shouldBe 0
+            handler.getAmmo(MegamanWeapons.AXE_SWINGER) shouldBe 0
         }
     }
 })

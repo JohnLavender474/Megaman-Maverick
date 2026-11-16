@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.state.FreezeComponent
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
@@ -125,7 +125,7 @@ class MegamanBodyFixturesTest : DescribeSpec({
 
         it("places the axe shield from the slip slide speed before the out-of-play velocity zero") {
             val rig = rig()
-            rig.megaman.currentWeapon = MegamanWeapon.AXE_SWINGER
+            rig.megaman.currentWeapon = MegamanWeapons.AXE_SWINGER
             rig.megaman.getComponent(PlayPhaseComponent::class)!!.phase = PlayPhase.PRE_PLAY
             rig.body.setBodySense(BodySense.FEET_ON_GROUND, true)
             rig.body.physics.velocity.set(3f * ConstVals.PPM, 0f)
@@ -268,7 +268,7 @@ private fun rig(): Rig {
 
     val megaman = Megaman(services)
     megaman.weaponsHandler = mockk(relaxed = true)
-    megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+    megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
     megaman.facing = Facing.RIGHT
     megaman.aButtonTask = AButtonTask.JUMP
 
@@ -390,15 +390,15 @@ private fun snapshotAll(): String {
             water(ProcessState.END)
         })
         out.append(scenario(direction, "needle spin") {
-            megaman.currentWeapon = MegamanWeapon.NEEDLE_SPIN
+            megaman.currentWeapon = MegamanWeapons.NEEDLE_SPIN
             megaman.shooting = true
         })
         out.append(scenario(direction, "axe, facing left") {
-            megaman.currentWeapon = MegamanWeapon.AXE_SWINGER
+            megaman.currentWeapon = MegamanWeapons.AXE_SWINGER
             megaman.facing = Facing.LEFT
         })
         out.append(scenario(direction, "axe, climbing") {
-            megaman.currentWeapon = MegamanWeapon.AXE_SWINGER
+            megaman.currentWeapon = MegamanWeapons.AXE_SWINGER
             activate(BehaviorType.CLIMBING)
         })
         out.append(scenario(direction, "side touching block right") {

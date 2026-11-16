@@ -4,21 +4,21 @@ import com.maverick.game.engine.common.GameLogger
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.Megaman.Companion.TAG
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.movement.RunParams
 
 const val MEGAMAN_CONTROLLER_COMPONENT_TAG = "MegamanControllerComponent"
 
 internal fun Megaman.setToNextWeapon() {
-    val start = currentWeapon.ordinal
-    var temp = currentWeapon.ordinal + 1
+    val start = MegamanWeapons.all.indexOf(currentWeapon, true)
+    var temp = start + 1
 
     var nextWeapon = currentWeapon
 
     while (temp != start) {
-        if (temp >= MegamanWeapon.entries.size) temp = 0
+        if (temp >= MegamanWeapons.all.size) temp = 0
 
-        val weapon = MegamanWeapon.entries[temp]
+        val weapon = MegamanWeapons.all[temp]
         if (weaponsHandler.hasWeapon(weapon)) {
             nextWeapon = weapon
             break

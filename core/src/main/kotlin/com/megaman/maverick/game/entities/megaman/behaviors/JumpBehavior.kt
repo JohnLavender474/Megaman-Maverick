@@ -10,7 +10,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.players.JumpParams
 import com.megaman.maverick.game.players.playerJumpBehavior
@@ -19,7 +19,7 @@ internal fun Megaman.jumpBehavior(): IBehavior = playerJumpBehavior(
     this,
     JumpParams(
         canStart = { aButtonTask == AButtonTask.JUMP },
-        blocked = { currentWeapon == MegamanWeapon.NEEDLE_SPIN && shooting },
+        blocked = { currentWeaponPrevents(BehaviorType.JUMPING) },
         jumpSpeed = {
             when {
                 services.gameState.containsEnhancement(MegaEnhancement.JUMP_BOOST) ->

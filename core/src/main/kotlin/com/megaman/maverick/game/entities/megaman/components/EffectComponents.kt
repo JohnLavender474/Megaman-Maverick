@@ -11,7 +11,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.decorations.UnderWaterBubble
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.weapons.TrailWhileFiring
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanTrailSpriteV2
 import com.megaman.maverick.game.entities.state.BubbleEmitterComponent
 import com.megaman.maverick.game.entities.state.TrailSpriteComponent
@@ -52,8 +52,11 @@ private fun Megaman.tryToSpawnTrailSprite(): Boolean {
         isBehaviorActive(BehaviorType.GROUND_SLIDING) -> {
             var key = "groundslide"
             if (shooting) {
-                if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
-                else if (currentWeapon != MegamanWeapon.RODENT_CLAWS) key += "_shoot"
+                when (currentWeapon.trailWhileFiring) {
+                    TrailWhileFiring.NONE -> return false
+                    TrailWhileFiring.SHOOT_KEY -> key += "_shoot"
+                    TrailWhileFiring.PLAIN_KEY -> {}
+                }
             }
             animKey = key
         }
@@ -61,8 +64,11 @@ private fun Megaman.tryToSpawnTrailSprite(): Boolean {
         isBehaviorActive(BehaviorType.AIR_DASHING) -> {
             var key = "airdash"
             if (shooting) {
-                if (currentWeapon == MegamanWeapon.NEEDLE_SPIN) return false
-                else if (currentWeapon != MegamanWeapon.RODENT_CLAWS) key += "_shoot"
+                when (currentWeapon.trailWhileFiring) {
+                    TrailWhileFiring.NONE -> return false
+                    TrailWhileFiring.SHOOT_KEY -> key += "_shoot"
+                    TrailWhileFiring.PLAIN_KEY -> {}
+                }
             }
             animKey = key
         }

@@ -3,7 +3,7 @@ package com.megaman.maverick.game
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.megaman.constants.MegaHealthTank
 import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.state.GameMode
@@ -275,11 +275,11 @@ class LaunchOptionsResolverTest : DescribeSpec({
         it("splits, trims and parses the weapons, case-insensitively") {
             val result = resolve(LaunchOptions(weapons = "moon_scythes, RUSH_JET ,"))
             result.isValid shouldBe true
-            result.resolved!!.weapons shouldBe setOf(MegamanWeapon.MOON_SCYTHES, MegamanWeapon.RUSH_JET)
+            result.resolved!!.weapons shouldBe setOf(MegamanWeapons.MOON_SCYTHES, MegamanWeapons.RUSH_JET)
         }
 
         it("gives every weapon with 'all'") {
-            resolve(LaunchOptions(weapons = "ALL")).resolved!!.weapons shouldBe MegamanWeapon.entries.toSet()
+            resolve(LaunchOptions(weapons = "ALL")).resolved!!.weapons shouldBe MegamanWeapons.all.toSet()
         }
 
         it("rejects an unknown weapon and suggests the nearest name") {

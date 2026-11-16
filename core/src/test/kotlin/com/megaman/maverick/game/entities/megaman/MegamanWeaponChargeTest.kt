@@ -24,7 +24,7 @@ import com.megaman.maverick.game.entities.megaman.components.halfCharged
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
@@ -81,7 +81,7 @@ class MegamanWeaponChargeTest : DescribeSpec({
 
         megaman = Megaman(services)
         megaman.weaponsHandler = weapons
-        megaman.currentWeapon = MegamanWeapon.MEGA_BUSTER
+        megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.facing = Facing.RIGHT
 
         audio = AudioComponent()
@@ -161,7 +161,7 @@ class MegamanWeaponChargeTest : DescribeSpec({
 
             release()
 
-            verify { weapons.fireWeapon(MegamanWeapon.MEGA_BUSTER, MegaChargeStatus.HALF_CHARGED) }
+            verify { weapons.fireWeapon(MegamanWeapons.MEGA_BUSTER, MegaChargeStatus.HALF_CHARGED) }
             megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
             chargeSoundStops() shouldBe 1
         }

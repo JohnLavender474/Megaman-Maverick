@@ -14,8 +14,8 @@ import com.maverick.game.engine.common.interfaces.Initializable
 import com.maverick.game.engine.drawables.sprites.containsRegion
 import com.maverick.game.engine.drawables.sprites.splitAndFlatten
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.assets.TextureAsset
-import com.megaman.maverick.game.entities.megaman.constants.MegamanWeapon
+import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimationDefs.CHARGING_FRAME_DUR
 import java.util.function.Supplier
 
@@ -27,25 +27,12 @@ class MegamanAnimations(
     companion object {
         const val TAG = "MegamanAnimations"
 
-        fun getAssetSourceForWeapon(weapon: MegamanWeapon) = when (weapon) {
-            MegamanWeapon.MEGA_BUSTER -> TextureAsset.MEGAMAN_BUSTER.source
-            MegamanWeapon.FRIGID_SHOT -> TextureAsset.MEGAMAN_ICE_CUBE.source
-            MegamanWeapon.AXE_SWINGER -> TextureAsset.MEGAMAN_AXE_THROW.source
-            MegamanWeapon.RUSH_JET -> TextureAsset.MEGAMAN_RUSH_JETPACK.source
-            MegamanWeapon.NEEDLE_SPIN -> TextureAsset.MEGAMAN_NEEDLE_SPIN.source
-            MegamanWeapon.MOON_SCYTHES -> TextureAsset.MEGAMAN_MOON_SCYTHE.source
-            MegamanWeapon.RODENT_CLAWS -> TextureAsset.MEGAMAN_RATTY_CLAWS.source
-            MegamanWeapon.REACTOR_SHOT -> TextureAsset.MEGAMAN_REACTOR_SHOT.source
-            MegamanWeapon.INFERNAL_BARRAGE -> TextureAsset.MEGAMAN_MAGMA_WAVE.source
-            MegamanWeapon.PRECIOUS_GUARD -> TextureAsset.MEGAMAN_PRECIOUS_GUARD.source
-        }
+        private val fullKeys = ObjectMap<WeaponDef, ObjectMap<String, String>>()
 
-        private val fullKeys = ObjectMap<MegamanWeapon, ObjectMap<String, String>>()
-
-        fun buildFullKey(regionKey: String, weapon: MegamanWeapon): String {
+        fun buildFullKey(regionKey: String, weapon: WeaponDef): String {
             val keys = fullKeys.get(weapon) ?: ObjectMap<String, String>().also { fullKeys.put(weapon, it) }
             return keys.get(regionKey)
-                ?: "${regionKey}_${weapon.name.lowercase().replace("_", "")}".also { keys.put(regionKey, it) }
+                ?: "${regionKey}_${weapon.id.replace("_", "")}".also { keys.put(regionKey, it) }
         }
     }
 
@@ -54,8 +41,8 @@ class MegamanAnimations(
     private var initialized = false
 
     override fun init(vararg params: Any) {
-        MegamanWeapon.entries.forEach { weapon ->
-            val assetSource = getAssetSourceForWeapon(weapon)
+        MegamanWeapons.all.forEach { weapon ->
+            val assetSource = weapon.atlas.source
             val atlas = services.assets.getTextureAtlas(assetSource)
 
             MegamanAnimationDefs.getKeys().forEach { defKey ->
