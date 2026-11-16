@@ -2369,3 +2369,23 @@ newest entry at the bottom.
 
 - From the `011a` Diffity review: the owner asked for work that replaces per-frame `new Vector2()` (and the other pooled types) and adds a rule so that new code does not repeat it. No item had this goal. The owner chose to add it to `045`, not to make a new item.
 - `045` `ITEM.md`: goal, two scope points (the sweep, the `docs/CODE_STYLE.md` rule), the owner's words. Title changed in `ITEMS.md`, `O1` and `O5`.
+
+## 2026-11-15 — mega-refactor-060d-protoman-slide-ladder
+
+- Summary: squash `9a694d778`. Proto Man slides and climbs with Megaman's rules. The ground slide is shared
+  (`players/PlayerGroundSlide.kt`, `GroundSlideParams`; Megaman's slide is a thin call, rule for rule the old one,
+  46 cases in `MegamanGroundSlideTest`); Proto Man calls it and the shared climb. His slide and ladder shots have their
+  own offsets (`BusterParams.slideOffset`); `B` in a slide is the slide shot, the single slash or the floor combo by
+  slot; the crouch guard, the crouch attacks and the crouch shot pose break in a slide and on a ladder. Play-test
+  fixes: `B` after the `DOWN` release is the standing shot; Megaman's 0.15 s slide-to-crouch delay (scope change 2).
+  Art: the slide and ladder strips, `jump_shoot` from the left hand, the jump family on the v3 jump body (scope change
+  1). `RefactorTest060` rooms `slide` and `ladder`. `ProtomanTest` calls `clearAllMocks` in `afterEach` (test heap).
+- Contract check: automated checks on the branch after `master` was merged in (no conflicts): `engine:test` 689,
+  `core:test` 2125, `core:smokeTest` 468, `lwjgl3:jar`; review before the play test by 3 subagents; owner play test
+  passed; Diffity round 1 with 0 threads.
+- Follow-up: new item `160` (the ladder shot at a ladder foot). Bug filed:
+  `docs/issues/2026-11-14-x-landing-probe-one-way-down.md`. Overlap: `024a` changes the slide block line in
+  `GroundSlideBehavior.kt`; the owner chose to merge `060d` first, and `024a` resolves it as
+  `blocked = { currentWeaponPrevents(BehaviorType.GROUND_SLIDING) }` (`060d` `docs/NOTES.md`). Next in `060`: `060k`
+  (the owner's frame edits), then `060l` (one input). The main checkout had 2 modified files of another session
+  (`docs/CODE_STYLE.md`, `CullablesSystem.kt`); they stay unstaged.

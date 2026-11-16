@@ -167,6 +167,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 157 | [D-1000 overdrive on the shared boss health phases](items/157-d1000-health-phases/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 158 | [A shared lead-aim helper for bosses](items/158-boss-lead-aim-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | done | none | 2026-11-15 | 2026-11-15 |
+| 160 | [Ladder shot height at a ladder foot](items/160-ladder-foot-shot/ITEM.md) | feature | `O9` | idea | none | | |
 
 ## Branches
 
@@ -176,7 +177,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-060a-shared-run-body`](items/060-proto-man/branches/mega-refactor-060a-shared-run-body/process-log.md) | 060 | Refactor only: move Megaman's run, body and momentum into `players/` functions with parameters; Megaman plays the same | merged | 2026-11-10 | 2026-11-10 |
 | [`mega-refactor-060b-protoman-move`](items/060-proto-man/branches/mega-refactor-060b-protoman-move/process-log.md) | 060 | `Protoman` in slot 0 on a test level: idle, step, walk, jump and fall, with an atlas sliced from the sheet | merged | 2026-11-10 | 2026-11-11 |
 | [`mega-refactor-060c-protoman-buster`](items/060-proto-man/branches/mega-refactor-060c-protoman-buster/process-log.md) | 060 | Proto Man's sabre and buster, X6 Zero style (`060f` folded in): sabre and buster weapon slots on `B` and `SELECT`, a crouch guard with the shield on `DOWN`, and crouch attacks; shared `players/` sabre, buster and charge | merged | 2026-11-11 | 2026-11-14 |
-| [`mega-refactor-060d-protoman-slide-ladder`](items/060-proto-man/branches/mega-refactor-060d-protoman-slide-ladder/process-log.md) | 060 | Proto Man's slide and ladder, with Megaman's shared rules | active | 2026-11-14 | |
+| [`mega-refactor-060d-protoman-slide-ladder`](items/060-proto-man/branches/mega-refactor-060d-protoman-slide-ladder/process-log.md) | 060 | Proto Man's slide and ladder, with Megaman's shared rules | merged | 2026-11-14 | 2026-11-15 |
 | [`mega-refactor-060j-mega-player`](items/060-proto-man/branches/mega-refactor-060j-mega-player/process-log.md) | 060 | Refactor only: an abstract `MegaPlayer` base class that owns the shared player wiring and is the receiver of the shared `players/` functions; `Megaman` and X move onto it and play the same | merged | 2026-11-10 | 2026-11-11 |
 | [`mega-refactor-024a-weapon-defs`](items/024-weapon-defs/branches/mega-refactor-024a-weapon-defs/process-log.md) | 024 | Refactor only: Megaman's 10 weapons become `WeaponDef` objects in a registry; Megaman plays the same | active | 2026-11-14 | |
 | [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | merged | 2026-11-02 | 2026-11-02 |
