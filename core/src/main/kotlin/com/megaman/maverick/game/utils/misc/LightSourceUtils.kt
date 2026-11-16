@@ -31,7 +31,7 @@ object LightSourceUtils {
     ) {
         val keys = props
             .get(ConstKeys.KEYS, String::class)
-            ?.replace("\\s+", "")
+            ?.replace(Regex("\\s+"), "")
             ?.split(",")
             ?.map { it.toInt() }
             ?.toObjectSet()

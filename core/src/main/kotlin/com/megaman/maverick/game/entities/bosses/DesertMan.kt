@@ -390,7 +390,7 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
         inDarkness = spawnProps.getOrDefault(ConstKeys.DARKNESS, false, Boolean::class)
         if (inDarkness) lightSourceKeys.addAll(
             spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}", String::class)!!
-                .replace("\\s+", "")
+                .replace(Regex("\\s+"), "")
                 .split(",")
                 .filter { it.isNotBlank() }
                 .map { it.toInt() }

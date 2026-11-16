@@ -379,7 +379,7 @@ class GameState : Resettable {
     fun fromString(s: String) {
         GameLogger.debug(TAG, "fromString(): s=$s")
 
-        val lines = s.split(";").map { it.replace("\\s+", "").split(",") }.toGdxArray()
+        val lines = s.split(";").map { it.replace(Regex("\\s+"), "").split(",") }.toGdxArray()
         for (i in 0 until lines.size) lines[i] = lines[i].filter { !it.isBlank() }
 
         if (lines.size >= 1 && !lines[0].isEmpty()) lines[0].forEach {

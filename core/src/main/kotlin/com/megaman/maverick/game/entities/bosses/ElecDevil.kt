@@ -164,7 +164,7 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
         )
 
         lightSourceKeys = spawnProps.get("${ConstKeys.LIGHT}_${ConstKeys.SOURCE}_${ConstKeys.KEYS}", String::class)!!
-            .replace("\\s+", "")
+            .replace(Regex("\\s+"), "")
             .split(",")
             .filter { it.isNotBlank() }
             .map { it.toInt() }

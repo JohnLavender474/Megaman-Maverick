@@ -153,8 +153,22 @@ class LocksTest : DescribeSpec({
                 TestGroup.A to false,
                 TestGroup.B to true,
                 TestGroup.B to false,
-                TestGroup.A to true
+                TestGroup.A to true,
+                TestGroup.A to false
             )
+        }
+
+        it("reset calls the hook with false for each locked group and not for a free group") {
+            val calls = ArrayList<Pair<LockGroup, Boolean>>()
+            val locks = LocksComponent(2) { group, locked -> calls.add(group to locked) }
+            locks.add(TestGroup.B, TestReason.X)
+            locks.add(TestGroup.B, TestReason.Y)
+            calls.clear()
+
+            locks.reset()
+            locks.reset()
+
+            calls shouldBe listOf(TestGroup.B to false)
         }
     }
 

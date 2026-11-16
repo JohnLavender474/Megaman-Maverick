@@ -110,7 +110,7 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
         lightSourceKeys.addAll(
             spawnProps.get(ConstKeys.KEYS, String::class)!!
-            .replace("\\s+", "")
+            .replace(Regex("\\s+"), "")
             .split(",")
             .map { it.toInt() }
             .toObjectSet()

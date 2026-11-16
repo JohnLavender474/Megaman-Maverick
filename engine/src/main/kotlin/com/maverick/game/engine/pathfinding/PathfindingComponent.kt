@@ -15,4 +15,9 @@ class PathfindingComponent(
     }
 
     internal var currentPath: PathfinderResult? = null
+
+    override fun reset() {
+        currentPath = null
+        intervalTimer.reset()
+    }
 }

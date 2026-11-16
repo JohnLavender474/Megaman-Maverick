@@ -51,5 +51,12 @@ class GameStateSaveStringTest : DescribeSpec({
             state.getCurrency() shouldBe 42
             state.getDifficultyMode() shouldBe DifficultyMode.HARD
         }
+
+        it("ignores whitespace in the string") {
+            val state = GameState()
+            state.fromString(" MOON_MAN, GLACIER_MAN ;A,\tC;B ,D;JUMP_BOOST,\nAIR_DASH_BOOST; 42 ; HARD")
+
+            state.toString() shouldBe saveString
+        }
     }
 })

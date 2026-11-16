@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.Queue
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.diagnostics.RuntimeDiagnostics
+import com.maverick.game.engine.entities.IGameEntity
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -35,6 +36,12 @@ class AsyncPathfindingSystem(
         get() = timeoutParams.timeoutUnit.toMillis(timeoutParams.timeout)
 
     override fun shouldPerformPathfinding(component: PathfindingComponent) = !futureMap.containsKey(component)
+
+    override fun onEntityLeft(entity: IGameEntity) {
+        val component = entity.getComponent(PathfindingComponent::class) ?: return
+        futureMap.remove(component)?.cancel(true)
+        submitTimeMap.remove(component)
+    }
 
     override fun handleEntries(entries: OrderedMap<PathfindingComponent, IPathfinder>) {
         diagnostics?.beginEntry("AsyncPathfindingSystem.handleEntries")

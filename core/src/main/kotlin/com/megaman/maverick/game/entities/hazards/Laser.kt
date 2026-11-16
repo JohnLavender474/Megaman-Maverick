@@ -223,7 +223,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         lightSourceKeyString = spawnProps.getOrDefault("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", "", String::class)
         lightSourceKeys.addAll(
             lightSourceKeyString
-                .replace("\\s+", "")
+                .replace(Regex("\\s+"), "")
                 .split(",")
                 .filter { it.isNotBlank() }
                 .map { it.toInt() }

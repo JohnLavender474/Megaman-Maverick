@@ -24,6 +24,7 @@ class LocksComponent(
     fun add(group: LockGroup, reason: LockReason) {
         val state = getLockGroup(group)
         state.reasons = state.reasons or bit(reason)
+        state.group = group
         onChange?.invoke(group, true)
     }
 
@@ -42,7 +43,13 @@ class LocksComponent(
 
     fun isLocked(group: LockGroup) = getLockGroup(group).isLocked()
 
-    override fun reset() = groups.forEach { it.reasons = 0 }
+    override fun reset() {
+        groups.forEach { state ->
+            val wasLocked = state.isLocked()
+            state.reasons = 0
+            if (wasLocked) onChange?.invoke(state.group!!, false)
+        }
+    }
 
     private fun check(group: LockGroup): Int {
         val i = group.index

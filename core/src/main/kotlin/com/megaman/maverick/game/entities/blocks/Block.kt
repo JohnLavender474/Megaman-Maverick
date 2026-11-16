@@ -129,7 +129,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         if (spawnProps.containsKey(ConstKeys.BODY_LABELS)) {
             val labels = spawnProps.get(ConstKeys.BODY_LABELS)
             if (labels is String) {
-                val labelStrings = labels.replace("\\s+", "").split(",")
+                val labelStrings = labels.replace(Regex("\\s+"), "").split(",")
                 labelStrings.forEach {
                     val bodyLabel = BodyLabel.valueOf(it.uppercase())
                     body.addBodyLabel(bodyLabel)
@@ -144,7 +144,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         if (spawnProps.containsKey(ConstKeys.FIXTURE_LABELS)) {
             val labels = spawnProps.get(ConstKeys.FIXTURE_LABELS)
             if (labels is String) {
-                val labelStrings = labels.replace("\\s+", "").split(",")
+                val labelStrings = labels.replace(Regex("\\s+"), "").split(",")
                 labelStrings.forEach {
                     val fixtureLabel = FixtureLabel.valueOf(it.uppercase())
                     blockFixture.addFixtureLabel(fixtureLabel)
@@ -190,7 +190,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
             var filters = spawnProps.get(ConstKeys.BLOCK_FILTERS)
             when (filters) {
                 is String -> {
-                    filters = filters.replace("\\s+", "").split(",")
+                    filters = filters.replace(Regex("\\s+"), "").split(",")
                     filters.forEach { tag ->
                         body.addBlockFilter { entity, _ ->
                             entity.hasTag(tag, ignoreCase = true)
