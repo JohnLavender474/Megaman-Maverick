@@ -12,7 +12,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.state.running
 
-enum class SabreState { FLOOR, CROUCH, AIR, WALL }
+enum class SabreState { FLOOR, AIR, WALL }
 
 class SabreMove(
     val bodyRegion: String,
@@ -110,14 +110,13 @@ class PlayerSabre(private val player: MegaPlayer, val params: SabreParams) {
     private fun movesOf(state: SabreState) = params.moves[state] ?: throw SabreStateMissingException(state)
 
     private fun stopOnFloor(state: SabreState) {
-        if (state != SabreState.FLOOR && state != SabreState.CROUCH) return
+        if (state != SabreState.FLOOR) return
         player.running = false
         player.setSideSpeed(0f)
     }
 
-    fun start(chains: Boolean = true, state: SabreState = params.chooseState()) {
-        begin(state, 0)
-        chainLocked = !chains
+    fun start() {
+        begin(params.chooseState(), 0)
         pressHeld = true
         val slash = MegaEntityFactory.fetch(PlayerSabreSlash::class)!!
         slash.spawn(props(ConstKeys.OWNER pairTo player, ConstKeys.PARENT pairTo this))

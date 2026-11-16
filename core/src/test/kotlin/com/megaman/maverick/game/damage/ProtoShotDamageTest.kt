@@ -27,9 +27,9 @@ class ProtoShotDamageTest : DescribeSpec({
             halfChargeDamage(ProtoBuster(testServices()))
         }
 
-        it("takes the full-charge damage of its size from a sabre slash that has not placed a move") {
+        it("takes the full sabre damage of its size from a sabre slash that has not placed a move") {
             val slash = PlayerSabreSlash(testServices())
-            StandardDamageNegotiator.get(Size.LARGE, slash) shouldBe 5
+            StandardDamageNegotiator.get(Size.LARGE, slash) shouldBe 12
             StandardDamageNegotiator.get(Size.MEDIUM, slash) shouldBe 15
             StandardDamageNegotiator.get(Size.SMALL, slash) shouldBe ConstVals.MAX_HEALTH
         }

@@ -27,7 +27,7 @@ class StandardDamageNegotiator(val overrides: ObjectMap<KClass<out IDamagerEntit
             ProtoBuster::class pairTo dmgNeg(3),
             PlayerSabreSlash::class pairTo dmgNeg {
                 it as PlayerSabreSlash
-                if (it.fullStrength) 5 else 4
+                if (it.fullStrength) 12 else 10
             },
             Fireball::class pairTo dmgNeg(5),
             MagmaFlame::class pairTo dmgNeg(5),

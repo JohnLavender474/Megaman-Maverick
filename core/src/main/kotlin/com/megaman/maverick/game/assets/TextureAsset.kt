@@ -68,7 +68,6 @@ enum class TextureAsset(src: String) : IAsset {
     MICROWAVE_MAN("MicrowaveMan.txt"),
     TEST("Test.txt"),
     BITS("Bits.txt"),
-    HUD("Hud.txt"),
     SMB3_ENEMIES("SMB3_Enemies.txt"),
     SMB3_POINTS("SMB3_Points.txt"),
     SMB3_EFFECTS("SMB3_Effects.txt"),

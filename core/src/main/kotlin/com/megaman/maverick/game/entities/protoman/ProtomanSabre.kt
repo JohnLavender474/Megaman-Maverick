@@ -16,7 +16,6 @@ internal fun protomanSabreParams(proto: Protoman) = SabreParams(
             ProtomanSabreMoves.SLASH_2,
             ProtomanSabreMoves.SLASH_3
         ),
-        SabreState.CROUCH pairTo gdxArrayOf(ProtomanSabreMoves.CROUCH),
         SabreState.AIR pairTo gdxArrayOf(ProtomanSabreMoves.AIR)
     ),
     atlas = TextureAsset.PROTOMAN,
@@ -27,7 +26,6 @@ internal fun protomanSabreParams(proto: Protoman) = SabreParams(
     chooseState = {
         when {
             !proto.bodyOverGround -> SabreState.AIR
-            proto.sabre.state == SabreState.CROUCH -> SabreState.CROUCH
             else -> SabreState.FLOOR
         }
     },

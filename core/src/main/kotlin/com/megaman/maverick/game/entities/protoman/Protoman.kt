@@ -49,7 +49,6 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.GutsTank
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
@@ -146,9 +145,6 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     internal val buster = PlayerBuster(this, PROTOMAN_BUSTER)
     internal val sabre: PlayerSabre = PlayerSabre(this, protomanSabreParams(this))
 
-    var weapon = ProtomanWeapon.SABRE
-        private set
-
     private var canMakeLandSound = false
 
     private val guardPullOut = Timer(ProtomanValues.GUARD_CROUCH_PULL_OUT_TIME)
@@ -176,11 +172,8 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     private val crouchShooting: Boolean
         get() = crouchShot && buster.shooting && !sliding && !climbing
 
-    private val crouchAttacking: Boolean
-        get() = sabre.state == SabreState.CROUCH || crouchShooting
-
     private val crouched: Boolean
-        get() = (guardRaised && guardPlanted()) || crouchAttacking
+        get() = (guardRaised && guardPlanted()) || crouchShooting
 
     private val pullingOutGuard: Boolean
         get() = guardRaised && guardWanted() && !guarding
@@ -203,7 +196,6 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     override fun onPlayerSpawn(spawnProps: Properties) {
         gravityScalar = 1f
         canMakeLandSound = false
-        weapon = ProtomanWeapon.SABRE
         crouchShot = false
         slideToCrouchDelay.setToEnd(allowJustFinished = false)
         dropGuard()
@@ -243,25 +235,19 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         bodyOverGround && input.isPressed(MegaControllerButton.DOWN) && !crouchBlocked()
 
     private fun crouchAttack() {
-        when (weapon) {
-            ProtomanWeapon.SABRE -> if (sabre.canStart()) sabre.start(chains = false, state = SabreState.CROUCH)
-            ProtomanWeapon.BUSTER -> {
-                if (!playerCanAttack || !buster.shoot(MegaChargeStatus.NOT_CHARGED, crouched = true)) return
-                crouchShot = true
-                running = false
-                setSideSpeed(0f)
-            }
-        }
+        if (!playerCanAttack || !buster.shoot(MegaChargeStatus.NOT_CHARGED, crouched = true)) return
+        crouchShot = true
+        running = false
+        setSideSpeed(0f)
     }
 
     private fun slideAttack() {
-        val upSlash = weapon == ProtomanWeapon.BUSTER && input.isPressed(MegaControllerButton.UP)
         when {
-            weapon == ProtomanWeapon.BUSTER && !upSlash -> if (playerCanAttack) buster.shoot(
+            !input.isPressed(MegaControllerButton.UP) -> if (playerCanAttack) buster.shoot(
                 MegaChargeStatus.NOT_CHARGED, sliding = true
             )
             body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || !sabre.canStart() -> Unit
-            else -> sabre.start(chains = !upSlash)
+            else -> sabre.start()
         }
     }
 
@@ -503,6 +489,7 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         return component
     }
 
+    // TODO: SELECT has no action for Proto Man until his special weapons (item 060, branch 060h)
     override fun defineControllerComponent() = ControllerComponent(
         MegaControllerButton.LEFT pairTo playerRunButton(
             this, Facing.LEFT, runParams, blocked = { holdsStill() }, onBlocked = { turnInPlace(it) }
@@ -518,23 +505,14 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                     sliding -> slideAttack()
                     crouchAttackWanted() -> crouchAttack()
                     guardWanted() -> Unit
-                    weapon == ProtomanWeapon.SABRE -> if (sabre.canStart()) sabre.start()
-                    input.isPressed(MegaControllerButton.UP) -> if (sabre.canStart()) sabre.start(chains = false)
+                    input.isPressed(MegaControllerButton.UP) -> if (sabre.canStart()) sabre.start()
                     playerCanAttack -> standingShot()
                 }
             }
-        ),
-        MegaControllerButton.SELECT pairTo ButtonActuator(onJustReleased = { selectNextWeapon() })
+        )
     )
 
-    private fun selectNextWeapon() {
-        if (services.players.settings(slot).selectButtonAction != SelectButtonAction.NEXT_WEAPON) return
-        if (!inPlay || damaged || teleporting || sabre.active) return
-        weapon = weapon.next()
-        requestToPlaySound(SoundAsset.SELECT_PING_SOUND, loop = false)
-    }
-
-    private fun holdsStill() = sabre.state == SabreState.FLOOR || crouchAttacking || guardPlanted()
+    private fun holdsStill() = sabre.state == SabreState.FLOOR || crouchShooting || guardPlanted()
 
     private fun turnInPlace(side: Facing) {
         if (guardPlanted() || crouchShooting || sabre.state == SabreState.FLOOR) facing = side

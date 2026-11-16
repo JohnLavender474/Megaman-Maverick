@@ -119,27 +119,5 @@ internal object ProtomanSabreMoves {
         fullStrength = false
     )
 
-    val CROUCH = SabreMove(
-        bodyRegion = "crouch_slash",
-        arcRegion = "crouch_slash_arc",
-        stripFrames = 4,
-        firstFrame = 0,
-        frameTimes = floatArrayOf(0.05f, 0.0333f, 0.0833f, 0.05f),
-        arcWidth = 106,
-        arcHeight = 40,
-        arcCenterAboveBody = -16,
-        stripFacesLeft = false,
-        hitBoxes = gdxArrayOf(
-            intArrayOf(20, 18, 30, 5),
-            intArrayOf(19, 6, 80, 19),
-            intArrayOf(68, 6, 34, 34),
-            intArrayOf(68, 13, 33, 27)
-        ),
-        artOnFrame = 1,
-        swingEndFrame = 1,
-        artOffFrame = 3,
-        fullStrength = false
-    )
-
-    val ALL = gdxArrayOf(SLASH_1, SLASH_2, SLASH_3, AIR, AIR_LAND, CROUCH)
+    val ALL = gdxArrayOf(SLASH_1, SLASH_2, SLASH_3, AIR, AIR_LAND)
 }

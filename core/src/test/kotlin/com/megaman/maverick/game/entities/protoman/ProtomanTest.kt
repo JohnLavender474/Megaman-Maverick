@@ -38,7 +38,6 @@ import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.audio.AudioComponent
-import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.gdxArrayOf
@@ -58,10 +57,10 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.enemies.MetaWheelF
+import com.megaman.maverick.game.entities.enemies.Robbit
 import com.megaman.maverick.game.entities.state.*
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.entities.IGameEntity
@@ -298,67 +297,35 @@ class ProtomanTest : DescribeSpec({
         }
     }
 
-    describe("the weapon slots") {
-        fun select() = step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
-
+    describe("the select button") {
         fun pings() =
             proto.require(AudioComponent::class).playSoundRequests.count { it.source == SoundAsset.SELECT_PING_SOUND }
 
-        it("starts with the sabre") {
-            proto.weapon shouldBe ProtomanWeapon.SABRE
-        }
-
-        it("switches sabre, buster, sabre on SELECT, with a ping each time") {
-            select()
-            proto.weapon shouldBe ProtomanWeapon.BUSTER
-            select()
-            proto.weapon shouldBe ProtomanWeapon.SABRE
-            pings() shouldBe 2
-        }
-
-        it("does not switch on the SELECT press") {
+        it("does nothing on SELECT: no ping, the slash goes on, and B stays the buster") {
             step(MegaControllerButton.SELECT to ButtonStatus.JUST_PRESSED)
-            proto.weapon shouldBe ProtomanWeapon.SABRE
-        }
-
-        it("does not switch when SELECT has another action") {
-            proto.services.players.settings(PlayerSlot(0)).selectButtonAction = SelectButtonAction.AIR_DASH
-            select()
-            proto.weapon shouldBe ProtomanWeapon.SABRE
+            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
             pings() shouldBe 0
-        }
-
-        it("does not switch during a slash") {
+            proto.sabre.active shouldBe false
+            proto.buster.shooting shouldBe false
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
+            proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
+            proto.sabre.reset()
+            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
             step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-            proto.sabre.active shouldBe true
-            select()
-            proto.weapon shouldBe ProtomanWeapon.SABRE
-        }
-
-        it("does not switch while damaged") {
-            hurt()
-            select()
-            proto.weapon shouldBe ProtomanWeapon.SABRE
-        }
-
-        it("goes back to the sabre at a spawn") {
-            select()
-            proto.addComponent(TagsComponent(Protoman.TAG))
-            proto.onSpawn(props(ConstKeys.BOUNDS pairTo GameRectangle(0f, 0f, ConstVals.PPM.toFloat(), ConstVals.PPM.toFloat())))
-            proto.weapon shouldBe ProtomanWeapon.SABRE
+            proto.buster.shooting shouldBe true
+            proto.sabre.active shouldBe false
+            pings() shouldBe 0
         }
     }
 
-    describe("the buster slot") {
-        fun useBuster() = step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
-
+    describe("the buster") {
         fun shoot(vararg held: MegaControllerButton) =
             step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED, *held.map { it to ButtonStatus.PRESSED }.toTypedArray())
 
         fun shots() = spawned.count { it.first is ProtoBuster }
 
-        it("fires one pellet on B on the ground") {
-            useBuster()
+        it("fires one pellet on B on the ground, with no slash") {
             shoot()
             shots() shouldBe 1
             spawned[0].first.shouldBeInstanceOf<ProtoBuster>()
@@ -368,7 +335,6 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("fires while he runs, and the run goes on") {
-            useBuster()
             hold(MegaControllerButton.RIGHT, 0.3f)
             val speed = body.physics.velocity.x
             shoot(MegaControllerButton.RIGHT)
@@ -378,15 +344,15 @@ class ProtomanTest : DescribeSpec({
             body.physics.velocity.x shouldBeGreaterThanOrEqual speed
         }
 
-        it("fires in the air") {
-            useBuster()
+        it("fires the jump shot on B in the air, with no slash") {
             overGround = false
             shoot()
             shots() shouldBe 1
+            proto.sabre.active shouldBe false
+            proto.animationKey("jump", ObjectMap()) shouldBe "jump_shoot"
         }
 
         it("lets him turn and run during the shot frame") {
-            useBuster()
             shoot()
             step(MegaControllerButton.LEFT to ButtonStatus.JUST_PRESSED)
             step(MegaControllerButton.LEFT to ButtonStatus.PRESSED)
@@ -396,13 +362,11 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("fires nothing on the release") {
-            useBuster()
             step(MegaControllerButton.B to ButtonStatus.JUST_RELEASED)
             shots() shouldBe 0
         }
 
         it("waits the cooldown before the next shot") {
-            useBuster()
             shoot()
             shoot()
             shots() shouldBe 1
@@ -412,14 +376,12 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("fires no shot while damaged") {
-            useBuster()
             hurt()
             shoot()
             shots() shouldBe 0
         }
 
-        it("starts one sabre slash on UP and B, with no shot and no chain") {
-            useBuster()
+        it("starts the floor combo on UP and B on the ground, with no shot, and B chains it") {
             shoot(MegaControllerButton.UP)
             shots() shouldBe 0
             proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
@@ -429,12 +391,11 @@ class ProtomanTest : DescribeSpec({
                 step()
                 time += DELTA
             }
-            proto.sabre.active shouldBe false
+            proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_2
             shots() shouldBe 0
         }
 
         it("ends the shot frame on a hit") {
-            useBuster()
             shoot()
             hurt()
             proto.buster.shooting shouldBe false
@@ -500,16 +461,10 @@ class ProtomanTest : DescribeSpec({
         }
     }
 
-    describe("the sabre slot") {
-        it("starts the sabre on UP and B on the ground, with no shot") {
-            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-            proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
-            spawned.none { it.first is ProtoBuster } shouldBe true
-        }
-    }
-
     describe("the sabre") {
         fun pressB() = step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+
+        fun upB() = step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
 
         fun runOut(move: SabreMove) {
             var time = 0f
@@ -521,21 +476,22 @@ class ProtomanTest : DescribeSpec({
 
         fun slashes() = spawned.count { it.first is PlayerSabreSlash }
 
-        it("starts the first floor slash on B on the ground") {
-            pressB()
+        it("starts the first floor slash on UP and B on the ground, with no shot") {
+            upB()
             proto.sabre.state shouldBe SabreState.FLOOR
             proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
             slashes() shouldBe 1
+            spawned.none { it.first is ProtoBuster } shouldBe true
         }
 
         it("ends after one slash when B is not pressed again") {
-            pressB()
+            upB()
             runOut(ProtomanSabreMoves.SLASH_1)
             proto.sabre.active shouldBe false
         }
 
-        it("chains the 3 floor slashes on a press during each slash, and no fourth") {
-            pressB()
+        it("chains the 3 floor slashes on a B press during each slash, and no fourth") {
+            upB()
             pressB()
             runOut(ProtomanSabreMoves.SLASH_1)
             proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_2
@@ -548,27 +504,39 @@ class ProtomanTest : DescribeSpec({
             slashes() shouldBe 1
         }
 
-        it("starts the air slash on B in the air, also with UP held") {
-            overGround = false
-            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-            proto.sabre.state shouldBe SabreState.AIR
-            proto.sabre.move shouldBe ProtomanSabreMoves.AIR
+        it("chains the floor slashes also on UP and B") {
+            upB()
+            upB()
+            runOut(ProtomanSabreMoves.SLASH_1)
+            proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_2
+            upB()
+            runOut(ProtomanSabreMoves.SLASH_2)
+            proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_3
             spawned.none { it.first is ProtoBuster } shouldBe true
         }
 
+        it("starts the one air slash on UP and B in the air, with no shot and no chain") {
+            overGround = false
+            upB()
+            proto.sabre.state shouldBe SabreState.AIR
+            proto.sabre.move shouldBe ProtomanSabreMoves.AIR
+            spawned.none { it.first is ProtoBuster } shouldBe true
+            proto.sabre.chain() shouldBe false
+        }
+
         it("ends a floor combo when he leaves the ground") {
-            pressB()
+            upB()
             pressB()
             overGround = false
             step()
             proto.sabre.active shouldBe false
-            pressB()
+            upB()
             proto.sabre.move shouldBe ProtomanSabreMoves.AIR
         }
 
         it("goes on with the swing on the ground when he lands before the follow-through") {
             overGround = false
-            pressB()
+            upB()
             step()
             val time = proto.sabre.time
             overGround = true
@@ -581,7 +549,7 @@ class ProtomanTest : DescribeSpec({
 
         it("does not chain the landed swing into the second floor slash") {
             overGround = false
-            pressB()
+            upB()
             overGround = true
             step()
             pressB()
@@ -591,7 +559,7 @@ class ProtomanTest : DescribeSpec({
 
         it("ends the air slash when he lands in its follow-through") {
             overGround = false
-            pressB()
+            upB()
             var time = 0f
             while (ProtomanSabreMoves.AIR.frameAt(time) <= ProtomanSabreMoves.AIR.swingEndFrame) {
                 step()
@@ -603,7 +571,7 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("does not run, but turns, during a floor slash, and the hit box turns with him") {
-            pressB()
+            upB()
             val slash = proto.sabre.slash!!
             slash.body.preProcess()
             slash.body.getCenter(Vector2()).x shouldBeGreaterThan proto.body.getCenter(Vector2()).x
@@ -617,16 +585,15 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("ends the slash on a hit") {
-            pressB()
+            upB()
             hurt()
             proto.sabre.active shouldBe false
         }
 
         it("ends the slash and the shot pose when a gate opens") {
-            pressB()
+            upB()
             proto.onEvent(Event(EventType.GATE_INIT_OPENING, props()))
             proto.sabre.active shouldBe false
-            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
             step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             proto.buster.shooting shouldBe true
             proto.onEvent(Event(EventType.GATE_INIT_OPENING, props()))
@@ -651,27 +618,27 @@ class ProtomanTest : DescribeSpec({
             shouldThrow<SabreStateMissingException> { sabre.start() }
         }
 
-        it("does the half-charge damage on hits 1 and 2, and the full-charge damage on hit 3") {
+        it("does the normal sabre damage on hits 1 and 2, and the full sabre damage on hit 3") {
             fun damageOf(): List<Int> {
                 val slash = proto.sabre.slash!!
                 slash.body.preProcess()
                 return listOf(Size.LARGE, Size.MEDIUM, Size.SMALL).map { StandardDamageNegotiator.get(it, slash) }
             }
-            pressB()
-            damageOf() shouldBe listOf(4, 12, 20)
+            upB()
+            damageOf() shouldBe listOf(10, 12, 20)
             pressB()
             runOut(ProtomanSabreMoves.SLASH_1)
             proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_2
-            damageOf() shouldBe listOf(4, 12, 20)
+            damageOf() shouldBe listOf(10, 12, 20)
             pressB()
             runOut(ProtomanSabreMoves.SLASH_2)
             proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_3
-            damageOf() shouldBe listOf(5, 15, ConstVals.MAX_HEALTH)
+            damageOf() shouldBe listOf(12, 15, ConstVals.MAX_HEALTH)
         }
 
-        it("does the half-charge damage on the air slash") {
+        it("does the normal sabre damage on the air slash") {
             overGround = false
-            pressB()
+            upB()
             val slash = proto.sabre.slash!!
             slash.body.preProcess()
             StandardDamageNegotiator.get(Size.MEDIUM, slash) shouldBe 12
@@ -679,7 +646,7 @@ class ProtomanTest : DescribeSpec({
 
         it("shows the body frame of the slash") {
             val animations = ObjectMap<String, IAnimation>()
-            pressB()
+            upB()
             proto.animationKey("stand", animations) shouldBe "sabre_1"
         }
     }
@@ -1018,24 +985,21 @@ class ProtomanTest : DescribeSpec({
             proto.guarding shouldBe true
         }
 
-        it("does not attack on B while DOWN is held in the air, with either slot") {
+        it("does not attack on B, or on UP and B, while DOWN is held in the air") {
             overGround = false
             step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             proto.sabre.active shouldBe false
             waitForGuard()
             guardStep(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             proto.sabre.active shouldBe false
-            guardStep(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
-            proto.weapon shouldBe ProtomanWeapon.BUSTER
-            guardStep(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            guardStep(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            proto.sabre.active shouldBe false
             spawned.none { it.first is ProtoBuster } shouldBe true
             proto.guarding shouldBe true
         }
 
         describe("the crouch attacks") {
             fun pressB() = guardStep(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-
-            fun useBuster() = step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
 
             fun shots() = spawned.filter { it.first is ProtoBuster }
 
@@ -1053,44 +1017,22 @@ class ProtomanTest : DescribeSpec({
                 }
             }
 
-            it("starts one crouch slash on B with DOWN held, in the pull-out and in the guard, at half strength") {
+            it("fires the crouch shot, never a slash, on B with DOWN held, in the pull-out and in the guard") {
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 pressB()
-                proto.sabre.state shouldBe SabreState.CROUCH
-                proto.sabre.move shouldBe ProtomanSabreMoves.CROUCH
-                ProtomanSabreMoves.CROUCH.fullStrength shouldBe false
+                proto.sabre.active shouldBe false
+                shots().size shouldBe 1
+                proto.animationKey("guard_crouch_start", ObjectMap()) shouldBe "crouch_shoot"
                 runOutAttack(held = true)
                 waitForGuard()
+                proto.buster.update(ProtomanValues.SHOT_WAIT)
                 pressB()
-                proto.sabre.move shouldBe ProtomanSabreMoves.CROUCH
-                spawned.count { it.first is PlayerSabreSlash } shouldBe 2
-            }
-
-            it("does not chain the crouch slash, and B after it ends starts another") {
-                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
-                pressB()
-                pressB()
-                proto.sabre.chain() shouldBe false
-                runOutAttack(held = true)
                 proto.sabre.active shouldBe false
-                pressB()
-                proto.sabre.move shouldBe ProtomanSabreMoves.CROUCH
-                spawned.count { it.first is PlayerSabreSlash } shouldBe 2
-            }
-
-            it("neither runs nor turns during the crouch slash") {
-                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
-                pressB()
-                guardStep(MegaControllerButton.LEFT to ButtonStatus.JUST_PRESSED)
-                guardStep(MegaControllerButton.LEFT to ButtonStatus.PRESSED)
-                proto.sabre.active shouldBe true
-                proto.facing shouldBe Facing.RIGHT
-                proto.running shouldBe false
-                body.physics.velocity.x shouldBe 0f
+                shots().size shouldBe 2
+                spawned.none { it.first is PlayerSabreSlash } shouldBe true
             }
 
             it("fires the standing shot from the crouch muzzle on B with DOWN held, in the crouch shoot pose") {
-                useBuster()
                 place()
                 waitForGuard()
                 pressB()
@@ -1106,7 +1048,6 @@ class ProtomanTest : DescribeSpec({
             }
 
             it("fires the crouch shot to the left from the mirrored muzzle") {
-                useBuster()
                 proto.facing = Facing.LEFT
                 place()
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
@@ -1116,7 +1057,6 @@ class ProtomanTest : DescribeSpec({
             }
 
             it("keeps the buster cooldown for the crouch shot") {
-                useBuster()
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 pressB()
                 pressB()
@@ -1127,7 +1067,6 @@ class ProtomanTest : DescribeSpec({
             }
 
             it("lets left and right only turn him during the crouch shot") {
-                useBuster()
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 pressB()
                 guardStep(MegaControllerButton.LEFT to ButtonStatus.JUST_PRESSED)
@@ -1138,72 +1077,61 @@ class ProtomanTest : DescribeSpec({
                 body.physics.velocity.x shouldBe 0f
             }
 
-            listOf(ProtomanWeapon.SABRE, ProtomanWeapon.BUSTER).forEach { weapon ->
-                it("drops the guard at the $weapon crouch attack and keeps the crouch boxes during it") {
-                    if (weapon == ProtomanWeapon.BUSTER) useBuster()
-                    waitForGuard()
-                    proto.guarding shouldBe true
-                    pressB()
-                    runOutAttack(held = true) {
-                        shield().isActive() shouldBe false
-                        proto.guarding shouldBe false
-                        proto.puttingAwayGuard shouldBe false
-                        crouchedBoxes() shouldBe true
-                    }
-                }
-
-                it("runs the full pull-out again after the $weapon crouch attack with DOWN still held") {
-                    if (weapon == ProtomanWeapon.BUSTER) useBuster()
-                    waitForGuard()
-                    pressB()
-                    runOutAttack(held = true)
-                    proto.guarding shouldBe false
-                    proto.animationKey("stand", ObjectMap()) shouldBe "guard_crouch_start"
-                    crouchedBoxes() shouldBe true
-                    var steps = 0
-                    while (!proto.guarding && steps < 20) {
-                        guardStep()
-                        steps++
-                    }
-                    steps shouldBe ProtomanValues.GUARD_CROUCH_TURN_FRAMES
-                }
-
-                it("stays crouched to the end of the $weapon crouch attack after DOWN is released, then stands") {
-                    if (weapon == ProtomanWeapon.BUSTER) useBuster()
-                    waitForGuard()
-                    pressB()
-                    release()
-                    runOutAttack(held = false) { crouchedBoxes() shouldBe true }
-                    step()
-                    crouchedBoxes() shouldBe false
-                    proto.puttingAwayGuard shouldBe false
-                    proto.animationKey("stand", ObjectMap()) shouldBe "stand"
-                }
-            }
-
-            it("shows the crouch slash body frame") {
-                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+            it("drops the guard at the crouch shot and keeps the crouch boxes during it") {
+                waitForGuard()
+                proto.guarding shouldBe true
                 pressB()
-                proto.animationKey("guard_crouch_start", ObjectMap()) shouldBe "crouch_slash"
+                runOutAttack(held = true) {
+                    shield().isActive() shouldBe false
+                    proto.guarding shouldBe false
+                    proto.puttingAwayGuard shouldBe false
+                    crouchedBoxes() shouldBe true
+                }
             }
 
-            it("ends the crouch slash on a jump after DOWN is released") {
+            it("runs the full pull-out again after the crouch shot with DOWN still held") {
+                waitForGuard()
+                pressB()
+                runOutAttack(held = true)
+                proto.guarding shouldBe false
+                proto.animationKey("stand", ObjectMap()) shouldBe "guard_crouch_start"
+                crouchedBoxes() shouldBe true
+                var steps = 0
+                while (!proto.guarding && steps < 20) {
+                    guardStep()
+                    steps++
+                }
+                steps shouldBe ProtomanValues.GUARD_CROUCH_TURN_FRAMES
+            }
+
+            it("stays crouched to the end of the crouch shot after DOWN is released, then stands") {
+                waitForGuard()
+                pressB()
+                release()
+                runOutAttack(held = false) { crouchedBoxes() shouldBe true }
+                step()
+                crouchedBoxes() shouldBe false
+                proto.puttingAwayGuard shouldBe false
+                proto.animationKey("stand", ObjectMap()) shouldBe "stand"
+            }
+
+            it("ends the crouch shot pose on a jump after DOWN is released") {
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 pressB()
                 release()
-                proto.sabre.state shouldBe SabreState.CROUCH
+                crouchedBoxes() shouldBe true
                 frame = InputFrame.RELEASED.with(MegaControllerButton.A, ButtonStatus.JUST_PRESSED)
                 val jump = proto.defineBehaviorsComponent().getBehavior(BehaviorType.JUMPING)!!
                 jump.evaluate(0f) shouldBe true
                 jump.init()
                 overGround = false
                 step()
-                proto.sabre.active shouldBe false
+                proto.buster.shooting shouldBe true
                 crouchedBoxes() shouldBe false
+                proto.animationKey("crouch_shoot", ObjectMap()) shouldBe "jump_shoot"
             }
 
             it("fires a crouch shot on DOWN and B during a standing shot pose") {
-                useBuster()
                 place()
                 step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
                 proto.buster.update(ProtomanValues.SHOT_WAIT)
@@ -1217,7 +1145,6 @@ class ProtomanTest : DescribeSpec({
             }
 
             it("fires a standing shot and stands on B after DOWN is released during a crouch shot") {
-                useBuster()
                 place()
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 pressB()
@@ -1233,15 +1160,7 @@ class ProtomanTest : DescribeSpec({
                 proto.animationKey("stand", ObjectMap()) shouldBe "stand_shoot"
             }
 
-            it("does a crouch slash, not the UP slash, on UP, DOWN and B on the ground with the sabre slot") {
-                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
-                guardStep(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                proto.sabre.state shouldBe SabreState.CROUCH
-                proto.sabre.move shouldBe ProtomanSabreMoves.CROUCH
-            }
-
-            it("fires a crouch shot, not the UP slash, on UP, DOWN and B on the ground with the buster slot") {
-                useBuster()
+            it("fires a crouch shot, not the UP slash, on UP, DOWN and B on the ground") {
                 place()
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 guardStep(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
@@ -1258,24 +1177,21 @@ class ProtomanTest : DescribeSpec({
                     proto.onEvent(Event(EventType.BEGIN_ROOM_TRANS, props(ConstKeys.POSITION pairTo Vector2())))
                 }
             ).forEach { (name, breakAttack) ->
-                listOf(ProtomanWeapon.SABRE, ProtomanWeapon.BUSTER).forEach { weapon ->
-                    it("ends the $weapon crouch attack on $name and puts the stand boxes back") {
-                        if (weapon == ProtomanWeapon.BUSTER) useBuster()
-                        step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
-                        pressB()
-                        crouchedBoxes() shouldBe true
-                        breakAttack()
-                        guardStep()
-                        proto.sabre.active shouldBe false
-                        proto.buster.shooting shouldBe false
-                        crouchedBoxes() shouldBe false
-                    }
+                it("ends the crouch shot on $name and puts the stand boxes back") {
+                    step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+                    pressB()
+                    crouchedBoxes() shouldBe true
+                    breakAttack()
+                    guardStep()
+                    proto.sabre.active shouldBe false
+                    proto.buster.shooting shouldBe false
+                    crouchedBoxes() shouldBe false
                 }
             }
         }
 
         it("is off during a slash") {
-            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
             guardStep()
             guardStep()
@@ -1284,7 +1200,6 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("is off during a shot") {
-            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
             step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
             proto.buster.shooting shouldBe true
@@ -1480,13 +1395,15 @@ class ProtomanTest : DescribeSpec({
             }
         }
 
+        fun upB() = step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+
         fun halfSlash(): PlayerSabreSlash {
-            pressB()
+            upB()
             return proto.sabre.slash!!.also { it.body.preProcess() }
         }
 
         fun fullSlash(): PlayerSabreSlash {
-            pressB()
+            upB()
             pressB()
             runOut(ProtomanSabreMoves.SLASH_1)
             pressB()
@@ -1530,6 +1447,14 @@ class ProtomanTest : DescribeSpec({
             damageOf(spawnTarget(MetaWheelF(proto.services)), halfSlash()) shouldBe 6
             proto.sabre.reset()
             damageOf(spawnTarget(MetaWheelF(proto.services)), fullSlash()) shouldBe 9
+        }
+
+        it("Robbit, a large standard enemy, takes 10 from a half hit and 12 from a full hit: one floor combo kills it") {
+            val robbit = spawnTarget(Robbit(proto.services))
+            damageOf(robbit, halfSlash()) shouldBe 10
+            proto.sabre.reset()
+            damageOf(spawnTarget(Robbit(proto.services)), fullSlash()) shouldBe 12
+            (10 + 10 + 12 >= robbit.getMaxHealth()) shouldBe true
         }
 
         it("BigAssMaverickRobot takes 4 from a half hit and 6 from a full hit, as from a half and a full charge") {
@@ -1705,7 +1630,7 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("does not start while a slash is active") {
-            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             proto.sabre.active shouldBe true
             startSlide()
             sliding() shouldBe false
@@ -1735,8 +1660,6 @@ class ProtomanTest : DescribeSpec({
 
             fun shots() = spawned.filter { it.first is ProtoBuster }
 
-            fun useBuster() = step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
-
             fun pullOut(frames: Int) {
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 repeat(frames) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
@@ -1761,7 +1684,6 @@ class ProtomanTest : DescribeSpec({
             }
 
             it("uses the slide body box, not the crouch box, in a slide that starts during a crouch shot") {
-                useBuster()
                 pullOut(1)
                 step(MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
                 shots().size shouldBe 1
@@ -1772,8 +1694,7 @@ class ProtomanTest : DescribeSpec({
             }
 
             listOf(Facing.RIGHT, Facing.LEFT).forEach { side ->
-                it("fires one shot from the slide offset facing $side on B with the buster slot, and the slide goes on") {
-                    useBuster()
+                it("fires one shot from the slide offset facing $side on B, and the slide goes on") {
                     proto.facing = side
                     startSlide()
                     val center = body.getCenter().cpy()
@@ -1788,58 +1709,40 @@ class ProtomanTest : DescribeSpec({
                 }
             }
 
-            it("ends the slide and does the single slash on UP and B with the buster slot") {
-                useBuster()
+            it("ends the slide and starts the floor combo on UP and B, and B chains it") {
                 startSlide()
                 holdBoth(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
                 sliding() shouldBe false
                 shots().size shouldBe 0
+                proto.sabre.state shouldBe SabreState.FLOOR
                 proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
+                body.getHeight() shouldBe (ProtomanValues.BODY_HEIGHT * ppm plusOrMinus TOLERANCE)
                 step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
                 var time = DELTA
                 while (time < ProtomanSabreMoves.SLASH_1.duration) {
                     step()
                     time += DELTA
                 }
+                proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_2
+            }
+
+            it("does nothing on UP and B under a low ceiling, and the slide goes on") {
+                startSlide()
+                body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
+                holdBoth(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                sliding() shouldBe true
                 proto.sabre.active shouldBe false
+                shots().size shouldBe 0
             }
 
-            listOf(null, MegaControllerButton.UP).forEach { held ->
-                it("ends the slide and starts the floor slash on B with the sabre slot and $held held") {
-                    startSlide()
-                    if (held == null) holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                    else holdBoth(held to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                    sliding() shouldBe false
-                    proto.sabre.state shouldBe SabreState.FLOOR
-                    proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
-                    shots().size shouldBe 0
-                    body.getHeight() shouldBe (ProtomanValues.BODY_HEIGHT * ppm plusOrMinus TOLERANCE)
-                }
-            }
-
-            listOf(
-                "B with the sabre slot" to false,
-                "UP and B with the buster slot" to true
-            ).forEach { (name, buster) ->
-                it("does nothing on $name under a low ceiling, and the slide goes on") {
-                    if (buster) useBuster()
-                    startSlide()
-                    body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
-                    if (buster) holdBoth(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                    else holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                    sliding() shouldBe true
-                    proto.sabre.active shouldBe false
-                    shots().size shouldBe 0
-                }
-            }
-
-            it("fires the slide shot on B with the buster slot under a low ceiling") {
-                useBuster()
+            it("fires the slide shot, not a crouch shot, on DOWN and B under a low ceiling") {
                 startSlide()
                 body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
                 holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
                 sliding() shouldBe true
                 shots().size shouldBe 1
+                proto.sabre.active shouldBe false
+                proto.animationKey("groundslide", ObjectMap()) shouldBe "groundslide_shoot"
             }
 
             it("starts the full ground pull-out after the slide-to-crouch delay with DOWN still held") {
@@ -1879,14 +1782,6 @@ class ProtomanTest : DescribeSpec({
                 shield().isActive() shouldBe false
                 body.getHeight() shouldBe (ProtomanValues.BODY_HEIGHT * ppm plusOrMinus TOLERANCE)
             }
-
-            it("does no crouch attack on DOWN and B in a slide with the sabre slot under a low ceiling") {
-                startSlide()
-                body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
-                holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                proto.sabre.state shouldNotBe SabreState.CROUCH
-                proto.sabre.active shouldBe false
-            }
         }
     }
 
@@ -1914,8 +1809,6 @@ class ProtomanTest : DescribeSpec({
             step(MegaControllerButton.UP to ButtonStatus.PRESSED)
             climbing() shouldBe true
         }
-
-        fun useBuster() = step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
 
         beforeEach {
             val behaviors = BehaviorsSystem()
@@ -2034,7 +1927,6 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("ends the crouch shot pose when he grabs the ladder at its foot") {
-            useBuster()
             place(4.2f, 0f)
             body.setBodySense(BodySense.FEET_ON_GROUND, true)
             step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
@@ -2046,24 +1938,21 @@ class ProtomanTest : DescribeSpec({
             proto.animationKey("climb", ObjectMap()) shouldBe "climb_still_shoot"
         }
 
-        listOf(ProtomanWeapon.SABRE, ProtomanWeapon.BUSTER).forEach { weapon ->
-            listOf(null, MegaControllerButton.UP, MegaControllerButton.DOWN).forEach { held ->
-                it("fires one shot from the climb offset on B with the $weapon slot and $held held, and holds still") {
-                    if (weapon == ProtomanWeapon.BUSTER) useBuster()
-                    grab()
-                    val center = body.getCenter().cpy()
-                    if (held == null) step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                    else step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED, held to ButtonStatus.PRESSED)
-                    shots().size shouldBe 1
-                    val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
-                    position.x shouldBe (center.x + ProtomanValues.SHOT_CLIMB_OFFSET_X * ppm plusOrMinus TOLERANCE)
-                    position.y shouldBe (center.y + ProtomanValues.SHOT_CLIMB_OFFSET_Y * ppm plusOrMinus TOLERANCE)
-                    proto.sabre.active shouldBe false
-                    climbing() shouldBe true
-                    if (held == null) step() else step(held to ButtonStatus.PRESSED)
-                    body.physics.velocity.y shouldBe 0f
-                    proto.animationKey("climb", ObjectMap()) shouldBe "climb_still_shoot"
-                }
+        listOf(null, MegaControllerButton.UP, MegaControllerButton.DOWN).forEach { held ->
+            it("fires one shot from the climb offset on B with $held held, and holds still") {
+                grab()
+                val center = body.getCenter().cpy()
+                if (held == null) step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                else step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED, held to ButtonStatus.PRESSED)
+                shots().size shouldBe 1
+                val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+                position.x shouldBe (center.x + ProtomanValues.SHOT_CLIMB_OFFSET_X * ppm plusOrMinus TOLERANCE)
+                position.y shouldBe (center.y + ProtomanValues.SHOT_CLIMB_OFFSET_Y * ppm plusOrMinus TOLERANCE)
+                proto.sabre.active shouldBe false
+                climbing() shouldBe true
+                if (held == null) step() else step(held to ButtonStatus.PRESSED)
+                body.physics.velocity.y shouldBe 0f
+                proto.animationKey("climb", ObjectMap()) shouldBe "climb_still_shoot"
             }
         }
 
@@ -2076,36 +1965,44 @@ class ProtomanTest : DescribeSpec({
             position.x shouldBe (center.x - ProtomanValues.SHOT_CLIMB_OFFSET_X * ppm plusOrMinus TOLERANCE)
         }
 
-        listOf(ProtomanWeapon.SABRE, ProtomanWeapon.BUSTER).forEach { weapon ->
-            it("does no crouch attack on DOWN and B at the ladder foot with the $weapon slot") {
-                if (weapon == ProtomanWeapon.BUSTER) useBuster()
-                grab()
-                overGround = true
-                body.setBodySense(BodySense.FEET_ON_GROUND, true)
-                val center = body.getCenter().cpy()
-                step(MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-                climbing() shouldBe true
-                proto.sabre.active shouldBe false
-                shots().size shouldBe 1
-                val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
-                position.y shouldBe (center.y + ProtomanValues.SHOT_CLIMB_OFFSET_Y * ppm plusOrMinus TOLERANCE)
-            }
+        it("does no crouch attack on DOWN and B at the ladder foot") {
+            grab()
+            overGround = true
+            body.setBodySense(BodySense.FEET_ON_GROUND, true)
+            val center = body.getCenter().cpy()
+            step(MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            climbing() shouldBe true
+            proto.sabre.active shouldBe false
+            shots().size shouldBe 1
+            val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+            position.y shouldBe (center.y + ProtomanValues.SHOT_CLIMB_OFFSET_Y * ppm plusOrMinus TOLERANCE)
         }
 
-        it("changes the slot on SELECT, and B stays the buster") {
-            grab()
-            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
-            proto.weapon shouldBe ProtomanWeapon.BUSTER
-            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
-            proto.weapon shouldBe ProtomanWeapon.SABRE
-            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
-            shots().size shouldBe 1
+        it("slashes, and does not grab, on UP and B pressed in the same frame in front of a ladder") {
+            place(4.2f, 0f)
+            touch(head = true, feet = true)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
+            climbing() shouldBe false
+            shots().size shouldBe 0
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe false
+        }
+
+        it("grabs on UP held a frame before B in front of a ladder, then fires the ladder shot on B") {
+            place(4.2f, 0f)
+            touch(head = true, feet = true)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe true
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            climbing() shouldBe true
             proto.sabre.active shouldBe false
+            shots().size shouldBe 1
         }
 
         it("does not grab during a slash") {
             overGround = false
-            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             proto.sabre.active shouldBe true
             place(4.2f, 2f)
             touch(head = true, feet = true)
@@ -2171,7 +2068,6 @@ class ProtomanTest : DescribeSpec({
         }
 
         it("shows the shoot key of each pose while the shot frame lasts") {
-            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
             step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
             animations["run_trans"].reset()
             proto.animationKey("stand", animations) shouldBe "stand_shoot"
