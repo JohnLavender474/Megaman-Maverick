@@ -39,6 +39,11 @@ Found by the review before the play test of `011a`. `011a` kept the old behavior
 after the spawn (for example on the next frame), or give a queued spawn its order number at the request. The other
 Moon Scythes fault (`2026-11-14-moon-scythes-stale-array.md`) is in the same function.
 
+Correction (`fix/moon-scythes` review, 2026-11-16): `MoonScythe.onSpawn` sets `fading` from the `FADE` spawn prop,
+which `fireMoonScythes` gives as `false`. So a fade that the loop puts on a queued scythe is undone when the spawn
+lands. In the game, the new shot does not fade: the older scythes do not fade either, and up to 8 scythes fly. The
+stale array (`2026-11-14-moon-scythes-stale-array.md`) can still fade older scythes by chance.
+
 ## Short contract
 
 Branch: `fix/moon-scythes`, off `master`, in `.worktrees/fix/moon-scythes`. It fixes this issue and
@@ -52,6 +57,9 @@ Intended changes, all in `MoonScythesState.fadeExtraScythes`:
 - It sorts a scythe whose spawn is still queued (the scythes of the shot that calls it) as the newest, after all live
   scythes, which keep their `spawnOrder`. So with more than 4 counted scythes, the oldest fade and the new shot stays.
 - The limit `4` becomes a named constant in `MegamanValues`.
+- Visible effect: when a shot makes more than 4 non-fading scythes, the oldest stop and fade (`MoonScythe` stops a
+  fading scythe and turns its fixtures off). On `master` they mostly fly on and keep hitting. So rapid fire puts at
+  most 4 damaging scythes on the field, and can do less damage to a boss than on `master`.
 
 Not changed:
 
@@ -61,18 +69,20 @@ Not changed:
 
 Checks:
 
-- New unit tests in `core` (`MoonScythesStateTest`) fail on the old function and pass with the fix: a new shot of 4
-  with 4 older live scythes fades the 4 older ones and none of the new; a shot after all scythes of the last shot died
-  fades nothing; a shot with an older scythe that already fades fades only the older live ones; 5 live scythes fade
-  only the oldest one.
+- New unit tests in `core` (`MoonScythesStateTest`) fail on the old function and pass with the fix: a new shot of 4,
+  faded while its spawns are queued, with 4 older live scythes fades the 4 older ones and none of the new; scythes
+  that the pool gives back to the next shot are counted once; a scythe that already fades does not count; a shot of
+  4 next to 1 older scythe fades only that one. A mutation run (no array clear, no `fading` filter, no queued-last
+  sort) fails all 4.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/moon-scythes`:
 
-- `./run-game-alpha.sh --level INTRO_STAGE --room room1 --weapons MOON_SCYTHES`: fire Moon Scythes, wait about 1 s
-  while the 4 scythes fly, and fire again. The 4 older scythes fade, and the 4 new scythes fly on.
-- `./run-game-alpha.sh --level TEST_1 --room room35 --weapons MOON_SCYTHES`: fire, and wait until all 4 scythes are
-  gone. Fire again: no scythe of the new shot fades at once. Do this a few times.
+- `./run-game-alpha.sh --level INTRO_STAGE --room room1 --weapons MOON_SCYTHES`: fire Moon Scythes, wait a bit more
+  than 1 s while the 4 scythes fly (a shot sooner is refused while more than 1 scythe is alive), and fire again. The
+  4 older scythes stop and fade, and the 4 new scythes fly on. Do it a few times: never more than 4 scythes fly.
+- Control: `./run-game-alpha.sh --level TEST_1 --room room35 --weapons MOON_SCYTHES`: fire, and wait until all 4
+  scythes are gone. Fire again: all 4 new scythes fly, none fades at once. Do this a few times.
 - Control: `./run-game-alpha.sh --level DESERT_MAN --room room16 --weapons MOON_SCYTHES --heartTanks all --healthTanks all`:
   go right into the boss room and fight Desert Man with Moon Scythes. The scythes fly, bounce on the walls, leave the
-  trail and hurt the boss as before.
+  trail and hurt the boss. Expected change: on each new shot the older scythes stop, fade and do no more damage.
