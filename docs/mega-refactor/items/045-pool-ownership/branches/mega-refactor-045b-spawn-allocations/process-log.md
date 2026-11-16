@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: blocked
+- State: active
 - Goal: a pooled entity makes its objects once: no constructor call in `onSpawn`, `onDestroy` or an event handler
 - Done:
-- Next: start after `045a` merges (it needs `045a`'s `CODE_STYLE.md` rule and `OwnedArray`); done end to end by a subagent
-- Blocked: waits for `mega-refactor-045a-pool-ownership`
+- Next: scan, SCOPE.md and CONTRACT.md, brief; done end to end by a subagent
+- Blocked:
 
 ## Entries
 
@@ -23,3 +23,10 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   an object inside an `onSpawn` body (`Vector2`, `GameRectangle`, `GameCircle`, `GameLine`, `GameSprite`, `Pendulum`,
   `MotionDefinition`, `Timer`); 84 of them are `Vector2`, `GameRectangle`, `GameCircle` or `GameLine`. Event handlers
   and `onDestroy` bodies are not counted yet. The scan step counts them.
+- `045a` merged (2026-11-16, squash `aaf51b514`), so this branch can start. Added to its scope from the `045a`
+  `docs/TODO.md`: the per-frame `new` that `045a` left (`ShapeUtils.intersectRectangleAndLine`, a `Vector2` per hit,
+  each frame for `Laser` and `TubeBeamerV2`; the `--debugShapes` suppliers of `Saw`, `SwingingAxe` and
+  `SwingingPlatform`; `Darkness.handleLightEvent`) and `MegaUtilMethods.delayRun` (a `UUID` string and a `Timer` per
+  call, often from `onSpawn` and events). Inventory: `temp/mega-refactor-045a-pool-ownership/scan-new.tsv` (main
+  checkout).
+- Branch start on `master` (2026-11-16). Merge target: directly into `master` (as `045a`). Done end to end by a subagent.

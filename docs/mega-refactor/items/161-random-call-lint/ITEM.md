@@ -29,6 +29,8 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ## Open questions
 
+- From `045a` (2026-11-16): `PoolOwnershipGuardTest` (a one-line text scan for pooled default parameters) has the same gap as the old random scan: a default split over 2 lines, or one that calls a scratch helper, passes. The detekt setup of this item could cover it.
+
 - Does the project want detekt in the build (CI time, a baseline for the existing code)?
 
 ## Decisions

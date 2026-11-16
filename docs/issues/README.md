@@ -172,3 +172,4 @@ related-items: [<mega-refactor item IDs>]
 | [Reactor Shot burst pieces sometimes die in mid-air](2026-11-16-reactor-shot-pieces-die-mid-air.md) | no | core | open |
 | [All level backgrounds stop drawing after a pixel-perfect change in game](2026-11-16-background-hidden-after-pixel-perfect-toggle.md) | yes | core | closed |
 | [The swim stroke pushes the wrong way in `DOWN` and `RIGHT` gravity](2026-11-16-swim-stroke-sign-down-right.md) | yes | core | open |
+| [The engine `Pool` double-free check slows down far faster than linear with many free entries](2026-11-16-engine-pool-identity-map-cost.md) | yes | engine | open |

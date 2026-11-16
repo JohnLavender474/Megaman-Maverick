@@ -2578,3 +2578,28 @@ newest entry at the bottom.
   `2026-11-16-swim-stroke-sign-down-right.md`. Owner at the merge: `060k` also takes Proto Man's trailing sprites and a
   cleanup of almost all his frames. The main checkout had 1 modified file of another session
   (`DesertMan_16x14_v4.tmx`); it stays unstaged.
+
+## 2026-11-16 — mega-refactor-045a-pool-ownership
+
+- Summary: squash `aaf51b514`. `GameObjectPools` gives only scratch objects (no `free()`, no `reclaim = false`); the
+  lifetime stays 3 frames (research: every legal lifetime crosses at most 1 frame edge; the unsafe ones last seconds,
+  so 4 or 5 would only hide faults). `OwnedArray` and owned fields replace the fetch/free pairs. `--poolChecks` sets
+  each reclaimed scratch to NaN. Hidden pooled defaults removed, with `PoolOwnershipGuardTest`. About 14 stored-scratch
+  faults fixed (among them the async pathfinder start and target, read by a worker thread). Hot-path per-frame `new`
+  removed. `docs/CODE_STYLE.md` "Allocation and pooled objects" and `core/.../utils/README.md`.
+- Done end to end by a subagent (owner request); review before the play test by 2 subagents. Diffity round 1: 0
+  threads, 1 chat comment: a per-spawn `new Vector2()` in `SpikeBall` defeats the pool. Fixed: the rule now says a
+  pooled entity makes its objects once, and `SpikeBall` is the model (one pendulum, anchor and chain sprite list per
+  instance; `SpikeBallTest`, which fails with the hide rule removed). The sweep of the other per-spawn and per-event
+  sites is `045b`. No live room reached a `SpikeBall`, so a new test map `REFACTOR_TEST_045` (`spike_ball`) was built;
+  the first play run found an old crash on `master` (`SpikeBall` `length` given as `type="int"` in `Test1.tmx`, read as
+  a `Float`), fixed in the data.
+- Contract check: owner play test passed (`REFACTOR_TEST_045 spike_ball`, `PRECIOUS_WOMAN room4`, `RODENT_MAN room1`,
+  `REFACTOR_TEST_029 enemy_aim`; the owner chose these 4 of 18). After `master` was merged into the branch (no
+  conflict; no new code on `master` uses a removed API): `engine:test` 703, `core:test` 2390, `core:smokeTest` 469,
+  `lwjgl3:jar` pass. No other active branch uses a removed API.
+- Follow-up: `045b` (planned, next). Bug filed: `docs/issues/2026-11-16-engine-pool-identity-map-cost.md`. The other
+  bug candidates were already filed (`DarknessV4`, the `TEST_1` unknown objects). Backlog: `borrow {}` and a fetch-count
+  measure stay in `045`; the per-frame leftovers and `delayRun` go to `045b`; the one-line guard gap goes to `161`.
+  `--poolChecks` added to the root `CLAUDE.md`. `O5-R1` current state updated. The main checkout had 1 modified file
+  of another session (`DesertMan_16x14_v4.tmx`); it stays unstaged.

@@ -45,6 +45,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
+| `O5-R1` | `holds` in the hot paths `045a` swept (2026-11-16) | `045a` moved the per-frame `new` of pooled types in `ArcMotion`, `Pendulum`, `toBoundingBox`, `ShapeUtils.overlapCircleAndPolygon`, several entity lambdas, the D1000 forecasts and the camera rectangles to scratch or owned fields. Left: `ShapeUtils.intersectRectangleAndLine` (a `Vector2` per hit, each frame for lasers), the `--debugShapes` suppliers, and the per-spawn and per-event `new` in pooled entities (`045b`). No runtime number. | `045`, `009` |
 | `O5-R1` | `holds` for reviewed diffs | The last 60 first-parent code commits were searched, and the hits in 14 diffs were read. New per-frame code uses fields, pools or a value class (`CameraController.kt:35-40`, `InputFrame.kt:6`). The search does not see lambdas or boxing, and no runtime number exists. | `009`, `026`, `044` |
 | `O5-R2` | `holds` for `134a` (2026-11-09) | The first branch under this rule: 2 `--diagnostics` runs in `REFACTOR_TEST_134` `open`, flag off and on, level frames only: mean 1.57 / 1.58 ms, p95 2.22 / 2.34 ms, `SpritesSystem` 0.04 / 0.04 ms (branch `process-log.md`). Before it: 0 of 54 process logs have before-and-after numbers. `051b` changed the per-frame camera path with no measure. | `009` |
 | `O5-R2` | not measured for `134b` (2026-11-09) | The owner approved the merge with no `--diagnostics` capture. The branch adds one function call per drawn entity in `SpritesSystem` and no allocation (review: `O5-R1` holds). | `009` |
@@ -69,7 +70,7 @@ None found. Numbers for merged hot-path work (`014c`, `031c`, `031d`, `051b`, `0
 | `010` | idea | [One simulation clock: fixed tick for gameplay, separate present phase](../items/010-fixed-tick/ITEM.md) |
 | `017` | planned | [Shared entity logic as systems and world-step hooks](../items/017-world-step-hooks/ITEM.md) |
 | `033` | planned | [Per-level asset manifests and texture budgets](../items/033-per-level-assets/ITEM.md) |
-| `045` | planned | [Clear ownership rules and debug checks for `GameObjectPools`, and no per-frame allocation of pooled types](../items/045-pool-ownership/ITEM.md) |
+| `045` | active | [Clear ownership rules and debug checks for `GameObjectPools`, and no per-frame allocation of pooled types](../items/045-pool-ownership/ITEM.md) |
 | `116` | idea | [Body senses as typed state, then a sense history](../items/116-body-senses/ITEM.md) |
 | `125` | idea | [Spatial or room index for spawners, if a measure shows a cost](../items/125-spawner-index/ITEM.md) (main) |
 | `128` | idea | [Cull near players, not only by the camera view](../items/128-cull-near-players/ITEM.md) |
