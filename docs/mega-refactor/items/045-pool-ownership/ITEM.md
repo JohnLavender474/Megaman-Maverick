@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O5`
 - Depends on: none
 - Related: `009`, `010`, `019`, `022`
-- Branches: `mega-refactor-045a-pool-ownership` (active)
+- Branches: `mega-refactor-045a-pool-ownership` (active), `mega-refactor-045b-spawn-allocations` (blocked: waits for `045a`)
 
 ## Goal
 
