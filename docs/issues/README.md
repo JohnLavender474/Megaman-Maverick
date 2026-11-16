@@ -169,3 +169,4 @@ related-items: [<mega-refactor item IDs>]
 | [X's landing probe skips one-way blocks while `DOWN` is held](2026-11-14-x-landing-probe-one-way-down.md) | no | core | open |
 | [Moon Scythes can fade live scythes too soon, because the count array keeps old entries](2026-11-14-moon-scythes-stale-array.md) | no | core | open |
 | [Moon Scythes of a new shot sort as the oldest and fade first](2026-11-14-moon-scythes-stale-spawn-order.md) | yes | core | open |
+| [Reactor Shot burst pieces sometimes die in mid-air](2026-11-16-reactor-shot-pieces-die-mid-air.md) | no | core | open |

@@ -57,7 +57,7 @@ Reason: the modes need the finished co-op rules, `030` and `102`. Replay needs `
 
 | Modes                                        | Replay                                        | Characters                          |
 |----------------------------------------------|-----------------------------------------------|-------------------------------------|
-| `102` game modes → `108` Spec Ops, `109` PvP | `006` headless boot → `055` record and replay | `024b` loadout per character → `060h` |
+| `102` game modes → `108` Spec Ops, `109` PvP | `006` headless boot → `055` record and replay | `060h` Proto Man's weapons on the loadout |
 | `047f` join and leave                        |                                               |                                     |
 
 `102` is an `idea`, and it must be `planned` before this stage.

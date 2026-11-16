@@ -14,7 +14,7 @@ redo risk and the linked items.
 | `O5` | [Plays well on weak hardware](O5-performance.md) | active | 2 | 2 | 0 | 0 | 0 |
 | `O6` | [Safe to change](O6-safe-to-change.md) | active | 4 | 1 | 2 | 1 | 0 |
 | `O7` | [Content from data](O7-content-from-data.md) | planned | 3 | 0 | 1 | 2 | 0 |
-| `O8` | [More playable characters and modes](O8-characters-and-modes.md) | active | 4 | 0 | 2 | 1 | 1 |
+| `O8` | [More playable characters and modes](O8-characters-and-modes.md) | active | 4 | 1 | 2 | 0 | 1 |
 | `O9` | [Player experience](O9-player-experience.md) | active | 3 | 0 | 2 | 1 | 0 |
 
 ## Always-on rules

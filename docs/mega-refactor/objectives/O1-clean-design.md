@@ -140,7 +140,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `103` | idea | [Remove the dead `ScreenController` path or give it a real use](../items/103-dead-screen-controller/ITEM.md) (main) |
 | `104` | idea | [Remove the dead `LevelSelectScreen`](../items/104-dead-level-select-screen/ITEM.md) (main) |
 | `018` | idea | [Event-driven system membership; component IDs when needed](../items/018-ecs-membership/ITEM.md) |
-| `024` | active | [One `WeaponDef` per weapon; loadout per character](../items/024-weapon-defs/ITEM.md) |
+| `024` | done | [One `WeaponDef` per weapon; loadout per character](../items/024-weapon-defs/ITEM.md) |
+| `162` | idea | [LibGDX collections in the launch options and level overrides](../items/162-launch-loadout-collections/ITEM.md) (main) |
 | `025` | idea | [Level manifest: traits, variants and rewards instead of level-identity checks](../items/025-level-manifest/ITEM.md) |
 | `029` | done | [`IPlayer` contract, players service and `CharacterDef`](../items/029-player-contract/ITEM.md) |
 | `032` | planned | [Platform-neutral `engine` module](../items/032-platform-neutral-engine/ITEM.md) |

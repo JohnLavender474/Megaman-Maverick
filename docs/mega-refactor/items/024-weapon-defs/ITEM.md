@@ -1,11 +1,11 @@
 # 024: One `WeaponDef` per weapon; loadout per character
 
-- Status: active
+- Status: done
 - Type: refactor
 - Objectives: `O8`, `O1`
 - Depends on: `029`
 - Related: `007`, `023`, `025`, `040`, `084`
-- Branches: `mega-refactor-024a-weapon-defs` (merged 2026-11-15); `mega-refactor-024b-character-loadouts` (active)
+- Branches: `mega-refactor-024a-weapon-defs` (merged 2026-11-15); `mega-refactor-024b-character-loadouts` (merged 2026-11-16)
 
 ## Goal
 

@@ -31,7 +31,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 021 | [Entity registry with stable readable IDs and aliases](items/021-entity-registry/ITEM.md) | refactor | `O7`, `O3` | planned | none | | |
 | 022 | [Typed property schema per entity, exported to Tiled](items/022-spawn-prop-schema/ITEM.md) | feature | `O7` | planned | `021` | | |
 | 023 | [Damage profiles keyed by damage tags](items/023-damage-profiles/ITEM.md) | refactor | `O1` | planned | `005` | | |
-| 024 | [One `WeaponDef` per weapon; loadout per character](items/024-weapon-defs/ITEM.md) | refactor | `O8`, `O1` | active | `029` | 2026-11-14 | |
+| 024 | [One `WeaponDef` per weapon; loadout per character](items/024-weapon-defs/ITEM.md) | refactor | `O8`, `O1` | done | `029` | 2026-11-14 | 2026-11-16 |
 | 025 | [Level manifest: traits, variants and rewards instead of level-identity checks](items/025-level-manifest/ITEM.md) | refactor | `O7`, `O1` | idea | none | | |
 | 026 | [Per-level render layers and an allocation-free draw queue](items/026-render-layers/ITEM.md) | refactor | `O5`, `O4` | planned | none | | |
 | 027 | [Non-null APIs instead of `!!`](items/027-non-null-apis/ITEM.md) | refactor | `O1` | planned | none | | |
@@ -67,7 +67,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 057 | [Typed event channels and payloads](items/057-typed-event-channels/ITEM.md) | refactor | `O1` | idea | none | | |
 | 058 | [Camera rotation as its own mechanism, separate from gravity](items/058-camera-rotation-mechanism/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 059 | [Max health read through from the profile](items/059-max-health-read-through/ITEM.md) | refactor | `O2`, `O1` | idea | none | | |
-| 060 | [Proto Man as a playable character](items/060-proto-man/ITEM.md) | feature | `O8` | active | `081a`, `084`; `024` for `060h`; `081` for `060i` | 2026-11-10 | |
+| 060 | [Proto Man as a playable character](items/060-proto-man/ITEM.md) | feature | `O8` | active | `081a`, `084`; `024` (done) for `060h`; `081` for `060i` | 2026-11-10 | |
 | 061 | [Thin player view; locks and signals as components and functions](items/061-thin-player/ITEM.md) | refactor | `O2`, `O8`, `O1` | done | `029`, `031` | 2026-10-26 | 2026-10-26 |
 | 062 | [One engine-owned entity existence state](items/062-entity-existence-state/ITEM.md) | refactor | `O1` | done | none | 2026-10-26 | 2026-10-27 |
 | 063 | [Entity contracts are entity types](items/063-entity-contracts-as-entity-types/ITEM.md) | refactor | `O1` | done | none | 2026-10-27 | 2026-10-28 |
@@ -169,6 +169,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | done | none | 2026-11-15 | 2026-11-15 |
 | 160 | [Ladder shot height at a ladder foot](items/160-ladder-foot-shot/ITEM.md) | feature | `O9` | idea | none | | |
 | 161 | [A type-aware check for direct random calls](items/161-random-call-lint/ITEM.md) | tooling | `O6`, `O2` | active | `011` | 2026-11-16 | |
+| 162 | [LibGDX collections in the launch options and level overrides](items/162-launch-loadout-collections/ITEM.md) | refactor | `O1` | idea | none | | |
 
 ## Branches
 
@@ -184,7 +185,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-060m-protoman-moves`](items/060-proto-man/branches/mega-refactor-060m-protoman-moves/process-log.md) | 060 | Megaman's moves for Proto Man: wall slide, air dash, swim (no Rush Jet) | active | 2026-11-16 | |
 | [`mega-refactor-060j-mega-player`](items/060-proto-man/branches/mega-refactor-060j-mega-player/process-log.md) | 060 | Refactor only: an abstract `MegaPlayer` base class that owns the shared player wiring and is the receiver of the shared `players/` functions; `Megaman` and X move onto it and play the same | merged | 2026-11-10 | 2026-11-11 |
 | [`mega-refactor-024a-weapon-defs`](items/024-weapon-defs/branches/mega-refactor-024a-weapon-defs/process-log.md) | 024 | Refactor only: Megaman's 10 weapons become `WeaponDef` objects in a registry; Megaman plays the same | merged | 2026-11-14 | 2026-11-15 |
-| [`mega-refactor-024b-character-loadouts`](items/024-weapon-defs/branches/mega-refactor-024b-character-loadouts/process-log.md) | 024 | A weapon loadout per character: owned weapons and boss rewards keyed by character; the `is Megaman` weapon workarounds go | active | 2026-11-15 | |
+| [`mega-refactor-024b-character-loadouts`](items/024-weapon-defs/branches/mega-refactor-024b-character-loadouts/process-log.md) | 024 | A weapon loadout per character: owned weapons and boss rewards keyed by character; the `is Megaman` weapon workarounds go | merged | 2026-11-15 | 2026-11-16 |
 | [`mega-refactor-118a-fight-routine`](items/118-boss-fight-routines/branches/mega-refactor-118a-fight-routine/process-log.md) | 118 | Core fight types, with `BigAssMaverickRobot` as the only boss on the new flow | merged | 2026-11-02 | 2026-11-02 |
 | [`mega-refactor-118b-batch-1`](items/118-boss-fight-routines/branches/mega-refactor-118b-batch-1/process-log.md) | 118 | `TimberWoman`, `MoonMan` and `ReactorMan` (6 fights) on the fight flow | merged | 2026-11-03 | 2026-11-03 |
 | [`mega-refactor-118c-batch-2`](items/118-boss-fight-routines/branches/mega-refactor-118c-batch-2/process-log.md) | 118 | `GlacierMan`, `DesertMan`, `InfernoMan`, `RodentMan` and `PreciousWoman` (10 fights) on the fight flow | merged | 2026-11-03 | 2026-11-04 |

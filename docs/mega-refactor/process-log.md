@@ -2478,3 +2478,23 @@ newest entry at the bottom.
   light source keys) is already fixed in the active `fix/small-bugs-3`, which changes one other line of
   `DesertMan.kt`. Item `077` stays active. The main checkout had 1 modified file of another session
   (`CullablesSystem.kt`); it stays unstaged.
+
+## 2026-11-16 — mega-refactor-024b-character-loadouts
+
+- Summary: squash `46e089310`. Each playable character has its own weapon loadout; bosses beaten stay shared.
+  `CharacterLoadout` (weapons in select order, rewards per level, a `WeaponLook` per weapon) per character; Megaman's
+  holds his 10 weapons, looks and rewards, X and Proto Man have empty ones. `WeaponDef<in O : MegaPlayer>` (owner D3):
+  Megaman's defs take `Megaman` with no cast; a `WeaponDef<MegaPlayer>` is shared and fits any loadout. The look
+  fields move into `WeaponLook`. Owned weapons are derived per character (`GameState.ownsWeapon`); the save does not
+  change. `PlayerWeaponsComponent` (`IGameEntity.weapons`) replaces the `is Megaman` checks in the HUD, pause, energy
+  pickup, progress reset, beam-out and get-weapon screens. `WeaponRewardListener` sets the reward from the slot-0
+  character (an empty reward skips the get-weapon screen; on `master` that case crashed). `MegaPlayer.shooting`
+  (owner D4): a `Met` also hides from X's and Proto Man's shots. `preventsWhileFiring(move)` keeps a def pure.
+- Contract check: automated checks on the branch after `master` (`011a`, `060l`) was merged in: `engine:test` 698,
+  `core:test` 2136, `core:smokeTest` 467, `lwjgl3:jar`; review before the play test by 2 subagents (no bug; dead code,
+  style, 1 latent iterator risk, 1 test gap and 3 check texts fixed); each new rule seen to fail on a mutation; owner
+  play test passed; Diffity round 1 with 0 threads. 1 simple import conflict with `060l` in `PlayerStatsHandler.kt`.
+- Follow-up: item `024` done. New item `162` (LibGDX collections in the launch options and level overrides). Bug
+  filed: `docs/issues/2026-11-16-reactor-shot-pieces-die-mid-air.md` (not caused by this branch). `O8-R4` holds;
+  `O8-R2` has 0 `is Megaman` checks left outside `entities/megaman/`. Next for weapons: `060h` (Proto Man's weapons on
+  the loadout). The main checkout had 1 modified file of another session (`CullablesSystem.kt`); it stays unstaged.
