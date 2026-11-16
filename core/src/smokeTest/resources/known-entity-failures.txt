@@ -3,7 +3,6 @@
 # A listed class that passes fails the test, so remove its line when you fix it.
 
 blocks.ConveyorBelt # silent: no ConveyorBelt/RightPart-MoveRight region
-bosses.DesertMan # silent: no DesertMan/init region
 bosses.PenguinMiniBoss # no region
 bosses.SigmaRat # no SigmaRat regions
 bosses.SigmaRatClaw # no SigmaRat regions

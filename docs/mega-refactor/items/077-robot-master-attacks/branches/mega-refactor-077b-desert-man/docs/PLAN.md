@@ -1,12 +1,11 @@
 # Plan: mega-refactor-077b-desert-man
 
-How to do the work in `SCOPE.md`. Write this file after the owner approves the brief. It needs
-no approval. When the plan changes, write the reason in the process log.
+Fast iteration: production code, then the owner plays; tests from `TEST-DEBT.md` at the end.
 
-## Steps
-
-### 1. <step>
-
-- Changes:
-- Check:
-- Done: no
+1. Long-punch arm gap fix. Done: yes
+2. Phases, damage table, tuning rows, player damage table with a `TODO`. Done: yes
+3. Punch wind-up. Done: yes
+4. Tornado fix and tell. Done: yes
+5. Burrow and erupt (phase 2). Done: yes
+6. Owner play test rounds. Done: no
+7. Final pass: tests, checks, review, merge. Done: no

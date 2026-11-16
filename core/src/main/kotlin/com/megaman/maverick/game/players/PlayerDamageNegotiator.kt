@@ -15,6 +15,7 @@ import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobot
 import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand
 import com.megaman.maverick.game.entities.bosses.D1000
 import com.megaman.maverick.game.entities.bosses.D1000Core
+import com.megaman.maverick.game.entities.bosses.DesertMan
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -28,6 +29,7 @@ import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
+import com.megaman.maverick.game.entities.projectiles.Needle
 import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.hardMode
 
@@ -45,6 +47,9 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
             val owner = (it as BigAssMaverickRobotOrb).owner
             if (owner is BigAssMaverickRobot || owner is BigAssMaverickRobotHand) 1 else 3
         },
+        // TODO: consider varied damage per Desert Man damager (item 077)
+        DesertMan.TAG pairTo dmgNeg(3),
+        Needle.TAG pairTo dmgNeg(3),
         D1000.TAG pairTo dmgNeg(2),
         D1000Core.TAG pairTo dmgNeg(2),
         EnemyShot.TAG pairTo dmgNeg { (it as EnemyShot).kind.damage },
