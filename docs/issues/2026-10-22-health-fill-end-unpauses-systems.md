@@ -1,6 +1,6 @@
 ---
 status: open
-verified: no
+verified: yes
 area: core
 gameplay-change: yes
 found-by: mega-refactor review (2026-10-22)
@@ -23,4 +23,12 @@ The fill does not change system flags while paused.
 
 ## How to reproduce
 
-Pick up a large health item at low health and pause at once. Wait for the fill to end while paused. Found by reading; needs a check in the game.
+Pick up a large health item at low health and pause at once. Wait for the fill to end while paused.
+
+## Notes
+
+Confirmed by reading the code on `master` (2026-11-16): `PlayerStatsHandler.update` runs at `MegaLevelScreen.kt:853`,
+outside the `!game.clock.paused` block, and turns all systems on at `PlayerStatsHandler.kt:321`.
+
+The fix is in `fix/pause-restores-systems`, with the short contract in
+`2026-10-22-pause-during-gate-reenables-physics.md`.
