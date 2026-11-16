@@ -7,7 +7,6 @@ class DesertManTuning(
     val tornadoChance: Float,
     val danceChance: Float,
     val windUpDur: Float,
-    val punchExtendSpeed: Float,
     val punchHoldDur: Float,
     val throwChance: Float,
     val throwWindUpDur: Float,
@@ -42,10 +41,6 @@ class DesertManTuning(
         const val WIND_UP_DUR = 0.5f
         const val WIND_UP_DUR_PHASE_2 = 0.4f
         const val WIND_UP_DUR_HARD = 0.35f
-        const val PUNCH_EXTEND_SPEED = 24f
-        const val PUNCH_EXTEND_SPEED_PHASE_2 = 28f
-        const val PUNCH_EXTEND_SPEED_HARD = 28f
-        const val PUNCH_EXTEND_SPEED_HARD_PHASE_2 = 32f
         const val PUNCH_HOLD_DUR = 0.35f
         const val PUNCH_HOLD_DUR_PHASE_2 = 0.3f
         const val PUNCH_HOLD_DUR_HARD = 0.3f
@@ -91,7 +86,7 @@ class DesertManTuning(
         val NORMAL = DesertManTuning(
             standDur = STAND_DUR, burrowChance = 0f, punchChance = PUNCH_CHANCE, tornadoChance = TORNADO_CHANCE,
             danceChance = DANCE_CHANCE, windUpDur = WIND_UP_DUR,
-            punchExtendSpeed = PUNCH_EXTEND_SPEED, punchHoldDur = PUNCH_HOLD_DUR,
+            punchHoldDur = PUNCH_HOLD_DUR,
             throwChance = THROW_CHANCE, throwWindUpDur = THROW_WIND_UP_DUR, throwHoldDur = THROW_HOLD_DUR,
             throwVolleys = 1, throwNeedles = 5, throwNeedleSpread = THROW_NEEDLE_SPREAD,
             throwNeedleSpeed = THROW_NEEDLE_SPEED,
@@ -103,7 +98,7 @@ class DesertManTuning(
         val NORMAL_PHASE_2 = DesertManTuning(
             standDur = STAND_DUR_PHASE_2, burrowChance = BURROW_CHANCE_PHASE_2, punchChance = PUNCH_CHANCE,
             tornadoChance = TORNADO_CHANCE, danceChance = DANCE_CHANCE,
-            windUpDur = WIND_UP_DUR_PHASE_2, punchExtendSpeed = PUNCH_EXTEND_SPEED_PHASE_2,
+            windUpDur = WIND_UP_DUR_PHASE_2,
             punchHoldDur = PUNCH_HOLD_DUR_PHASE_2, tornadoSpinUpDur = TORNADO_SPIN_UP_DUR, tornadoTurns = 1,
             throwChance = THROW_CHANCE_PHASE_2, throwWindUpDur = THROW_WIND_UP_DUR_PHASE_2,
             throwHoldDur = THROW_HOLD_DUR_PHASE_2, throwVolleys = 2, throwNeedles = 5,
@@ -116,7 +111,7 @@ class DesertManTuning(
         val HARD = DesertManTuning(
             standDur = STAND_DUR_HARD, burrowChance = 0f, punchChance = PUNCH_CHANCE,
             tornadoChance = TORNADO_CHANCE_HARD, danceChance = DANCE_CHANCE,
-            windUpDur = WIND_UP_DUR_HARD, punchExtendSpeed = PUNCH_EXTEND_SPEED_HARD,
+            windUpDur = WIND_UP_DUR_HARD,
             punchHoldDur = PUNCH_HOLD_DUR_HARD, tornadoSpinUpDur = TORNADO_SPIN_UP_DUR, tornadoTurns = 0,
             throwChance = THROW_CHANCE_HARD, throwWindUpDur = THROW_WIND_UP_DUR_HARD,
             throwHoldDur = THROW_HOLD_DUR_HARD, throwVolleys = 2, throwNeedles = 5,
@@ -129,7 +124,7 @@ class DesertManTuning(
         val HARD_PHASE_2 = DesertManTuning(
             standDur = STAND_DUR_HARD_PHASE_2, burrowChance = BURROW_CHANCE_HARD_PHASE_2, punchChance = PUNCH_CHANCE,
             tornadoChance = TORNADO_CHANCE_HARD, danceChance = DANCE_CHANCE,
-            windUpDur = WIND_UP_DUR_HARD, punchExtendSpeed = PUNCH_EXTEND_SPEED_HARD_PHASE_2,
+            windUpDur = WIND_UP_DUR_HARD,
             punchHoldDur = PUNCH_HOLD_DUR_HARD_PHASE_2, tornadoSpinUpDur = TORNADO_SPIN_UP_DUR_HARD_PHASE_2,
             throwChance = THROW_CHANCE_HARD_PHASE_2, throwWindUpDur = THROW_WIND_UP_DUR_HARD_PHASE_2,
             throwHoldDur = THROW_HOLD_DUR_HARD_PHASE_2, throwVolleys = 3, throwNeedles = 7,

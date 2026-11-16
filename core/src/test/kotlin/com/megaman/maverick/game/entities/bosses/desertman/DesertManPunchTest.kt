@@ -63,8 +63,9 @@ private class Frame(
         get() = if (facing == Facing.RIGHT) arm.getMaxX() else arm.getX()
 }
 
-private fun moveDur(distance: Float, averageSpeed: Float) =
-    max(distance / (averageSpeed * T), distance * MathUtils.HALF_PI / (30f * T))
+private fun peakDur(distance: Float) = distance * MathUtils.HALF_PI / (30f * T)
+
+private fun moveDur(distance: Float, averageSpeed: Float) = max(distance / (averageSpeed * T), peakDur(distance))
 
 class DesertManPunchTest : DescribeSpec({
 
@@ -232,13 +233,13 @@ class DesertManPunchTest : DescribeSpec({
         }
 
         listOf(
-            Triple("normal", false to false, 24f),
-            Triple("hard phase 2", true to true, 32f)
-        ).forEach { (name, row, speed) ->
-            it("$name: eases out from the wind-up length to the reach, with the peak at 30 tiles/s or less") {
+            "normal" to (false to false),
+            "hard phase 2" to (true to true)
+        ).forEach { (name, row) ->
+            it("$name: eases out from the wind-up length to the reach in the time of the 30 tiles/s peak") {
                 start(hard = row.first, phase2 = row.second)
                 val extend = Phases(punch()).extend
-                val dur = moveDur(REACH - MIN_LENGTH, speed)
+                val dur = peakDur(REACH - MIN_LENGTH)
                 extend.forEachIndexed { k, it ->
                     val ratio = (k * STEP / dur).coerceAtMost(1f)
                     withClue("tick $k") {
@@ -255,7 +256,7 @@ class DesertManPunchTest : DescribeSpec({
             start()
             val frames = punch()
             val phases = Phases(frames)
-            val dur = moveDur(REACH - MIN_LENGTH, 24f)
+            val dur = peakDur(REACH - MIN_LENGTH)
             phases.extend.forEachIndexed { k, it ->
                 val ratio = k * STEP / dur
                 if (abs(ratio - 0.75f) > 0.02f) withClue("tick $k") { it.speedHidden shouldBe (ratio >= 0.75f) }

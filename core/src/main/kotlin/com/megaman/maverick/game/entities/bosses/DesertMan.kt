@@ -1465,14 +1465,14 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
         val maxReach = PUNCH_MAX_REACH * ConstVals.PPM
         punchHitsWall = wallLimit <= maxReach
         punchReach = min(maxReach, wallLimit).coerceAtLeast(minLength)
-        startPunchPhase(PunchPhase.EXTEND, punchMoveDur(punchReach - minLength, attackTuning.punchExtendSpeed))
+        startPunchPhase(PunchPhase.EXTEND, punchPeakDur(punchReach - minLength))
         requestToPlaySound(SoundAsset.WHOOSH_SOUND, loop = false)
     }
 
-    private fun punchMoveDur(distance: Float, averageSpeed: Float) = max(
-        distance / (averageSpeed * ConstVals.PPM),
-        distance * MathUtils.HALF_PI / (PUNCH_MAX_SPEED * ConstVals.PPM)
-    )
+    private fun punchMoveDur(distance: Float, averageSpeed: Float) =
+        max(distance / (averageSpeed * ConstVals.PPM), punchPeakDur(distance))
+
+    private fun punchPeakDur(distance: Float) = distance * MathUtils.HALF_PI / (PUNCH_MAX_SPEED * ConstVals.PPM)
 
     private fun onPunchHitWall() {
         spawnSandSplash(restShoulderX() + facing.value * punchReach, punchPartY(PUNCH_FIST_BOTTOM))

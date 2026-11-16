@@ -2498,3 +2498,14 @@ newest entry at the bottom.
   filed: `docs/issues/2026-11-16-reactor-shot-pieces-die-mid-air.md` (not caused by this branch). `O8-R4` holds;
   `O8-R2` has 0 `is Megaman` checks left outside `entities/megaman/`. Next for weapons: `060h` (Proto Man's weapons on
   the loadout). The main checkout had 1 modified file of another session (`CullablesSystem.kt`); it stays unstaged.
+
+## 2026-11-16 — direct change on `master`: remove `DesertManTuning.punchExtendSpeed`
+
+- Summary: the owner asked for it after the `077b` merge. The field and its 4 constants never changed the punch: every
+  row (24 / 28 / 28 / 32 tiles/s) was faster than the 30 tiles/s peak cap allows with `sineOut` (about 19.1 tiles/s
+  average), so the extend time was always the cap time. The extend now uses that cap time directly
+  (`punchPeakDur`); the retract keeps its own speed. No gameplay change. `DesertManPunchTest` checks the cap time in
+  each row.
+- Why not a branch: a small cleanup that the owner asked for, with no gameplay change (`docs/mega-refactor/CLAUDE.md`
+  "Small ad-hoc changes on `master`").
+- Checks: `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` pass on `master` before the commit.
