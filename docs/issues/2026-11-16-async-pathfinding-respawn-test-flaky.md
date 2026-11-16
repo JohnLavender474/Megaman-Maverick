@@ -64,8 +64,11 @@ Checks:
 
 - `engine:test --rerun --tests 'com.maverick.game.engine.pathfinding.PathfindingRespawnTest'` passes in 10 runs in a
   row, and the harness on the new order (with the `started` wait) gives no fail in a warm loop.
-- With the `futureMap.remove(component)?.cancel(true)` line of `AsyncPathfindingSystem.onEntityLeft` removed for one
-  run, the case fails (`consumed` is not `0`). The line is then restored, and `git diff` shows no production change.
+- With the `onEntityLeft` override of `AsyncPathfindingSystem` removed for one run (the code before `c52ce18f6`), the
+  case fails (`consumed` is not `0`). The file is then restored, and `git diff` shows no production change. The
+  removal of only the `futureMap.remove(component)?.cancel(true)` line is not a valid mutation: `onEntityLeft` also
+  removes the `submitTimeMap` entry, so the timeout branch (`submitTimeMap[component] ?: 0L`) cancels the future in
+  the same frame, and the case passes.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
 No play check: the change is in a test only, and the game code does not change.
